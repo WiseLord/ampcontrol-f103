@@ -53,6 +53,7 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c
 Inc/input.h
 Inc/main.h
+Inc/pins.h
 Inc/stm32_assert.h
 Inc/stm32f1xx_hal_conf.h
 Inc/stm32f1xx_it.h

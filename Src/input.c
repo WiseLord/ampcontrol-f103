@@ -1,13 +1,14 @@
 #include "input.h"
 
 #include "main.h"
+#include "pins.h"
 
 void inputPoll()
 {
     static volatile uint32_t i;
     if (i++ & 0x00000100) {
-        LL_GPIO_ResetOutputPin(DISP_BL_GPIO_Port, DISP_BL_Pin);
+        CLR(DISP_BL);
     } else {
-        LL_GPIO_SetOutputPin(DISP_BL_GPIO_Port, DISP_BL_Pin);
+        SET(DISP_BL);
     }
 }
