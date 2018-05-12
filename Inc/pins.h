@@ -17,8 +17,11 @@
 #define READ(x)             (PIN(x) & x ## _LINE)
 */
 
+#define OUT(x)              (LL_GPIO_SetPinMode(CONCAT(x, _GPIO_Port), CONCAT(x, _Pin), LL_GPIO_MODE_OUTPUT))
+#define IN(x)              (LL_GPIO_SetPinMode(CONCAT(x, _GPIO_Port), CONCAT(x, _Pin), LL_GPIO_MODE_INPUT))
 #define SET(x)              (LL_GPIO_SetOutputPin(CONCAT(x, _GPIO_Port), CONCAT(x, _Pin)))
 #define CLR(x)              (LL_GPIO_ResetOutputPin(CONCAT(x, _GPIO_Port), CONCAT(x, _Pin)))
+#define READ(x)             (LL_GPIO_IsInputPinSet(CONCAT(x, _GPIO_Port), CONCAT(x, _Pin)))
 
 #define KS0108_D0           DISP_D0
 #define KS0108_D1           DISP_D1

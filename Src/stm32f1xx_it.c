@@ -202,6 +202,7 @@ void TIM2_IRQHandler(void)
       LL_TIM_ClearFlag_UPDATE(TIM2);
     }
     ks0108IRQ();
+    LL_GPIO_TogglePin(DISP_BCKL_GPIO_Port, DISP_BCKL_Pin);
 
   /* USER CODE END TIM2_IRQn 0 */
   /* USER CODE BEGIN TIM2_IRQn 1 */

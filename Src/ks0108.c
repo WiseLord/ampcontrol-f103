@@ -51,7 +51,6 @@ static void ks0108SetPort(uint8_t data)
 
 static void ks0108SetDdrIn()
 {
-/*
     IN(KS0108_D0);
     IN(KS0108_D1);
     IN(KS0108_D2);
@@ -60,12 +59,10 @@ static void ks0108SetDdrIn()
     IN(KS0108_D5);
     IN(KS0108_D6);
     IN(KS0108_D7);
-*/
 }
 
 static void ks0108SetDdrOut()
 {
-/*
     OUT(KS0108_D0);
     OUT(KS0108_D1);
     OUT(KS0108_D2);
@@ -74,13 +71,12 @@ static void ks0108SetDdrOut()
     OUT(KS0108_D5);
     OUT(KS0108_D6);
     OUT(KS0108_D7);
-*/
 }
 
 static uint8_t ks0108ReadPin()
 {
     uint8_t ret = 0;
-/*
+
     if (READ(KS0108_D0)) ret |= (1 << 0);
     if (READ(KS0108_D1)) ret |= (1 << 1);
     if (READ(KS0108_D2)) ret |= (1 << 2);
@@ -89,11 +85,11 @@ static uint8_t ks0108ReadPin()
     if (READ(KS0108_D5)) ret |= (1 << 5);
     if (READ(KS0108_D6)) ret |= (1 << 6);
     if (READ(KS0108_D7)) ret |= (1 << 7);
-*/
+
     return ret;
 }
 
-void ks0108WriteCmd(uint8_t cmd)
+static void ks0108WriteCmd(uint8_t cmd)
 {
     _delay_us(50);
 
@@ -157,27 +153,27 @@ void ks0108IRQ(void)
 
     if (++br >= KS0108_MAX_BRIGHTNESS)              // Loop brightness
         br = KS0108_MIN_BRIGHTNESS;
-
+/*
     if (br == _br) {
         CLR(KS0108_BCKL);                           // Turn backlight off
     } else if (br == 0)
         SET(KS0108_BCKL);                           // Turn backlight on
-
+*/
 }
 
 void ks0108Init()
 {
-//    // Set control and data lines as outputs
-//    OUT(KS0108_DI);
-//    OUT(KS0108_E);
-//    OUT(KS0108_CS1);
-//    OUT(KS0108_CS2);
+    // Set control and data lines as outputs
+    OUT(KS0108_DI);
+    OUT(KS0108_E);
+    OUT(KS0108_CS1);
+    OUT(KS0108_CS2);
 
-//    ks0108SetDdrOut();
+    ks0108SetDdrOut();
 
-//    // Set RW line to zero
+    // Set RW line to zero
 //#ifdef _atmega32
-//    OUT(KS0108_RW);
+    OUT(KS0108_RW);
     CLR(KS0108_RW);
 //#endif
 
@@ -186,7 +182,7 @@ void ks0108Init()
 
     // Hardware reset
 //#ifdef _atmega32
-//    OUT(KS0108_RES);
+    OUT(KS0108_RES);
     CLR(KS0108_RES);
     _delay_us(1);
     SET(KS0108_RES);
@@ -208,7 +204,7 @@ void ks0108Init()
     SET(KS0108_DI);
 
     // Enable backlight control
-//    OUT(KS0108_BCKL);
+    OUT(KS0108_BCKL);
 }
 
 void ks0108Clear()

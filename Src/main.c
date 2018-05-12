@@ -113,14 +113,24 @@ int main(void)
 
   gdClear();
   _delay_ms(500);
-  gdSetXY(10, 0);
-  gdWriteString("Testing");
+  gdSetXY(5, 0);
+  gdWriteString("Test inputs");
 
-  gdSetXY(0, 32);
-  gdWriteIcon24(ICON24_BALANCE);
+//  gdSetXY(0, 32);
+//  gdWriteIcon24(ICON24_BALANCE);
 
   while (1)
   {
+      uint8_t pins = gdGetPins();
+      for (uint8_t i = 0; i < 8; i++) {
+          gdSetXY(3 + 16 * i, 40);
+          if (pins & (1 << i)) {
+              gdWriteChar('1');
+          } else {
+              gdWriteChar('0');
+          }
+      }
+
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
