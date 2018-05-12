@@ -40,7 +40,8 @@
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "gdfb.h"
+#include "functions.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -106,9 +107,20 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  gdInit();
+  gdLoadFont(font_ks0066_ru_24, 1, FONT_DIR_0);
+
+  gdClear();
+  _delay_ms(500);
+  gdSetXY(10, 0);
+  gdWriteString("Testing");
+
+  gdSetXY(0, 32);
+  gdWriteIcon24(ICON24_BALANCE);
+
   while (1)
   {
-
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -213,9 +225,9 @@ static void MX_TIM2_Init(void)
   NVIC_SetPriority(TIM2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
   NVIC_EnableIRQ(TIM2_IRQn);
 
-  TIM_InitStruct.Prescaler = 17999;
+  TIM_InitStruct.Prescaler = 99;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 1999;
+  TIM_InitStruct.Autoreload = 35;
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
   LL_TIM_Init(TIM2, &TIM_InitStruct);
 
@@ -245,16 +257,43 @@ static void MX_GPIO_Init(void)
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOD);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
+  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
 
   /**/
-  LL_GPIO_ResetOutputPin(DISP_BL_GPIO_Port, DISP_BL_Pin);
+  LL_GPIO_ResetOutputPin(DISP_BCKL_GPIO_Port, DISP_BCKL_Pin);
 
   /**/
-  GPIO_InitStruct.Pin = DISP_BL_Pin;
+  LL_GPIO_ResetOutputPin(GPIOA, DISP_D0_Pin|DISP_D1_Pin|DISP_D2_Pin|DISP_D3_Pin 
+                          |DISP_D4_Pin|DISP_D5_Pin|DISP_D6_Pin|DISP_D7_Pin 
+                          |DISP_DATA_Pin);
+
+  /**/
+  LL_GPIO_ResetOutputPin(GPIOB, DISP_CTRL1_Pin|DISP_CTRL2_Pin|DISP_STROB_Pin|DISP_RESET_Pin 
+                          |DISP_RW_Pin);
+
+  /**/
+  GPIO_InitStruct.Pin = DISP_BCKL_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  LL_GPIO_Init(DISP_BL_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(DISP_BCKL_GPIO_Port, &GPIO_InitStruct);
+
+  /**/
+  GPIO_InitStruct.Pin = DISP_D0_Pin|DISP_D1_Pin|DISP_D2_Pin|DISP_D3_Pin 
+                          |DISP_D4_Pin|DISP_D5_Pin|DISP_D6_Pin|DISP_D7_Pin 
+                          |DISP_DATA_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /**/
+  GPIO_InitStruct.Pin = DISP_CTRL1_Pin|DISP_CTRL2_Pin|DISP_STROB_Pin|DISP_RESET_Pin 
+                          |DISP_RW_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 

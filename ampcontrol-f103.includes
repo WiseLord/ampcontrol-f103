@@ -1,7 +1,7 @@
+/home/STM32/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/
 Drivers/CMSIS/Device/ST/STM32F1xx/Include
 Drivers/CMSIS/Include
 Drivers/STM32F1xx_HAL_Driver/Inc
 Inc
 .
 Src
-Drivers/STM32F1xx_HAL_Driver/Src

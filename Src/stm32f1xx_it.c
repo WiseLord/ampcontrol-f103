@@ -36,6 +36,7 @@
 
 /* USER CODE BEGIN 0 */
 #include "input.h"
+#include "gdfb.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -200,7 +201,7 @@ void TIM2_IRQHandler(void)
       /* Clear the update interrupt flag*/
       LL_TIM_ClearFlag_UPDATE(TIM2);
     }
-    LL_GPIO_TogglePin(DISP_BL_GPIO_Port, DISP_BL_Pin);
+    ks0108IRQ();
 
   /* USER CODE END TIM2_IRQn 0 */
   /* USER CODE BEGIN TIM2_IRQn 1 */
