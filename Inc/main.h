@@ -50,6 +50,7 @@
 #include "stm32f1xx_ll_utils.h"
 #include "stm32f1xx_ll_pwr.h"
 #include "stm32f1xx_ll_dma.h"
+#include "stm32f1xx_ll_tim.h"
 #include "stm32f1xx.h"
 #include "stm32f1xx_ll_gpio.h"
 
