@@ -37,6 +37,7 @@
 /* USER CODE BEGIN 0 */
 #include "input.h"
 #include "gdfb.h"
+#include "functions.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -191,6 +192,30 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+* @brief This function handles RTC global interrupt.
+*/
+void RTC_IRQHandler(void)
+{
+  /* USER CODE BEGIN RTC_IRQn 0 */
+    if (LL_RTC_IsEnabledIT_SEC(RTC) != 0)
+    {
+      /* Clear the RTC Second interrupt */
+      LL_RTC_ClearFlag_SEC(RTC);
+      LL_GPIO_TogglePin(DISP_BCKL_GPIO_Port, DISP_BCKL_Pin);
+      _show_time();
+      /* Wait until last write operation on RTC registers has finished */
+      LL_RTC_WaitForSynchro(RTC);
+    }
+    /* Clear the EXTI's Flag for RTC Alarm */
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_17);
+
+  /* USER CODE END RTC_IRQn 0 */
+  /* USER CODE BEGIN RTC_IRQn 1 */
+
+  /* USER CODE END RTC_IRQn 1 */
+}
+
+/**
 * @brief This function handles TIM2 global interrupt.
 */
 void TIM2_IRQHandler(void)
@@ -202,7 +227,7 @@ void TIM2_IRQHandler(void)
       LL_TIM_ClearFlag_UPDATE(TIM2);
     }
     ks0108IRQ();
-    LL_GPIO_TogglePin(DISP_BCKL_GPIO_Port, DISP_BCKL_Pin);
+//    LL_GPIO_TogglePin(DISP_BCKL_GPIO_Port, DISP_BCKL_Pin);
 
   /* USER CODE END TIM2_IRQn 0 */
   /* USER CODE BEGIN TIM2_IRQn 1 */

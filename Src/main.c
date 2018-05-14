@@ -42,6 +42,7 @@
 /* USER CODE BEGIN Includes */
 #include "gdfb.h"
 #include "functions.h"
+#include "rtc.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -56,6 +57,7 @@ static void LL_Init(void);
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_RTC_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -63,7 +65,39 @@ static void MX_TIM2_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+void Init_RTC(){
+    //разрешить тактирование модулей управления питанием и управлением резервной областью
+    RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
+    //разрешить доступ к области резервных данных
+    PWR->CR |= PWR_CR_DBP;
+    //если часы выключены - инициализировать их
+    if ((RCC->BDCR & RCC_BDCR_RTCEN) != RCC_BDCR_RTCEN){
+        //выполнить сброс области резервных данных
+        RCC->BDCR |=  RCC_BDCR_BDRST;
+        RCC->BDCR &= ~RCC_BDCR_BDRST;
 
+        //выбрать источником тактовых импульсов внешний кварц 32768 и подать тактирование
+        RCC->BDCR |=  RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_LSE;
+
+        RTC->CRL  |=  RTC_CRL_CNF;
+        RTC->PRLL  =  0x7FFF;         //регистр деления на 32768
+        RTC->CRH  |=  RTC_CRH_SECIE;
+        RTC->CRL  &=  ~RTC_CRL_CNF;
+
+        //установить бит разрешения работы и дождаться установки бита готовности
+        RCC->BDCR |= RCC_BDCR_LSEON;
+        while ((RCC->BDCR & RCC_BDCR_LSEON) != RCC_BDCR_LSEON){}
+
+        RTC->CRL &= (uint16_t)~RTC_CRL_RSF;
+        while((RTC->CRL & RTC_CRL_RSF) != RTC_CRL_RSF){}
+
+        RTC->CRL &= ~RTC_CRL_SECF;
+    }else{
+        RTC->CRH  |=  RTC_CRH_SECIE;
+    }
+
+    NVIC_EnableIRQ (RTC_IRQn);           //разрешить прерывания от RTC
+}
 /* USER CODE END 0 */
 
 /**
@@ -103,24 +137,27 @@ int main(void)
   LL_TIM_EnableCounter(TIM2);
   LL_TIM_EnableIT_UPDATE(TIM2);
 
+  Init_RTC();
+//  MX_RTC_Init();
+//  LL_RTC_EnableIT_SEC(RTC);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
   gdInit();
-  gdLoadFont(font_ks0066_ru_24, 1, FONT_DIR_0);
-
   gdClear();
-  _delay_ms(500);
-  gdSetXY(5, 0);
-  gdWriteString("Test inputs");
+  gdLoadFont(font_ks0066_ru_24, 1, FONT_DIR_0);
 
 //  gdSetXY(0, 32);
 //  gdWriteIcon24(ICON24_BALANCE);
 
   while (1)
   {
+      _delay_ms(100);
+//      _show_time();
+
       uint8_t pins = gdGetPins();
       for (uint8_t i = 0; i < 8; i++) {
           gdSetXY(3 + 16 * i, 40);
@@ -190,6 +227,23 @@ void SystemClock_Config(void)
   {
     
   }
+  LL_PWR_EnableBkUpAccess();
+
+  LL_RCC_ForceBackupDomainReset();
+
+  LL_RCC_ReleaseBackupDomainReset();
+
+  LL_RCC_LSE_Enable();
+
+   /* Wait till LSE is ready */
+  while(LL_RCC_LSE_IsReady() != 1)
+  {
+    
+  }
+  LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
+
+  LL_RCC_EnableRTC();
+
   LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE_DIV_1, LL_RCC_PLL_MUL_9);
 
   LL_RCC_PLL_Enable();
@@ -220,6 +274,31 @@ void SystemClock_Config(void)
 
   /* SysTick_IRQn interrupt configuration */
   NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
+}
+
+/* RTC init function */
+static void MX_RTC_Init(void)
+{
+
+  LL_RTC_InitTypeDef RTC_InitStruct;
+
+    LL_PWR_EnableBkUpAccess();
+    /* Enable BKP CLK enable for backup registers */
+    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_BKP);
+  /* Peripheral clock enable */
+  LL_RCC_EnableRTC();
+
+  /* RTC interrupt Init */
+  NVIC_SetPriority(RTC_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
+  NVIC_EnableIRQ(RTC_IRQn);
+
+    /**Initialize RTC and set the Time and Date 
+    */
+  RTC_InitStruct.AsynchPrescaler = 0xFFFFFFFFU;
+  LL_RTC_Init(RTC, &RTC_InitStruct);
+
+  LL_RTC_SetAsynchPrescaler(RTC, 0xFFFFFFFFU);
+
 }
 
 /* TIM2 init function */

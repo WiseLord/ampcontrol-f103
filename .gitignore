@@ -1,4 +1,4 @@
 build/
 .mxproject
-ms.scratch
+mx.scratch
 *.user
