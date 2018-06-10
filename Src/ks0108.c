@@ -6,19 +6,13 @@
 static uint8_t pins;
 
 #ifdef _KS0108B
-#define KS0108_SET_CS1(); \
-    CLR(KS0108_CS1); \
-    SET(KS0108_CS2);
-#define KS0108_SET_CS2(); \
-    CLR(KS0108_CS2); \
-    SET(KS0108_CS1);
+#define KS0108_SET_CS1()    CLR(KS0108_CS1); SET(KS0108_CS2)
+#define KS0108_SET_CS2()    SET(KS0108_CS1); CLR(KS0108_CS2)
+#define KS0108_SET_CS()     CLR(KS0108_CS2); CLR(KS0108_CS1)
 #else
-#define KS0108_SET_CS1(); \
-    SET(KS0108_CS1); \
-    CLR(KS0108_CS2);
-#define KS0108_SET_CS2(); \
-    SET(KS0108_CS2); \
-    CLR(KS0108_CS1);
+#define KS0108_SET_CS1()    SET(KS0108_CS1); CLR(KS0108_CS2)
+#define KS0108_SET_CS2()    CLR(KS0108_CS1); SET(KS0108_CS2)
+#define KS0108_SET_CS()     SET(KS0108_CS1); SET(KS0108_CS2)
 #endif
 
 static uint8_t fb[KS0108_COLS * KS0108_CHIPS][KS0108_ROWS];
@@ -189,13 +183,8 @@ void ks0108Init()
     _delay_us(1);
 //#endif
 
-    // Init first controller
-    KS0108_SET_CS1();
-    ks0108WriteCmd(KS0108_DISPLAY_START_LINE);
-    ks0108WriteCmd(KS0108_DISPLAY_ON);
-    _delay_ms(10);
-    // Init second controller
-    KS0108_SET_CS2();
+    // Init both controller
+    KS0108_SET_CS();
     ks0108WriteCmd(KS0108_DISPLAY_START_LINE);
     ks0108WriteCmd(KS0108_DISPLAY_ON);
     _delay_ms(10);

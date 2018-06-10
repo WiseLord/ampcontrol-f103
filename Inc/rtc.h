@@ -3,5 +3,6 @@
 
 #include <inttypes.h>
 
+void rtcInit();
 
 #endif // RTC_H
