@@ -35,7 +35,27 @@ void _show_number(uint32_t number)
 
 void _show_time()
 {
-    gdLoadFont(font_ks0066_ru_24, 1, FONT_DIR_0);
+    gdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
     gdSetXY(5, 0);
-    _show_number(LL_RTC_TIME_Get(RTC));
+
+    uint32_t time = LL_RTC_TIME_Get(RTC);
+    _show_number(time);
+
+    RTC_type rtc;
+
+    rtcFromUnix(time, &rtc);
+
+    gdSetXY(0, 8);
+    _show_number(rtc.hour);
+    gdSetXY(0, 16);
+    _show_number(rtc.min);
+    gdSetXY(0, 24);
+    _show_number(rtc.sec);
+
+    gdSetXY(64, 8);
+    _show_number(rtc.date);
+    gdSetXY(64, 16);
+    _show_number(rtc.month);
+    gdSetXY(64, 24);
+    _show_number(rtc.year);
 }

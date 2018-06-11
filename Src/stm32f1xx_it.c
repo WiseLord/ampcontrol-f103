@@ -202,7 +202,7 @@ void RTC_IRQHandler(void)
       /* Clear the RTC Second interrupt */
       LL_RTC_ClearFlag_SEC(RTC);
       LL_GPIO_TogglePin(DISP_BCKL_GPIO_Port, DISP_BCKL_Pin);
-      _show_time();
+
       /* Wait until last write operation on RTC registers has finished */
       LL_RTC_WaitForSynchro(RTC);
     }

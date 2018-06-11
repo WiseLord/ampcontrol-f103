@@ -31,11 +31,11 @@ int main(void)
     NVIC_EnableIRQ (RTC_IRQn);           //разрешить прерывания от RTC
 
     gdClear();
-    gdLoadFont(font_ks0066_ru_24, 1, FONT_DIR_0);
 
     while (1) {
         _delay_ms(100);
 
+        gdLoadFont(font_ks0066_ru_24, 1, FONT_DIR_0);
         uint8_t pins = gdGetPins();
         for (uint8_t i = 0; i < 8; i++) {
             gdSetXY(3 + 16 * i, 40);
@@ -45,6 +45,8 @@ int main(void)
                 gdWriteChar('0');
             }
         }
+
+        _show_time();
     }
 }
 
