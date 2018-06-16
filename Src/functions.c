@@ -43,7 +43,7 @@ void _show_time()
 
     RTC_type rtc;
 
-    rtcFromUnix(time, &rtc);
+    secToRtc(time, &rtc);
 
     gdSetXY(0, 8);
     _show_number(rtc.hour);
