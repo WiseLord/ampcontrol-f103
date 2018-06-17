@@ -43,6 +43,11 @@
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
+#define TEST_A_Port             GPIOB
+#define TEST_A_Pin              LL_GPIO_PIN_0
+#define TEST_B_Port             GPIOB
+#define TEST_B_Pin              LL_GPIO_PIN_1
+
 #define KS0108_D0               DISP_D0
 #define KS0108_D1               DISP_D1
 #define KS0108_D2               DISP_D2

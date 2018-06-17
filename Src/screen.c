@@ -55,11 +55,11 @@ static void drawTm(RTC_type *rtc, uint8_t tm, const uint8_t *font)
     gdLoadFont(font, 1, FONT_DIR_0);
 }
 
-void screenTime()
+void screenTime(int8_t etm)
 {
     RTC_type rtc;
     rtcGetTime(&rtc);
-    rtc.etm = RTC_NOEDIT;
+    rtc.etm = etm;
 
     uint32_t sec = rtcToSec(&rtc);
     secToRtc(sec, &rtc);
@@ -89,4 +89,10 @@ void screenTime()
 
     writeNum(rtc.wday, 1, ' ', 10);
 //    writeStringEeprom(txtLabels[LABEL_SUNDAY + (rtcWeekDay() - 1) % 7]);
+}
+
+
+void screenNum(int16_t num)
+{
+    writeNum(num, 5, ' ', 10);
 }

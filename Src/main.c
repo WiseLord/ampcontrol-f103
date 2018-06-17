@@ -5,6 +5,7 @@
 #include "rtc.h"
 #include "pins.h"
 #include "screen.h"
+#include "input.h"
 
 static void LL_Init(void)
 {
@@ -94,7 +95,8 @@ static void GPIO_Init(void)
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
 
     GPIO_InitStruct.Pin = DISP_CTRL1_Pin | DISP_CTRL2_Pin | DISP_STROB_Pin |
-                          DISP_RESET_Pin | DISP_RW_Pin;
+                          DISP_RESET_Pin | DISP_RW_Pin |
+                          TEST_A_Pin | TEST_B_Pin;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
@@ -150,6 +152,9 @@ int main(void)
     gdInit();
     gdClear();
 
+    // Input
+    inputInit();
+
     // Timer
     LL_TIM_EnableCounter(TIM2);
     LL_TIM_EnableIT_UPDATE(TIM2);
@@ -158,10 +163,35 @@ int main(void)
     rtcInit();
     NVIC_EnableIRQ (RTC_IRQn);
 
-    while (1) {
-        screenTime();
+    int8_t etm = RTC_NOEDIT;
+    CmdBtn cmdBtn = CMD_BTN_END;
 
-        _delay_ms(100);
+    int16_t encCnt = 0;
+
+    // Test pins
+    OUT(TEST_A);
+    OUT(TEST_B);
+
+    while (1) {
+        cmdBtn = getBtnCmd();
+        encCnt += getEncoder();
+
+        if (cmdBtn == CMD_BTN_0) {
+            switch (etm) {
+            case RTC_NOEDIT:
+                etm = RTC_HOUR;
+                break;
+            default:
+                etm = RTC_NOEDIT;
+                break;
+            }
+        }
+
+        screenTime(etm);
+
+        gdSetXY(64, 56);
+        screenNum(encCnt);
+
     }
 }
 
