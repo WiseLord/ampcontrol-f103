@@ -54,6 +54,7 @@ Src/gdfb.c \
 Src/ks0108.c \
 Src/input.c \
 Src/rtc.c \
+Src/screen.c \
 Src/functions.c \
 Src/stm32f1xx_it.c \
 /Src/system_stm32f1xx.c \

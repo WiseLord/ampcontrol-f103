@@ -77,6 +77,7 @@ Inc/ks0108.h
 Inc/main.h
 Inc/pins.h
 Inc/rtc.h
+Inc/screen.h
 Inc/stm32_assert.h
 Inc/stm32f1xx_hal_conf.h
 Inc/stm32f1xx_it.h
@@ -93,6 +94,7 @@ Src/input.c
 Src/ks0108.c
 Src/main.c
 Src/rtc.c
+Src/screen.c
 Src/stm32f1xx_it.c
 Src/system_stm32f1xx.c
 startup_stm32f103xb.s

@@ -3,52 +3,8 @@
 #include "gdfb.h"
 #include "functions.h"
 #include "rtc.h"
-
-/* Private function prototypes -----------------------------------------------*/
-static void LL_Init(void);
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_TIM2_Init(void);
-
-int main(void)
-{
-    LL_Init();
-    SystemClock_Config();
-
-    /* Initialize all configured peripherals */
-    MX_GPIO_Init();
-    MX_TIM2_Init();
-
-    LL_SYSTICK_EnableIT();
-
-    gdInit();
-
-    LL_TIM_EnableCounter(TIM2);
-    LL_TIM_EnableIT_UPDATE(TIM2);
-
-    rtcInit();
-
-    NVIC_EnableIRQ (RTC_IRQn);           //разрешить прерывания от RTC
-
-    gdClear();
-
-    while (1) {
-        _delay_ms(100);
-
-        gdLoadFont(font_ks0066_ru_24, 1, FONT_DIR_0);
-        uint8_t pins = gdGetPins();
-        for (uint8_t i = 0; i < 8; i++) {
-            gdSetXY(3 + 16 * i, 40);
-            if (pins & (1 << i)) {
-                gdWriteChar('1');
-            } else {
-                gdWriteChar('0');
-            }
-        }
-
-        _show_time();
-    }
-}
+#include "pins.h"
+#include "screen.h"
 
 static void LL_Init(void)
 {
@@ -78,7 +34,7 @@ static void LL_Init(void)
     LL_GPIO_AF_Remap_SWJ_NOJTAG();
 }
 
-void SystemClock_Config(void)
+static void SystemClock_Config(void)
 {
     LL_FLASH_SetLatency(LL_FLASH_LATENCY_2);
 
@@ -89,9 +45,7 @@ void SystemClock_Config(void)
 
     /* Wait till HSE is ready */
     while (LL_RCC_HSE_IsReady() != 1) {
-
     }
-
 
     LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE_DIV_1, LL_RCC_PLL_MUL_9);
 
@@ -123,10 +77,40 @@ void SystemClock_Config(void)
     NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
 }
 
-/* TIM2 init function */
-static void MX_TIM2_Init(void)
+static void GPIO_Init(void)
 {
+    LL_GPIO_InitTypeDef GPIO_InitStruct;
 
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
+
+    GPIO_InitStruct.Pin = DISP_D0_Pin | DISP_D1_Pin | DISP_D2_Pin | DISP_D3_Pin |
+                          DISP_D4_Pin | DISP_D5_Pin | DISP_D6_Pin | DISP_D7_Pin |
+                          DISP_DATA_Pin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
+
+    GPIO_InitStruct.Pin = DISP_CTRL1_Pin | DISP_CTRL2_Pin | DISP_STROB_Pin |
+                          DISP_RESET_Pin | DISP_RW_Pin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
+
+    GPIO_InitStruct.Pin = DISP_BCKL_Pin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+}
+
+static void TIM2_Init(void)
+{
     LL_TIM_InitTypeDef TIM_InitStruct;
 
     /* Peripheral clock enable */
@@ -140,66 +124,47 @@ static void MX_TIM2_Init(void)
     TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
     TIM_InitStruct.Autoreload = 35;
     TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
+    // 72MHz / 100 / 36 => 20kHz
     LL_TIM_Init(TIM2, &TIM_InitStruct);
 
     LL_TIM_DisableARRPreload(TIM2);
-
     LL_TIM_SetClockSource(TIM2, LL_TIM_CLOCKSOURCE_INTERNAL);
-
     LL_TIM_SetTriggerOutput(TIM2, LL_TIM_TRGO_RESET);
-
     LL_TIM_DisableMasterSlaveMode(TIM2);
-
 }
 
-static void MX_GPIO_Init(void)
+int main(void)
 {
+    // System
+    LL_Init();
+    SystemClock_Config();
 
-    LL_GPIO_InitTypeDef GPIO_InitStruct;
+    // Peripherals
+    GPIO_Init();
+    TIM2_Init();
 
-    /* GPIO Ports Clock Enable */
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOD);
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
+    // Systick
+    LL_SYSTICK_EnableIT();
 
-    /**/
-    LL_GPIO_ResetOutputPin(DISP_BCKL_GPIO_Port, DISP_BCKL_Pin);
+    // Display
+    gdInit();
+    gdClear();
 
-    /**/
-    LL_GPIO_ResetOutputPin(GPIOA, DISP_D0_Pin | DISP_D1_Pin | DISP_D2_Pin | DISP_D3_Pin
-                           | DISP_D4_Pin | DISP_D5_Pin | DISP_D6_Pin | DISP_D7_Pin
-                           | DISP_DATA_Pin);
+    // Timer
+    LL_TIM_EnableCounter(TIM2);
+    LL_TIM_EnableIT_UPDATE(TIM2);
 
-    /**/
-    LL_GPIO_ResetOutputPin(GPIOB, DISP_CTRL1_Pin | DISP_CTRL2_Pin | DISP_STROB_Pin | DISP_RESET_Pin
-                           | DISP_RW_Pin);
+    // RTC
+    rtcInit();
+    NVIC_EnableIRQ (RTC_IRQn);
 
-    /**/
-    GPIO_InitStruct.Pin = DISP_BCKL_Pin;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-    LL_GPIO_Init(DISP_BCKL_GPIO_Port, &GPIO_InitStruct);
+    while (1) {
+        screenTime();
 
-    /**/
-    GPIO_InitStruct.Pin = DISP_D0_Pin | DISP_D1_Pin | DISP_D2_Pin | DISP_D3_Pin
-                          | DISP_D4_Pin | DISP_D5_Pin | DISP_D6_Pin | DISP_D7_Pin
-                          | DISP_DATA_Pin;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    /**/
-    GPIO_InitStruct.Pin = DISP_CTRL1_Pin | DISP_CTRL2_Pin | DISP_STROB_Pin | DISP_RESET_Pin
-                          | DISP_RW_Pin;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
+        _delay_ms(100);
+    }
 }
+
 
 void _Error_Handler(char *file, int line)
 {

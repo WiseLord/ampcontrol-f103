@@ -61,36 +61,6 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define DISP_BCKL_Pin LL_GPIO_PIN_13
-#define DISP_BCKL_GPIO_Port GPIOC
-#define DISP_D0_Pin LL_GPIO_PIN_0
-#define DISP_D0_GPIO_Port GPIOA
-#define DISP_D1_Pin LL_GPIO_PIN_1
-#define DISP_D1_GPIO_Port GPIOA
-#define DISP_D2_Pin LL_GPIO_PIN_2
-#define DISP_D2_GPIO_Port GPIOA
-#define DISP_D3_Pin LL_GPIO_PIN_3
-#define DISP_D3_GPIO_Port GPIOA
-#define DISP_D4_Pin LL_GPIO_PIN_4
-#define DISP_D4_GPIO_Port GPIOA
-#define DISP_D5_Pin LL_GPIO_PIN_5
-#define DISP_D5_GPIO_Port GPIOA
-#define DISP_D6_Pin LL_GPIO_PIN_6
-#define DISP_D6_GPIO_Port GPIOA
-#define DISP_D7_Pin LL_GPIO_PIN_7
-#define DISP_D7_GPIO_Port GPIOA
-#define DISP_CTRL1_Pin LL_GPIO_PIN_10
-#define DISP_CTRL1_GPIO_Port GPIOB
-#define DISP_CTRL2_Pin LL_GPIO_PIN_11
-#define DISP_CTRL2_GPIO_Port GPIOB
-#define DISP_DATA_Pin LL_GPIO_PIN_15
-#define DISP_DATA_GPIO_Port GPIOA
-#define DISP_STROB_Pin LL_GPIO_PIN_3
-#define DISP_STROB_GPIO_Port GPIOB
-#define DISP_RESET_Pin LL_GPIO_PIN_4
-#define DISP_RESET_GPIO_Port GPIOB
-#define DISP_RW_Pin LL_GPIO_PIN_5
-#define DISP_RW_GPIO_Port GPIOB
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
                                                                  4 bits for subpriority */

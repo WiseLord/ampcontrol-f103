@@ -7,6 +7,8 @@
 #include <stm32f1xx_ll_rcc.h>
 #include <stm32f1xx_ll_rtc.h>
 
+static uint32_t rtcTime;
+
 void rtcInit()
 {
     // Power interface clock enable
@@ -92,4 +94,19 @@ void secToRtc(uint32_t time, RTC_type *rtc)
     rtc->year = y - a;
     rtc->month = m + (12 * a) - 9;
     rtc->date = time + 1;
+}
+
+void rtcGetTime(RTC_type *rtc)
+{
+    secToRtc(rtcTime, rtc);
+}
+
+void rtcReadTime(void)
+{
+    rtcTime = LL_RTC_TIME_Get(RTC);
+}
+
+void rtcWriteTime(uint32_t time)
+{
+    LL_RTC_TIME_SetCounter(RTC, time);
 }
