@@ -2,7 +2,7 @@
 #include "stm32f1xx_it.h"
 
 #include "input.h"
-#include "gdfb.h"
+#include "display/gdfb.h"
 #include "functions.h"
 #include "pins.h"
 #include "rtc.h"

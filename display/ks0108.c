@@ -1,7 +1,7 @@
 #include "ks0108.h"
 
-#include "pins.h"
-#include "functions.h"
+#include "../pins.h"
+#include "../functions.h"
 
 static uint8_t pins;
 

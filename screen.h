@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "gdfb.h"
+#include "display/gdfb.h"
 
 #define writeString(x)          gdWriteString(x)
 // String buffer

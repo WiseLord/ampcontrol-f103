@@ -1,6 +1,6 @@
 #include "functions.h"
 
-#include "gdfb.h"
+#include "display/gdfb.h"
 #include "rtc.h"
 #include <stm32f1xx_ll_rtc.h>
 

@@ -1,4 +1,3 @@
 build/
-.mxproject
-mx.scratch
+flash/
 *.user

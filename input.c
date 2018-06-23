@@ -1,6 +1,6 @@
 #include "input.h"
 
-#include "gdfb.h"
+#include "display/gdfb.h"
 #include "pins.h"
 
 // Previous state

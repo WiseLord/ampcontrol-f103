@@ -1,6 +1,6 @@
 #include "screen.h"
 
-#include "gdfb.h"
+#include "display/gdfb.h"
 #include "rtc.h"
 
 char strbuf[STR_BUFSIZE + 1];   // String buffer

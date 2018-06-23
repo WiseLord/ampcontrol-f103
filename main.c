@@ -1,6 +1,6 @@
 #include "main.h"
 
-#include "gdfb.h"
+#include "display/gdfb.h"
 #include "functions.h"
 #include "rtc.h"
 #include "pins.h"
