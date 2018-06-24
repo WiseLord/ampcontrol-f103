@@ -1,11 +1,19 @@
-#include "stm32f1xx.h"
-#include "stm32f1xx_it.h"
+#include "handlers.h"
+
+#include <stm32f1xx_ll_rtc.h>
+#include <stm32f1xx_ll_tim.h>
 
 #include "input.h"
 #include "display/gdfb.h"
 #include "functions.h"
 #include "pins.h"
 #include "rtc.h"
+
+void _Error_Handler(char *file, int line)
+{
+    while (1) {
+    }
+}
 
 void NMI_Handler(void)
 {

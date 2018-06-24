@@ -1,4 +1,6 @@
 Makefile
+handlers.c
+handlers.h
 m32.mk
 old.mk
 functions.c
@@ -6,14 +8,11 @@ functions.h
 input.c
 input.h
 main.c
-main.h
 pins.h
 rtc.c
 rtc.h
 screen.c
 screen.h
-stm32f1xx_it.c
-stm32f1xx_it.h
 system/startup_stm32f103xb.s
 system/system_stm32f1xx.c
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c

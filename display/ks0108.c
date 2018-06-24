@@ -147,12 +147,11 @@ void ks0108IRQ(void)
 
     if (++br >= KS0108_MAX_BRIGHTNESS)              // Loop brightness
         br = KS0108_MIN_BRIGHTNESS;
-/*
+
     if (br == _br) {
         CLR(KS0108_BCKL);                           // Turn backlight off
     } else if (br == 0)
         SET(KS0108_BCKL);                           // Turn backlight on
-*/
 }
 
 void ks0108Init()
@@ -166,22 +165,18 @@ void ks0108Init()
     ks0108SetDdrOut();
 
     // Set RW line to zero
-//#ifdef _atmega32
     OUT(KS0108_RW);
     CLR(KS0108_RW);
-//#endif
 
     CLR(KS0108_DI);
     CLR(KS0108_E);
 
     // Hardware reset
-//#ifdef _atmega32
     OUT(KS0108_RES);
     CLR(KS0108_RES);
     _delay_us(1);
     SET(KS0108_RES);
     _delay_us(1);
-//#endif
 
     // Init both controller
     KS0108_SET_CS();

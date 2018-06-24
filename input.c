@@ -3,14 +3,10 @@
 #include "display/gdfb.h"
 #include "pins.h"
 
-// Previous state
-static volatile uint8_t encPrev = ENC_NO;
-static volatile uint8_t btnPrev = BTN_NO;
-
 static volatile int8_t encRes = 0;
 static volatile int8_t encCnt = 0;
 
-static CmdBtn cmdBuf = CMD_BTN_END;
+static CmdBtn cmdBuf = BTN_NO;
 
 static uint8_t getPins()
 {
@@ -21,15 +17,21 @@ void inputInit()
 {
     encRes = -4; // TODO: Read from settings
     encCnt = 0;
-    cmdBuf = CMD_BTN_END;
+    cmdBuf = BTN_NO;
 }
 
 void inputPoll()
 {
-    static int16_t btnCnt = 0;                      // Buttons press duration value
+    // Antibounce counter
+    static int16_t btnCnt = 0;
 
-    uint8_t btnNow = getPins();
-    uint8_t encNow = btnNow;
+    // Previous state
+    static volatile uint8_t btnPrev = BTN_NO;
+    static volatile uint8_t encPrev = ENC_NO;
+
+    // Current state
+    uint16_t btnNow = getPins();
+    uint8_t encNow = btnNow & 0xFF;
 
     // If encoder event has happened, inc/dec encoder counter
     if (encRes) {
@@ -49,31 +51,12 @@ void inputPoll()
         encPrev = encNow;
     }
 
-    // If button event has happened, place it to command buffer
+    // On button event place it to command buffer
     if (btnNow) {
         if (btnNow == btnPrev) {
             btnCnt++;
             if (btnCnt == LONG_PRESS) {
-                switch (btnPrev) {
-                case BTN_D0:
-                    cmdBuf = CMD_BTN_0_LONG;
-                    break;
-                case BTN_D1:
-                    cmdBuf = CMD_BTN_1_LONG;
-                    break;
-                case BTN_D2:
-                    cmdBuf = CMD_BTN_2_LONG;
-                    break;
-                case BTN_D3:
-                    cmdBuf = CMD_BTN_3_LONG;
-                    break;
-                case BTN_D4:
-                    cmdBuf = CMD_BTN_4_LONG;
-                    break;
-                case BTN_D5:
-                    cmdBuf = CMD_BTN_5_LONG;
-                    break;
-                }
+                cmdBuf = btnPrev << 8;
             } else if (!encRes) {
                 if (btnCnt == LONG_PRESS + AUTOREPEAT) {
                     switch (btnPrev) {
@@ -92,26 +75,7 @@ void inputPoll()
         }
     } else {
         if ((btnCnt > SHORT_PRESS) && (btnCnt < LONG_PRESS)) {
-            switch (btnPrev) {
-            case BTN_D0:
-                cmdBuf = CMD_BTN_0;
-                break;
-            case BTN_D1:
-                cmdBuf = CMD_BTN_1;
-                break;
-            case BTN_D2:
-                cmdBuf = CMD_BTN_2;
-                break;
-            case BTN_D3:
-                cmdBuf = CMD_BTN_3;
-                break;
-            case BTN_D4:
-                cmdBuf = CMD_BTN_4;
-                break;
-            case BTN_D5:
-                cmdBuf = CMD_BTN_5;
-                break;
-            }
+            cmdBuf = btnPrev;
             if (!encRes) {
                 switch (btnPrev) {
                 case ENC_A:
@@ -163,7 +127,7 @@ int8_t getEncoder()
 CmdBtn getBtnCmd()
 {
     CmdBtn ret = cmdBuf;
-    cmdBuf = CMD_BTN_END;
+    cmdBuf = BTN_NO;
 
     return ret;
 }

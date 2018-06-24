@@ -24,22 +24,7 @@
 #define LONG_PRESS              600
 #define AUTOREPEAT              150
 
-typedef enum {
-    CMD_BTN_0,
-    CMD_BTN_1,
-    CMD_BTN_2,
-    CMD_BTN_3,
-    CMD_BTN_4,
-    CMD_BTN_5,
-    CMD_BTN_0_LONG,
-    CMD_BTN_1_LONG,
-    CMD_BTN_2_LONG,
-    CMD_BTN_3_LONG,
-    CMD_BTN_4_LONG,
-    CMD_BTN_5_LONG,
-
-    CMD_BTN_END
-} CmdBtn;
+typedef uint16_t CmdBtn;
 
 void inputInit();
 void inputPoll(void);

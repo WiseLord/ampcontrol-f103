@@ -1,9 +1,9 @@
 #ifndef PINS_H
 #define PINS_H
 
-#define CONCAT(x,y)         x ## y
+#include <stm32f1xx_ll_gpio.h>
 
-#include "main.h"
+#define CONCAT(x,y)         x ## y
 
 #define OUT(x)                  (LL_GPIO_SetPinMode(CONCAT(x, _Port), CONCAT(x, _Pin), LL_GPIO_MODE_OUTPUT))
 #define IN(x)                   (LL_GPIO_SetPinMode(CONCAT(x, _Port), CONCAT(x, _Pin), LL_GPIO_MODE_INPUT))

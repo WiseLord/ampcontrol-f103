@@ -1,11 +1,24 @@
-#include "main.h"
+#include <stm32f1xx_ll_bus.h>
+#include <stm32f1xx_ll_cortex.h>
+#include <stm32f1xx_ll_rcc.h>
+#include <stm32f1xx_ll_tim.h>
+#include <stm32f1xx_ll_utils.h>
 
+#include "handlers.h"
 #include "display/gdfb.h"
 #include "functions.h"
 #include "rtc.h"
 #include "pins.h"
 #include "screen.h"
 #include "input.h"
+
+#ifndef NVIC_PRIORITYGROUP_0
+#define NVIC_PRIORITYGROUP_0    ((uint32_t)0x00000007)
+#define NVIC_PRIORITYGROUP_1    ((uint32_t)0x00000006)
+#define NVIC_PRIORITYGROUP_2    ((uint32_t)0x00000005)
+#define NVIC_PRIORITYGROUP_3    ((uint32_t)0x00000004)
+#define NVIC_PRIORITYGROUP_4    ((uint32_t)0x00000003)
+#endif
 
 static void LL_Init(void)
 {
@@ -14,24 +27,23 @@ static void LL_Init(void)
 
     NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
 
-    /* System interrupt init*/
-    /* MemoryManagement_IRQn interrupt configuration */
+    // System interrupt init
+    // MemoryManagement_IRQn interrupt configuration
     NVIC_SetPriority(MemoryManagement_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
-    /* BusFault_IRQn interrupt configuration */
+    // BusFault_IRQn interrupt configuration
     NVIC_SetPriority(BusFault_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
-    /* UsageFault_IRQn interrupt configuration */
+    // UsageFault_IRQn interrupt configuration
     NVIC_SetPriority(UsageFault_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
-    /* SVCall_IRQn interrupt configuration */
+    // SVCall_IRQn interrupt configuration
     NVIC_SetPriority(SVCall_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
-    /* DebugMonitor_IRQn interrupt configuration */
+    // DebugMonitor_IRQn interrupt configuration
     NVIC_SetPriority(DebugMonitor_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
-    /* PendSV_IRQn interrupt configuration */
+    // PendSV_IRQn interrupt configuration
     NVIC_SetPriority(PendSV_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
-    /* SysTick_IRQn interrupt configuration */
+    // SysTick_IRQn interrupt configuration
     NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
 
-    /**NOJTAG: JTAG-DP Disabled and SW-DP Enabled
-    */
+    // NOJTAG: JTAG-DP Disabled and SW-DP Enabled
     LL_GPIO_AF_Remap_SWJ_NOJTAG();
 }
 
@@ -164,7 +176,7 @@ int main(void)
     NVIC_EnableIRQ (RTC_IRQn);
 
     int8_t etm = RTC_NOEDIT;
-    CmdBtn cmdBtn = CMD_BTN_END;
+    CmdBtn cmdBtn = BTN_NO;
 
     int16_t encCnt = 0;
 
@@ -176,7 +188,7 @@ int main(void)
         cmdBtn = getBtnCmd();
         encCnt += getEncoder();
 
-        if (cmdBtn == CMD_BTN_0) {
+        if (cmdBtn == BTN_D0) {
             switch (etm) {
             case RTC_NOEDIT:
                 etm = RTC_HOUR;
@@ -191,13 +203,5 @@ int main(void)
 
         gdSetXY(64, 56);
         screenNum(encCnt);
-
-    }
-}
-
-
-void _Error_Handler(char *file, int line)
-{
-    while (1) {
     }
 }
