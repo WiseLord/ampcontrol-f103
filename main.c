@@ -176,17 +176,11 @@ int main(void)
     rtcInit();
     NVIC_EnableIRQ (RTC_IRQn);
 
-    int16_t encCnt = 0;
-
     while (1) {
-        encCnt += getEncoder();
         Action action = actionGet();
 
         actionHandle(action);
 
         actionShowScreen();
-
-        gdSetXY(64, 56);
-        screenNum(encCnt);
     }
 }

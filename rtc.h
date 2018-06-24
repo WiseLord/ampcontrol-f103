@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-enum {
+typedef enum {
     RTC_HOUR,
     RTC_MIN,
     RTC_SEC,
@@ -12,7 +12,7 @@ enum {
     RTC_YEAR,
 
     RTC_NOEDIT,
-};
+} RtcMode;
 
 typedef struct {
     int8_t hour;

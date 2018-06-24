@@ -1,7 +1,6 @@
 #include "screen.h"
 
 #include "display/gdfb.h"
-#include "rtc.h"
 
 char strbuf[STR_BUFSIZE + 1];   // String buffer
 
@@ -10,10 +9,18 @@ const char STR_SPCOLSP[]        = "\x7F:\x7F";
 const char STR_YEAR20[]         = "20";
 const char STR_SP[]             = "\x7F";
 
-static void writeStringPgm(const char *string)
+const char *txtLabels[LABEL_END] = {
+    [LABEL_SUNDAY]          = "  SUNDAY  ",
+    [LABEL_MONDAY]          = "  MONDAY  ",
+    [LABEL_TUESDAY]         = " TUESDAY  ",
+    [LABEL_WEDNESDAY]       = "WEDNESDAY ",
+    [LABEL_THURSDAY]        = " THURSDAY ",
+    [LABEL_FRIDAY]          = "  FRIDAY  ",
+    [LABEL_SATURDAY]        = " SATURDAY ",
+};
+
+static void writeStringFlash(const char *string)
 {
-//    strcpy_P(strbuf, string);
-//    writeString(strbuf);
     writeString((char *)string);
 }
 
@@ -55,7 +62,7 @@ static void drawTm(RTC_type *rtc, uint8_t tm, const uint8_t *font)
     gdLoadFont(font, 1, FONT_DIR_0);
 }
 
-void screenTime(int8_t etm)
+void screenTime(RtcMode etm)
 {
     RTC_type rtc;
     rtcGetTime(&rtc);
@@ -67,28 +74,27 @@ void screenTime(int8_t etm)
     gdSetXY(4, 0);
 
     drawTm(&rtc, RTC_HOUR, font_digits_32);
-    writeStringPgm(STR_SPCOLSP);
+    writeStringFlash(STR_SPCOLSP);
     drawTm(&rtc, RTC_MIN, font_digits_32);
-    writeStringPgm(STR_SPCOLSP);
+    writeStringFlash(STR_SPCOLSP);
     drawTm(&rtc, RTC_SEC, font_digits_32);
 
     gdSetXY(9, 32);
 
     drawTm(&rtc, RTC_DATE, font_ks0066_ru_24);
-    writeStringPgm(STR_SPDOTSP);
+    writeStringFlash(STR_SPDOTSP);
     drawTm(&rtc, RTC_MONTH, font_ks0066_ru_24);
-    writeStringPgm(STR_SPDOTSP);
+    writeStringFlash(STR_SPDOTSP);
     if (rtc.etm == RTC_YEAR)
         gdLoadFont(font_ks0066_ru_24, 0, FONT_DIR_0);
-    writeStringPgm(STR_YEAR20);
-    writeStringPgm(STR_SP);
+    writeStringFlash(STR_YEAR20);
+    writeStringFlash(STR_SP);
     drawTm(&rtc, RTC_YEAR, font_ks0066_ru_24);
 
     gdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
-    gdSetXY(32, 56);
+    gdSetXY(36, 56);
 
-    writeNum(rtc.wday, 1, ' ', 10);
-//    writeStringEeprom(txtLabels[LABEL_SUNDAY + (rtcWeekDay() - 1) % 7]);
+    writeStringFlash(txtLabels[LABEL_SUNDAY + rtc.wday]);
 }
 
 

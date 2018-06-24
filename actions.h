@@ -21,6 +21,10 @@ typedef enum {
 
     ACTION_GO_STANDBY,
     ACTION_EXIT_STANDBY,
+
+    ACTION_NEXT_RTCMODE,
+
+    ACTION_END
 } Action;
 
 typedef enum {
