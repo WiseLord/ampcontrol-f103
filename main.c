@@ -11,6 +11,7 @@
 #include "pins.h"
 #include "screen.h"
 #include "input.h"
+#include "actions.h"
 
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0    ((uint32_t)0x00000007)
@@ -107,8 +108,7 @@ static void GPIO_Init(void)
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
 
     GPIO_InitStruct.Pin = DISP_CTRL1_Pin | DISP_CTRL2_Pin | DISP_STROB_Pin |
-                          DISP_RESET_Pin | DISP_RW_Pin |
-                          TEST_A_Pin | TEST_B_Pin;
+                          DISP_RESET_Pin | DISP_RW_Pin;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
@@ -163,6 +163,7 @@ int main(void)
     // Display
     gdInit();
     gdClear();
+    gdSetBrightness(GD_MAX_BRIGHTNESS / 8);
 
     // Input
     inputInit();
@@ -175,31 +176,15 @@ int main(void)
     rtcInit();
     NVIC_EnableIRQ (RTC_IRQn);
 
-    int8_t etm = RTC_NOEDIT;
-    CmdBtn cmdBtn = BTN_NO;
-
     int16_t encCnt = 0;
 
-    // Test pins
-    OUT(TEST_A);
-    OUT(TEST_B);
-
     while (1) {
-        cmdBtn = getBtnCmd();
         encCnt += getEncoder();
+        Action action = actionGet();
 
-        if (cmdBtn == BTN_D0) {
-            switch (etm) {
-            case RTC_NOEDIT:
-                etm = RTC_HOUR;
-                break;
-            default:
-                etm = RTC_NOEDIT;
-                break;
-            }
-        }
+        actionHandle(action);
 
-        screenTime(etm);
+        actionShowScreen();
 
         gdSetXY(64, 56);
         screenNum(encCnt);

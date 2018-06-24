@@ -11,7 +11,6 @@
 
 void screenTime(int8_t etm);
 
-
 void screenNum(int16_t num);
 
 #endif // SCREEN_H

@@ -1,4 +1,6 @@
 Makefile
+actions.c
+actions.h
 handlers.c
 handlers.h
 m32.mk
