@@ -19,10 +19,14 @@ typedef enum {
     ACTION_BTN4_LONG,
     ACTION_BTN5_LONG,
 
-    ACTION_GO_STANDBY,
-    ACTION_EXIT_STANDBY,
+    ACTION_DISTIME_EXPIRED,
 
-    ACTION_NEXT_RTCMODE,
+    ACTION_STANDBY,
+    ACTION_STANDBY_ENTER,
+    ACTION_STANDBY_EXIT,
+
+    ACTION_RTC,
+    ACTION_RTC_EDIT,
 
     ACTION_END
 } Action;
@@ -30,6 +34,7 @@ typedef enum {
 typedef enum {
     SCREEN_STANDBY,
     SCREEN_TIME,
+    SCREEN_SPECTRUM,
 } Screen;
 
 Action actionGet();

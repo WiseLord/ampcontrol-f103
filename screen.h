@@ -23,7 +23,6 @@ typedef enum {
 } TxtLabel;
 
 void screenTime(RtcMode etm);
-
-void screenNum(int16_t num);
+void screenSpectrum(void);
 
 #endif // SCREEN_H

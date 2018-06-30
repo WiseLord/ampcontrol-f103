@@ -9,8 +9,9 @@ TARGET = ampcontrol_f103_$(shell echo $(DISPLAY) | tr A-Z a-z)
 C_SOURCES = main.c
 C_SOURCES += input.c rtc.c
 C_SOURCES += actions.c
-C_SOURCES += handlers.c
 C_SOURCES += functions.c
+C_SOURCES += handlers.c
+C_SOURCES += swtimers.c
 
 C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
 

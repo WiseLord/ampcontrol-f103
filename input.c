@@ -13,14 +13,14 @@ static uint8_t getPins()
     return gdGetPins();
 }
 
-void inputInit()
+void inputInit(void)
 {
     encRes = -4; // TODO: Read from settings
     encCnt = 0;
     cmdBuf = BTN_NO;
 }
 
-void inputPoll()
+void inputPoll(void)
 {
     // Antibounce counter
     static int16_t btnCnt = 0;
@@ -92,7 +92,7 @@ void inputPoll()
     btnPrev = btnNow;
 }
 
-int8_t getEncoder()
+int8_t getEncoder(void)
 {
     int8_t ret = 0;
 
@@ -124,7 +124,7 @@ int8_t getEncoder()
     return ret;
 }
 
-CmdBtn getBtnCmd()
+CmdBtn getBtnCmd(void)
 {
     CmdBtn ret = cmdBuf;
     cmdBuf = BTN_NO;

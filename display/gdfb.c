@@ -1,7 +1,5 @@
 #include "gdfb.h"
 
-//#include <avr/pgmspace.h>
-
 const uint8_t *_font;
 static uint8_t fp[FONT_PARAM_END];
 

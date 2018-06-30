@@ -1,6 +1,7 @@
 #include "screen.h"
 
 #include "display/gdfb.h"
+#include "swtimers.h"
 
 char strbuf[STR_BUFSIZE + 1];   // String buffer
 
@@ -97,8 +98,10 @@ void screenTime(RtcMode etm)
     writeStringFlash(txtLabels[LABEL_SUNDAY + rtc.wday]);
 }
 
-
-void screenNum(int16_t num)
+void screenSpectrum()
 {
-    writeNum(num, 5, ' ', 10);
+    gdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
+    gdSetXY(0, 0);
+
+    writeString("Test spectrum");
 }

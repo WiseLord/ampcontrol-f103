@@ -1,10 +1,13 @@
 #include "actions.h"
 
 #include "input.h"
-#include "screen.h"
 #include "rtc.h"
+#include "screen.h"
+#include "swtimers.h"
 
 static Screen screen = SCREEN_STANDBY;
+static Screen screenDefault = SCREEN_SPECTRUM;
+
 static RtcMode rtcMode = RTC_NOEDIT;
 
 static Action actionHandleButtons()
@@ -57,30 +60,56 @@ static Action actionHandleButtons()
     return action;
 }
 
-static Action actionRemap(Action action)
+static Action actionRemapButtons(Action action)
 {
     switch (action) {
     case ACTION_BTN0:
-        switch (screen) {
-        case SCREEN_STANDBY:
-            action = ACTION_EXIT_STANDBY;
-            break;
-        default:
-            action = ACTION_GO_STANDBY;
-            break;
-        }
+        action = ACTION_STANDBY;
         break;
     case ACTION_BTN2:
         switch (screen) {
         case SCREEN_TIME:
-            action = ACTION_NEXT_RTCMODE;
+            action = ACTION_RTC_EDIT;
             break;
         default:
+            action = ACTION_RTC;
             break;
         }
         break;
     default:
         break;
+    }
+
+    return action;
+}
+
+static Action actionRemapActions(Action action)
+{
+    switch (action) {
+    case ACTION_STANDBY:
+        switch (screen) {
+        case SCREEN_STANDBY:
+            action = ACTION_STANDBY_EXIT;
+            break;
+        default:
+            action = ACTION_STANDBY_ENTER;
+            break;
+        }
+        break;
+    default:
+        break;
+    }
+
+    return action;
+}
+
+static Action actionHandleTimers()
+{
+    Action action = ACTION_NONE;
+
+    if (swTimGetDisplay() == 0) {
+        action = ACTION_DISTIME_EXPIRED;
+        swTimSetDisplay(SW_TIM_OFF);
     }
 
     return action;
@@ -91,8 +120,12 @@ Action actionGet()
     Action action = ACTION_NONE;
 
     action = actionHandleButtons();
+    action = actionRemapButtons(action);
+    action = actionRemapActions(action);
 
-    action = actionRemap(action);
+    if (action == ACTION_NONE) {
+        action = actionHandleTimers();
+    }
 
     return action;
 }
@@ -100,19 +133,34 @@ Action actionGet()
 void actionHandle(Action action)
 {
     switch (action) {
-    case ACTION_GO_STANDBY:
+    case ACTION_STANDBY_ENTER:
         screen = SCREEN_STANDBY;
         rtcMode = RTC_NOEDIT;
         gdSetBrightness(GD_MAX_BRIGHTNESS / 8);
         break;
-    case ACTION_EXIT_STANDBY:
+    case ACTION_STANDBY_EXIT:
         screen = SCREEN_TIME;
         gdSetBrightness(GD_MAX_BRIGHTNESS);
+        swTimSetDisplay(1000);
         break;
-    case ACTION_NEXT_RTCMODE:
+    case ACTION_RTC:
         screen = SCREEN_TIME;
+        swTimSetDisplay(5000);
+        break;
+    case ACTION_RTC_EDIT:
+        screen = SCREEN_TIME;
+        swTimSetDisplay(5000);
         if (++rtcMode > RTC_NOEDIT) {
             rtcMode = RTC_HOUR;
+        }
+        break;
+    case ACTION_DISTIME_EXPIRED:
+        switch (screen) {
+        case SCREEN_STANDBY:
+            break;
+        default:
+            screen = screenDefault;
+            break;
         }
         break;
     default:
@@ -122,12 +170,25 @@ void actionHandle(Action action)
 
 void actionShowScreen()
 {
+    static Screen screenPrev = SCREEN_STANDBY;
+
+    // Clear display if screen mode has changed
+    if (screen != screenPrev) {
+        gdClear();
+    }
+
     switch (screen) {
     case SCREEN_STANDBY:
     case SCREEN_TIME:
         screenTime(rtcMode);
         break;
+    case SCREEN_SPECTRUM:
+        screenSpectrum();
+        break;
     default:
         break;
     }
+
+    // Save current screen as previous
+    screenPrev = screen;
 }

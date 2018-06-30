@@ -26,10 +26,10 @@
 
 typedef uint16_t CmdBtn;
 
-void inputInit();
+void inputInit(void);
 void inputPoll(void);
 
-int8_t getEncoder();
-CmdBtn getBtnCmd();
+int8_t getEncoder(void);
+CmdBtn getBtnCmd(void);
 
 #endif // INPUT_H

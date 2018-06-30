@@ -3,11 +3,10 @@
 #include <stm32f1xx_ll_rtc.h>
 #include <stm32f1xx_ll_tim.h>
 
-#include "input.h"
 #include "display/gdfb.h"
-#include "functions.h"
-#include "pins.h"
+#include "input.h"
 #include "rtc.h"
+#include "swtimers.h"
 
 void _Error_Handler(char *file, int line)
 {
@@ -58,6 +57,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
     inputPoll();
+    swTimUpdate();
 }
 
 void RTC_IRQHandler(void)
