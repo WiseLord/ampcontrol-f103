@@ -12,48 +12,33 @@ static RtcMode rtcMode = RTC_NOEDIT;
 
 static Action actionHandleButtons()
 {
-    Action action = ACTION_NONE;
+    Action action = {ACTION_NONE, ACTVAL_BTN_SHORT};
 
     CmdBtn cmdBtn = getBtnCmd();
+
+    if (cmdBtn & 0xFF00) {
+        cmdBtn >>= 8;
+        action.value = ACTVAL_BTN_LONG;
+    }
+
     switch (cmdBtn) {
     case BTN_D0:
-        action = ACTION_BTN0;
+        action.param = ACTION_BTN0;
         break;
     case BTN_D1:
-        action = ACTION_BTN1;
+        action.param = ACTION_BTN1;
         break;
     case BTN_D2:
-        action = ACTION_BTN2;
+        action.param = ACTION_BTN2;
         break;
     case BTN_D3:
-        action = ACTION_BTN3;
+        action.param = ACTION_BTN3;
         break;
     case BTN_D4:
-        action = ACTION_BTN4;
+        action.param = ACTION_BTN4;
         break;
     case BTN_D5:
-        action = ACTION_BTN5;
-        break;
-    case BTN_D0 << 8:
-        action = ACTION_BTN0_LONG;
-        break;
-    case BTN_D1 << 8:
-        action = ACTION_BTN1_LONG;
-        break;
-    case BTN_D2 << 8:
-        action = ACTION_BTN2_LONG;
-        break;
-    case BTN_D3 << 8:
-        action = ACTION_BTN3_LONG;
-        break;
-    case BTN_D4 << 8:
-        action = ACTION_BTN4_LONG;
-        break;
-    case BTN_D5 << 8:
-        action = ACTION_BTN5_LONG;
-        break;
-    default:
-        action = ACTION_NONE;
+        action.param = ACTION_BTN5;
         break;
     }
 
@@ -62,21 +47,29 @@ static Action actionHandleButtons()
 
 static Action actionRemapButtons(Action action)
 {
-    switch (action) {
+    switch (action.param) {
     case ACTION_BTN0:
-        action = ACTION_STANDBY;
-        break;
-    case ACTION_BTN2:
-        switch (screen) {
-        case SCREEN_TIME:
-            action = ACTION_RTC_EDIT;
-            break;
-        default:
-            action = ACTION_RTC;
+        switch (action.value) {
+        case ACTVAL_BTN_SHORT:
+            action.param = ACTION_STANDBY;
+            action.value = ACTVAL_STANDBY_SWITCH;
             break;
         }
         break;
-    default:
+    case ACTION_BTN2:
+        switch (action.value) {
+        case ACTVAL_BTN_SHORT:
+            action.param = ACTION_RTC;
+            switch (screen) {
+            case SCREEN_TIME:
+                action.value = ACTVAL_RTC_EDIT;
+                break;
+            default:
+                action.value = ACTVAL_RTC_SHOW;
+                break;
+            }
+            break;
+        }
         break;
     }
 
@@ -85,15 +78,17 @@ static Action actionRemapButtons(Action action)
 
 static Action actionRemapActions(Action action)
 {
-    switch (action) {
+    switch (action.param) {
     case ACTION_STANDBY:
-        switch (screen) {
-        case SCREEN_STANDBY:
-            action = ACTION_STANDBY_EXIT;
-            break;
-        default:
-            action = ACTION_STANDBY_ENTER;
-            break;
+        if (action.value == ACTVAL_STANDBY_SWITCH) {
+            switch (screen) {
+            case SCREEN_STANDBY:
+                action.value = ACTVAL_STANDBY_EXIT;
+                break;
+            default:
+                action.value = ACTVAL_STANDBY_ENTER;
+                break;
+            }
         }
         break;
     default:
@@ -105,10 +100,10 @@ static Action actionRemapActions(Action action)
 
 static Action actionHandleTimers()
 {
-    Action action = ACTION_NONE;
+    Action action = {ACTION_NONE, 0};
 
     if (swTimGetDisplay() == 0) {
-        action = ACTION_DISTIME_EXPIRED;
+        action.param = ACTION_DISPTIME;
         swTimSetDisplay(SW_TIM_OFF);
     }
 
@@ -117,13 +112,13 @@ static Action actionHandleTimers()
 
 Action actionGet()
 {
-    Action action = ACTION_NONE;
+    Action action = {ACTION_NONE, 0};
 
     action = actionHandleButtons();
     action = actionRemapButtons(action);
     action = actionRemapActions(action);
 
-    if (action == ACTION_NONE) {
+    if (action.param == ACTION_NONE) {
         action = actionHandleTimers();
     }
 
@@ -132,29 +127,37 @@ Action actionGet()
 
 void actionHandle(Action action)
 {
-    switch (action) {
-    case ACTION_STANDBY_ENTER:
-        screen = SCREEN_STANDBY;
-        rtcMode = RTC_NOEDIT;
-        gdSetBrightness(GD_MAX_BRIGHTNESS / 8);
-        break;
-    case ACTION_STANDBY_EXIT:
-        screen = SCREEN_TIME;
-        gdSetBrightness(GD_MAX_BRIGHTNESS);
-        swTimSetDisplay(1000);
-        break;
-    case ACTION_RTC:
-        screen = SCREEN_TIME;
-        swTimSetDisplay(5000);
-        break;
-    case ACTION_RTC_EDIT:
-        screen = SCREEN_TIME;
-        swTimSetDisplay(5000);
-        if (++rtcMode > RTC_NOEDIT) {
-            rtcMode = RTC_HOUR;
+    switch (action.param) {
+    case ACTION_STANDBY:
+        switch (action.value) {
+        case ACTVAL_STANDBY_ENTER:
+            screen = SCREEN_STANDBY;
+            rtcMode = RTC_NOEDIT;
+            gdSetBrightness(GD_MAX_BRIGHTNESS / 8);
+            break;
+        case ACTVAL_STANDBY_EXIT:
+            screen = SCREEN_TIME;
+            gdSetBrightness(GD_MAX_BRIGHTNESS);
+            swTimSetDisplay(1000);
+            break;
         }
         break;
-    case ACTION_DISTIME_EXPIRED:
+    case ACTION_RTC:
+        switch (action.value) {
+        case ACTVAL_RTC_SHOW:
+            screen = SCREEN_TIME;
+            swTimSetDisplay(5000);
+            break;
+        case ACTVAL_RTC_EDIT:
+            screen = SCREEN_TIME;
+            swTimSetDisplay(5000);
+            if (++rtcMode > RTC_NOEDIT) {
+                rtcMode = RTC_HOUR;
+            }
+            break;
+        }
+        break;
+    case ACTION_DISPTIME:
         switch (screen) {
         case SCREEN_STANDBY:
             break;
@@ -162,8 +165,6 @@ void actionHandle(Action action)
             screen = screenDefault;
             break;
         }
-        break;
-    default:
         break;
     }
 }

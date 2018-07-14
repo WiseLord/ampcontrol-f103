@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-typedef enum {
+enum {
     ACTION_NONE,
 
     ACTION_BTN0,
@@ -12,23 +12,29 @@ typedef enum {
     ACTION_BTN3,
     ACTION_BTN4,
     ACTION_BTN5,
-    ACTION_BTN0_LONG,
-    ACTION_BTN1_LONG,
-    ACTION_BTN2_LONG,
-    ACTION_BTN3_LONG,
-    ACTION_BTN4_LONG,
-    ACTION_BTN5_LONG,
-
-    ACTION_DISTIME_EXPIRED,
 
     ACTION_STANDBY,
-    ACTION_STANDBY_ENTER,
-    ACTION_STANDBY_EXIT,
 
     ACTION_RTC,
-    ACTION_RTC_EDIT,
 
-    ACTION_END
+    ACTION_DISPTIME,
+};
+
+enum {
+    ACTVAL_BTN_SHORT = 0,
+    ACTVAL_BTN_LONG,
+
+    ACTVAL_STANDBY_SWITCH = 0,
+    ACTVAL_STANDBY_ENTER,
+    ACTVAL_STANDBY_EXIT,
+
+    ACTVAL_RTC_SHOW = 0,
+    ACTVAL_RTC_EDIT,
+};
+
+typedef struct {
+    uint8_t param;
+    int8_t value;
 } Action;
 
 typedef enum {
