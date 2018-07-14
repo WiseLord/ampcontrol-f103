@@ -9,6 +9,25 @@
 
 static uint32_t rtcTime;
 
+const static RTC_type rtcMin = { 0,  0, 0,  1,  1,  1, 0, RTC_NOEDIT};
+const static RTC_type rtcMax = {23, 59, 0, 31, 12, 99, 0, RTC_NOEDIT};
+
+static uint8_t rtcDaysInMonth(RTC_type *rtc)
+{
+    uint8_t ret = rtc->month;
+
+    if (ret == 2) {
+        ret = rtc->year & 0x03;
+        ret = (ret ? 28 : 29);
+    } else {
+        if (ret > 7)
+            ret++;
+        ret |= 30;
+    }
+
+    return ret;
+}
+
 void rtcInit()
 {
     // Power interface clock enable
@@ -109,4 +128,29 @@ void rtcReadTime(void)
 void rtcWriteTime(uint32_t time)
 {
     LL_RTC_TIME_SetCounter(RTC, time);
+}
+
+void rtcChangeTime(RtcMode mode, int8_t diff)
+{
+    RTC_type rtc;
+    secToRtc(rtcTime, &rtc);
+
+    int8_t *time = (int8_t *)&rtc + mode;
+    int8_t timeMax = *((int8_t *)&rtcMax + mode);
+    int8_t timeMin = *((int8_t *)&rtcMin + mode);
+
+    if (mode == RTC_DATE)
+        timeMax = rtcDaysInMonth(&rtc);
+
+    *time += diff;
+
+    if (*time > timeMax)
+        *time = timeMin;
+    if (*time < timeMin)
+        *time = timeMax;
+
+    uint32_t newTime = rtcToSec(&rtc);
+
+    rtcTime = newTime;
+    rtcWriteTime(newTime);
 }

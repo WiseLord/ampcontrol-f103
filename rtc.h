@@ -35,4 +35,6 @@ void rtcGetTime(RTC_type *rtc);
 void rtcReadTime(void);
 void rtcWriteTime(uint32_t time);
 
+void rtcChangeTime(RtcMode mode, int8_t diff);
+
 #endif // RTC_H

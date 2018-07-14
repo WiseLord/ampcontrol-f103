@@ -62,13 +62,31 @@ static Action actionRemapButtons(Action action)
             action.param = ACTION_RTC;
             switch (screen) {
             case SCREEN_TIME:
-                action.value = ACTVAL_RTC_EDIT;
+                action.value = ACTVAL_RTC_MODE;
                 break;
             default:
                 action.value = ACTVAL_RTC_SHOW;
                 break;
             }
             break;
+        }
+        break;
+    case ACTION_BTN4:
+        switch (action.value) {
+        case ACTVAL_BTN_SHORT:
+            if (screen == SCREEN_TIME && rtcMode != RTC_NOEDIT) {
+                action.param = ACTION_RTC;
+                action.value = ACTVAL_RTC_DEC;
+            }
+        }
+        break;
+    case ACTION_BTN5:
+        switch (action.value) {
+        case ACTVAL_BTN_SHORT:
+            if (screen == SCREEN_TIME && rtcMode != RTC_NOEDIT) {
+                action.param = ACTION_RTC;
+                action.value = ACTVAL_RTC_INC;
+            }
         }
         break;
     }
@@ -148,16 +166,27 @@ void actionHandle(Action action)
             screen = SCREEN_TIME;
             swTimSetDisplay(5000);
             break;
-        case ACTVAL_RTC_EDIT:
+        case ACTVAL_RTC_MODE:
             screen = SCREEN_TIME;
             swTimSetDisplay(5000);
             if (++rtcMode > RTC_NOEDIT) {
                 rtcMode = RTC_HOUR;
             }
             break;
+        case ACTVAL_RTC_DEC:
+            screen = SCREEN_TIME;
+            swTimSetDisplay(5000);
+            rtcChangeTime(rtcMode, -1);
+            break;
+        case ACTVAL_RTC_INC:
+            screen = SCREEN_TIME;
+            swTimSetDisplay(5000);
+            rtcChangeTime(rtcMode, +1);
+            break;
         }
         break;
     case ACTION_DISPTIME:
+        rtcMode = RTC_NOEDIT;
         switch (screen) {
         case SCREEN_STANDBY:
             break;

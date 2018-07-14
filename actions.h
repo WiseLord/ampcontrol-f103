@@ -29,7 +29,9 @@ enum {
     ACTVAL_STANDBY_EXIT,
 
     ACTVAL_RTC_SHOW = 0,
-    ACTVAL_RTC_EDIT,
+    ACTVAL_RTC_MODE,
+    ACTVAL_RTC_INC,
+    ACTVAL_RTC_DEC,
 };
 
 typedef struct {
