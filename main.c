@@ -177,9 +177,9 @@ int main(void)
     NVIC_EnableIRQ (RTC_IRQn);
 
     while (1) {
-        Action action = actionGet();
+        actionGet();
 
-        actionHandle(action);
+        actionHandle();
 
         actionShowScreen();
     }

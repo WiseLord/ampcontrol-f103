@@ -11,16 +11,10 @@
 #define STR_BUFSIZE             20
 
 typedef enum {
-    LABEL_SUNDAY,
-    LABEL_MONDAY,
-    LABEL_TUESDAY,
-    LABEL_WEDNESDAY,
-    LABEL_THURSDAY,
-    LABEL_FRIDAY,
-    LABEL_SATURDAY,
-
-    LABEL_END
-} TxtLabel;
+    SCREEN_STANDBY,
+    SCREEN_TIME,
+    SCREEN_SPECTRUM,
+} Screen;
 
 void screenTime(RtcMode etm);
 void screenSpectrum(void);

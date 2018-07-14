@@ -10,6 +10,18 @@ const char STR_SPCOLSP[]        = "\x7F:\x7F";
 const char STR_YEAR20[]         = "20";
 const char STR_SP[]             = "\x7F";
 
+typedef enum {
+    LABEL_SUNDAY,
+    LABEL_MONDAY,
+    LABEL_TUESDAY,
+    LABEL_WEDNESDAY,
+    LABEL_THURSDAY,
+    LABEL_FRIDAY,
+    LABEL_SATURDAY,
+
+    LABEL_END
+} TxtLabel;
+
 const char *txtLabels[LABEL_END] = {
     [LABEL_SUNDAY]          = "  SUNDAY  ",
     [LABEL_MONDAY]          = "  MONDAY  ",
