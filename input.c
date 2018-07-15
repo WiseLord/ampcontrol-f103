@@ -8,7 +8,7 @@ static volatile int8_t encCnt = 0;
 
 static CmdBtn cmdBuf = BTN_NO;
 
-static uint8_t getPins()
+static uint8_t getPins(void)
 {
     return gdGetPins();
 }

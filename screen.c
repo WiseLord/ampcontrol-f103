@@ -1,7 +1,11 @@
 #include "screen.h"
 
 #include "display/gdfb.h"
+#include "display.h"
+#include "actions.h"
 #include "swtimers.h"
+
+static Screen screen = SCREEN_STANDBY;
 
 char strbuf[STR_BUFSIZE + 1];   // String buffer
 
@@ -19,6 +23,8 @@ typedef enum {
     LABEL_FRIDAY,
     LABEL_SATURDAY,
 
+    LABEL_BRIGNTNESS,
+
     LABEL_END
 } TxtLabel;
 
@@ -30,6 +36,8 @@ const char *txtLabels[LABEL_END] = {
     [LABEL_THURSDAY]        = " THURSDAY ",
     [LABEL_FRIDAY]          = "  FRIDAY  ",
     [LABEL_SATURDAY]        = " SATURDAY ",
+
+    [LABEL_BRIGNTNESS]      = "Brightness",
 };
 
 static void writeStringFlash(const char *string)
@@ -75,6 +83,18 @@ static void drawTm(RTC_type *rtc, uint8_t tm, const uint8_t *font)
     gdLoadFont(font, 1, FONT_DIR_0);
 }
 
+
+void screenSet(Screen value)
+{
+    screen = value;
+}
+
+Screen screenGet()
+{
+    return screen;
+}
+
+
 void screenTime(RtcMode etm)
 {
     RTC_type rtc;
@@ -110,10 +130,23 @@ void screenTime(RtcMode etm)
     writeStringFlash(txtLabels[LABEL_SUNDAY + rtc.wday]);
 }
 
-void screenSpectrum()
+void screenSpectrum(void)
 {
     gdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
     gdSetXY(0, 0);
 
-    writeString("Test spectrum");
+    writeString("Spectrum screen");
+}
+
+void screenBrightness()
+{
+    DispParam dp;
+
+    dp.label = txtLabels[LABEL_BRIGNTNESS];
+    dp.value = displayGetBrightness(AMODE_BRIGHTNESS_WORK);
+    dp.min = MIN_BRIGHTNESS;
+    dp.max = MAX_BRIGHTNESS;
+    dp.icon = ICON24_BRIGHTNESS;
+
+    displayShowParam(&dp);
 }

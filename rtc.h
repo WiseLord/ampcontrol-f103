@@ -25,7 +25,7 @@ typedef struct {
     int8_t etm;
 } RTC_type;
 
-void rtcInit();
+void rtcInit(void);
 
 uint32_t rtcToSec(RTC_type *rtc);
 void secToRtc(uint32_t time, RTC_type *rtc);

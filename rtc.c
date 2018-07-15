@@ -28,7 +28,7 @@ static uint8_t rtcDaysInMonth(RTC_type *rtc)
     return ret;
 }
 
-void rtcInit()
+void rtcInit(void)
 {
     // Power interface clock enable
     LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);

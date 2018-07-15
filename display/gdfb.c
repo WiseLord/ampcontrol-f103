@@ -133,7 +133,7 @@ void gdSetXY(uint8_t x, uint8_t y)
     _y = y;
 }
 
-uint8_t gdGetX()
+uint8_t gdGetX(void)
 {
     return _x;
 }

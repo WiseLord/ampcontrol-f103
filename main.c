@@ -4,14 +4,15 @@
 #include <stm32f1xx_ll_tim.h>
 #include <stm32f1xx_ll_utils.h>
 
-#include "handlers.h"
 #include "display/gdfb.h"
-#include "functions.h"
-#include "rtc.h"
-#include "pins.h"
-#include "screen.h"
-#include "input.h"
 #include "actions.h"
+#include "display.h"
+#include "functions.h"
+#include "handlers.h"
+#include "input.h"
+#include "pins.h"
+#include "rtc.h"
+#include "screen.h"
 
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0    ((uint32_t)0x00000007)
@@ -164,6 +165,7 @@ int main(void)
     gdInit();
     gdClear();
     gdSetBrightness(GD_MAX_BRIGHTNESS / 8);
+    displayInit();
 
     // Input
     inputInit();

@@ -95,7 +95,7 @@ static void ks0108WriteCmd(uint8_t cmd)
     CLR(KS0108_E);
 }
 
-void ks0108IRQ(void)
+void ks0108IRQ()
 {
     static uint8_t i;
     static uint8_t j;

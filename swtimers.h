@@ -8,6 +8,6 @@
 void swTimUpdate(void);
 
 void swTimSetDisplay(int16_t value);
-int16_t swTimGetDisplay();
+int16_t swTimGetDisplay(void);
 
 #endif // SWTIMERS_H

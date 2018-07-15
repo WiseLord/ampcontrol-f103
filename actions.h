@@ -18,6 +18,8 @@ enum {
     ATYPE_RTC,
 
     ATYPE_DISPTIME,
+
+    ATYPE_BRIGHTNESS
 };
 
 enum {
@@ -31,6 +33,9 @@ enum {
     AMODE_RTC_SHOW = 0,
     AMODE_RTC_MODE,
     AMODE_RTC_CHANGE,
+
+    AMODE_BRIGHTNESS_WORK = 0,
+    AMODE_BRIGNTNESS_STANDBY,
 };
 
 typedef struct {
@@ -39,8 +44,8 @@ typedef struct {
     int16_t value;
 } Action;
 
-void actionGet();
-void actionHandle();
-void actionShowScreen();
+void actionGet(void);
+void actionHandle(void);
+void actionShowScreen(void);
 
 #endif // ACTIONS_H

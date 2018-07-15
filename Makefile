@@ -34,7 +34,7 @@ else ifeq "$(DISPLAY)" "SH1106"
 else
   C_SOURCES += display/gdfb.c display/ks0108.c $(FONTS_SRC) $(ICONS_SRC)
 endif
-C_SOURCES += screen.c
+C_SOURCES += display.c screen.c
 C_DEFS += -D_$(DISPLAY)
 
 C_SOURCES += \
@@ -67,7 +67,7 @@ DEBUG = 1
 FPU =
 FLOAT-ABI =
 MCU = -mcpu=cortex-m3 -mthumb $(FPU) $(FLOAT-ABI)
-OPT = -Og -ffunction-sections -fdata-sections
+OPT = -Og -fshort-enums -ffunction-sections -fdata-sections
 WARN = -Wall -Werror
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) $(WARN)
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) $(WARN)

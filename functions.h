@@ -1,7 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include <stdint.h>
+#include <inttypes.h>
 
 void _delay_us(uint32_t us);
 void _delay_ms(uint32_t ms);
