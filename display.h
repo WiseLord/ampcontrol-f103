@@ -3,6 +3,8 @@
 
 #include <inttypes.h>
 
+#include "rtc.h"
+
 #define MIN_BRIGHTNESS          GD_MIN_BRIGHTNESS
 #define MAX_BRIGHTNESS          GD_MAX_BRIGHTNESS
 
@@ -21,6 +23,7 @@ void displayInit();
 int8_t displayGetBrightness(uint8_t mode);
 void displayChangeBrighness(uint8_t mode, int8_t diff);
 
+void displayShowTime(RTC_type *rtc, char *wday);
 void displayShowParam(DispParam *dp);
 
 #endif // DISPLAY_H

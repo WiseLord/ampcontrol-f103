@@ -8,6 +8,11 @@ static int8_t brWork;
 
 static char strbuf[STR_BUFSIZE + 1];   // String buffer
 
+static void displayWriteChar(char code)
+{
+    gdWriteChar(code);
+}
+
 static void displayWriteString(char *string)
 {
     gdWriteString(string);
@@ -83,6 +88,25 @@ static void displayShowIcon(uint8_t icon)
     }
 }
 
+static void displayTm(RTC_type *rtc, uint8_t tm, const uint8_t *font)
+{
+    char ltSp = font[FONT_LTSPPOS];
+    int8_t time = *((int8_t *)rtc + tm);
+
+    gdLoadFont(font, 1, FONT_DIR_0);
+    displayWriteChar(ltSp);
+    gdLoadFont(font, rtc->etm == tm ? 0 : 1, FONT_DIR_0);
+    displayWriteChar(ltSp);
+    if (tm == RTC_YEAR) {
+        displayWriteString("20");
+        displayWriteChar(ltSp);
+    }
+    displayWriteNum(time, 2, '0', 10);
+    displayWriteChar(ltSp);
+    gdLoadFont(font, 1, FONT_DIR_0);
+    displayWriteChar(ltSp);
+}
+
 void displayInit()
 {
     // TODO: Read from backup memory
@@ -113,6 +137,30 @@ void displayChangeBrighness(uint8_t mode, int8_t diff)
         *br = MIN_BRIGHTNESS;
 
     gdSetBrightness(*br);
+}
+
+
+void displayShowTime(RTC_type *rtc, char *wday)
+{
+    gdSetXY(4, 0);
+
+    displayTm(rtc, RTC_HOUR, font_digits_32);
+    displayWriteChar(':');
+    displayTm(rtc, RTC_MIN, font_digits_32);
+    displayWriteChar(':');
+    displayTm(rtc, RTC_SEC, font_digits_32);
+
+    gdSetXY(5, 32);
+
+    displayTm(rtc, RTC_DATE, font_ks0066_ru_24);
+    displayWriteChar('.');
+    displayTm(rtc, RTC_MONTH, font_ks0066_ru_24);
+    displayWriteChar('.');
+    displayTm(rtc, RTC_YEAR, font_ks0066_ru_24);
+
+    gdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
+    gdSetXY(36, 56);
+    displayWriteString(wday);
 }
 
 void displayShowParam(DispParam *dp)

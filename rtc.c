@@ -122,7 +122,7 @@ void rtcGetTime(RTC_type *rtc)
 
 void rtcReadTime(void)
 {
-    rtcTime = LL_RTC_TIME_Get(RTC);
+    rtcTime = LL_RTC_TIME_Get(RTC) + 1;
 }
 
 void rtcWriteTime(uint32_t time)
