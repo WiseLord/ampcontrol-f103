@@ -3,6 +3,8 @@
 
 #include <stm32f1xx_ll_gpio.h>
 
+void pinsInit(void);
+
 #define CONCAT(x,y)         x ## y
 
 #define OUT(x)                  (LL_GPIO_SetPinMode(CONCAT(x, _Port), CONCAT(x, _Pin), LL_GPIO_MODE_OUTPUT))

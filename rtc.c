@@ -59,6 +59,8 @@ void rtcInit(void)
     }
 
     LL_RTC_EnableIT_SEC(RTC);
+
+    NVIC_EnableIRQ (RTC_IRQn);
 }
 
 uint32_t rtcToSec(RTC_type *rtc)

@@ -3,7 +3,6 @@
 #include "display/gdfb.h"
 #include "display.h"
 #include "actions.h"
-#include "swtimers.h"
 
 static Screen screen = SCREEN_STANDBY;
 

@@ -4,7 +4,7 @@
 #include "input.h"
 #include "rtc.h"
 #include "screen.h"
-#include "swtimers.h"
+#include "timers.h"
 
 static Screen screenDefault = SCREEN_SPECTRUM;
 

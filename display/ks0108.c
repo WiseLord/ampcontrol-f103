@@ -156,23 +156,13 @@ void ks0108IRQ()
 
 void ks0108Init()
 {
-    // Set control and data lines as outputs
-    OUT(KS0108_DI);
-    OUT(KS0108_E);
-    OUT(KS0108_CS1);
-    OUT(KS0108_CS2);
-
-    ks0108SetDdrOut();
-
     // Set RW line to zero
-    OUT(KS0108_RW);
     CLR(KS0108_RW);
 
     CLR(KS0108_DI);
     CLR(KS0108_E);
 
     // Hardware reset
-    OUT(KS0108_RES);
     CLR(KS0108_RES);
     _delay_us(1);
     SET(KS0108_RES);

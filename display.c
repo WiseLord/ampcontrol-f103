@@ -109,9 +109,14 @@ static void displayTm(RTC_type *rtc, uint8_t tm, const uint8_t *font)
 
 void displayInit()
 {
+    gdInit();
+    gdClear();
+
     // TODO: Read from backup memory
-    brStby = GD_MAX_BRIGHTNESS / 8;
+    brStby = GD_MAX_BRIGHTNESS / 16;
     brWork = GD_MAX_BRIGHTNESS;
+
+    displayChangeBrighness(AMODE_BRIGNTNESS_STANDBY, brStby);
 }
 
 int8_t displayGetBrightness(uint8_t mode)

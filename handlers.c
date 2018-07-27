@@ -6,7 +6,7 @@
 #include "display/gdfb.h"
 #include "input.h"
 #include "rtc.h"
-#include "swtimers.h"
+#include "timers.h"
 
 void _Error_Handler(char *file, int line)
 {
