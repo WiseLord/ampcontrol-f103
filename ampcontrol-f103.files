@@ -1,4 +1,6 @@
 pins.c
+spectrum.c
+spectrum.h
 timers.h
 timers.c
 Makefile

@@ -6,9 +6,6 @@
 #include "display/gdfb.h"
 #include "rtc.h"
 
-#define writeString(x)          gdWriteString(x)
-// String buffer
-
 typedef enum {
     SCREEN_STANDBY,
     SCREEN_TIME,

@@ -11,6 +11,7 @@
 #include "input.h"
 #include "pins.h"
 #include "timers.h"
+#include "spectrum.h"
 
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0    ((uint32_t)0x00000007)
@@ -83,6 +84,8 @@ int main(void)
     displayInit();
     inputInit();
     rtcInit();
+
+    spInit();
 
     while (1) {
         actionGet();

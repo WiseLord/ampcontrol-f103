@@ -22,4 +22,7 @@ void SysTick_Handler(void);
 void RTC_IRQHandler(void);
 void TIM2_IRQHandler(void);
 
+void ADC1_2_IRQHandler(void);
+void DMA1_Channel1_IRQHandler(void);
+
 #endif // STM32F1XX_IT_H

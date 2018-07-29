@@ -5,6 +5,7 @@
 #include "rtc.h"
 #include "screen.h"
 #include "timers.h"
+#include "spectrum.h"
 
 static Screen screenDefault = SCREEN_SPECTRUM;
 
@@ -65,6 +66,10 @@ static void actionRemapButtons(void)
             action.mode = AMODE_BRIGHTNESS_WORK;
             break;
         }
+        break;
+    // For test purposes
+    case ATYPE_BTN1:
+        spConvertADC();
         break;
     case ATYPE_BTN2:
         switch (action.mode) {

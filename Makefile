@@ -14,6 +14,7 @@ C_SOURCES += actions.c
 C_SOURCES += functions.c
 C_SOURCES += handlers.c
 C_SOURCES += timers.c
+C_SOURCES += spectrum.c
 
 C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
 

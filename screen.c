@@ -3,6 +3,7 @@
 #include "display/gdfb.h"
 #include "display.h"
 #include "actions.h"
+#include "spectrum.h"
 
 static Screen screen = SCREEN_STANDBY;
 
@@ -54,10 +55,9 @@ void screenTime(RtcMode etm)
 
 void screenSpectrum(void)
 {
-    gdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
-    gdSetXY(0, 0);
+    uint16_t *spData = spGetADC();
 
-    writeString("Spectrum screen");
+    displayShowSpectrum(spData);
 }
 
 void screenBrightness()
