@@ -9,12 +9,6 @@
 #include "rtc.h"
 #include "timers.h"
 
-void _Error_Handler(char *file, int line)
-{
-    while (1) {
-    }
-}
-
 void NMI_Handler(void)
 {
 }

@@ -6,10 +6,6 @@
 #include "stm32f1xx_ll_gpio.h"
 #include "stm32f1xx_ll_exti.h"
 
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
-
-void _Error_Handler(char *, int);
-
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void MemManage_Handler(void);

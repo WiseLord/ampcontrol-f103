@@ -4,6 +4,7 @@
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_dma.h>
 #include <stm32f1xx_ll_gpio.h>
+#include <stm32f1xx_ll_rcc.h>
 
 #define ADC_DELAY_ENABLE_CALIB_CPU_CYCLES  (LL_ADC_DELAY_ENABLE_CALIB_ADC_CYCLES * 32)
 
@@ -53,6 +54,9 @@ static void spInitDMA(void)
 
 static void spInitADC(void)
 {
+    // Configure ADC clock
+    LL_RCC_SetADCClockSource(LL_RCC_ADC_CLKSRC_PCLK2_DIV_6);
+
     // Enable GPIO Clock
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
 
