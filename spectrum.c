@@ -8,8 +8,16 @@
 
 #define ADC_DELAY_ENABLE_CALIB_CPU_CYCLES  (LL_ADC_DELAY_ENABLE_CALIB_ADC_CYCLES * 32)
 
-#define ADC_CONVERTED_DATA_BUFFER_SIZE   ((uint32_t)   2)
-__IO uint16_t spBuf[ADC_CONVERTED_DATA_BUFFER_SIZE];
+#define DMA_BUF_SIZE            2
+static volatile uint16_t bufDMA[DMA_BUF_SIZE];
+
+#define FFT_SIZE    64
+static uint16_t fftBufL[FFT_SIZE];
+static uint16_t fftBufR[FFT_SIZE];
+static volatile uint8_t fftIndex = 0;
+
+//static int16_t fftRe[FFT_SIZE];
+//static int16_t fftIm[FFT_SIZE];
 
 static void spInitDMA(void)
 {
@@ -35,13 +43,13 @@ static void spInitDMA(void)
     LL_DMA_ConfigAddresses(DMA1,
                            LL_DMA_CHANNEL_1,
                            LL_ADC_DMA_GetRegAddr(ADC1, LL_ADC_DMA_REG_REGULAR_DATA),
-                           (uint32_t)&spBuf,
+                           (uint32_t)&bufDMA,
                            LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
 
     // Set DMA transfer size
     LL_DMA_SetDataLength(DMA1,
                          LL_DMA_CHANNEL_1,
-                         ADC_CONVERTED_DATA_BUFFER_SIZE);
+                         DMA_BUF_SIZE);
 
     // Enable DMA transfer interruption: transfer complete
     LL_DMA_EnableIT_TC(DMA1,
@@ -71,8 +79,7 @@ static void spInitADC(void)
     LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_0, LL_GPIO_MODE_ANALOG);
     LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_1, LL_GPIO_MODE_ANALOG);
 
-    if (LL_ADC_IsEnabled(ADC1) == 0)
-    {
+    if (LL_ADC_IsEnabled(ADC1) == 0) {
         // Set ADC conversion data alignment
         LL_ADC_SetDataAlignment(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
 
@@ -104,10 +111,6 @@ static void spInitADC(void)
         LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_9, LL_ADC_SAMPLINGTIME_41CYCLES_5);
     }
 
-    // Enable interruption ADC group regular end of sequence conversions
-    LL_ADC_EnableIT_EOS(ADC1);
-
-
     __IO uint32_t wait_loop_index = 0;
 
     if (LL_ADC_IsEnabled(ADC1) == 0) {
@@ -133,9 +136,17 @@ void spInit()
     spInitADC();
 }
 
-uint16_t *spGetADC()
+void spGetADC(uint16_t **dataL, uint16_t **dataR)
 {
-    return (uint16_t *)spBuf;
+//    uint8_t oft = fftIndex;
+
+//    for (uint8_t i = 0; i < FFT_SIZE; i++) {
+//        fftIm[i] = fftBufL[(i + oft) % FFT_SIZE];
+//    }
+
+
+    *dataL = fftBufL;
+    *dataR = fftBufR;
 }
 
 void spConvertADC()
@@ -145,3 +156,10 @@ void spConvertADC()
     }
 }
 
+void spUpdate()
+{
+    fftBufL[fftIndex] = bufDMA[0];
+    fftBufR[fftIndex] = bufDMA[1];
+    if (++fftIndex >= FFT_SIZE)
+        fftIndex = 0;
+}

@@ -55,9 +55,12 @@ void screenTime(RtcMode etm)
 
 void screenSpectrum(void)
 {
-    uint16_t *spData = spGetADC();
+    uint16_t *dataL;
+    uint16_t *dataR;
 
-    displayShowSpectrum(spData);
+    spGetADC(&dataL, &dataR);
+
+    displayShowSpectrum(dataL, dataR);
 }
 
 void screenBrightness()

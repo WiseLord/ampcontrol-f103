@@ -69,7 +69,7 @@ static void actionRemapButtons(void)
         break;
     // For test purposes
     case ATYPE_BTN1:
-        spConvertADC();
+//        spConvertADC();
         break;
     case ATYPE_BTN2:
         switch (action.mode) {

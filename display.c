@@ -183,20 +183,16 @@ void displayShowParam(DispParam *dp)
     displayShowIcon(dp->icon);
 }
 
-void displayShowSpectrum(uint16_t *data)
+void displayShowSpectrum(uint16_t *dataL, uint16_t *dataR)
 {
     gdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
     gdSetXY(0, 0);
 
     displayWriteString("Spectrum screen");
 
-    int16_t l_low = data[0] & 0x00000FFF;
-
     gdSetXY(0, 16);
-    displayWriteNum(l_low, 4, '0', 16);
-
-    int16_t r_low = data[1] & 0x00000FFF;
+    displayWriteNum(dataL[0], 4, '0', 16);
 
     gdSetXY(0, 32);
-    displayWriteNum(r_low, 4, '0', 16);
+    displayWriteNum(dataR[0], 4, '0', 16);
 }

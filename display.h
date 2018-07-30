@@ -25,6 +25,6 @@ void displayChangeBrighness(uint8_t mode, int8_t diff);
 
 void displayShowTime(RTC_type *rtc, char *wday);
 void displayShowParam(DispParam *dp);
-void displayShowSpectrum(uint16_t *data);
+void displayShowSpectrum(uint16_t *dataL, uint16_t *dataR);
 
 #endif // DISPLAY_H

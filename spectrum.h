@@ -5,7 +5,10 @@
 
 void spInit(void);
 
-uint16_t *spGetADC(void);
+void spGetADC(uint16_t **dataL, uint16_t **dataR);
+
 void spConvertADC();
+
+void spUpdate();
 
 #endif // SPECTRUM_H

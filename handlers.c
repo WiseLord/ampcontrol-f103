@@ -7,6 +7,7 @@
 #include "display/gdfb.h"
 #include "input.h"
 #include "rtc.h"
+#include "spectrum.h"
 #include "timers.h"
 
 void NMI_Handler(void)
@@ -80,12 +81,8 @@ void TIM2_IRQHandler(void)
 
         // Callback
         ks0108IRQ();
+        spConvertADC();
     }
-}
-
-void ADC1_2_IRQHandler(void)
-{
-
 }
 
 void DMA1_Channel1_IRQHandler(void)
@@ -97,6 +94,6 @@ void DMA1_Channel1_IRQHandler(void)
     LL_DMA_ClearFlag_GI1(DMA1);
 
     // DMA callback
-    //
+    spUpdate();
   }
 }
