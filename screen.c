@@ -55,8 +55,8 @@ void screenTime(RtcMode etm)
 
 void screenSpectrum(void)
 {
-    uint16_t *dataL;
-    uint16_t *dataR;
+    uint8_t *dataL;
+    uint8_t *dataR;
 
     spGetADC(&dataL, &dataR);
 

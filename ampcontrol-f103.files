@@ -1,3 +1,5 @@
+fft.c
+fft.h
 pins.c
 spectrum.c
 spectrum.h

@@ -183,16 +183,39 @@ void displayShowParam(DispParam *dp)
     displayShowIcon(dp->icon);
 }
 
-void displayShowSpectrum(uint16_t *dataL, uint16_t *dataR)
+static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_t max)
+{
+    uint8_t i;
+
+    val = (val < max ? btm - val : btm - max);
+
+    for (i = 0; i < w; i++) {
+        gdDrawVertLine(xbase + i, btm, val, 1);
+        gdDrawVertLine(xbase + i, val > (btm - max) ? val - 1 : val, btm - max, 0);
+    }
+}
+
+void displayShowSpectrum(uint8_t *dataL, uint8_t *dataR)
 {
     gdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
     gdSetXY(0, 0);
 
     displayWriteString("Spectrum screen");
 
-    gdSetXY(0, 16);
-    displayWriteNum(dataL[0], 4, '0', 16);
 
-    gdSetXY(0, 32);
-    displayWriteNum(dataR[0], 4, '0', 16);
+    uint8_t x, xbase;
+    uint8_t y, ybase;
+    uint8_t *buf = dataL;
+
+    for (x = 0; x < GD_SIZE_X / 6 + 1; x++) {
+        xbase = x * 6;
+        y = 32;
+
+        ybase = buf[x];
+        drawSpCol(xbase, 2, 31 + y, ybase, 31);
+        ybase += buf[x + 1];
+        ybase /= 2;
+        drawSpCol(xbase + 3, 2, 31 + y, ybase, 31);
+    }
+
 }

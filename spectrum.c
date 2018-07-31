@@ -6,18 +6,20 @@
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_rcc.h>
 
+#include "fft.h"
+
 #define ADC_DELAY_ENABLE_CALIB_CPU_CYCLES  (LL_ADC_DELAY_ENABLE_CALIB_ADC_CYCLES * 32)
 
-#define DMA_BUF_SIZE            2
-static volatile uint16_t bufDMA[DMA_BUF_SIZE];
-
 #define FFT_SIZE    64
-static uint16_t fftBufL[FFT_SIZE];
-static uint16_t fftBufR[FFT_SIZE];
-static volatile uint8_t fftIndex = 0;
+#define DMA_BUF_SIZE        (FFT_SIZE * 2)
 
-//static int16_t fftRe[FFT_SIZE];
-//static int16_t fftIm[FFT_SIZE];
+static volatile int16_t bufDMA[DMA_BUF_SIZE];
+
+static int16_t fr[FFT_SIZE];
+static int16_t fi[FFT_SIZE];
+
+static uint8_t outL[FFT_SIZE / 2];
+static uint8_t outR[FFT_SIZE / 2];
 
 static void spInitDMA(void)
 {
@@ -136,17 +138,85 @@ void spInit()
     spInitADC();
 }
 
-void spGetADC(uint16_t **dataL, uint16_t **dataR)
+static const uint8_t hannTable[] = {
+    0,   1,   3,   6,  10,  16,  22,  30,
+    38,  48,  58,  69,  81,  93, 105, 118,
+    131, 143, 156, 168, 180, 191, 202, 212,
+    221, 229, 236, 242, 247, 251, 254, 255,
+};
+
+#define N_DB        32
+
+static const int16_t dbTable[N_DB - 1] = {
+    1,    1,    2,    2,    3,    4,    6,    8,
+    10,   14,   18,   24,   33,   44,   59,   78,
+    105,  140,  187,  250,  335,  448,  599,  801,
+    1071, 1432, 1915, 2561, 3425, 4580, 6125
+};
+
+static uint8_t revBits(uint8_t x)
 {
-//    uint8_t oft = fftIndex;
+    x = ((x & 0x15) << 1) | ((x & 0x2A) >> 1);              // 00abcdef => 00badcfe
+    x = (x & 0x0C) | ((x & 0x03) << 4) | ((x & 0x30) >> 4); // 00badcfe => 00fedcba
 
-//    for (uint8_t i = 0; i < FFT_SIZE; i++) {
-//        fftIm[i] = fftBufL[(i + oft) % FFT_SIZE];
-//    }
+    return x;
+}
 
+static void prepareData()
+{
+    uint8_t i, j;
+    int16_t dcOft = 0;
+    uint8_t hw;
 
-    *dataL = fftBufL;
-    *dataR = fftBufR;
+    // Calculate average DC offset
+    for (i = 0; i < FFT_SIZE; i++)
+        dcOft += fi[i];
+    dcOft /= FFT_SIZE;
+
+    // Move FI => FR with reversing bit order in index
+    for (i = 0; i < FFT_SIZE; i++) {
+        j = revBits(i);
+        hw = hannTable[i < 32 ? i : 63 - i];
+        fr[j] = ((fi[i] - dcOft) * hw) >> 6;
+        fi[i] = 0;
+    }
+}
+
+static void cplx2dB(int16_t *fr, int16_t *fi)
+{
+    uint8_t i, j;
+    int16_t calc;
+
+    for (i = 0; i < FFT_SIZE / 2; i++) {
+        calc = ((int32_t)fr[i] * fr[i] + (int32_t)fi[i] * fi[i]) >> 13;
+
+        for (j = 0; j < N_DB - 1; j++)
+            if (calc <= dbTable[j])
+                break;
+        fr[i] = j;
+    }
+}
+
+void spGetADC(uint8_t **dataL, uint8_t **dataR)
+{
+    volatile int16_t *dma;
+
+    dma = bufDMA;
+
+    for (int16_t i = 0; i < FFT_SIZE; i++) {
+        fi[i] = dma[2 * i] >> 4;
+    }
+
+    prepareData();
+    fftRad4(fr, fi);
+    cplx2dB(fr, fi);
+
+    for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
+        outL[i] = fr[i];
+    }
+
+    *dataL = outL;
+    *dataR = outR;
 }
 
 void spConvertADC()
@@ -158,8 +228,4 @@ void spConvertADC()
 
 void spUpdate()
 {
-    fftBufL[fftIndex] = bufDMA[0];
-    fftBufR[fftIndex] = bufDMA[1];
-    if (++fftIndex >= FFT_SIZE)
-        fftIndex = 0;
 }
