@@ -215,6 +215,18 @@ void spGetADC(uint8_t **dataL, uint8_t **dataR)
         outL[i] = fr[i];
     }
 
+    for (int16_t i = 0; i < FFT_SIZE; i++) {
+        fi[i] = dma[2 * i + 1] >> 4;
+    }
+
+    prepareData();
+    fftRad4(fr, fi);
+    cplx2dB(fr, fi);
+
+    for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
+        outR[i] = fr[i];
+    }
+
     *dataL = outL;
     *dataR = outR;
 }

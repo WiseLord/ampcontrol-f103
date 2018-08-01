@@ -197,16 +197,23 @@ static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_
 
 void displayShowSpectrum(uint8_t *dataL, uint8_t *dataR)
 {
-    gdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
-    gdSetXY(0, 0);
-
-    displayWriteString("Spectrum screen");
-
-
     uint8_t x, xbase;
     uint8_t y, ybase;
-    uint8_t *buf = dataL;
+    uint8_t *buf;
 
+    buf = dataL;
+    for (x = 0; x < GD_SIZE_X / 6 + 1; x++) {
+        xbase = x * 6;
+        y = 0;
+
+        ybase = buf[x];
+        drawSpCol(xbase, 2, 31 + y, ybase, 31);
+        ybase += buf[x + 1];
+        ybase /= 2;
+        drawSpCol(xbase + 3, 2, 31 + y, ybase, 31);
+    }
+
+    buf = dataR;
     for (x = 0; x < GD_SIZE_X / 6 + 1; x++) {
         xbase = x * 6;
         y = 32;
