@@ -10,7 +10,6 @@
 
 #define ADC_DELAY_ENABLE_CALIB_CPU_CYCLES  (LL_ADC_DELAY_ENABLE_CALIB_ADC_CYCLES * 32)
 
-#define FFT_SIZE    64
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)
 
 static volatile int16_t bufDMA[DMA_BUF_SIZE];
@@ -65,7 +64,7 @@ static void spInitDMA(void)
 static void spInitADC(void)
 {
     // Configure ADC clock
-    LL_RCC_SetADCClockSource(LL_RCC_ADC_CLKSRC_PCLK2_DIV_6);
+    LL_RCC_SetADCClockSource(RCC_CFGR_ADCPRE_DIV2);
 
     // Enable GPIO Clock
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
@@ -145,26 +144,18 @@ static const uint8_t hannTable[] = {
     221, 229, 236, 242, 247, 251, 254, 255,
 };
 
-#define N_DB        32
-
-static const int16_t dbTable[N_DB - 1] = {
-    1,    1,    2,    2,    3,    4,    6,    8,
-    10,   14,   18,   24,   33,   44,   59,   78,
-    105,  140,  187,  250,  335,  448,  599,  801,
-    1071, 1432, 1915, 2561, 3425, 4580, 6125
-};
-
 static uint8_t revBits(uint8_t x)
 {
-    x = ((x & 0x15) << 1) | ((x & 0x2A) >> 1);              // 00abcdef => 00badcfe
-    x = (x & 0x0C) | ((x & 0x03) << 4) | ((x & 0x30) >> 4); // 00badcfe => 00fedcba
+    x = ((x & 0x55) << 1) | ((x & 0xAA) >> 1);              // abcdefgh => badcfehg
+    x = ((x & 0x33) << 2) | ((x & 0xCC) >> 2);              // badcfehg => dcbahgfe
+    x = ((x & 0x0F) << 4) | ((x & 0xF0) >> 4);              // dcbahgfe => hgfedcba
 
     return x;
 }
 
 static void prepareData()
 {
-    uint8_t i, j;
+    uint16_t i, j;
     int16_t dcOft = 0;
     uint8_t hw;
 
@@ -177,23 +168,9 @@ static void prepareData()
     for (i = 0; i < FFT_SIZE; i++) {
         j = revBits(i);
         hw = hannTable[i < 32 ? i : 63 - i];
+        hw = 255;
         fr[j] = ((fi[i] - dcOft) * hw) >> 6;
         fi[i] = 0;
-    }
-}
-
-static void cplx2dB(int16_t *fr, int16_t *fi)
-{
-    uint8_t i, j;
-    int16_t calc;
-
-    for (i = 0; i < FFT_SIZE / 2; i++) {
-        calc = ((int32_t)fr[i] * fr[i] + (int32_t)fi[i] * fi[i]) >> 13;
-
-        for (j = 0; j < N_DB - 1; j++)
-            if (calc <= dbTable[j])
-                break;
-        fr[i] = j;
     }
 }
 
@@ -208,26 +185,30 @@ void spGetADC(uint8_t **dataL, uint8_t **dataR)
     }
 
     prepareData();
-    fftRad4(fr, fi);
+    fft_radix4(fr, fi);
     cplx2dB(fr, fi);
 
     for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
         outL[i] = fr[i];
     }
 
+    *dataL = outL;
+
     for (int16_t i = 0; i < FFT_SIZE; i++) {
-        fi[i] = dma[2 * i + 1] >> 4;
+        fr[i] = (dma[2 * i + 1] - 2048) / 4;
+        fi[i] = 0;
     }
 
-    prepareData();
-    fftRad4(fr, fi);
+//    hammWindow(fr);
+    rev_bin(fr);
+
+    fft_radix4(fr, fi);
     cplx2dB(fr, fi);
 
     for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
         outR[i] = fr[i];
     }
 
-    *dataL = outL;
     *dataR = outR;
 }
 

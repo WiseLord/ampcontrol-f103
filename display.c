@@ -202,27 +202,21 @@ void displayShowSpectrum(uint8_t *dataL, uint8_t *dataR)
     uint8_t *buf;
 
     buf = dataL;
-    for (x = 0; x < GD_SIZE_X / 6 + 1; x++) {
-        xbase = x * 6;
+    for (x = 0; x < GD_SIZE_X; x++) {
+        xbase = x;
         y = 0;
 
         ybase = buf[x];
-        drawSpCol(xbase, 2, 31 + y, ybase, 31);
-        ybase += buf[x + 1];
-        ybase /= 2;
-        drawSpCol(xbase + 3, 2, 31 + y, ybase, 31);
+        drawSpCol(xbase, 1, 31 + y, ybase, 31);
     }
 
     buf = dataR;
-    for (x = 0; x < GD_SIZE_X / 6 + 1; x++) {
-        xbase = x * 6;
+    for (x = 0; x < GD_SIZE_X; x++) {
+        xbase = x;
         y = 32;
 
         ybase = buf[x];
-        drawSpCol(xbase, 2, 31 + y, ybase, 31);
-        ybase += buf[x + 1];
-        ybase /= 2;
-        drawSpCol(xbase + 3, 2, 31 + y, ybase, 31);
+        drawSpCol(xbase, 1, 31 + y, ybase, 31);
     }
 
 }
