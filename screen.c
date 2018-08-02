@@ -7,6 +7,9 @@
 
 static Screen screen = SCREEN_STANDBY;
 
+static uint8_t spLeft[128];
+static uint8_t spRight[128];
+
 typedef enum {
     LABEL_SUNDAY,
     LABEL_MONDAY,
@@ -55,12 +58,9 @@ void screenTime(RtcMode etm)
 
 void screenSpectrum(void)
 {
-    uint8_t *dataL;
-    uint8_t *dataR;
+    spGetADC(spLeft, spRight);
 
-    spGetADC(&dataL, &dataR);
-
-    displayShowSpectrum(dataL, dataR);
+    displayShowSpectrum(spLeft, spRight);
 }
 
 void screenBrightness()

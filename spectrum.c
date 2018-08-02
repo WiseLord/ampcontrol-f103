@@ -12,49 +12,12 @@
 
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)
 
+// Array with ADC data, interleaved L-R-L-R...
 static volatile int16_t bufDMA[DMA_BUF_SIZE];
 
+// Array for FFT (real and imaginary parts)
 static int16_t fr[FFT_SIZE];
 static int16_t fi[FFT_SIZE];
-
-static uint8_t outL[FFT_SIZE / 2];
-static uint8_t outR[FFT_SIZE / 2];
-
-
-const int16_t input[FFT_SIZE] = {
-    0,   632,  1203,  1656,  1947,  2048,  1947,  1656,
- 1203,   632,     0,  -632, -1203, -1656, -1947, -2048,
--1947, -1656, -1203,  -632,     0,   632,  1203,  1656,
- 1947,  2048,  1947,  1656,  1203,   632,     0,  -632,
--1203, -1656, -1947, -2048, -1947, -1656, -1203,  -632,
-    0,   632,  1203,  1656,  1947,  2048,  1947,  1656,
- 1203,   632,     0,  -632, -1203, -1656, -1947, -2048,
--1947, -1656, -1203,  -632,     0,   632,  1203,  1656,
- 1947,  2048,  1947,  1656,  1203,   632,     0,  -632,
--1203, -1656, -1947, -2048, -1947, -1656, -1203,  -632,
-    0,   632,  1203,  1656,  1947,  2048,  1947,  1656,
- 1203,   632,     0,  -632, -1203, -1656, -1947, -2048,
--1947, -1656, -1203,  -632,     0,   632,  1203,  1656,
- 1947,  2048,  1947,  1656,  1203,   632,     0,  -632,
--1203, -1656, -1947, -2048, -1947, -1656, -1203,  -632,
-    0,   632,  1203,  1656,  1947,  2048,  1947,  1656,
- 1203,   632,     0,  -632, -1203, -1656, -1947, -2048,
--1947, -1656, -1203,  -632,     0,   632,  1203,  1656,
- 1947,  2048,  1947,  1656,  1203,   632,     0,  -632,
--1203, -1656, -1947, -2048, -1947, -1656, -1203,  -632,
-    0,   632,  1203,  1656,  1947,  2048,  1947,  1656,
- 1203,   632,     0,  -632, -1203, -1656, -1947, -2048,
--1947, -1656, -1203,  -632,     0,   632,  1203,  1656,
- 1947,  2048,  1947,  1656,  1203,   632,     0,  -632,
--1203, -1656, -1947, -2048, -1947, -1656, -1203,  -632,
-    0,   632,  1203,  1656,  1947,  2048,  1947,  1656,
- 1203,   632,     0,  -632, -1203, -1656, -1947, -2048,
--1947, -1656, -1203,  -632,     0,   632,  1203,  1656,
- 1947,  2048,  1947,  1656,  1203,   632,     0,  -632,
--1203, -1656, -1947, -2048, -1947, -1656, -1203,  -632,
-    0,   632,  1203,  1656,  1947,  2048,  1947,  1656,
- 1203,   632,     0,  -632, -1203, -1656, -1947, -2048,
-};
 
 static void spInitDMA(void)
 {
@@ -87,10 +50,6 @@ static void spInitDMA(void)
     LL_DMA_SetDataLength(DMA1,
                          LL_DMA_CHANNEL_1,
                          DMA_BUF_SIZE);
-
-    // Enable DMA transfer interruption: transfer complete
-    LL_DMA_EnableIT_TC(DMA1,
-                       LL_DMA_CHANNEL_1);
 
     // Enable the DMA transfer
     LL_DMA_EnableChannel(DMA1,
@@ -169,89 +128,36 @@ static void spInitADC(void)
 void spInit()
 {
     spInitDMA();
-
     spInitADC();
 }
 
-static const uint8_t hannTable[] = {
-    0,   1,   3,   6,  10,  16,  22,  30,
-    38,  48,  58,  69,  81,  93, 105, 118,
-    131, 143, 156, 168, 180, 191, 202, 212,
-    221, 229, 236, 242, 247, 251, 254, 255,
-};
-
-static uint8_t revBits(uint8_t x)
+static void spGet(int16_t *dma, uint8_t *data)
 {
-    x = ((x & 0x55) << 1) | ((x & 0xAA) >> 1);              // abcdefgh => badcfehg
-    x = ((x & 0x33) << 2) | ((x & 0xCC) >> 2);              // badcfehg => dcbahgfe
-    x = ((x & 0x0F) << 4) | ((x & 0xF0) >> 4);              // dcbahgfe => hgfedcba
-
-    return x;
-}
-
-static void prepareData()
-{
-    uint16_t i, j;
-    int16_t dcOft = 0;
-    uint8_t hw;
-
-    // Calculate average DC offset
-    for (i = 0; i < FFT_SIZE; i++)
-        dcOft += fi[i];
-    dcOft /= FFT_SIZE;
-
-    // Move FI => FR with reversing bit order in index
-    for (i = 0; i < FFT_SIZE; i++) {
-        j = revBits(i);
-        hw = hannTable[i < 32 ? i : 63 - i];
-        hw = 255;
-        fr[j] = ((fi[i] - dcOft) * hw) >> 6;
-        fi[i] = 0;
-    }
-}
-
-void spGetADC(uint8_t **dataL, uint8_t **dataR)
-{
-    volatile int16_t *dma;
-
-    dma = bufDMA;
-
     for (int16_t i = 0; i < FFT_SIZE; i++) {
-        fi[i] = dma[2 * i] >> 4;
-//        fi[i] = input[i] >> 6;
-    }
-
-    prepareData();
-    fft_radix4(fr, fi);
-    cplx2dB(fr, fi);
-
-    for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
-        if (fr[i] > outL[i])
-            outL[i] = fr[i];
-        else
-            if (outL[i])
-            outL[i]--;
-    }
-
-    *dataL = outL;
-
-    for (int16_t i = 0; i < FFT_SIZE; i++) {
-        fr[i] = (dma[2 * i + 1] - 2048) / 4;
-//        fr[i] = input[i] >> 4;
+        fr[i] = (dma[2 * i] - 2048) / 4;
         fi[i] = 0;
     }
 
-//    hammWindow(fr);
-    rev_bin(fr);
+    fft_hamm_window(fr);
+    fft_rev_bin(fr);
 
     fft_radix4(fr, fi);
-    cplx2dB(fr, fi);
+    fft_cplx2dB(fr, fi);
 
     for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
-        outR[i] = fr[i];
+        if (fr[i] > data[i]) {
+            data[i] = fr[i];
+        } else {
+            if (data[i])
+                data[i]--;
+        }
     }
+}
 
-    *dataR = outR;
+void spGetADC(uint8_t *dataL, uint8_t *dataR)
+{
+    spGet((int16_t *)(bufDMA + 0), dataL);
+    spGet((int16_t *)(bufDMA + 1), dataR);
 }
 
 void spConvertADC()
@@ -259,8 +165,4 @@ void spConvertADC()
     if (LL_ADC_IsEnabled(ADC1) == 1) {
         LL_ADC_REG_StartConversionSWStart(ADC1);
     }
-}
-
-void spUpdate()
-{
 }

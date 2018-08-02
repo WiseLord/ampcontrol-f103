@@ -84,16 +84,3 @@ void TIM2_IRQHandler(void)
         spConvertADC();
     }
 }
-
-void DMA1_Channel1_IRQHandler(void)
-{
-  if(LL_DMA_IsActiveFlag_TC1(DMA1) == 1)
-  {
-    // Clear flag DMA global interrupt
-    // (global interrupt flag: half transfer and transfer complete flags)
-    LL_DMA_ClearFlag_GI1(DMA1);
-
-    // DMA callback
-    spUpdate();
-  }
-}
