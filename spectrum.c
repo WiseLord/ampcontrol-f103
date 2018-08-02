@@ -131,7 +131,7 @@ void spInit()
     spInitADC();
 }
 
-static void spGet(int16_t *dma, uint8_t *data)
+static void spGet(int16_t *dma, uint8_t *data, uint8_t speed)
 {
     int32_t dcOft = 0;
 
@@ -156,16 +156,18 @@ static void spGet(int16_t *dma, uint8_t *data)
         if (fr[i] > data[i]) {
             data[i] = fr[i];
         } else {
-            if (data[i])
-                data[i]--;
+            if (data[i] >= speed)
+                data[i] -= speed;
+            else
+                data[i] = 0;
         }
     }
 }
 
-void spGetADC(uint8_t *dataL, uint8_t *dataR)
+void spGetADC(uint8_t *dataL, uint8_t *dataR, uint8_t speed)
 {
-    spGet((int16_t *)(bufDMA + 0), dataL);
-    spGet((int16_t *)(bufDMA + 1), dataR);
+    spGet((int16_t *)(bufDMA + 0), dataL, speed);
+    spGet((int16_t *)(bufDMA + 1), dataR, speed);
 }
 
 void spConvertADC()

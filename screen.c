@@ -56,9 +56,9 @@ void screenTime(RtcMode etm)
     displayShowTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
 }
 
-void screenSpectrum(void)
+void screenSpectrum(uint8_t speed)
 {
-    spGetADC(spLeft, spRight);
+    spGetADC(spLeft, spRight, speed);
 
     displayShowSpectrum(spLeft, spRight);
 }

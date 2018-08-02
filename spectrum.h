@@ -5,7 +5,7 @@
 
 void spInit(void);
 
-void spGetADC(uint8_t *dataL, uint8_t *dataR);
+void spGetADC(uint8_t *dataL, uint8_t *dataR, uint8_t speed);
 
 void spConvertADC();
 

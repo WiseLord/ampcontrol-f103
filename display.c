@@ -206,7 +206,7 @@ void displayShowSpectrum(uint8_t *dataL, uint8_t *dataR)
         xbase = x;
         y = 0;
 
-        ybase = buf[x];
+        ybase = buf[x] / 4;
         drawSpCol(xbase, 1, 31 + y, ybase, 31);
     }
 
@@ -215,7 +215,7 @@ void displayShowSpectrum(uint8_t *dataL, uint8_t *dataR)
         xbase = x;
         y = 32;
 
-        ybase = buf[x];
+        ybase = buf[x] / 4;
         drawSpCol(xbase, 1, 31 + y, ybase, 31);
     }
 

@@ -10,6 +10,9 @@
 #define SIGNAL_SCALE    32767
 #define HAMM_SCALE      65535
 
+#define N_DB        128
+#define DB_MAX      65535
+
 int16_t input[FFT_SIZE];
 
 int main()
@@ -20,22 +23,17 @@ int main()
     for (int i = 0; i < FFT_SIZE; i++) {
         t = (double)i / SAMPLE_FREQ;
 
-        input[i] = (int16_t)(SIGNAL_SCALE * sin(2 * M_PI * SIGNAL_FREQ * t));
-    }
-
-    for (int i = 0; i < FFT_SIZE; i++) {
-        printf("%6d, ", input[i]);
+        printf("%6d, ", (int16_t)(SIGNAL_SCALE * sin(2 * M_PI * SIGNAL_FREQ * t)));
         if (i % 8 == 7)
             printf("\n");
     }
-
     printf("\n");
 
     // Hamming window
     double a0 = 0.53836;
     double a1 = 0.46164;
-//    double a0 = 0.5;
-//    double a1 = 0.5;
+//    double a0 = 0.5; // Hann window
+//    double a1 = 0.5; // Hann window
 
     for (int i = 0; i < FFT_SIZE; i++) {
         double w;
@@ -45,6 +43,16 @@ int main()
         hw = (uint16_t)(HAMM_SCALE * w);
 
         printf("%6d, ", hw);
+        if (i % 8 == 7)
+            printf("\n");
+    }
+    printf("\n");
+
+    for (int i = 0; i < N_DB; i++) {
+        double l;
+
+        l = exp((double)i / (N_DB - 1) * log(DB_MAX));
+        printf("%5.0f, ", l);
         if (i % 8 == 7)
             printf("\n");
     }
