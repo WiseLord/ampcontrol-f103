@@ -7,8 +7,8 @@
 
 #define FFT_SIZE        256
 
-//#define SIGNAL_SCALE    2047
-#define SIGNAL_SCALE    4095
+#define SIGNAL_SCALE    32767
+#define HAMM_SCALE      65535
 
 int16_t input[FFT_SIZE];
 
@@ -42,7 +42,7 @@ int main()
         uint16_t hw;
 
         w = a0 - a1 * cos((2 * M_PI * i) / (FFT_SIZE - 1));
-        hw = (uint16_t)(SIGNAL_SCALE * w);
+        hw = (uint16_t)(HAMM_SCALE * w);
 
         printf("%6d, ", hw);
         if (i % 8 == 7)

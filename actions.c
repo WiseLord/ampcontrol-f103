@@ -237,10 +237,10 @@ void actionShowScreen(void)
     }
 
     switch (screen) {
-    case SCREEN_STANDBY:
     case SCREEN_TIME:
         screenTime(rtcMode);
         break;
+    case SCREEN_STANDBY:
     case SCREEN_SPECTRUM:
         screenSpectrum();
         break;
