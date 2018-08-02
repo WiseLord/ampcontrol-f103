@@ -3,6 +3,8 @@ fft.h
 pins.c
 spectrum.c
 spectrum.h
+system/stm32f103c8tx_flash.ld
+system/stm32f10x-openocd.cfg
 timers.h
 timers.c
 Makefile
