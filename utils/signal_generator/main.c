@@ -2,10 +2,10 @@
 #include <math.h>
 #include <stdint.h>
 
-#define SAMPLE_FREQ     256000
+#define SAMPLE_FREQ     1024000
 #define SIGNAL_FREQ     1000
 
-#define FFT_SIZE        256
+#define FFT_SIZE        1024
 
 #define SIGNAL_SCALE    32767
 #define HAMM_SCALE      65535

@@ -6,7 +6,8 @@
 #define FFT_SIZE    256
 #define FFT_LOG2    8
 
-#define N_WAVE      256
+#define N_WAVE      1024
+#define N_HANN      1024
 #define N_DB        128
 
 void fft_hamm_window(int16_t *fr);

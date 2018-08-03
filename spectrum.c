@@ -135,13 +135,13 @@ static void spGet(int16_t *dma, uint8_t *data, uint8_t speed)
 {
     int32_t dcOft = 0;
 
-    for (uint16_t i = 0; i < FFT_SIZE; i++) {
+    for (int16_t i = 0; i < FFT_SIZE; i++) {
         fr[i] = dma[2 * i];
         dcOft += fr[i];
     }
     dcOft /= FFT_SIZE;
 
-    for (uint16_t i = 0; i < FFT_SIZE; i++) {
+    for (int16_t i = 0; i < FFT_SIZE; i++) {
         fr[i] -= dcOft;
         fi[i] = 0;
     }

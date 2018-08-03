@@ -4,11 +4,12 @@
 #include "display.h"
 #include "actions.h"
 #include "spectrum.h"
+#include "fft.h"
 
 static Screen screen = SCREEN_STANDBY;
 
-static uint8_t spLeft[128];
-static uint8_t spRight[128];
+static uint8_t spLeft[FFT_SIZE / 2];
+static uint8_t spRight[FFT_SIZE / 2];
 
 typedef enum {
     LABEL_SUNDAY,
