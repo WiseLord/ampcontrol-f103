@@ -134,7 +134,7 @@ static const uint16_t hammTable[N_HANN / 2] = {
     65502,  65510,  65517,  65523,  65528,  65531,  65533,  65534,
 };
 
-static const int16_t dbTable[N_DB] = {
+static const uint16_t dbTable[N_DB] = {
     1,     1,     1,     1,     1,     2,     2,     2,
     2,     2,     2,     3,     3,     3,     3,     4,
     4,     4,     5,     5,     6,     6,     7,     7,
@@ -152,6 +152,17 @@ static const int16_t dbTable[N_DB] = {
     17685, 19298, 21060, 22981, 25078, 27367, 29864, 32589,
     35563, 38808, 42350, 46214, 50431, 55033, 60055, 65535,
 };
+
+static inline int16_t fft_getDb(uint16_t value, uint16_t min, uint16_t max)
+{
+    uint16_t mid = (min + max) / 2;
+
+    if (dbTable[mid] < value) {
+        return mid == min ? mid : fft_getDb(value, mid, max);
+    } else {
+        return mid == max ? mid : fft_getDb(value, min, mid);
+    }
+}
 
 static inline int16_t sinTbl(int16_t phi)
 {
@@ -284,16 +295,11 @@ void fft_radix4(int16_t *fr, int16_t *fi)
 
 void fft_cplx2dB(int16_t *fr, int16_t *fi)
 {
-    int16_t i, j;
+    int16_t i;
 
     for (i = 0; i < FFT_SIZE / 2; i++) {
-        int16_t calc = ((int32_t)fr[i] * fr[i] + (int32_t)fi[i] * fi[i]) >> 16;
+        uint16_t calc = ((int32_t)fr[i] * fr[i] + (int32_t)fi[i] * fi[i]) >> 16;
 
-        for (j = 0; j < N_DB; j++) {
-            if (calc <= dbTable[j])
-                break;
-        }
-
-        fr[i] = j;
+        fr[i] = fft_getDb(calc, 0, N_DB - 1);
     }
 }
