@@ -1,3 +1,5 @@
+display/gm128x64.c
+display/gm128x64.h
 fft.c
 fft.h
 pins.c

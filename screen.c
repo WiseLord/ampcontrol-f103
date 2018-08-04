@@ -1,10 +1,9 @@
 #include "screen.h"
 
-#include "display/gdfb.h"
-#include "display.h"
 #include "actions.h"
-#include "spectrum.h"
+#include "display.h"
 #include "fft.h"
+#include "spectrum.h"
 
 static Screen screen = SCREEN_STANDBY;
 

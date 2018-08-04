@@ -2,12 +2,10 @@
 #include <stm32f1xx_ll_cortex.h>
 #include <stm32f1xx_ll_rcc.h>
 #include <stm32f1xx_ll_system.h>
-#include <stm32f1xx_ll_tim.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "actions.h"
 #include "display.h"
-#include "handlers.h"
 #include "input.h"
 #include "pins.h"
 #include "timers.h"

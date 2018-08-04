@@ -1,9 +1,5 @@
 #include "functions.h"
 
-#include "display/gdfb.h"
-#include "rtc.h"
-#include <stm32f1xx_ll_rtc.h>
-
 void _delay_us(uint32_t us)
 {
     volatile uint32_t n = 8 * us;
@@ -18,5 +14,4 @@ void _delay_ms(uint32_t ms)
     while (--n > 0) {
         _delay_us(ms);
     }
-
 }

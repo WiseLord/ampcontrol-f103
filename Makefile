@@ -37,6 +37,7 @@ else ifeq "$(DISPLAY)" "SH1106"
   C_DEFS += -D_SSD1306
 else
   C_SOURCES += display/gdfb.c display/ks0108.c $(FONTS_SRC) $(ICONS_SRC)
+  C_SOURCES += display/gm128x64.c
 endif
 C_SOURCES += display.c screen.c
 C_DEFS += -D_$(DISPLAY)

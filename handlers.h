@@ -2,9 +2,6 @@
 #define STM32F1XX_IT_H
 
 #include "stm32f1xx.h"
-#include "stm32f1xx_ll_system.h"
-#include "stm32f1xx_ll_gpio.h"
-#include "stm32f1xx_ll_exti.h"
 
 void NMI_Handler(void);
 void HardFault_Handler(void);

@@ -1,6 +1,6 @@
 #include "handlers.h"
 
-#include <stm32f1xx_ll_dma.h>
+#include "stm32f1xx_ll_exti.h"
 #include <stm32f1xx_ll_rtc.h>
 #include <stm32f1xx_ll_tim.h>
 
