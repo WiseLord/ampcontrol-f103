@@ -7,11 +7,21 @@ void pinsInit(void);
 
 #define CONCAT(x,y)         x ## y
 
-#define OUT(x)                  (LL_GPIO_SetPinMode(CONCAT(x, _Port), CONCAT(x, _Pin), LL_GPIO_MODE_OUTPUT))
-#define IN(x)                   (LL_GPIO_SetPinMode(CONCAT(x, _Port), CONCAT(x, _Pin), LL_GPIO_MODE_INPUT))
-#define SET(x)                  (LL_GPIO_SetOutputPin(CONCAT(x, _Port), CONCAT(x, _Pin)))
-#define CLR(x)                  (LL_GPIO_ResetOutputPin(CONCAT(x, _Port), CONCAT(x, _Pin)))
-#define READ(x)                 (LL_GPIO_IsInputPinSet(CONCAT(x, _Port), CONCAT(x, _Pin)))
+#define OUT(p)                  (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_OUTPUT))
+#define IN(p)                   (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_INPUT))
+#define SET(p)                  (LL_GPIO_SetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
+#define CLR(p)                  (LL_GPIO_ResetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
+#define READ(p)                 (LL_GPIO_IsInputPinSet(CONCAT(p, _Port), CONCAT(p, _Pin)))
+
+#define SPEED(p, s)             (LL_GPIO_SetPinSpeed(CONCAT(p, _Port), CONCAT(p, _Pin), s))
+#define OTYPE(p, t)             (LL_GPIO_SetPinOutputType(CONCAT(p, _Port), CONCAT(p, _Pin), t))
+
+#define OUT_INIT(p, t, s)   \
+    do {                    \
+        OUT(p);             \
+        OTYPE(p, t);        \
+        SPEED(p, s);        \
+    } while (0);
 
 #define DISP_D0_Port            GPIOA
 #define DISP_D0_Pin             LL_GPIO_PIN_0

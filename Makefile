@@ -7,39 +7,34 @@ FEATURE_LIST =
 TARGET = ampcontrol_f103_$(shell echo $(DISPLAY) | tr A-Z a-z)
 
 C_SOURCES = main.c
-C_SOURCES += pins.c
-C_SOURCES += input.c
-C_SOURCES += rtc.c
+
 C_SOURCES += actions.c
+C_SOURCES += display.c
+C_SOURCES += fft.c
 C_SOURCES += functions.c
 C_SOURCES += handlers.c
-C_SOURCES += timers.c
+C_SOURCES += input.c
+C_SOURCES += pins.c
+C_SOURCES += rtc.c
+C_SOURCES += screen.c
 C_SOURCES += spectrum.c
-C_SOURCES += fft.c
+C_SOURCES += timers.c
 
 C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
 
 # Display source files
 FONTS_SRC = $(wildcard display/font*.c)
 ICONS_SRC = $(wildcard display/icon*.c)
-ifeq "$(DISPLAY)" "KS0066_16X2_8BIT"
-  C_SOURCES += display/ks0066.c
-else ifeq "$(DISPLAY)" "KS0066_16X2_PCF8574"
-  C_SOURCES += display/ks0066.c
-else ifeq "$(DISPLAY)" "LS020"
-  C_SOURCES += display/ls020.c $(FONTS_SRC) $(ICONS_SRC)
-else ifeq "$(DISPLAY)" "ST7920"
-  C_SOURCES += display/gdfb.c display/st7920.c $(FONTS_SRC) $(ICONS_SRC)
-else ifeq "$(DISPLAY)" "SSD1306"
-  C_SOURCES += display/gdfb.c display/ssd1306.c $(FONTS_SRC) $(ICONS_SRC)
-else ifeq "$(DISPLAY)" "SH1106"
-  C_SOURCES += display/gdfb.c display/ssd1306.c $(FONTS_SRC) $(ICONS_SRC)
-  C_DEFS += -D_SSD1306
+C_SOURCES += $(FONTS_SRC)
+C_SOURCES += $(ICONS_SRC)
+
+ifeq "$(DISPLAY)" "ILI9341_SPI"
+  C_SOURCES += display/ili9341.c
 else
-  C_SOURCES += display/gdfb.c display/ks0108.c $(FONTS_SRC) $(ICONS_SRC)
+  C_SOURCES += display/ks0108.c
   C_SOURCES += display/gm128x64.c
+  C_SOURCES += display/gdfb.c
 endif
-C_SOURCES += display.c screen.c
 C_DEFS += -D_$(DISPLAY)
 
 C_SOURCES += \
