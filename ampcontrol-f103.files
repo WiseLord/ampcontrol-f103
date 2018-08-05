@@ -1,7 +1,11 @@
+display/gc320x240.c
+display/gc320x240.h
 display/gm128x64.c
 display/gm128x64.h
 fft.c
 fft.h
+ili9341.c
+ili9341.h
 pins.c
 spectrum.c
 spectrum.h

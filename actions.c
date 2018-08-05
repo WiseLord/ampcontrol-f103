@@ -233,7 +233,7 @@ void actionShowScreen(void)
 
     // Clear display if screen mode has changed
     if (screen != screenPrev) {
-        gdClear();
+        screenClear();
     }
 
     switch (screen) {

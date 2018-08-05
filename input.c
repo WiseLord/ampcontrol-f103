@@ -1,17 +1,11 @@
 #include "input.h"
 
-#include "display/gdfb.h"
 #include "pins.h"
 
 static volatile int8_t encRes = 0;
 static volatile int8_t encCnt = 0;
 
 static CmdBtn cmdBuf = BTN_NO;
-
-static uint8_t getPins(void)
-{
-    return gdGetPins();
-}
 
 void inputInit(void)
 {
@@ -30,7 +24,7 @@ void inputPoll(void)
     static volatile uint8_t encPrev = ENC_NO;
 
     // Current state
-    uint16_t btnNow = getPins();
+    uint16_t btnNow = pinsGetInput();
     uint8_t encNow = btnNow & 0xFF;
 
     // If encoder event has happened, inc/dec encoder counter

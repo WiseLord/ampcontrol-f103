@@ -30,10 +30,13 @@ C_SOURCES += $(ICONS_SRC)
 
 ifeq "$(DISPLAY)" "ILI9341_SPI"
   C_SOURCES += display/ili9341.c
-else
+  C_SOURCES += display/gc320x240.c
+  C_DEFS += -D_GC320X240
+else ifeq "$(DISPLAY)" "KS0108B"
   C_SOURCES += display/ks0108.c
   C_SOURCES += display/gm128x64.c
   C_SOURCES += display/gdfb.c
+  C_DEFS += -D_GM128X64
 endif
 C_DEFS += -D_$(DISPLAY)
 

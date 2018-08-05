@@ -2,6 +2,10 @@
 
 #include <stm32f1xx_ll_bus.h>
 
+#if defined(_GM128X64)
+#include "display/gdfb.h"
+#endif
+
 static void pinsInitDisplay(void)
 {
 #if defined _KS0108B
@@ -33,4 +37,15 @@ void pinsInit(void)
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
 
     pinsInitDisplay();
+}
+
+uint8_t pinsGetInput(void)
+{
+    uint8_t ret = 0;
+
+#if defined(_GM128X64)
+    ret = gdGetPins();
+#endif
+
+    return ret;
 }

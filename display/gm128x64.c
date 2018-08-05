@@ -11,6 +11,7 @@ Display gm128x64 = {
     .height = 64,
     .writeChar = gdWriteChar,
     .writeString = gdWriteString,
+    .setBrightness = ks0108SetBrightness,
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,

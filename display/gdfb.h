@@ -64,7 +64,6 @@ enum {
 #define GD_SIZE_Y                   KS0108_ROWS * 8
 #define gdInit()                    ks0108Init()
 #define gdClear()                   ks0108Clear()
-#define gdSetBrightness(br)         ks0108SetBrightness(br)
 #define gdDrawPixel(x, y, color)    ks0108DrawPixel(x, y, color)
 #define gdGetPins()                 ks0108GetPins()
 #endif

@@ -4,7 +4,7 @@
 #include <stm32f1xx_ll_rtc.h>
 #include <stm32f1xx_ll_tim.h>
 
-#include "display/gdfb.h"
+#include "display.h"
 #include "input.h"
 #include "rtc.h"
 #include "spectrum.h"
@@ -80,7 +80,7 @@ void TIM2_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM2);
 
         // Callback
-        ks0108IRQ();
+        displayUpdateIRQ();
         spConvertADC();
     }
 }

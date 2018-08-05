@@ -5,8 +5,13 @@
 
 #include "rtc.h"
 
+#if defined(_GC320X240)
+#define MIN_BRIGHTNESS          0
+#define MAX_BRIGHTNESS          8
+#else
 #define MIN_BRIGHTNESS          GD_MIN_BRIGHTNESS
 #define MAX_BRIGHTNESS          GD_MAX_BRIGHTNESS
+#endif
 
 #define STR_BUFSIZE             20
 
@@ -23,12 +28,15 @@ typedef struct {
     uint16_t height;
     void (*writeChar)(uint8_t code);
     void (*writeString)(char *string);
+    void (*setBrightness)(uint8_t br);
     void (*showTime)(RTC_type *rtc, char *wday);
     void (*showParam)(DispParam *dp);
     void (*showSpectrum)(uint8_t *dataL, uint8_t *dataR);
 } Display;
 
 void displayInit();
+void displayClear();
+void displayUpdateIRQ();
 
 int8_t displayGetBrightness(uint8_t mode);
 void displayChangeBrighness(uint8_t mode, int8_t diff);

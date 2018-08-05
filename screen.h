@@ -15,6 +15,7 @@ typedef enum {
 
 void screenSet(Screen value);
 Screen screenGet(void);
+void screenClear(void);
 
 void screenTime(RtcMode etm);
 void screenSpectrum(uint8_t speed);

@@ -46,6 +46,11 @@ Screen screenGet()
     return screen;
 }
 
+void screenClear(void)
+{
+    displayClear();
+}
+
 void screenTime(RtcMode etm)
 {
     RTC_type rtc;
