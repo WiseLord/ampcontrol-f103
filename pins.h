@@ -89,4 +89,23 @@ uint8_t pinsGetInput(void);
 #define KS0108_RES              DISP_RESET
 #define KS0108_BCKL             DISP_BCKL
 
+
+
+#define ILI9320_DHI_Port        GPIOB
+#define ILI9320_DHI_Pin         (LL_GPIO_PIN_8  | LL_GPIO_PIN_9  | LL_GPIO_PIN_10 | LL_GPIO_PIN_11 | \
+                                 LL_GPIO_PIN_12 | LL_GPIO_PIN_13 | LL_GPIO_PIN_14 | LL_GPIO_PIN_15)
+#define ILI9320_DLO_Port        GPIOC
+#define ILI9320_DLO_Pin         (LL_GPIO_PIN_0  | LL_GPIO_PIN_1  | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
+                                 LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
+#define ILI9320_RS_Port         GPIOC
+#define ILI9320_RS_Pin          LL_GPIO_PIN_8
+#define ILI9320_CS_Port         GPIOC
+#define ILI9320_CS_Pin          LL_GPIO_PIN_9
+#define ILI9320_WR_Port         GPIOC
+#define ILI9320_WR_Pin          LL_GPIO_PIN_10
+#define ILI9320_RD_Port         GPIOC
+#define ILI9320_RD_Pin          LL_GPIO_PIN_11
+#define ILI9320_LED_Port        GPIOC
+#define ILI9320_LED_Pin         LL_GPIO_PIN_12
+
 #endif // PINS_H

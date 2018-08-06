@@ -32,6 +32,10 @@ ifeq "$(DISPLAY)" "ILI9341_SPI"
   C_SOURCES += display/ili9341.c
   C_SOURCES += display/gc320x240.c
   C_DEFS += -D_GC320X240
+else ifeq "$(DISPLAY)" "ILI9320"
+  C_SOURCES += display/ili9320
+  C_SOURCES += display/gc320x240.c
+  C_DEFS += -D_GC320X240
 else ifeq "$(DISPLAY)" "KS0108B"
   C_SOURCES += display/ks0108.c
   C_SOURCES += display/gm128x64.c
@@ -41,20 +45,20 @@ endif
 C_DEFS += -D_$(DISPLAY)
 
 C_SOURCES += \
-system/system_stm32f1xx.c \
-drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \
-drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c \
-drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
-drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c \
-drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_tim.c \
-drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
-drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_pwr.c \
-drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rtc.c
+  system/system_stm32f1xx.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_tim.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_pwr.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rtc.c
 
 C_INCLUDES = \
--Idrivers/STM32F1xx_HAL_Driver/Inc \
--Idrivers/CMSIS/Device/ST/STM32F1xx/Include \
--Idrivers/CMSIS/Include
+  -Idrivers/STM32F1xx_HAL_Driver/Inc \
+  -Idrivers/CMSIS/Device/ST/STM32F1xx/Include \
+  -Idrivers/CMSIS/Include
 
 AS_DEFS =
 
