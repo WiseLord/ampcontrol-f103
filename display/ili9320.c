@@ -26,16 +26,6 @@ void ILI9320_Init(void)
 
 void ILI9320_Write(uint16_t data)
 {
-#if 0 // 16bit bus mode
-    ILI9320_DHI_Port->BRR = 0xFF00;
-    ILI9320_DHI_Port->BSRR = data & 0xFF00;
-
-    ILI9320_DLO_Port->BRR = 0x00FF;
-    ILI9320_DLO_Port->BSRR = data & 0x00FF;
-
-    CLR(ILI9320_WR);
-    SET(ILI9320_WR);
-#else // 8bit bus mode
     ILI9320_DHI_Port->BRR = 0xFF00;
     ILI9320_DHI_Port->BSRR = data & 0xFF00;
     CLR(ILI9320_WR);
@@ -44,7 +34,6 @@ void ILI9320_Write(uint16_t data)
     ILI9320_DHI_Port->BSRR = (data << 8) & 0xFF00;
     CLR(ILI9320_WR);
     SET(ILI9320_WR);
-#endif
 }
 
 void ILI9320_SelectReg(uint16_t reg)
@@ -342,14 +331,14 @@ void ILI9320_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, u
 
 void ILI9320_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
-    uint16_t i, w, h;
+    uint16_t w, h;
 
     w = x1 - x0 + 1;
     h = y1 - y0 + 1;
 
     ILI9320_SetWindow(x0, y0, w, h);
     ILI9320_SelectReg(0x0022);
-    for (i = 0; i < w * h; i++)
+    for (uint32_t i = 0; i < w * h; i++)
         ILI9320_Write(color);
 }
 

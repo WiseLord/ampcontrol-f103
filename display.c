@@ -66,7 +66,9 @@ void displayChangeBrighness(uint8_t mode, int8_t diff)
     if (*br < MIN_BRIGHTNESS)
         *br = MIN_BRIGHTNESS;
 
-    disp->setBrightness(*br);
+    if (disp->setBrightness) {
+        disp->setBrightness(*br);
+    }
 }
 
 void displayWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix)

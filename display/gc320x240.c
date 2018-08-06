@@ -2,13 +2,42 @@
 
 #include "ili9320.h"
 
+static void showTime(RTC_type *rtc, char *wday);
+static void showParam(DispParam *dp);
+static void showSpectrum(uint8_t *dataL, uint8_t *dataR);
+
+Display gc320x240 = {
+    .width = 320,
+    .height = 240,
+//    .writeChar = gdWriteChar,
+//    .writeString = gdWriteString,
+//    .setBrightness = ks0108SetBrightness,
+    .showTime = showTime,
+    .showParam = showParam,
+    .showSpectrum = showSpectrum,
+};
+
+static void showTime(RTC_type *rtc, char *wday)
+{
+    ILI9320_DrawFilledCircle(160, 120, 59, LCD_COLOR_RED);
+}
+
+static void showParam(DispParam *dp)
+{
+
+}
+
+static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
+{
+
+}
+
 void gc320x240Init(Display **disp)
 {
+    *disp = &gc320x240;
+
     ILI9320_Init();
-    // Rotage 90
     ILI9320_Rotate(LCD_Orientation_Landscape_1);
 
-    ILI9320_DrawFilledCircle(160, 120, 59, LCD_COLOR_BLACK);
-    ILI9320_DrawFilledCircle(160, 120, 56, LCD_COLOR_WHITE);
-    ILI9320_DrawFilledCircle(160, 120, 53, LCD_COLOR_BLACK);
+    ILI9320_DrawFilledRectangle(0, 0, 319, 239, LCD_COLOR_BLACK);
 }
