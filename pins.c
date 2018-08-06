@@ -6,6 +6,17 @@
 #include "display/gdfb.h"
 #endif
 
+static void pinsInitButtons(void)
+{
+    LL_GPIO_InitTypeDef gpio;
+
+    gpio.Mode = LL_GPIO_MODE_INPUT;
+    gpio.Pull = LL_GPIO_PULL_UP;
+
+    gpio.Pin = INPUT_Pin;
+    LL_GPIO_Init(INPUT_Port, &gpio);
+}
+
 static void pinsInitDisplay(void)
 {
 #if defined _KS0108B
@@ -36,6 +47,7 @@ void pinsInit(void)
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
 
+    pinsInitButtons();
     pinsInitDisplay();
 }
 

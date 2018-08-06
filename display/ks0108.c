@@ -45,14 +45,14 @@ static void ks0108SetPort(uint8_t data)
 
 static void ks0108SetDdrIn()
 {
-    IN(KS0108_D0);
-    IN(KS0108_D1);
-    IN(KS0108_D2);
-    IN(KS0108_D3);
-    IN(KS0108_D4);
-    IN(KS0108_D5);
-    IN(KS0108_D6);
-    IN(KS0108_D7);
+    IN_U(KS0108_D0);
+    IN_U(KS0108_D1);
+    IN_U(KS0108_D2);
+    IN_U(KS0108_D3);
+    IN_U(KS0108_D4);
+    IN_U(KS0108_D5);
+    IN_U(KS0108_D6);
+    IN_U(KS0108_D7);
 }
 
 static void ks0108SetDdrOut()
@@ -135,7 +135,6 @@ void ks0108IRQ()
 
         // Prepare to read pins
         if (j == KS0108_PHASE_SET_ADDR) {
-            ks0108SetPort(0xFF);                    // Pull-up data lines
             ks0108SetDdrIn();                       // Set data lines as inputs
         }
     }
