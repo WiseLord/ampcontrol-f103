@@ -2,6 +2,8 @@ display/gc320x240.c
 display/gc320x240.h
 display/gm128x64.c
 display/gm128x64.h
+display/ili9320.c
+display/ili9320.h
 fft.c
 fft.h
 ili9341.c

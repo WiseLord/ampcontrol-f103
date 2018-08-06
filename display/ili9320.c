@@ -21,13 +21,12 @@ void ILI9320_Init(void)
     ILI9320_Opts.orientation = LCD_Orientation_Portrait_1;
 
     ILI9320_InitLCD();
-
-    return;
 }
 
 
 void ILI9320_Write(uint16_t data)
 {
+#if 0 // 16bit bus mode
     ILI9320_DHI_Port->BRR = 0xFF00;
     ILI9320_DHI_Port->BSRR = data & 0xFF00;
 
@@ -36,8 +35,16 @@ void ILI9320_Write(uint16_t data)
 
     CLR(ILI9320_WR);
     SET(ILI9320_WR);
-
-    return;
+#else // 8bit bus mode
+    ILI9320_DHI_Port->BRR = 0xFF00;
+    ILI9320_DHI_Port->BSRR = data & 0xFF00;
+    CLR(ILI9320_WR);
+    SET(ILI9320_WR);
+    ILI9320_DHI_Port->BRR = 0xFF00;
+    ILI9320_DHI_Port->BSRR = (data << 8) & 0xFF00;
+    CLR(ILI9320_WR);
+    SET(ILI9320_WR);
+#endif
 }
 
 void ILI9320_SelectReg(uint16_t reg)
@@ -45,16 +52,12 @@ void ILI9320_SelectReg(uint16_t reg)
     CLR(ILI9320_RS);
     ILI9320_Write(reg);
     SET(ILI9320_RS);
-
-    return;
 }
 
 void ILI9320_WriteReg(uint16_t reg, uint16_t data)
 {
     ILI9320_SelectReg(reg);
     ILI9320_Write(data);
-
-    return;
 }
 
 
@@ -134,8 +137,6 @@ void ILI9320_InitLCD(void)
     ILI9320_WriteReg(0x0098, 0x0000);
 
     ILI9320_WriteReg(0x0007, 0x0173); // 262K color and display ON
-
-    return;
 }
 
 void ILI9320_ExitSleep(void)
@@ -155,8 +156,6 @@ void ILI9320_ExitSleep(void)
     ILI9320_WriteReg(0x0029, 0x000C); // VCM[4:0] for VCOMH
 
     ILI9320_WriteReg(0x0007, 0x0173); // 262K color and display ON
-
-    return;
 }
 
 void ILI9320_EnterSleep(void)
@@ -169,8 +168,6 @@ void ILI9320_EnterSleep(void)
     ILI9320_WriteReg(0x0013, 0x0000); // VDV[4:0] for VCOM amplitude
     _delay_ms(200);
     ILI9320_WriteReg(0x0010, 0x0002); // SAP, BT[3:0], AP, DSTB, SLP, STB
-
-    return;
 }
 
 void ILI9320_Rotate(LCD_Orientation orientation)
@@ -202,8 +199,6 @@ void ILI9320_Rotate(LCD_Orientation orientation)
     default:
         break;
     }
-
-    return;
 }
 
 
@@ -229,8 +224,6 @@ void ILI9320_SetCursor(uint16_t x, uint16_t y)
     default:
         break;
     }
-
-    return;
 }
 
 void ILI9320_SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
@@ -265,8 +258,6 @@ void ILI9320_SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     default:
         break;
     }
-
-    return;
 }
 
 
@@ -279,8 +270,6 @@ void ILI9320_Fill(uint16_t color)
     ILI9320_SelectReg(0x0022);
     for (i = 0; i < ILI9341_PIXEL; i++)
         ILI9320_Write(color);
-
-    return;
 }
 
 void ILI9320_DrawPixel(uint16_t x, uint16_t y, uint16_t color)
@@ -292,8 +281,6 @@ void ILI9320_DrawPixel(uint16_t x, uint16_t y, uint16_t color)
 
     ILI9320_SelectReg(0x0022);
     ILI9320_Write(color);
-
-    return;
 }
 
 void ILI9320_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
@@ -319,8 +306,6 @@ void ILI9320_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16
         }
     }
     ILI9320_DrawPixel(x1, y1, color);
-
-    return;
 }
 
 void ILI9320_DrawHorizLine(uint16_t x0, uint16_t x1, uint16_t y, uint16_t color)
@@ -333,8 +318,6 @@ void ILI9320_DrawHorizLine(uint16_t x0, uint16_t x1, uint16_t y, uint16_t color)
     ILI9320_SelectReg(0x0022);
     for (i = 0; i < len; i++)
         ILI9320_Write(color);
-
-    return;
 }
 
 void ILI9320_DrawVertLine(uint16_t x, uint16_t y0, uint16_t y1, uint16_t color)
@@ -347,8 +330,6 @@ void ILI9320_DrawVertLine(uint16_t x, uint16_t y0, uint16_t y1, uint16_t color)
     ILI9320_SelectReg(0x0022);
     for (i = 0; i < len; i++)
         ILI9320_Write(color);
-
-    return;
 }
 
 void ILI9320_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
@@ -357,8 +338,6 @@ void ILI9320_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, u
     ILI9320_DrawVertLine(x0, y0, y1, color);
     ILI9320_DrawVertLine(x1, y0, y1, color);
     ILI9320_DrawHorizLine(x0, x1, y1, color);
-
-    return;
 }
 
 void ILI9320_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
@@ -372,8 +351,6 @@ void ILI9320_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t
     ILI9320_SelectReg(0x0022);
     for (i = 0; i < w * h; i++)
         ILI9320_Write(color);
-
-    return;
 }
 
 void ILI9320_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
@@ -409,8 +386,6 @@ void ILI9320_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
         ILI9320_DrawPixel(x0 + y, y0 - x, color);
         ILI9320_DrawPixel(x0 - y, y0 - x, color);
     }
-
-    return;
 }
 
 void ILI9320_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
@@ -438,6 +413,4 @@ void ILI9320_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
         ILI9320_DrawHorizLine(x0 - y, x0 + y, y0 + x, color);
         ILI9320_DrawHorizLine(x0 - y, x0 + y, y0 - x, color);
     }
-
-    return;
 }

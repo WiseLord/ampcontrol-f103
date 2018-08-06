@@ -1,4 +1,4 @@
-DISPLAY = KS0108B
+DISPLAY = ILI9320
 
 APROC_LIST =
 TUNER_LIST =
@@ -33,7 +33,7 @@ ifeq "$(DISPLAY)" "ILI9341_SPI"
   C_SOURCES += display/gc320x240.c
   C_DEFS += -D_GC320X240
 else ifeq "$(DISPLAY)" "ILI9320"
-  C_SOURCES += display/ili9320
+  C_SOURCES += display/ili9320.c
   C_SOURCES += display/gc320x240.c
   C_DEFS += -D_GC320X240
 else ifeq "$(DISPLAY)" "KS0108B"
