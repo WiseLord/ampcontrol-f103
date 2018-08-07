@@ -103,5 +103,7 @@ uint8_t pinsGetInput(void);
 #define ILI9320_RD_Pin          LL_GPIO_PIN_11
 #define ILI9320_LED_Port        GPIOC
 #define ILI9320_LED_Pin         LL_GPIO_PIN_12
+#define ILI9320_RST_Port        GPIOB
+#define ILI9320_RST_Pin         LL_GPIO_PIN_4
 
 #endif // PINS_H

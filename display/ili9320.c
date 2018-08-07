@@ -16,6 +16,12 @@ void ILI9320_Init(void)
     SET(ILI9320_RS);
     CLR(ILI9320_CS);
 
+    SET(ILI9320_RST);
+    _delay_ms(1);
+    CLR(ILI9320_RST);
+    _delay_ms(10);
+    SET(ILI9320_RST);
+
     ILI9320_Opts.width = ILI9320_WIDTH;
     ILI9320_Opts.height = ILI9320_HEIGHT;
     ILI9320_Opts.orientation = LCD_Orientation_Portrait_1;
@@ -26,12 +32,12 @@ void ILI9320_Init(void)
 
 void ILI9320_Write(uint16_t data)
 {
-    ILI9320_DHI_Port->BRR = 0xFF00;
-    ILI9320_DHI_Port->BSRR = data & 0xFF00;
+//    ILI9320_DHI_Port->BSRR = 0x00FF0000 | (data >> 8);            // If port bits 7..0 are used
+    ILI9320_DHI_Port->BSRR = 0xFF000000 | (data & 0xFF00);          // If port bits 15..8 are used
     CLR(ILI9320_WR);
     SET(ILI9320_WR);
-    ILI9320_DHI_Port->BRR = 0xFF00;
-    ILI9320_DHI_Port->BSRR = (data << 8) & 0xFF00;
+//    ILI9320_DHI_Port->BSRR = 0x00FF0000 | (data & 0x00FF);        // If port bits 7..0 are used
+    ILI9320_DHI_Port->BSRR = 0xFF000000 | ((data << 8) & 0xFF00);   // If port bits 15..8 are used
     CLR(ILI9320_WR);
     SET(ILI9320_WR);
 }
