@@ -103,6 +103,9 @@ void ks0108IRQ()
 
     static uint8_t br;
 
+    pins = ks0108ReadPin();                         // Read pins
+    ks0108SetDdrOut();                              // Set data lines as outputs
+
     if (j == KS0108_PHASE_SET_PAGE) {               // Phase 1 (Y)
         if (++i >= 8) {
             i = 0;
@@ -121,25 +124,19 @@ void ks0108IRQ()
         ks0108SetPort(KS0108_SET_PAGE + i);
     } else if (j == KS0108_PHASE_SET_ADDR) {        // Phase 2 (X)
         ks0108SetPort(KS0108_SET_ADDRESS);
-    } else if (j == KS0108_PHASE_READ_PORT) {
-        pins = ks0108ReadPin();                     // Read pins
-        ks0108SetDdrOut();                          // Set data lines as outputs
     } else {                                        // Phase 3 (32 bytes of data)
         ks0108SetPort(fb[j + 64 * cs][i]);
     }
 
-    if (j != KS0108_PHASE_READ_PORT) {
-        SET(KS0108_E);                              // Strob
-        _delay_us(1);
-        CLR(KS0108_E);
+    SET(KS0108_E);                                  // Data strob
+    _delay_us(1);
+    CLR(KS0108_E);
 
-        // Prepare to read pins
-        if (j == KS0108_PHASE_SET_ADDR) {
-            ks0108SetDdrIn();                       // Set data lines as inputs
-        }
-    }
+    // Prepare to read pins
+    ks0108SetPort(0xFF);                            // Set 1 (pull-up) on data lines
+    ks0108SetDdrIn();                               // Set data lines as inputs
 
-    if (++j > KS0108_PHASE_READ_PORT) {
+    if (++j > KS0108_PHASE_SET_ADDR) {
         j = 0;
         SET(KS0108_DI);                             // Go to data mode
     }

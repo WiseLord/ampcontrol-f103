@@ -30,7 +30,6 @@
 
 #define KS0108_PHASE_SET_PAGE       64
 #define KS0108_PHASE_SET_ADDR       65
-#define KS0108_PHASE_READ_PORT      66
 
 void ks0108SetBrightness(uint8_t br);
 
