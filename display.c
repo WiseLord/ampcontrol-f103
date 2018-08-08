@@ -2,6 +2,7 @@
 
 #if defined(_GC320X240)
 #include "display/gc320x240.h"
+#include "display/ili9320.h"
 #else
 #include "display/gm128x64.h"
 #include "display/gdfb.h"
@@ -39,8 +40,10 @@ void displayClear()
 
 void displayUpdateIRQ()
 {
-#if defined(_GM128X64)
+#if defined(_KS0108B)
     ks0108IRQ();
+#elif defined(_ILI9320)
+    ILI9320_IRQ();
 #endif
 }
 
@@ -102,6 +105,11 @@ void displayWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix)
     if (disp->writeString) {
         disp->writeString(strbuf);
     }
+}
+
+uint8_t displayReadBus(void)
+{
+    return disp->readBus ? disp->readBus() : 0;
 }
 
 void displayShowTime(RTC_type *rtc, char *wday)

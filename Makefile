@@ -74,7 +74,7 @@ DEBUG = 1
 FPU =
 FLOAT-ABI =
 MCU = -mcpu=cortex-m3 -mthumb $(FPU) $(FLOAT-ABI)
-OPT = -Og -fshort-enums -ffunction-sections -fdata-sections
+OPT = -Os -fshort-enums -ffunction-sections -fdata-sections
 WARN = -Wall -Werror
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) $(WARN)
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) $(WARN)

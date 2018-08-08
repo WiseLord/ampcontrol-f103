@@ -12,6 +12,8 @@ Display gc320x240 = {
 //    .writeChar = gdWriteChar,
 //    .writeString = gdWriteString,
 //    .setBrightness = ks0108SetBrightness,
+    .readBus = ILI9320_GetPins,
+
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
@@ -24,12 +26,12 @@ static void showTime(RTC_type *rtc, char *wday)
 
 static void showParam(DispParam *dp)
 {
-
+    ILI9320_DrawFilledCircle(160, 120, 59, LCD_COLOR_GREEN);
 }
 
 static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
 {
-
+    ILI9320_DrawFilledCircle(160, 120, 59, LCD_COLOR_YELLOW);
 }
 
 void gc320x240Init(Display **disp)

@@ -29,6 +29,8 @@ typedef struct {
     void (*writeChar)(uint8_t code);
     void (*writeString)(char *string);
     void (*setBrightness)(uint8_t br);
+    uint8_t(*readBus)(void);
+
     void (*showTime)(RTC_type *rtc, char *wday);
     void (*showParam)(DispParam *dp);
     void (*showSpectrum)(uint8_t *dataL, uint8_t *dataR);
@@ -42,6 +44,7 @@ int8_t displayGetBrightness(uint8_t mode);
 void displayChangeBrighness(uint8_t mode, int8_t diff);
 
 void displayWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix);
+uint8_t displayReadBus(void);
 
 void displayShowTime(RTC_type *rtc, char *wday);
 void displayShowParam(DispParam *dp);

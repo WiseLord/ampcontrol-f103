@@ -32,6 +32,8 @@ typedef struct {
 } LCD_Options;
 
 void ILI9320_Init(void);
+void ILI9320_IRQ();
+uint8_t ILI9320_GetPins(void);
 
 void ILI9320_Write(uint16_t data);
 void ILI9320_SelectReg(uint16_t reg);

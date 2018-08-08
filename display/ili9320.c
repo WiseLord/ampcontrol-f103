@@ -1,10 +1,10 @@
 #include "ili9320.h"
 
+#include "../pins.h"
 #include "../functions.h"
 
-#include "../pins.h"
-
-#include <stm32f1xx_ll_gpio.h>
+static uint8_t pins;
+static uint8_t bus_requested = 0;
 
 static LCD_Options ILI9320_Opts;
 
@@ -29,23 +29,35 @@ void ILI9320_Init(void)
     ILI9320_InitLCD();
 }
 
+void ILI9320_IRQ()
+{
+    bus_requested = 1;
+}
+
+uint8_t ILI9320_GetPins(void)
+{
+    return ~pins;
+}
+
 
 void ILI9320_Write(uint16_t data)
 {
-#ifdef USE_TEST_BOARD
-    ILI9320_DHI_Port->BSRR = 0xFF000000 | (data & 0xFF00);          // If port bits 15..8 are used
-#else
     ILI9320_DHI_Port->BSRR = 0x00FF0000 | (data >> 8);              // If port bits 7..0 are used
-#endif
-    CLR(ILI9320_WR);
+    CLR(ILI9320_WR);                                                // Strob MSB
     SET(ILI9320_WR);
-#ifdef USE_TEST_BOARD
-    ILI9320_DHI_Port->BSRR = 0xFF000000 | ((data << 8) & 0xFF00);   // If port bits 15..8 are used
-#else
     ILI9320_DHI_Port->BSRR = 0x00FF0000 | (data & 0x00FF);          // If port bits 7..0 are used
-#endif
-    CLR(ILI9320_WR);
+    CLR(ILI9320_WR);                                                // Strob LSB
     SET(ILI9320_WR);
+
+    // If input IRQ requested bus status, switch temporarly to input mode and read bus
+    if (bus_requested) {
+        ILI9320_DHI_Port->BSRR = 0x000000FF;                        // Set 1 on all data lines
+        ILI9320_DHI_Port->CRL = 0x88888888;                         // SET CNF=10, MODE=00 - Input pullup
+        _delay_us(5);
+        pins = ILI9320_DHI_Port->IDR & 0x00FF;
+        ILI9320_DHI_Port->CRL = 0x33333333;                         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        bus_requested = 0;
+    }
 }
 
 void ILI9320_SelectReg(uint16_t reg)

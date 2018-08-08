@@ -54,9 +54,9 @@ uint8_t pinsGetInput(void);
 #define ENC_B_Port              GPIOA
 #define ENC_B_Pin               LL_GPIO_PIN_7
 
-#define INPUT_Port              GPIOA
-#define INPUT_Pin               (LL_GPIO_PIN_0  | LL_GPIO_PIN_1  | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
-                                 LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
+#define INPUT_Port              BTN_0_Port
+#define INPUT_Pin               (BTN_0_Pin | BTN_1_Pin | BTN_2_Pin | BTN_3_Pin | \
+                                 BTN_4_Pin | BTN_5_Pin | ENC_A_Pin | ENC_B_Pin)
 
 #define DISP_RS_Port            GPIOA
 #define DISP_RS_Pin             LL_GPIO_PIN_15
@@ -89,33 +89,14 @@ uint8_t pinsGetInput(void);
 #define KS0108_RES              DISP_RESET
 #define KS0108_BCKL             DISP_BCKL
 
-//#define USE_TEST_BOARD
-#ifdef USE_TEST_BOARD
-#define ILI9320_DHI_Port        GPIOB
-#define ILI9320_DHI_Pin         (LL_GPIO_PIN_8  | LL_GPIO_PIN_9  | LL_GPIO_PIN_10 | LL_GPIO_PIN_11 | \
-                                 LL_GPIO_PIN_12 | LL_GPIO_PIN_13 | LL_GPIO_PIN_14 | LL_GPIO_PIN_15)
-#define ILI9320_RS_Port         GPIOC
-#define ILI9320_RS_Pin          LL_GPIO_PIN_8
-#define ILI9320_CS_Port         GPIOC
-#define ILI9320_CS_Pin          LL_GPIO_PIN_9
-#define ILI9320_WR_Port         GPIOC
-#define ILI9320_WR_Pin          LL_GPIO_PIN_10
-#define ILI9320_RD_Port         GPIOC
-#define ILI9320_RD_Pin          LL_GPIO_PIN_11
-#define ILI9320_LED_Port        GPIOC
-#define ILI9320_LED_Pin         LL_GPIO_PIN_12
-#define ILI9320_RST_Port        GPIOB
-#define ILI9320_RST_Pin         LL_GPIO_PIN_4
-#else
-#define ILI9320_DHI_Port        GPIOA
-#define ILI9320_DHI_Pin         (LL_GPIO_PIN_0  | LL_GPIO_PIN_1  | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
-                                 LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
+// Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
+#define ILI9320_DHI_Port        INPUT_Port
+#define ILI9320_DHI_Pin         INPUT_Pin
 #define ILI9320_CS              DISP_STROB
 #define ILI9320_RS              DISP_RS
 #define ILI9320_WR              DISP_RW
 #define ILI9320_RD              DISP_CTRL1
 #define ILI9320_RESET           DISP_RESET
 #define ILI9320_LED             DISP_CTRL2
-#endif
 
 #endif // PINS_H
