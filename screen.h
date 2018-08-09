@@ -3,7 +3,6 @@
 
 #include <inttypes.h>
 
-#include "display/gdfb.h"
 #include "rtc.h"
 
 typedef enum {

@@ -3,6 +3,14 @@
 #include "../pins.h"
 #include "../functions.h"
 
+#include "gm128x64.h"
+
+DisplayDriver ks0108_8bit = {
+    .setBrightness = ks0108SetBrightness,
+    .readBus = ks0108GetPins,
+    .drawPixel = ks0108DrawPixel,
+};
+
 static uint8_t pins;
 
 #ifdef _KS0108B
@@ -150,8 +158,11 @@ void ks0108IRQ()
         SET(KS0108_BCKL);                           // Turn backlight on
 }
 
-void ks0108Init()
+void ks0108Init(DisplayDriver **disp)
 {
+    *disp = &ks0108_8bit;
+    gm128x64Init(*disp);
+
     // Set RW line to zero
     CLR(KS0108_RW);
 
@@ -188,7 +199,7 @@ void ks0108Clear()
     }
 }
 
-void ks0108DrawPixel(uint8_t x, uint8_t y, uint8_t color)
+void ks0108DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
     uint8_t bit;
 

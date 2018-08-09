@@ -5,8 +5,8 @@
 
 #include <inttypes.h>
 
-#include "../display.h"
+#include "glcd.h"
 
-void gc320x240Init(Display **disp);
+void gc320x240Init(DisplayDriver *driver);
 
 #endif // GC320X240_H

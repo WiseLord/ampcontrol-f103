@@ -3,6 +3,8 @@
 
 #include <inttypes.h>
 
+#include "glcd.h"
+
 // Display geometry
 #define KS0108_COLS                 64
 #define KS0108_ROWS                 8
@@ -33,11 +35,11 @@
 
 void ks0108SetBrightness(uint8_t br);
 
-void ks0108Init();
+void ks0108Init(DisplayDriver **disp);
 void ks0108Clear();
 void ks0108IRQ();
 
-void ks0108DrawPixel(uint8_t x, uint8_t y, uint8_t color);
+void ks0108DrawPixel(int16_t x, int16_t y, uint16_t color);
 
 uint8_t ks0108GetPins();
 

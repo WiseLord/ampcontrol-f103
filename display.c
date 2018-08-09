@@ -1,34 +1,37 @@
 #include "display.h"
 
-#if defined(_GC320X240)
-#include "display/gc320x240.h"
+#if defined (_KS0108B)
+#include "display/ks0108.h"
+#elif defined (_ILI9320)
 #include "display/ili9320.h"
 #else
-#include "display/gm128x64.h"
-#include "display/gdfb.h"
+#error "Unsupported display driver"
 #endif
+
 #include "actions.h"
 
-static Display *disp;
+static DisplayDriver *disp;
 
 static int8_t brStby;
 static int8_t brWork;
 
-static char strbuf[STR_BUFSIZE + 1];   // String buffer
-
 void displayInit()
 {
-#if defined(_GC320X240)
-    gc320x240Init(&disp);
-#else
-    gm128x64Init(&disp);
+#if defined (_KS0108B)
+    ks0108Init(&disp);
 
     // TODO: Read from backup memory
-    brStby = GD_MAX_BRIGHTNESS / 16;
-    brWork = GD_MAX_BRIGHTNESS;
+    brStby = 1;
+    brWork = 30;
 
     displayChangeBrighness(AMODE_BRIGNTNESS_STANDBY, brStby);
+#elif defined (_ILI9320)
+    ILI9320_Init(&disp);
+    ILI9320_Rotate(LCD_Orientation_Landscape_1);
+
+    ILI9320_DrawFilledRectangle(0, 0, 319, 239, LCD_COLOR_BLACK);
 #endif
+
 }
 
 void displayClear()
@@ -64,46 +67,14 @@ void displayChangeBrighness(uint8_t mode, int8_t diff)
 
     *br += diff;
 
-    if (*br > MAX_BRIGHTNESS)
-        *br = MAX_BRIGHTNESS;
-    if (*br < MIN_BRIGHTNESS)
-        *br = MIN_BRIGHTNESS;
+    // TODO: Use param from driver/layout
+    if (*br > 32)
+        *br = 32;
+    if (*br < 0)
+        *br = 0;
 
     if (disp->setBrightness) {
         disp->setBrightness(*br);
-    }
-}
-
-void displayWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix)
-{
-    uint8_t numdiv;
-    uint8_t sign = lead;
-    int8_t i;
-
-    if (number < 0) {
-        sign = '-';
-        number = -number;
-    }
-
-    for (i = 0; i < width; i++)
-        strbuf[i] = lead;
-    strbuf[width] = '\0';
-    i = width - 1;
-
-    while (number > 0 || i == width - 1) {
-        numdiv = number % radix;
-        strbuf[i] = numdiv + 0x30;
-        if (numdiv >= 10)
-            strbuf[i] += 7;
-        i--;
-        number /= radix;
-    }
-
-    if (i >= 0)
-        strbuf[i] = sign;
-
-    if (disp->writeString) {
-        disp->writeString(strbuf);
     }
 }
 
@@ -114,21 +85,21 @@ uint8_t displayReadBus(void)
 
 void displayShowTime(RTC_type *rtc, char *wday)
 {
-    if (disp->showTime) {
-        disp->showTime(rtc, wday);
+    if (disp->layout->showTime) {
+        disp->layout->showTime(rtc, wday);
     }
 }
 
 void displayShowParam(DispParam *dp)
 {
-    if (disp->showParam) {
-        disp->showParam(dp);
+    if (disp->layout->showParam) {
+        disp->layout->showParam(dp);
     }
 }
 
 void displayShowSpectrum(uint8_t *dataL, uint8_t *dataR)
 {
-    if (disp->showSpectrum) {
-        disp->showSpectrum(dataL, dataR);
+    if (disp->layout->showSpectrum) {
+        disp->layout->showSpectrum(dataL, dataR);
     }
 }

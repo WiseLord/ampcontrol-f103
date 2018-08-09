@@ -99,8 +99,8 @@ display/ks0108.c
 display/icons.h
 display/icons-32.c
 display/icons-24.c
-display/gdfb.h
-display/gdfb.c
+display/glcd.h
+display/glcd.c
 display/fonts.h
 display/font-ks0066-ru-24.c
 display/font-ks0066-ru-08.c

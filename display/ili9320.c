@@ -3,13 +3,24 @@
 #include "../pins.h"
 #include "../functions.h"
 
+#include "gc320x240.h"
+
+DisplayDriver ili9320_8bit = {
+//    .setBrightness = ks0108SetBrightness,
+    .readBus = ILI9320_GetPins,
+    .drawPixel = ILI9320_DrawPixel,
+};
+
 static uint8_t pins;
 static uint8_t bus_requested = 0;
 
 static LCD_Options ILI9320_Opts;
 
-void ILI9320_Init(void)
+void ILI9320_Init(DisplayDriver **disp)
 {
+    *disp = &ili9320_8bit;
+    gc320x240Init(*disp);
+
     SET(ILI9320_LED);
     SET(ILI9320_RD);
     SET(ILI9320_WR);
@@ -285,7 +296,7 @@ void ILI9320_Fill(uint16_t color)
         ILI9320_Write(color);
 }
 
-void ILI9320_DrawPixel(uint16_t x, uint16_t y, uint16_t color)
+void ILI9320_DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
     if (x >= ILI9320_Opts.width || y >= ILI9320_Opts.height)
         return;

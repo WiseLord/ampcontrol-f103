@@ -1,5 +1,6 @@
 #include "screen.h"
 
+#include "display/icons.h"
 #include "actions.h"
 #include "display.h"
 #include "fft.h"
@@ -74,8 +75,9 @@ void screenBrightness()
 
     dp.label = txtLabels[LABEL_BRIGNTNESS];
     dp.value = displayGetBrightness(AMODE_BRIGHTNESS_WORK);
-    dp.min = MIN_BRIGHTNESS;
-    dp.max = MAX_BRIGHTNESS;
+    // TODO: Use param from driver/layout
+    dp.min = 0;
+    dp.max = 32;
     dp.icon = ICON24_BRIGHTNESS;
 
     displayShowParam(&dp);

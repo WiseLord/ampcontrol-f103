@@ -6,13 +6,11 @@ static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
 static void showSpectrum(uint8_t *dataL, uint8_t *dataR);
 
-Display gc320x240 = {
+DisplayDriver *disp;
+
+DisplayLayout gc320x240 = {
     .width = 320,
     .height = 240,
-//    .writeChar = gdWriteChar,
-//    .writeString = gdWriteString,
-//    .setBrightness = ks0108SetBrightness,
-    .readBus = ILI9320_GetPins,
 
     .showTime = showTime,
     .showParam = showParam,
@@ -34,12 +32,9 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
     ILI9320_DrawFilledCircle(160, 120, 59, LCD_COLOR_YELLOW);
 }
 
-void gc320x240Init(Display **disp)
+void gc320x240Init(DisplayDriver *driver)
 {
-    *disp = &gc320x240;
-
-    ILI9320_Init();
-    ILI9320_Rotate(LCD_Orientation_Landscape_1);
-
-    ILI9320_DrawFilledRectangle(0, 0, 319, 239, LCD_COLOR_BLACK);
+    disp = driver;
+    disp->layout = &gc320x240;
+    glcdInit(disp);
 }

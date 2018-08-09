@@ -5,8 +5,8 @@
 
 #include <inttypes.h>
 
-#include "../display.h"
+#include "glcd.h"
 
-void gm128x64Init(Display **disp);
+void gm128x64Init(DisplayDriver *driver);
 
 #endif // GM128X64_H

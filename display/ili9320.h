@@ -3,6 +3,8 @@
 
 #include <inttypes.h>
 
+#include "glcd.h"
+
 //LCD settings
 #define ILI9320_WIDTH           240
 #define ILI9320_HEIGHT          320
@@ -31,7 +33,7 @@ typedef struct {
     LCD_Orientation orientation;
 } LCD_Options;
 
-void ILI9320_Init(void);
+void ILI9320_Init(DisplayDriver **disp);
 void ILI9320_IRQ();
 uint8_t ILI9320_GetPins(void);
 
@@ -49,7 +51,7 @@ void ILI9320_SetCursor(uint16_t x, uint16_t y);
 void ILI9320_SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
 
 void ILI9320_Fill(uint16_t color);
-void ILI9320_DrawPixel(uint16_t x, uint16_t y, uint16_t color);
+void ILI9320_DrawPixel(int16_t x, int16_t y, uint16_t color);
 
 void ILI9320_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
 void ILI9320_DrawHorizLine(uint16_t x0, uint16_t x1, uint16_t y, uint16_t color);
