@@ -26,10 +26,10 @@ void displayInit()
 
     displayChangeBrighness(AMODE_BRIGNTNESS_STANDBY, brStby);
 #elif defined (_ILI9320)
-    ILI9320_Init(&disp);
-    ILI9320_Rotate(LCD_Orientation_Landscape_1);
+    ili9320Init(&disp);
+//    ILI9320_Rotate(LCD_Orientation_Landscape_1);
 
-    ILI9320_DrawFilledRectangle(0, 0, 319, 239, LCD_COLOR_BLACK);
+//    ILI9320_DrawFilledRectangle(0, 0, 319, 239, LCD_COLOR_BLACK);
 #endif
 
 }
@@ -46,7 +46,7 @@ void displayUpdateIRQ()
 #if defined(_KS0108B)
     ks0108IRQ();
 #elif defined(_ILI9320)
-    ILI9320_IRQ();
+    ili9320BusIRQ();
 #endif
 }
 
@@ -80,7 +80,7 @@ void displayChangeBrighness(uint8_t mode, int8_t diff)
 
 uint8_t displayReadBus(void)
 {
-    return disp->readBus ? disp->readBus() : 0;
+    return disp->bus;
 }
 
 void displayShowTime(RTC_type *rtc, char *wday)

@@ -5,13 +5,11 @@
 
 #include "gm128x64.h"
 
-DisplayDriver ks0108_8bit = {
+DisplayDriver drv = {
     .setBrightness = ks0108SetBrightness,
-    .readBus = ks0108GetPins,
     .drawPixel = ks0108DrawPixel,
+    .drawFontChar = glcdDrawFontChar,
 };
-
-static uint8_t pins;
 
 #ifdef _KS0108B
 #define KS0108_SET_CS1()    CLR(KS0108_CS1); SET(KS0108_CS2)
@@ -111,7 +109,8 @@ void ks0108IRQ()
 
     static uint8_t br;
 
-    pins = ks0108ReadPin();                         // Read pins
+    // TODO: avoid function call, use direct port read
+    drv.bus = ks0108ReadPin();                      // Read pins
     ks0108SetDdrOut();                              // Set data lines as outputs
 
     if (j == KS0108_PHASE_SET_PAGE) {               // Phase 1 (Y)
@@ -160,7 +159,7 @@ void ks0108IRQ()
 
 void ks0108Init(DisplayDriver **disp)
 {
-    *disp = &ks0108_8bit;
+    *disp = &drv;
     gm128x64Init(*disp);
 
     // Set RW line to zero
@@ -214,9 +213,4 @@ void ks0108DrawPixel(int16_t x, int16_t y, uint16_t color)
         fb[x][y >> 3] |= bit;
     else
         fb[x][y >> 3] &= ~bit;
-}
-
-uint8_t ks0108GetPins()
-{
-    return ~pins;
 }

@@ -5,9 +5,7 @@
 static char strbuf[STR_BUFSIZE + 1];   // String buffer
 
 DisplayDriver *disp;
-
-const uint8_t *_font;
-static uint8_t fp[FONT_PARAM_END];
+CharParam charParam;
 
 void glcdInit(DisplayDriver *driver)
 {
@@ -45,16 +43,19 @@ void glcdWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix)
     glcdWriteString(strbuf);
 }
 
-void glcdLoadFont(const uint8_t *font, uint16_t color, uint8_t direction)
+void glcdLoadFont(const uint8_t *font)
 {
-    uint8_t i;
+    disp->font.data = font;
+}
 
-    _font = font + 5;
-    for (i = 0; i < FONT_END - 1; i++)
-        fp[i] = font[i];
-    fp[FONT_COLOR] = color;
-    fp[FONT_DIRECTION] = direction;
-    fp[FONT_FIXED] = 0;
+void glcdSetFontColor(uint16_t color)
+{
+    disp->font.color = color;
+}
+
+void glcdSetFontMult(uint8_t mult)
+{
+    disp->font.mult = mult;
 }
 
 void glcdSetXY(int16_t x, int16_t y)
@@ -63,71 +64,58 @@ void glcdSetXY(int16_t x, int16_t y)
     disp->layout->y = y;
 }
 
-void glcdWriteChar(uint8_t code)
+void glcdSetX(int16_t x)
+{
+    disp->layout->x = x;
+}
+
+static void findCharOft(uint8_t code)
 {
     uint8_t i;
-    uint8_t j;
-    uint8_t k;
-
-    uint8_t pgmData;
+    const uint8_t *fp = disp->font.data;
 
     uint8_t spos = code - ((code >= 128) ? fp[FONT_OFTNA] : fp[FONT_OFTA]);
 
     uint16_t oft = 0;               // Current symbol offset in array
     uint8_t swd = 0;                // Current symbol width
-    uint8_t fwd = fp[FONT_FIXED];   // Fixed width
 
     for (i = 0; i < spos; i++) {
-        swd = _font[i];
+        swd = fp[FONT_HEADER_END + i];
         oft += swd;
     }
-    swd = _font[spos];
-    if (!fwd)
-        fwd = swd;
+    swd = fp[FONT_HEADER_END + spos];
 
     oft *= fp[FONT_HEIGHT];
+    oft += FONT_HEADER_END;
     oft += fp[FONT_CCNT];
 
-    for (j = 0; j < fp[FONT_HEIGHT]; j++) {
-        for (i = 0; i < fwd; i++) {
-            if (i >= swd)
-                pgmData = 0x00;
-            else
-                pgmData = _font[oft + (swd * j) + i];
-            if (!fp[FONT_COLOR])
-                pgmData = ~pgmData;
-            for (k = 0; k < 8; k++) {
-                switch (fp[FONT_DIRECTION]) {
-                case FONT_DIR_0:
-                    disp->drawPixel(disp->layout->x + i, disp->layout->y + (8 * j + k), pgmData & (1 << k));
-                    break;
-                case FONT_DIR_90:
-                    disp->drawPixel(disp->layout->x + (8 * j + k), disp->layout->y - i, pgmData & (1 << k));
-                    break;
-                case FONT_DIR_180:
-                    disp->drawPixel(disp->layout->x - i, disp->layout->y - (8 * j + k), pgmData & (1 << k));
-                    break;
-                case FONT_DIR_270:
-                    disp->drawPixel(disp->layout->x - (8 * j + k), disp->layout->y + i, pgmData & (1 << k));
-                    break;
-                }
+    charParam.data = fp + oft;
+    charParam.width = swd;
+}
+
+void glcdDrawFontChar(CharParam *param)
+{
+    uint8_t w = param->width;
+    uint8_t h = disp->font.data[FONT_HEIGHT];
+    uint16_t color = disp->font.color;
+
+    for (uint16_t j = 0; j < h; j++) {
+        for (uint16_t i = 0; i < w; i++) {
+            uint8_t data = param->data[w * j + i];
+            if (!color)
+                data = ~data;
+            for (uint8_t k = 0; k < 8; k++) {
+                disp->drawPixel(disp->layout->x + i, disp->layout->y + (8 * j + k), data & (1 << k));
             }
         }
     }
-    switch (fp[FONT_DIRECTION]) {
-    case FONT_DIR_0:
-        glcdSetXY(disp->layout->x + fwd, disp->layout->y);
-        break;
-    case FONT_DIR_90:
-        glcdSetXY(disp->layout->x, disp->layout->y - fwd);
-        break;
-    case FONT_DIR_180:
-        glcdSetXY(disp->layout->x - fwd, disp->layout->y);
-        break;
-    case FONT_DIR_270:
-        glcdSetXY(disp->layout->x, disp->layout->y + fwd);
-        break;
-    }
+}
+
+void glcdWriteChar(uint8_t code)
+{
+    findCharOft(code);
+    disp->drawFontChar(&charParam);
+    glcdSetX(disp->layout->x + charParam.width * disp->font.mult);
 }
 
 void glcdWriteString(char *string)
@@ -135,8 +123,7 @@ void glcdWriteString(char *string)
     if (*string)
         glcdWriteChar(*string++);
     while (*string) {
-        if (!fp[FONT_FIXED])
-            glcdWriteChar(fp[FONT_LTSPPOS]);
+        glcdWriteChar(disp->font.data[FONT_LTSPPOS]);
         glcdWriteChar(*string++);
     }
 }

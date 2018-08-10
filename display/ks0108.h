@@ -41,6 +41,4 @@ void ks0108IRQ();
 
 void ks0108DrawPixel(int16_t x, int16_t y, uint16_t color);
 
-uint8_t ks0108GetPins();
-
 #endif // KS0108_H

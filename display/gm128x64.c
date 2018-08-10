@@ -3,37 +3,24 @@
 #include "fonts.h"
 #include "icons.h"
 
-static void showTime(RTC_type *rtc, char *wday);
-static void showParam(DispParam *dp);
-static void showSpectrum(uint8_t *dataL, uint8_t *dataR);
-
 DisplayDriver *disp;
 
-DisplayLayout gm128x64 = {
-    .width = 128,
-    .height = 64,
+//static void drawHorizLine(uint8_t x1, uint8_t x2, uint8_t y, uint8_t color)
+//{
+//    uint8_t i;
 
-    .showTime = showTime,
-    .showParam = showParam,
-    .showSpectrum = showSpectrum,
-};
+//    // Swap X
+//    if (x1 > x2) {
+//        i = x1;
+//        x1 = x2;
+//        x2 = i;
+//    }
 
-void drawHorizLine(uint8_t x1, uint8_t x2, uint8_t y, uint8_t color)
-{
-    uint8_t i;
+//    for (i = x1; i <= x2; i++)
+//        disp->drawPixel(i, y, color);
+//}
 
-    // Swap X
-    if (x1 > x2) {
-        i = x1;
-        x1 = x2;
-        x2 = i;
-    }
-
-    for (i = x1; i <= x2; i++)
-        disp->drawPixel(i, y, color);
-}
-
-void drawVertLine(uint8_t x, uint8_t y1, uint8_t y2, uint8_t color)
+static void drawVertLine(uint8_t x, uint8_t y1, uint8_t y2, uint8_t color)
 {
     uint8_t i;
 
@@ -48,7 +35,7 @@ void drawVertLine(uint8_t x, uint8_t y1, uint8_t y2, uint8_t color)
         disp->drawPixel(x, i, color);
 }
 
-
+// TODO: move to glcd and make work with rectangle area
 void drawIcon24(uint8_t iconNum)
 {
     uint8_t i, j, k;
@@ -70,6 +57,7 @@ void drawIcon24(uint8_t iconNum)
     }
 }
 
+// TODO: move to glcd and make work with rectangle area
 void drawIcon32(uint8_t iconNum)
 {
     uint8_t i, j, k;
@@ -103,14 +91,15 @@ static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_
     }
 }
 
-/*static*/ void displayTm(RTC_type *rtc, uint8_t tm, const uint8_t *font)
+static void displayTm(RTC_type *rtc, uint8_t tm)
 {
-    char ltSp = font[FONT_LTSPPOS];
+    char ltSp = disp->font.data[FONT_LTSPPOS];
     int8_t time = *((int8_t *)rtc + tm);
 
-    glcdLoadFont(font, 1, FONT_DIR_0);
+    glcdSetFontColor(LCD_COLOR_WHITE);
     glcdWriteChar(ltSp);
-    glcdLoadFont(font, rtc->etm == tm ? 0 : 1, FONT_DIR_0);
+    if (rtc->etm == tm)
+        glcdSetFontColor(LCD_COLOR_BLACK);
     glcdWriteChar(ltSp);
     if (tm == RTC_YEAR) {
         glcdWriteString("20");
@@ -118,29 +107,30 @@ static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_
     }
     glcdWriteNum(time, 2, '0', 10);
     glcdWriteChar(ltSp);
-    glcdLoadFont(font, 1, FONT_DIR_0);
+    glcdSetFontColor(LCD_COLOR_WHITE);
     glcdWriteChar(ltSp);
 }
 
 static void showTime(RTC_type *rtc, char *wday)
 {
+    glcdLoadFont(font_digits_32);
     glcdSetXY(4, 0);
-
-    displayTm(rtc, RTC_HOUR, font_digits_32);
+    displayTm(rtc, RTC_HOUR);
     glcdWriteChar(':');
-    displayTm(rtc, RTC_MIN, font_digits_32);
+    displayTm(rtc, RTC_MIN);
     glcdWriteChar(':');
-    displayTm(rtc, RTC_SEC, font_digits_32);
+    displayTm(rtc, RTC_SEC);
 
+    glcdLoadFont(font_ks0066_ru_24);
     glcdSetXY(5, 32);
-
-    displayTm(rtc, RTC_DATE, font_ks0066_ru_24);
+    displayTm(rtc, RTC_DATE);
     glcdWriteChar('.');
-    displayTm(rtc, RTC_MONTH, font_ks0066_ru_24);
+    displayTm(rtc, RTC_MONTH);
     glcdWriteChar('.');
-    displayTm(rtc, RTC_YEAR, font_ks0066_ru_24);
+    displayTm(rtc, RTC_YEAR);
 
-    glcdLoadFont(font_ks0066_ru_08, 1, FONT_DIR_0);
+    glcdLoadFont(font_ks0066_ru_08);
+    glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetXY(36, 56);
     glcdWriteString(wday);
 }
@@ -187,13 +177,13 @@ static void displayShowIcon(uint8_t icon)
 
 static void showParam(DispParam *dp)
 {
-    glcdLoadFont(font_ks0066_ru_24, 1, FONT_DIR_0);
+    glcdLoadFont(font_ks0066_ru_24);
+    glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetXY(0, 0);
     glcdWriteString((char *)dp->label);
 
     displayShowBar(dp->min, dp->max, dp->value);
 
-    glcdLoadFont(font_ks0066_ru_24, 1, FONT_DIR_0);
     glcdSetXY(94, 30);
     glcdWriteNum(dp->value, 3, ' ', 10);
 
@@ -207,7 +197,7 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
     uint8_t *buf;
 
     buf = dataL;
-    for (x = 0; x < gm128x64.width; x++) {
+    for (x = 0; x < disp->layout->width; x++) {
         xbase = x;
         y = 0;
 
@@ -216,7 +206,7 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
     }
 
     buf = dataR;
-    for (x = 0; x < gm128x64.width; x++) {
+    for (x = 0; x < disp->layout->width; x++) {
         xbase = x;
         y = 32;
 
@@ -225,9 +215,20 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
     }
 }
 
+DisplayLayout gm128x64 = {
+    .width = 128,
+    .height = 64,
+
+    .showTime = showTime,
+    .showParam = showParam,
+    .showSpectrum = showSpectrum,
+};
+
 void gm128x64Init(DisplayDriver *driver)
 {
     disp = driver;
     disp->layout = &gm128x64;
     glcdInit(disp);
+
+    glcdSetFontMult(1);
 }

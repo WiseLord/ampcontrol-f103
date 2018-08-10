@@ -68,7 +68,7 @@ uint8_t pinsGetInput(void)
     uint8_t ret = 0;
 
 #if defined(_KS0108B) || defined(_ILI9320)
-    ret = displayReadBus();
+    ret = ~displayReadBus();
 #endif
 
     return ret;
