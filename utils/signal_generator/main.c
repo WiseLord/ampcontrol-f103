@@ -52,6 +52,28 @@ int main()
         double l;
 
         l = exp((double)i / (N_DB - 1) * log(DB_MAX));
+
+//        double power = 1;
+//        double N = 0;
+
+//        double power = 0.9;
+//        double N = 2;
+
+//        double power = 0.8;
+//        double N = 8;
+
+        double power = 0.7;
+        double N = 27;
+
+//        double power = 0.6;
+//        double N = 84;
+
+//        double power = 0.5;
+//        double N = 256;
+
+        double x = (65535 + N) / pow (65535, power);
+        l = pow(l, power) * x - N;
+
         printf("%5.0f, ", l);
         if (i % 8 == 7)
             printf("\n");

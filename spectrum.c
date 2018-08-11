@@ -7,8 +7,7 @@
 #include <stm32f1xx_ll_rcc.h>
 
 #include "fft.h"
-
-#define ADC_DELAY_ENABLE_CALIB_CPU_CYCLES  (LL_ADC_DELAY_ENABLE_CALIB_ADC_CYCLES * 32)
+#include "functions.h"
 
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)
 
@@ -59,7 +58,7 @@ static void spInitDMA(void)
 static void spInitADC(void)
 {
     // Configure ADC clock
-    LL_RCC_SetADCClockSource(RCC_CFGR_ADCPRE_DIV2);
+    LL_RCC_SetADCClockSource(RCC_CFGR_ADCPRE_DIV6);
 
     // Enable GPIO Clock
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
@@ -103,21 +102,16 @@ static void spInitADC(void)
 
     if (LL_ADC_IsEnabled(ADC1) == 0) {
         /* Set ADC channels sampling time */
-        LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_8, LL_ADC_SAMPLINGTIME_41CYCLES_5);
-        LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_9, LL_ADC_SAMPLINGTIME_41CYCLES_5);
+        LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_8, LL_ADC_SAMPLINGTIME_71CYCLES_5);
+        LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_9, LL_ADC_SAMPLINGTIME_71CYCLES_5);
     }
-
-    __IO uint32_t wait_loop_index = 0;
 
     if (LL_ADC_IsEnabled(ADC1) == 0) {
         LL_ADC_Enable(ADC1);
 
-        wait_loop_index = (ADC_DELAY_ENABLE_CALIB_CPU_CYCLES >> 1);
-        while (wait_loop_index != 0) {
-            wait_loop_index--;
-        }
+        _delay_us(1);
 
-        /* Run ADC self calibration */
+        // Run ADC self calibration
         LL_ADC_StartCalibration(ADC1);
         while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0) {
         }

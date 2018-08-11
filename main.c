@@ -75,13 +75,13 @@ int main(void)
     LL_Init();
     SystemClock_Config();
 
+    spInit();
+
     pinsInit();
     timersInit();
     screenInit();
     inputInit();
     rtcInit();
-
-    spInit();
 
     while (1) {
         actionGet();
