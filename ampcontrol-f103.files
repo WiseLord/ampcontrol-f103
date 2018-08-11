@@ -4,6 +4,8 @@ display/gm128x64.c
 display/gm128x64.h
 display/ili9320.c
 display/ili9320.h
+display/ili9341.c
+display/ili9341.h
 fft.c
 fft.h
 ili9341.c

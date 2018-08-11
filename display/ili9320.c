@@ -7,7 +7,7 @@
 
 #define ILI9320_WIDTH           240
 #define ILI9320_HEIGHT          320
-#define ILI9341_PIXELS          (ILI9320_WIDTH * ILI9320_HEIGHT)
+#define ILI9320_PIXELS          (ILI9320_WIDTH * ILI9320_HEIGHT)
 
 static uint8_t bus_requested = 0;
 

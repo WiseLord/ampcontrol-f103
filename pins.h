@@ -71,7 +71,7 @@ uint8_t pinsGetInput(void);
 #define DISP_RESET_Port         GPIOB
 #define DISP_RESET_Pin          LL_GPIO_PIN_4
 // Temporarly
-#ifdef _ILI9320
+#if defined(_ILI9320) || defined(_ILI9341)
 #define DISP_BCKL_Port          GPIOB
 #define DISP_BCKL_Pin           LL_GPIO_PIN_11
 #else
@@ -98,5 +98,13 @@ uint8_t pinsGetInput(void);
 #define ILI9320_RD              DISP_CTRL1
 #define ILI9320_RESET           DISP_RESET
 #define ILI9320_LED             DISP_BCKL
+
+#define ILI9341_CS              DISP_RS
+#define ILI9341_RESET           DISP_RESET
+#define ILI9341_DC              DISP_CTRL1
+#define ILI9341_LED             DISP_BCKL
+#define ILI9341_SDI             DISP_RW
+#define ILI9341_SCK             DISP_STROB
+//#define ILI9341_SD0             DISP_RS
 
 #endif // PINS_H

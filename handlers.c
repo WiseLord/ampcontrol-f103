@@ -13,6 +13,8 @@
 #include "display/ks0108.h"
 #elif defined (_ILI9320)
 #include "display/ili9320.h"
+#elif defined (_ILI9341)
+#include "display/ili9341.h"
 #else
 #error "Unsupported display driver"
 #endif
