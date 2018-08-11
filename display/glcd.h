@@ -42,6 +42,7 @@ typedef struct {
     void (*clear)(void);
     void (*setBrightness)(uint8_t br);
     void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
+    void (*drawRectangle)(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
     void (*drawFontChar)(CharParam *param);
 
     DisplayLayout *layout;

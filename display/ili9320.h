@@ -13,7 +13,6 @@ void ili9320Sleep(void);
 void ili9320Wakeup(void);
 
 void ili9320DrawPixel(int16_t x, int16_t y, uint16_t color);
-
 void ili9320DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
 
 void ili9320DrawFontChar(CharParam *param);

@@ -3,8 +3,6 @@
 #include "fonts.h"
 #include "icons.h"
 
-#include "ili9320.h" // TODO: remove after updating driver
-
 DisplayDriver *disp;
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
@@ -32,8 +30,8 @@ static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t va
     if (value > max)
         value = max;
 
-    ili9320DrawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
-    ili9320DrawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
+    disp->drawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
+    disp->drawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
 }
 
 static void showTime(RTC_type *rtc, char *wday)
@@ -64,7 +62,7 @@ static void showTime(RTC_type *rtc, char *wday)
 
 static void showParam(DispParam *dp)
 {
-    ili9320DrawRectangle(10, 10, 50, 30, LCD_COLOR_GREEN);
+    disp->drawRectangle(10, 10, 50, 30, LCD_COLOR_GREEN);
 }
 
 static void showSpectrum(uint8_t *dataL, uint8_t *dataR)

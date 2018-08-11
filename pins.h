@@ -79,14 +79,8 @@ uint8_t pinsGetInput(void);
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 #endif
 
-#define KS0108_D0               BTN_0
-#define KS0108_D1               BTN_1
-#define KS0108_D2               BTN_2
-#define KS0108_D3               BTN_3
-#define KS0108_D4               BTN_4
-#define KS0108_D5               BTN_5
-#define KS0108_D6               ENC_A
-#define KS0108_D7               ENC_B
+#define KS0108_DATA_Port        INPUT_Port
+#define KS0108_DATA_Pin         INPUT_Pin
 #define KS0108_DI               DISP_RS
 #define KS0108_RW               DISP_RW
 #define KS0108_E                DISP_STROB

@@ -26,62 +26,24 @@ static uint8_t fb[KS0108_COLS * KS0108_CHIPS][KS0108_ROWS];
 
 static void ks0108SetPort(uint8_t data)
 {
-    if (data & (1 << 0)) SET(KS0108_D0);
-    else CLR(KS0108_D0);
-    if (data & (1 << 1)) SET(KS0108_D1);
-    else CLR(KS0108_D1);
-    if (data & (1 << 2)) SET(KS0108_D2);
-    else CLR(KS0108_D2);
-    if (data & (1 << 3)) SET(KS0108_D3);
-    else CLR(KS0108_D3);
-    if (data & (1 << 4)) SET(KS0108_D4);
-    else CLR(KS0108_D4);
-    if (data & (1 << 5)) SET(KS0108_D5);
-    else CLR(KS0108_D5);
-    if (data & (1 << 6)) SET(KS0108_D6);
-    else CLR(KS0108_D6);
-    if (data & (1 << 7)) SET(KS0108_D7);
-    else CLR(KS0108_D7);
+    KS0108_DATA_Port->BSRR = 0x00FF0000 | data;     // If port bits 7..0 are used
 }
 
 static void ks0108SetDdrIn()
 {
-    IN_U(KS0108_D0);
-    IN_U(KS0108_D1);
-    IN_U(KS0108_D2);
-    IN_U(KS0108_D3);
-    IN_U(KS0108_D4);
-    IN_U(KS0108_D5);
-    IN_U(KS0108_D6);
-    IN_U(KS0108_D7);
+    KS0108_DATA_Port->CRL = 0x88888888;             // SET CNF=10, MODE=00 - Input pullup
 }
 
-static void ks0108SetDdrOut()
+static inline void ks0108SetDdrOut() __attribute__((always_inline));
+static inline void ks0108SetDdrOut()
 {
-    OUT(KS0108_D0);
-    OUT(KS0108_D1);
-    OUT(KS0108_D2);
-    OUT(KS0108_D3);
-    OUT(KS0108_D4);
-    OUT(KS0108_D5);
-    OUT(KS0108_D6);
-    OUT(KS0108_D7);
+    KS0108_DATA_Port->CRL = 0x22222222;             // Set CNF=00, MODE=10 - Output push-pull 2 MHz
 }
 
-static uint8_t ks0108ReadPin()
+static inline uint8_t ks0108ReadPin(void) __attribute__((always_inline));
+static inline uint8_t ks0108ReadPin(void)
 {
-    uint8_t ret = 0;
-
-    if (READ(KS0108_D0)) ret |= (1 << 0);
-    if (READ(KS0108_D1)) ret |= (1 << 1);
-    if (READ(KS0108_D2)) ret |= (1 << 2);
-    if (READ(KS0108_D3)) ret |= (1 << 3);
-    if (READ(KS0108_D4)) ret |= (1 << 4);
-    if (READ(KS0108_D5)) ret |= (1 << 5);
-    if (READ(KS0108_D6)) ret |= (1 << 6);
-    if (READ(KS0108_D7)) ret |= (1 << 7);
-
-    return ret;
+    return KS0108_DATA_Port->IDR & 0x00FF;          // Read 8-bit bus;
 }
 
 static void ks0108WriteCmd(uint8_t cmd)
@@ -102,7 +64,6 @@ void ks0108IRQ()
     static uint8_t j;
     static uint8_t cs;
 
-    // TODO: avoid function call, use direct port read
     drv.bus = ks0108ReadPin();                      // Read pins
     ks0108SetDdrOut();                              // Set data lines as outputs
 

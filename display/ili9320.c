@@ -15,6 +15,7 @@ DisplayDriver drv = {
     .clear = ili9320Clear,
     .setBrightness = glcdSetBrightness,
     .drawPixel = ili9320DrawPixel,
+    .drawRectangle = ili9320DrawRectangle,
     .drawFontChar = ili9320DrawFontChar,
 };
 
@@ -39,7 +40,7 @@ static inline void ili9320SendData(uint16_t data)
         __NOP();
         __NOP();
         __NOP();
-        drv.bus = ILI9320_DHI_Port->IDR & 0x00FF;
+        drv.bus = ILI9320_DHI_Port->IDR & 0x00FF;   // Read 8-bit bus
         ILI9320_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
