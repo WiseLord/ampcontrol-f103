@@ -2,6 +2,7 @@
 #define GLCD_H
 
 #include <inttypes.h>
+
 #include "fonts.h"
 #include "../rtc.h"
 
@@ -38,6 +39,7 @@ typedef struct {
 } DisplayLayout;
 
 typedef struct {
+    void (*clear)(void);
     void (*setBrightness)(uint8_t br);
     void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
     void (*drawFontChar)(CharParam *param);
@@ -80,7 +82,13 @@ typedef struct {
 #define LCD_COLOR_WITCH_HAZE            RGB_TO_565(0xFFFF80)
 #define LCD_COLOR_WHITE                 RGB_TO_565(0xFFFFFF)
 
+#define GLCD_MIN_BRIGHTNESS             0
+#define GLCD_MAX_BRIGHTNESS             32
+
 void glcdInit(DisplayDriver *driver);
+
+void glcdSetBrightness(uint8_t value);
+void glcdPWM();
 
 void glcdWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix);
 

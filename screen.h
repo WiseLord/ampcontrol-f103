@@ -12,9 +12,17 @@ typedef enum {
     SCREEN_BRIGHTNESS,
 } Screen;
 
+void screenInit(void);
+void screenClear(void);
+
+uint8_t screenReadBus(void);
+
 void screenSet(Screen value);
 Screen screenGet(void);
-void screenClear(void);
+
+int8_t screenGetBrightness(uint8_t mode);
+void screenSetBrightness(uint8_t mode, int8_t value);
+void screenChangeBrighness(uint8_t mode, int8_t diff);
 
 void screenTime(RtcMode etm);
 void screenSpectrum(uint8_t speed);

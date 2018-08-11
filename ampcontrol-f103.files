@@ -18,8 +18,6 @@ timers.c
 Makefile
 actions.c
 actions.h
-display.c
-display.h
 handlers.c
 handlers.h
 m32.mk

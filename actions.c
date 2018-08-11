@@ -1,6 +1,5 @@
 #include "actions.h"
 
-#include "display.h"
 #include "input.h"
 #include "rtc.h"
 #include "screen.h"
@@ -181,11 +180,11 @@ void actionHandle(void)
         case AMODE_STANDBY_ENTER:
             screenSet(SCREEN_STANDBY);
             rtcMode = RTC_NOEDIT;
-            displayChangeBrighness(AMODE_BRIGNTNESS_STANDBY, 0);
+            screenChangeBrighness(AMODE_BRIGNTNESS_STANDBY, 0);
             break;
         case AMODE_STANDBY_EXIT:
             screenSet(SCREEN_TIME);
-            displayChangeBrighness(AMODE_BRIGHTNESS_WORK, 0);
+            screenChangeBrighness(AMODE_BRIGHTNESS_WORK, 0);
             swTimSetDisplay(1000);
             break;
         }
@@ -221,7 +220,7 @@ void actionHandle(void)
     case ATYPE_BRIGHTNESS:
         screenSet(SCREEN_BRIGHTNESS);
         swTimSetDisplay(5000);
-        displayChangeBrighness(action.mode, action.value);
+        screenChangeBrighness(action.mode, action.value);
         break;
     }
 }
@@ -231,13 +230,15 @@ void actionShowScreen(void)
     static Screen screenPrev = SCREEN_STANDBY;
     Screen screen = screenGet();
 
-    // Clear display if screen mode has changed
+    // Clear display if screen mode has changed (but not standby/time screens)
     if (screen != screenPrev) {
-        screenClear();
+        if (screen > SCREEN_TIME || screenPrev > SCREEN_TIME)
+            screenClear();
     }
 
     switch (screen) {
     case SCREEN_STANDBY:
+        swTimSetDisplay(SW_TIM_OFF);
     case SCREEN_TIME:
         screenTime(rtcMode);
         break;

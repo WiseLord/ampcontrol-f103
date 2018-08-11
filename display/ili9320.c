@@ -12,7 +12,8 @@
 static uint8_t bus_requested = 0;
 
 DisplayDriver drv = {
-//    .setBrightness = ,
+    .clear = ili9320Clear,
+    .setBrightness = glcdSetBrightness,
     .drawPixel = ili9320DrawPixel,
     .drawFontChar = ili9320DrawFontChar,
 };
@@ -20,22 +21,26 @@ DisplayDriver drv = {
 static inline void ili9320SendData(uint16_t data) __attribute__((always_inline));
 static inline void ili9320SendData(uint16_t data)
 {
-    ILI9320_DHI_Port->BSRR = 0x00FF0000 | (data >> 8);              // If port bits 7..0 are used
-    CLR(ILI9320_WR);                                                // Strob MSB
+    uint8_t dataH = data >> 8;
+    uint8_t dataL = data & 0xFF;
+
+    ILI9320_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
+    CLR(ILI9320_WR);                                // Strob MSB
     SET(ILI9320_WR);
-    ILI9320_DHI_Port->BSRR = 0x00FF0000 | (data & 0x00FF);          // If port bits 7..0 are used
-    CLR(ILI9320_WR);                                                // Strob LSB
+    ILI9320_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
+    CLR(ILI9320_WR);                                // Strob LSB
     SET(ILI9320_WR);
 
     // If input IRQ requested bus status, switch temporarly to input mode and read bus
     if (bus_requested) {
-        ILI9320_DHI_Port->BSRR = 0x000000FF;                        // Set 1 on all data lines
-        ILI9320_DHI_Port->CRL = 0x88888888;                         // SET CNF=10, MODE=00 - Input pullup
-        // TODO: Use some internal delay
-        _delay_us(1);
+        ILI9320_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
+        ILI9320_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
+        // Small delay to stabilize data before reading
+        __NOP();
+        __NOP();
+        __NOP();
         drv.bus = ILI9320_DHI_Port->IDR & 0x00FF;
-        ILI9320_DHI_Port->CRL =
-            0x33333333;                         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        ILI9320_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
 }
@@ -50,8 +55,10 @@ static inline void ili9320SelectReg(uint16_t reg)
 
 static void ili9320WriteReg(uint16_t reg, uint16_t data)
 {
+    CLR(ILI9320_CS);
     ili9320SelectReg(reg);
     ili9320SendData(data);
+    SET(ILI9320_CS);
 }
 
 static inline void ili9320InitSeq(void)
@@ -75,21 +82,11 @@ static inline void ili9320InitSeq(void)
     ili9320WriteReg(0x000F, 0x0000); // RGB interface polarity
 
     // Power On Sequence
-    ili9320WriteReg(0x0010, 0x0000); // SAP, BT[3:0], AP, DSTB, SLP, STB
-    ili9320WriteReg(0x0011, 0x0000); // DC1[2:0], DC0[2:0], VC[2:0]
-    ili9320WriteReg(0x0012, 0x0000); // VREG1OUT voltage
-    ili9320WriteReg(0x0013, 0x0000); // VDV[4:0] for VCOM amplitude
-    _delay_ms(200);
     ili9320WriteReg(0x0010, 0x17B0); // SAP, BT[3:0], AP, DSTB, SLP, STB
     ili9320WriteReg(0x0011, 0x0037); // DC1[2:0], DC0[2:0], VC[2:0]
-    _delay_ms(50);
     ili9320WriteReg(0x0012, 0x013A); // VREG1OUT voltage
-    _delay_ms(50);
     ili9320WriteReg(0x0013, 0x1600); // VDV[4:0] for VCOM amplitude
     ili9320WriteReg(0x0029, 0x000C); // VCM[4:0] for VCOMH
-    _delay_ms(50);
-    ili9320WriteReg(0x0020, 0x0000); // GRAM horisontal address
-    ili9320WriteReg(0x0021, 0x0000); // GRAM vertical address
 
     // Adjust the Gamma Curve
     ili9320WriteReg(0x0030, 0x0007);
@@ -104,6 +101,9 @@ static inline void ili9320InitSeq(void)
     ili9320WriteReg(0x003D, 0x0F00);
 
     // Set GRAM area
+    ili9320WriteReg(0x0020, 0x0000); // GRAM horisontal address
+    ili9320WriteReg(0x0021, 0x0000); // GRAM vertical address
+
     ili9320WriteReg(0x0050, 0x0000); // Horizontal GRAM Start Address
     ili9320WriteReg(0x0051, 0x00EF); // Horizontal GRAM End Address
     ili9320WriteReg(0x0052, 0x0000); // Vertical GRAM Start Address
@@ -156,7 +156,7 @@ static void ili9320SetCursor(uint16_t x, uint16_t y)
 //    }
 }
 
-void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+static void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
 //    ili9320SetCursor(x, y);
 
@@ -192,9 +192,6 @@ void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 //    default:
 //        break;
 //    }
-
-    // Go to data mode
-    ili9320SelectReg(0x0022);
 }
 
 void ili9320Init(DisplayDriver **disp)
@@ -206,25 +203,21 @@ void ili9320Init(DisplayDriver **disp)
     SET(ILI9320_RD);
     SET(ILI9320_WR);
     SET(ILI9320_RS);
-    CLR(ILI9320_CS);
+    SET(ILI9320_CS);
 
-    SET(ILI9320_RESET);
-    _delay_ms(1);
     CLR(ILI9320_RESET);
-    _delay_ms(10);
+    _delay_ms(1);
     SET(ILI9320_RESET);
 
     ili9320InitSeq();
-
-//    for (uint8_t i = 0; i < 200; i++) {
-    ili9320DrawRectangle(0, 0, drv.layout->width, drv.layout->height,
-                         LCD_COLOR_BLACK);
-//        ili9320DrawRectangle(0, 0, drv.layout->width, drv.layout->height,
-//                                    LCD_COLOR_RED);
-//    }
 }
 
-void ili9320BusIRQ()
+void ili9320Clear(void)
+{
+    ili9320DrawRectangle(0, 0, drv.layout->width, drv.layout->height, LCD_COLOR_BLACK);
+}
+
+void ili9320BusIRQ(void)
 {
     bus_requested = 1;
 }
@@ -264,8 +257,10 @@ void ili9320DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
     ili9320SetCursor(x, y);
 
+    CLR(ILI9320_CS);
     ili9320SelectReg(0x0022);
     ili9320SendData(color);
+    SET(ILI9320_CS);
 }
 
 void ili9320DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
@@ -300,8 +295,11 @@ void ili9320DrawHorizLine(uint16_t x0, uint16_t x1, uint16_t y, uint16_t color)
     len = x1 - x0 + 1;
 
     ili9320SetWindow(x0, y, len, 1);
+    CLR(ILI9320_CS);
+    ili9320SelectReg(0x0022);
     for (i = 0; i < len; i++)
         ili9320SendData(color);
+    SET(ILI9320_CS);
 }
 
 void ili9320DrawVertLine(uint16_t x, uint16_t y0, uint16_t y1, uint16_t color)
@@ -311,8 +309,11 @@ void ili9320DrawVertLine(uint16_t x, uint16_t y0, uint16_t y1, uint16_t color)
     len = y1 - y0 + 1;
 
     ili9320SetWindow(x, y0, 1, len);
+    CLR(ILI9320_CS);
+    ili9320SelectReg(0x0022);
     for (i = 0; i < len; i++)
         ili9320SendData(color);
+    SET(ILI9320_CS);
 }
 
 void ili9320DrawFrame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
@@ -326,8 +327,11 @@ void ili9320DrawFrame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16
 void ili9320DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
     ili9320SetWindow(x, y, w, h);
+    CLR(ILI9320_CS);
+    ili9320SelectReg(0x0022);
     for (uint32_t i = 0; i < w * h; i++)
         ili9320SendData(color);
+    SET(ILI9320_CS);
 }
 
 void ili9320DrawFontChar(CharParam *param)
@@ -341,6 +345,8 @@ void ili9320DrawFontChar(CharParam *param)
     uint8_t mult = drv.font.mult;
 
     ili9320SetWindow(x0, y0, mult * w, mult * h * 8);
+    CLR(ILI9320_CS);
+    ili9320SelectReg(0x0022);
     for (uint16_t i = 0; i < w; i++) {
         for (uint8_t mx = 0; mx < mult; mx++) {
             for (uint16_t j = 0; j < h; j++) {
@@ -353,6 +359,7 @@ void ili9320DrawFontChar(CharParam *param)
             }
         }
     }
+    SET(ILI9320_CS);
 }
 
 void ili9320DrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color)

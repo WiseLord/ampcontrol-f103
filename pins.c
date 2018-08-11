@@ -1,7 +1,7 @@
 #include "pins.h"
 
 #include <stm32f1xx_ll_bus.h>
-#include "display.h"
+#include "screen.h"
 
 static void pinsInitButtons(void)
 {
@@ -68,7 +68,7 @@ uint8_t pinsGetInput(void)
     uint8_t ret = 0;
 
 #if defined(_KS0108B) || defined(_ILI9320)
-    ret = ~displayReadBus();
+    ret = ~screenReadBus();
 #endif
 
     return ret;

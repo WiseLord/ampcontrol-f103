@@ -4,11 +4,18 @@
 #include <stm32f1xx_ll_rtc.h>
 #include <stm32f1xx_ll_tim.h>
 
-#include "display.h"
 #include "input.h"
 #include "rtc.h"
 #include "spectrum.h"
 #include "timers.h"
+
+#if defined (_KS0108B)
+#include "display/ks0108.h"
+#elif defined (_ILI9320)
+#include "display/ili9320.h"
+#else
+#error "Unsupported display driver"
+#endif
 
 void NMI_Handler(void)
 {
@@ -79,8 +86,13 @@ void TIM2_IRQHandler(void)
         // Clear the update interrupt flag
         LL_TIM_ClearFlag_UPDATE(TIM2);
 
-        // Callback
-        displayUpdateIRQ();
+        // Callbacks
+#if defined(_KS0108B)
+        ks0108IRQ();        // Update screen from framebuffer
+#elif defined(_ILI9320)
+        ili9320BusIRQ();    // Read bus
+#endif
+        glcdPWM();
         spConvertADC();
     }
 }

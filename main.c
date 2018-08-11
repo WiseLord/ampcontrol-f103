@@ -5,9 +5,9 @@
 #include <stm32f1xx_ll_utils.h>
 
 #include "actions.h"
-#include "display.h"
 #include "input.h"
 #include "pins.h"
+#include "screen.h"
 #include "timers.h"
 #include "spectrum.h"
 
@@ -77,7 +77,7 @@ int main(void)
 
     pinsInit();
     timersInit();
-    displayInit();
+    screenInit();
     inputInit();
     rtcInit();
 

@@ -6,7 +6,8 @@
 #include "gm128x64.h"
 
 DisplayDriver drv = {
-    .setBrightness = ks0108SetBrightness,
+    .clear = ks0108Clear,
+    .setBrightness = glcdSetBrightness,
     .drawPixel = ks0108DrawPixel,
     .drawFontChar = glcdDrawFontChar,
 };
@@ -22,12 +23,6 @@ DisplayDriver drv = {
 #endif
 
 static uint8_t fb[KS0108_COLS * KS0108_CHIPS][KS0108_ROWS];
-static uint8_t _br;
-
-void ks0108SetBrightness(uint8_t br)
-{
-    _br = br;
-}
 
 static void ks0108SetPort(uint8_t data)
 {
@@ -107,8 +102,6 @@ void ks0108IRQ()
     static uint8_t j;
     static uint8_t cs;
 
-    static uint8_t br;
-
     // TODO: avoid function call, use direct port read
     drv.bus = ks0108ReadPin();                      // Read pins
     ks0108SetDdrOut();                              // Set data lines as outputs
@@ -147,14 +140,6 @@ void ks0108IRQ()
         j = 0;
         SET(KS0108_DI);                             // Go to data mode
     }
-
-    if (++br >= KS0108_MAX_BRIGHTNESS)              // Loop brightness
-        br = KS0108_MIN_BRIGHTNESS;
-
-    if (br == _br) {
-        CLR(KS0108_BCKL);                           // Turn backlight off
-    } else if (br == 0)
-        SET(KS0108_BCKL);                           // Turn backlight on
 }
 
 void ks0108Init(DisplayDriver **disp)

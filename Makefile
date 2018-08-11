@@ -9,7 +9,6 @@ TARGET = ampcontrol_f103_$(shell echo $(DISPLAY) | tr A-Z a-z)
 C_SOURCES = main.c
 
 C_SOURCES += actions.c
-C_SOURCES += display.c
 C_SOURCES += fft.c
 C_SOURCES += functions.c
 C_SOURCES += handlers.c
@@ -98,6 +97,7 @@ PREFIX = arm-none-eabi-
 CC = $(BINPATH)$(PREFIX)gcc
 AS = $(BINPATH)$(PREFIX)gcc -x assembler-with-cpp
 CP = $(BINPATH)$(PREFIX)objcopy
+OD = $(BINPATH)$(PREFIX)objdump
 AR = $(BINPATH)$(PREFIX)ar
 SZ = $(BINPATH)$(PREFIX)size
 
@@ -116,6 +116,7 @@ all: $(BIN) size
 
 $(BIN): $(ELF)
 	$(CP) -O binary $(ELF) $(BIN)
+	$(OD) -h -S $(ELF) > $(BUILD_DIR)/$(TARGET).lss
 
 $(ELF): $(OBJECTS)
 	@mkdir -p flash

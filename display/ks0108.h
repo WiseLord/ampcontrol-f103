@@ -27,13 +27,8 @@
 #define KS0108_COMMAND              0
 #define KS0108_DATA                 1
 
-#define KS0108_MIN_BRIGHTNESS       0
-#define KS0108_MAX_BRIGHTNESS       32
-
 #define KS0108_PHASE_SET_PAGE       64
 #define KS0108_PHASE_SET_ADDR       65
-
-void ks0108SetBrightness(uint8_t br);
 
 void ks0108Init(DisplayDriver **disp);
 void ks0108Clear();
