@@ -8,7 +8,7 @@
 #if defined (_KS0108B)
 #include "display/ks0108.h"
 #elif defined (_ILI9320)
-#include "display/ili9341.h"
+#include "display/ili9320.h"
 #elif defined (_ILI9341)
 #include "display/ili9341.h"
 #else
@@ -63,6 +63,8 @@ void screenInit(void)
     ks0108Init(&disp);
 #elif defined (_ILI9320)
     ili9320Init(&disp);
+#elif defined (_ILI9341)
+    ili9341Init(&disp);
 #endif
     screenClear();
     if (disp->setBrightness) {

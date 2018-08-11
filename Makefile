@@ -1,4 +1,4 @@
-DISPLAY = ILI9320
+DISPLAY = KS0108B
 
 APROC_LIST =
 TUNER_LIST =
@@ -27,7 +27,7 @@ ICONS_SRC = $(wildcard display/icon*.c)
 C_SOURCES += $(FONTS_SRC)
 C_SOURCES += $(ICONS_SRC)
 
-ifeq "$(DISPLAY)" "ILI9341_SPI"
+ifeq "$(DISPLAY)" "ILI9341"
   C_SOURCES += display/ili9341.c
   C_SOURCES += display/gc320x240.c
   C_SOURCES += display/glcd.c
@@ -46,15 +46,16 @@ endif
 C_DEFS += -D_$(DISPLAY)
 
 C_SOURCES += \
-  system/system_stm32f1xx.c \
-  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \
-  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c \
-  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
-  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c \
-  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_tim.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_pwr.c \
-  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rtc.c
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rtc.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_spi.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_tim.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c \
+  system/system_stm32f1xx.c
 
 C_INCLUDES = \
   -Idrivers/STM32F1xx_HAL_Driver/Inc \

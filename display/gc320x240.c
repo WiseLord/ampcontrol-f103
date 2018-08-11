@@ -3,6 +3,8 @@
 #include "fonts.h"
 #include "icons.h"
 
+#include "../functions.h"
+
 DisplayDriver *disp;
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
@@ -33,6 +35,7 @@ static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t va
     disp->drawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
     disp->drawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
 }
+extern CharParam charParam;
 
 static void showTime(RTC_type *rtc, char *wday)
 {

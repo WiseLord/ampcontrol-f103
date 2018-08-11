@@ -92,7 +92,7 @@ void glcdSetX(int16_t x)
     disp->layout->x = x;
 }
 
-static void findCharOft(uint8_t code)
+/*static*/ void findCharOft(uint8_t code)
 {
     uint8_t i;
     const uint8_t *fp = disp->font.data;
@@ -121,6 +121,8 @@ void glcdDrawFontChar(CharParam *param)
     uint8_t w = param->width;
     uint8_t h = disp->font.data[FONT_HEIGHT];
     uint16_t color = disp->font.color;
+    uint16_t bgColor = disp->layout->color;
+    uint8_t mult = disp->font.mult;
 
     for (uint16_t j = 0; j < h; j++) {
         for (uint16_t i = 0; i < w; i++) {
@@ -128,7 +130,11 @@ void glcdDrawFontChar(CharParam *param)
             if (!color)
                 data = ~data;
             for (uint8_t k = 0; k < 8; k++) {
-                disp->drawPixel(disp->layout->x + i, disp->layout->y + (8 * j + k), data & (1 << k));
+                for (uint8_t mx = 0; mx < mult; mx++) {
+                    for (uint8_t my = 0; my < mult; my++) {
+                        disp->drawPixel(disp->layout->x + mult * i + mx, disp->layout->y + mult * (8 * j + k) + my, data & (1 << k) ? color : bgColor);
+                    }
+                }
             }
         }
     }

@@ -1,5 +1,8 @@
 #include "ili9341.h"
 
+#include <stm32f1xx_ll_bus.h>
+#include <stm32f1xx_ll_spi.h>
+
 #include "../pins.h"
 #include "../functions.h"
 
@@ -12,12 +15,30 @@
 DisplayDriver drv = {
     .clear = ili9341Clear,
     .setBrightness = glcdSetBrightness,
-//    .drawPixel = ili9341DrawPixel,
+    .drawPixel = ili9341DrawPixel,
     .drawRectangle = ili9341DrawRectangle,
-    .drawFontChar = ili9341DrawFontChar,
+    .drawFontChar = glcdDrawFontChar,
+//    .drawFontChar = ili9341DrawFontChar,
 };
 
-static void ili9341SendSPI(uint8_t data) {
+static void ili9341SendSPI(uint8_t data)
+{
+    uint8_t i;
+
+    for (i = 0; i < 8; i++) {
+        if (data & 0x80)
+            SET(ILI9341_SDI);
+        else
+            CLR(ILI9341_SDI);
+
+        SET(ILI9341_SCK);
+        CLR(ILI9341_SCK);
+
+        data <<= 1;
+    }
+    _delay_us(1);
+//    while (LL_SPI_IsActiveFlag_TXE(SPI1));
+//    LL_SPI_TransmitData8(SPI1, data);
 //    while (!(SPSR & (1 << SPIF)));
 //    SPDR = data;
 }
@@ -25,6 +46,10 @@ static void ili9341SendSPI(uint8_t data) {
 static void ili9341WriteData(uint8_t data)
 {
     CLR(ILI9341_CS);
+    ili9341SendSPI(data);
+    _delay_us(1);
+//    LL_SPI_TransmitData8(SPI1, data);
+//    while (LL_SPI_IsActiveFlag_TXE(SPI1));
 //    SPDR = data;
 //    while (!(SPSR & (1 << SPIF)));  // Wait for transmittion to complete
     SET(ILI9341_CS);
@@ -34,6 +59,10 @@ static void ili9341SendCmd(uint8_t cmd)
 {
     CLR(ILI9341_DC);
     CLR(ILI9341_CS);
+    ili9341SendSPI(cmd);
+    _delay_us(1);
+//    LL_SPI_TransmitData8(SPI1, cmd);
+//    while (LL_SPI_IsActiveFlag_TXE(SPI1));
 //    SPDR = cmd;
 //    while (!(SPSR & (1 << SPIF)));  // Wait for transmittion to complete
     SET(ILI9341_CS);
@@ -48,16 +77,15 @@ static void ili9341SendData(uint16_t data)
     CLR(ILI9341_CS);
     ili9341SendSPI(dataH);
     ili9341SendSPI(dataL);
+    _delay_us(1);
+//    while (LL_SPI_IsActiveFlag_TXE(SPI1));
 //    while (!(SPSR & (1 << SPIF)));  // Wait for last transmission to complete
     SET(ILI9341_CS);
 }
 
 static void ili9341InitSeq(void)
 {
-    CLR(ILI9341_RESET);
-    _delay_ms(100);
-    SET(ILI9341_RESET);
-    _delay_ms(100);
+    _delay_ms(50);
 
     ili9341SendCmd(ILI9341_SWRESET);
     _delay_ms(10);
@@ -168,27 +196,22 @@ static void ili9341InitSeq(void)
     _delay_ms(100);
 }
 
-void ili9341SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+void ili9341SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
     ili9341SendCmd(ILI9341_PASET);
-#ifdef SIM_MODE
-    ili9341SendData(239 - x1);
-    ili9341SendData(239 - x0);
-#else
-    ili9341SendData(x0);
-    ili9341SendData(x1);
-#endif
+    ili9341SendData(x);
+    ili9341SendData(x + w - 1);
 
     ili9341SendCmd(ILI9341_CASET);
-    ili9341SendData(y0);
-    ili9341SendData(y1);
+    ili9341SendData(y);
+    ili9341SendData(y + h - 1);
 
     ili9341SendCmd(ILI9341_RAMWR);
 }
 
-//static void ili9341Rotate(GlcdOrientation orientation)
-//{
-//    ili9341SendCmd(ILI9341_MADCTL);
+static void ili9341Rotate()
+{
+    ili9341SendCmd(ILI9341_MADCTL);
 
 //    switch (orientation) {
 //    case LCD_Orientation_Portrait_1:
@@ -204,7 +227,7 @@ void ili9341SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 //        glcdOpts.orientation = orientation;
 //        break;
 //    case LCD_Orientation_Landscape_1:
-//        ili9341WriteData(0x08);
+        ili9341WriteData(0x08);
 //        glcdOpts.width = ILI9341_HEIGHT;
 //        glcdOpts.height = ILI9341_WIDTH;
 //        glcdOpts.orientation = orientation;
@@ -216,34 +239,50 @@ void ili9341SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 //        glcdOpts.orientation = orientation;
 //        break;
 //    }
-//}
+}
 
-void ili9341Init(void)
+static void ili9341InitSPI()
 {
-    // Non-SPI pins
-    OUT(ILI9341_DC);
-    OUT(ILI9341_RESET);
-    OUT(ILI9341_LED);
+    return;
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
 
-    // SPI pins
-    OUT(ILI9341_SDI);
-    OUT(ILI9341_SCK);
-    OUT(ILI9341_CS);
+    LL_SPI_InitTypeDef SPI_InitStruct;
+    SPI_InitStruct.Mode = LL_SPI_MODE_MASTER;
+    SPI_InitStruct.TransferDirection = LL_SPI_FULL_DUPLEX;
+    SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV4;
+    SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_LOW;
+    SPI_InitStruct.ClockPhase = LL_SPI_PHASE_1EDGE;
+    SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
+    SPI_InitStruct.DataWidth = LL_SPI_DATAWIDTH_8BIT;
+    SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
+    SPI_InitStruct.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
+    SPI_InitStruct.CRCPoly = 10;
+    LL_SPI_Init(SPI1, &SPI_InitStruct);
+}
+
+void ili9341Init(DisplayDriver **disp)
+{
+    *disp = &drv;
+    gc320x240Init(*disp);
 
     // Configure Hardware SPI
-//    SPCR = (1 << SPE) | (1 << MSTR);
-//    SPSR = (1 << SPI2X);
+    ili9341InitSPI();
+
+    CLR(ILI9341_RESET);
+    _delay_ms(100);
+    SET(ILI9341_RESET);
 
     // Init magic
     ili9341InitSeq();
     SET(ILI9341_LED);
 
 //    // Set display orientation and size
-//#ifdef SIM_MODE
-//    ili9341Rotate(LCD_Orientation_Portrait_2);
-//#else
-//    ili9341Rotate(LCD_Orientation_Portrait_1);
-//#endif
+    ili9341Rotate();
+}
+
+void ili9341Clear(void)
+{
+    ili9341DrawRectangle(0, 0, drv.layout->width, drv.layout->height, LCD_COLOR_BLACK);
 }
 
 void ili9341Sleep(void)
@@ -262,32 +301,31 @@ void ili9341Wakeup(void)
     SET(ILI9341_LED);
 }
 
-void ili9431DrawPixel(int16_t x, int16_t y, uint16_t color)
+void ili9341DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    ili9341SetWindow(x, y, x, y);
+    ili9341SetWindow(x, y, 1, 1);
     ili9341SendData(color);
 }
 
-void ili9341DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
+void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    uint32_t i, j;
-    uint16_t w = x1 - x0 + 1;
-    uint16_t h = y1 - y0 + 1;
     uint8_t colorH = color >> 8;
     uint8_t colorL = color & 0xFF;
 
-    ili9341SetWindow(x0, y0, x1, y1);
+    ili9341SetWindow(x, y, w, h);
 
     CLR(ILI9341_CS);
-    for (i = 0; i < w; i++) {
-        for (j = 0; j < h; j++) {
+    for (uint16_t i = 0; i < w; i++) {
+        for (uint16_t j = 0; j < h; j++) {
             ili9341SendSPI(colorH);
             ili9341SendSPI(colorL);
         }
     }
     // Wait for last transmission to complete
+    _delay_us(1);
+//    while (LL_SPI_IsActiveFlag_TXE(SPI1));
 //    while (!(SPSR & (1 << SPIF)));
-//    SET(ILI9341_CS);
+    SET(ILI9341_CS);
 }
 
 void ili9341DrawFontChar(CharParam *param)
@@ -325,6 +363,8 @@ void ili9341WriteChar(const uint8_t *chOft, uint8_t fwd, uint8_t swd)
         }
     }
     // Wait for last transmission to complete
+    _delay_us(1);
+//    while (LL_SPI_IsActiveFlag_TXE(SPI1));
 //    while (!(SPSR & (1 << SPIF)));
-//    SET(ILI9341_CS);
+    SET(ILI9341_CS);
 }

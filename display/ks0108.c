@@ -50,7 +50,7 @@ static void ks0108WriteCmd(uint8_t cmd)
 {
     _delay_us(50);
 
-    CLR(KS0108_DI);
+    CLR(KS0108_RS);
     ks0108SetPort(cmd);
 
     SET(KS0108_E);
@@ -81,7 +81,7 @@ void ks0108IRQ()
                 break;
             }
         }
-        CLR(KS0108_DI);                             // Go to command mode
+        CLR(KS0108_RS);                             // Go to command mode
         ks0108SetPort(KS0108_SET_PAGE + i);
     } else if (j == KS0108_PHASE_SET_ADDR) {        // Phase 2 (X)
         ks0108SetPort(KS0108_SET_ADDRESS);
@@ -99,7 +99,7 @@ void ks0108IRQ()
 
     if (++j > KS0108_PHASE_SET_ADDR) {
         j = 0;
-        SET(KS0108_DI);                             // Go to data mode
+        SET(KS0108_RS);                             // Go to data mode
     }
 }
 
@@ -111,13 +111,13 @@ void ks0108Init(DisplayDriver **disp)
     // Set RW line to zero
     CLR(KS0108_RW);
 
-    CLR(KS0108_DI);
+    CLR(KS0108_RS);
     CLR(KS0108_E);
 
     // Hardware reset
-    CLR(KS0108_RES);
+    CLR(KS0108_RST);
     _delay_us(1);
-    SET(KS0108_RES);
+    SET(KS0108_RST);
     _delay_us(1);
 
     // Init both controller
@@ -127,10 +127,11 @@ void ks0108Init(DisplayDriver **disp)
     _delay_ms(10);
 
     // Go to data mode
-    SET(KS0108_DI);
+    SET(KS0108_RS);
 
     // Enable backlight control
     OUT(KS0108_BCKL);
+    SET(KS0108_BCKL);
 }
 
 void ks0108Clear()

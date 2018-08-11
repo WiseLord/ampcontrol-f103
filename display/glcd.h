@@ -103,5 +103,5 @@ void glcdSetX(int16_t x);
 void glcdDrawFontChar(CharParam *param);
 void glcdWriteChar(uint8_t code);
 void glcdWriteString(char *string);
-
+void findCharOft(uint8_t code);
 #endif // GLCD_H

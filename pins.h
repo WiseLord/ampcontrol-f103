@@ -11,6 +11,7 @@ uint8_t pinsGetInput(void);
 #define OUT(p)                  (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_OUTPUT))
 #define IN_F(p)                 (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_FLOATING))
 #define IN_P(p)                 (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_INPUT))
+#define ALT(p)                  (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_ALTERNATE))
 #define SET(p)                  (LL_GPIO_SetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
 #define CLR(p)                  (LL_GPIO_ResetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
 #define READ(p)                 (LL_GPIO_IsInputPinSet(CONCAT(p, _Port), CONCAT(p, _Pin)))
@@ -81,12 +82,12 @@ uint8_t pinsGetInput(void);
 
 #define KS0108_DATA_Port        INPUT_Port
 #define KS0108_DATA_Pin         INPUT_Pin
-#define KS0108_DI               DISP_RS
+#define KS0108_RS               DISP_RS
 #define KS0108_RW               DISP_RW
 #define KS0108_E                DISP_STROB
 #define KS0108_CS1              DISP_CTRL1
 #define KS0108_CS2              DISP_CTRL2
-#define KS0108_RES              DISP_RESET
+#define KS0108_RST              DISP_RESET
 #define KS0108_BCKL             DISP_BCKL
 
 // Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
