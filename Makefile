@@ -125,11 +125,11 @@ $(ELF): $(OBJECTS)
 size: $(ELF)
 	$(SZ) $(ELF)
 
-$(BUILD_DIR)/%.o: %.c
+$(BUILD_DIR)/%.o: %.c Makefile
 	@mkdir -p $(dir $@)
 	$(CC) -c $(CFLAGS) $(C_DEFS) -o $@ $<
 
-$(BUILD_DIR)/%.o: %.s
+$(BUILD_DIR)/%.o: %.s Makefile
 	@mkdir -p $(dir $@)
 	$(AS) -c $(CFLAGS) $(AS_DEFS) -o $@ $<
 

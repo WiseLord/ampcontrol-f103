@@ -243,7 +243,7 @@ void actionShowScreen(void)
         screenTime(rtcMode);
         break;
     case SCREEN_SPECTRUM:
-        screenSpectrum(2);
+        screenSpectrum();
         break;
     case SCREEN_BRIGHTNESS:
         screenBrightness();

@@ -16,8 +16,14 @@
 static DisplayDriver *disp;
 static Screen screen = SCREEN_STANDBY;
 
-static uint8_t spLeft[FFT_SIZE / 2];
-static uint8_t spRight[FFT_SIZE / 2];
+typedef struct {
+    uint8_t data[FFT_SIZE / 2];
+    uint8_t fall[FFT_SIZE / 2];
+    uint8_t show[FFT_SIZE / 2];
+} SpectrumData;
+
+static SpectrumData spLeft;
+static SpectrumData spRight;
 
 // TODO: Read from backup memory
 static int8_t brStby = 1;
@@ -130,12 +136,34 @@ void screenTime(RtcMode etm)
     }
 }
 
-void screenSpectrum(uint8_t speed)
+static void improveSpectrum (SpectrumData *sd)
 {
-    spGetADC(spLeft, spRight, speed);
+    for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
+        if (sd->data[i] < sd->show[i]) {
+            if (sd->show[i] >= sd->fall[i]) {
+                sd->show[i] -= sd->fall[i];
+                sd->fall[i]++;
+            } else {
+                sd->show[i] = 0;
+            }
+        }
+
+        if (sd->data[i] > sd->show[i]) {
+            sd->show[i] = sd->data[i];
+            sd->fall[i] = 0;
+        }
+    }
+}
+
+void screenSpectrum(void)
+{
+    spGetADC(spLeft.data, spRight.data);
+
+    improveSpectrum(&spLeft);
+    improveSpectrum(&spRight);
 
     if (disp->layout->showSpectrum) {
-        disp->layout->showSpectrum(spLeft, spRight);
+        disp->layout->showSpectrum(spLeft.show, spRight.show);
     }
 }
 

@@ -25,7 +25,7 @@ void screenSetBrightness(uint8_t mode, int8_t value);
 void screenChangeBrighness(uint8_t mode, int8_t diff);
 
 void screenTime(RtcMode etm);
-void screenSpectrum(uint8_t speed);
+void screenSpectrum(void);
 void screenBrightness(void);
 
 #endif // SCREEN_H

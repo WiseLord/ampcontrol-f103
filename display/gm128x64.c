@@ -79,18 +79,6 @@ void drawIcon32(uint8_t iconNum)
     }
 }
 
-static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_t max)
-{
-    uint8_t i;
-
-    val = (val < max ? btm - val : btm - max);
-
-    for (i = 0; i < w; i++) {
-        drawVertLine(xbase + i, btm, val, 1);
-        drawVertLine(xbase + i, val > (btm - max) ? val - 1 : val, btm - max, 0);
-    }
-}
-
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
     char ltSp = disp->font.data[FONT_LTSPPOS];
@@ -109,30 +97,6 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
     glcdWriteChar(ltSp);
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdWriteChar(ltSp);
-}
-
-static void showTime(RTC_type *rtc, char *wday)
-{
-    glcdLoadFont(font_digits_32);
-    glcdSetXY(4, 0);
-    displayTm(rtc, RTC_HOUR);
-    glcdWriteChar(':');
-    displayTm(rtc, RTC_MIN);
-    glcdWriteChar(':');
-    displayTm(rtc, RTC_SEC);
-
-    glcdLoadFont(font_ks0066_ru_24);
-    glcdSetXY(5, 32);
-    displayTm(rtc, RTC_DATE);
-    glcdWriteChar('.');
-    displayTm(rtc, RTC_MONTH);
-    glcdWriteChar('.');
-    displayTm(rtc, RTC_YEAR);
-
-    glcdLoadFont(font_ks0066_ru_08);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetXY(36, 56);
-    glcdWriteString(wday);
 }
 
 static void displayShowBar(int16_t min, int16_t max, int16_t value)
@@ -174,6 +138,41 @@ static void displayShowIcon(uint8_t icon)
     }
 }
 
+static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_t max)
+{
+    uint8_t i;
+
+    val = (val < max ? btm - val : btm - max);
+
+    for (i = 0; i < w; i++) {
+        drawVertLine(xbase + i, btm, val, 1);
+        drawVertLine(xbase + i, val > (btm - max) ? val - 1 : val, btm - max, 0);
+    }
+}
+
+static void showTime(RTC_type *rtc, char *wday)
+{
+    glcdLoadFont(font_digits_32);
+    glcdSetXY(4, 0);
+    displayTm(rtc, RTC_HOUR);
+    glcdWriteChar(':');
+    displayTm(rtc, RTC_MIN);
+    glcdWriteChar(':');
+    displayTm(rtc, RTC_SEC);
+
+    glcdLoadFont(font_ks0066_ru_24);
+    glcdSetXY(5, 32);
+    displayTm(rtc, RTC_DATE);
+    glcdWriteChar('.');
+    displayTm(rtc, RTC_MONTH);
+    glcdWriteChar('.');
+    displayTm(rtc, RTC_YEAR);
+
+    glcdLoadFont(font_ks0066_ru_08);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetXY(36, 56);
+    glcdWriteString(wday);
+}
 
 static void showParam(DispParam *dp)
 {

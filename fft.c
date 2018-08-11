@@ -153,9 +153,9 @@ static const uint16_t dbTable[N_DB] = {
     42712, 45406, 48269, 51314, 54550, 57990, 61647, 65535,
 };
 
-static inline int16_t fft_getDb(uint16_t value, uint16_t min, uint16_t max)
+static inline uint8_t fft_getDb(uint16_t value, uint8_t min, uint8_t max)
 {
-    uint16_t mid = (min + max) / 2;
+    uint8_t mid = (min + max) / 2;
 
     if (dbTable[mid] < value) {
         return mid == min ? mid : fft_getDb(value, mid, max);
@@ -293,13 +293,13 @@ void fft_radix4(int16_t *fr, int16_t *fi)
     }
 }
 
-void fft_cplx2dB(int16_t *fr, int16_t *fi)
+void fft_cplx2dB(int16_t *fr, int16_t *fi, uint8_t *out)
 {
     int16_t i;
 
     for (i = 0; i < FFT_SIZE / 2; i++) {
-        uint16_t calc = ((int32_t)fr[i] * fr[i] + (int32_t)fi[i] * fi[i]) >> 16;
+        uint16_t calc = (fr[i] * fr[i] + fi[i] * fi[i]) >> 16;
 
-        fr[i] = fft_getDb(calc, 0, N_DB - 1);
+        out[i] = fft_getDb(calc, 0, N_DB - 1);
     }
 }

@@ -27,6 +27,15 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
     glcdWriteChar(ltSp);
 }
 
+static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t value, uint16_t max)
+{
+    if (value > max)
+        value = max;
+
+    ili9320DrawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
+    ili9320DrawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
+}
+
 static void showTime(RTC_type *rtc, char *wday)
 {
     glcdSetXY(42, 8);
@@ -60,18 +69,23 @@ static void showParam(DispParam *dp)
 
 static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
 {
-    for (uint16_t i = 0; i < (disp->layout->width + 1) / 3; i++) {
-        uint16_t h;
-        h = dataL[i];
-        if (h > 119)
-            h = 119;
-        ili9320DrawRectangle(i * 3, 0, 2, h, LCD_COLOR_AQUA);
-        ili9320DrawRectangle(i * 3, h, 2, 119 - h, LCD_COLOR_BLACK);
-        h = dataR[i];
-        if (h > 119)
-            h = 119;
-        ili9320DrawRectangle(i * 3, 120, 2, h, LCD_COLOR_AQUA);
-        ili9320DrawRectangle(i * 3, 120 + h, 2, 119 - h, LCD_COLOR_BLACK);
+    for (uint16_t x = 0; x < (disp->layout->width + 1) / 3; x++) {
+        uint16_t xbase = x * 3;
+        uint16_t ybase = 120;
+        uint16_t width = 2;
+        uint16_t value = dataL[x];
+        uint16_t max = 119;
+
+        drawSpCol(xbase, ybase, width, value + 1, max);
+    }
+    for (uint16_t x = 0; x < (disp->layout->width + 1) / 3; x++) {
+        uint16_t xbase = x * 3;
+        uint16_t ybase = 240;
+        uint16_t width = 2;
+        uint16_t value = dataR[x];
+        uint16_t max = 119;
+
+        drawSpCol(xbase, ybase, width, value + 1, max);
     }
 }
 
