@@ -22,8 +22,8 @@ uint8_t pinsGetInput(void);
 #define OUT_INIT(p, t, s)   \
     do {                    \
         OUT(p);             \
-        OTYPE(p, t);        \
         SPEED(p, s);        \
+        OTYPE(p, t);        \
     } while (0);
 
 #define IN_U(p)             \
@@ -36,6 +36,13 @@ uint8_t pinsGetInput(void);
     do {                    \
         IN_P(p);            \
         CLR(p);             \
+    } while (0);
+
+#define ALT_INIT(p, t, s)  \
+    do {                    \
+        ALT(p);             \
+        SPEED(p, s);        \
+        OTYPE(p, t);        \
     } while (0);
 
 #define BTN_0_Port              GPIOA
