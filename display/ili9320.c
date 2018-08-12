@@ -175,14 +175,15 @@ static void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 //        ILI9320_WriteReg(0x0053, ILI9320_HEIGHT - y - 1);
 //        break;
 //    case LCD_Orientation_Landscape_1:
-    // Set cursor
-    ili9320WriteReg(0x0020, ILI9320_WIDTH - y - 1);
-    ili9320WriteReg(0x0021, x);
-
     ili9320WriteReg(0x0050, ILI9320_WIDTH - y - h);
     ili9320WriteReg(0x0051, ILI9320_WIDTH - y - 1);
     ili9320WriteReg(0x0052, x);
     ili9320WriteReg(0x0053, x + w - 1);
+
+    // Set cursor
+    ili9320WriteReg(0x0020, ILI9320_WIDTH - y - 1);
+    ili9320WriteReg(0x0021, x);
+
 //        break;
 //    case LCD_Orientation_Landscape_2:
 //        ILI9320_WriteReg(0x0050, y);

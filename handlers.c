@@ -94,7 +94,7 @@ void TIM2_IRQHandler(void)
 #elif defined(_ILI9320)
         ili9320BusIRQ();    // Read bus
 #endif
-//        glcdPWM();
+        glcdPWM();
         spConvertADC();
     }
 }

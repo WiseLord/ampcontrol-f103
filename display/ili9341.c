@@ -268,38 +268,44 @@ void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     SET(ILI9341_CS);
 }
 
-static inline void drawPixel(int16_t x, int16_t y, uint16_t color) __attribute__((always_inline));
-static inline void drawPixel(int16_t x, int16_t y, uint16_t color)
-{
-    ili9341SetWindow(x, y, 1, 1);
-    ili9341SendData(color);
-}
 void ili9341DrawFontChar(CharParam *param)
 {
-    // Temporarly copied from pixel-based glcdDrawFontChar()
     uint8_t w = param->width;
     uint8_t h = drv.font.data[FONT_HEIGHT];
-    uint16_t color = drv.font.color;
-    uint16_t bgColor = drv.layout->color;
+    uint16_t x0 = drv.layout->x;
+    uint16_t y0 = drv.layout->y;
+    uint8_t colorH = drv.font.color >> 8;
+    uint8_t colorL = drv.font.color & 0xFF;
+    uint8_t bgColorH = drv.layout->color >> 8;
+    uint8_t bgColorL = drv.layout->color & 0xFF;
     uint8_t mult = drv.font.mult;
 
     CLR(ILI9341_CS);
 
-    for (uint16_t j = 0; j < h; j++) {
-        for (uint16_t i = 0; i < w; i++) {
-            uint8_t data = param->data[w * j + i];
-            if (!color)
-                data = ~data;
-            for (uint8_t k = 0; k < 8; k++) {
-                for (uint8_t mx = 0; mx < mult; mx++) {
-                    for (uint8_t my = 0; my < mult; my++) {
-                        drawPixel(drv.layout->x + mult * i + mx, drv.layout->y + mult * (8 * j + k) + my, data & (1 << k) ? color : bgColor);
+    ili9341SetWindow(x0, y0, mult * w, mult * h * 8);
+
+    for (uint16_t i = 0; i < w; i++) {
+        for (uint8_t mx = 0; mx < mult; mx++) {
+            for (uint16_t j = 0; j < h; j++) {
+                uint8_t data = param->data[w * j + i];
+                for (uint8_t bit = 0; bit < 8; bit++) {
+                    if (data & 0x01) {
+                        for (uint8_t my = 0; my < mult; my++) {
+                            ili9341SendSPI(colorH);
+                            ili9341SendSPI(colorL);
+                        }
+                    } else {
+                        for (uint8_t my = 0; my < mult; my++) {
+                            ili9341SendSPI(bgColorH);
+                            ili9341SendSPI(bgColorL);
+                        }
                     }
+                    data >>= 1;
                 }
             }
         }
     }
 
     while (TX_BUSY());
-    SET(ILI9341_CS);
+    SET(ILI9320_CS);
 }
