@@ -183,6 +183,16 @@ static inline void mult_shf(int16_t cos, int16_t sin, int16_t x, int16_t y,
     *v = ((int32_t)y * cos + (int32_t)x * sin) >> 15;
 }
 
+int16_t fft_sin(int16_t phi)
+{
+    return sinTbl(phi % N_WAVE);
+}
+
+int16_t fft_cos(int16_t phi)
+{
+    return sinTbl((phi + N_WAVE / 4) % N_WAVE);
+}
+
 void fft_hamm_window(int16_t *fr)
 {
     for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
