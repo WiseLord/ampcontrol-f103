@@ -15,6 +15,8 @@
 #include "display/ili9320.h"
 #elif defined (_ILI9341)
 #include "display/ili9341.h"
+#elif defined (_S6D0139)
+#include "display/s6d0139.h"
 #else
 #error "Unsupported display driver"
 #endif
@@ -93,8 +95,10 @@ void TIM2_IRQHandler(void)
         ks0108IRQ();        // Update screen from framebuffer
 #elif defined(_ILI9320)
         ili9320BusIRQ();    // Read bus
+#elif defined(_S6D0139)
+        s6d0139BusIRQ();    // Read bus
 #endif
-//        glcdPWM();
+        glcdPWM();
         spConvertADC();
     }
 }

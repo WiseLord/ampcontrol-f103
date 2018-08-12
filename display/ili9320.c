@@ -38,7 +38,7 @@ static inline void ili9320SendData(uint16_t data)
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
         while (--delay);
-        glcd.bus = ILI9320_DHI_Port->IDR & 0x00FF;   // Read 8-bit bus
+        glcd.bus = ILI9320_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
         ILI9320_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
@@ -66,26 +66,26 @@ static inline void ili9320InitSeq(void)
     CLR(ILI9320_CS);
 
     // Initial Sequence
-    ili9320WriteReg(0x00E5, 0x8000); // Set the Vcore voltage and this setting is must
-    ili9320WriteReg(0x0000, 0x0001); // Start internal OSC
-    ili9320WriteReg(0x0001, 0x0000); // Set SS and SM bit
-    ili9320WriteReg(0x0002, 0x0700); // Set 1 line inversion
-    ili9320WriteReg(0x0003, 0x1020); // Set GRAM write direction and BGR = 1
-    ili9320WriteReg(0x0004, 0x0000); // Resize register
+    ili9320WriteReg(0x00E5, 0x8000);    // Set the Vcore voltage and this setting is must
+    ili9320WriteReg(0x0000, 0x0001);    // Start internal OSC
+    ili9320WriteReg(0x0001, 0x0000);    // Set SS and SM bit
+    ili9320WriteReg(0x0002, 0x0700);    // Set 1 line inversion
+    ili9320WriteReg(0x0003, 0x1020);    // Set GRAM write direction and BGR = 1
+    ili9320WriteReg(0x0004, 0x0000);    // Resize register
 
-    ili9320WriteReg(0x0008, 0x0202); // Set the back porch and front porch
-    ili9320WriteReg(0x0009, 0x0000); // Set non-display area refresh cycle ICS[3:0]
-    ili9320WriteReg(0x000A, 0x0000); // FMARK function
-    ili9320WriteReg(0x000C, 0x0000); // RGB interface setting
-    ili9320WriteReg(0x000D, 0x0000); // Frame marker position
-    ili9320WriteReg(0x000F, 0x0000); // RGB interface polarity
+    ili9320WriteReg(0x0008, 0x0202);    // Set the back porch and front porch
+    ili9320WriteReg(0x0009, 0x0000);    // Set non-display area refresh cycle ICS[3:0]
+    ili9320WriteReg(0x000A, 0x0000);    // FMARK function
+    ili9320WriteReg(0x000C, 0x0000);    // RGB interface setting
+    ili9320WriteReg(0x000D, 0x0000);    // Frame marker position
+    ili9320WriteReg(0x000F, 0x0000);    // RGB interface polarity
 
     // Power On Sequence
-    ili9320WriteReg(0x0010, 0x17B0); // SAP, BT[3:0], AP, DSTB, SLP, STB
-    ili9320WriteReg(0x0011, 0x0037); // DC1[2:0], DC0[2:0], VC[2:0]
-    ili9320WriteReg(0x0012, 0x013A); // VREG1OUT voltage
-    ili9320WriteReg(0x0013, 0x1600); // VDV[4:0] for VCOM amplitude
-    ili9320WriteReg(0x0029, 0x000C); // VCM[4:0] for VCOMH
+    ili9320WriteReg(0x0010, 0x17B0);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+    ili9320WriteReg(0x0011, 0x0037);    // DC1[2:0], DC0[2:0], VC[2:0]
+    ili9320WriteReg(0x0012, 0x013A);    // VREG1OUT voltage
+    ili9320WriteReg(0x0013, 0x1600);    // VDV[4:0] for VCOM amplitude
+    ili9320WriteReg(0x0029, 0x000C);    // VCM[4:0] for VCOMH
 
     // Adjust the Gamma Curve
     ili9320WriteReg(0x0030, 0x0007);
@@ -100,17 +100,17 @@ static inline void ili9320InitSeq(void)
     ili9320WriteReg(0x003D, 0x0F00);
 
     // Set GRAM area
-    ili9320WriteReg(0x0020, 0x0000); // GRAM horisontal address
-    ili9320WriteReg(0x0021, 0x0000); // GRAM vertical address
+    ili9320WriteReg(0x0020, 0x0000);    // GRAM horisontal address
+    ili9320WriteReg(0x0021, 0x0000);    // GRAM vertical address
 
-    ili9320WriteReg(0x0050, 0x0000); // Horizontal GRAM Start Address
-    ili9320WriteReg(0x0051, 0x00EF); // Horizontal GRAM End Address
-    ili9320WriteReg(0x0052, 0x0000); // Vertical GRAM Start Address
-    ili9320WriteReg(0x0053, 0x013F); // Vertical GRAM End Address
+    ili9320WriteReg(0x0050, 0x0000);    // Horizontal GRAM Start Address
+    ili9320WriteReg(0x0051, 0x00EF);    // Horizontal GRAM End Address
+    ili9320WriteReg(0x0052, 0x0000);    // Vertical GRAM Start Address
+    ili9320WriteReg(0x0053, 0x013F);    // Vertical GRAM End Address
 
-    ili9320WriteReg(0x0060, 0x2700); // Gate scan line
-    ili9320WriteReg(0x0061, 0x0003); // NDV, VLE, REV
-    ili9320WriteReg(0x006A, 0x0000); // Set scrolling line
+    ili9320WriteReg(0x0060, 0x2700);    // Gate scan line
+    ili9320WriteReg(0x0061, 0x0003);    // NDV, VLE, REV
+    ili9320WriteReg(0x006A, 0x0000);    // Set scrolling line
 
     // Partial Display Control
     ili9320WriteReg(0x0080, 0x0000);
@@ -128,7 +128,7 @@ static inline void ili9320InitSeq(void)
     ili9320WriteReg(0x0097, 0x0000);
     ili9320WriteReg(0x0098, 0x0000);
 
-    ili9320WriteReg(0x0007, 0x0173); // 262K color and display ON
+    ili9320WriteReg(0x0007, 0x0173);    // 262K color and display ON
 
     SET(ILI9320_CS);
 }
@@ -178,14 +178,14 @@ void ili9320Sleep(void)
 {
     CLR(ILI9320_CS);
 
-    ili9320WriteReg(0x0007, 0x0000); // Display OFF
+    ili9320WriteReg(0x0007, 0x0000);    // Display OFF
     // Power Off Sequence
-    ili9320WriteReg(0x0010, 0x0000); // SAP, BT[3:0], AP, DSTB, SLP, STB
-    ili9320WriteReg(0x0011, 0x0000); // DC1[2:0], DC0[2:0], VC[2:0]
-    ili9320WriteReg(0x0012, 0x0000); // VREG1OUT voltage
-    ili9320WriteReg(0x0013, 0x0000); // VDV[4:0] for VCOM amplitude
+    ili9320WriteReg(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+    ili9320WriteReg(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
+    ili9320WriteReg(0x0012, 0x0000);    // VREG1OUT voltage
+    ili9320WriteReg(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
     _delay_ms(200);
-    ili9320WriteReg(0x0010, 0x0002); // SAP, BT[3:0], AP, DSTB, SLP, STB
+    ili9320WriteReg(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
     SET(ILI9320_CS);
 }
@@ -195,20 +195,20 @@ void ili9320Wakeup(void)
     CLR(ILI9320_CS);
 
     // Power On Sequence
-    ili9320WriteReg(0x0010, 0x0000); // SAP, BT[3:0], AP, DSTB, SLP, STB
-    ili9320WriteReg(0x0011, 0x0000); // DC1[2:0], DC0[2:0], VC[2:0]
-    ili9320WriteReg(0x0012, 0x0000); // VREG1OUT voltage
-    ili9320WriteReg(0x0013, 0x0000); // VDV[4:0] for VCOM amplitude
+    ili9320WriteReg(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+    ili9320WriteReg(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
+    ili9320WriteReg(0x0012, 0x0000);    // VREG1OUT voltage
+    ili9320WriteReg(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
     _delay_ms(200);
-    ili9320WriteReg(0x0010, 0x17B0); // SAP, BT[3:0], AP, DSTB, SLP, STB
-    ili9320WriteReg(0x0011, 0x0037); // DC1[2:0], DC0[2:0], VC[2:0]
+    ili9320WriteReg(0x0010, 0x17B0);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+    ili9320WriteReg(0x0011, 0x0037);    // DC1[2:0], DC0[2:0], VC[2:0]
     _delay_ms(50);
-    ili9320WriteReg(0x0012, 0x013A); // VREG1OUT voltage
+    ili9320WriteReg(0x0012, 0x013A);    // VREG1OUT voltage
     _delay_ms(50);
-    ili9320WriteReg(0x0013, 0x1600); // VDV[4:0] for VCOM amplitude
-    ili9320WriteReg(0x0029, 0x000C); // VCM[4:0] for VCOMH
+    ili9320WriteReg(0x0013, 0x1600);    // VDV[4:0] for VCOM amplitude
+    ili9320WriteReg(0x0029, 0x000C);    // VCM[4:0] for VCOMH
 
-    ili9320WriteReg(0x0007, 0x0173); // 262K color and display ON
+    ili9320WriteReg(0x0007, 0x0173);    // 262K color and display ON
 
     SET(ILI9320_CS);
 }

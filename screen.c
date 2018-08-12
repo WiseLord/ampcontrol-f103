@@ -5,12 +5,14 @@
 #include "fft.h"
 #include "spectrum.h"
 
-#if defined (_ILI9320)
+#if defined (_KS0108B)
+#include "display/ks0108.h"
+#elif defined (_ILI9320)
 #include "display/ili9320.h"
 #elif defined (_ILI9341)
 #include "display/ili9341.h"
-#elif defined (_KS0108B)
-#include "display/ks0108.h"
+#elif defined (_S6D0139)
+#include "display/s6d0139.h"
 #else
 #error "Unsupported display driver"
 #endif
@@ -65,6 +67,10 @@ void screenInit(void)
     ili9320Init(&glcd);
 #elif defined (_ILI9341)
     ili9341Init(&glcd);
+#elif defined (_S6D0139)
+    s6d0139Init(&glcd);
+#else
+#error "Unsupported display driver"
 #endif
     screenClear();
     glcdSetBrightness(brStby);

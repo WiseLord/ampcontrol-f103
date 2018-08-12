@@ -1,7 +1,4 @@
-drivers/STM32F1xx_HAL_Driver/Src
-drivers/CMSIS/Device/ST/STM32F1xx/Include
-system
 drivers/CMSIS/Include
-display
+drivers/CMSIS/Device/ST/STM32F1xx/Include
 drivers/STM32F1xx_HAL_Driver/Inc
 .

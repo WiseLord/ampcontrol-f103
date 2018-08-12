@@ -79,13 +79,15 @@ uint8_t pinsGetInput(void);
 #define DISP_RESET_Port         GPIOB
 #define DISP_RESET_Pin          LL_GPIO_PIN_4
 // Temporarly
-#if defined(_ILI9320) || defined(_ILI9341)
+#if defined(_ILI9320) || defined(_S6D0139) || defined(_ILI9341)
 #define DISP_BCKL_Port          GPIOB
 #define DISP_BCKL_Pin           LL_GPIO_PIN_11
 #else
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 #endif
+
+#if defined(_KS0108B)
 
 #define KS0108_DATA_Port        INPUT_Port
 #define KS0108_DATA_Pin         INPUT_Pin
@@ -97,6 +99,8 @@ uint8_t pinsGetInput(void);
 #define KS0108_RST              DISP_RESET
 #define KS0108_BCKL             DISP_BCKL
 
+#elif defined(_ILI9320)
+
 // Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
 #define ILI9320_DHI_Port        INPUT_Port
 #define ILI9320_DHI_Pin         INPUT_Pin
@@ -107,6 +111,8 @@ uint8_t pinsGetInput(void);
 #define ILI9320_RESET           DISP_RESET
 #define ILI9320_LED             DISP_BCKL
 
+#elif defined(_ILI9341)
+
 #define ILI9341_CS              DISP_RS
 #define ILI9341_RESET           DISP_RESET
 #define ILI9341_DC              DISP_CTRL1
@@ -114,5 +120,21 @@ uint8_t pinsGetInput(void);
 #define ILI9341_SDI             DISP_RW
 #define ILI9341_SCK             DISP_STROB
 //#define ILI9341_SD0             DISP_RS
+
+#elif defined(_S6D0139)
+
+// Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
+#define S6D0139_DHI_Port        INPUT_Port
+#define S6D0139_DHI_Pin         INPUT_Pin
+#define S6D0139_CS              DISP_STROB
+#define S6D0139_RS              DISP_RS
+#define S6D0139_WR              DISP_RW
+#define S6D0139_RD              DISP_CTRL1
+#define S6D0139_RESET           DISP_RESET
+#define S6D0139_LED             DISP_BCKL
+
+#else
+#error "Unsupported display driver"
+#endif
 
 #endif // PINS_H
