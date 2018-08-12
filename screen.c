@@ -5,17 +5,17 @@
 #include "fft.h"
 #include "spectrum.h"
 
-#if defined (_KS0108B)
-#include "display/ks0108.h"
-#elif defined (_ILI9320)
+#if defined (_ILI9320)
 #include "display/ili9320.h"
 #elif defined (_ILI9341)
 #include "display/ili9341.h"
+#elif defined (_KS0108B)
+#include "display/ks0108.h"
 #else
 #error "Unsupported display driver"
 #endif
 
-static DisplayDriver *disp;
+static GlcdDriver *glcd;
 static Screen screen = SCREEN_STANDBY;
 
 typedef struct {
@@ -60,28 +60,19 @@ const char *txtLabels[LABEL_END] = {
 void screenInit(void)
 {
 #if defined (_KS0108B)
-    ks0108Init(&disp);
+    ks0108Init(&glcd);
 #elif defined (_ILI9320)
-    ili9320Init(&disp);
+    ili9320Init(&glcd);
 #elif defined (_ILI9341)
-    ili9341Init(&disp);
+    ili9341Init(&glcd);
 #endif
     screenClear();
-    if (disp->setBrightness) {
-        disp->setBrightness(brStby);
-    }
+    glcdSetBrightness(brStby);
 }
 
 void screenClear(void)
 {
-    if (disp->clear) {
-        disp->clear();
-    }
-}
-
-uint8_t screenReadBus(void)
-{
-    return disp->bus;
+    glcdClear();
 }
 
 void screenSet(Screen value)
@@ -109,9 +100,7 @@ void screenSetBrightness(uint8_t mode, int8_t value)
     else
         brStby = value;
 
-    if (disp->setBrightness) {
-        disp->setBrightness(value);
-    }
+    glcdSetBrightness(value);
 }
 
 void screenChangeBrighness(uint8_t mode, int8_t diff)
@@ -135,8 +124,8 @@ void screenTime(RtcMode etm)
 
     rtcGetTime(&rtc);
 
-    if (disp->layout->showTime) {
-        disp->layout->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
+    if (glcd->canvas->showTime) {
+        glcd->canvas->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
     }
 }
 
@@ -166,8 +155,8 @@ void screenSpectrum(void)
     improveSpectrum(&spLeft);
     improveSpectrum(&spRight);
 
-    if (disp->layout->showSpectrum) {
-        disp->layout->showSpectrum(spLeft.show, spRight.show);
+    if (glcd->canvas->showSpectrum) {
+        glcd->canvas->showSpectrum(spLeft.show, spRight.show);
     }
 }
 
@@ -181,7 +170,7 @@ void screenBrightness()
     dp.max = GLCD_MAX_BRIGHTNESS;
     dp.icon = ICON24_BRIGHTNESS;
 
-    if (disp->layout->showParam) {
-        disp->layout->showParam(&dp);
+    if (glcd->canvas->showParam) {
+        glcd->canvas->showParam(&dp);
     }
 }

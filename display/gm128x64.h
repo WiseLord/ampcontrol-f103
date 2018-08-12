@@ -7,6 +7,6 @@
 
 #include "glcd.h"
 
-void gm128x64Init(DisplayDriver *driver);
+void gm128x64Init(GlcdDriver *driver);
 
 #endif // GM128X64_H

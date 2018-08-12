@@ -24,7 +24,7 @@ void inputPoll(void)
     static volatile uint8_t encPrev = ENC_NO;
 
     // Current state
-    uint16_t btnNow = pinsGetInput();
+    uint8_t btnNow = pinsGetInput();
     uint8_t encNow = btnNow & 0xFF;
 
     // If encoder event has happened, inc/dec encoder counter

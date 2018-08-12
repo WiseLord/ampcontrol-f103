@@ -7,6 +7,6 @@
 
 #include "glcd.h"
 
-void gc320x240Init(DisplayDriver *driver);
+void gc320x240Init(GlcdDriver *driver);
 
 #endif // GC320X240_H

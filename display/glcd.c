@@ -6,14 +6,31 @@
 
 static char strbuf[STR_BUFSIZE + 1];   // String buffer
 
-DisplayDriver *disp;
-CharParam charParam;
+static GlcdDriver *glcd;
+static CharParam charParam;
 
 static uint8_t brightness;
 
-void glcdInit(DisplayDriver *driver)
+void glcdInit(GlcdDriver *driver)
 {
-    disp = driver;
+    glcd = driver;
+}
+
+void glcdClear(void)
+{
+    if (glcd->clear) {
+        glcd->clear();
+    }
+}
+
+GlcdCanvas *glcdGetCanvas(void)
+{
+    return glcd->canvas;
+}
+
+uint8_t glcdGetBus(void)
+{
+    return glcd->bus;
 }
 
 void glcdSetBrightness(uint8_t value)
@@ -21,7 +38,7 @@ void glcdSetBrightness(uint8_t value)
     brightness = value;
 }
 
-void glcdPWM()
+void glcdPWM(void)
 {
     static uint8_t br;
 
@@ -68,34 +85,34 @@ void glcdWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix)
 
 void glcdLoadFont(const uint8_t *font)
 {
-    disp->font.data = font;
+    glcd->font.data = font;
 }
 
 void glcdSetFontColor(uint16_t color)
 {
-    disp->font.color = color;
+    glcd->font.color = color;
 }
 
 void glcdSetFontMult(uint8_t mult)
 {
-    disp->font.mult = mult;
+    glcd->font.mult = mult;
 }
 
 void glcdSetXY(int16_t x, int16_t y)
 {
-    disp->layout->x = x;
-    disp->layout->y = y;
+    glcd->canvas->x = x;
+    glcd->canvas->y = y;
 }
 
 void glcdSetX(int16_t x)
 {
-    disp->layout->x = x;
+    glcd->canvas->x = x;
 }
 
-/*static*/ void findCharOft(uint8_t code)
+static void findCharOft(uint8_t code)
 {
     uint8_t i;
-    const uint8_t *fp = disp->font.data;
+    const uint8_t *fp = glcd->font.data;
 
     uint8_t spos = code - ((code >= 128) ? fp[FONT_OFTNA] : fp[FONT_OFTA]);
 
@@ -119,10 +136,10 @@ void glcdSetX(int16_t x)
 void glcdDrawFontChar(CharParam *param)
 {
     uint8_t w = param->width;
-    uint8_t h = disp->font.data[FONT_HEIGHT];
-    uint16_t color = disp->font.color;
-    uint16_t bgColor = disp->layout->color;
-    uint8_t mult = disp->font.mult;
+    uint8_t h = glcd->font.data[FONT_HEIGHT];
+    uint16_t color = glcd->font.color;
+    uint16_t bgColor = glcd->canvas->color;
+    uint8_t mult = glcd->font.mult;
 
     for (uint16_t j = 0; j < h; j++) {
         for (uint16_t i = 0; i < w; i++) {
@@ -132,7 +149,8 @@ void glcdDrawFontChar(CharParam *param)
             for (uint8_t k = 0; k < 8; k++) {
                 for (uint8_t mx = 0; mx < mult; mx++) {
                     for (uint8_t my = 0; my < mult; my++) {
-                        disp->drawPixel(disp->layout->x + mult * i + mx, disp->layout->y + mult * (8 * j + k) + my, data & (1 << k) ? color : bgColor);
+                        glcd->drawPixel(glcd->canvas->x + mult * i + mx, glcd->canvas->y + mult * (8 * j + k) + my,
+                                        data & (1 << k) ? color : bgColor);
                     }
                 }
             }
@@ -143,8 +161,8 @@ void glcdDrawFontChar(CharParam *param)
 void glcdWriteChar(uint8_t code)
 {
     findCharOft(code);
-    disp->drawFontChar(&charParam);
-    glcdSetX(disp->layout->x + charParam.width * disp->font.mult);
+    glcd->drawFontChar(&charParam);
+    glcdSetX(glcd->canvas->x + charParam.width * glcd->font.mult);
 }
 
 void glcdWriteString(char *string)
@@ -152,8 +170,127 @@ void glcdWriteString(char *string)
     if (*string)
         glcdWriteChar(*string++);
     while (*string) {
-        glcdWriteChar(disp->font.data[FONT_LTSPPOS]);
+        glcdWriteChar(glcd->font.data[FONT_LTSPPOS]);
         glcdWriteChar(*string++);
     }
 }
 
+void glcdDrawRect(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color)
+{
+    if (glcd->drawRectangle) {
+        glcd->drawRectangle(x, y, w, h, color);
+    } else {
+        // TODO: draw in pixels
+    }
+}
+
+void glcdDrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
+{
+    if (x0 == x1) {                 // Vertical
+        if (y0 > y1) {              // Swap
+            y0 = y0 + y1;
+            y1 = y0 - y1;
+            y0 = y0 - y1;
+        }
+        glcdDrawRect(x0, y0, 1, y1 - y0 + 1, color);
+    } else if (y0 == y1) {          // Horisontal
+        if (x0 > x1) {              // Swap
+            x0 = x0 + x1;
+            x1 = x0 - x1;
+            x0 = x0 - x1;
+        }
+        glcdDrawRect(x0, y0, x1 - x0 + 1, 1, color);
+    } else {
+        int16_t sX, sY, dX, dY, err, err2;
+
+        sX = x0 < x1 ? 1 : -1;
+        sY = y0 < y1 ? 1 : -1;
+        dX = sX > 0 ? x1 - x0 : x0 - x1;
+        dY = sY > 0 ? y1 - y0 : y0 - y1;
+        err = dX - dY;
+
+        while (x0 != x1 || y0 != y1) {
+            glcd->drawPixel(x0, y0, color);
+            err2 = err * 2;
+            if (err2 > -dY / 2) {
+                err -= dY;
+                x0 += sX;
+            }
+            if (err2 < dX) {
+                err += dX;
+                y0 += sY;
+            }
+        }
+        glcd->drawPixel(x1, y1, color);
+    }
+}
+
+void glcdDrawFrame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
+{
+    glcdDrawLine(x0, y0, x0, y1, color);
+    glcdDrawLine(x0, y1, x1, y1, color);
+    glcdDrawLine(x1, y0, x1, y1, color);
+    glcdDrawLine(x0, y0, x1, y0, color);
+}
+
+void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
+{
+    int16_t f = 1 - r;
+    int16_t ddF_x = 1;
+    int16_t ddF_y = -2 * r;
+    int16_t x = 0;
+    int16_t y = r;
+
+    glcdDrawLine(x0 - r, y0, x0 + r, y0, color);
+
+    while (x < y) {
+        if (f >= 0) {
+            y--;
+            ddF_y += 2;
+            f += ddF_y;
+        }
+        x++;
+        ddF_x += 2;
+        f += ddF_x;
+
+        glcdDrawLine(x0 - x, y0 + y, x0 + x, y0 + y, color);
+        glcdDrawLine(x0 - x, y0 - y, x0 + x, y0 - y, color);
+        glcdDrawLine(x0 - y, y0 + x, x0 + y, y0 + x, color);
+        glcdDrawLine(x0 - y, y0 - x, x0 + y, y0 - x, color);
+    }
+}
+#include "../functions.h"
+void glcdDrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color)
+{
+    int16_t f = 1 - r;
+    int16_t ddF_x = 1;
+    int16_t ddF_y = -2 * r;
+    int16_t x = 0;
+    int16_t y = r;
+
+    glcd->drawPixel(x0, y0 + r, color);
+    glcd->drawPixel(x0, y0 - r, color);
+    glcd->drawPixel(x0 + r, y0, color);
+    glcd->drawPixel(x0 - r, y0, color);
+
+    while (x < y) {
+        if (f >= 0) {
+            y--;
+            ddF_y += 2;
+            f += ddF_y;
+        }
+        x++;
+        ddF_x += 2;
+        f += ddF_x;
+
+        glcd->drawPixel(x0 + x, y0 + y, color);
+        glcd->drawPixel(x0 - x, y0 + y, color);
+        glcd->drawPixel(x0 + x, y0 - y, color);
+        glcd->drawPixel(x0 - x, y0 - y, color);
+
+        glcd->drawPixel(x0 + y, y0 + x, color);
+        glcd->drawPixel(x0 - y, y0 + x, color);
+        glcd->drawPixel(x0 + y, y0 - x, color);
+        glcd->drawPixel(x0 - y, y0 - x, color);
+    }
+}

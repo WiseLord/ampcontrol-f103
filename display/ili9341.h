@@ -99,7 +99,7 @@
 #define ILI9341_EN3G                0xF2 // Enable 3G
 #define ILI9341_PUMPRTCTL           0xF7 // Pump Ratio Control
 
-void ili9341Init(DisplayDriver **disp);
+void ili9341Init(GlcdDriver **driver);
 void ili9341Clear(void);
 
 void ili9341Sleep(void);

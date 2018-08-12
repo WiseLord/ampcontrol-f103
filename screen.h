@@ -15,8 +15,6 @@ typedef enum {
 void screenInit(void);
 void screenClear(void);
 
-uint8_t screenReadBus(void);
-
 void screenSet(Screen value);
 Screen screenGet(void);
 

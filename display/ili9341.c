@@ -14,9 +14,8 @@
 
 #define TX_BUSY()               (LL_SPI_IsActiveFlag_BSY(SPI1) || !LL_SPI_IsActiveFlag_TXE(SPI1))
 
-DisplayDriver drv = {
+static GlcdDriver glcd = {
     .clear = ili9341Clear,
-    .setBrightness = glcdSetBrightness,
     .drawPixel = ili9341DrawPixel,
     .drawRectangle = ili9341DrawRectangle,
     .drawFontChar = ili9341DrawFontChar,
@@ -201,10 +200,10 @@ static void ili9341InitSPI()
     LL_SPI_Enable(SPI1);
 }
 
-void ili9341Init(DisplayDriver **disp)
+void ili9341Init(GlcdDriver **driver)
 {
-    *disp = &drv;
-    gc320x240Init(*disp);
+    *driver = &glcd;
+    gc320x240Init(*driver);
 
     // Configure Hardware SPI
     ili9341InitSPI();
@@ -220,7 +219,7 @@ void ili9341Init(DisplayDriver **disp)
 
 void ili9341Clear(void)
 {
-    ili9341DrawRectangle(0, 0, drv.layout->width, drv.layout->height, drv.layout->color);
+    ili9341DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, glcd.canvas->color);
 }
 
 void ili9341Sleep(void)
@@ -271,14 +270,14 @@ void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
 void ili9341DrawFontChar(CharParam *param)
 {
     uint8_t w = param->width;
-    uint8_t h = drv.font.data[FONT_HEIGHT];
-    uint16_t x0 = drv.layout->x;
-    uint16_t y0 = drv.layout->y;
-    uint8_t colorH = drv.font.color >> 8;
-    uint8_t colorL = drv.font.color & 0xFF;
-    uint8_t bgColorH = drv.layout->color >> 8;
-    uint8_t bgColorL = drv.layout->color & 0xFF;
-    uint8_t mult = drv.font.mult;
+    uint8_t h = glcd.font.data[FONT_HEIGHT];
+    uint16_t x0 = glcd.canvas->x;
+    uint16_t y0 = glcd.canvas->y;
+    uint8_t colorH = glcd.font.color >> 8;
+    uint8_t colorL = glcd.font.color & 0xFF;
+    uint8_t bgColorH = glcd.canvas->color >> 8;
+    uint8_t bgColorL = glcd.canvas->color & 0xFF;
+    uint8_t mult = glcd.font.mult;
 
     CLR(ILI9341_CS);
 
@@ -307,5 +306,5 @@ void ili9341DrawFontChar(CharParam *param)
     }
 
     while (TX_BUSY());
-    SET(ILI9320_CS);
+    SET(ILI9341_CS);
 }

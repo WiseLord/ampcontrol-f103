@@ -5,11 +5,11 @@
 
 #include "../functions.h"
 
-DisplayDriver *disp;
+static GlcdDriver *glcd;
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
-    char ltSp = disp->font.data[FONT_LTSPPOS];
+    char ltSp = glcd->font.data[FONT_LTSPPOS];
     int8_t time = *((int8_t *)rtc + tm);
 
     glcdSetFontColor(LCD_COLOR_AQUA);
@@ -32,8 +32,8 @@ static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t va
     if (value > max)
         value = max;
 
-    disp->drawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
-    disp->drawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
+    glcd->drawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
+    glcd->drawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
 }
 extern CharParam charParam;
 
@@ -65,12 +65,12 @@ static void showTime(RTC_type *rtc, char *wday)
 
 static void showParam(DispParam *dp)
 {
-    disp->drawRectangle(10, 10, 50, 30, LCD_COLOR_GREEN);
+    glcd->drawRectangle(10, 10, 50, 30, LCD_COLOR_GREEN);
 }
 
 static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
 {
-    for (uint16_t x = 0; x < (disp->layout->width + 1) / 3; x++) {
+    for (uint16_t x = 0; x < (glcd->canvas->width + 1) / 3; x++) {
         uint16_t xbase = x * 3;
         uint16_t ybase = 120;
         uint16_t width = 2;
@@ -79,7 +79,7 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
 
         drawSpCol(xbase, ybase, width, value + 1, max);
     }
-    for (uint16_t x = 0; x < (disp->layout->width + 1) / 3; x++) {
+    for (uint16_t x = 0; x < (glcd->canvas->width + 1) / 3; x++) {
         uint16_t xbase = x * 3;
         uint16_t ybase = 240;
         uint16_t width = 2;
@@ -90,7 +90,7 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
     }
 }
 
-DisplayLayout gc320x240 = {
+GlcdCanvas gc320x240 = {
     .width = 320,
     .height = 240,
 
@@ -99,11 +99,11 @@ DisplayLayout gc320x240 = {
     .showSpectrum = showSpectrum,
 };
 
-void gc320x240Init(DisplayDriver *driver)
+void gc320x240Init(GlcdDriver *driver)
 {
-    disp = driver;
-    disp->layout = &gc320x240;
-    glcdInit(disp);
+    glcd = driver;
+    glcd->canvas = &gc320x240;
+    glcdInit(glcd);
 
     glcdSetFontMult(2);
 }

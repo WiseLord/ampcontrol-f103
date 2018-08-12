@@ -3,7 +3,7 @@
 #include "fonts.h"
 #include "icons.h"
 
-DisplayDriver *disp;
+static GlcdDriver *glcd;
 
 //static void drawHorizLine(uint8_t x1, uint8_t x2, uint8_t y, uint8_t color)
 //{
@@ -32,7 +32,7 @@ static void drawVertLine(uint8_t x, uint8_t y1, uint8_t y2, uint8_t color)
     }
 
     for (i = y1; i <= y2; i++)
-        disp->drawPixel(x, i, color);
+        glcd->drawPixel(x, i, color);
 }
 
 // TODO: move to glcd and make work with rectangle area
@@ -50,7 +50,7 @@ void drawIcon24(uint8_t iconNum)
             for (i = 0; i < 24; i++) {
                 pgmData = icon[24 * j + i];
                 for (k = 0; k < 8; k++) {
-                    disp->drawPixel(disp->layout->x + i, disp->layout->y + 8 * j + k, pgmData & (1 << k));
+                    glcd->drawPixel(glcd->canvas->x + i, glcd->canvas->y + 8 * j + k, pgmData & (1 << k));
                 }
             }
         }
@@ -72,7 +72,7 @@ void drawIcon32(uint8_t iconNum)
             for (i = 0; i < 32; i++) {
                 pgmData = icon[32 * j + i];
                 for (k = 0; k < 8; k++) {
-                    disp->drawPixel(disp->layout->x + i, disp->layout->y + 8 * j + k, pgmData & (1 << k));
+                    glcd->drawPixel(glcd->canvas->x + i, glcd->canvas->y + 8 * j + k, pgmData & (1 << k));
                 }
             }
         }
@@ -81,7 +81,7 @@ void drawIcon32(uint8_t iconNum)
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
-    char ltSp = disp->font.data[FONT_LTSPPOS];
+    char ltSp = glcd->font.data[FONT_LTSPPOS];
     int8_t time = *((int8_t *)rtc + tm);
 
     glcdSetFontColor(LCD_COLOR_WHITE);
@@ -121,9 +121,9 @@ static void displayShowBar(int16_t min, int16_t max, int16_t value)
         if (!(i & 0x01)) {
             for (j = 27; j < 38; j++) {
                 if (j == 32) {
-                    disp->drawPixel(i, j, 1);
+                    glcd->drawPixel(i, j, 1);
                 } else {
-                    disp->drawPixel(i, j, color);
+                    glcd->drawPixel(i, j, color);
                 }
             }
         }
@@ -196,7 +196,7 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
     uint8_t *buf;
 
     buf = dataL;
-    for (x = 0; x < disp->layout->width; x++) {
+    for (x = 0; x < glcd->canvas->width; x++) {
         xbase = x;
         y = 0;
 
@@ -205,7 +205,7 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
     }
 
     buf = dataR;
-    for (x = 0; x < disp->layout->width; x++) {
+    for (x = 0; x < glcd->canvas->width; x++) {
         xbase = x;
         y = 32;
 
@@ -214,7 +214,7 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
     }
 }
 
-DisplayLayout gm128x64 = {
+GlcdCanvas gm128x64 = {
     .width = 128,
     .height = 64,
 
@@ -223,11 +223,11 @@ DisplayLayout gm128x64 = {
     .showSpectrum = showSpectrum,
 };
 
-void gm128x64Init(DisplayDriver *driver)
+void gm128x64Init(GlcdDriver *driver)
 {
-    disp = driver;
-    disp->layout = &gm128x64;
-    glcdInit(disp);
+    glcd = driver;
+    glcd->canvas = &gm128x64;
+    glcdInit(glcd);
 
     glcdSetFontMult(1);
 }

@@ -2,7 +2,8 @@
 
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_spi.h>
-#include "screen.h"
+
+#include "display/glcd.h"
 
 static void pinsInitButtons(void)
 {
@@ -81,7 +82,7 @@ uint8_t pinsGetInput(void)
     uint8_t bus = 0;
 
 #if defined(_KS0108B) || defined(_ILI9320)
-    bus = screenReadBus();
+    bus = glcdGetBus();
 #elif defined(_ILI9341)
     bus = INPUT_Port->IDR & 0x00FF;   // Read 8-bit bus
 #endif

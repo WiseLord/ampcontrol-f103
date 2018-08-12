@@ -11,9 +11,8 @@
 
 static uint8_t bus_requested = 0;
 
-DisplayDriver drv = {
+static GlcdDriver glcd = {
     .clear = ili9320Clear,
-    .setBrightness = glcdSetBrightness,
     .drawPixel = ili9320DrawPixel,
     .drawRectangle = ili9320DrawRectangle,
     .drawFontChar = ili9320DrawFontChar,
@@ -37,10 +36,9 @@ static inline void ili9320SendData(uint16_t data)
         ILI9320_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
         ILI9320_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
         // Small delay to stabilize data before reading
-        __NOP();
-        __NOP();
-        __NOP();
-        drv.bus = ILI9320_DHI_Port->IDR & 0x00FF;   // Read 8-bit bus
+        volatile uint8_t delay = 2;
+        while (--delay);
+        glcd.bus = ILI9320_DHI_Port->IDR & 0x00FF;   // Read 8-bit bus
         ILI9320_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
@@ -56,16 +54,16 @@ static inline void ili9320SelectReg(uint16_t reg)
 
 static void ili9320WriteReg(uint16_t reg, uint16_t data)
 {
-    CLR(ILI9320_CS);
     ili9320SelectReg(reg);
     ili9320SendData(data);
-    SET(ILI9320_CS);
 }
 
 static inline void ili9320InitSeq(void)
 {
     // Wait for reset
     _delay_ms(50);
+
+    CLR(ILI9320_CS);
 
     // Initial Sequence
     ili9320WriteReg(0x00E5, 0x8000); // Set the Vcore voltage and this setting is must
@@ -131,50 +129,13 @@ static inline void ili9320InitSeq(void)
     ili9320WriteReg(0x0098, 0x0000);
 
     ili9320WriteReg(0x0007, 0x0173); // 262K color and display ON
+
+    SET(ILI9320_CS);
 }
 
-static void ili9320SetCursor(uint16_t x, uint16_t y)
+static inline void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
+static inline void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-//    switch (ILI9320_Opts.orientation) {
-//    case LCD_Orientation_Portrait_1:
-//        ILI9320_WriteReg(0x0020, x);
-//        ILI9320_WriteReg(0x0021, y);
-//        break;
-//    case LCD_Orientation_Portrait_2:
-//        ILI9320_WriteReg(0x0020, ILI9320_WIDTH - x - 1);
-//        ILI9320_WriteReg(0x0021, ILI9320_HEIGHT - y - 1);
-//        break;
-//    case LCD_Orientation_Landscape_1:
-    ili9320WriteReg(0x0020, ILI9320_WIDTH - y - 1);
-    ili9320WriteReg(0x0021, x);
-//        break;
-//    case LCD_Orientation_Landscape_2:
-//        ILI9320_WriteReg(0x0020, y);
-//        ILI9320_WriteReg(0x0021, ILI9320_HEIGHT - x - 1);
-//        break;
-//    default:
-//        break;
-//    }
-}
-
-static void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-//    ili9320SetCursor(x, y);
-
-//    switch (ILI9320_Opts.orientation) {
-//    case LCD_Orientation_Portrait_1:
-//        ILI9320_WriteReg(0x0050, x);
-//        ILI9320_WriteReg(0x0051, x + w - 1);
-//        ILI9320_WriteReg(0x0052, y);
-//        ILI9320_WriteReg(0x0053, y + h - 1);
-//        break;
-//    case LCD_Orientation_Portrait_2:
-//        ILI9320_WriteReg(0x0050, ILI9320_WIDTH - x - w);
-//        ILI9320_WriteReg(0x0051, ILI9320_WIDTH - x - 1);
-//        ILI9320_WriteReg(0x0052, ILI9320_HEIGHT - y - h);
-//        ILI9320_WriteReg(0x0053, ILI9320_HEIGHT - y - 1);
-//        break;
-//    case LCD_Orientation_Landscape_1:
     ili9320WriteReg(0x0050, ILI9320_WIDTH - y - h);
     ili9320WriteReg(0x0051, ILI9320_WIDTH - y - 1);
     ili9320WriteReg(0x0052, x);
@@ -183,23 +144,12 @@ static void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     // Set cursor
     ili9320WriteReg(0x0020, ILI9320_WIDTH - y - 1);
     ili9320WriteReg(0x0021, x);
-
-//        break;
-//    case LCD_Orientation_Landscape_2:
-//        ILI9320_WriteReg(0x0050, y);
-//        ILI9320_WriteReg(0x0051, y + h - 1);
-//        ILI9320_WriteReg(0x0052, ILI9320_HEIGHT - x - w);
-//        ILI9320_WriteReg(0x0053, ILI9320_HEIGHT - x - 1);
-//        break;
-//    default:
-//        break;
-//    }
 }
 
-void ili9320Init(DisplayDriver **disp)
+void ili9320Init(GlcdDriver **driver)
 {
-    *disp = &drv;
-    gc320x240Init(*disp);
+    *driver = &glcd;
+    gc320x240Init(*driver);
 
     SET(ILI9320_LED);
     SET(ILI9320_RD);
@@ -216,7 +166,7 @@ void ili9320Init(DisplayDriver **disp)
 
 void ili9320Clear(void)
 {
-    ili9320DrawRectangle(0, 0, drv.layout->width, drv.layout->height, LCD_COLOR_BLACK);
+    ili9320DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void ili9320BusIRQ(void)
@@ -226,6 +176,8 @@ void ili9320BusIRQ(void)
 
 void ili9320Sleep(void)
 {
+    CLR(ILI9320_CS);
+
     ili9320WriteReg(0x0007, 0x0000); // Display OFF
     // Power Off Sequence
     ili9320WriteReg(0x0010, 0x0000); // SAP, BT[3:0], AP, DSTB, SLP, STB
@@ -234,10 +186,14 @@ void ili9320Sleep(void)
     ili9320WriteReg(0x0013, 0x0000); // VDV[4:0] for VCOM amplitude
     _delay_ms(200);
     ili9320WriteReg(0x0010, 0x0002); // SAP, BT[3:0], AP, DSTB, SLP, STB
+
+    SET(ILI9320_CS);
 }
 
 void ili9320Wakeup(void)
 {
+    CLR(ILI9320_CS);
+
     // Power On Sequence
     ili9320WriteReg(0x0010, 0x0000); // SAP, BT[3:0], AP, DSTB, SLP, STB
     ili9320WriteReg(0x0011, 0x0000); // DC1[2:0], DC0[2:0], VC[2:0]
@@ -253,101 +209,49 @@ void ili9320Wakeup(void)
     ili9320WriteReg(0x0029, 0x000C); // VCM[4:0] for VCOMH
 
     ili9320WriteReg(0x0007, 0x0173); // 262K color and display ON
+
+    SET(ILI9320_CS);
 }
 
 void ili9320DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    ili9320SetCursor(x, y);
-
     CLR(ILI9320_CS);
+
+    ili9320SetWindow(x, y, 1, 1);
+
     ili9320SelectReg(0x0022);
     ili9320SendData(color);
+
     SET(ILI9320_CS);
-}
-
-void ili9320DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
-{
-    int16_t sX, sY, dX, dY, err, err2;
-
-    sX = x0 < x1 ? 1 : -1;
-    sY = y0 < y1 ? 1 : -1;
-    dX = sX > 0 ? x1 - x0 : x0 - x1;
-    dY = sY > 0 ? y1 - y0 : y0 - y1;
-    err = dX - dY;
-
-    while (x0 != x1 || y0 != y1) {
-        ili9320DrawPixel(x0, y0, color);
-        err2 = err * 2;
-        if (err2 > -dY / 2) {
-            err -= dY;
-            x0 += sX;
-        }
-        if (err2 < dX) {
-            err += dX;
-            y0 += sY;
-        }
-    }
-    ili9320DrawPixel(x1, y1, color);
-}
-
-void ili9320DrawHorizLine(uint16_t x0, uint16_t x1, uint16_t y, uint16_t color)
-{
-    uint16_t i, len;
-
-    len = x1 - x0 + 1;
-
-    ili9320SetWindow(x0, y, len, 1);
-    CLR(ILI9320_CS);
-    ili9320SelectReg(0x0022);
-    for (i = 0; i < len; i++)
-        ili9320SendData(color);
-    SET(ILI9320_CS);
-}
-
-void ili9320DrawVertLine(uint16_t x, uint16_t y0, uint16_t y1, uint16_t color)
-{
-    uint16_t i, len;
-
-    len = y1 - y0 + 1;
-
-    ili9320SetWindow(x, y0, 1, len);
-    CLR(ILI9320_CS);
-    ili9320SelectReg(0x0022);
-    for (i = 0; i < len; i++)
-        ili9320SendData(color);
-    SET(ILI9320_CS);
-}
-
-void ili9320DrawFrame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
-{
-    ili9320DrawHorizLine(x0, x1, y0, color);
-    ili9320DrawVertLine(x0, y0, y1, color);
-    ili9320DrawVertLine(x1, y0, y1, color);
-    ili9320DrawHorizLine(x0, x1, y1, color);
 }
 
 void ili9320DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    ili9320SetWindow(x, y, w, h);
     CLR(ILI9320_CS);
+
+    ili9320SetWindow(x, y, w, h);
+
     ili9320SelectReg(0x0022);
     for (uint32_t i = 0; i < w * h; i++)
         ili9320SendData(color);
+
     SET(ILI9320_CS);
 }
 
 void ili9320DrawFontChar(CharParam *param)
 {
     uint8_t w = param->width;
-    uint8_t h = drv.font.data[FONT_HEIGHT];
-    uint16_t x0 = drv.layout->x;
-    uint16_t y0 = drv.layout->y;
-    uint16_t color = drv.font.color;
-    uint16_t bgColor = drv.layout->color;
-    uint8_t mult = drv.font.mult;
+    uint8_t h = glcd.font.data[FONT_HEIGHT];
+    uint16_t x0 = glcd.canvas->x;
+    uint16_t y0 = glcd.canvas->y;
+    uint16_t color = glcd.font.color;
+    uint16_t bgColor = glcd.canvas->color;
+    uint8_t mult = glcd.font.mult;
+
+    CLR(ILI9320_CS);
 
     ili9320SetWindow(x0, y0, mult * w, mult * h * 8);
-    CLR(ILI9320_CS);
+
     ili9320SelectReg(0x0022);
     for (uint16_t i = 0; i < w; i++) {
         for (uint8_t mx = 0; mx < mult; mx++) {
@@ -361,67 +265,6 @@ void ili9320DrawFontChar(CharParam *param)
             }
         }
     }
+
     SET(ILI9320_CS);
-}
-
-void ili9320DrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color)
-{
-    int16_t f = 1 - r;
-    int16_t ddF_x = 1;
-    int16_t ddF_y = -2 * r;
-    int16_t x = 0;
-    int16_t y = r;
-
-    ili9320DrawPixel(x0, y0 + r, color);
-    ili9320DrawPixel(x0, y0 - r, color);
-    ili9320DrawPixel(x0 + r, y0, color);
-    ili9320DrawPixel(x0 - r, y0, color);
-
-    while (x < y) {
-        if (f >= 0) {
-            y--;
-            ddF_y += 2;
-            f += ddF_y;
-        }
-        x++;
-        ddF_x += 2;
-        f += ddF_x;
-
-        ili9320DrawPixel(x0 + x, y0 + y, color);
-        ili9320DrawPixel(x0 - x, y0 + y, color);
-        ili9320DrawPixel(x0 + x, y0 - y, color);
-        ili9320DrawPixel(x0 - x, y0 - y, color);
-
-        ili9320DrawPixel(x0 + y, y0 + x, color);
-        ili9320DrawPixel(x0 - y, y0 + x, color);
-        ili9320DrawPixel(x0 + y, y0 - x, color);
-        ili9320DrawPixel(x0 - y, y0 - x, color);
-    }
-}
-
-void ili9320DrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
-{
-    int16_t f = 1 - r;
-    int16_t ddF_x = 1;
-    int16_t ddF_y = -2 * r;
-    int16_t x = 0;
-    int16_t y = r;
-
-    ili9320DrawHorizLine(x0 - r, x0 + r, y0, color);
-
-    while (x < y) {
-        if (f >= 0) {
-            y--;
-            ddF_y += 2;
-            f += ddF_y;
-        }
-        x++;
-        ddF_x += 2;
-        f += ddF_x;
-
-        ili9320DrawHorizLine(x0 - x, x0 + x, y0 + y, color);
-        ili9320DrawHorizLine(x0 - x, x0 + x, y0 - y, color);
-        ili9320DrawHorizLine(x0 - y, x0 + y, y0 + x, color);
-        ili9320DrawHorizLine(x0 - y, x0 + y, y0 - x, color);
-    }
 }

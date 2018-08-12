@@ -5,9 +5,8 @@
 
 #include "gm128x64.h"
 
-DisplayDriver drv = {
+static GlcdDriver glcd = {
     .clear = ks0108Clear,
-    .setBrightness = glcdSetBrightness,
     .drawPixel = ks0108DrawPixel,
     .drawFontChar = glcdDrawFontChar,
 };
@@ -58,13 +57,13 @@ static void ks0108WriteCmd(uint8_t cmd)
     CLR(KS0108_E);
 }
 
-void ks0108IRQ()
+void ks0108IRQ(void)
 {
     static uint8_t i;
     static uint8_t j;
     static uint8_t cs;
 
-    drv.bus = ks0108ReadPin();                      // Read pins
+    glcd.bus = ks0108ReadPin();                      // Read pins
     ks0108SetDdrOut();                              // Set data lines as outputs
 
     if (j == KS0108_PHASE_SET_PAGE) {               // Phase 1 (Y)
@@ -103,10 +102,10 @@ void ks0108IRQ()
     }
 }
 
-void ks0108Init(DisplayDriver **disp)
+void ks0108Init(GlcdDriver **driver)
 {
-    *disp = &drv;
-    gm128x64Init(*disp);
+    *driver = &glcd;
+    gm128x64Init(*driver);
 
     // Set RW line to zero
     CLR(KS0108_RW);
@@ -134,7 +133,7 @@ void ks0108Init(DisplayDriver **disp)
     SET(KS0108_BCKL);
 }
 
-void ks0108Clear()
+void ks0108Clear(void)
 {
     uint8_t i, j;
 

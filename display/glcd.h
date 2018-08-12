@@ -36,20 +36,19 @@ typedef struct {
     void (*showTime)(RTC_type *rtc, char *wday);
     void (*showParam)(DispParam *dp);
     void (*showSpectrum)(uint8_t *dataL, uint8_t *dataR);
-} DisplayLayout;
+} GlcdCanvas;
 
 typedef struct {
     void (*clear)(void);
-    void (*setBrightness)(uint8_t br);
     void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
     void (*drawRectangle)(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
     void (*drawFontChar)(CharParam *param);
 
-    DisplayLayout *layout;
+    GlcdCanvas *canvas;
     Font font;
 
     uint8_t bus;
-} DisplayDriver;
+} GlcdDriver;
 
 //Colors
 #define RGB_TO_565(x)                   (((x >> 8) & 0xF800) | ((x >> 5) & 0x7E0) | ((x >> 3) & 0x1F))
@@ -86,10 +85,15 @@ typedef struct {
 #define GLCD_MIN_BRIGHTNESS             0
 #define GLCD_MAX_BRIGHTNESS             32
 
-void glcdInit(DisplayDriver *driver);
+void glcdInit(GlcdDriver *driver);
+void glcdClear(void);
+
+GlcdCanvas *glcdGetCanvas(void);
+
+uint8_t glcdGetBus(void);
 
 void glcdSetBrightness(uint8_t value);
-void glcdPWM();
+void glcdPWM(void);
 
 void glcdWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix);
 
@@ -103,5 +107,12 @@ void glcdSetX(int16_t x);
 void glcdDrawFontChar(CharParam *param);
 void glcdWriteChar(uint8_t code);
 void glcdWriteString(char *string);
-void findCharOft(uint8_t code);
+
+void glcdDrawRect(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color);
+void glcdDrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
+void glcdDrawFrame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
+
+void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+void glcdDrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+
 #endif // GLCD_H

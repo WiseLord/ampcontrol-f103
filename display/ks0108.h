@@ -30,9 +30,9 @@
 #define KS0108_PHASE_SET_PAGE       64
 #define KS0108_PHASE_SET_ADDR       65
 
-void ks0108Init(DisplayDriver **disp);
-void ks0108Clear();
-void ks0108IRQ();
+void ks0108Init(GlcdDriver **driver);
+void ks0108Clear(void);
+void ks0108IRQ(void);
 
 void ks0108DrawPixel(int16_t x, int16_t y, uint16_t color);
 
