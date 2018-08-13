@@ -66,37 +66,31 @@ uint8_t pinsGetInput(void);
 #define INPUT_Pin               (BTN_0_Pin | BTN_1_Pin | BTN_2_Pin | BTN_3_Pin | \
                                  BTN_4_Pin | BTN_5_Pin | ENC_A_Pin | ENC_B_Pin)
 
-#define DISP_RS_Port            GPIOA
-#define DISP_RS_Pin             LL_GPIO_PIN_15
+#define DISP_CS_Port            GPIOA
+#define DISP_CS_Pin             LL_GPIO_PIN_15
+#define DISP_SCK_Port           GPIOB
+#define DISP_SCK_Pin            LL_GPIO_PIN_3
+#define DISP_RD_Port            GPIOB
+#define DISP_RD_Pin             LL_GPIO_PIN_4
 #define DISP_RW_Port            GPIOB
 #define DISP_RW_Pin             LL_GPIO_PIN_5
-#define DISP_STROB_Port         GPIOB
-#define DISP_STROB_Pin          LL_GPIO_PIN_3
-#define DISP_CTRL1_Port         GPIOB
-#define DISP_CTRL1_Pin          LL_GPIO_PIN_10
-#define DISP_CTRL2_Port         GPIOB
-#define DISP_CTRL2_Pin          LL_GPIO_PIN_11
-#define DISP_RESET_Port         GPIOB
-#define DISP_RESET_Pin          LL_GPIO_PIN_4
-// Temporarly
-#if defined(_ILI9320) || defined(_S6D0139) || defined(_ILI9341)
-#define DISP_BCKL_Port          GPIOB
-#define DISP_BCKL_Pin           LL_GPIO_PIN_11
-#else
+#define DISP_RS_Port            GPIOB
+#define DISP_RS_Pin             LL_GPIO_PIN_10
+#define DISP_RST_Port           GPIOB
+#define DISP_RST_Pin            LL_GPIO_PIN_11
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
-#endif
 
 #if defined(_KS0108B)
 
 #define KS0108_DATA_Port        INPUT_Port
 #define KS0108_DATA_Pin         INPUT_Pin
-#define KS0108_RS               DISP_RS
+#define KS0108_DI               DISP_CS
 #define KS0108_RW               DISP_RW
-#define KS0108_E                DISP_STROB
-#define KS0108_CS1              DISP_CTRL1
-#define KS0108_CS2              DISP_CTRL2
-#define KS0108_RST              DISP_RESET
+#define KS0108_E                DISP_SCK
+#define KS0108_CS1              DISP_RS
+#define KS0108_CS2              DISP_RD
+#define KS0108_RST              DISP_RST
 #define KS0108_BCKL             DISP_BCKL
 
 #elif defined(_ILI9320)
@@ -104,33 +98,33 @@ uint8_t pinsGetInput(void);
 // Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
 #define ILI9320_DHI_Port        INPUT_Port
 #define ILI9320_DHI_Pin         INPUT_Pin
-#define ILI9320_CS              DISP_STROB
+#define ILI9320_CS              DISP_CS
 #define ILI9320_RS              DISP_RS
 #define ILI9320_WR              DISP_RW
-#define ILI9320_RD              DISP_CTRL1
-#define ILI9320_RESET           DISP_RESET
+#define ILI9320_RD              DISP_RD
+#define ILI9320_RESET           DISP_RST
 #define ILI9320_LED             DISP_BCKL
 
 #elif defined(_ILI9341)
 
-#define ILI9341_CS              DISP_RS
-#define ILI9341_RESET           DISP_RESET
-#define ILI9341_DC              DISP_CTRL1
-#define ILI9341_LED             DISP_BCKL
+#define ILI9341_CS              DISP_CS
+#define ILI9341_RESET           DISP_RST
+#define ILI9341_DC              DISP_RS
 #define ILI9341_SDI             DISP_RW
-#define ILI9341_SCK             DISP_STROB
-//#define ILI9341_SD0             DISP_RS
+#define ILI9341_SCK             DISP_SCK
+#define ILI9341_LED             DISP_BCKL
+#define ILI9341_SD0             DISP_RD
 
 #elif defined(_S6D0139)
 
 // Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
 #define S6D0139_DHI_Port        INPUT_Port
 #define S6D0139_DHI_Pin         INPUT_Pin
-#define S6D0139_CS              DISP_STROB
+#define S6D0139_CS              DISP_CS
 #define S6D0139_RS              DISP_RS
 #define S6D0139_WR              DISP_RW
-#define S6D0139_RD              DISP_CTRL1
-#define S6D0139_RESET           DISP_RESET
+#define S6D0139_RD              DISP_RD
+#define S6D0139_RESET           DISP_RST
 #define S6D0139_LED             DISP_BCKL
 
 #else
