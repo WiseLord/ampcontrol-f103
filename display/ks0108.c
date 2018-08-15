@@ -23,12 +23,14 @@ static GlcdDriver glcd = {
 
 static uint8_t fb[KS0108_COLS * KS0108_CHIPS][KS0108_ROWS];
 
-static void ks0108SetPort(uint8_t data)
+static inline void ks0108SetPort(uint8_t data) __attribute__((always_inline));
+static inline void ks0108SetPort(uint8_t data)
 {
     KS0108_DATA_Port->BSRR = 0x00FF0000 | data;     // If port bits 7..0 are used
 }
 
-static void ks0108SetDdrIn()
+static inline void ks0108SetDdrIn() __attribute__((always_inline));
+static inline void ks0108SetDdrIn()
 {
     KS0108_DATA_Port->CRL = 0x88888888;             // SET CNF=10, MODE=00 - Input pullup
 }
@@ -59,16 +61,16 @@ static void ks0108WriteCmd(uint8_t cmd)
 
 void ks0108IRQ(void)
 {
-    static uint8_t i;
-    static uint8_t j;
+    static uint8_t page = 0;
+    static uint8_t phase = KS0108_PHASE_SET_PAGE;
     static uint8_t cs;
 
-    glcd.bus = ks0108ReadPin();                      // Read pins
+    glcd.bus = ks0108ReadPin();                     // Read pins
     ks0108SetDdrOut();                              // Set data lines as outputs
 
-    if (j == KS0108_PHASE_SET_PAGE) {               // Phase 1 (Y)
-        if (++i >= 8) {
-            i = 0;
+    if (phase == KS0108_PHASE_SET_PAGE) {           // Phase 1 (Y)
+        if (++page >= 8) {
+            page = 0;
             if (++cs >= KS0108_CHIPS)
                 cs = 0;
             switch (cs) {
@@ -81,11 +83,11 @@ void ks0108IRQ(void)
             }
         }
         CLR(KS0108_DI);                             // Go to command mode
-        ks0108SetPort(KS0108_SET_PAGE + i);
-    } else if (j == KS0108_PHASE_SET_ADDR) {        // Phase 2 (X)
-        ks0108SetPort(KS0108_SET_ADDRESS);
+        ks0108SetPort(KS0108_SET_PAGE + page);
+    } else if (phase == KS0108_PHASE_SET_ADDR) {    // Phase 2 (X)
+        ks0108SetPort(KS0108_SET_ADDRESS + 0);
     } else {                                        // Phase 3 (32 bytes of data)
-        ks0108SetPort(fb[j + 64 * cs][i]);
+        ks0108SetPort(fb[phase + 64 * cs][page]);
     }
 
     SET(KS0108_E);                                  // Data strob
@@ -96,8 +98,8 @@ void ks0108IRQ(void)
     ks0108SetPort(0xFF);                            // Set 1 (pull-up) on data lines
     ks0108SetDdrIn();                               // Set data lines as inputs
 
-    if (++j > KS0108_PHASE_SET_ADDR) {
-        j = 0;
+    if (++phase > KS0108_PHASE_SET_ADDR) {
+        phase = 0;
         SET(KS0108_DI);                             // Go to data mode
     }
 }
