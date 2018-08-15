@@ -93,6 +93,13 @@ uint8_t pinsGetInput(void);
 #define KS0108_RST              DISP_RST
 #define KS0108_BCKL             DISP_BCKL
 
+#elif defined(_SSD1306)
+
+#define SSD1306_SCK_Pin         DISP_RS_Pin
+#define SSD1306_SCK_Port        DISP_RS_Port
+#define SSD1306_SDA_Pin         DISP_RST_Pin
+#define SSD1306_SDA_Port        DISP_RST_Port
+
 #elif defined(_ILI9320)
 
 // Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode

@@ -259,7 +259,7 @@ void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
         glcdDrawLine(x0 - y, y0 - x, x0 + y, y0 - x, color);
     }
 }
-#include "../functions.h"
+
 void glcdDrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color)
 {
     int16_t f = 1 - r;
@@ -292,5 +292,12 @@ void glcdDrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color)
         glcd->drawPixel(x0 - y, y0 + x, color);
         glcd->drawPixel(x0 + y, y0 - x, color);
         glcd->drawPixel(x0 - y, y0 - x, color);
+    }
+}
+
+void glcdUpdate(void)
+{
+    if (glcd->updateFB) {
+        glcd->updateFB();
     }
 }

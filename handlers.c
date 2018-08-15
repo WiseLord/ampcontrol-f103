@@ -11,6 +11,8 @@
 
 #if defined (_KS0108B)
 #include "display/ks0108.h"
+#elif defined (_SSD1306)
+#include "display/ssd1306.h"
 #elif defined (_ILI9320)
 #include "display/ili9320.h"
 #elif defined (_ILI9341)

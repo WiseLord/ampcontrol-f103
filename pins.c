@@ -35,6 +35,15 @@ static void pinsInitDisplay(void)
     OUT_INIT(KS0108_CS2,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
     OUT_INIT(KS0108_RST,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
     OUT_INIT(KS0108_BCKL,   LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
+#elif defined(_SSD1306)
+    LL_GPIO_InitTypeDef GPIO_InitStruct;
+
+    GPIO_InitStruct.Pin = SSD1306_SCK_Pin|SSD1306_SDA_Pin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+
+    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 #elif defined(_ILI9320)
     LL_GPIO_InitTypeDef initDef;
 
@@ -101,7 +110,7 @@ uint8_t pinsGetInput(void)
 
 #if defined(_KS0108B)  || defined(_ILI9320) || defined(_S6D0139)
     bus = glcdGetBus();
-#elif defined(_ILI9341)
+#elif defined(_ILI9341) || defined(_SSD1306)
     bus = INPUT_Port->IDR & 0x00FF;   // Read 8-bit bus
 #else
 #error "Unsupported display driver"

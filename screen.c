@@ -9,6 +9,8 @@
 #include "display/ks0108.h"
 #elif defined (_ILI9320)
 #include "display/ili9320.h"
+#elif defined (_SSD1306)
+#include "display/ssd1306.h"
 #elif defined (_ILI9341)
 #include "display/ili9341.h"
 #elif defined (_S6D0139)
@@ -65,6 +67,8 @@ void screenInit(void)
     ks0108Init(&glcd);
 #elif defined (_ILI9320)
     ili9320Init(&glcd);
+#elif defined (_SSD1306)
+    ssd1306Init(&glcd);
 #elif defined (_ILI9341)
     ili9341Init(&glcd);
 #elif defined (_S6D0139)
@@ -79,6 +83,11 @@ void screenInit(void)
 void screenClear(void)
 {
     glcdClear();
+}
+
+void screenUpdate(void)
+{
+    glcdUpdate();
 }
 
 void screenSet(Screen value)

@@ -43,6 +43,7 @@ typedef struct {
     void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
     void (*drawRectangle)(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
     void (*drawFontChar)(CharParam *param);
+    void (*updateFB)(void);
 
     GlcdCanvas *canvas;
     Font font;
@@ -114,5 +115,7 @@ void glcdDrawFrame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t 
 
 void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
 void glcdDrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+
+void glcdUpdate(void);
 
 #endif // GLCD_H

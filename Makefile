@@ -47,6 +47,11 @@ else ifeq "$(DISPLAY)" "KS0108B"
   C_SOURCES += display/gm128x64.c
   C_SOURCES += display/glcd.c
   C_DEFS += -D_GM128X64
+else ifeq "$(DISPLAY)" "SSD1306"
+  C_SOURCES += display/ssd1306.c
+  C_SOURCES += display/gm128x64.c
+  C_SOURCES += display/glcd.c
+  C_DEFS += -D_GM128X64
 endif
 C_DEFS += -D_$(DISPLAY)
 
@@ -54,6 +59,7 @@ C_SOURCES += \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_i2c.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_pwr.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rtc.c \

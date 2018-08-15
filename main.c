@@ -5,6 +5,7 @@
 #include <stm32f1xx_ll_utils.h>
 
 #include "actions.h"
+#include "functions.h"
 #include "input.h"
 #include "pins.h"
 #include "screen.h"

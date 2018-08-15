@@ -254,4 +254,6 @@ void actionShowScreen(void)
 
     // Save current screen as previous
     screenPrev = screen;
+
+    screenUpdate();
 }
