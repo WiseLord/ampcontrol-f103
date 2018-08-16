@@ -27,22 +27,7 @@ ICONS_SRC = $(wildcard display/icon*.c)
 C_SOURCES += $(FONTS_SRC)
 C_SOURCES += $(ICONS_SRC)
 
-ifeq "$(DISPLAY)" "ILI9341"
-  C_SOURCES += display/ili9341.c
-  C_SOURCES += display/gc320x240.c
-  C_SOURCES += display/glcd.c
-  C_DEFS += -D_GC320X240
-else ifeq "$(DISPLAY)" "ILI9320"
-  C_SOURCES += display/ili9320.c
-  C_SOURCES += display/gc320x240.c
-  C_SOURCES += display/glcd.c
-  C_DEFS += -D_GC320X240
-else ifeq "$(DISPLAY)" "S6D0139"
-  C_SOURCES += display/s6d0139.c
-  C_SOURCES += display/gc320x240.c
-  C_SOURCES += display/glcd.c
-  C_DEFS += -D_GC320X240
-else ifeq "$(DISPLAY)" "KS0108B"
+ifeq "$(DISPLAY)" "KS0108B"
   C_SOURCES += display/ks0108.c
   C_SOURCES += display/gm128x64.c
   C_SOURCES += display/glcd.c
@@ -52,6 +37,26 @@ else ifeq "$(DISPLAY)" "SSD1306"
   C_SOURCES += display/gm128x64.c
   C_SOURCES += display/glcd.c
   C_DEFS += -D_GM128X64
+else ifeq "$(DISPLAY)" "ILI9320"
+  C_SOURCES += display/ili9320.c
+  C_SOURCES += display/gc320x240.c
+  C_SOURCES += display/glcd.c
+  C_DEFS += -D_GC320X240
+else ifeq "$(DISPLAY)" "ILI9341"
+  C_SOURCES += display/ili9341.c
+  C_SOURCES += display/gc320x240.c
+  C_SOURCES += display/glcd.c
+  C_DEFS += -D_GC320X240
+else ifeq "$(DISPLAY)" "S6D0139"
+  C_SOURCES += display/s6d0139.c
+  C_SOURCES += display/gc320x240.c
+  C_SOURCES += display/glcd.c
+  C_DEFS += -D_GC320X240
+else ifeq "$(DISPLAY)" "SPFD5408"
+  C_SOURCES += display/spfd5408.c
+  C_SOURCES += display/gc320x240.c
+  C_SOURCES += display/glcd.c
+  C_DEFS += -D_GC320X240
 endif
 C_DEFS += -D_$(DISPLAY)
 

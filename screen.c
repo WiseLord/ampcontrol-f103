@@ -7,14 +7,16 @@
 
 #if defined (_KS0108B)
 #include "display/ks0108.h"
-#elif defined (_ILI9320)
-#include "display/ili9320.h"
 #elif defined (_SSD1306)
 #include "display/ssd1306.h"
+#elif defined (_ILI9320)
+#include "display/ili9320.h"
 #elif defined (_ILI9341)
 #include "display/ili9341.h"
 #elif defined (_S6D0139)
 #include "display/s6d0139.h"
+#elif defined (_SPFD5408)
+#include "display/spfd5408.h"
 #else
 #error "Unsupported display driver"
 #endif
@@ -65,14 +67,16 @@ void screenInit(void)
 {
 #if defined (_KS0108B)
     ks0108Init(&glcd);
-#elif defined (_ILI9320)
-    ili9320Init(&glcd);
 #elif defined (_SSD1306)
     ssd1306Init(&glcd);
+#elif defined (_ILI9320)
+    ili9320Init(&glcd);
 #elif defined (_ILI9341)
     ili9341Init(&glcd);
 #elif defined (_S6D0139)
     s6d0139Init(&glcd);
+#elif defined (_SPFD5408)
+    spfd5408Init(&glcd);
 #else
 #error "Unsupported display driver"
 #endif

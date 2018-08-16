@@ -134,6 +134,18 @@ uint8_t pinsGetInput(void);
 #define S6D0139_RESET           DISP_RST
 #define S6D0139_LED             DISP_BCKL
 
+#elif defined(_SPFD5408)
+
+// Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
+#define SPFD5408_DHI_Port       INPUT_Port
+#define SPFD5408_DHI_Pin        INPUT_Pin
+#define SPFD5408_CS             DISP_CS
+#define SPFD5408_RS             DISP_RS
+#define SPFD5408_WR             DISP_RW
+#define SPFD5408_RD             DISP_RD
+#define SPFD5408_RESET          DISP_RST
+#define SPFD5408_LED            DISP_BCKL
+
 #else
 #error "Unsupported display driver"
 #endif

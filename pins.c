@@ -85,6 +85,22 @@ static void pinsInitDisplay(void)
     OUT_INIT(S6D0139_RD,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
     OUT_INIT(S6D0139_RESET, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
     OUT_INIT(S6D0139_LED,   LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+#elif defined(_SPFD5408)
+    LL_GPIO_InitTypeDef initDef;
+
+    initDef.Mode = LL_GPIO_MODE_OUTPUT;
+    initDef.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    initDef.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+
+    initDef.Pin = SPFD5408_DHI_Pin;
+    LL_GPIO_Init(SPFD5408_DHI_Port, &initDef);
+
+    OUT_INIT(SPFD5408_RS,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+    OUT_INIT(SPFD5408_CS,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+    OUT_INIT(SPFD5408_WR,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+    OUT_INIT(SPFD5408_RD,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+    OUT_INIT(SPFD5408_RESET, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
+    OUT_INIT(SPFD5408_LED,   LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
 #else
 #error "Unsupported display driver"
 #endif
@@ -108,7 +124,7 @@ uint8_t pinsGetInput(void)
 {
     uint8_t bus = 0;
 
-#if defined(_KS0108B)  || defined(_ILI9320) || defined(_S6D0139)
+#if defined(_KS0108B)  || defined(_ILI9320) || defined(_S6D0139) || defined(_SPFD5408)
     bus = glcdGetBus();
 #elif defined(_ILI9341) || defined(_SSD1306)
     bus = INPUT_Port->IDR & 0x00FF;   // Read 8-bit bus

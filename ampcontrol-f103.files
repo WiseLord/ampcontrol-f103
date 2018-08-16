@@ -21,6 +21,8 @@ display/ks0108.c
 display/ks0108.h
 display/s6d0139.c
 display/s6d0139.h
+display/spfd5408.c
+display/spfd5408.h
 display/ssd1306.c
 display/ssd1306.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
