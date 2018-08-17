@@ -193,7 +193,7 @@ void s6d0139Wakeup(void)
     _delay_ms(50);
     s6d0139WriteReg(0x0013, 0x0070);    // Power control4 setting
     _delay_ms(40);
-    s6d0139WriteReg(0x0007, 0x0173);    // 262K color and display ON
+    s6d0139WriteReg(0x0007, 0x0017);    // 262K color and display ON
 
     SET(S6D0139_CS);
 }
