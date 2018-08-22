@@ -109,14 +109,13 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 #LDFLAGS = $(WARN) -mmcu=$(MCU) -Wl,--gc-sections -Wl,--relax
 
 # Main definitions
-BINPATH = ../../gcc-arm-none-eabi-7-2017-q4-major/bin/
 PREFIX = arm-none-eabi-
-CC = $(BINPATH)$(PREFIX)gcc
-AS = $(BINPATH)$(PREFIX)gcc -x assembler-with-cpp
-CP = $(BINPATH)$(PREFIX)objcopy
-OD = $(BINPATH)$(PREFIX)objdump
-AR = $(BINPATH)$(PREFIX)ar
-SZ = $(BINPATH)$(PREFIX)size
+CC = $(PREFIX)gcc
+AS = $(PREFIX)gcc -x assembler-with-cpp
+CP = $(PREFIX)objcopy
+OD = $(PREFIX)objdump
+AR = $(PREFIX)ar
+SZ = $(PREFIX)size
 
 OPENOCD := openocd
 OPENOCD_CFG := system/stm32f10x-openocd.cfg
