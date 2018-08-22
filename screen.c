@@ -9,6 +9,12 @@
 #include "display/ks0108.h"
 #elif defined (_SSD1306)
 #include "display/ssd1306.h"
+#elif defined (_LS020)
+#include "display/ls020.h"
+#elif defined (_LPH9157)
+#include "display/lph9157.h"
+#elif defined (_SSD1286A)
+#include "display/ssd1286a.h"
 #elif defined (_ILI9320)
 #include "display/ili9320.h"
 #elif defined (_ILI9341)
@@ -69,6 +75,12 @@ void screenInit(void)
     ks0108Init(&glcd);
 #elif defined (_SSD1306)
     ssd1306Init(&glcd);
+#elif defined (_LS020)
+    ls020Init(&glcd);
+#elif defined (_LPH9157)
+    lph9157Init(&glcd);
+#elif defined (_SSD1286A)
+    ssd1286aInit(&glcd);
 #elif defined (_ILI9320)
     ili9320Init(&glcd);
 #elif defined (_ILI9341)

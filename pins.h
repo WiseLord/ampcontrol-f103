@@ -100,6 +100,36 @@ uint8_t pinsGetInput(void);
 #define SSD1306_SDA_Pin         DISP_RST_Pin
 #define SSD1306_SDA_Port        DISP_RST_Port
 
+#elif defined(_LS020)
+
+#define LS020_CS                DISP_CS
+#define LS020_RESET             DISP_RST
+#define LS020_DC                DISP_RS
+#define LS020_SDI               DISP_RW
+#define LS020_SCK               DISP_SCK
+#define LS020_LED               DISP_BCKL
+#define LS020_SD0               DISP_RD
+
+#elif defined(_LPH9157)
+
+#define LPH9157_CS              DISP_CS
+#define LPH9157_RESET           DISP_RST
+#define LPH9157_DC              DISP_RS
+#define LPH9157_SDI             DISP_RW
+#define LPH9157_SCK             DISP_SCK
+#define LPH9157_LED             DISP_BCKL
+#define LPH9157_SD0             DISP_RD
+
+#elif defined(_SSD1286A)
+
+#define SSD1286A_CS             DISP_CS
+#define SSD1286A_RESET          DISP_RST
+#define SSD1286A_DC             DISP_RS
+#define SSD1286A_SDI            DISP_RW
+#define SSD1286A_SCK            DISP_SCK
+#define SSD1286A_LED            DISP_BCKL
+#define SSD1286A_SD0            DISP_RD
+
 #elif defined(_ILI9320)
 
 // Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
