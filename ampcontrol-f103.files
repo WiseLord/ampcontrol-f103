@@ -94,6 +94,7 @@ system/stm32f103c8tx_flash.ld
 system/stm32f10x-openocd.cfg
 system/system_stm32f1xx.c
 .astylerc
+Makefile
 actions.c
 actions.h
 fft.c
@@ -102,14 +103,11 @@ functions.c
 functions.h
 handlers.c
 handlers.h
-ili9341.c
-ili9341.h
+i2c.c
+i2c.h
 input.c
 input.h
-m32.mk
 main.c
-Makefile
-old.mk
 pins.c
 pins.h
 rtc.c
