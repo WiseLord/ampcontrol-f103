@@ -124,6 +124,8 @@ void ks0108Init(GlcdDriver **driver)
     ks0108WriteCmd(KS0108_DISPLAY_START_LINE);
     ks0108WriteCmd(KS0108_DISPLAY_ON);
     _delay_ms(10);
+
+    SET(KS0108_DI);                             // Go to data mode
 }
 
 void ks0108Clear(void)

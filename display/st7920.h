@@ -54,7 +54,6 @@
 
 #define ST7920_PHASE_SET_PAGE       32
 #define ST7920_PHASE_SET_ADDR       33
-#define ST7920_PHASE_READ_PORT      34
 
 void st7920Init(GlcdDriver **driver);
 void st7920Clear();

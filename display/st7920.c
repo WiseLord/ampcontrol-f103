@@ -16,73 +16,69 @@ static uint8_t fb[ST7920_SIZE_X / 4][ST7920_SIZE_Y / 2];
 static inline void st7920SetPort(uint8_t data) __attribute__((always_inline));
 static void st7920SetPort(uint8_t data)
 {
-    ST7920_DATA_Port->BSRR = 0x00FF0000 | data;     // If port bits 7..0 are used
+    ST7920_DATA_Port->BSRR = 0x00FF0000 | data;         // If port bits 7..0 are used
 }
 
 static inline void st7920SetDdrIn() __attribute__((always_inline));
 static void st7920SetDdrIn()
 {
-    ST7920_DATA_Port->CRL = 0x88888888;             // SET CNF=10, MODE=00 - Input pullup
+    ST7920_DATA_Port->CRL = 0x88888888;                 // SET CNF=10, MODE=00 - Input pullup
 }
 
 static inline void st7920SetDdrOut() __attribute__((always_inline));
 static void st7920SetDdrOut()
 {
-    ST7920_DATA_Port->CRL = 0x22222222;             // Set CNF=00, MODE=10 - Output push-pull 2 MHz
+    ST7920_DATA_Port->CRL = 0x22222222;                 // Set CNF=00, MODE=10 - Output push-pull 2 MHz
 }
 
 static inline uint8_t st7920ReadPin(void) __attribute__((always_inline));
 static uint8_t st7920ReadPin()
 {
-    return ST7920_DATA_Port->IDR & 0x00FF;          // Read 8-bit bus;
+    return ST7920_DATA_Port->IDR & 0x00FF;              // Read 8-bit bus;
 }
 
 static void st7920WriteCmd(uint8_t cmd)
 {
-    _delay_us(150);
+    _delay_us(100);
 
     CLR(ST7920_RS);
     st7920SetPort(cmd);
 
     SET(ST7920_E);
-   _delay_us(1);
+    _delay_us(1);
     CLR(ST7920_E);
 }
 
 void st7920IRQ(void)
-  {
-    static uint8_t i = 0;
-    static uint8_t j = ST7920_PHASE_SET_PAGE;
+{
+    static uint8_t page = 0;
+    static uint8_t phase = ST7920_PHASE_SET_PAGE;
 
-    if (j == ST7920_PHASE_SET_PAGE) {                       // Phase 1 (Y)
-        CLR(ST7920_RS);                                     // Go to command mode
-        if (++i >= 32)
-            i = 0;
-        st7920SetPort(ST7920_SET_GRAPHIC_RAM | i);          // Set Y
-    } else if (j == ST7920_PHASE_SET_ADDR) {                // Phase 2 (X)
-        st7920SetPort(ST7920_SET_GRAPHIC_RAM);              // Set X
-    } else if (j == ST7920_PHASE_READ_PORT) {
-        glcd.bus = st7920ReadPin();                         // Read pins
-        st7920SetDdrOut();                                  // Set data lines as outputs
-    } else {                                                // Phase 3 (32 bytes of data)
-        st7920SetPort(fb[j][i]);
+    glcd.bus = st7920ReadPin();                         // Read pins
+    st7920SetDdrOut();                                  // Set data lines as outputs
+
+    if (phase == ST7920_PHASE_SET_PAGE) {               // Phase 1 (Y)
+        CLR(ST7920_RS);                                 // Go to command mode
+        if (++page >= 32)
+            page = 0;
+        st7920SetPort(ST7920_SET_GRAPHIC_RAM | page);   // Set Y
+    } else if (phase == ST7920_PHASE_SET_ADDR) {        // Phase 2 (X)
+        st7920SetPort(ST7920_SET_GRAPHIC_RAM);          // Set X
+    } else {                                            // Phase 3 (32 bytes of data)
+        st7920SetPort(fb[phase][page]);
     }
 
-    if (j != ST7920_PHASE_READ_PORT) {
-        SET(ST7920_E);                                      // Strob
-       _delay_us(1);
-        CLR(ST7920_E);
+    SET(ST7920_E);                                      // Strob
+    _delay_us(1);
+    CLR(ST7920_E);
 
-        // Prepare to read pins
-        if (j == ST7920_PHASE_SET_ADDR) {
-            st7920SetPort(0xFF);                            // Pull-up data lines
-            st7920SetDdrIn();                               // Set data lines as inputs
-        }
-    }
+    // Prepare to read pins
+    st7920SetPort(0xFF);                                // Pull-up data lines
+    st7920SetDdrIn();                                   // Set data lines as inputs
 
-    if (++j > ST7920_PHASE_READ_PORT) {
-        j = 0;
-        SET(ST7920_RS);                                     // Go to data mode
+    if (++phase > ST7920_PHASE_SET_ADDR) {
+        phase = 0;
+        SET(ST7920_RS);                                 // Go to data mode
     }
 }
 
@@ -110,6 +106,8 @@ void st7920Init(GlcdDriver **driver)
     st7920WriteCmd(ST7920_ENTRY_MODE | ST7920_INC_ADDR);
     st7920WriteCmd(ST7920_FUNCTION | ST7920_8BIT | ST7920_EXT_INSTR);
     st7920WriteCmd(ST7920_FUNCTION | ST7920_8BIT | ST7920_EXT_INSTR | ST7920_GRAPHIC);
+
+    SET(ST7920_RS);                                 // Go to data mode
 }
 
 void st7920Clear()
