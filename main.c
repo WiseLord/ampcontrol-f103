@@ -79,10 +79,10 @@ int main(void)
     spInit();
 
     pinsInit();
-    timersInit();
     screenInit();
     inputInit();
     rtcInit();
+    timersInit();
 
     while (1) {
         actionGet();

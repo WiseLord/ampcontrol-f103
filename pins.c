@@ -36,6 +36,23 @@ static void pinsInitDisplay(void)
     OUT_INIT(KS0108_RST,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
     OUT_INIT(KS0108_BCKL,   LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
 
+#elif defined(_ST7920)
+    LL_GPIO_InitTypeDef initDef;
+
+    initDef.Mode = LL_GPIO_MODE_OUTPUT;
+    initDef.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    initDef.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+
+    initDef.Pin = ST7920_DATA_Pin;
+    LL_GPIO_Init(ST7920_DATA_Port, &initDef);
+
+    OUT_INIT(ST7920_RS,     LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
+    OUT_INIT(ST7920_RW,     LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
+    OUT_INIT(ST7920_E,      LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
+    OUT_INIT(ST7920_PSB,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
+    OUT_INIT(ST7920_RST,    LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
+    OUT_INIT(ST7920_BCKL,   LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_LOW);
+
 #elif defined(_SSD1306)
 
     LL_GPIO_InitTypeDef GPIO_InitStruct;
@@ -168,7 +185,7 @@ uint8_t pinsGetInput(void)
 {
     uint8_t bus = 0;
 
-#if defined(_KS0108)  || defined(_ILI9320) || defined(_S6D0139) || defined(_SPFD5408)
+#if defined(_KS0108) || defined(_ST7920) || defined(_ILI9320) || defined(_S6D0139) || defined(_SPFD5408)
     bus = glcdGetBus();
 #elif defined(_ILI9341) || defined(_SSD1306) || defined(_LS020) || defined(_LPH9157) || defined(_SSD1286A)
     bus = INPUT_Port->IDR & 0x00FF;   // Read 8-bit bus

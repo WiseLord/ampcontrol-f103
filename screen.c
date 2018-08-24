@@ -7,6 +7,8 @@
 
 #if defined (_KS0108)
 #include "display/ks0108.h"
+#elif defined (_ST7920)
+#include "display/st7920.h"
 #elif defined (_SSD1306)
 #include "display/ssd1306.h"
 #elif defined (_LS020)
@@ -73,6 +75,8 @@ void screenInit(void)
 {
 #if defined (_KS0108)
     ks0108Init(&glcd);
+#elif defined (_ST7920)
+    st7920Init(&glcd);
 #elif defined (_SSD1306)
     ssd1306Init(&glcd);
 #elif defined (_LS020)

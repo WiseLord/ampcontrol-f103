@@ -109,9 +109,7 @@ void ks0108Init(GlcdDriver **driver)
     *driver = &glcd;
     gm128x64Init(*driver);
 
-    // Set RW line to zero
     CLR(KS0108_RW);
-
     CLR(KS0108_DI);
     CLR(KS0108_E);
 
@@ -126,13 +124,6 @@ void ks0108Init(GlcdDriver **driver)
     ks0108WriteCmd(KS0108_DISPLAY_START_LINE);
     ks0108WriteCmd(KS0108_DISPLAY_ON);
     _delay_ms(10);
-
-    // Go to data mode
-    SET(KS0108_DI);
-
-    // Enable backlight control
-    OUT(KS0108_BCKL);
-    SET(KS0108_BCKL);
 }
 
 void ks0108Clear(void)

@@ -31,6 +31,8 @@ display/ssd1286a.c
 display/ssd1286a.h
 display/ssd1306.c
 display/ssd1306.h
+display/st7920.c
+display/st7920.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h

@@ -93,6 +93,17 @@ uint8_t pinsGetInput(void);
 #define KS0108_RST              DISP_RST
 #define KS0108_BCKL             DISP_BCKL
 
+#elif defined(_ST7920)
+
+#define ST7920_DATA_Port        INPUT_Port
+#define ST7920_DATA_Pin         INPUT_Pin
+#define ST7920_RS               DISP_CS
+#define ST7920_RW               DISP_RW
+#define ST7920_E                DISP_SCK
+#define ST7920_PSB              DISP_RS
+#define ST7920_RST              DISP_RST
+#define ST7920_BCKL             DISP_BCKL
+
 #elif defined(_SSD1306)
 
 #define SSD1306_SCK_Pin         DISP_RS_Pin

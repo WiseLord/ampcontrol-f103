@@ -32,6 +32,9 @@ C_SOURCES += $(ICONS_SRC)
 ifeq "$(DISPLAY)" "KS0108"
   C_SOURCES += display/ks0108.c
   C_SOURCES += display/gm128x64.c
+else ifeq "$(DISPLAY)" "ST7920"
+  C_SOURCES += display/st7920.c
+  C_SOURCES += display/gm128x64.c
 else ifeq "$(DISPLAY)" "SSD1306"
   C_SOURCES += display/ssd1306.c
   C_SOURCES += display/gm128x64.c
