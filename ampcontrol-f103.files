@@ -19,6 +19,8 @@ display/ili9341.c
 display/ili9341.h
 display/ks0108.c
 display/ks0108.h
+display/lcd.c
+display/lcd.h
 display/lph9157.c
 display/lph9157.h
 display/ls020.c

@@ -15,6 +15,7 @@ C_SOURCES += functions.c
 C_SOURCES += handlers.c
 C_SOURCES += i2c.c
 C_SOURCES += input.c
+C_SOURCES += lcd.c
 C_SOURCES += pins.c
 C_SOURCES += rtc.c
 C_SOURCES += screen.c

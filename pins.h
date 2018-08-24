@@ -4,7 +4,6 @@
 #include <stm32f1xx_ll_gpio.h>
 
 void pinsInit(void);
-uint8_t pinsGetInput(void);
 
 #define CONCAT(x,y)         x ## y
 

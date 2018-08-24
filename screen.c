@@ -1,33 +1,9 @@
 #include "screen.h"
 
-#include "display/icons.h"
+#include "display/lcd.h"
 #include "actions.h"
 #include "fft.h"
 #include "spectrum.h"
-
-#if defined (_KS0108)
-#include "display/ks0108.h"
-#elif defined (_ST7920)
-#include "display/st7920.h"
-#elif defined (_SSD1306)
-#include "display/ssd1306.h"
-#elif defined (_LS020)
-#include "display/ls020.h"
-#elif defined (_LPH9157)
-#include "display/lph9157.h"
-#elif defined (_SSD1286A)
-#include "display/ssd1286a.h"
-#elif defined (_ILI9320)
-#include "display/ili9320.h"
-#elif defined (_ILI9341)
-#include "display/ili9341.h"
-#elif defined (_S6D0139)
-#include "display/s6d0139.h"
-#elif defined (_SPFD5408)
-#include "display/spfd5408.h"
-#else
-#error "Unsupported display driver"
-#endif
 
 static GlcdDriver *glcd;
 static Screen screen = SCREEN_STANDBY;
@@ -73,31 +49,9 @@ const char *txtLabels[LABEL_END] = {
 
 void screenInit(void)
 {
-#if defined (_KS0108)
-    ks0108Init(&glcd);
-#elif defined (_ST7920)
-    st7920Init(&glcd);
-#elif defined (_SSD1306)
-    ssd1306Init(&glcd);
-#elif defined (_LS020)
-    ls020Init(&glcd);
-#elif defined (_LPH9157)
-    lph9157Init(&glcd);
-#elif defined (_SSD1286A)
-    ssd1286aInit(&glcd);
-#elif defined (_ILI9320)
-    ili9320Init(&glcd);
-#elif defined (_ILI9341)
-    ili9341Init(&glcd);
-#elif defined (_S6D0139)
-    s6d0139Init(&glcd);
-#elif defined (_SPFD5408)
-    spfd5408Init(&glcd);
-#else
-#error "Unsupported display driver"
-#endif
+    lcdInit(&glcd);
     screenClear();
-    glcdSetBrightness(brStby);
+    lcdSetBrightness(brStby);
 }
 
 void screenClear(void)
@@ -135,7 +89,7 @@ void screenSetBrightness(uint8_t mode, int8_t value)
     else
         brStby = value;
 
-    glcdSetBrightness(value);
+    lcdSetBrightness(value);
 }
 
 void screenChangeBrighness(uint8_t mode, int8_t diff)

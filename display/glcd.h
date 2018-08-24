@@ -4,6 +4,7 @@
 #include <inttypes.h>
 
 #include "fonts.h"
+#include "icons.h"
 #include "../rtc.h"
 
 typedef enum {
@@ -92,9 +93,6 @@ void glcdClear(void);
 GlcdCanvas *glcdGetCanvas(void);
 
 uint8_t glcdGetBus(void);
-
-void glcdSetBrightness(uint8_t value);
-void glcdPWM(void);
 
 void glcdWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix);
 

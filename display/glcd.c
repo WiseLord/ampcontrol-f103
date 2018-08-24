@@ -9,8 +9,6 @@ static char strbuf[STR_BUFSIZE + 1];   // String buffer
 static GlcdDriver *glcd;
 static CharParam charParam;
 
-static uint8_t brightness;
-
 void glcdInit(GlcdDriver *driver)
 {
     glcd = driver;
@@ -31,25 +29,6 @@ GlcdCanvas *glcdGetCanvas(void)
 uint8_t glcdGetBus(void)
 {
     return glcd->bus;
-}
-
-void glcdSetBrightness(uint8_t value)
-{
-    brightness = value;
-}
-
-void glcdPWM(void)
-{
-    static uint8_t br;
-
-    if (++br >= GLCD_MAX_BRIGHTNESS)
-        br = GLCD_MIN_BRIGHTNESS;
-
-    if (br == brightness) {
-        CLR(DISP_BCKL);
-    } else if (br == 0) {
-        SET(DISP_BCKL);
-    }
 }
 
 void glcdWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix)

@@ -4,34 +4,11 @@
 #include <stm32f1xx_ll_rtc.h>
 #include <stm32f1xx_ll_tim.h>
 
+#include "display/lcd.h"
 #include "input.h"
 #include "rtc.h"
 #include "spectrum.h"
 #include "timers.h"
-
-#if defined (_KS0108)
-#include "display/ks0108.h"
-#elif defined (_ST7920)
-#include "display/st7920.h"
-#elif defined (_SSD1306)
-#include "display/ssd1306.h"
-#elif defined (_LS020)
-#include "display/ls020.h"
-#elif defined (_LPH9157)
-#include "display/lph9157.h"
-#elif defined (_SSD1286A)
-#include "display/ssd1286a.h"
-#elif defined (_ILI9320)
-#include "display/ili9320.h"
-#elif defined (_ILI9341)
-#include "display/ili9341.h"
-#elif defined (_S6D0139)
-#include "display/s6d0139.h"
-#elif defined (_SPFD5408)
-#include "display/spfd5408.h"
-#else
-#error "Unsupported display driver"
-#endif
 
 void NMI_Handler(void)
 {
@@ -103,18 +80,8 @@ void TIM2_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM2);
 
         // Callbacks
-#if defined(_KS0108)
-        ks0108IRQ();        // Update screen from framebuffer
-#elif defined(_ST7920)
-        st7920IRQ();        // Update screen from framebuffer
-#elif defined(_ILI9320)
-        ili9320BusIRQ();    // Read bus
-#elif defined(_S6D0139)
-        s6d0139BusIRQ();    // Read bus
-#elif defined(_SPFD5408)
-        spfd5408BusIRQ();   // Read bus
-#endif
-        glcdPWM();
+        LCD_IRQ();
+        lcdPWM();
         spConvertADC();
     }
 }
