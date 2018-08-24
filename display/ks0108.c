@@ -11,7 +11,7 @@ static GlcdDriver glcd = {
     .drawFontChar = glcdDrawFontChar,
 };
 
-#ifdef _KS0108B
+#if defined(_CSNEG)
 #define KS0108_SET_CS1()    CLR(KS0108_CS1); SET(KS0108_CS2)
 #define KS0108_SET_CS2()    SET(KS0108_CS1); CLR(KS0108_CS2)
 #define KS0108_SET_CS()     CLR(KS0108_CS2); CLR(KS0108_CS1)

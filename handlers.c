@@ -9,7 +9,7 @@
 #include "spectrum.h"
 #include "timers.h"
 
-#if defined (_KS0108B)
+#if defined (_KS0108)
 #include "display/ks0108.h"
 #elif defined (_SSD1306)
 #include "display/ssd1306.h"
@@ -101,7 +101,7 @@ void TIM2_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM2);
 
         // Callbacks
-#if defined(_KS0108B)
+#if defined(_KS0108)
         ks0108IRQ();        // Update screen from framebuffer
 #elif defined(_ILI9320)
         ili9320BusIRQ();    // Read bus

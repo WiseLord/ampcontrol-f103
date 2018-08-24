@@ -5,7 +5,7 @@
 #include "fft.h"
 #include "spectrum.h"
 
-#if defined (_KS0108B)
+#if defined (_KS0108)
 #include "display/ks0108.h"
 #elif defined (_SSD1306)
 #include "display/ssd1306.h"
@@ -71,7 +71,7 @@ const char *txtLabels[LABEL_END] = {
 
 void screenInit(void)
 {
-#if defined (_KS0108B)
+#if defined (_KS0108)
     ks0108Init(&glcd);
 #elif defined (_SSD1306)
     ssd1306Init(&glcd);

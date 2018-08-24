@@ -81,7 +81,7 @@ uint8_t pinsGetInput(void);
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
-#if defined(_KS0108B)
+#if defined(_KS0108)
 
 #define KS0108_DATA_Port        INPUT_Port
 #define KS0108_DATA_Pin         INPUT_Pin

@@ -1,10 +1,11 @@
 DISPLAY = ILI9320
+DISPVAR = 8BIT
 
 APROC_LIST =
 TUNER_LIST =
 FEATURE_LIST =
 
-TARGET = ampcontrol_f103_$(shell echo $(DISPLAY) | tr A-Z a-z)
+TARGET = ampcontrol_f103_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
 
 C_SOURCES = main.c
 
@@ -28,7 +29,7 @@ ICONS_SRC = $(wildcard display/icon*.c)
 C_SOURCES += $(FONTS_SRC)
 C_SOURCES += $(ICONS_SRC)
 
-ifeq "$(DISPLAY)" "KS0108B"
+ifeq "$(DISPLAY)" "KS0108"
   C_SOURCES += display/ks0108.c
   C_SOURCES += display/gm128x64.c
 else ifeq "$(DISPLAY)" "SSD1306"
@@ -58,6 +59,7 @@ else ifeq "$(DISPLAY)" "SPFD5408"
 endif
 C_SOURCES += display/glcd.c
 C_DEFS += -D_$(DISPLAY)
+C_DEFS += -D_$(DISPVAR)
 
 C_SOURCES += \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
