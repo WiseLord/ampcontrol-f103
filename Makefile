@@ -65,6 +65,9 @@ C_SOURCES += display/glcd.c
 C_DEFS += -D_$(DISPLAY)
 C_DEFS += -D_$(DISPVAR)
 
+# Audio source files
+C_SOURCES += audio/audio.c
+
 C_SOURCES += \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \

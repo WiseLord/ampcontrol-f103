@@ -1,3 +1,5 @@
+audio/audio.c
+audio/audio.h
 display/display.c
 display/display.h
 display/font-digits-32.c
