@@ -1,6 +1,6 @@
 #include "screen.h"
 
-#include "display/lcd.h"
+#include "display/display.h"
 #include "actions.h"
 #include "fft.h"
 #include "spectrum.h"
@@ -49,9 +49,9 @@ const char *txtLabels[LABEL_END] = {
 
 void screenInit(void)
 {
-    lcdInit(&glcd);
+    displayInit(&glcd);
     screenClear();
-    lcdSetBrightness(brStby);
+    displySetBrightness(brStby);
 }
 
 void screenClear(void)
@@ -89,7 +89,7 @@ void screenSetBrightness(uint8_t mode, int8_t value)
     else
         brStby = value;
 
-    lcdSetBrightness(value);
+    displySetBrightness(value);
 }
 
 void screenChangeBrighness(uint8_t mode, int8_t diff)

@@ -1,10 +1,10 @@
-#include "lcd.h"
+#include "display.h"
 
 #include "../pins.h"
 
 static uint8_t brightness;
 
-void lcdInit(GlcdDriver **driver)
+void displayInit(GlcdDriver **driver)
 {
 #if defined (_KS0108)
     ks0108Init(driver);
@@ -31,7 +31,7 @@ void lcdInit(GlcdDriver **driver)
 #endif
 }
 
-void lcdPWM(void)
+void displayPWM(void)
 {
     static uint8_t br;
 
@@ -45,12 +45,12 @@ void lcdPWM(void)
     }
 }
 
-void lcdSetBrightness(uint8_t value)
+void displySetBrightness(uint8_t value)
 {
     brightness = value;
 }
 
-uint8_t lcdGetInput(void)
+uint8_t displayGetInput(void)
 {
     uint8_t bus = 0;
 

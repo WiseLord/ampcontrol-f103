@@ -4,7 +4,7 @@
 #include <stm32f1xx_ll_rtc.h>
 #include <stm32f1xx_ll_tim.h>
 
-#include "display/lcd.h"
+#include "display/display.h"
 #include "input.h"
 #include "rtc.h"
 #include "spectrum.h"
@@ -80,8 +80,8 @@ void TIM2_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM2);
 
         // Callbacks
-        LCD_IRQ();
-        lcdPWM();
+        DISPLAY_IRQ();
+        displayPWM();
         spConvertADC();
     }
 }

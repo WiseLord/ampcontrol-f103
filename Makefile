@@ -15,7 +15,6 @@ C_SOURCES += functions.c
 C_SOURCES += handlers.c
 C_SOURCES += i2c.c
 C_SOURCES += input.c
-C_SOURCES += lcd.c
 C_SOURCES += pins.c
 C_SOURCES += rtc.c
 C_SOURCES += screen.c
@@ -61,6 +60,7 @@ else ifeq "$(DISPLAY)" "SPFD5408"
   C_SOURCES += display/spfd5408.c
   C_SOURCES += display/gc320x240.c
 endif
+C_SOURCES += display.c
 C_SOURCES += display/glcd.c
 C_DEFS += -D_$(DISPLAY)
 C_DEFS += -D_$(DISPVAR)

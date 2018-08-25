@@ -1,5 +1,5 @@
-#ifndef LCD_H
-#define LCD_H
+#ifndef DISPLAY_H
+#define DISPLAY_H
 
 #include <inttypes.h>
 
@@ -28,22 +28,22 @@
 #endif
 
 #if defined(_KS0108)
-#define LCD_IRQ ks0108IRQ
+#define DISPLAY_IRQ ks0108IRQ
 #elif defined(_ST7920)
-#define LCD_IRQ st7920IRQ
+#define DISPLAY_IRQ st7920IRQ
 #elif defined(_ILI9320)
-#define LCD_IRQ ili9320BusIRQ
+#define DISPLAY_IRQ ili9320BusIRQ
 #elif defined(_S6D0139)
-#define LCD_IRQ s6d0139BusIRQ
+#define DISPLAY_IRQ s6d0139BusIRQ
 #elif defined(_SPFD5408)
-#define LCD_IRQ spfd5408BusIRQ
+#define DISPLAY_IRQ spfd5408BusIRQ
 #else
-#define LCD_IRQ void
+#define DISPLAY_IRQ()
 #endif
 
-void lcdInit(GlcdDriver **glcd);
-void lcdPWM(void);
-void lcdSetBrightness(uint8_t value);
-uint8_t lcdGetInput(void);
+void displayInit(GlcdDriver **glcd);
+void displayPWM(void);
+void displySetBrightness(uint8_t value);
+uint8_t displayGetInput(void);
 
-#endif // LCD_H
+#endif // DISPLAY_H
