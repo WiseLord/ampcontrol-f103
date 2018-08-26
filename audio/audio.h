@@ -3,6 +3,8 @@
 
 #include <inttypes.h>
 
+#define STEP_MULT   8
+
 typedef enum {
     AUDIO_PARAM_VOLUME = 0,
     AUDIO_PARAM_BASS,
@@ -42,14 +44,19 @@ typedef enum {
 } AudioFlag;
 
 typedef struct {
-    void (*set)(int8_t value);
-    int8_t min;     // Minimum in steps
-    int8_t max;     // Maximum in steps
-    int8_t step;    // Step multiplied by 8 (to handle 1.25 and so on)
+    int16_t min;     // Minimum in steps
+    int16_t max;     // Maximum in steps
+    int16_t step;    // Step multiplied by STEP_MULT (to handle 1.25 and so on)
+} AudioGrid;
+
+typedef struct {
+    void (*set)(void);
+    const AudioGrid *grid;
     int8_t value;   // Value in steps
 } AudioItem;
 
 typedef struct {
+    void (*setFlag)(void);
     AudioIC ic;
     AudioFlag flag;
     AudioItem item[AUDIO_PARAM_END];

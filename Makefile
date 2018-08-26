@@ -1,7 +1,7 @@
 DISPLAY = ILI9320
 DISPVAR = 8BIT
 
-APROC_LIST =
+APROC_LIST = TDA7439 TDA731X PT232X
 TUNER_LIST =
 FEATURE_LIST =
 
@@ -66,7 +66,11 @@ C_DEFS += -D_$(DISPLAY)
 C_DEFS += -D_$(DISPVAR)
 
 # Audio source files
+ifeq "$(findstring TDA7439, $(APROC_LIST))" "TDA7439"
+  C_SOURCES += audio/tda7439.c
+endif
 C_SOURCES += audio/audio.c
+C_DEFS += $(addprefix -D_, $(APROC_LIST))
 
 C_SOURCES += \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \

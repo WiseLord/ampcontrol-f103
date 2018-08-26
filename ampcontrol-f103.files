@@ -1,5 +1,7 @@
 audio/audio.c
 audio/audio.h
+audio/tda7439.c
+audio/tda7439.h
 display/display.c
 display/display.h
 display/font-digits-32.c
