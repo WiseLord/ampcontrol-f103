@@ -77,6 +77,11 @@ void glcdSetFontMult(uint8_t mult)
     glcd->font.mult = mult;
 }
 
+void glcdSetCanvasColor(uint16_t color)
+{
+    glcd->canvas->color = color;
+}
+
 void glcdSetXY(int16_t x, int16_t y)
 {
     glcd->canvas->x = x;
@@ -123,8 +128,6 @@ void glcdDrawFontChar(CharParam *param)
     for (uint16_t j = 0; j < h; j++) {
         for (uint16_t i = 0; i < w; i++) {
             uint8_t data = param->data[w * j + i];
-            if (!color)
-                data = ~data;
             for (uint8_t k = 0; k < 8; k++) {
                 for (uint8_t mx = 0; mx < mult; mx++) {
                     for (uint8_t my = 0; my < mult; my++) {

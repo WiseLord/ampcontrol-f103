@@ -85,9 +85,12 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
     int8_t time = *((int8_t *)rtc + tm);
 
     glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetCanvasColor(LCD_COLOR_BLACK);
     glcdWriteChar(ltSp);
-    if (rtc->etm == tm)
+    if (rtc->etm == tm) {
         glcdSetFontColor(LCD_COLOR_BLACK);
+        glcdSetCanvasColor(LCD_COLOR_WHITE);
+    }
     glcdWriteChar(ltSp);
     if (tm == RTC_YEAR) {
         glcdWriteString("20");
@@ -96,6 +99,7 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
     glcdWriteNum(time, 2, '0', 10);
     glcdWriteChar(ltSp);
     glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetCanvasColor(LCD_COLOR_BLACK);
     glcdWriteChar(ltSp);
 }
 

@@ -100,6 +100,8 @@ void glcdLoadFont(const uint8_t *font);
 void glcdSetFontColor(uint16_t color);
 void glcdSetFontMult(uint8_t mult);
 
+void glcdSetCanvasColor(uint16_t color);
+
 void glcdSetXY(int16_t x, int16_t y);
 void glcdSetX(int16_t x);
 
