@@ -3,44 +3,32 @@
 
 #include <inttypes.h>
 
-enum {
-    ATYPE_NONE,
+#define CMD_OFF         0
+#define CMD_ON          1
+#define CMD_SWITCH      2
 
-    ATYPE_BTN0,
-    ATYPE_BTN1,
-    ATYPE_BTN2,
-    ATYPE_BTN3,
-    ATYPE_BTN4,
-    ATYPE_BTN5,
+typedef enum {
+    ACTION_NONE,
 
-    ATYPE_STANDBY,
+    ACTION_BTN_SHORT,
+    ACTION_BTN_LONG,
 
-    ATYPE_RTC,
+    ACTION_STANDBY,
 
-    ATYPE_DISPTIME,
+    ACTION_RTC_SHOW,
+    ACTION_RTC_MODE,
+    ACTION_RTC_CHANGE,
 
-    ATYPE_BRIGHTNESS
-};
+    ACTION_BR_WORK,
+    ACTION_BR_STBY,
 
-enum {
-    AMODE_BTN_SHORT = 0,
-    AMODE_BTN_LONG,
+    ACTION_TIMER_EXPIRED,
 
-    AMODE_STANDBY_SWITCH = 0,
-    AMODE_STANDBY_ENTER,
-    AMODE_STANDBY_EXIT,
-
-    AMODE_RTC_SHOW = 0,
-    AMODE_RTC_MODE,
-    AMODE_RTC_CHANGE,
-
-    AMODE_BRIGHTNESS_WORK = 0,
-    AMODE_BRIGNTNESS_STANDBY,
-};
+    ACTION_TYPE_END
+} ActionType;
 
 typedef struct {
-    uint8_t type;
-    uint8_t mode;
+    ActionType type;
     int16_t value;
 } Action;
 

@@ -45,7 +45,7 @@ void displayPWM(void)
     }
 }
 
-void displySetBrightness(uint8_t value)
+void displaySetBrightness(uint8_t value)
 {
     brightness = value;
 }

@@ -43,7 +43,7 @@
 
 void displayInit(GlcdDriver **glcd);
 void displayPWM(void);
-void displySetBrightness(uint8_t value);
+void displaySetBrightness(uint8_t value);
 uint8_t displayGetInput(void);
 
 #endif // DISPLAY_H

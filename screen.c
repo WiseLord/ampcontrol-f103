@@ -51,7 +51,7 @@ void screenInit(void)
 {
     displayInit(&glcd);
     screenClear();
-    displySetBrightness(brStby);
+    displaySetBrightness(brStby);
 }
 
 void screenClear(void)
@@ -76,7 +76,7 @@ Screen screenGet()
 
 int8_t screenGetBrightness(uint8_t mode)
 {
-    if (mode == AMODE_BRIGHTNESS_WORK)
+    if (mode == ACTION_BR_WORK)
         return brWork;
     else
         return brStby;
@@ -84,12 +84,12 @@ int8_t screenGetBrightness(uint8_t mode)
 
 void screenSetBrightness(uint8_t mode, int8_t value)
 {
-    if (mode == AMODE_BRIGHTNESS_WORK)
+    if (mode == ACTION_BR_WORK)
         brWork = value;
     else
         brStby = value;
 
-    displySetBrightness(value);
+    displaySetBrightness(value);
 }
 
 void screenChangeBrighness(uint8_t mode, int8_t diff)
@@ -154,7 +154,7 @@ void screenBrightness()
     DispParam dp;
 
     dp.label = txtLabels[LABEL_BRIGNTNESS];
-    dp.value = screenGetBrightness(AMODE_BRIGHTNESS_WORK);
+    dp.value = screenGetBrightness(ACTION_BR_WORK);
     dp.min = GLCD_MIN_BRIGHTNESS;
     dp.max = GLCD_MAX_BRIGHTNESS;
     dp.icon = ICON24_BRIGHTNESS;

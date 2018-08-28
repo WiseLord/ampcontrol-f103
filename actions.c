@@ -9,12 +9,11 @@
 static Screen screenDefault = SCREEN_SPECTRUM;
 
 static RtcMode rtcMode = RTC_NOEDIT;
-static Action action = {ATYPE_NONE, 0};
+static Action action = {ACTION_NONE, 0};
 
-static void actionSet(uint8_t type, uint8_t mode, int16_t value)
+static void actionSet(ActionType type, int16_t value)
 {
     action.type = type;
-    action.mode = mode;
     action.value = value;
 }
 
@@ -24,29 +23,12 @@ static void actionHandleButtons(void)
 
     if (cmdBtn & 0xFF00) {
         cmdBtn >>= 8;
-        action.mode = AMODE_BTN_LONG;
+        action.type = ACTION_BTN_LONG;
+    } else if (cmdBtn & 0x00FF) {
+        action.type = ACTION_BTN_SHORT;
     }
 
-    switch (cmdBtn) {
-    case BTN_D0:
-        action.type = ATYPE_BTN0;
-        break;
-    case BTN_D1:
-        action.type = ATYPE_BTN1;
-        break;
-    case BTN_D2:
-        action.type = ATYPE_BTN2;
-        break;
-    case BTN_D3:
-        action.type = ATYPE_BTN3;
-        break;
-    case BTN_D4:
-        action.type = ATYPE_BTN4;
-        break;
-    case BTN_D5:
-        action.type = ATYPE_BTN5;
-        break;
-    }
+    action.value = cmdBtn;
 }
 
 static void actionRemapButtons(void)
@@ -54,86 +36,79 @@ static void actionRemapButtons(void)
     Screen screen = screenGet();
 
     switch (action.type) {
-    case ATYPE_BTN0:
-        switch (action.mode) {
-        case AMODE_BTN_SHORT:
-            action.type = ATYPE_STANDBY;
-            action.mode = AMODE_STANDBY_SWITCH;
+    case ACTION_BTN_SHORT:
+        switch (action.value) {
+        case BTN_D0:
+            action.type = ACTION_STANDBY;
+            action.value = CMD_SWITCH;
             break;
-        case AMODE_BTN_LONG:
-            action.type = ATYPE_BRIGHTNESS;
-            action.mode = AMODE_BRIGHTNESS_WORK;
+        case BTN_D1:
             break;
-        }
-        break;
-    // For test purposes
-    case ATYPE_BTN1:
-//        spConvertADC();
-        break;
-    case ATYPE_BTN2:
-        switch (action.mode) {
-        case AMODE_BTN_SHORT:
-            action.type = ATYPE_RTC;
-            switch (screen) {
-            case SCREEN_TIME:
-                action.mode = AMODE_RTC_MODE;
-                break;
-            default:
-                action.mode = AMODE_RTC_SHOW;
-                break;
+        case BTN_D2:
+            if (SCREEN_TIME == screen) {
+                action.type = ACTION_RTC_MODE;
+            } else {
+                action.type = ACTION_RTC_SHOW;
             }
+            break;
+        case BTN_D3:
+            break;
+        case BTN_D4:
+            break;
+        case BTN_D5:
+            break;
+        default:
             break;
         }
         break;
-    case ATYPE_BTN4:
-        switch (action.mode) {
-        case AMODE_BTN_SHORT:
-            if (screen == SCREEN_TIME && rtcMode != RTC_NOEDIT) {
-                actionSet(ATYPE_RTC, AMODE_RTC_CHANGE, -1);
-            }
+    case ACTION_BTN_LONG:
+        switch (action.value) {
+        case BTN_D0:
+            action.type = ACTION_BR_WORK;
+            break;
+        case BTN_D1:
+            break;
+        case BTN_D2:
+            break;
+        case BTN_D3:
+            break;
+        case BTN_D4:
+            break;
+        case BTN_D5:
+            break;
+        default:
+            break;
         }
         break;
-    case ATYPE_BTN5:
-        switch (action.mode) {
-        case AMODE_BTN_SHORT:
-            if (screen == SCREEN_TIME && rtcMode != RTC_NOEDIT) {
-                actionSet(ATYPE_RTC, AMODE_RTC_CHANGE, +1);
-            }
-        }
+    default:
         break;
     }
 }
 
 static void actionRemapActions(void)
 {
+    Screen screen = screenGet();
+
     switch (action.type) {
-    case ATYPE_STANDBY:
-        if (action.mode == AMODE_STANDBY_SWITCH) {
-            switch (screenGet()) {
-            case SCREEN_STANDBY:
-                action.mode = AMODE_STANDBY_EXIT;
-                break;
-            default:
-                action.mode = AMODE_STANDBY_ENTER;
-                break;
-            }
+    case ACTION_STANDBY:
+        if (CMD_SWITCH == action.value) {
+            action.value = (SCREEN_STANDBY == screen ? CMD_OFF : CMD_ON);
         }
         break;
     default:
         break;
     }
 
-    // Disable any action except EXIT_STANDBY in standby mode
-    if (screenGet() == SCREEN_STANDBY && action.mode != AMODE_STANDBY_EXIT) {
-        action.type = ATYPE_NONE;
+    if (SCREEN_STANDBY == screen && ACTION_STANDBY != action.type) {
+        actionSet(ACTION_NONE, 0);
     }
 }
 
 static void actionHandleTimers(void)
 {
-    if (action.type == ATYPE_NONE) {
+    if (ACTION_NONE == action.type) {
         if (swTimGetDisplay() == 0) {
-            action.type = ATYPE_DISPTIME;
+            action.type = ACTION_TIMER_EXPIRED;
             swTimSetDisplay(SW_TIM_OFF);
         }
     }
@@ -141,16 +116,18 @@ static void actionHandleTimers(void)
 
 static void actionHandleEncoder(void)
 {
-    if (action.type == ATYPE_NONE) {
+    Screen screen = screenGet();
+
+    if (ACTION_NONE == action.type) {
         int8_t encCnt = getEncoder();
 
         if (encCnt) {
-            switch (screenGet()) {
+            switch (screen) {
             case SCREEN_TIME:
-                actionSet(ATYPE_RTC, AMODE_RTC_CHANGE, encCnt);
+                actionSet(ACTION_RTC_CHANGE, encCnt);
                 break;
             case SCREEN_BRIGHTNESS:
-                actionSet(ATYPE_BRIGHTNESS, AMODE_BRIGHTNESS_WORK, encCnt);
+                actionSet(ACTION_BR_WORK, encCnt);
                 break;
             default:
                 break;
@@ -161,7 +138,7 @@ static void actionHandleEncoder(void)
 
 void actionGet(void)
 {
-    actionSet(ATYPE_NONE, 0, 0);
+    actionSet(ACTION_NONE, 0);
 
     actionHandleButtons();
     actionRemapButtons();
@@ -172,55 +149,52 @@ void actionGet(void)
     actionHandleTimers();
 }
 
+
 void actionHandle(void)
 {
+    Screen screen = screenGet();
+
     switch (action.type) {
-    case ATYPE_STANDBY:
-        switch (action.mode) {
-        case AMODE_STANDBY_ENTER:
+    case ACTION_STANDBY:
+        if (action.value == CMD_OFF) {
+            screenSet(SCREEN_TIME);
+            screenChangeBrighness(ACTION_BR_WORK, 0);
+            swTimSetDisplay(1000);
+        } else {
             screenSet(SCREEN_STANDBY);
             rtcMode = RTC_NOEDIT;
-            screenChangeBrighness(AMODE_BRIGNTNESS_STANDBY, 0);
-            break;
-        case AMODE_STANDBY_EXIT:
-            screenSet(SCREEN_TIME);
-            screenChangeBrighness(AMODE_BRIGHTNESS_WORK, 0);
-            swTimSetDisplay(1000);
-            break;
+            screenChangeBrighness(ACTION_BR_STBY, 0);
         }
         break;
-    case ATYPE_RTC:
+
+    case ACTION_RTC_SHOW:
         screenSet(SCREEN_TIME);
-        switch (action.mode) {
-        case AMODE_RTC_SHOW:
-            swTimSetDisplay(5000);
-            break;
-        case AMODE_RTC_MODE:
-            swTimSetDisplay(5000);
-            if (++rtcMode > RTC_NOEDIT) {
-                rtcMode = RTC_HOUR;
-            }
-            break;
-        case AMODE_RTC_CHANGE:
-            swTimSetDisplay(5000);
-            rtcChangeTime(rtcMode, action.value);
-            break;
+        swTimSetDisplay(5000);
+        break;
+    case ACTION_RTC_MODE:
+        swTimSetDisplay(15000);
+        if (++rtcMode > RTC_NOEDIT) {
+            rtcMode = RTC_HOUR;
         }
         break;
-    case ATYPE_DISPTIME:
-        screenSet(RTC_NOEDIT);
-        switch (screenGet()) {
-        case SCREEN_STANDBY:
-            break;
-        default:
-            screenSet(screenDefault);
-            break;
-        }
+    case ACTION_RTC_CHANGE:
+        swTimSetDisplay(5000);
+        rtcChangeTime(rtcMode, action.value);
         break;
-    case ATYPE_BRIGHTNESS:
+
+    case ACTION_BR_WORK:
         screenSet(SCREEN_BRIGHTNESS);
         swTimSetDisplay(5000);
-        screenChangeBrighness(action.mode, action.value);
+        screenChangeBrighness(action.type, action.value);
+        break;
+
+    case ACTION_TIMER_EXPIRED:
+        screenSet(RTC_NOEDIT);
+        if (SCREEN_STANDBY != screen) {
+            screenSet(screenDefault);
+        }
+        break;
+    default:
         break;
     }
 }
@@ -239,6 +213,8 @@ void actionShowScreen(void)
     switch (screen) {
     case SCREEN_STANDBY:
         swTimSetDisplay(SW_TIM_OFF);
+        screenTime(RTC_NOEDIT);
+        break;
     case SCREEN_TIME:
         screenTime(rtcMode);
         break;
