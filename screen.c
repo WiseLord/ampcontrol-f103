@@ -7,6 +7,7 @@
 
 static GlcdDriver *glcd;
 static Screen screen = SCREEN_STANDBY;
+static Screen screenDefault = SCREEN_SPECTRUM;
 
 typedef struct {
     uint8_t data[FFT_SIZE / 2];
@@ -74,6 +75,16 @@ Screen screenGet()
     return screen;
 }
 
+void screenSetDefault(Screen value)
+{
+    screenDefault = value;
+}
+
+Screen screenGetDefault(void)
+{
+    return screenDefault;
+}
+
 int8_t screenGetBrightness(uint8_t mode)
 {
     if (mode == ACTION_BR_WORK)
@@ -106,18 +117,6 @@ void screenChangeBrighness(uint8_t mode, int8_t diff)
     screenSetBrightness(mode, br);
 }
 
-void screenTime(RtcMode etm)
-{
-    RTC_type rtc;
-    rtc.etm = etm;
-
-    rtcGetTime(&rtc);
-
-    if (glcd->canvas->showTime) {
-        glcd->canvas->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
-    }
-}
-
 static void improveSpectrum (SpectrumData *sd)
 {
     for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
@@ -134,6 +133,53 @@ static void improveSpectrum (SpectrumData *sd)
             sd->show[i] = sd->data[i];
             sd->fall[i] = 0;
         }
+    }
+}
+
+
+void screenShow(void)
+{
+    static Screen screenPrev = SCREEN_STANDBY;
+    Screen screen = screenGet();
+
+    // Clear display if screen mode has changed (but not standby/time screens)
+    if (screen != screenPrev) {
+        if (screen > SCREEN_TIME || screenPrev > SCREEN_TIME)
+            screenClear();
+    }
+
+    switch (screen) {
+    case SCREEN_STANDBY:
+        screenTime();
+        break;
+    case SCREEN_TIME:
+        screenTime();
+        break;
+    case SCREEN_SPECTRUM:
+        screenSpectrum();
+        break;
+    case SCREEN_BRIGHTNESS:
+        screenBrightness();
+        break;
+    default:
+        break;
+    }
+
+    // Save current screen as previous
+    screenPrev = screen;
+
+    screenUpdate();
+}
+
+void screenTime(void)
+{
+    RTC_type rtc;
+    rtc.etm = rtcGetMode();
+
+    rtcGetTime(&rtc);
+
+    if (glcd->canvas->showTime) {
+        glcd->canvas->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
     }
 }
 

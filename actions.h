@@ -34,6 +34,5 @@ typedef struct {
 
 void actionGet(void);
 void actionHandle(void);
-void actionShowScreen(void);
 
 #endif // ACTIONS_H

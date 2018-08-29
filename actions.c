@@ -6,9 +6,6 @@
 #include "spectrum.h"
 #include "timers.h"
 
-static Screen screenDefault = SCREEN_SPECTRUM;
-
-static RtcMode rtcMode = RTC_NOEDIT;
 static Action action = {ACTION_NONE, 0};
 
 static void actionSet(ActionType type, int16_t value)
@@ -149,7 +146,6 @@ void actionGet(void)
     actionHandleTimers();
 }
 
-
 void actionHandle(void)
 {
     Screen screen = screenGet();
@@ -161,8 +157,9 @@ void actionHandle(void)
             screenChangeBrighness(ACTION_BR_WORK, 0);
             swTimSetDisplay(1000);
         } else {
+            swTimSetDisplay(SW_TIM_OFF);
             screenSet(SCREEN_STANDBY);
-            rtcMode = RTC_NOEDIT;
+            rtcSetMode(RTC_NOEDIT);
             screenChangeBrighness(ACTION_BR_STBY, 0);
         }
         break;
@@ -173,13 +170,11 @@ void actionHandle(void)
         break;
     case ACTION_RTC_MODE:
         swTimSetDisplay(15000);
-        if (++rtcMode > RTC_NOEDIT) {
-            rtcMode = RTC_HOUR;
-        }
+        rtcModeNext();
         break;
     case ACTION_RTC_CHANGE:
         swTimSetDisplay(5000);
-        rtcChangeTime(rtcMode, action.value);
+        rtcChangeTime(rtcGetMode(), action.value);
         break;
 
     case ACTION_BR_WORK:
@@ -191,45 +186,10 @@ void actionHandle(void)
     case ACTION_TIMER_EXPIRED:
         screenSet(RTC_NOEDIT);
         if (SCREEN_STANDBY != screen) {
-            screenSet(screenDefault);
+            screenSet(screenGetDefault());
         }
         break;
     default:
         break;
     }
-}
-
-void actionShowScreen(void)
-{
-    static Screen screenPrev = SCREEN_STANDBY;
-    Screen screen = screenGet();
-
-    // Clear display if screen mode has changed (but not standby/time screens)
-    if (screen != screenPrev) {
-        if (screen > SCREEN_TIME || screenPrev > SCREEN_TIME)
-            screenClear();
-    }
-
-    switch (screen) {
-    case SCREEN_STANDBY:
-        swTimSetDisplay(SW_TIM_OFF);
-        screenTime(RTC_NOEDIT);
-        break;
-    case SCREEN_TIME:
-        screenTime(rtcMode);
-        break;
-    case SCREEN_SPECTRUM:
-        screenSpectrum();
-        break;
-    case SCREEN_BRIGHTNESS:
-        screenBrightness();
-        break;
-    default:
-        break;
-    }
-
-    // Save current screen as previous
-    screenPrev = screen;
-
-    screenUpdate();
 }

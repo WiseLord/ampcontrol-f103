@@ -3,8 +3,6 @@
 
 #include <inttypes.h>
 
-#include "rtc.h"
-
 typedef enum {
     SCREEN_STANDBY,
     SCREEN_TIME,
@@ -19,11 +17,16 @@ void screenUpdate(void);
 void screenSet(Screen value);
 Screen screenGet(void);
 
+void screenSetDefault(Screen value);
+Screen screenGetDefault(void);
+
 int8_t screenGetBrightness(uint8_t mode);
 void screenSetBrightness(uint8_t mode, int8_t value);
 void screenChangeBrighness(uint8_t mode, int8_t diff);
 
-void screenTime(RtcMode etm);
+void screenShow(void);
+
+void screenTime(void);
 void screenSpectrum(void);
 void screenBrightness(void);
 

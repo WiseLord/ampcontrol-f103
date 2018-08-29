@@ -8,6 +8,7 @@
 #include <stm32f1xx_ll_rtc.h>
 
 static uint32_t rtcTime;
+static int8_t rtcMode = RTC_NOEDIT;
 
 const static RTC_type rtcMin = { 0,  0, 0,  1,  1,  1, 0, RTC_NOEDIT};
 const static RTC_type rtcMax = {23, 59, 0, 31, 12, 99, 0, RTC_NOEDIT};
@@ -132,7 +133,7 @@ void rtcWriteTime(uint32_t time)
     LL_RTC_TIME_SetCounter(RTC, time);
 }
 
-void rtcChangeTime(RtcMode mode, int8_t diff)
+void rtcChangeTime(int8_t mode, int8_t diff)
 {
     RTC_type rtc;
     secToRtc(rtcTime, &rtc);
@@ -155,4 +156,21 @@ void rtcChangeTime(RtcMode mode, int8_t diff)
 
     rtcTime = newTime;
     rtcWriteTime(newTime);
+}
+
+int8_t rtcGetMode()
+{
+    return rtcMode;
+}
+
+void rtcSetMode(int8_t mode)
+{
+    rtcMode = mode;
+}
+
+void rtcModeNext()
+{
+    if (++rtcMode > RTC_NOEDIT) {
+        rtcMode = RTC_HOUR;
+    }
 }

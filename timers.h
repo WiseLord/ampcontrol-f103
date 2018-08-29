@@ -2,6 +2,7 @@
 #define TIMERS_H
 
 #include <inttypes.h>
+
 #define SW_TIM_OFF       -1
 
 void timersInit(void);

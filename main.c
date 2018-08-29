@@ -8,6 +8,7 @@
 #include "functions.h"
 #include "input.h"
 #include "pins.h"
+#include "rtc.h"
 #include "screen.h"
 #include "timers.h"
 #include "spectrum.h"
@@ -87,6 +88,6 @@ int main(void)
     while (1) {
         actionGet();
         actionHandle();
-        actionShowScreen();
+        screenShow();
     }
 }
