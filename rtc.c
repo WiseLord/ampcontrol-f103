@@ -133,6 +133,31 @@ void rtcWriteTime(uint32_t time)
     LL_RTC_TIME_SetCounter(RTC, time);
 }
 
+void rtcSetTime(int8_t mode, int8_t value)
+{
+    RTC_type rtc;
+    secToRtc(rtcTime, &rtc);
+
+    int8_t *time = (int8_t *)&rtc + mode;
+    int8_t timeMax = *((int8_t *)&rtcMax + mode);
+    int8_t timeMin = *((int8_t *)&rtcMin + mode);
+
+    if (mode == RTC_DATE)
+        timeMax = rtcDaysInMonth(&rtc);
+
+    if (value > timeMax)
+        return;
+    if (value < timeMin)
+        return;
+
+    *time = value;
+
+    uint32_t newTime = rtcToSec(&rtc);
+
+    rtcTime = newTime;
+    rtcWriteTime(newTime);
+}
+
 void rtcChangeTime(int8_t mode, int8_t diff)
 {
     RTC_type rtc;

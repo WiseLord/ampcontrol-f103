@@ -7,6 +7,9 @@
 #define CMD_ON          1
 #define CMD_SWITCH      2
 
+#define ACTION_HIDDEN   0
+#define ACTION_VISIBLE  1
+
 typedef enum {
     ACTION_NONE,
 
@@ -18,6 +21,7 @@ typedef enum {
     ACTION_RTC_SHOW,
     ACTION_RTC_MODE,
     ACTION_RTC_CHANGE,
+    ACTION_RTC_SET,
 
     ACTION_BR_WORK,
     ACTION_BR_STBY,
@@ -32,7 +36,7 @@ typedef struct {
     int16_t value;
 } Action;
 
-void actionGet(void);
-void actionHandle(void);
+Action actionUserGet(void);
+void actionHandle(Action action, uint8_t visible);
 
 #endif // ACTIONS_H

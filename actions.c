@@ -106,7 +106,6 @@ static void actionHandleTimers(void)
     if (ACTION_NONE == action.type) {
         if (swTimGetDisplay() == 0) {
             action.type = ACTION_TIMER_EXPIRED;
-            swTimSetDisplay(SW_TIM_OFF);
         }
     }
 }
@@ -133,7 +132,7 @@ static void actionHandleEncoder(void)
     }
 }
 
-void actionGet(void)
+Action actionUserGet(void)
 {
     actionSet(ACTION_NONE, 0);
 
@@ -144,52 +143,66 @@ void actionGet(void)
     actionHandleEncoder();
 
     actionHandleTimers();
+
+    return action;
 }
 
-void actionHandle(void)
+void actionHandle(Action action, uint8_t visible)
 {
     Screen screen = screenGet();
+    int16_t dispTime = 0;
 
     switch (action.type) {
     case ACTION_STANDBY:
         if (action.value == CMD_OFF) {
-            screenSet(SCREEN_TIME);
+            screen = SCREEN_TIME;
             screenChangeBrighness(ACTION_BR_WORK, 0);
-            swTimSetDisplay(1000);
+            dispTime = 1000;
         } else {
-            swTimSetDisplay(SW_TIM_OFF);
-            screenSet(SCREEN_STANDBY);
+            dispTime = SW_TIM_OFF;
+            screen = SCREEN_STANDBY;
             rtcSetMode(RTC_NOEDIT);
             screenChangeBrighness(ACTION_BR_STBY, 0);
         }
         break;
 
     case ACTION_RTC_SHOW:
-        screenSet(SCREEN_TIME);
-        swTimSetDisplay(5000);
+        screen = SCREEN_TIME;
+        dispTime = 5000;
         break;
     case ACTION_RTC_MODE:
-        swTimSetDisplay(15000);
+        dispTime = 15000;
         rtcModeNext();
         break;
     case ACTION_RTC_CHANGE:
-        swTimSetDisplay(5000);
+        dispTime = 5000;
         rtcChangeTime(rtcGetMode(), action.value);
+        break;
+    case ACTION_RTC_SET:
+        rtcSetTime(rtcGetMode(), action.value);
         break;
 
     case ACTION_BR_WORK:
-        screenSet(SCREEN_BRIGHTNESS);
-        swTimSetDisplay(5000);
+        screen = SCREEN_BRIGHTNESS;
+        dispTime = 5000;
         screenChangeBrighness(action.type, action.value);
         break;
 
     case ACTION_TIMER_EXPIRED:
-        screenSet(RTC_NOEDIT);
+        rtcSetMode(RTC_NOEDIT);
         if (SCREEN_STANDBY != screen) {
-            screenSet(screenGetDefault());
+            screen = screenGetDefault();
         }
+        dispTime = SW_TIM_OFF;
         break;
     default:
         break;
+    }
+
+    if (visible) {
+        screenSet(screen);
+        if (dispTime) {
+            swTimSetDisplay(dispTime);
+        }
     }
 }

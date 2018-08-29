@@ -86,8 +86,8 @@ int main(void)
     timersInit();
 
     while (1) {
-        actionGet();
-        actionHandle();
+        Action userAction = actionUserGet();
+        actionHandle(userAction, ACTION_VISIBLE);
         screenShow();
     }
 }
