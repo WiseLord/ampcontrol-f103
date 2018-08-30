@@ -5,7 +5,7 @@
 
 void pinsInit(void);
 
-#define CONCAT(x,y)         x ## y
+#define CONCAT(x,y)             x ## y
 
 #define OUT(p)                  (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_OUTPUT))
 #define IN_F(p)                 (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_FLOATING))
@@ -113,32 +113,32 @@ void pinsInit(void);
 #elif defined(_LS020)
 
 #define LS020_CS                DISP_CS
-#define LS020_RESET             DISP_RST
+#define LS020_RST               DISP_RST
 #define LS020_DC                DISP_RS
 #define LS020_SDI               DISP_RW
 #define LS020_SCK               DISP_SCK
 #define LS020_LED               DISP_BCKL
-#define LS020_SD0               DISP_RD
+#define LS020_SDO               DISP_RD
 
 #elif defined(_LPH9157)
 
 #define LPH9157_CS              DISP_CS
-#define LPH9157_RESET           DISP_RST
+#define LPH9157_RST             DISP_RST
 #define LPH9157_DC              DISP_RS
 #define LPH9157_SDI             DISP_RW
 #define LPH9157_SCK             DISP_SCK
 #define LPH9157_LED             DISP_BCKL
-#define LPH9157_SD0             DISP_RD
+#define LPH9157_SDO             DISP_RD
 
 #elif defined(_SSD1286A)
 
 #define SSD1286A_CS             DISP_CS
-#define SSD1286A_RESET          DISP_RST
+#define SSD1286A_RST            DISP_RST
 #define SSD1286A_DC             DISP_RS
 #define SSD1286A_SDI            DISP_RW
 #define SSD1286A_SCK            DISP_SCK
 #define SSD1286A_LED            DISP_BCKL
-#define SSD1286A_SD0            DISP_RD
+#define SSD1286A_SDO            DISP_RD
 
 #elif defined(_ILI9320)
 
@@ -149,18 +149,18 @@ void pinsInit(void);
 #define ILI9320_RS              DISP_RS
 #define ILI9320_WR              DISP_RW
 #define ILI9320_RD              DISP_RD
-#define ILI9320_RESET           DISP_RST
+#define ILI9320_RST             DISP_RST
 #define ILI9320_LED             DISP_BCKL
 
 #elif defined(_ILI9341)
 
 #define ILI9341_CS              DISP_CS
-#define ILI9341_RESET           DISP_RST
+#define ILI9341_RST             DISP_RST
 #define ILI9341_DC              DISP_RS
 #define ILI9341_SDI             DISP_RW
 #define ILI9341_SCK             DISP_SCK
 #define ILI9341_LED             DISP_BCKL
-#define ILI9341_SD0             DISP_RD
+#define ILI9341_SDO             DISP_RD
 
 #elif defined(_S6D0139)
 
@@ -171,7 +171,7 @@ void pinsInit(void);
 #define S6D0139_RS              DISP_RS
 #define S6D0139_WR              DISP_RW
 #define S6D0139_RD              DISP_RD
-#define S6D0139_RESET           DISP_RST
+#define S6D0139_RST             DISP_RST
 #define S6D0139_LED             DISP_BCKL
 
 #elif defined(_SPFD5408)
@@ -183,7 +183,7 @@ void pinsInit(void);
 #define SPFD5408_RS             DISP_RS
 #define SPFD5408_WR             DISP_RW
 #define SPFD5408_RD             DISP_RD
-#define SPFD5408_RESET          DISP_RST
+#define SPFD5408_RST            DISP_RST
 #define SPFD5408_LED            DISP_BCKL
 
 #else

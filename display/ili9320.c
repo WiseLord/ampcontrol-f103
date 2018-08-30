@@ -157,9 +157,9 @@ void ili9320Init(GlcdDriver **driver)
     SET(ILI9320_RS);
     SET(ILI9320_CS);
 
-    CLR(ILI9320_RESET);
+    CLR(ILI9320_RST);
     _delay_ms(1);
-    SET(ILI9320_RESET);
+    SET(ILI9320_RST);
 
     ili9320InitSeq();
 }

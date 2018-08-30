@@ -110,7 +110,7 @@ void lph9157Init(GlcdDriver **driver)
     lph9157InitSPI();
 
 
-    SET(LPH9157_RESET);
+    SET(LPH9157_RST);
 
     // Init magic
     lph9157InitSeq();

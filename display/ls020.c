@@ -132,9 +132,9 @@ void ls020Init(GlcdDriver **driver)
     // Configure Hardware SPI
     ls020InitSPI();
 
-    CLR(LS020_RESET);
+    CLR(LS020_RST);
     _delay_ms(100);
-    SET(LS020_RESET);
+    SET(LS020_RST);
 
     // Init magic
     ls020InitSeq();

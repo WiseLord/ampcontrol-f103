@@ -138,9 +138,9 @@ void s6d0139Init(GlcdDriver **driver)
     SET(S6D0139_RS);
     SET(S6D0139_CS);
 
-    CLR(S6D0139_RESET);
+    CLR(S6D0139_RST);
     _delay_ms(1);
-    SET(S6D0139_RESET);
+    SET(S6D0139_RST);
 
     s6d0139InitSeq();
 }

@@ -177,9 +177,9 @@ void spfd5408Init(GlcdDriver **driver)
     SET(SPFD5408_RS);
     SET(SPFD5408_CS);
 
-    CLR(SPFD5408_RESET);
+    CLR(SPFD5408_RST);
     _delay_ms(1);
-    SET(SPFD5408_RESET);
+    SET(SPFD5408_RST);
 
     spfd5408InitSeq();
 }

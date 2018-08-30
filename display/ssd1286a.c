@@ -140,9 +140,9 @@ void ssd1286aInit(GlcdDriver **driver)
     // Configure Hardware SPI
     ssd1286aInitSPI();
 
-    CLR(SSD1286A_RESET);
+    CLR(SSD1286A_RST);
     _delay_ms(100);
-    SET(SSD1286A_RESET);
+    SET(SSD1286A_RST);
 
     // Init magic
     ssd1286aInitSeq();

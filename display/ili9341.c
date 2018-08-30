@@ -208,9 +208,9 @@ void ili9341Init(GlcdDriver **driver)
     // Configure Hardware SPI
     ili9341InitSPI();
 
-    CLR(ILI9341_RESET);
+    CLR(ILI9341_RST);
     _delay_ms(100);
-    SET(ILI9341_RESET);
+    SET(ILI9341_RST);
 
     // Init magic
     ili9341InitSeq();
