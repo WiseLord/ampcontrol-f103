@@ -30,7 +30,7 @@ static void actionHandleButtons(void)
 
 static void actionRemapButtons(void)
 {
-    Screen screen = screenGet();
+//    Screen screen = screenGet();
 
     switch (action.type) {
     case ACTION_BTN_SHORT:
@@ -42,11 +42,7 @@ static void actionRemapButtons(void)
         case BTN_D1:
             break;
         case BTN_D2:
-            if (SCREEN_TIME == screen) {
-                action.type = ACTION_RTC_MODE;
-            } else {
-                action.type = ACTION_RTC_SHOW;
-            }
+            action.type = ACTION_RTC_MODE;
             break;
         case BTN_D3:
             break;
@@ -166,20 +162,28 @@ void actionHandle(Action action, uint8_t visible)
         }
         break;
 
-    case ACTION_RTC_SHOW:
-        screen = SCREEN_TIME;
-        dispTime = 5000;
-        break;
     case ACTION_RTC_MODE:
-        dispTime = 15000;
-        rtcModeNext();
+        if (screen == SCREEN_TIME) {
+            dispTime = 15000;
+            rtcModeNext();
+        } else {
+            dispTime = 5000;
+            rtcSetMode(RTC_NOEDIT);
+            screen = SCREEN_TIME;
+        }
         break;
     case ACTION_RTC_CHANGE:
         dispTime = 5000;
         rtcChangeTime(rtcGetMode(), action.value);
         break;
-    case ACTION_RTC_SET:
-        rtcSetTime(rtcGetMode(), action.value);
+    case ACTION_RTC_SET_HOUR:
+    case ACTION_RTC_SET_MIN:
+    case ACTION_RTC_SET_SEC:
+    case ACTION_RTC_SET_DATE:
+    case ACTION_RTC_SET_MONTH:
+    case ACTION_RTC_SET_YEAR:
+        dispTime = 5000;
+        rtcSetTime(action.type - ACTION_RTC_SET_HOUR, action.value);
         break;
 
     case ACTION_BR_WORK:
