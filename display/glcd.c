@@ -31,15 +31,16 @@ uint8_t glcdGetBus(void)
     return glcd->bus;
 }
 
-void glcdWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix)
+void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
 {
     uint8_t numdiv;
     uint8_t sign = lead;
     int8_t i;
+    uint32_t num = (uint32_t)number;
 
-    if (number < 0) {
+    if (number < 0 && radix == 10) {
         sign = '-';
-        number = -number;
+        num = -number;
     }
 
     for (i = 0; i < width; i++)
@@ -47,13 +48,13 @@ void glcdWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix)
     strbuf[width] = '\0';
     i = width - 1;
 
-    while (number > 0 || i == width - 1) {
-        numdiv = number % radix;
+    while (num > 0 || i == width - 1) {
+        numdiv = num % radix;
         strbuf[i] = numdiv + 0x30;
         if (numdiv >= 10)
             strbuf[i] += 7;
         i--;
-        number /= radix;
+        num /= radix;
     }
 
     if (i >= 0)

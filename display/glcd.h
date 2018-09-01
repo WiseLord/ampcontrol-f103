@@ -96,7 +96,7 @@ GlcdCanvas *glcdGetCanvas(void);
 
 uint8_t glcdGetBus(void);
 
-void glcdWriteNum(int16_t number, uint8_t width, uint8_t lead, uint8_t radix);
+void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);
 
 void glcdLoadFont(const uint8_t *font);
 void glcdSetFontColor(uint16_t color);
