@@ -77,6 +77,7 @@ static void actionRemapButtons(void)
             action.type = ACTION_BR_WORK;
             break;
         case BTN_D1:
+            action.type = ACTION_TEST;
             break;
         case BTN_D2:
             break;
@@ -245,6 +246,11 @@ void actionHandle(Action action, uint8_t visible)
         if (SCREEN_STANDBY != screen) {
             screen = screenGetDefault();
         }
+        dispTime = SW_TIM_OFF;
+        break;
+
+    case ACTION_TEST:
+        screen = SCREEN_TEST;
         dispTime = SW_TIM_OFF;
         break;
     default:

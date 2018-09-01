@@ -50,6 +50,7 @@ typedef enum {
 
     ACTION_TIMER_EXPIRED,
 
+    ACTION_TEST,
     ACTION_TYPE_END
 } ActionType;
 

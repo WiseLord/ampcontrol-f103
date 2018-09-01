@@ -165,6 +165,73 @@ static void improveSpectrum (SpectrumData *sd)
     }
 }
 
+static void screenTime(void)
+{
+    RTC_type rtc;
+    rtc.etm = rtcGetMode();
+
+    rtcGetTime(&rtc);
+
+    if (glcd->canvas->showTime) {
+        glcd->canvas->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
+    }
+}
+
+static void screenSpectrum(void)
+{
+    spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
+
+    improveSpectrum(&spData[SP_CHAN_LEFT]);
+    improveSpectrum(&spData[SP_CHAN_RIGHT]);
+
+    if (glcd->canvas->showSpectrum) {
+        glcd->canvas->showSpectrum(spData);
+    }
+}
+
+static void screenBrightness()
+{
+    DispParam dp;
+
+    dp.label = txtLabels[LABEL_BRIGNTNESS];
+    dp.value = screenGetBrightness(ACTION_BR_WORK);
+    dp.min = GLCD_MIN_BRIGHTNESS;
+    dp.max = GLCD_MAX_BRIGHTNESS;
+    dp.step = 1 * 8;
+    dp.icon = ICON24_BRIGHTNESS;
+
+    if (glcd->canvas->showParam) {
+        glcd->canvas->showParam(&dp);
+    }
+}
+
+static void screenAudioParam()
+{
+    AudioProc *aProc = audioProcGet();
+    AudioParam aPar = scrPar.audio;
+
+    if (aPar >= AUDIO_PARAM_END)
+        aPar = AUDIO_PARAM_VOLUME;
+
+    DispParam dp;
+    dp.label = txtLabels[LABEL_VOLUME + aPar];
+    dp.value = aProc->item[aPar].value;
+    dp.min = aProc->item[aPar].grid->min;
+    dp.max = aProc->item[aPar].grid->max;
+    dp.step = aProc->item[aPar].grid->step;
+    dp.icon = ICON24_VOLUME + aPar;
+
+    if (glcd->canvas->showParam) {
+        glcd->canvas->showParam(&dp);
+    }
+}
+
+static void screenTest()
+{
+    if (glcd->canvas->showTest) {
+        glcd->canvas->showTest();
+    }
+}
 
 void screenShow(void)
 {
@@ -195,6 +262,10 @@ void screenShow(void)
             screenClear();
         screenAudioParam();
         break;
+
+    case SCREEN_TEST:
+        screenTest();
+        break;
     default:
         break;
     }
@@ -204,65 +275,4 @@ void screenShow(void)
     scrParPrev = scrPar;
 
     screenUpdate();
-}
-
-void screenTime(void)
-{
-    RTC_type rtc;
-    rtc.etm = rtcGetMode();
-
-    rtcGetTime(&rtc);
-
-    if (glcd->canvas->showTime) {
-        glcd->canvas->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
-    }
-}
-
-void screenSpectrum(void)
-{
-    spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
-
-    improveSpectrum(&spData[SP_CHAN_LEFT]);
-    improveSpectrum(&spData[SP_CHAN_RIGHT]);
-
-    if (glcd->canvas->showSpectrum) {
-        glcd->canvas->showSpectrum(spData);
-    }
-}
-
-void screenBrightness()
-{
-    DispParam dp;
-
-    dp.label = txtLabels[LABEL_BRIGNTNESS];
-    dp.value = screenGetBrightness(ACTION_BR_WORK);
-    dp.min = GLCD_MIN_BRIGHTNESS;
-    dp.max = GLCD_MAX_BRIGHTNESS;
-    dp.step = 1 * 8;
-    dp.icon = ICON24_BRIGHTNESS;
-
-    if (glcd->canvas->showParam) {
-        glcd->canvas->showParam(&dp);
-    }
-}
-
-void screenAudioParam()
-{
-    AudioProc *aProc = audioProcGet();
-    AudioParam aPar = scrPar.audio;
-
-    if (aPar >= AUDIO_PARAM_END)
-        aPar = AUDIO_PARAM_VOLUME;
-
-    DispParam dp;
-    dp.label = txtLabels[LABEL_VOLUME + aPar];
-    dp.value = aProc->item[aPar].value;
-    dp.min = aProc->item[aPar].grid->min;
-    dp.max = aProc->item[aPar].grid->max;
-    dp.step = aProc->item[aPar].grid->step;
-    dp.icon = ICON24_VOLUME + aPar;
-
-    if (glcd->canvas->showParam) {
-        glcd->canvas->showParam(&dp);
-    }
 }

@@ -39,6 +39,7 @@ typedef struct {
     void (*showTime)(RTC_type *rtc, char *wday);
     void (*showParam)(DispParam *dp);
     void (*showSpectrum)(SpectrumData *spData);
+    void (*showTest)(void);
 } GlcdCanvas;
 
 typedef struct {

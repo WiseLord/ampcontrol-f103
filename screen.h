@@ -14,6 +14,7 @@ typedef enum {
     SCREEN_AUDIO_INPUT,
     SCREEN_AUDIO_PARAM,
 
+    SCREEN_TEST,
     SCREEN_END
 } Screen;
 
@@ -39,10 +40,5 @@ void screenSetBrightness(uint8_t mode, int8_t value);
 void screenChangeBrighness(uint8_t mode, int8_t diff);
 
 void screenShow(void);
-
-void screenTime(void);
-void screenSpectrum(void);
-void screenBrightness(void);
-void screenAudioParam(void);
 
 #endif // SCREEN_H
