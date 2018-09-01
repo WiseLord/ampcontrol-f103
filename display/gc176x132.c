@@ -68,22 +68,27 @@ static void showParam(DispParam *dp)
     glcd->drawRectangle(10, 10, 50, 30, LCD_COLOR_GREEN);
 }
 
-static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
+static void showSpectrum(SpectrumData *spData)
 {
+    uint8_t *buf;
+
+    buf = spData[SP_CHAN_LEFT].show;
     for (uint16_t x = 0; x < (glcd->canvas->width + 1) / 2; x++) {
         uint16_t xbase = x * 2;
         uint16_t ybase = 66;
         uint16_t width = 1;
-        uint16_t value = dataL[x];
+        uint16_t value = buf[x];
         uint16_t max = 65;
 
         drawSpCol(xbase, ybase, width, value + 1, max);
     }
+
+    buf = spData[SP_CHAN_RIGHT].show;
     for (uint16_t x = 0; x < (glcd->canvas->width + 1) / 2; x++) {
         uint16_t xbase = x * 2;
         uint16_t ybase = 132;
         uint16_t width = 1;
-        uint16_t value = dataR[x];
+        uint16_t value = buf[x];
         uint16_t max = 65;
 
         drawSpCol(xbase, ybase, width, value + 1, max);

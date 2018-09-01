@@ -193,13 +193,13 @@ static void showParam(DispParam *dp)
     displayShowIcon(dp->icon);
 }
 
-static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
+static void showSpectrum(SpectrumData *spData)
 {
     uint8_t x, xbase;
     uint8_t y, ybase;
     uint8_t *buf;
 
-    buf = dataL;
+    buf = spData[SP_CHAN_LEFT].show;
     for (x = 0; x < glcd->canvas->width; x++) {
         xbase = x;
         y = 0;
@@ -208,7 +208,7 @@ static void showSpectrum(uint8_t *dataL, uint8_t *dataR)
         drawSpCol(xbase, 1, 31 + y, ybase, 31);
     }
 
-    buf = dataR;
+    buf = spData[SP_CHAN_RIGHT].show;
     for (x = 0; x < glcd->canvas->width; x++) {
         xbase = x;
         y = 32;

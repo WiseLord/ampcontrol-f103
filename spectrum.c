@@ -6,7 +6,6 @@
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_rcc.h>
 
-#include "fft.h"
 #include "functions.h"
 
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)

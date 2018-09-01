@@ -6,6 +6,7 @@
 #include "fonts.h"
 #include "icons.h"
 #include "../rtc.h"
+#include "../spectrum.h"
 
 typedef enum {
     GLCD_Landscape_1,
@@ -36,7 +37,7 @@ typedef struct {
 
     void (*showTime)(RTC_type *rtc, char *wday);
     void (*showParam)(DispParam *dp);
-    void (*showSpectrum)(uint8_t *dataL, uint8_t *dataR);
+    void (*showSpectrum)(SpectrumData *spData);
 } GlcdCanvas;
 
 typedef struct {

@@ -10,14 +10,7 @@ static Screen screen = SCREEN_STANDBY;
 static Screen screenDefault = SCREEN_SPECTRUM;
 static ScreenParam scrPar;
 
-typedef struct {
-    uint8_t data[FFT_SIZE / 2];
-    uint8_t fall[FFT_SIZE / 2];
-    uint8_t show[FFT_SIZE / 2];
-} SpectrumData;
-
-static SpectrumData spLeft;
-static SpectrumData spRight;
+static SpectrumData spData[SP_CHAN_END];
 
 // TODO: Read from backup memory
 static int8_t brStby = 1;
@@ -226,13 +219,13 @@ void screenTime(void)
 
 void screenSpectrum(void)
 {
-    spGetADC(spLeft.data, spRight.data);
+    spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
 
-    improveSpectrum(&spLeft);
-    improveSpectrum(&spRight);
+    improveSpectrum(&spData[SP_CHAN_LEFT]);
+    improveSpectrum(&spData[SP_CHAN_RIGHT]);
 
     if (glcd->canvas->showSpectrum) {
-        glcd->canvas->showSpectrum(spLeft.show, spRight.show);
+        glcd->canvas->showSpectrum(spData);
     }
 }
 
