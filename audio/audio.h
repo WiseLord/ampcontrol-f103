@@ -65,6 +65,7 @@ typedef struct {
 } AudioProc;
 
 void audioInit(void);
+AudioProc *audioProcGet(void);
 
 void audioSetInput(uint8_t value);
 void audioSetParam(AudioParam param, int8_t value);

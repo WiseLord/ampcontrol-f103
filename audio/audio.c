@@ -38,6 +38,11 @@ void audioInit()
     }
 }
 
+AudioProc *audioProcGet(void)
+{
+    return &aProc;
+}
+
 void audioSetInput(uint8_t value)
 {
     if (value >= aProc.inCnt)

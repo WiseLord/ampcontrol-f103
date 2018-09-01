@@ -1,5 +1,6 @@
 #include "actions.h"
 
+#include "audio/audio.h"
 #include "input.h"
 #include "rtc.h"
 #include "screen.h"
@@ -8,10 +9,36 @@
 
 static Action action = {ACTION_NONE, 0};
 
+static ScreenParam scrPar;
+
 static void actionSet(ActionType type, int16_t value)
 {
     action.type = type;
     action.value = value;
+}
+/*
+void sndNextParam(uint8_t *mode)
+{
+    do { // Skip unused params (with step = 0)
+        (*mode)++;
+        if (*mode >= MODE_SND_GAIN0)
+            *mode = MODE_SND_VOLUME;
+    } while ((pgm_read_byte(&sndPar[*mode].grid->step) == 0) &&
+             (*mode < MODE_SND_GAIN0) && (*mode != MODE_SND_VOLUME));
+}
+*/
+static void actionNextAudioParam(void)
+{
+    AudioProc *aProc = audioProcGet();
+
+    do {
+        scrPar.audio++;
+        if (scrPar.audio == AUDIO_PARAM_GAIN0)
+            scrPar.audio = AUDIO_PARAM_VOLUME;
+        else if (scrPar.audio >= AUDIO_PARAM_END) {
+            scrPar.audio = AUDIO_PARAM_GAIN0;
+        }
+    } while (aProc->item[scrPar.audio].grid->step == 0);
 }
 
 static void actionHandleButtons(void)
@@ -49,6 +76,7 @@ static void actionRemapButtons(void)
         case BTN_D4:
             break;
         case BTN_D5:
+            action.type = ACTION_AUDIO_PARAM;
             break;
         default:
             break;
@@ -118,6 +146,9 @@ static void actionHandleEncoder(void)
             case SCREEN_TIME:
                 actionSet(ACTION_RTC_CHANGE, encCnt);
                 break;
+            case SCREEN_AUDIO_PARAM:
+                actionSet(ACTION_AUDIO_CHANGE, encCnt);
+                break;
             case SCREEN_BRIGHTNESS:
                 actionSet(ACTION_BR_WORK, encCnt);
                 break;
@@ -186,6 +217,20 @@ void actionHandle(Action action, uint8_t visible)
         rtcSetTime(action.type - ACTION_RTC_SET_HOUR, action.value);
         break;
 
+    case ACTION_AUDIO_PARAM:
+        dispTime = 5000;
+        if (screen == SCREEN_AUDIO_PARAM) {
+            actionNextAudioParam();
+        } else {
+            screen = SCREEN_AUDIO_PARAM;
+            scrPar.audio = AUDIO_PARAM_VOLUME;
+        }
+        break;
+    case ACTION_AUDIO_CHANGE:
+        dispTime = 5000;
+        audioChangeParam(scrPar.audio, action.value);
+        break;
+
     case ACTION_BR_WORK:
         screen = SCREEN_BRIGHTNESS;
         dispTime = 5000;
@@ -205,6 +250,7 @@ void actionHandle(Action action, uint8_t visible)
 
     if (visible) {
         screenSet(screen);
+        screenSetParam(scrPar);
         if (dispTime) {
             swTimSetDisplay(dispTime);
         }

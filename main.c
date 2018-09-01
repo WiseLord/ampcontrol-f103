@@ -80,6 +80,7 @@ int main(void)
     spInit();
 
     pinsInit();
+    audioInit();
     screenInit();
     inputInit();
     rtcInit();

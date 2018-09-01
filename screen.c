@@ -8,6 +8,7 @@
 static GlcdDriver *glcd;
 static Screen screen = SCREEN_STANDBY;
 static Screen screenDefault = SCREEN_SPECTRUM;
+static ScreenParam scrPar;
 
 typedef struct {
     uint8_t data[FFT_SIZE / 2];
@@ -33,6 +34,21 @@ typedef enum {
 
     LABEL_BRIGNTNESS,
 
+    LABEL_VOLUME,
+    LABEL_BASS,
+    LABEL_MIDDLE,
+    LABEL_TREBLE,
+    LABEL_PREAMP,
+    LABEL_FRONTREAR,
+    LABEL_BALANCE,
+    LABEL_CENTER,
+    LABEL_SUBWOOFER,
+    LABEL_GAIN0,
+    LABEL_GAIN1,
+    LABEL_GAIN2,
+    LABEL_GAIN3,
+    LABEL_GAIN4,
+
     LABEL_END
 } TxtLabel;
 
@@ -46,6 +62,21 @@ const char *txtLabels[LABEL_END] = {
     [LABEL_SATURDAY]        = " SATURDAY ",
 
     [LABEL_BRIGNTNESS]      = "Brightness",
+
+    [LABEL_VOLUME]          = "Volume",
+    [LABEL_BASS]            = "Bass",
+    [LABEL_MIDDLE]          = "Middle",
+    [LABEL_TREBLE]          = "Treble",
+    [LABEL_PREAMP]          = "Preamp",
+    [LABEL_FRONTREAR]       = "Frontrear",
+    [LABEL_BALANCE]         = "Balance",
+    [LABEL_CENTER]          = "Center",
+    [LABEL_SUBWOOFER]       = "Subwoofer",
+    [LABEL_GAIN0]           = "Gain 0",
+    [LABEL_GAIN1]           = "Gain 2",
+    [LABEL_GAIN2]           = "Gain 3",
+    [LABEL_GAIN3]           = "Gain 4",
+    [LABEL_GAIN4]           = "Gain 5",
 };
 
 void screenInit(void)
@@ -73,6 +104,11 @@ void screenSet(Screen value)
 Screen screenGet()
 {
     return screen;
+}
+
+void screenSetParam(ScreenParam param)
+{
+    scrPar = param;
 }
 
 void screenSetDefault(Screen value)
@@ -140,9 +176,8 @@ static void improveSpectrum (SpectrumData *sd)
 void screenShow(void)
 {
     static Screen screenPrev = SCREEN_STANDBY;
-    Screen screen = screenGet();
+    static ScreenParam scrParPrev;
 
-    // Clear display if screen mode has changed (but not standby/time screens)
     if (screen != screenPrev) {
         if (screen > SCREEN_TIME || screenPrev > SCREEN_TIME)
             screenClear();
@@ -161,12 +196,18 @@ void screenShow(void)
     case SCREEN_BRIGHTNESS:
         screenBrightness();
         break;
+    case SCREEN_AUDIO_PARAM:
+        if (scrPar.audio != scrParPrev.audio)
+            screenClear();
+        screenAudioParam();
+        break;
     default:
         break;
     }
 
     // Save current screen as previous
     screenPrev = screen;
+    scrParPrev = scrPar;
 
     screenUpdate();
 }
@@ -204,6 +245,26 @@ void screenBrightness()
     dp.min = GLCD_MIN_BRIGHTNESS;
     dp.max = GLCD_MAX_BRIGHTNESS;
     dp.icon = ICON24_BRIGHTNESS;
+
+    if (glcd->canvas->showParam) {
+        glcd->canvas->showParam(&dp);
+    }
+}
+
+void screenAudioParam()
+{
+    AudioProc *aProc = audioProcGet();
+    AudioParam aPar = scrPar.audio;
+
+    if (aPar >= AUDIO_PARAM_END)
+        aPar = AUDIO_PARAM_VOLUME;
+
+    DispParam dp;
+    dp.label = txtLabels[LABEL_VOLUME + aPar];
+    dp.value = aProc->item[aPar].value;
+    dp.min = aProc->item[aPar].grid->min;
+    dp.max = aProc->item[aPar].grid->max;
+    dp.icon = ICON24_VOLUME + aPar;
 
     if (glcd->canvas->showParam) {
         glcd->canvas->showParam(&dp);
