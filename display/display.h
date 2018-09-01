@@ -23,6 +23,10 @@
 #include "s6d0139.h"
 #elif defined (_SPFD5408)
 #include "spfd5408.h"
+#elif defined (_ILI9327)
+#include "ili9327.h"
+#elif defined (_ST7793)
+#include "st7793.h"
 #else
 #error "Unsupported display driver"
 #endif
@@ -37,6 +41,10 @@
 #define DISPLAY_IRQ s6d0139BusIRQ
 #elif defined(_SPFD5408)
 #define DISPLAY_IRQ spfd5408BusIRQ
+#elif defined(_ILI9327)
+#define DISPLAY_IRQ ili9327BusIRQ
+#elif defined(_ST7793)
+#define DISPLAY_IRQ st7793BusIRQ
 #else
 #define DISPLAY_IRQ()
 #endif

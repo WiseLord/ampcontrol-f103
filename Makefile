@@ -1,5 +1,5 @@
-DISPLAY = ILI9320
-DISPVAR = 8BIT
+DISPLAY = KS0108
+DISPVAR = 8BIT_B
 
 APROC_LIST = TDA7439 TDA731X PT232X
 TUNER_LIST =
@@ -59,6 +59,12 @@ else ifeq "$(DISPLAY)" "S6D0139"
 else ifeq "$(DISPLAY)" "SPFD5408"
   C_SOURCES += display/spfd5408.c
   C_SOURCES += display/gc320x240.c
+else ifeq "$(DISPLAY)" "ILI9327"
+  C_SOURCES += display/ili9327.c
+  C_SOURCES += display/gc400x240.c
+else ifeq "$(DISPLAY)" "ST7793"
+  C_SOURCES += display/st7793.c
+  C_SOURCES += display/gc400x240.c
 endif
 C_SOURCES += display.c
 C_SOURCES += display/glcd.c

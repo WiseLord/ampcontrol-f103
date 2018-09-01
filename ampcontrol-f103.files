@@ -12,6 +12,8 @@ display/gc176x132.c
 display/gc176x132.h
 display/gc320x240.c
 display/gc320x240.h
+display/gc400x240.c
+display/gc400x240.h
 display/glcd.c
 display/glcd.h
 display/gm128x64.c
@@ -21,6 +23,8 @@ display/icons-32.c
 display/icons.h
 display/ili9320.c
 display/ili9320.h
+display/ili9327.c
+display/ili9327.h
 display/ili9341.c
 display/ili9341.h
 display/ks0108.c
@@ -37,6 +41,8 @@ display/ssd1286a.c
 display/ssd1286a.h
 display/ssd1306.c
 display/ssd1306.h
+display/st7793.c
+display/st7793.h
 display/st7920.c
 display/st7920.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h

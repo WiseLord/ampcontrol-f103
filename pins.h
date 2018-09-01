@@ -142,7 +142,6 @@ void pinsInit(void);
 
 #elif defined(_ILI9320)
 
-// Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
 #define ILI9320_DHI_Port        INPUT_Port
 #define ILI9320_DHI_Pin         INPUT_Pin
 #define ILI9320_CS              DISP_CS
@@ -164,7 +163,6 @@ void pinsInit(void);
 
 #elif defined(_S6D0139)
 
-// Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
 #define S6D0139_DHI_Port        INPUT_Port
 #define S6D0139_DHI_Pin         INPUT_Pin
 #define S6D0139_CS              DISP_CS
@@ -176,7 +174,6 @@ void pinsInit(void);
 
 #elif defined(_SPFD5408)
 
-// Data High (15..8) bits of ILI9320 are used botn in 16-bit and 8-bit mode
 #define SPFD5408_DHI_Port       INPUT_Port
 #define SPFD5408_DHI_Pin        INPUT_Pin
 #define SPFD5408_CS             DISP_CS
@@ -185,6 +182,28 @@ void pinsInit(void);
 #define SPFD5408_RD             DISP_RD
 #define SPFD5408_RST            DISP_RST
 #define SPFD5408_LED            DISP_BCKL
+
+#elif defined(_ILI9327)
+
+#define ILI9327_DHI_Port        INPUT_Port
+#define ILI9327_DHI_Pin         INPUT_Pin
+#define ILI9327_CS              DISP_CS
+#define ILI9327_RS              DISP_RS
+#define ILI9327_WR              DISP_RW
+#define ILI9327_RD              DISP_RD
+#define ILI9327_RST             DISP_RST
+#define ILI9327_LED             DISP_BCKL
+
+#elif defined(_ST7793)
+
+#define ST7793_DHI_Port        INPUT_Port
+#define ST7793_DHI_Pin         INPUT_Pin
+#define ST7793_CS              DISP_CS
+#define ST7793_RS              DISP_RS
+#define ST7793_WR              DISP_RW
+#define ST7793_RD              DISP_RD
+#define ST7793_RST             DISP_RST
+#define ST7793_LED             DISP_BCKL
 
 #else
 #error "Unsupported display driver"
