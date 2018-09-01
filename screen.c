@@ -66,10 +66,10 @@ const char *txtLabels[LABEL_END] = {
     [LABEL_CENTER]          = "Center",
     [LABEL_SUBWOOFER]       = "Subwoofer",
     [LABEL_GAIN0]           = "Gain 0",
-    [LABEL_GAIN1]           = "Gain 2",
-    [LABEL_GAIN2]           = "Gain 3",
-    [LABEL_GAIN3]           = "Gain 4",
-    [LABEL_GAIN4]           = "Gain 5",
+    [LABEL_GAIN1]           = "Gain 1",
+    [LABEL_GAIN2]           = "Gain 2",
+    [LABEL_GAIN3]           = "Gain 3",
+    [LABEL_GAIN4]           = "Gain 4",
 };
 
 void screenInit(void)
@@ -189,6 +189,7 @@ void screenShow(void)
     case SCREEN_BRIGHTNESS:
         screenBrightness();
         break;
+    case SCREEN_AUDIO_INPUT:
     case SCREEN_AUDIO_PARAM:
         if (scrPar.audio != scrParPrev.audio)
             screenClear();
@@ -237,6 +238,7 @@ void screenBrightness()
     dp.value = screenGetBrightness(ACTION_BR_WORK);
     dp.min = GLCD_MIN_BRIGHTNESS;
     dp.max = GLCD_MAX_BRIGHTNESS;
+    dp.step = 1 * 8;
     dp.icon = ICON24_BRIGHTNESS;
 
     if (glcd->canvas->showParam) {
@@ -257,6 +259,7 @@ void screenAudioParam()
     dp.value = aProc->item[aPar].value;
     dp.min = aProc->item[aPar].grid->min;
     dp.max = aProc->item[aPar].grid->max;
+    dp.step = aProc->item[aPar].grid->step;
     dp.icon = ICON24_VOLUME + aPar;
 
     if (glcd->canvas->showParam) {

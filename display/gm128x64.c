@@ -188,7 +188,8 @@ static void showParam(DispParam *dp)
     displayShowBar(dp->min, dp->max, dp->value);
 
     glcdSetXY(94, 30);
-    glcdWriteNum(dp->value, 3, ' ', 10);
+//    glcdWriteNum(dp->value, 3, ' ', 10);
+    glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
 
     displayShowIcon(dp->icon);
 }

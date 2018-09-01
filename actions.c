@@ -1,4 +1,4 @@
-#include "actions.h"
+﻿#include "actions.h"
 
 #include "audio/audio.h"
 #include "input.h"
@@ -16,21 +16,9 @@ static void actionSet(ActionType type, int16_t value)
     action.type = type;
     action.value = value;
 }
-/*
-void sndNextParam(uint8_t *mode)
-{
-    do { // Skip unused params (with step = 0)
-        (*mode)++;
-        if (*mode >= MODE_SND_GAIN0)
-            *mode = MODE_SND_VOLUME;
-    } while ((pgm_read_byte(&sndPar[*mode].grid->step) == 0) &&
-             (*mode < MODE_SND_GAIN0) && (*mode != MODE_SND_VOLUME));
-}
-*/
-static void actionNextAudioParam(void)
-{
-    AudioProc *aProc = audioProcGet();
 
+static void actionNextAudioParam(AudioProc *aProc)
+{
     do {
         scrPar.audio++;
         if (scrPar.audio == AUDIO_PARAM_GAIN0)
@@ -67,6 +55,7 @@ static void actionRemapButtons(void)
             action.value = CMD_SWITCH;
             break;
         case BTN_D1:
+            action.type = ACTION_AUDIO_INPUT;
             break;
         case BTN_D2:
             action.type = ACTION_RTC_MODE;
@@ -143,16 +132,19 @@ static void actionHandleEncoder(void)
 
         if (encCnt) {
             switch (screen) {
+            case SCREEN_STANDBY:
+                break;
             case SCREEN_TIME:
                 actionSet(ACTION_RTC_CHANGE, encCnt);
-                break;
-            case SCREEN_AUDIO_PARAM:
-                actionSet(ACTION_AUDIO_CHANGE, encCnt);
                 break;
             case SCREEN_BRIGHTNESS:
                 actionSet(ACTION_BR_WORK, encCnt);
                 break;
+            case SCREEN_SPECTRUM:
+                screenSet(SCREEN_AUDIO_PARAM);
+                scrPar.audio = AUDIO_PARAM_VOLUME;
             default:
+                actionSet(ACTION_AUDIO_CHANGE, encCnt);
                 break;
             }
         }
@@ -177,6 +169,7 @@ Action actionUserGet(void)
 void actionHandle(Action action, uint8_t visible)
 {
     Screen screen = screenGet();
+    AudioProc *aProc = audioProcGet();
     int16_t dispTime = 0;
 
     switch (action.type) {
@@ -217,10 +210,20 @@ void actionHandle(Action action, uint8_t visible)
         rtcSetTime(action.type - ACTION_RTC_SET_HOUR, action.value);
         break;
 
+    case ACTION_AUDIO_INPUT:
+        dispTime = 5000;
+        if (screen == SCREEN_AUDIO_INPUT) {
+            actionNextAudioParam(aProc);
+            audioSetInput(scrPar.audio - AUDIO_PARAM_GAIN0);
+        } else {
+            screen = SCREEN_AUDIO_INPUT;
+            scrPar.audio = AUDIO_PARAM_GAIN0 + aProc->input;
+        }
+        break;
     case ACTION_AUDIO_PARAM:
         dispTime = 5000;
         if (screen == SCREEN_AUDIO_PARAM) {
-            actionNextAudioParam();
+            actionNextAudioParam(aProc);
         } else {
             screen = SCREEN_AUDIO_PARAM;
             scrPar.audio = AUDIO_PARAM_VOLUME;

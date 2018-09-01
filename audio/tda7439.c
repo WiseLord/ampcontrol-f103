@@ -15,6 +15,7 @@ void tda7439Init(AudioProc *audioProc)
     aProc = audioProc;
     aProc->inCnt = TDA7439_IN_CNT;
     aProc->setFlag = tda7439SetMute;
+    aProc->setInput = tda7439SetInput;
 
     aProc->item[AUDIO_PARAM_VOLUME].grid = &grid_n79_0_1;
     aProc->item[AUDIO_PARAM_VOLUME].set = tda7439SetSpeakers;

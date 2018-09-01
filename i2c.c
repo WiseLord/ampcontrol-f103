@@ -29,6 +29,7 @@ void I2CInit()
 
 uint8_t I2CStart(uint8_t addr)
 {
+    return 0;
     LL_I2C_AcknowledgeNextData(I2C1, LL_I2C_ACK);
 
     LL_I2C_GenerateStartCondition(I2C1);
@@ -44,6 +45,7 @@ uint8_t I2CStart(uint8_t addr)
 
 void I2CStop()
 {
+    return;
     while (!LL_I2C_IsActiveFlag_TXE(I2C1));
 
     LL_I2C_GenerateStopCondition(I2C1);
@@ -51,6 +53,7 @@ void I2CStop()
 
 uint8_t I2CWriteByte(uint8_t data)
 {
+    return 0;
     while (!LL_I2C_IsActiveFlag_TXE(I2C1));
 
     LL_I2C_TransmitData8(I2C1, data);

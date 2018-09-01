@@ -4,6 +4,9 @@
 #include "tda7439.h"
 #endif
 
+#define FLAG_ON     1
+#define FLAG_OFF    0
+
 static const AudioGrid grid_0_0_0 = {  0,  0, 0.00 * STEP_MULT};    // Not implemented
 static void setNothing(void) {}
 
@@ -43,12 +46,33 @@ AudioProc *audioProcGet(void)
     return &aProc;
 }
 
+void audioPowerOn(void)
+{
+    audioSetFlag(AUDIO_FLAG_MUTE, FLAG_ON);
+    audioSetInput(aProc.input);
+
+    for (AudioParam param = AUDIO_PARAM_GAIN0 - 1; param >= AUDIO_PARAM_VOLUME; param--) {
+        audioSetParam(param, aProc.item[param].value);
+    }
+
+    audioSetFlag(AUDIO_FLAG_MUTE, FLAG_OFF);
+}
+
+void audioPowerOff(void)
+{
+    // TODO: Save all audioparams to FLASH/BKP
+}
+
 void audioSetInput(uint8_t value)
 {
     if (value >= aProc.inCnt)
         value = 0;
 
     aProc.input = value;
+
+    if (aProc.setInput) {
+        aProc.setInput();
+    }
 }
 
 void audioSetParam(AudioParam param, int8_t value)

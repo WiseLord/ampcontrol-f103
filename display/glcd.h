@@ -20,6 +20,7 @@ typedef struct {
     int16_t value;
     int16_t min;
     int16_t max;
+    uint8_t step;
     uint8_t icon;
 } DispParam;
 

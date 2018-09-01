@@ -46,7 +46,7 @@ typedef enum {
 typedef struct {
     int16_t min;     // Minimum in steps
     int16_t max;     // Maximum in steps
-    int16_t step;    // Step multiplied by STEP_MULT (to handle 1.25 and so on)
+    uint8_t step;    // Step multiplied by STEP_MULT (to handle 1.25 and so on)
 } AudioGrid;
 
 typedef struct {
@@ -57,6 +57,7 @@ typedef struct {
 
 typedef struct {
     void (*setFlag)(void);
+    void (*setInput)(void);
     AudioIC ic;
     AudioFlag flag;
     AudioItem item[AUDIO_PARAM_END];
@@ -66,6 +67,9 @@ typedef struct {
 
 void audioInit(void);
 AudioProc *audioProcGet(void);
+
+void audioPowerOn(void);
+void audioPowerOff(void);
 
 void audioSetInput(uint8_t value);
 void audioSetParam(AudioParam param, int8_t value);

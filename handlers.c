@@ -64,13 +64,7 @@ void RTC_IRQHandler(void)
 
         // Callback
         rtcReadTime();
-
-        // Wait until last write operation on RTC registers has finished
-        LL_RTC_WaitForSynchro(RTC);
     }
-
-    // Clear the EXTI's Flag for RTC Alarm
-    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_17);
 }
 
 void TIM2_IRQHandler(void)
