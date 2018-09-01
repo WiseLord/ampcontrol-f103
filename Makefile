@@ -174,5 +174,9 @@ clean:
 flash: $(BIN)
 	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_flash $(BIN)" -c shutdown
 
+.PHONY: erase
+erase:
+	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_erase" -c shutdown
+
 # Other dependencies
 -include $(OBJECTS:.o=.d)

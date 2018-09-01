@@ -1,5 +1,8 @@
 ﻿#include "actions.h"
 
+#include <stm32f103xb.h>
+#include <stm32f1xx.h>
+
 #include "audio/audio.h"
 #include "input.h"
 #include "rtc.h"
@@ -250,8 +253,22 @@ void actionHandle(Action action, uint8_t visible)
         break;
 
     case ACTION_TEST:
-        screen = SCREEN_TEST;
-        dispTime = SW_TIM_OFF;
+        if (screen == SCREEN_TEST) {
+
+            WRITE_REG(FLASH->KEYR, FLASH_KEY1);
+            WRITE_REG(FLASH->KEYR, FLASH_KEY2);
+            SET_BIT(FLASH->CR, FLASH_CR_PG);
+
+            uint16_t *value;
+            value = (uint16_t *)(0x08000000 + 1024 * 60);
+            *value = 0x0060;
+            value = (uint16_t *)(0x08000000 + 1024 * 120);
+            *value = 0x0120;
+
+        } else {
+            screen = SCREEN_TEST;
+            dispTime = SW_TIM_OFF;
+        }
         break;
     default:
         break;

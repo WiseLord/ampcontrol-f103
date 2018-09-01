@@ -228,9 +228,18 @@ static void screenAudioParam()
 
 static void screenTest()
 {
-    if (glcd->canvas->showTest) {
-        glcd->canvas->showTest();
-    }
+    glcdLoadFont(font_ks0066_ru_24);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+
+    uint32_t *value;
+
+    glcdSetXY(0, 0);
+    value = (uint32_t *)(0x08000000 + 1024 * 60);
+    glcdWriteNum(*value, 8, '0', 16);
+
+    glcdSetXY(0, 32);
+    value = (uint32_t *)(0x08000000 + 1024 * 120);
+    glcdWriteNum(*value, 8, '0', 16);
 }
 
 void screenShow(void)

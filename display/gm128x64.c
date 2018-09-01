@@ -219,15 +219,6 @@ static void showSpectrum(SpectrumData *spData)
     }
 }
 
-static void showTest(void)
-{
-    glcdLoadFont(font_ks0066_ru_24);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-
-    glcdSetXY(0, 0);
-    glcdWriteString("Test screen");
-}
-
 GlcdCanvas gm128x64 = {
     .width = 128,
     .height = 64,
@@ -235,7 +226,6 @@ GlcdCanvas gm128x64 = {
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
-    .showTest = showTest,
 };
 
 void gm128x64Init(GlcdDriver *driver)
