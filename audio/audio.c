@@ -1,5 +1,7 @@
 #include "audio.h"
 
+#include "../eemul.h"
+
 #ifdef _TDA7439
 #include "tda7439.h"
 #endif
@@ -12,6 +14,38 @@ static void setNothing(void) {}
 
 static AudioProc aProc;
 
+static void audioReadSettings()
+{
+    uint16_t eeData;
+
+    eeData = eeRead(EE_AUDIO_IC);
+    aProc.ic = (eeData == EE_EMPTY ? AUDIO_IC_TDA7439 : eeData);
+
+    eeData = eeRead(EE_AUDIO_FLAG);
+    aProc.flag = (eeData == EE_EMPTY ? AUDIO_FLAG_INIT : eeData);
+
+    eeData = eeRead(EE_AUDIO_INPUT);
+    aProc.input = (eeData == EE_EMPTY ? 0 : eeData);
+
+    for (AudioParam par = AUDIO_PARAM_VOLUME; par < AUDIO_PARAM_END; par++) {
+        eeData = eeRead(EE_AUDIO_PARAM_VOLUME + (par - AUDIO_PARAM_VOLUME));
+        aProc.item[par].value = (eeData == EE_EMPTY ? 0 : (int8_t)eeData);
+    }
+}
+
+static void audioSaveSettings()
+{
+    aProc.flag &= ~AUDIO_FLAG_MUTE; // Do not save mute
+
+    eeUpdate(EE_AUDIO_IC, aProc.ic);
+    eeUpdate(EE_AUDIO_FLAG, aProc.flag);
+    eeUpdate(EE_AUDIO_INPUT, aProc.input);
+
+    for (AudioParam par = AUDIO_PARAM_VOLUME; par < AUDIO_PARAM_END; par++) {
+        eeUpdate(EE_AUDIO_PARAM_VOLUME + (par - AUDIO_PARAM_VOLUME), aProc.item[par].value);
+    }
+}
+
 void audioInit()
 {
     // Reset grid and function pointers
@@ -21,13 +55,7 @@ void audioInit()
         aProc.item[par].set = setNothing;
     }
 
-    // TODO: Read values from settings
-    aProc.ic = AUDIO_IC_TDA7439;
-    aProc.flag = 0x0000;
-    aProc.input = 0;
-    for (AudioParam par = 0; par < AUDIO_PARAM_END; par++) {
-        aProc.item[par].value = 0;
-    }
+    audioReadSettings();
 
     // TODO: move to audio driver init function
     switch (aProc.ic) {
@@ -60,7 +88,7 @@ void audioPowerOn(void)
 
 void audioPowerOff(void)
 {
-    // TODO: Save all audioparams to FLASH/BKP
+    audioSaveSettings();
 }
 
 void audioSetInput(uint8_t value)

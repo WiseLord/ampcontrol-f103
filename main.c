@@ -5,6 +5,7 @@
 #include <stm32f1xx_ll_utils.h>
 
 #include "actions.h"
+#include "eemul.h"
 #include "functions.h"
 #include "input.h"
 #include "pins.h"
@@ -76,6 +77,8 @@ int main(void)
     // System
     LL_Init();
     SystemClock_Config();
+
+    eeInit();
 
     spInit();
 

@@ -1,9 +1,7 @@
 ﻿#include "actions.h"
 
-#include <stm32f103xb.h>
-#include <stm32f1xx.h>
-
 #include "audio/audio.h"
+#include "eemul.h"
 #include "input.h"
 #include "rtc.h"
 #include "screen.h"
@@ -48,7 +46,7 @@ static void actionHandleButtons(void)
 
 static void actionRemapButtons(void)
 {
-//    Screen screen = screenGet();
+    Screen screen = screenGet();
 
     switch (action.type) {
     case ACTION_BTN_SHORT:
@@ -80,7 +78,8 @@ static void actionRemapButtons(void)
             action.type = ACTION_BR_WORK;
             break;
         case BTN_D1:
-            action.type = ACTION_TEST;
+            if (screen == SCREEN_STANDBY)
+               action.type = ACTION_TEST;
             break;
         case BTN_D2:
             break;
@@ -113,7 +112,7 @@ static void actionRemapActions(void)
         break;
     }
 
-    if (SCREEN_STANDBY == screen && ACTION_STANDBY != action.type) {
+    if (SCREEN_STANDBY == screen && ACTION_STANDBY != action.type && ACTION_TEST != action.type) {
         actionSet(ACTION_NONE, 0);
     }
 }
@@ -187,6 +186,7 @@ void actionHandle(Action action, uint8_t visible)
             screen = SCREEN_STANDBY;
             rtcSetMode(RTC_NOEDIT);
             screenChangeBrighness(ACTION_BR_STBY, 0);
+            audioPowerOff();
         }
         break;
 
@@ -253,19 +253,7 @@ void actionHandle(Action action, uint8_t visible)
         break;
 
     case ACTION_TEST:
-        if (screen == SCREEN_TEST) {
-
-            WRITE_REG(FLASH->KEYR, FLASH_KEY1);
-            WRITE_REG(FLASH->KEYR, FLASH_KEY2);
-            SET_BIT(FLASH->CR, FLASH_CR_PG);
-
-            uint16_t *value;
-            value = (uint16_t *)(0x08000000 + 1024 * 60);
-            *value = 0x0060;
-            value = (uint16_t *)(0x08000000 + 1024 * 120);
-            *value = 0x0120;
-
-        } else {
+        if (screen != SCREEN_TEST) {
             screen = SCREEN_TEST;
             dispTime = SW_TIM_OFF;
         }

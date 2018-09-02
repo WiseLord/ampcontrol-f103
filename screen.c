@@ -2,6 +2,7 @@
 
 #include "display/display.h"
 #include "actions.h"
+#include "eemul.h"
 #include "fft.h"
 #include "spectrum.h"
 
@@ -146,7 +147,7 @@ void screenChangeBrighness(uint8_t mode, int8_t diff)
     screenSetBrightness(mode, br);
 }
 
-static void improveSpectrum (SpectrumData *sd)
+static void improveSpectrum(SpectrumData *sd)
 {
     for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
         if (sd->data[i] < sd->show[i]) {
@@ -228,18 +229,22 @@ static void screenAudioParam()
 
 static void screenTest()
 {
-    glcdLoadFont(font_ks0066_ru_24);
+    glcdLoadFont(font_ks0066_ru_08);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
-    uint32_t *value;
+    uint16_t *value;
 
-    glcdSetXY(0, 0);
-    value = (uint32_t *)(0x08000000 + 1024 * 60);
-    glcdWriteNum(*value, 8, '0', 16);
+    for (uint8_t i = 0; i < 16; i++) {
+        glcdSetXY((i % 2) ? 28 : 0, 8 * (i / 2));
+        value = (uint16_t *)(FLASH_BASE + EE_PAGE_SIZE * EE_PAGE_0 + 2 * i);
+        glcdWriteNum(*value, 4, '0', 16);
+    }
 
-    glcdSetXY(0, 32);
-    value = (uint32_t *)(0x08000000 + 1024 * 120);
-    glcdWriteNum(*value, 8, '0', 16);
+    for (uint8_t i = 0; i < 16; i++) {
+        glcdSetXY((i % 2) ? 92 : 64, 8 * (i / 2));
+        value = (uint16_t *)(FLASH_BASE + EE_PAGE_SIZE * EE_PAGE_1 + 2 * i);
+        glcdWriteNum(*value, 4, '0', 16);
+    }
 }
 
 void screenShow(void)

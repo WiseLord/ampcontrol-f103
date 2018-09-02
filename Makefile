@@ -10,6 +10,7 @@ TARGET = ampcontrol_f103_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
 C_SOURCES = main.c
 
 C_SOURCES += actions.c
+C_SOURCES += eemul.c
 C_SOURCES += fft.c
 C_SOURCES += functions.c
 C_SOURCES += handlers.c

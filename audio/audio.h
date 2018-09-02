@@ -35,6 +35,8 @@ typedef enum {
 } AudioIC;
 
 typedef enum {
+    AUDIO_FLAG_INIT     = 0x0000,
+
     AUDIO_FLAG_MUTE     = 0x0001,
 
     AUDIO_FLAG_LOUDNESS = 0x0010,
