@@ -35,50 +35,6 @@ static void drawVertLine(uint8_t x, uint8_t y1, uint8_t y2, uint8_t color)
         glcd->drawPixel(x, i, color);
 }
 
-// TODO: move to glcd and make work with rectangle area
-void drawIcon24(uint8_t iconNum)
-{
-    uint8_t i, j, k;
-    uint8_t pgmData;
-
-    const uint8_t *icon;
-
-    icon = &icons_24[24 * 24 / 8 * iconNum];
-
-    if (icon) {
-        for (j = 0; j < 3; j++) {
-            for (i = 0; i < 24; i++) {
-                pgmData = icon[24 * j + i];
-                for (k = 0; k < 8; k++) {
-                    glcd->drawPixel(glcd->canvas->x + i, glcd->canvas->y + 8 * j + k, pgmData & (1 << k));
-                }
-            }
-        }
-    }
-}
-
-// TODO: move to glcd and make work with rectangle area
-void drawIcon32(uint8_t iconNum)
-{
-    uint8_t i, j, k;
-    uint8_t pgmData;
-
-    const uint8_t *icon;
-
-    icon = &icons_32[32 * 32 / 8 * iconNum];
-
-    if (icon) {
-        for (j = 0; j < 4; j++) {
-            for (i = 0; i < 32; i++) {
-                pgmData = icon[32 * j + i];
-                for (k = 0; k < 8; k++) {
-                    glcd->drawPixel(glcd->canvas->x + i, glcd->canvas->y + 8 * j + k, pgmData & (1 << k));
-                }
-            }
-        }
-    }
-}
-
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
     char ltSp = glcd->font.data[FONT_LTSPPOS];
@@ -134,14 +90,6 @@ static void displayShowBar(int16_t min, int16_t max, int16_t value)
     }
 }
 
-static void displayShowIcon(uint8_t icon)
-{
-    if (icon < ICON24_END) {
-        glcdSetXY(104, 2);
-        drawIcon24(icon);
-    }
-}
-
 static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_t max)
 {
     uint8_t i;
@@ -188,10 +136,10 @@ static void showParam(DispParam *dp)
     displayShowBar(dp->min, dp->max, dp->value);
 
     glcdSetXY(94, 30);
-//    glcdWriteNum(dp->value, 3, ' ', 10);
     glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
 
-    displayShowIcon(dp->icon);
+    glcdSetXY(104, 2);
+    glcdWriteIcon(dp->icon, icons_24);
 }
 
 static void showSpectrum(SpectrumData *spData)

@@ -2,7 +2,7 @@
 
 const uint8_t font_ks0066_ru_24[] = {
 
-    0x03, // font height in bytes
+    0x18, // font height
     0x7F, // position of symbol-space between letters
     0xC0, // count of chars
     0x20, // ascii char offset

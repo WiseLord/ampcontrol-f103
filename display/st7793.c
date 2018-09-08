@@ -218,7 +218,7 @@ void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
 void st7793DrawImage(tImage *img)
 {
     uint16_t w = img->width;
-    uint16_t h = img->height;
+    uint16_t h = img->height / 8;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
     uint16_t color = glcd.font.color;

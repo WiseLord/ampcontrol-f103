@@ -2,7 +2,7 @@
 
 const uint8_t font_digits_32[] = {
 
-    0x04, // font height in bytes
+    0x20, // font height
     0x27, // position of symbol-space between letters
     0x1B, // count of chars
     0x20, // ascii char offset

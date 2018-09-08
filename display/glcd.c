@@ -109,7 +109,7 @@ static void findCharOft(uint8_t code, tImage *img)
     }
     swd = fp[FONT_HEADER_END + spos];
 
-    oft *= fp[FONT_HEIGHT];
+    oft *= fp[FONT_HEIGHT] / 8;
     oft += FONT_HEADER_END;
     oft += fp[FONT_CCNT];
 
@@ -121,7 +121,7 @@ static void findCharOft(uint8_t code, tImage *img)
 void glcdDrawImage(tImage *img)
 {
     uint16_t w = img->width;
-    uint16_t h = img->height;
+    uint16_t h = img->height / 8;
     uint16_t color = glcd->font.color;
     uint16_t bgColor = glcd->canvas->color;
     uint8_t mult = glcd->font.mult;
@@ -139,6 +139,24 @@ void glcdDrawImage(tImage *img)
             }
         }
     }
+}
+
+void glcdWriteIcon(uint8_t num, const uint8_t *icons)
+{
+    tImage img;
+    img.data = 0;
+
+    if (icons == icons_24) {
+        img.width = img.height = 24;
+    } else if (icons == icons_32) {
+        img.width = img.height = 32;
+    } else {
+        return;
+    }
+
+    img.data = icons + (img.width * img.height / 8 * num);
+
+    glcdDrawImage(&img);
 }
 
 void glcdWriteChar(uint8_t code)
