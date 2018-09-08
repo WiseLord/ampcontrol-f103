@@ -229,7 +229,7 @@ static void screenAudioParam()
 
 static void screenTest()
 {
-    glcdLoadFont(font_ks0066_ru_08);
+    glcdSetFont(&fontamp08);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
     uint16_t *value;

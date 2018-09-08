@@ -9,21 +9,20 @@ static GlcdDriver *glcd;
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
-    char ltSp = glcd->font.data[FONT_LTSPPOS];
     int8_t time = *((int8_t *)rtc + tm);
 
     glcdSetFontColor(LCD_COLOR_AQUA);
     if (rtc->etm == tm)
         glcdSetFontColor(LCD_COLOR_YELLOW);
-    glcdWriteChar(ltSp);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     if (tm == RTC_YEAR) {
         glcdWriteString("20");
-        glcdWriteChar(ltSp);
+        glcdWriteChar(LETTER_SPACE_CHAR);
     }
     glcdWriteNum(time, 2, '0', 10);
-    glcdWriteChar(ltSp);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdSetFontColor(LCD_COLOR_AQUA);
-    glcdWriteChar(ltSp);
+    glcdWriteChar(LETTER_SPACE_CHAR);
 }
 
 static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t value, uint16_t max)
@@ -39,7 +38,7 @@ static void showTime(RTC_type *rtc, char *wday)
 {
     glcdSetXY(2, 4);
     glcdSetFontMult(2);
-    glcdLoadFont(font_ks0066_ru_24);
+    glcdSetFont(&fontamp24);
 
     displayTm(rtc, RTC_HOUR);
     glcdWriteChar(':');
@@ -49,7 +48,7 @@ static void showTime(RTC_type *rtc, char *wday)
 
     glcdSetXY(12, 64);
     glcdSetFontMult(1);
-    glcdLoadFont(font_digits_32);
+    glcdSetFont(&fontampdig32);
 
     displayTm(rtc, RTC_DATE);
     glcdWriteChar('.');
@@ -57,7 +56,7 @@ static void showTime(RTC_type *rtc, char *wday)
     glcdWriteChar('.');
     displayTm(rtc, RTC_YEAR);
 
-    glcdLoadFont(font_ks0066_ru_24);
+    glcdSetFont(&fontamp24);
     glcdSetFontColor(LCD_COLOR_AQUA);
     glcdSetXY(24, 104);
     glcdWriteString(wday);

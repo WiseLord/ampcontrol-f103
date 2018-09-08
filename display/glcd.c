@@ -65,12 +65,6 @@ void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
 void glcdSetFont(const tFont *font)
 {
     glcd->font.tfont = font;
-    glcd->font.data = 0;
-}
-
-void glcdLoadFont(const uint8_t *font)
-{
-    glcd->font.data = font;
 }
 
 void glcdSetFontColor(uint16_t color)
@@ -103,41 +97,17 @@ static void findCharOft(uint16_t code, tImage *img)
 {
     const tFont *font = glcd->font.tfont;
 
-    if (glcd->font.data == 0) {
-        for (uint16_t i = 0; i < font->length; i++) {
-            if (font->chars[i].code == code) {
-                img->data = font->chars[i].image->data;
-                img->width = font->chars[i].image->width;
-                img->height = font->chars[i].image->height;
-                return;
-            }
+    for (uint16_t i = 0; i < font->length; i++) {
+        if (font->chars[i].code == code) {
+            img->data = font->chars[i].image->data;
+            img->width = font->chars[i].image->width;
+            img->height = font->chars[i].image->height;
+            return;
         }
-        img->data = 0;
-
-        return;
     }
+    img->data = 0;
 
-    uint8_t i;
-    const uint8_t *fp = glcd->font.data;
-
-    uint8_t spos = code - ((code >= 128) ? fp[FONT_OFTNA] : fp[FONT_OFTA]);
-
-    uint16_t oft = 0;               // Current symbol offset in array
-    uint8_t swd = 0;                // Current symbol width
-
-    for (i = 0; i < spos; i++) {
-        swd = fp[FONT_HEADER_END + i];
-        oft += swd;
-    }
-    swd = fp[FONT_HEADER_END + spos];
-
-    oft *= fp[FONT_HEIGHT] / 8;
-    oft += FONT_HEADER_END;
-    oft += fp[FONT_CCNT];
-
-    img->data = fp + oft;
-    img->width = swd;
-    img->height = fp[FONT_HEIGHT];
+    return;
 }
 
 void glcdDrawImage(tImage *img)
@@ -200,11 +170,7 @@ void glcdWriteString(char *string)
     if (*string)
         glcdWriteChar(*string++);
     while (*string) {
-        if (glcd->font.data) {
-            glcdWriteChar(glcd->font.data[FONT_LTSPPOS]);
-        } else {
-            glcdWriteChar(0x00A0);
-        }
+        glcdWriteChar(LETTER_SPACE_CHAR);
         glcdWriteChar(*string++);
     }
 }

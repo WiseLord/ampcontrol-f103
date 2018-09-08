@@ -37,26 +37,25 @@ static void drawVertLine(uint8_t x, uint8_t y1, uint8_t y2, uint8_t color)
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
-    char ltSp = glcd->font.data[FONT_LTSPPOS];
     int8_t time = *((int8_t *)rtc + tm);
 
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetCanvasColor(LCD_COLOR_BLACK);
-    glcdWriteChar(ltSp);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     if (rtc->etm == tm) {
         glcdSetFontColor(LCD_COLOR_BLACK);
         glcdSetCanvasColor(LCD_COLOR_WHITE);
     }
-    glcdWriteChar(ltSp);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     if (tm == RTC_YEAR) {
         glcdWriteString("20");
-        glcdWriteChar(ltSp);
+        glcdWriteChar(LETTER_SPACE_CHAR);
     }
     glcdWriteNum(time, 2, '0', 10);
-    glcdWriteChar(ltSp);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetCanvasColor(LCD_COLOR_BLACK);
-    glcdWriteChar(ltSp);
+    glcdWriteChar(LETTER_SPACE_CHAR);
 }
 
 static void displayShowBar(int16_t min, int16_t max, int16_t value)
@@ -104,7 +103,7 @@ static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_
 
 static void showTime(RTC_type *rtc, char *wday)
 {
-    glcdLoadFont(font_digits_32);
+    glcdSetFont(&fontampdig32);
     glcdSetXY(4, 0);
     displayTm(rtc, RTC_HOUR);
     glcdWriteChar(':');
@@ -112,7 +111,7 @@ static void showTime(RTC_type *rtc, char *wday)
     glcdWriteChar(':');
     displayTm(rtc, RTC_SEC);
 
-    glcdLoadFont(font_ks0066_ru_24);
+    glcdSetFont(&fontamp24);
     glcdSetXY(5, 32);
     displayTm(rtc, RTC_DATE);
     glcdWriteChar('.');
@@ -120,7 +119,7 @@ static void showTime(RTC_type *rtc, char *wday)
     glcdWriteChar('.');
     displayTm(rtc, RTC_YEAR);
 
-//    glcdLoadFont(font_ks0066_ru_08);
+//    glcdSetFont(&fontamp08);
     glcdSetFont(&fontamp08);
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetXY(36, 56);
@@ -129,7 +128,7 @@ static void showTime(RTC_type *rtc, char *wday)
 
 static void showParam(DispParam *dp)
 {
-    glcdLoadFont(font_ks0066_ru_24);
+    glcdSetFont(&fontamp24);
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetXY(0, 0);
     glcdWriteString((char *)dp->label);
