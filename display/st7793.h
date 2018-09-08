@@ -15,6 +15,6 @@ void st7793Wakeup(void);
 void st7793DrawPixel(int16_t x, int16_t y, uint16_t color);
 void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
 
-void st7793DrawFontChar(CharParam *param);
+void st7793DrawImage(tImage *img);
 
 #endif // ST7793_H

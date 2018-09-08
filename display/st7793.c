@@ -15,7 +15,7 @@ static GlcdDriver glcd = {
     .clear = st7793Clear,
     .drawPixel = st7793DrawPixel,
     .drawRectangle = st7793DrawRectangle,
-    .drawFontChar = st7793DrawFontChar,
+    .drawImage = st7793DrawImage,
 };
 
 static inline void st7793SendData(uint16_t data) __attribute__((always_inline));
@@ -215,10 +215,10 @@ void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
     SET(ST7793_CS);
 }
 
-void st7793DrawFontChar(CharParam *param)
+void st7793DrawImage(tImage *img)
 {
-    uint8_t w = param->width;
-    uint8_t h = glcd.font.data[FONT_HEIGHT];
+    uint16_t w = img->width;
+    uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
     uint16_t color = glcd.font.color;
@@ -233,7 +233,7 @@ void st7793DrawFontChar(CharParam *param)
     for (uint16_t i = 0; i < w; i++) {
         for (uint8_t mx = 0; mx < mult; mx++) {
             for (uint16_t j = 0; j < h; j++) {
-                uint8_t data = param->data[w * j + i];
+                uint8_t data = img->data[w * j + i];
                 for (uint8_t bit = 0; bit < 8; bit++) {
                     for (uint8_t my = 0; my < mult; my++)
                         st7793SendData(data & 0x01 ? color : bgColor);

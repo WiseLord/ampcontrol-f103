@@ -18,7 +18,7 @@ static GlcdDriver glcd = {
     .clear = ili9341Clear,
     .drawPixel = ili9341DrawPixel,
     .drawRectangle = ili9341DrawRectangle,
-    .drawFontChar = ili9341DrawFontChar,
+    .drawImage = ili9341DrawImage,
 };
 
 static inline void ili9341SendSPI(uint8_t data) __attribute__((always_inline));
@@ -267,10 +267,10 @@ void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     SET(ILI9341_CS);
 }
 
-void ili9341DrawFontChar(CharParam *param)
+void ili9341DrawImage(tImage *img)
 {
-    uint8_t w = param->width;
-    uint8_t h = glcd.font.data[FONT_HEIGHT];
+    uint16_t w = img->width;
+    uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
     uint8_t colorH = glcd.font.color >> 8;
@@ -286,7 +286,7 @@ void ili9341DrawFontChar(CharParam *param)
     for (uint16_t i = 0; i < w; i++) {
         for (uint8_t mx = 0; mx < mult; mx++) {
             for (uint16_t j = 0; j < h; j++) {
-                uint8_t data = param->data[w * j + i];
+                uint8_t data = img->data[w * j + i];
                 for (uint8_t bit = 0; bit < 8; bit++) {
                     if (data & 0x01) {
                         for (uint8_t my = 0; my < mult; my++) {

@@ -8,7 +8,7 @@
 static GlcdDriver glcd = {
     .clear = st7920Clear,
     .drawPixel = st7920DrawPixel,
-    .drawFontChar = glcdDrawFontChar,
+    .drawImage = glcdDrawImage,
 };
 
 static uint8_t fb[ST7920_SIZE_X / 4][ST7920_SIZE_Y / 2];

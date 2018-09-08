@@ -26,8 +26,10 @@ typedef struct {
 
 typedef struct {
     const uint8_t *data;
-    uint8_t width;
-} CharParam;
+    uint16_t width;
+    uint16_t height;
+    uint8_t dataSize;
+} tImage;
 
 typedef struct {
     uint16_t width;
@@ -45,7 +47,7 @@ typedef struct {
     void (*clear)(void);
     void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
     void (*drawRectangle)(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
-    void (*drawFontChar)(CharParam *param);
+    void (*drawImage)(tImage *img);
     void (*updateFB)(void);
 
     GlcdCanvas *canvas;
@@ -107,7 +109,7 @@ void glcdSetCanvasColor(uint16_t color);
 void glcdSetXY(int16_t x, int16_t y);
 void glcdSetX(int16_t x);
 
-void glcdDrawFontChar(CharParam *param);
+void glcdDrawImage(tImage *img);
 void glcdWriteChar(uint8_t code);
 void glcdWriteString(char *string);
 

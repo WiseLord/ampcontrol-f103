@@ -8,7 +8,7 @@
 static GlcdDriver glcd = {
     .clear = ks0108Clear,
     .drawPixel = ks0108DrawPixel,
-    .drawFontChar = glcdDrawFontChar,
+    .drawImage = glcdDrawImage,
 };
 
 #if defined(_8BIT_B)                                // CS active level is 0 (WG12864B)

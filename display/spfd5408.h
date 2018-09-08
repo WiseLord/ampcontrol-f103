@@ -15,6 +15,6 @@ void spfd5408Wakeup(void);
 void spfd5408DrawPixel(int16_t x, int16_t y, uint16_t color);
 void spfd5408DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
 
-void spfd5408DrawFontChar(CharParam *param);
+void spfd5408DrawImage(tImage *img);
 
 #endif // SPFD5408_H

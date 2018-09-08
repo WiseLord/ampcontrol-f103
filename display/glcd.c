@@ -7,7 +7,6 @@
 static char strbuf[STR_BUFSIZE + 1];   // String buffer
 
 static GlcdDriver *glcd;
-static CharParam charParam;
 
 void glcdInit(GlcdDriver *driver)
 {
@@ -94,7 +93,7 @@ void glcdSetX(int16_t x)
     glcd->canvas->x = x;
 }
 
-static void findCharOft(uint8_t code)
+static void findCharOft(uint8_t code, tImage *img)
 {
     uint8_t i;
     const uint8_t *fp = glcd->font.data;
@@ -114,21 +113,22 @@ static void findCharOft(uint8_t code)
     oft += FONT_HEADER_END;
     oft += fp[FONT_CCNT];
 
-    charParam.data = fp + oft;
-    charParam.width = swd;
+    img->data = fp + oft;
+    img->width = swd;
+    img->height = fp[FONT_HEIGHT];
 }
 
-void glcdDrawFontChar(CharParam *param)
+void glcdDrawImage(tImage *img)
 {
-    uint8_t w = param->width;
-    uint8_t h = glcd->font.data[FONT_HEIGHT];
+    uint16_t w = img->width;
+    uint16_t h = img->height;
     uint16_t color = glcd->font.color;
     uint16_t bgColor = glcd->canvas->color;
     uint8_t mult = glcd->font.mult;
 
     for (uint16_t j = 0; j < h; j++) {
         for (uint16_t i = 0; i < w; i++) {
-            uint8_t data = param->data[w * j + i];
+            uint8_t data = img->data[w * j + i];
             for (uint8_t k = 0; k < 8; k++) {
                 for (uint8_t mx = 0; mx < mult; mx++) {
                     for (uint8_t my = 0; my < mult; my++) {
@@ -143,9 +143,11 @@ void glcdDrawFontChar(CharParam *param)
 
 void glcdWriteChar(uint8_t code)
 {
-    findCharOft(code);
-    glcd->drawFontChar(&charParam);
-    glcdSetX(glcd->canvas->x + charParam.width * glcd->font.mult);
+    tImage img;
+
+    findCharOft(code, &img);
+    glcd->drawImage(&img);
+    glcdSetX(glcd->canvas->x + img.width * glcd->font.mult);
 }
 
 void glcdWriteString(char *string)

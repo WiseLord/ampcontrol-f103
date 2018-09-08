@@ -17,7 +17,7 @@
 static GlcdDriver glcd = {
     .clear = ssd1306Clear,
     .drawPixel = ssd1306DrawPixel,
-    .drawFontChar = glcdDrawFontChar,
+    .drawImage = glcdDrawImage,
     .updateFB = ssd1306UpdateFb,
 };
 
