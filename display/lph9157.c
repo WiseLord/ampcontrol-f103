@@ -172,7 +172,7 @@ void lph9157DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
 void lph9157DrawImage(tImage *img)
 {
     uint16_t w = img->width;
-    uint16_t h = img->height / 8;
+    uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
     uint8_t colorH = glcd.font.color >> 8;
@@ -183,25 +183,27 @@ void lph9157DrawImage(tImage *img)
 
     CLR(LPH9157_CS);
 
-    lph9157SetWindow(x0, y0, mult * w, mult * h * 8);
+    lph9157SetWindow(x0, y0, mult * w, mult * h);
 
     for (uint16_t i = 0; i < w; i++) {
         for (uint8_t mx = 0; mx < mult; mx++) {
-            for (uint16_t j = 0; j < h; j++) {
+            for (uint16_t j = 0; j < h + 7 / 8; j++) {
                 uint8_t data = img->data[w * j + i];
                 for (uint8_t bit = 0; bit < 8; bit++) {
-                    if (data & 0x01) {
-                        for (uint8_t my = 0; my < mult; my++) {
-                            lph9157SendSPI(colorH);
-                            lph9157SendSPI(colorL);
+                    if (8 * j + bit < h) {
+                        if (data & 0x01) {
+                            for (uint8_t my = 0; my < mult; my++) {
+                                lph9157SendSPI(colorH);
+                                lph9157SendSPI(colorL);
+                            }
+                        } else {
+                            for (uint8_t my = 0; my < mult; my++) {
+                                lph9157SendSPI(bgColorH);
+                                lph9157SendSPI(bgColorL);
+                            }
                         }
-                    } else {
-                        for (uint8_t my = 0; my < mult; my++) {
-                            lph9157SendSPI(bgColorH);
-                            lph9157SendSPI(bgColorL);
-                        }
+                        data >>= 1;
                     }
-                    data >>= 1;
                 }
             }
         }

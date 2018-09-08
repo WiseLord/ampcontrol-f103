@@ -270,7 +270,7 @@ void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
 void ili9341DrawImage(tImage *img)
 {
     uint16_t w = img->width;
-    uint16_t h = img->height / 8;
+    uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
     uint8_t colorH = glcd.font.color >> 8;
@@ -281,25 +281,27 @@ void ili9341DrawImage(tImage *img)
 
     CLR(ILI9341_CS);
 
-    ili9341SetWindow(x0, y0, mult * w, mult * h * 8);
+    ili9341SetWindow(x0, y0, mult * w, mult * h);
 
     for (uint16_t i = 0; i < w; i++) {
         for (uint8_t mx = 0; mx < mult; mx++) {
-            for (uint16_t j = 0; j < h; j++) {
+            for (uint16_t j = 0; j < h + 7 / 8; j++) {
                 uint8_t data = img->data[w * j + i];
                 for (uint8_t bit = 0; bit < 8; bit++) {
-                    if (data & 0x01) {
-                        for (uint8_t my = 0; my < mult; my++) {
-                            ili9341SendSPI(colorH);
-                            ili9341SendSPI(colorL);
+                    if (8 * j + bit < h) {
+                        if (data & 0x01) {
+                            for (uint8_t my = 0; my < mult; my++) {
+                                ili9341SendSPI(colorH);
+                                ili9341SendSPI(colorL);
+                            }
+                        } else {
+                            for (uint8_t my = 0; my < mult; my++) {
+                                ili9341SendSPI(bgColorH);
+                                ili9341SendSPI(bgColorL);
+                            }
                         }
-                    } else {
-                        for (uint8_t my = 0; my < mult; my++) {
-                            ili9341SendSPI(bgColorH);
-                            ili9341SendSPI(bgColorL);
-                        }
+                        data >>= 1;
                     }
-                    data >>= 1;
                 }
             }
         }

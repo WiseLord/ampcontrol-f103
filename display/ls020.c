@@ -221,7 +221,7 @@ void ls020DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t
 void ls020DrawImage(tImage *img)
 {
     uint16_t w = img->width;
-    uint16_t h = img->height / 8;
+    uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
     uint8_t colorH = glcd.font.color >> 8;
@@ -230,28 +230,30 @@ void ls020DrawImage(tImage *img)
     uint8_t bgColorL = glcd.canvas->color & 0xFF;
     uint8_t mult = glcd.font.mult;
 
-    ls020SetWindow(x0, y0, mult * w, mult * h * 8);
+    ls020SetWindow(x0, y0, mult * w, mult * h);
 
     CLR(LS020_DC);
     CLR(LS020_CS);
 
     for (uint16_t i = 0; i < w; i++) {
         for (uint8_t mx = 0; mx < mult; mx++) {
-            for (uint16_t j = 0; j < h; j++) {
+            for (uint16_t j = 0; j < h + 7 / 8; j++) {
                 uint8_t data = img->data[w * j + i];
                 for (uint8_t bit = 0; bit < 8; bit++) {
-                    if (data & 0x01) {
-                        for (uint8_t my = 0; my < mult; my++) {
-                            ls020SendSPI(colorH);
-                            ls020SendSPI(colorL);
+                    for (uint8_t bit = 0; bit < 8; bit++) {
+                        if (data & 0x01) {
+                            for (uint8_t my = 0; my < mult; my++) {
+                                ls020SendSPI(colorH);
+                                ls020SendSPI(colorL);
+                            }
+                        } else {
+                            for (uint8_t my = 0; my < mult; my++) {
+                                ls020SendSPI(bgColorH);
+                                ls020SendSPI(bgColorL);
+                            }
                         }
-                    } else {
-                        for (uint8_t my = 0; my < mult; my++) {
-                            ls020SendSPI(bgColorH);
-                            ls020SendSPI(bgColorL);
-                        }
+                        data >>= 1;
                     }
-                    data >>= 1;
                 }
             }
         }

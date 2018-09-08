@@ -240,7 +240,7 @@ void ssd1286aDrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
 void ssd1286aDrawImage(tImage *img)
 {
     uint16_t w = img->width;
-    uint16_t h = img->height / 8;
+    uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
     uint8_t colorH = glcd.font.color >> 8;
@@ -251,25 +251,27 @@ void ssd1286aDrawImage(tImage *img)
 
     CLR(SSD1286A_CS);
 
-    ssd1286aSetWindow(x0, y0, mult * w, mult * h * 8);
+    ssd1286aSetWindow(x0, y0, mult * w, mult * h);
 
     for (uint16_t i = 0; i < w; i++) {
         for (uint8_t mx = 0; mx < mult; mx++) {
-            for (uint16_t j = 0; j < h; j++) {
+            for (uint16_t j = 0; j < h + 7 / 8; j++) {
                 uint8_t data = img->data[w * j + i];
                 for (uint8_t bit = 0; bit < 8; bit++) {
-                    if (data & 0x01) {
-                        for (uint8_t my = 0; my < mult; my++) {
-                            ssd1286aSendSPI(colorH);
-                            ssd1286aSendSPI(colorL);
+                    if (8 * j + bit < h) {
+                        if (data & 0x01) {
+                            for (uint8_t my = 0; my < mult; my++) {
+                                ssd1286aSendSPI(colorH);
+                                ssd1286aSendSPI(colorL);
+                            }
+                        } else {
+                            for (uint8_t my = 0; my < mult; my++) {
+                                ssd1286aSendSPI(bgColorH);
+                                ssd1286aSendSPI(bgColorL);
+                            }
                         }
-                    } else {
-                        for (uint8_t my = 0; my < mult; my++) {
-                            ssd1286aSendSPI(bgColorH);
-                            ssd1286aSendSPI(bgColorL);
-                        }
+                        data >>= 1;
                     }
-                    data >>= 1;
                 }
             }
         }

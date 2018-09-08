@@ -65,7 +65,7 @@ static inline void st7793InitSeq(void)
 
     CLR(ST7793_CS);
 
-   //-------------Display Control Setting-------------------------------------//
+    //-------------Display Control Setting-------------------------------------//
 
     st7793WriteReg(0x0001, 0x0100);
     st7793WriteReg(0x0003, 0x1020);
@@ -133,8 +133,8 @@ static inline void st7793SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t 
     st7793WriteReg(0x0213, x + w - 1);
 
     // Set cursor
-   st7793WriteReg(0x00200, ST7793_WIDTH - y - 1);
-   st7793WriteReg(0x00201, x);
+    st7793WriteReg(0x00200, ST7793_WIDTH - y - 1);
+    st7793WriteReg(0x00201, x);
 }
 
 void st7793Init(GlcdDriver **driver)
@@ -218,7 +218,7 @@ void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
 void st7793DrawImage(tImage *img)
 {
     uint16_t w = img->width;
-    uint16_t h = img->height / 8;
+    uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
     uint16_t color = glcd.font.color;
@@ -227,17 +227,19 @@ void st7793DrawImage(tImage *img)
 
     CLR(ST7793_CS);
 
-    st7793SetWindow(x0, y0, mult * w, mult * h * 8);
+    st7793SetWindow(x0, y0, mult * w, mult * h);
 
     st7793SelectReg(0x0202);
     for (uint16_t i = 0; i < w; i++) {
         for (uint8_t mx = 0; mx < mult; mx++) {
-            for (uint16_t j = 0; j < h; j++) {
+            for (uint16_t j = 0; j < h + 7 / 8; j++) {
                 uint8_t data = img->data[w * j + i];
                 for (uint8_t bit = 0; bit < 8; bit++) {
-                    for (uint8_t my = 0; my < mult; my++)
-                        st7793SendData(data & 0x01 ? color : bgColor);
-                    data >>= 1;
+                    if (8 * j + bit < h) {
+                        for (uint8_t my = 0; my < mult; my++)
+                            st7793SendData(data & 0x01 ? color : bgColor);
+                        data >>= 1;
+                    }
                 }
             }
         }
