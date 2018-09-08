@@ -62,6 +62,12 @@ void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
     glcdWriteString(strbuf);
 }
 
+void glcdSetFont(const tFont *font)
+{
+    glcd->font.tfont = font;
+    glcd->font.data = 0;
+}
+
 void glcdLoadFont(const uint8_t *font)
 {
     glcd->font.data = font;
@@ -93,8 +99,24 @@ void glcdSetX(int16_t x)
     glcd->canvas->x = x;
 }
 
-static void findCharOft(uint8_t code, tImage *img)
+static void findCharOft(uint16_t code, tImage *img)
 {
+    const tFont *font = glcd->font.tfont;
+
+    if (glcd->font.data == 0) {
+        for (uint16_t i = 0; i < font->length; i++) {
+            if (font->chars[i].code == code) {
+                img->data = font->chars[i].image->data;
+                img->width = font->chars[i].image->width;
+                img->height = font->chars[i].image->height;
+                return;
+            }
+        }
+        img->data = 0;
+
+        return;
+    }
+
     uint8_t i;
     const uint8_t *fp = glcd->font.data;
 
@@ -156,14 +178,19 @@ void glcdWriteIcon(uint8_t num, const uint8_t *icons)
 
     img.data = icons + (img.width * img.height / 8 * num);
 
-    glcdDrawImage(&img);
+    glcd->drawImage(&img);
 }
 
-void glcdWriteChar(uint8_t code)
+void glcdWriteChar(uint16_t code)
 {
     tImage img;
+    img.data = 0;
 
     findCharOft(code, &img);
+
+    if (img.data == 0)
+        return;
+
     glcd->drawImage(&img);
     glcdSetX(glcd->canvas->x + img.width * glcd->font.mult);
 }
@@ -173,7 +200,11 @@ void glcdWriteString(char *string)
     if (*string)
         glcdWriteChar(*string++);
     while (*string) {
-        glcdWriteChar(glcd->font.data[FONT_LTSPPOS]);
+        if (glcd->font.data) {
+            glcdWriteChar(glcd->font.data[FONT_LTSPPOS]);
+        } else {
+            glcdWriteChar(0x00A0);
+        }
         glcdWriteChar(*string++);
     }
 }

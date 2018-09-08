@@ -25,13 +25,6 @@ typedef struct {
 } DispParam;
 
 typedef struct {
-    const uint8_t *data;
-    uint16_t width;
-    uint16_t height;
-    uint8_t dataSize;
-} tImage;
-
-typedef struct {
     uint16_t width;
     uint16_t height;
     int16_t x;
@@ -100,6 +93,7 @@ uint8_t glcdGetBus(void);
 
 void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);
 
+void glcdSetFont(const tFont *font);
 void glcdLoadFont(const uint8_t *font);
 void glcdSetFontColor(uint16_t color);
 void glcdSetFontMult(uint8_t mult);
@@ -111,7 +105,7 @@ void glcdSetX(int16_t x);
 
 void glcdDrawImage(tImage *img);
 void glcdWriteIcon(uint8_t num, const uint8_t *icons);
-void glcdWriteChar(uint8_t code);
+void glcdWriteChar(uint16_t code);
 void glcdWriteString(char *string);
 
 void glcdDrawRect(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color);

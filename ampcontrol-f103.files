@@ -4,6 +4,9 @@ audio/tda7439.c
 audio/tda7439.h
 display/display.c
 display/display.h
+display/font-amp-08.c
+display/font-amp-24.c
+display/font-amp-dig-32.c
 display/font-digits-32.c
 display/font-ks0066-ru-08.c
 display/font-ks0066-ru-24.c

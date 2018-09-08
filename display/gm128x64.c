@@ -120,7 +120,8 @@ static void showTime(RTC_type *rtc, char *wday)
     glcdWriteChar('.');
     displayTm(rtc, RTC_YEAR);
 
-    glcdLoadFont(font_ks0066_ru_08);
+//    glcdLoadFont(font_ks0066_ru_08);
+    glcdSetFont(&fontamp08);
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetXY(36, 56);
     glcdWriteString(wday);

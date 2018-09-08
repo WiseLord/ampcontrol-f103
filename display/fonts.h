@@ -3,6 +3,27 @@
 
 #include <inttypes.h>
 
+typedef struct {
+    const uint8_t *data;
+    uint16_t width;
+    uint16_t height;
+    uint8_t dataSize;
+} tImage;
+
+typedef struct {
+    long int code;
+    const tImage *image;
+} tChar;
+
+typedef struct {
+    int length;
+    const tChar *chars;
+} tFont;
+
+extern const tFont fontamp08;
+extern const tFont fontamp24;
+extern const tFont fontampdig32;
+
 typedef enum {
     FONT_HEIGHT = 0,
     FONT_LTSPPOS,
@@ -18,7 +39,7 @@ typedef struct {
 
     uint16_t color;
 
-    uint8_t height;
+    const tFont *tfont;
 
     uint8_t fixed;
     uint8_t mult;
