@@ -7,10 +7,10 @@
 * family: Liberation Sans
 * size: 5
 * style: Bold
-* included characters:  !"#$%&'()*+,-./0123456789:;<=>?\x0040ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x007f\x00a0«°±·»ЁЄІЇЎАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёєіїўҐґ
+* included characters:  !"#$%&'()*+,-./0123456789:;<=>?\x0040ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x00a0«°±·»ЁЄІЇЎАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёєіїўҐґ █
 * antialiasing: no
 * type: proportional
-* encoding: cp1251
+* encoding: UTF-8
 * unicode bom: no
 *
 * preset name: template-ampcontrol-m32
@@ -27,25 +27,28 @@
 *******************************************************************************/
 
 /*
- typedef struct {
-     const uint8_t *data;
-     uint16_t width;
-     uint16_t height;
-     uint8_t dataSize;
-     } tImage;
- typedef struct {
-     long int code;
-     const tImage *image;
-     } tChar;
- typedef struct {
-     int length;
-     const tChar *chars;
-     } tFont;
+typedef struct {
+    const uint8_t *data;
+    uint16_t width;
+    uint16_t height;
+} tImage;
+
+typedef struct {
+    int32_t code;
+    const tImage *image;
+} tChar;
+
+typedef struct {
+    uint16_t length;
+    const tChar *chars;
+} tFont;
 */
 
 #include <stdint.h>
 
 #include "fonts.h"
+
+
 
 #if (0x0 == 0x0)
 static const uint8_t image_data_fontamp08_0x20[5] = {
@@ -59,8 +62,7 @@ static const uint8_t image_data_fontamp08_0x20[5] = {
     // ∙∙∙∙∙
     0x00, 0x00, 0x00, 0x00, 0x00
 };
-static const tImage fontamp08_0x20 = { image_data_fontamp08_0x20,
-    5, 8, 8};
+static const tImage fontamp08_0x20 = { image_data_fontamp08_0x20, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -75,8 +77,7 @@ static const uint8_t image_data_fontamp08_0x21[1] = {
     // ∙
     0x5f
 };
-static const tImage fontamp08_0x21 = { image_data_fontamp08_0x21,
-    1, 8, 8};
+static const tImage fontamp08_0x21 = { image_data_fontamp08_0x21, 1, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -91,8 +92,7 @@ static const uint8_t image_data_fontamp08_0x22[3] = {
     // ∙∙∙
     0x07, 0x00, 0x07
 };
-static const tImage fontamp08_0x22 = { image_data_fontamp08_0x22,
-    3, 8, 8};
+static const tImage fontamp08_0x22 = { image_data_fontamp08_0x22, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -107,8 +107,7 @@ static const uint8_t image_data_fontamp08_0x23[5] = {
     // ∙∙∙∙∙
     0x14, 0x7f, 0x14, 0x7f, 0x14
 };
-static const tImage fontamp08_0x23 = { image_data_fontamp08_0x23,
-    5, 8, 8};
+static const tImage fontamp08_0x23 = { image_data_fontamp08_0x23, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -123,8 +122,7 @@ static const uint8_t image_data_fontamp08_0x24[5] = {
     // ∙∙∙∙∙
     0x24, 0x2a, 0x7f, 0x2a, 0x12
 };
-static const tImage fontamp08_0x24 = { image_data_fontamp08_0x24,
-    5, 8, 8};
+static const tImage fontamp08_0x24 = { image_data_fontamp08_0x24, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -139,8 +137,7 @@ static const uint8_t image_data_fontamp08_0x25[5] = {
     // ∙∙∙∙∙
     0x23, 0x13, 0x08, 0x64, 0x62
 };
-static const tImage fontamp08_0x25 = { image_data_fontamp08_0x25,
-    5, 8, 8};
+static const tImage fontamp08_0x25 = { image_data_fontamp08_0x25, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -155,8 +152,7 @@ static const uint8_t image_data_fontamp08_0x26[5] = {
     // ∙∙∙∙∙
     0x36, 0x49, 0x55, 0x22, 0x50
 };
-static const tImage fontamp08_0x26 = { image_data_fontamp08_0x26,
-    5, 8, 8};
+static const tImage fontamp08_0x26 = { image_data_fontamp08_0x26, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -171,8 +167,7 @@ static const uint8_t image_data_fontamp08_0x27[2] = {
     // ∙∙
     0x05, 0x03
 };
-static const tImage fontamp08_0x27 = { image_data_fontamp08_0x27,
-    2, 8, 8};
+static const tImage fontamp08_0x27 = { image_data_fontamp08_0x27, 2, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -187,8 +182,7 @@ static const uint8_t image_data_fontamp08_0x28[3] = {
     // ∙∙∙
     0x1c, 0x22, 0x41
 };
-static const tImage fontamp08_0x28 = { image_data_fontamp08_0x28,
-    3, 8, 8};
+static const tImage fontamp08_0x28 = { image_data_fontamp08_0x28, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -203,8 +197,7 @@ static const uint8_t image_data_fontamp08_0x29[3] = {
     // ∙∙∙
     0x41, 0x22, 0x1c
 };
-static const tImage fontamp08_0x29 = { image_data_fontamp08_0x29,
-    3, 8, 8};
+static const tImage fontamp08_0x29 = { image_data_fontamp08_0x29, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -219,8 +212,7 @@ static const uint8_t image_data_fontamp08_0x2a[5] = {
     // ∙∙∙∙∙
     0x14, 0x08, 0x3e, 0x08, 0x14
 };
-static const tImage fontamp08_0x2a = { image_data_fontamp08_0x2a,
-    5, 8, 8};
+static const tImage fontamp08_0x2a = { image_data_fontamp08_0x2a, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -235,8 +227,7 @@ static const uint8_t image_data_fontamp08_0x2b[5] = {
     // ∙∙∙∙∙
     0x08, 0x08, 0x3e, 0x08, 0x08
 };
-static const tImage fontamp08_0x2b = { image_data_fontamp08_0x2b,
-    5, 8, 8};
+static const tImage fontamp08_0x2b = { image_data_fontamp08_0x2b, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -251,8 +242,7 @@ static const uint8_t image_data_fontamp08_0x2c[2] = {
     // █∙
     0x80, 0x40
 };
-static const tImage fontamp08_0x2c = { image_data_fontamp08_0x2c,
-    2, 8, 8};
+static const tImage fontamp08_0x2c = { image_data_fontamp08_0x2c, 2, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -267,8 +257,7 @@ static const uint8_t image_data_fontamp08_0x2d[5] = {
     // ∙∙∙∙∙
     0x08, 0x08, 0x08, 0x08, 0x08
 };
-static const tImage fontamp08_0x2d = { image_data_fontamp08_0x2d,
-    5, 8, 8};
+static const tImage fontamp08_0x2d = { image_data_fontamp08_0x2d, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -283,8 +272,7 @@ static const uint8_t image_data_fontamp08_0x2e[1] = {
     // ∙
     0x40
 };
-static const tImage fontamp08_0x2e = { image_data_fontamp08_0x2e,
-    1, 8, 8};
+static const tImage fontamp08_0x2e = { image_data_fontamp08_0x2e, 1, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -299,8 +287,7 @@ static const uint8_t image_data_fontamp08_0x2f[5] = {
     // ∙∙∙∙∙
     0x20, 0x10, 0x08, 0x04, 0x02
 };
-static const tImage fontamp08_0x2f = { image_data_fontamp08_0x2f,
-    5, 8, 8};
+static const tImage fontamp08_0x2f = { image_data_fontamp08_0x2f, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -315,8 +302,7 @@ static const uint8_t image_data_fontamp08_0x30[5] = {
     // ∙∙∙∙∙
     0x3e, 0x51, 0x49, 0x45, 0x3e
 };
-static const tImage fontamp08_0x30 = { image_data_fontamp08_0x30,
-    5, 8, 8};
+static const tImage fontamp08_0x30 = { image_data_fontamp08_0x30, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -331,8 +317,7 @@ static const uint8_t image_data_fontamp08_0x31[5] = {
     // ∙∙∙∙∙
     0x00, 0x42, 0x7f, 0x40, 0x00
 };
-static const tImage fontamp08_0x31 = { image_data_fontamp08_0x31,
-    5, 8, 8};
+static const tImage fontamp08_0x31 = { image_data_fontamp08_0x31, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -347,8 +332,7 @@ static const uint8_t image_data_fontamp08_0x32[5] = {
     // ∙∙∙∙∙
     0x42, 0x61, 0x51, 0x49, 0x46
 };
-static const tImage fontamp08_0x32 = { image_data_fontamp08_0x32,
-    5, 8, 8};
+static const tImage fontamp08_0x32 = { image_data_fontamp08_0x32, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -363,8 +347,7 @@ static const uint8_t image_data_fontamp08_0x33[5] = {
     // ∙∙∙∙∙
     0x21, 0x41, 0x45, 0x4b, 0x31
 };
-static const tImage fontamp08_0x33 = { image_data_fontamp08_0x33,
-    5, 8, 8};
+static const tImage fontamp08_0x33 = { image_data_fontamp08_0x33, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -379,8 +362,7 @@ static const uint8_t image_data_fontamp08_0x34[5] = {
     // ∙∙∙∙∙
     0x18, 0x14, 0x12, 0x7f, 0x10
 };
-static const tImage fontamp08_0x34 = { image_data_fontamp08_0x34,
-    5, 8, 8};
+static const tImage fontamp08_0x34 = { image_data_fontamp08_0x34, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -395,8 +377,7 @@ static const uint8_t image_data_fontamp08_0x35[5] = {
     // ∙∙∙∙∙
     0x27, 0x45, 0x45, 0x45, 0x39
 };
-static const tImage fontamp08_0x35 = { image_data_fontamp08_0x35,
-    5, 8, 8};
+static const tImage fontamp08_0x35 = { image_data_fontamp08_0x35, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -411,8 +392,7 @@ static const uint8_t image_data_fontamp08_0x36[5] = {
     // ∙∙∙∙∙
     0x3c, 0x4a, 0x49, 0x49, 0x30
 };
-static const tImage fontamp08_0x36 = { image_data_fontamp08_0x36,
-    5, 8, 8};
+static const tImage fontamp08_0x36 = { image_data_fontamp08_0x36, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -427,8 +407,7 @@ static const uint8_t image_data_fontamp08_0x37[5] = {
     // ∙∙∙∙∙
     0x01, 0x71, 0x09, 0x05, 0x03
 };
-static const tImage fontamp08_0x37 = { image_data_fontamp08_0x37,
-    5, 8, 8};
+static const tImage fontamp08_0x37 = { image_data_fontamp08_0x37, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -443,8 +422,7 @@ static const uint8_t image_data_fontamp08_0x38[5] = {
     // ∙∙∙∙∙
     0x36, 0x49, 0x49, 0x49, 0x36
 };
-static const tImage fontamp08_0x38 = { image_data_fontamp08_0x38,
-    5, 8, 8};
+static const tImage fontamp08_0x38 = { image_data_fontamp08_0x38, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -459,8 +437,7 @@ static const uint8_t image_data_fontamp08_0x39[5] = {
     // ∙∙∙∙∙
     0x06, 0x49, 0x49, 0x29, 0x1e
 };
-static const tImage fontamp08_0x39 = { image_data_fontamp08_0x39,
-    5, 8, 8};
+static const tImage fontamp08_0x39 = { image_data_fontamp08_0x39, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -475,8 +452,7 @@ static const uint8_t image_data_fontamp08_0x3a[1] = {
     // ∙
     0x24
 };
-static const tImage fontamp08_0x3a = { image_data_fontamp08_0x3a,
-    1, 8, 8};
+static const tImage fontamp08_0x3a = { image_data_fontamp08_0x3a, 1, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -491,8 +467,7 @@ static const uint8_t image_data_fontamp08_0x3b[2] = {
     // ∙∙
     0x40, 0x24
 };
-static const tImage fontamp08_0x3b = { image_data_fontamp08_0x3b,
-    2, 8, 8};
+static const tImage fontamp08_0x3b = { image_data_fontamp08_0x3b, 2, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -507,8 +482,7 @@ static const uint8_t image_data_fontamp08_0x3c[4] = {
     // ∙∙∙∙
     0x08, 0x14, 0x22, 0x41
 };
-static const tImage fontamp08_0x3c = { image_data_fontamp08_0x3c,
-    4, 8, 8};
+static const tImage fontamp08_0x3c = { image_data_fontamp08_0x3c, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -523,8 +497,7 @@ static const uint8_t image_data_fontamp08_0x3d[5] = {
     // ∙∙∙∙∙
     0x14, 0x14, 0x14, 0x14, 0x14
 };
-static const tImage fontamp08_0x3d = { image_data_fontamp08_0x3d,
-    5, 8, 8};
+static const tImage fontamp08_0x3d = { image_data_fontamp08_0x3d, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -539,8 +512,7 @@ static const uint8_t image_data_fontamp08_0x3e[4] = {
     // ∙∙∙∙
     0x41, 0x22, 0x14, 0x08
 };
-static const tImage fontamp08_0x3e = { image_data_fontamp08_0x3e,
-    4, 8, 8};
+static const tImage fontamp08_0x3e = { image_data_fontamp08_0x3e, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -555,8 +527,7 @@ static const uint8_t image_data_fontamp08_0x3f[5] = {
     // ∙∙∙∙∙
     0x02, 0x01, 0x51, 0x09, 0x06
 };
-static const tImage fontamp08_0x3f = { image_data_fontamp08_0x3f,
-    5, 8, 8};
+static const tImage fontamp08_0x3f = { image_data_fontamp08_0x3f, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -571,8 +542,7 @@ static const uint8_t image_data_fontamp08_0x40[5] = {
     // ∙∙∙∙∙
     0x3e, 0x41, 0x5d, 0x55, 0x1e
 };
-static const tImage fontamp08_0x40 = { image_data_fontamp08_0x40,
-    5, 8, 8};
+static const tImage fontamp08_0x40 = { image_data_fontamp08_0x40, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -587,8 +557,7 @@ static const uint8_t image_data_fontamp08_0x41[5] = {
     // ∙∙∙∙∙
     0x7e, 0x11, 0x11, 0x11, 0x7e
 };
-static const tImage fontamp08_0x41 = { image_data_fontamp08_0x41,
-    5, 8, 8};
+static const tImage fontamp08_0x41 = { image_data_fontamp08_0x41, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -603,8 +572,7 @@ static const uint8_t image_data_fontamp08_0x42[5] = {
     // ∙∙∙∙∙
     0x7f, 0x49, 0x49, 0x49, 0x36
 };
-static const tImage fontamp08_0x42 = { image_data_fontamp08_0x42,
-    5, 8, 8};
+static const tImage fontamp08_0x42 = { image_data_fontamp08_0x42, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -619,8 +587,7 @@ static const uint8_t image_data_fontamp08_0x43[5] = {
     // ∙∙∙∙∙
     0x3e, 0x41, 0x41, 0x41, 0x22
 };
-static const tImage fontamp08_0x43 = { image_data_fontamp08_0x43,
-    5, 8, 8};
+static const tImage fontamp08_0x43 = { image_data_fontamp08_0x43, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -635,8 +602,7 @@ static const uint8_t image_data_fontamp08_0x44[5] = {
     // ∙∙∙∙∙
     0x7f, 0x41, 0x41, 0x22, 0x1c
 };
-static const tImage fontamp08_0x44 = { image_data_fontamp08_0x44,
-    5, 8, 8};
+static const tImage fontamp08_0x44 = { image_data_fontamp08_0x44, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -651,8 +617,7 @@ static const uint8_t image_data_fontamp08_0x45[5] = {
     // ∙∙∙∙∙
     0x7f, 0x49, 0x49, 0x49, 0x41
 };
-static const tImage fontamp08_0x45 = { image_data_fontamp08_0x45,
-    5, 8, 8};
+static const tImage fontamp08_0x45 = { image_data_fontamp08_0x45, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -667,8 +632,7 @@ static const uint8_t image_data_fontamp08_0x46[5] = {
     // ∙∙∙∙∙
     0x7f, 0x09, 0x09, 0x09, 0x01
 };
-static const tImage fontamp08_0x46 = { image_data_fontamp08_0x46,
-    5, 8, 8};
+static const tImage fontamp08_0x46 = { image_data_fontamp08_0x46, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -683,8 +647,7 @@ static const uint8_t image_data_fontamp08_0x47[5] = {
     // ∙∙∙∙∙
     0x3e, 0x41, 0x49, 0x49, 0x7a
 };
-static const tImage fontamp08_0x47 = { image_data_fontamp08_0x47,
-    5, 8, 8};
+static const tImage fontamp08_0x47 = { image_data_fontamp08_0x47, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -699,8 +662,7 @@ static const uint8_t image_data_fontamp08_0x48[5] = {
     // ∙∙∙∙∙
     0x7f, 0x08, 0x08, 0x08, 0x7f
 };
-static const tImage fontamp08_0x48 = { image_data_fontamp08_0x48,
-    5, 8, 8};
+static const tImage fontamp08_0x48 = { image_data_fontamp08_0x48, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -715,8 +677,7 @@ static const uint8_t image_data_fontamp08_0x49[3] = {
     // ∙∙∙
     0x41, 0x7f, 0x41
 };
-static const tImage fontamp08_0x49 = { image_data_fontamp08_0x49,
-    3, 8, 8};
+static const tImage fontamp08_0x49 = { image_data_fontamp08_0x49, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -731,8 +692,7 @@ static const uint8_t image_data_fontamp08_0x4a[5] = {
     // ∙∙∙∙∙
     0x20, 0x40, 0x41, 0x3f, 0x01
 };
-static const tImage fontamp08_0x4a = { image_data_fontamp08_0x4a,
-    5, 8, 8};
+static const tImage fontamp08_0x4a = { image_data_fontamp08_0x4a, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -747,8 +707,7 @@ static const uint8_t image_data_fontamp08_0x4b[5] = {
     // ∙∙∙∙∙
     0x7f, 0x08, 0x14, 0x22, 0x41
 };
-static const tImage fontamp08_0x4b = { image_data_fontamp08_0x4b,
-    5, 8, 8};
+static const tImage fontamp08_0x4b = { image_data_fontamp08_0x4b, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -763,8 +722,7 @@ static const uint8_t image_data_fontamp08_0x4c[4] = {
     // ∙∙∙∙
     0x7f, 0x40, 0x40, 0x40
 };
-static const tImage fontamp08_0x4c = { image_data_fontamp08_0x4c,
-    4, 8, 8};
+static const tImage fontamp08_0x4c = { image_data_fontamp08_0x4c, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -779,8 +737,7 @@ static const uint8_t image_data_fontamp08_0x4d[5] = {
     // ∙∙∙∙∙
     0x7f, 0x02, 0x0c, 0x02, 0x7f
 };
-static const tImage fontamp08_0x4d = { image_data_fontamp08_0x4d,
-    5, 8, 8};
+static const tImage fontamp08_0x4d = { image_data_fontamp08_0x4d, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -795,8 +752,7 @@ static const uint8_t image_data_fontamp08_0x4e[5] = {
     // ∙∙∙∙∙
     0x7f, 0x04, 0x08, 0x10, 0x7f
 };
-static const tImage fontamp08_0x4e = { image_data_fontamp08_0x4e,
-    5, 8, 8};
+static const tImage fontamp08_0x4e = { image_data_fontamp08_0x4e, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -811,8 +767,7 @@ static const uint8_t image_data_fontamp08_0x4f[5] = {
     // ∙∙∙∙∙
     0x3e, 0x41, 0x41, 0x41, 0x3e
 };
-static const tImage fontamp08_0x4f = { image_data_fontamp08_0x4f,
-    5, 8, 8};
+static const tImage fontamp08_0x4f = { image_data_fontamp08_0x4f, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -827,8 +782,7 @@ static const uint8_t image_data_fontamp08_0x50[5] = {
     // ∙∙∙∙∙
     0x7f, 0x09, 0x09, 0x09, 0x06
 };
-static const tImage fontamp08_0x50 = { image_data_fontamp08_0x50,
-    5, 8, 8};
+static const tImage fontamp08_0x50 = { image_data_fontamp08_0x50, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -843,8 +797,7 @@ static const uint8_t image_data_fontamp08_0x51[5] = {
     // ∙∙∙∙∙
     0x3e, 0x41, 0x51, 0x21, 0x5e
 };
-static const tImage fontamp08_0x51 = { image_data_fontamp08_0x51,
-    5, 8, 8};
+static const tImage fontamp08_0x51 = { image_data_fontamp08_0x51, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -859,8 +812,7 @@ static const uint8_t image_data_fontamp08_0x52[5] = {
     // ∙∙∙∙∙
     0x7f, 0x09, 0x19, 0x29, 0x46
 };
-static const tImage fontamp08_0x52 = { image_data_fontamp08_0x52,
-    5, 8, 8};
+static const tImage fontamp08_0x52 = { image_data_fontamp08_0x52, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -875,8 +827,7 @@ static const uint8_t image_data_fontamp08_0x53[5] = {
     // ∙∙∙∙∙
     0x26, 0x49, 0x49, 0x49, 0x32
 };
-static const tImage fontamp08_0x53 = { image_data_fontamp08_0x53,
-    5, 8, 8};
+static const tImage fontamp08_0x53 = { image_data_fontamp08_0x53, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -891,8 +842,7 @@ static const uint8_t image_data_fontamp08_0x54[5] = {
     // ∙∙∙∙∙
     0x01, 0x01, 0x7f, 0x01, 0x01
 };
-static const tImage fontamp08_0x54 = { image_data_fontamp08_0x54,
-    5, 8, 8};
+static const tImage fontamp08_0x54 = { image_data_fontamp08_0x54, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -907,8 +857,7 @@ static const uint8_t image_data_fontamp08_0x55[5] = {
     // ∙∙∙∙∙
     0x3f, 0x40, 0x40, 0x40, 0x3f
 };
-static const tImage fontamp08_0x55 = { image_data_fontamp08_0x55,
-    5, 8, 8};
+static const tImage fontamp08_0x55 = { image_data_fontamp08_0x55, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -923,8 +872,7 @@ static const uint8_t image_data_fontamp08_0x56[5] = {
     // ∙∙∙∙∙
     0x07, 0x18, 0x60, 0x18, 0x07
 };
-static const tImage fontamp08_0x56 = { image_data_fontamp08_0x56,
-    5, 8, 8};
+static const tImage fontamp08_0x56 = { image_data_fontamp08_0x56, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -939,8 +887,7 @@ static const uint8_t image_data_fontamp08_0x57[5] = {
     // ∙∙∙∙∙
     0x3f, 0x40, 0x38, 0x40, 0x3f
 };
-static const tImage fontamp08_0x57 = { image_data_fontamp08_0x57,
-    5, 8, 8};
+static const tImage fontamp08_0x57 = { image_data_fontamp08_0x57, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -955,8 +902,7 @@ static const uint8_t image_data_fontamp08_0x58[5] = {
     // ∙∙∙∙∙
     0x63, 0x14, 0x08, 0x14, 0x63
 };
-static const tImage fontamp08_0x58 = { image_data_fontamp08_0x58,
-    5, 8, 8};
+static const tImage fontamp08_0x58 = { image_data_fontamp08_0x58, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -971,8 +917,7 @@ static const uint8_t image_data_fontamp08_0x59[5] = {
     // ∙∙∙∙∙
     0x07, 0x08, 0x70, 0x08, 0x07
 };
-static const tImage fontamp08_0x59 = { image_data_fontamp08_0x59,
-    5, 8, 8};
+static const tImage fontamp08_0x59 = { image_data_fontamp08_0x59, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -987,8 +932,7 @@ static const uint8_t image_data_fontamp08_0x5a[5] = {
     // ∙∙∙∙∙
     0x61, 0x51, 0x49, 0x45, 0x43
 };
-static const tImage fontamp08_0x5a = { image_data_fontamp08_0x5a,
-    5, 8, 8};
+static const tImage fontamp08_0x5a = { image_data_fontamp08_0x5a, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1003,8 +947,7 @@ static const uint8_t image_data_fontamp08_0x5b[3] = {
     // ∙∙∙
     0x7f, 0x41, 0x41
 };
-static const tImage fontamp08_0x5b = { image_data_fontamp08_0x5b,
-    3, 8, 8};
+static const tImage fontamp08_0x5b = { image_data_fontamp08_0x5b, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1019,8 +962,7 @@ static const uint8_t image_data_fontamp08_0x5c[5] = {
     // ∙∙∙∙∙
     0x02, 0x04, 0x08, 0x10, 0x20
 };
-static const tImage fontamp08_0x5c = { image_data_fontamp08_0x5c,
-    5, 8, 8};
+static const tImage fontamp08_0x5c = { image_data_fontamp08_0x5c, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1035,8 +977,7 @@ static const uint8_t image_data_fontamp08_0x5d[3] = {
     // ∙∙∙
     0x41, 0x41, 0x7f
 };
-static const tImage fontamp08_0x5d = { image_data_fontamp08_0x5d,
-    3, 8, 8};
+static const tImage fontamp08_0x5d = { image_data_fontamp08_0x5d, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1051,8 +992,7 @@ static const uint8_t image_data_fontamp08_0x5e[5] = {
     // ∙∙∙∙∙
     0x04, 0x02, 0x01, 0x02, 0x04
 };
-static const tImage fontamp08_0x5e = { image_data_fontamp08_0x5e,
-    5, 8, 8};
+static const tImage fontamp08_0x5e = { image_data_fontamp08_0x5e, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1067,8 +1007,7 @@ static const uint8_t image_data_fontamp08_0x5f[5] = {
     // ∙∙∙∙∙
     0x40, 0x40, 0x40, 0x40, 0x40
 };
-static const tImage fontamp08_0x5f = { image_data_fontamp08_0x5f,
-    5, 8, 8};
+static const tImage fontamp08_0x5f = { image_data_fontamp08_0x5f, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1083,8 +1022,7 @@ static const uint8_t image_data_fontamp08_0x60[2] = {
     // ∙∙
     0x01, 0x02
 };
-static const tImage fontamp08_0x60 = { image_data_fontamp08_0x60,
-    2, 8, 8};
+static const tImage fontamp08_0x60 = { image_data_fontamp08_0x60, 2, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1099,8 +1037,7 @@ static const uint8_t image_data_fontamp08_0x61[5] = {
     // ∙∙∙∙∙
     0x20, 0x54, 0x54, 0x54, 0x78
 };
-static const tImage fontamp08_0x61 = { image_data_fontamp08_0x61,
-    5, 8, 8};
+static const tImage fontamp08_0x61 = { image_data_fontamp08_0x61, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1115,8 +1052,7 @@ static const uint8_t image_data_fontamp08_0x62[5] = {
     // ∙∙∙∙∙
     0x7f, 0x48, 0x44, 0x44, 0x38
 };
-static const tImage fontamp08_0x62 = { image_data_fontamp08_0x62,
-    5, 8, 8};
+static const tImage fontamp08_0x62 = { image_data_fontamp08_0x62, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1131,8 +1067,7 @@ static const uint8_t image_data_fontamp08_0x63[5] = {
     // ∙∙∙∙∙
     0x38, 0x44, 0x44, 0x44, 0x20
 };
-static const tImage fontamp08_0x63 = { image_data_fontamp08_0x63,
-    5, 8, 8};
+static const tImage fontamp08_0x63 = { image_data_fontamp08_0x63, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1147,8 +1082,7 @@ static const uint8_t image_data_fontamp08_0x64[5] = {
     // ∙∙∙∙∙
     0x38, 0x44, 0x44, 0x48, 0x7f
 };
-static const tImage fontamp08_0x64 = { image_data_fontamp08_0x64,
-    5, 8, 8};
+static const tImage fontamp08_0x64 = { image_data_fontamp08_0x64, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1163,8 +1097,7 @@ static const uint8_t image_data_fontamp08_0x65[5] = {
     // ∙∙∙∙∙
     0x38, 0x54, 0x54, 0x54, 0x18
 };
-static const tImage fontamp08_0x65 = { image_data_fontamp08_0x65,
-    5, 8, 8};
+static const tImage fontamp08_0x65 = { image_data_fontamp08_0x65, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1179,8 +1112,7 @@ static const uint8_t image_data_fontamp08_0x66[5] = {
     // ∙∙∙∙∙
     0x08, 0x7e, 0x09, 0x01, 0x02
 };
-static const tImage fontamp08_0x66 = { image_data_fontamp08_0x66,
-    5, 8, 8};
+static const tImage fontamp08_0x66 = { image_data_fontamp08_0x66, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1195,8 +1127,7 @@ static const uint8_t image_data_fontamp08_0x67[5] = {
     // ∙███∙
     0x18, 0xa4, 0xa4, 0xa4, 0x7c
 };
-static const tImage fontamp08_0x67 = { image_data_fontamp08_0x67,
-    5, 8, 8};
+static const tImage fontamp08_0x67 = { image_data_fontamp08_0x67, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1211,8 +1142,7 @@ static const uint8_t image_data_fontamp08_0x68[5] = {
     // ∙∙∙∙∙
     0x7f, 0x08, 0x04, 0x04, 0x78
 };
-static const tImage fontamp08_0x68 = { image_data_fontamp08_0x68,
-    5, 8, 8};
+static const tImage fontamp08_0x68 = { image_data_fontamp08_0x68, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1227,8 +1157,7 @@ static const uint8_t image_data_fontamp08_0x69[3] = {
     // ∙∙∙
     0x44, 0x7d, 0x40
 };
-static const tImage fontamp08_0x69 = { image_data_fontamp08_0x69,
-    3, 8, 8};
+static const tImage fontamp08_0x69 = { image_data_fontamp08_0x69, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1243,8 +1172,7 @@ static const uint8_t image_data_fontamp08_0x6a[4] = {
     // ∙██∙
     0x40, 0x80, 0x84, 0x7d
 };
-static const tImage fontamp08_0x6a = { image_data_fontamp08_0x6a,
-    4, 8, 8};
+static const tImage fontamp08_0x6a = { image_data_fontamp08_0x6a, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1259,8 +1187,7 @@ static const uint8_t image_data_fontamp08_0x6b[4] = {
     // ∙∙∙∙
     0x7f, 0x10, 0x28, 0x44
 };
-static const tImage fontamp08_0x6b = { image_data_fontamp08_0x6b,
-    4, 8, 8};
+static const tImage fontamp08_0x6b = { image_data_fontamp08_0x6b, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1275,8 +1202,7 @@ static const uint8_t image_data_fontamp08_0x6c[3] = {
     // ∙∙∙
     0x41, 0x7f, 0x40
 };
-static const tImage fontamp08_0x6c = { image_data_fontamp08_0x6c,
-    3, 8, 8};
+static const tImage fontamp08_0x6c = { image_data_fontamp08_0x6c, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1291,8 +1217,7 @@ static const uint8_t image_data_fontamp08_0x6d[5] = {
     // ∙∙∙∙∙
     0x7c, 0x04, 0x18, 0x04, 0x78
 };
-static const tImage fontamp08_0x6d = { image_data_fontamp08_0x6d,
-    5, 8, 8};
+static const tImage fontamp08_0x6d = { image_data_fontamp08_0x6d, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1307,8 +1232,7 @@ static const uint8_t image_data_fontamp08_0x6e[4] = {
     // ∙∙∙∙
     0x7c, 0x08, 0x04, 0x78
 };
-static const tImage fontamp08_0x6e = { image_data_fontamp08_0x6e,
-    4, 8, 8};
+static const tImage fontamp08_0x6e = { image_data_fontamp08_0x6e, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1323,8 +1247,7 @@ static const uint8_t image_data_fontamp08_0x6f[5] = {
     // ∙∙∙∙∙
     0x38, 0x44, 0x44, 0x44, 0x38
 };
-static const tImage fontamp08_0x6f = { image_data_fontamp08_0x6f,
-    5, 8, 8};
+static const tImage fontamp08_0x6f = { image_data_fontamp08_0x6f, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1339,8 +1262,7 @@ static const uint8_t image_data_fontamp08_0x70[5] = {
     // █∙∙∙∙
     0xfc, 0x24, 0x44, 0x44, 0x38
 };
-static const tImage fontamp08_0x70 = { image_data_fontamp08_0x70,
-    5, 8, 8};
+static const tImage fontamp08_0x70 = { image_data_fontamp08_0x70, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1355,8 +1277,7 @@ static const uint8_t image_data_fontamp08_0x71[5] = {
     // ∙∙∙∙█
     0x38, 0x44, 0x44, 0x24, 0xfc
 };
-static const tImage fontamp08_0x71 = { image_data_fontamp08_0x71,
-    5, 8, 8};
+static const tImage fontamp08_0x71 = { image_data_fontamp08_0x71, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1371,8 +1292,7 @@ static const uint8_t image_data_fontamp08_0x72[4] = {
     // ∙∙∙∙
     0x7c, 0x08, 0x04, 0x08
 };
-static const tImage fontamp08_0x72 = { image_data_fontamp08_0x72,
-    4, 8, 8};
+static const tImage fontamp08_0x72 = { image_data_fontamp08_0x72, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1387,8 +1307,7 @@ static const uint8_t image_data_fontamp08_0x73[5] = {
     // ∙∙∙∙∙
     0x08, 0x54, 0x54, 0x54, 0x20
 };
-static const tImage fontamp08_0x73 = { image_data_fontamp08_0x73,
-    5, 8, 8};
+static const tImage fontamp08_0x73 = { image_data_fontamp08_0x73, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1403,8 +1322,7 @@ static const uint8_t image_data_fontamp08_0x74[5] = {
     // ∙∙∙∙∙
     0x04, 0x3f, 0x44, 0x40, 0x20
 };
-static const tImage fontamp08_0x74 = { image_data_fontamp08_0x74,
-    5, 8, 8};
+static const tImage fontamp08_0x74 = { image_data_fontamp08_0x74, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1419,8 +1337,7 @@ static const uint8_t image_data_fontamp08_0x75[5] = {
     // ∙∙∙∙∙
     0x3c, 0x40, 0x40, 0x20, 0x7c
 };
-static const tImage fontamp08_0x75 = { image_data_fontamp08_0x75,
-    5, 8, 8};
+static const tImage fontamp08_0x75 = { image_data_fontamp08_0x75, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1435,8 +1352,7 @@ static const uint8_t image_data_fontamp08_0x76[5] = {
     // ∙∙∙∙∙
     0x0c, 0x30, 0x40, 0x30, 0x0c
 };
-static const tImage fontamp08_0x76 = { image_data_fontamp08_0x76,
-    5, 8, 8};
+static const tImage fontamp08_0x76 = { image_data_fontamp08_0x76, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1451,8 +1367,7 @@ static const uint8_t image_data_fontamp08_0x77[5] = {
     // ∙∙∙∙∙
     0x3c, 0x40, 0x30, 0x40, 0x3c
 };
-static const tImage fontamp08_0x77 = { image_data_fontamp08_0x77,
-    5, 8, 8};
+static const tImage fontamp08_0x77 = { image_data_fontamp08_0x77, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1467,8 +1382,7 @@ static const uint8_t image_data_fontamp08_0x78[5] = {
     // ∙∙∙∙∙
     0x44, 0x28, 0x10, 0x28, 0x44
 };
-static const tImage fontamp08_0x78 = { image_data_fontamp08_0x78,
-    5, 8, 8};
+static const tImage fontamp08_0x78 = { image_data_fontamp08_0x78, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1483,8 +1397,7 @@ static const uint8_t image_data_fontamp08_0x79[5] = {
     // ∙███∙
     0x1c, 0xa0, 0xa0, 0xa0, 0x7c
 };
-static const tImage fontamp08_0x79 = { image_data_fontamp08_0x79,
-    5, 8, 8};
+static const tImage fontamp08_0x79 = { image_data_fontamp08_0x79, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1499,8 +1412,7 @@ static const uint8_t image_data_fontamp08_0x7a[5] = {
     // ∙∙∙∙∙
     0x44, 0x64, 0x54, 0x4c, 0x44
 };
-static const tImage fontamp08_0x7a = { image_data_fontamp08_0x7a,
-    5, 8, 8};
+static const tImage fontamp08_0x7a = { image_data_fontamp08_0x7a, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1515,8 +1427,7 @@ static const uint8_t image_data_fontamp08_0x7b[3] = {
     // ∙∙∙
     0x08, 0x36, 0x41
 };
-static const tImage fontamp08_0x7b = { image_data_fontamp08_0x7b,
-    3, 8, 8};
+static const tImage fontamp08_0x7b = { image_data_fontamp08_0x7b, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1531,8 +1442,7 @@ static const uint8_t image_data_fontamp08_0x7c[1] = {
     // ∙
     0x7f
 };
-static const tImage fontamp08_0x7c = { image_data_fontamp08_0x7c,
-    1, 8, 8};
+static const tImage fontamp08_0x7c = { image_data_fontamp08_0x7c, 1, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1547,8 +1457,7 @@ static const uint8_t image_data_fontamp08_0x7d[3] = {
     // ∙∙∙
     0x41, 0x36, 0x08
 };
-static const tImage fontamp08_0x7d = { image_data_fontamp08_0x7d,
-    3, 8, 8};
+static const tImage fontamp08_0x7d = { image_data_fontamp08_0x7d, 3, 8};
 #endif
 
 #if (0x0 == 0x0)
@@ -1563,28 +1472,11 @@ static const uint8_t image_data_fontamp08_0x7e[5] = {
     // ∙∙∙∙∙
     0x08, 0x04, 0x08, 0x10, 0x08
 };
-static const tImage fontamp08_0x7e = { image_data_fontamp08_0x7e,
-    5, 8, 8};
+static const tImage fontamp08_0x7e = { image_data_fontamp08_0x7e, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0x7f[5] = {
-    // █████
-    // █████
-    // █████
-    // █████
-    // █████
-    // █████
-    // █████
-    // █████
-    0xff, 0xff, 0xff, 0xff, 0xff
-};
-static const tImage fontamp08_0x7f = { image_data_fontamp08_0x7f,
-    5, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xa0[1] = {
+static const uint8_t image_data_fontamp08_0xc2a0[1] = {
     // ∙
     // ∙
     // ∙
@@ -1595,92 +1487,11 @@ static const uint8_t image_data_fontamp08_0xa0[1] = {
     // ∙
     0x00
 };
-static const tImage fontamp08_0xa0 = { image_data_fontamp08_0xa0,
-    1, 8, 8};
+static const tImage fontamp08_0xc2a0 = { image_data_fontamp08_0xc2a0, 1, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xa1[5] = {
-    // ∙█∙█∙
-    // ∙∙█∙∙
-    // █∙∙∙█
-    // █∙∙∙█
-    // ∙████
-    // ∙∙∙∙█
-    // ∙███∙
-    // ∙∙∙∙∙
-    0x0c, 0x51, 0x52, 0x51, 0x3c
-};
-static const tImage fontamp08_0xa1 = { image_data_fontamp08_0xa1,
-    5, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xa2[5] = {
-    // ∙∙∙∙∙
-    // ∙█∙█∙
-    // ∙∙█∙∙
-    // █∙∙∙█
-    // █∙∙∙█
-    // ∙████
-    // ∙∙∙∙█
-    // ∙███∙
-    0x18, 0xa2, 0xa4, 0xa2, 0x78
-};
-static const tImage fontamp08_0xa2 = { image_data_fontamp08_0xa2,
-    5, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xa5[5] = {
-    // ∙∙∙∙█
-    // █████
-    // █∙∙∙∙
-    // █∙∙∙∙
-    // █∙∙∙∙
-    // █∙∙∙∙
-    // █∙∙∙∙
-    // ∙∙∙∙∙
-    0x7e, 0x02, 0x02, 0x02, 0x03
-};
-static const tImage fontamp08_0xa5 = { image_data_fontamp08_0xa5,
-    5, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xa8[5] = {
-    // ∙█∙█∙
-    // █████
-    // █∙∙∙∙
-    // ████∙
-    // █∙∙∙∙
-    // █∙∙∙∙
-    // █████
-    // ∙∙∙∙∙
-    0x7e, 0x4b, 0x4a, 0x4b, 0x42
-};
-static const tImage fontamp08_0xa8 = { image_data_fontamp08_0xa8,
-    5, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xaa[5] = {
-    // ∙███∙
-    // █∙∙∙█
-    // █∙∙∙∙
-    // ███∙∙
-    // █∙∙∙∙
-    // █∙∙∙█
-    // ∙███∙
-    // ∙∙∙∙∙
-    0x3e, 0x49, 0x49, 0x41, 0x22
-};
-static const tImage fontamp08_0xaa = { image_data_fontamp08_0xaa,
-    5, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xab[5] = {
+static const uint8_t image_data_fontamp08_0xc2ab[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ∙█∙∙█
@@ -1691,28 +1502,11 @@ static const uint8_t image_data_fontamp08_0xab[5] = {
     // ∙∙∙∙∙
     0x08, 0x14, 0x00, 0x08, 0x14
 };
-static const tImage fontamp08_0xab = { image_data_fontamp08_0xab,
-    5, 8, 8};
+static const tImage fontamp08_0xc2ab = { image_data_fontamp08_0xc2ab, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xaf[5] = {
-    // █∙█∙∙
-    // ∙█∙∙∙
-    // ∙█∙∙∙
-    // ∙█∙∙∙
-    // ∙█∙∙∙
-    // ∙█∙∙∙
-    // ∙█∙∙∙
-    // ∙∙∙∙∙
-    0x01, 0x7e, 0x01, 0x00, 0x00
-};
-static const tImage fontamp08_0xaf = { image_data_fontamp08_0xaf,
-    5, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xb0[4] = {
+static const uint8_t image_data_fontamp08_0xc2b0[4] = {
     // ∙██∙
     // █∙∙█
     // █∙∙█
@@ -1723,12 +1517,11 @@ static const uint8_t image_data_fontamp08_0xb0[4] = {
     // ∙∙∙∙
     0x06, 0x09, 0x09, 0x06
 };
-static const tImage fontamp08_0xb0 = { image_data_fontamp08_0xb0,
-    4, 8, 8};
+static const tImage fontamp08_0xc2b0 = { image_data_fontamp08_0xc2b0, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xb1[5] = {
+static const uint8_t image_data_fontamp08_0xc2b1[5] = {
     // ∙∙█∙∙
     // ∙∙█∙∙
     // █████
@@ -1739,60 +1532,11 @@ static const uint8_t image_data_fontamp08_0xb1[5] = {
     // ∙∙∙∙∙
     0x44, 0x44, 0x5f, 0x44, 0x44
 };
-static const tImage fontamp08_0xb1 = { image_data_fontamp08_0xb1,
-    5, 8, 8};
-#endif
-
-#if (0x049 == 0x0)
-static const uint8_t image_data_fontamp08_0xb2[3] = {
-    // ███
-    // ∙█∙
-    // ∙█∙
-    // ∙█∙
-    // ∙█∙
-    // ∙█∙
-    // ███
-    // ∙∙∙
-    0x41, 0x7f, 0x41
-};
-static const tImage fontamp08_0xb2 = { image_data_fontamp08_0xb2,
-    3, 8, 8};
+static const tImage fontamp08_0xc2b1 = { image_data_fontamp08_0xc2b1, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xb3[1] = {
-    // █
-    // ∙
-    // █
-    // █
-    // █
-    // █
-    // █
-    // ∙
-    0x7d
-};
-static const tImage fontamp08_0xb3 = { image_data_fontamp08_0xb3,
-    1, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xb4[4] = {
-    // ∙∙∙∙
-    // ∙∙∙█
-    // ████
-    // █∙∙∙
-    // █∙∙∙
-    // █∙∙∙
-    // █∙∙∙
-    // ∙∙∙∙
-    0x7c, 0x04, 0x04, 0x06
-};
-static const tImage fontamp08_0xb4 = { image_data_fontamp08_0xb4,
-    4, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xb7[1] = {
+static const uint8_t image_data_fontamp08_0xc2b7[1] = {
     // ∙
     // ∙
     // ∙
@@ -1803,44 +1547,11 @@ static const uint8_t image_data_fontamp08_0xb7[1] = {
     // ∙
     0x08
 };
-static const tImage fontamp08_0xb7 = { image_data_fontamp08_0xb7,
-    1, 8, 8};
+static const tImage fontamp08_0xc2b7 = { image_data_fontamp08_0xc2b7, 1, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xb8[5] = {
-    // ∙█∙█∙
-    // ∙∙∙∙∙
-    // ∙███∙
-    // █∙∙∙█
-    // █████
-    // █∙∙∙∙
-    // ∙███∙
-    // ∙∙∙∙∙
-    0x38, 0x55, 0x54, 0x55, 0x18
-};
-static const tImage fontamp08_0xb8 = { image_data_fontamp08_0xb8,
-    5, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xba[5] = {
-    // ∙∙∙∙∙
-    // ∙∙∙∙∙
-    // ∙███∙
-    // █∙∙∙█
-    // ███∙∙
-    // █∙∙∙█
-    // ∙███∙
-    // ∙∙∙∙∙
-    0x38, 0x54, 0x54, 0x44, 0x28
-};
-static const tImage fontamp08_0xba = { image_data_fontamp08_0xba,
-    5, 8, 8};
-#endif
-
-#if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xbb[5] = {
+static const uint8_t image_data_fontamp08_0xc2bb[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙∙█∙
@@ -1851,28 +1562,86 @@ static const uint8_t image_data_fontamp08_0xbb[5] = {
     // ∙∙∙∙∙
     0x14, 0x08, 0x00, 0x14, 0x08
 };
-static const tImage fontamp08_0xbb = { image_data_fontamp08_0xbb,
-    5, 8, 8};
+static const tImage fontamp08_0xc2bb = { image_data_fontamp08_0xc2bb, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xbf[3] = {
-    // ∙∙∙
-    // █∙█
-    // ∙∙∙
-    // ∙█∙
-    // ∙█∙
-    // ∙█∙
-    // ∙█∙
-    // ∙∙∙
-    0x02, 0x78, 0x02
+static const uint8_t image_data_fontamp08_0xd081[5] = {
+    // ∙█∙█∙
+    // █████
+    // █∙∙∙∙
+    // ████∙
+    // █∙∙∙∙
+    // █∙∙∙∙
+    // █████
+    // ∙∙∙∙∙
+    0x7e, 0x4b, 0x4a, 0x4b, 0x42
 };
-static const tImage fontamp08_0xbf = { image_data_fontamp08_0xbf,
-    3, 8, 8};
+static const tImage fontamp08_0xd081 = { image_data_fontamp08_0xd081, 5, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd084[5] = {
+    // ∙███∙
+    // █∙∙∙█
+    // █∙∙∙∙
+    // ███∙∙
+    // █∙∙∙∙
+    // █∙∙∙█
+    // ∙███∙
+    // ∙∙∙∙∙
+    0x3e, 0x49, 0x49, 0x41, 0x22
+};
+static const tImage fontamp08_0xd084 = { image_data_fontamp08_0xd084, 5, 8};
+#endif
+
+#if (0x049 == 0x0)
+static const uint8_t image_data_fontamp08_0xd086[3] = {
+    // ███
+    // ∙█∙
+    // ∙█∙
+    // ∙█∙
+    // ∙█∙
+    // ∙█∙
+    // ███
+    // ∙∙∙
+    0x41, 0x7f, 0x41
+};
+static const tImage fontamp08_0xd086 = { image_data_fontamp08_0xd086, 3, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd087[5] = {
+    // █∙█∙∙
+    // ∙█∙∙∙
+    // ∙█∙∙∙
+    // ∙█∙∙∙
+    // ∙█∙∙∙
+    // ∙█∙∙∙
+    // ∙█∙∙∙
+    // ∙∙∙∙∙
+    0x01, 0x7e, 0x01, 0x00, 0x00
+};
+static const tImage fontamp08_0xd087 = { image_data_fontamp08_0xd087, 5, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd08e[5] = {
+    // ∙█∙█∙
+    // ∙∙█∙∙
+    // █∙∙∙█
+    // █∙∙∙█
+    // ∙████
+    // ∙∙∙∙█
+    // ∙███∙
+    // ∙∙∙∙∙
+    0x0c, 0x51, 0x52, 0x51, 0x3c
+};
+static const tImage fontamp08_0xd08e = { image_data_fontamp08_0xd08e, 5, 8};
 #endif
 
 #if (0x041 == 0x0)
-static const uint8_t image_data_fontamp08_0xc0[5] = {
+static const uint8_t image_data_fontamp08_0xd090[5] = {
     // ∙███∙
     // █∙∙∙█
     // █∙∙∙█
@@ -1883,12 +1652,11 @@ static const uint8_t image_data_fontamp08_0xc0[5] = {
     // ∙∙∙∙∙
     0x7e, 0x11, 0x11, 0x11, 0x7e
 };
-static const tImage fontamp08_0xc0 = { image_data_fontamp08_0xc0,
-    5, 8, 8};
+static const tImage fontamp08_0xd090 = { image_data_fontamp08_0xd090, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xc1[5] = {
+static const uint8_t image_data_fontamp08_0xd091[5] = {
     // █████
     // █∙∙∙∙
     // █∙∙∙∙
@@ -1899,12 +1667,11 @@ static const uint8_t image_data_fontamp08_0xc1[5] = {
     // ∙∙∙∙∙
     0x7f, 0x49, 0x49, 0x49, 0x31
 };
-static const tImage fontamp08_0xc1 = { image_data_fontamp08_0xc1,
-    5, 8, 8};
+static const tImage fontamp08_0xd091 = { image_data_fontamp08_0xd091, 5, 8};
 #endif
 
 #if (0x042 == 0x0)
-static const uint8_t image_data_fontamp08_0xc2[5] = {
+static const uint8_t image_data_fontamp08_0xd092[5] = {
     // ████∙
     // █∙∙∙█
     // █∙∙∙█
@@ -1915,12 +1682,11 @@ static const uint8_t image_data_fontamp08_0xc2[5] = {
     // ∙∙∙∙∙
     0x7f, 0x49, 0x49, 0x49, 0x36
 };
-static const tImage fontamp08_0xc2 = { image_data_fontamp08_0xc2,
-    5, 8, 8};
+static const tImage fontamp08_0xd092 = { image_data_fontamp08_0xd092, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xc3[5] = {
+static const uint8_t image_data_fontamp08_0xd093[5] = {
     // █████
     // █∙∙∙█
     // █∙∙∙∙
@@ -1931,12 +1697,11 @@ static const uint8_t image_data_fontamp08_0xc3[5] = {
     // ∙∙∙∙∙
     0x7f, 0x01, 0x01, 0x01, 0x03
 };
-static const tImage fontamp08_0xc3 = { image_data_fontamp08_0xc3,
-    5, 8, 8};
+static const tImage fontamp08_0xd093 = { image_data_fontamp08_0xd093, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xc4[5] = {
+static const uint8_t image_data_fontamp08_0xd094[5] = {
     // ∙∙██∙
     // ∙█∙█∙
     // ∙█∙█∙
@@ -1947,12 +1712,11 @@ static const uint8_t image_data_fontamp08_0xc4[5] = {
     // █∙∙∙█
     0xc0, 0x7e, 0x41, 0x7f, 0xc0
 };
-static const tImage fontamp08_0xc4 = { image_data_fontamp08_0xc4,
-    5, 8, 8};
+static const tImage fontamp08_0xd094 = { image_data_fontamp08_0xd094, 5, 8};
 #endif
 
 #if (0x045 == 0x0)
-static const uint8_t image_data_fontamp08_0xc5[5] = {
+static const uint8_t image_data_fontamp08_0xd095[5] = {
     // █████
     // █∙∙∙∙
     // █∙∙∙∙
@@ -1963,12 +1727,11 @@ static const uint8_t image_data_fontamp08_0xc5[5] = {
     // ∙∙∙∙∙
     0x7f, 0x49, 0x49, 0x49, 0x41
 };
-static const tImage fontamp08_0xc5 = { image_data_fontamp08_0xc5,
-    5, 8, 8};
+static const tImage fontamp08_0xd095 = { image_data_fontamp08_0xd095, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xc6[5] = {
+static const uint8_t image_data_fontamp08_0xd096[5] = {
     // █∙█∙█
     // █∙█∙█
     // █∙█∙█
@@ -1979,12 +1742,11 @@ static const uint8_t image_data_fontamp08_0xc6[5] = {
     // ∙∙∙∙∙
     0x77, 0x08, 0x7f, 0x08, 0x77
 };
-static const tImage fontamp08_0xc6 = { image_data_fontamp08_0xc6,
-    5, 8, 8};
+static const tImage fontamp08_0xd096 = { image_data_fontamp08_0xd096, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xc7[5] = {
+static const uint8_t image_data_fontamp08_0xd097[5] = {
     // ████∙
     // ∙∙∙∙█
     // ∙∙∙∙█
@@ -1995,12 +1757,11 @@ static const uint8_t image_data_fontamp08_0xc7[5] = {
     // ∙∙∙∙∙
     0x41, 0x49, 0x49, 0x49, 0x36
 };
-static const tImage fontamp08_0xc7 = { image_data_fontamp08_0xc7,
-    5, 8, 8};
+static const tImage fontamp08_0xd097 = { image_data_fontamp08_0xd097, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xc8[5] = {
+static const uint8_t image_data_fontamp08_0xd098[5] = {
     // █∙∙∙█
     // █∙∙∙█
     // █∙∙██
@@ -2011,12 +1772,11 @@ static const uint8_t image_data_fontamp08_0xc8[5] = {
     // ∙∙∙∙∙
     0x7f, 0x10, 0x08, 0x04, 0x7f
 };
-static const tImage fontamp08_0xc8 = { image_data_fontamp08_0xc8,
-    5, 8, 8};
+static const tImage fontamp08_0xd098 = { image_data_fontamp08_0xd098, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xc9[5] = {
+static const uint8_t image_data_fontamp08_0xd099[5] = {
     // ∙█∙█∙
     // ∙∙█∙∙
     // █∙∙∙█
@@ -2027,12 +1787,11 @@ static const uint8_t image_data_fontamp08_0xc9[5] = {
     // ∙∙∙∙∙
     0x7c, 0x21, 0x12, 0x09, 0x7c
 };
-static const tImage fontamp08_0xc9 = { image_data_fontamp08_0xc9,
-    5, 8, 8};
+static const tImage fontamp08_0xd099 = { image_data_fontamp08_0xd099, 5, 8};
 #endif
 
 #if (0x04b == 0x0)
-static const uint8_t image_data_fontamp08_0xca[5] = {
+static const uint8_t image_data_fontamp08_0xd09a[5] = {
     // █∙∙∙█
     // █∙∙█∙
     // █∙█∙∙
@@ -2043,12 +1802,11 @@ static const uint8_t image_data_fontamp08_0xca[5] = {
     // ∙∙∙∙∙
     0x7f, 0x08, 0x14, 0x22, 0x41
 };
-static const tImage fontamp08_0xca = { image_data_fontamp08_0xca,
-    5, 8, 8};
+static const tImage fontamp08_0xd09a = { image_data_fontamp08_0xd09a, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xcb[5] = {
+static const uint8_t image_data_fontamp08_0xd09b[5] = {
     // ∙∙∙██
     // ∙∙█∙█
     // ∙█∙∙█
@@ -2059,12 +1817,11 @@ static const uint8_t image_data_fontamp08_0xcb[5] = {
     // ∙∙∙∙∙
     0x40, 0x3c, 0x02, 0x01, 0x7f
 };
-static const tImage fontamp08_0xcb = { image_data_fontamp08_0xcb,
-    5, 8, 8};
+static const tImage fontamp08_0xd09b = { image_data_fontamp08_0xd09b, 5, 8};
 #endif
 
 #if (0x04d == 0x0)
-static const uint8_t image_data_fontamp08_0xcc[5] = {
+static const uint8_t image_data_fontamp08_0xd09c[5] = {
     // █∙∙∙█
     // ██∙██
     // █∙█∙█
@@ -2075,12 +1832,11 @@ static const uint8_t image_data_fontamp08_0xcc[5] = {
     // ∙∙∙∙∙
     0x7f, 0x02, 0x0c, 0x02, 0x7f
 };
-static const tImage fontamp08_0xcc = { image_data_fontamp08_0xcc,
-    5, 8, 8};
+static const tImage fontamp08_0xd09c = { image_data_fontamp08_0xd09c, 5, 8};
 #endif
 
 #if (0x048 == 0x0)
-static const uint8_t image_data_fontamp08_0xcd[5] = {
+static const uint8_t image_data_fontamp08_0xd09d[5] = {
     // █∙∙∙█
     // █∙∙∙█
     // █∙∙∙█
@@ -2091,12 +1847,11 @@ static const uint8_t image_data_fontamp08_0xcd[5] = {
     // ∙∙∙∙∙
     0x7f, 0x08, 0x08, 0x08, 0x7f
 };
-static const tImage fontamp08_0xcd = { image_data_fontamp08_0xcd,
-    5, 8, 8};
+static const tImage fontamp08_0xd09d = { image_data_fontamp08_0xd09d, 5, 8};
 #endif
 
 #if (0x04f == 0x0)
-static const uint8_t image_data_fontamp08_0xce[5] = {
+static const uint8_t image_data_fontamp08_0xd09e[5] = {
     // ∙███∙
     // █∙∙∙█
     // █∙∙∙█
@@ -2107,12 +1862,11 @@ static const uint8_t image_data_fontamp08_0xce[5] = {
     // ∙∙∙∙∙
     0x3e, 0x41, 0x41, 0x41, 0x3e
 };
-static const tImage fontamp08_0xce = { image_data_fontamp08_0xce,
-    5, 8, 8};
+static const tImage fontamp08_0xd09e = { image_data_fontamp08_0xd09e, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xcf[5] = {
+static const uint8_t image_data_fontamp08_0xd09f[5] = {
     // █████
     // █∙∙∙█
     // █∙∙∙█
@@ -2123,12 +1877,11 @@ static const uint8_t image_data_fontamp08_0xcf[5] = {
     // ∙∙∙∙∙
     0x7f, 0x01, 0x01, 0x01, 0x7f
 };
-static const tImage fontamp08_0xcf = { image_data_fontamp08_0xcf,
-    5, 8, 8};
+static const tImage fontamp08_0xd09f = { image_data_fontamp08_0xd09f, 5, 8};
 #endif
 
 #if (0x050 == 0x0)
-static const uint8_t image_data_fontamp08_0xd0[5] = {
+static const uint8_t image_data_fontamp08_0xd0a0[5] = {
     // ████∙
     // █∙∙∙█
     // █∙∙∙█
@@ -2139,12 +1892,11 @@ static const uint8_t image_data_fontamp08_0xd0[5] = {
     // ∙∙∙∙∙
     0x7f, 0x09, 0x09, 0x09, 0x06
 };
-static const tImage fontamp08_0xd0 = { image_data_fontamp08_0xd0,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a0 = { image_data_fontamp08_0xd0a0, 5, 8};
 #endif
 
 #if (0x043 == 0x0)
-static const uint8_t image_data_fontamp08_0xd1[5] = {
+static const uint8_t image_data_fontamp08_0xd0a1[5] = {
     // ∙███∙
     // █∙∙∙█
     // █∙∙∙∙
@@ -2155,12 +1907,11 @@ static const uint8_t image_data_fontamp08_0xd1[5] = {
     // ∙∙∙∙∙
     0x3e, 0x41, 0x41, 0x41, 0x22
 };
-static const tImage fontamp08_0xd1 = { image_data_fontamp08_0xd1,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a1 = { image_data_fontamp08_0xd0a1, 5, 8};
 #endif
 
 #if (0x054 == 0x0)
-static const uint8_t image_data_fontamp08_0xd2[5] = {
+static const uint8_t image_data_fontamp08_0xd0a2[5] = {
     // █████
     // ∙∙█∙∙
     // ∙∙█∙∙
@@ -2171,12 +1922,11 @@ static const uint8_t image_data_fontamp08_0xd2[5] = {
     // ∙∙∙∙∙
     0x01, 0x01, 0x7f, 0x01, 0x01
 };
-static const tImage fontamp08_0xd2 = { image_data_fontamp08_0xd2,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a2 = { image_data_fontamp08_0xd0a2, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xd3[5] = {
+static const uint8_t image_data_fontamp08_0xd0a3[5] = {
     // █∙∙∙█
     // █∙∙∙█
     // █∙∙∙█
@@ -2187,12 +1937,11 @@ static const uint8_t image_data_fontamp08_0xd3[5] = {
     // ∙∙∙∙∙
     0x07, 0x48, 0x48, 0x48, 0x3f
 };
-static const tImage fontamp08_0xd3 = { image_data_fontamp08_0xd3,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a3 = { image_data_fontamp08_0xd0a3, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xd4[5] = {
+static const uint8_t image_data_fontamp08_0xd0a4[5] = {
     // ∙∙█∙∙
     // ∙███∙
     // █∙█∙█
@@ -2203,12 +1952,11 @@ static const uint8_t image_data_fontamp08_0xd4[5] = {
     // ∙∙█∙∙
     0x3c, 0x42, 0xff, 0x42, 0x3c
 };
-static const tImage fontamp08_0xd4 = { image_data_fontamp08_0xd4,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a4 = { image_data_fontamp08_0xd0a4, 5, 8};
 #endif
 
 #if (0x058 == 0x0)
-static const uint8_t image_data_fontamp08_0xd5[5] = {
+static const uint8_t image_data_fontamp08_0xd0a5[5] = {
     // █∙∙∙█
     // █∙∙∙█
     // ∙█∙█∙
@@ -2219,12 +1967,11 @@ static const uint8_t image_data_fontamp08_0xd5[5] = {
     // ∙∙∙∙∙
     0x63, 0x14, 0x08, 0x14, 0x63
 };
-static const tImage fontamp08_0xd5 = { image_data_fontamp08_0xd5,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a5 = { image_data_fontamp08_0xd0a5, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xd6[5] = {
+static const uint8_t image_data_fontamp08_0xd0a6[5] = {
     // █∙∙█∙
     // █∙∙█∙
     // █∙∙█∙
@@ -2235,12 +1982,11 @@ static const uint8_t image_data_fontamp08_0xd6[5] = {
     // ∙∙∙∙█
     0x7f, 0x40, 0x40, 0x7f, 0xc0
 };
-static const tImage fontamp08_0xd6 = { image_data_fontamp08_0xd6,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a6 = { image_data_fontamp08_0xd0a6, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xd7[5] = {
+static const uint8_t image_data_fontamp08_0xd0a7[5] = {
     // █∙∙∙█
     // █∙∙∙█
     // █∙∙∙█
@@ -2251,12 +1997,11 @@ static const uint8_t image_data_fontamp08_0xd7[5] = {
     // ∙∙∙∙∙
     0x07, 0x08, 0x08, 0x08, 0x7f
 };
-static const tImage fontamp08_0xd7 = { image_data_fontamp08_0xd7,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a7 = { image_data_fontamp08_0xd0a7, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xd8[5] = {
+static const uint8_t image_data_fontamp08_0xd0a8[5] = {
     // █∙█∙█
     // █∙█∙█
     // █∙█∙█
@@ -2267,12 +2012,11 @@ static const uint8_t image_data_fontamp08_0xd8[5] = {
     // ∙∙∙∙∙
     0x7f, 0x40, 0x7f, 0x40, 0x7f
 };
-static const tImage fontamp08_0xd8 = { image_data_fontamp08_0xd8,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a8 = { image_data_fontamp08_0xd0a8, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xd9[5] = {
+static const uint8_t image_data_fontamp08_0xd0a9[5] = {
     // █∙█∙█
     // █∙█∙█
     // █∙█∙█
@@ -2283,12 +2027,11 @@ static const uint8_t image_data_fontamp08_0xd9[5] = {
     // ∙∙∙∙█
     0x7f, 0x40, 0x7f, 0x40, 0xff
 };
-static const tImage fontamp08_0xd9 = { image_data_fontamp08_0xd9,
-    5, 8, 8};
+static const tImage fontamp08_0xd0a9 = { image_data_fontamp08_0xd0a9, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xda[5] = {
+static const uint8_t image_data_fontamp08_0xd0aa[5] = {
     // ██∙∙∙
     // ∙█∙∙∙
     // ∙█∙∙∙
@@ -2299,12 +2042,11 @@ static const uint8_t image_data_fontamp08_0xda[5] = {
     // ∙∙∙∙∙
     0x01, 0x7f, 0x48, 0x48, 0x30
 };
-static const tImage fontamp08_0xda = { image_data_fontamp08_0xda,
-    5, 8, 8};
+static const tImage fontamp08_0xd0aa = { image_data_fontamp08_0xd0aa, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xdb[5] = {
+static const uint8_t image_data_fontamp08_0xd0ab[5] = {
     // █∙∙∙█
     // █∙∙∙█
     // █∙∙∙█
@@ -2315,12 +2057,11 @@ static const uint8_t image_data_fontamp08_0xdb[5] = {
     // ∙∙∙∙∙
     0x7f, 0x48, 0x30, 0x00, 0x7f
 };
-static const tImage fontamp08_0xdb = { image_data_fontamp08_0xdb,
-    5, 8, 8};
+static const tImage fontamp08_0xd0ab = { image_data_fontamp08_0xd0ab, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xdc[4] = {
+static const uint8_t image_data_fontamp08_0xd0ac[4] = {
     // █∙∙∙
     // █∙∙∙
     // █∙∙∙
@@ -2331,12 +2072,11 @@ static const uint8_t image_data_fontamp08_0xdc[4] = {
     // ∙∙∙∙
     0x7f, 0x48, 0x48, 0x30
 };
-static const tImage fontamp08_0xdc = { image_data_fontamp08_0xdc,
-    4, 8, 8};
+static const tImage fontamp08_0xd0ac = { image_data_fontamp08_0xd0ac, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xdd[5] = {
+static const uint8_t image_data_fontamp08_0xd0ad[5] = {
     // ∙███∙
     // █∙∙∙█
     // ∙∙∙∙█
@@ -2347,12 +2087,11 @@ static const uint8_t image_data_fontamp08_0xdd[5] = {
     // ∙∙∙∙∙
     0x22, 0x41, 0x49, 0x49, 0x3e
 };
-static const tImage fontamp08_0xdd = { image_data_fontamp08_0xdd,
-    5, 8, 8};
+static const tImage fontamp08_0xd0ad = { image_data_fontamp08_0xd0ad, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xde[5] = {
+static const uint8_t image_data_fontamp08_0xd0ae[5] = {
     // █∙∙█∙
     // █∙█∙█
     // █∙█∙█
@@ -2363,12 +2102,11 @@ static const uint8_t image_data_fontamp08_0xde[5] = {
     // ∙∙∙∙∙
     0x7f, 0x08, 0x3e, 0x41, 0x3e
 };
-static const tImage fontamp08_0xde = { image_data_fontamp08_0xde,
-    5, 8, 8};
+static const tImage fontamp08_0xd0ae = { image_data_fontamp08_0xd0ae, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xdf[5] = {
+static const uint8_t image_data_fontamp08_0xd0af[5] = {
     // ∙████
     // █∙∙∙█
     // █∙∙∙█
@@ -2379,12 +2117,11 @@ static const uint8_t image_data_fontamp08_0xdf[5] = {
     // ∙∙∙∙∙
     0x46, 0x29, 0x19, 0x09, 0x7f
 };
-static const tImage fontamp08_0xdf = { image_data_fontamp08_0xdf,
-    5, 8, 8};
+static const tImage fontamp08_0xd0af = { image_data_fontamp08_0xd0af, 5, 8};
 #endif
 
 #if (0x061 == 0x0)
-static const uint8_t image_data_fontamp08_0xe0[5] = {
+static const uint8_t image_data_fontamp08_0xd0b0[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ∙███∙
@@ -2395,12 +2132,11 @@ static const uint8_t image_data_fontamp08_0xe0[5] = {
     // ∙∙∙∙∙
     0x20, 0x54, 0x54, 0x54, 0x78
 };
-static const tImage fontamp08_0xe0 = { image_data_fontamp08_0xe0,
-    5, 8, 8};
+static const tImage fontamp08_0xd0b0 = { image_data_fontamp08_0xd0b0, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xe1[5] = {
+static const uint8_t image_data_fontamp08_0xd0b1[5] = {
     // ∙∙∙█∙
     // ∙██∙∙
     // █∙∙∙∙
@@ -2411,12 +2147,11 @@ static const uint8_t image_data_fontamp08_0xe1[5] = {
     // ∙∙∙∙∙
     0x3c, 0x4a, 0x4a, 0x49, 0x30
 };
-static const tImage fontamp08_0xe1 = { image_data_fontamp08_0xe1,
-    5, 8, 8};
+static const tImage fontamp08_0xd0b1 = { image_data_fontamp08_0xd0b1, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xe2[4] = {
+static const uint8_t image_data_fontamp08_0xd0b2[4] = {
     // ∙∙∙∙
     // ∙∙∙∙
     // ███∙
@@ -2427,12 +2162,11 @@ static const uint8_t image_data_fontamp08_0xe2[4] = {
     // ∙∙∙∙
     0x7c, 0x54, 0x54, 0x28
 };
-static const tImage fontamp08_0xe2 = { image_data_fontamp08_0xe2,
-    4, 8, 8};
+static const tImage fontamp08_0xd0b2 = { image_data_fontamp08_0xd0b2, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xe3[5] = {
+static const uint8_t image_data_fontamp08_0xd0b3[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ████∙
@@ -2443,12 +2177,11 @@ static const uint8_t image_data_fontamp08_0xe3[5] = {
     // ∙∙∙∙∙
     0x7c, 0x04, 0x04, 0x0c, 0x00
 };
-static const tImage fontamp08_0xe3 = { image_data_fontamp08_0xe3,
-    5, 8, 8};
+static const tImage fontamp08_0xd0b3 = { image_data_fontamp08_0xd0b3, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xe4[5] = {
+static const uint8_t image_data_fontamp08_0xd0b4[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ∙∙██∙
@@ -2459,12 +2192,11 @@ static const uint8_t image_data_fontamp08_0xe4[5] = {
     // █∙∙∙█
     0xc0, 0x78, 0x44, 0x7c, 0xc0
 };
-static const tImage fontamp08_0xe4 = { image_data_fontamp08_0xe4,
-    5, 8, 8};
+static const tImage fontamp08_0xd0b4 = { image_data_fontamp08_0xd0b4, 5, 8};
 #endif
 
 #if (0x065 == 0x0)
-static const uint8_t image_data_fontamp08_0xe5[5] = {
+static const uint8_t image_data_fontamp08_0xd0b5[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ∙███∙
@@ -2475,12 +2207,11 @@ static const uint8_t image_data_fontamp08_0xe5[5] = {
     // ∙∙∙∙∙
     0x38, 0x54, 0x54, 0x54, 0x18
 };
-static const tImage fontamp08_0xe5 = { image_data_fontamp08_0xe5,
-    5, 8, 8};
+static const tImage fontamp08_0xd0b5 = { image_data_fontamp08_0xd0b5, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xe6[5] = {
+static const uint8_t image_data_fontamp08_0xd0b6[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙█∙█
@@ -2491,12 +2222,11 @@ static const uint8_t image_data_fontamp08_0xe6[5] = {
     // ∙∙∙∙∙
     0x6c, 0x10, 0x7c, 0x10, 0x6c
 };
-static const tImage fontamp08_0xe6 = { image_data_fontamp08_0xe6,
-    5, 8, 8};
+static const tImage fontamp08_0xd0b6 = { image_data_fontamp08_0xd0b6, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xe7[4] = {
+static const uint8_t image_data_fontamp08_0xd0b7[4] = {
     // ∙∙∙∙
     // ∙∙∙∙
     // ███∙
@@ -2507,12 +2237,11 @@ static const uint8_t image_data_fontamp08_0xe7[4] = {
     // ∙∙∙∙
     0x44, 0x54, 0x54, 0x28
 };
-static const tImage fontamp08_0xe7 = { image_data_fontamp08_0xe7,
-    4, 8, 8};
+static const tImage fontamp08_0xd0b7 = { image_data_fontamp08_0xd0b7, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xe8[5] = {
+static const uint8_t image_data_fontamp08_0xd0b8[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙∙∙█
@@ -2523,12 +2252,11 @@ static const uint8_t image_data_fontamp08_0xe8[5] = {
     // ∙∙∙∙∙
     0x7c, 0x20, 0x10, 0x08, 0x7c
 };
-static const tImage fontamp08_0xe8 = { image_data_fontamp08_0xe8,
-    5, 8, 8};
+static const tImage fontamp08_0xd0b8 = { image_data_fontamp08_0xd0b8, 5, 8};
 #endif
 
-#if (0x0c9 == 0x0)
-static const uint8_t image_data_fontamp08_0xe9[5] = {
+#if (0x0d099 == 0x0)
+static const uint8_t image_data_fontamp08_0xd0b9[5] = {
     // ∙█∙█∙
     // ∙∙█∙∙
     // █∙∙∙█
@@ -2539,12 +2267,11 @@ static const uint8_t image_data_fontamp08_0xe9[5] = {
     // ∙∙∙∙∙
     0x7c, 0x21, 0x12, 0x09, 0x7c
 };
-static const tImage fontamp08_0xe9 = { image_data_fontamp08_0xe9,
-    5, 8, 8};
+static const tImage fontamp08_0xd0b9 = { image_data_fontamp08_0xd0b9, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xea[4] = {
+static const uint8_t image_data_fontamp08_0xd0ba[4] = {
     // ∙∙∙∙
     // ∙∙∙∙
     // █∙∙█
@@ -2555,12 +2282,11 @@ static const uint8_t image_data_fontamp08_0xea[4] = {
     // ∙∙∙∙
     0x7c, 0x10, 0x28, 0x44
 };
-static const tImage fontamp08_0xea = { image_data_fontamp08_0xea,
-    4, 8, 8};
+static const tImage fontamp08_0xd0ba = { image_data_fontamp08_0xd0ba, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xeb[4] = {
+static const uint8_t image_data_fontamp08_0xd0bb[4] = {
     // ∙∙∙∙
     // ∙∙∙∙
     // ∙∙██
@@ -2571,12 +2297,11 @@ static const uint8_t image_data_fontamp08_0xeb[4] = {
     // ∙∙∙∙
     0x70, 0x08, 0x04, 0x7c
 };
-static const tImage fontamp08_0xeb = { image_data_fontamp08_0xeb,
-    4, 8, 8};
+static const tImage fontamp08_0xd0bb = { image_data_fontamp08_0xd0bb, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xec[5] = {
+static const uint8_t image_data_fontamp08_0xd0bc[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙∙∙█
@@ -2587,12 +2312,11 @@ static const uint8_t image_data_fontamp08_0xec[5] = {
     // ∙∙∙∙∙
     0x7c, 0x08, 0x10, 0x08, 0x7c
 };
-static const tImage fontamp08_0xec = { image_data_fontamp08_0xec,
-    5, 8, 8};
+static const tImage fontamp08_0xd0bc = { image_data_fontamp08_0xd0bc, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xed[4] = {
+static const uint8_t image_data_fontamp08_0xd0bd[4] = {
     // ∙∙∙∙
     // ∙∙∙∙
     // █∙∙█
@@ -2603,12 +2327,11 @@ static const uint8_t image_data_fontamp08_0xed[4] = {
     // ∙∙∙∙
     0x7c, 0x10, 0x10, 0x7c
 };
-static const tImage fontamp08_0xed = { image_data_fontamp08_0xed,
-    4, 8, 8};
+static const tImage fontamp08_0xd0bd = { image_data_fontamp08_0xd0bd, 4, 8};
 #endif
 
 #if (0x06f == 0x0)
-static const uint8_t image_data_fontamp08_0xee[5] = {
+static const uint8_t image_data_fontamp08_0xd0be[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ∙███∙
@@ -2619,12 +2342,11 @@ static const uint8_t image_data_fontamp08_0xee[5] = {
     // ∙∙∙∙∙
     0x38, 0x44, 0x44, 0x44, 0x38
 };
-static const tImage fontamp08_0xee = { image_data_fontamp08_0xee,
-    5, 8, 8};
+static const tImage fontamp08_0xd0be = { image_data_fontamp08_0xd0be, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xef[4] = {
+static const uint8_t image_data_fontamp08_0xd0bf[4] = {
     // ∙∙∙∙
     // ∙∙∙∙
     // ████
@@ -2635,12 +2357,11 @@ static const uint8_t image_data_fontamp08_0xef[4] = {
     // ∙∙∙∙
     0x7c, 0x04, 0x04, 0x7c
 };
-static const tImage fontamp08_0xef = { image_data_fontamp08_0xef,
-    4, 8, 8};
+static const tImage fontamp08_0xd0bf = { image_data_fontamp08_0xd0bf, 4, 8};
 #endif
 
 #if (0x070 == 0x0)
-static const uint8_t image_data_fontamp08_0xf0[5] = {
+static const uint8_t image_data_fontamp08_0xd180[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ████∙
@@ -2651,12 +2372,11 @@ static const uint8_t image_data_fontamp08_0xf0[5] = {
     // █∙∙∙∙
     0xfc, 0x24, 0x44, 0x44, 0x38
 };
-static const tImage fontamp08_0xf0 = { image_data_fontamp08_0xf0,
-    5, 8, 8};
+static const tImage fontamp08_0xd180 = { image_data_fontamp08_0xd180, 5, 8};
 #endif
 
 #if (0x063 == 0x0)
-static const uint8_t image_data_fontamp08_0xf1[5] = {
+static const uint8_t image_data_fontamp08_0xd181[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ∙███∙
@@ -2667,12 +2387,11 @@ static const uint8_t image_data_fontamp08_0xf1[5] = {
     // ∙∙∙∙∙
     0x38, 0x44, 0x44, 0x44, 0x20
 };
-static const tImage fontamp08_0xf1 = { image_data_fontamp08_0xf1,
-    5, 8, 8};
+static const tImage fontamp08_0xd181 = { image_data_fontamp08_0xd181, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xf2[5] = {
+static const uint8_t image_data_fontamp08_0xd182[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █████
@@ -2683,12 +2402,11 @@ static const uint8_t image_data_fontamp08_0xf2[5] = {
     // ∙∙∙∙∙
     0x04, 0x04, 0x7c, 0x04, 0x04
 };
-static const tImage fontamp08_0xf2 = { image_data_fontamp08_0xf2,
-    5, 8, 8};
+static const tImage fontamp08_0xd182 = { image_data_fontamp08_0xd182, 5, 8};
 #endif
 
 #if (0x079 == 0x0)
-static const uint8_t image_data_fontamp08_0xf3[5] = {
+static const uint8_t image_data_fontamp08_0xd183[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙∙∙█
@@ -2699,12 +2417,11 @@ static const uint8_t image_data_fontamp08_0xf3[5] = {
     // ∙███∙
     0x1c, 0xa0, 0xa0, 0xa0, 0x7c
 };
-static const tImage fontamp08_0xf3 = { image_data_fontamp08_0xf3,
-    5, 8, 8};
+static const tImage fontamp08_0xd183 = { image_data_fontamp08_0xd183, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xf4[5] = {
+static const uint8_t image_data_fontamp08_0xd184[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ∙∙█∙∙
@@ -2715,12 +2432,11 @@ static const uint8_t image_data_fontamp08_0xf4[5] = {
     // ∙∙█∙∙
     0x30, 0x48, 0xfc, 0x48, 0x30
 };
-static const tImage fontamp08_0xf4 = { image_data_fontamp08_0xf4,
-    5, 8, 8};
+static const tImage fontamp08_0xd184 = { image_data_fontamp08_0xd184, 5, 8};
 #endif
 
 #if (0x078 == 0x0)
-static const uint8_t image_data_fontamp08_0xf5[5] = {
+static const uint8_t image_data_fontamp08_0xd185[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙∙∙█
@@ -2731,12 +2447,11 @@ static const uint8_t image_data_fontamp08_0xf5[5] = {
     // ∙∙∙∙∙
     0x44, 0x28, 0x10, 0x28, 0x44
 };
-static const tImage fontamp08_0xf5 = { image_data_fontamp08_0xf5,
-    5, 8, 8};
+static const tImage fontamp08_0xd185 = { image_data_fontamp08_0xd185, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xf6[5] = {
+static const uint8_t image_data_fontamp08_0xd186[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙∙█∙
@@ -2747,12 +2462,11 @@ static const uint8_t image_data_fontamp08_0xf6[5] = {
     // ∙∙∙∙█
     0x7c, 0x40, 0x40, 0x7c, 0xc0
 };
-static const tImage fontamp08_0xf6 = { image_data_fontamp08_0xf6,
-    5, 8, 8};
+static const tImage fontamp08_0xd186 = { image_data_fontamp08_0xd186, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xf7[4] = {
+static const uint8_t image_data_fontamp08_0xd187[4] = {
     // ∙∙∙∙
     // ∙∙∙∙
     // █∙∙█
@@ -2763,12 +2477,11 @@ static const uint8_t image_data_fontamp08_0xf7[4] = {
     // ∙∙∙∙
     0x0c, 0x10, 0x10, 0x7c
 };
-static const tImage fontamp08_0xf7 = { image_data_fontamp08_0xf7,
-    4, 8, 8};
+static const tImage fontamp08_0xd187 = { image_data_fontamp08_0xd187, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xf8[5] = {
+static const uint8_t image_data_fontamp08_0xd188[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙█∙█
@@ -2779,12 +2492,11 @@ static const uint8_t image_data_fontamp08_0xf8[5] = {
     // ∙∙∙∙∙
     0x7c, 0x40, 0x7c, 0x40, 0x7c
 };
-static const tImage fontamp08_0xf8 = { image_data_fontamp08_0xf8,
-    5, 8, 8};
+static const tImage fontamp08_0xd188 = { image_data_fontamp08_0xd188, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xf9[5] = {
+static const uint8_t image_data_fontamp08_0xd189[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙█∙█
@@ -2795,12 +2507,11 @@ static const uint8_t image_data_fontamp08_0xf9[5] = {
     // ∙∙∙∙█
     0x7c, 0x40, 0x7c, 0x40, 0xfc
 };
-static const tImage fontamp08_0xf9 = { image_data_fontamp08_0xf9,
-    5, 8, 8};
+static const tImage fontamp08_0xd189 = { image_data_fontamp08_0xd189, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xfa[5] = {
+static const uint8_t image_data_fontamp08_0xd18a[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ██∙∙∙
@@ -2811,12 +2522,11 @@ static const uint8_t image_data_fontamp08_0xfa[5] = {
     // ∙∙∙∙∙
     0x04, 0x7c, 0x50, 0x50, 0x20
 };
-static const tImage fontamp08_0xfa = { image_data_fontamp08_0xfa,
-    5, 8, 8};
+static const tImage fontamp08_0xd18a = { image_data_fontamp08_0xd18a, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xfb[5] = {
+static const uint8_t image_data_fontamp08_0xd18b[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙∙∙█
@@ -2827,12 +2537,11 @@ static const uint8_t image_data_fontamp08_0xfb[5] = {
     // ∙∙∙∙∙
     0x7c, 0x50, 0x20, 0x00, 0x7c
 };
-static const tImage fontamp08_0xfb = { image_data_fontamp08_0xfb,
-    5, 8, 8};
+static const tImage fontamp08_0xd18b = { image_data_fontamp08_0xd18b, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xfc[4] = {
+static const uint8_t image_data_fontamp08_0xd18c[4] = {
     // ∙∙∙∙
     // ∙∙∙∙
     // █∙∙∙
@@ -2843,12 +2552,11 @@ static const uint8_t image_data_fontamp08_0xfc[4] = {
     // ∙∙∙∙
     0x7c, 0x50, 0x50, 0x20
 };
-static const tImage fontamp08_0xfc = { image_data_fontamp08_0xfc,
-    4, 8, 8};
+static const tImage fontamp08_0xd18c = { image_data_fontamp08_0xd18c, 4, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xfd[5] = {
+static const uint8_t image_data_fontamp08_0xd18d[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ∙███∙
@@ -2859,12 +2567,11 @@ static const uint8_t image_data_fontamp08_0xfd[5] = {
     // ∙∙∙∙∙
     0x28, 0x44, 0x54, 0x54, 0x38
 };
-static const tImage fontamp08_0xfd = { image_data_fontamp08_0xfd,
-    5, 8, 8};
+static const tImage fontamp08_0xd18d = { image_data_fontamp08_0xd18d, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xfe[5] = {
+static const uint8_t image_data_fontamp08_0xd18e[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // █∙∙█∙
@@ -2875,12 +2582,11 @@ static const uint8_t image_data_fontamp08_0xfe[5] = {
     // ∙∙∙∙∙
     0x7c, 0x10, 0x38, 0x44, 0x38
 };
-static const tImage fontamp08_0xfe = { image_data_fontamp08_0xfe,
-    5, 8, 8};
+static const tImage fontamp08_0xd18e = { image_data_fontamp08_0xd18e, 5, 8};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontamp08_0xff[5] = {
+static const uint8_t image_data_fontamp08_0xd18f[5] = {
     // ∙∙∙∙∙
     // ∙∙∙∙∙
     // ∙████
@@ -2891,1438 +2597,1580 @@ static const uint8_t image_data_fontamp08_0xff[5] = {
     // ∙∙∙∙∙
     0x08, 0x54, 0x34, 0x14, 0x7c
 };
-static const tImage fontamp08_0xff = { image_data_fontamp08_0xff,
-    5, 8, 8};
+static const tImage fontamp08_0xd18f = { image_data_fontamp08_0xd18f, 5, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd191[5] = {
+    // ∙█∙█∙
+    // ∙∙∙∙∙
+    // ∙███∙
+    // █∙∙∙█
+    // █████
+    // █∙∙∙∙
+    // ∙███∙
+    // ∙∙∙∙∙
+    0x38, 0x55, 0x54, 0x55, 0x18
+};
+static const tImage fontamp08_0xd191 = { image_data_fontamp08_0xd191, 5, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd194[5] = {
+    // ∙∙∙∙∙
+    // ∙∙∙∙∙
+    // ∙███∙
+    // █∙∙∙█
+    // ███∙∙
+    // █∙∙∙█
+    // ∙███∙
+    // ∙∙∙∙∙
+    0x38, 0x54, 0x54, 0x44, 0x28
+};
+static const tImage fontamp08_0xd194 = { image_data_fontamp08_0xd194, 5, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd196[1] = {
+    // █
+    // ∙
+    // █
+    // █
+    // █
+    // █
+    // █
+    // ∙
+    0x7d
+};
+static const tImage fontamp08_0xd196 = { image_data_fontamp08_0xd196, 1, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd197[3] = {
+    // ∙∙∙
+    // █∙█
+    // ∙∙∙
+    // ∙█∙
+    // ∙█∙
+    // ∙█∙
+    // ∙█∙
+    // ∙∙∙
+    0x02, 0x78, 0x02
+};
+static const tImage fontamp08_0xd197 = { image_data_fontamp08_0xd197, 3, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd19e[5] = {
+    // ∙∙∙∙∙
+    // ∙█∙█∙
+    // ∙∙█∙∙
+    // █∙∙∙█
+    // █∙∙∙█
+    // ∙████
+    // ∙∙∙∙█
+    // ∙███∙
+    0x18, 0xa2, 0xa4, 0xa2, 0x78
+};
+static const tImage fontamp08_0xd19e = { image_data_fontamp08_0xd19e, 5, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd290[5] = {
+    // ∙∙∙∙█
+    // █████
+    // █∙∙∙∙
+    // █∙∙∙∙
+    // █∙∙∙∙
+    // █∙∙∙∙
+    // █∙∙∙∙
+    // ∙∙∙∙∙
+    0x7e, 0x02, 0x02, 0x02, 0x03
+};
+static const tImage fontamp08_0xd290 = { image_data_fontamp08_0xd290, 5, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xd291[4] = {
+    // ∙∙∙∙
+    // ∙∙∙█
+    // ████
+    // █∙∙∙
+    // █∙∙∙
+    // █∙∙∙
+    // █∙∙∙
+    // ∙∙∙∙
+    0x7c, 0x04, 0x04, 0x06
+};
+static const tImage fontamp08_0xd291 = { image_data_fontamp08_0xd291, 4, 8};
+#endif
+
+#if (0x0c2a0 == 0x0)
+static const uint8_t image_data_fontamp08_0xe28088[1] = {
+    // ∙
+    // ∙
+    // ∙
+    // ∙
+    // ∙
+    // ∙
+    // ∙
+    // ∙
+    0x00
+};
+static const tImage fontamp08_0xe28088 = { image_data_fontamp08_0xe28088, 1, 8};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontamp08_0xe29688[5] = {
+    // █████
+    // █████
+    // █████
+    // █████
+    // █████
+    // █████
+    // █████
+    // █████
+    0xff, 0xff, 0xff, 0xff, 0xff
+};
+static const tImage fontamp08_0xe29688 = { image_data_fontamp08_0xe29688, 5, 8};
 #endif
 
 
 static const tChar fontamp08_array[] = {
 
 #if (0x0 == 0x0)
-  // character: ' '
-  {0x20, &fontamp08_0x20},
+    // character: ' '
+    {0x20, &fontamp08_0x20},
 #else
-  // character: ' ' == ''
-  {0x20, &fontamp08_0x},
+    // character: ' ' == ''
+    {0x20, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '!'
-  {0x21, &fontamp08_0x21},
+    // character: '!'
+    {0x21, &fontamp08_0x21},
 #else
-  // character: '!' == ''
-  {0x21, &fontamp08_0x},
+    // character: '!' == ''
+    {0x21, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '"'
-  {0x22, &fontamp08_0x22},
+    // character: '"'
+    {0x22, &fontamp08_0x22},
 #else
-  // character: '"' == ''
-  {0x22, &fontamp08_0x},
+    // character: '"' == ''
+    {0x22, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '#'
-  {0x23, &fontamp08_0x23},
+    // character: '#'
+    {0x23, &fontamp08_0x23},
 #else
-  // character: '#' == ''
-  {0x23, &fontamp08_0x},
+    // character: '#' == ''
+    {0x23, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '$'
-  {0x24, &fontamp08_0x24},
+    // character: '$'
+    {0x24, &fontamp08_0x24},
 #else
-  // character: '$' == ''
-  {0x24, &fontamp08_0x},
+    // character: '$' == ''
+    {0x24, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '%'
-  {0x25, &fontamp08_0x25},
+    // character: '%'
+    {0x25, &fontamp08_0x25},
 #else
-  // character: '%' == ''
-  {0x25, &fontamp08_0x},
+    // character: '%' == ''
+    {0x25, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '&'
-  {0x26, &fontamp08_0x26},
+    // character: '&'
+    {0x26, &fontamp08_0x26},
 #else
-  // character: '&' == ''
-  {0x26, &fontamp08_0x},
+    // character: '&' == ''
+    {0x26, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '''
-  {0x27, &fontamp08_0x27},
+    // character: '''
+    {0x27, &fontamp08_0x27},
 #else
-  // character: ''' == ''
-  {0x27, &fontamp08_0x},
+    // character: ''' == ''
+    {0x27, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '('
-  {0x28, &fontamp08_0x28},
+    // character: '('
+    {0x28, &fontamp08_0x28},
 #else
-  // character: '(' == ''
-  {0x28, &fontamp08_0x},
+    // character: '(' == ''
+    {0x28, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: ')'
-  {0x29, &fontamp08_0x29},
+    // character: ')'
+    {0x29, &fontamp08_0x29},
 #else
-  // character: ')' == ''
-  {0x29, &fontamp08_0x},
+    // character: ')' == ''
+    {0x29, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '*'
-  {0x2a, &fontamp08_0x2a},
+    // character: '*'
+    {0x2a, &fontamp08_0x2a},
 #else
-  // character: '*' == ''
-  {0x2a, &fontamp08_0x},
+    // character: '*' == ''
+    {0x2a, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '+'
-  {0x2b, &fontamp08_0x2b},
+    // character: '+'
+    {0x2b, &fontamp08_0x2b},
 #else
-  // character: '+' == ''
-  {0x2b, &fontamp08_0x},
+    // character: '+' == ''
+    {0x2b, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: ','
-  {0x2c, &fontamp08_0x2c},
+    // character: ','
+    {0x2c, &fontamp08_0x2c},
 #else
-  // character: ',' == ''
-  {0x2c, &fontamp08_0x},
+    // character: ',' == ''
+    {0x2c, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '-'
-  {0x2d, &fontamp08_0x2d},
+    // character: '-'
+    {0x2d, &fontamp08_0x2d},
 #else
-  // character: '-' == ''
-  {0x2d, &fontamp08_0x},
+    // character: '-' == ''
+    {0x2d, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '.'
-  {0x2e, &fontamp08_0x2e},
+    // character: '.'
+    {0x2e, &fontamp08_0x2e},
 #else
-  // character: '.' == ''
-  {0x2e, &fontamp08_0x},
+    // character: '.' == ''
+    {0x2e, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '/'
-  {0x2f, &fontamp08_0x2f},
+    // character: '/'
+    {0x2f, &fontamp08_0x2f},
 #else
-  // character: '/' == ''
-  {0x2f, &fontamp08_0x},
+    // character: '/' == ''
+    {0x2f, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '0'
-  {0x30, &fontamp08_0x30},
+    // character: '0'
+    {0x30, &fontamp08_0x30},
 #else
-  // character: '0' == ''
-  {0x30, &fontamp08_0x},
+    // character: '0' == ''
+    {0x30, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '1'
-  {0x31, &fontamp08_0x31},
+    // character: '1'
+    {0x31, &fontamp08_0x31},
 #else
-  // character: '1' == ''
-  {0x31, &fontamp08_0x},
+    // character: '1' == ''
+    {0x31, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '2'
-  {0x32, &fontamp08_0x32},
+    // character: '2'
+    {0x32, &fontamp08_0x32},
 #else
-  // character: '2' == ''
-  {0x32, &fontamp08_0x},
+    // character: '2' == ''
+    {0x32, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '3'
-  {0x33, &fontamp08_0x33},
+    // character: '3'
+    {0x33, &fontamp08_0x33},
 #else
-  // character: '3' == ''
-  {0x33, &fontamp08_0x},
+    // character: '3' == ''
+    {0x33, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '4'
-  {0x34, &fontamp08_0x34},
+    // character: '4'
+    {0x34, &fontamp08_0x34},
 #else
-  // character: '4' == ''
-  {0x34, &fontamp08_0x},
+    // character: '4' == ''
+    {0x34, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '5'
-  {0x35, &fontamp08_0x35},
+    // character: '5'
+    {0x35, &fontamp08_0x35},
 #else
-  // character: '5' == ''
-  {0x35, &fontamp08_0x},
+    // character: '5' == ''
+    {0x35, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '6'
-  {0x36, &fontamp08_0x36},
+    // character: '6'
+    {0x36, &fontamp08_0x36},
 #else
-  // character: '6' == ''
-  {0x36, &fontamp08_0x},
+    // character: '6' == ''
+    {0x36, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '7'
-  {0x37, &fontamp08_0x37},
+    // character: '7'
+    {0x37, &fontamp08_0x37},
 #else
-  // character: '7' == ''
-  {0x37, &fontamp08_0x},
+    // character: '7' == ''
+    {0x37, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '8'
-  {0x38, &fontamp08_0x38},
+    // character: '8'
+    {0x38, &fontamp08_0x38},
 #else
-  // character: '8' == ''
-  {0x38, &fontamp08_0x},
+    // character: '8' == ''
+    {0x38, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '9'
-  {0x39, &fontamp08_0x39},
+    // character: '9'
+    {0x39, &fontamp08_0x39},
 #else
-  // character: '9' == ''
-  {0x39, &fontamp08_0x},
+    // character: '9' == ''
+    {0x39, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: ':'
-  {0x3a, &fontamp08_0x3a},
+    // character: ':'
+    {0x3a, &fontamp08_0x3a},
 #else
-  // character: ':' == ''
-  {0x3a, &fontamp08_0x},
+    // character: ':' == ''
+    {0x3a, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: ';'
-  {0x3b, &fontamp08_0x3b},
+    // character: ';'
+    {0x3b, &fontamp08_0x3b},
 #else
-  // character: ';' == ''
-  {0x3b, &fontamp08_0x},
+    // character: ';' == ''
+    {0x3b, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '<'
-  {0x3c, &fontamp08_0x3c},
+    // character: '<'
+    {0x3c, &fontamp08_0x3c},
 #else
-  // character: '<' == ''
-  {0x3c, &fontamp08_0x},
+    // character: '<' == ''
+    {0x3c, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '='
-  {0x3d, &fontamp08_0x3d},
+    // character: '='
+    {0x3d, &fontamp08_0x3d},
 #else
-  // character: '=' == ''
-  {0x3d, &fontamp08_0x},
+    // character: '=' == ''
+    {0x3d, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '>'
-  {0x3e, &fontamp08_0x3e},
+    // character: '>'
+    {0x3e, &fontamp08_0x3e},
 #else
-  // character: '>' == ''
-  {0x3e, &fontamp08_0x},
+    // character: '>' == ''
+    {0x3e, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '?'
-  {0x3f, &fontamp08_0x3f},
+    // character: '?'
+    {0x3f, &fontamp08_0x3f},
 #else
-  // character: '?' == ''
-  {0x3f, &fontamp08_0x},
+    // character: '?' == ''
+    {0x3f, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '\x0040'
-  {0x40, &fontamp08_0x40},
+    // character: '\x0040'
+    {0x40, &fontamp08_0x40},
 #else
-  // character: '\x0040' == ''
-  {0x40, &fontamp08_0x},
+    // character: '\x0040' == ''
+    {0x40, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'A'
-  {0x41, &fontamp08_0x41},
+    // character: 'A'
+    {0x41, &fontamp08_0x41},
 #else
-  // character: 'A' == ''
-  {0x41, &fontamp08_0x},
+    // character: 'A' == ''
+    {0x41, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'B'
-  {0x42, &fontamp08_0x42},
+    // character: 'B'
+    {0x42, &fontamp08_0x42},
 #else
-  // character: 'B' == ''
-  {0x42, &fontamp08_0x},
+    // character: 'B' == ''
+    {0x42, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'C'
-  {0x43, &fontamp08_0x43},
+    // character: 'C'
+    {0x43, &fontamp08_0x43},
 #else
-  // character: 'C' == ''
-  {0x43, &fontamp08_0x},
+    // character: 'C' == ''
+    {0x43, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'D'
-  {0x44, &fontamp08_0x44},
+    // character: 'D'
+    {0x44, &fontamp08_0x44},
 #else
-  // character: 'D' == ''
-  {0x44, &fontamp08_0x},
+    // character: 'D' == ''
+    {0x44, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'E'
-  {0x45, &fontamp08_0x45},
+    // character: 'E'
+    {0x45, &fontamp08_0x45},
 #else
-  // character: 'E' == ''
-  {0x45, &fontamp08_0x},
+    // character: 'E' == ''
+    {0x45, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'F'
-  {0x46, &fontamp08_0x46},
+    // character: 'F'
+    {0x46, &fontamp08_0x46},
 #else
-  // character: 'F' == ''
-  {0x46, &fontamp08_0x},
+    // character: 'F' == ''
+    {0x46, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'G'
-  {0x47, &fontamp08_0x47},
+    // character: 'G'
+    {0x47, &fontamp08_0x47},
 #else
-  // character: 'G' == ''
-  {0x47, &fontamp08_0x},
+    // character: 'G' == ''
+    {0x47, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'H'
-  {0x48, &fontamp08_0x48},
+    // character: 'H'
+    {0x48, &fontamp08_0x48},
 #else
-  // character: 'H' == ''
-  {0x48, &fontamp08_0x},
+    // character: 'H' == ''
+    {0x48, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'I'
-  {0x49, &fontamp08_0x49},
+    // character: 'I'
+    {0x49, &fontamp08_0x49},
 #else
-  // character: 'I' == ''
-  {0x49, &fontamp08_0x},
+    // character: 'I' == ''
+    {0x49, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'J'
-  {0x4a, &fontamp08_0x4a},
+    // character: 'J'
+    {0x4a, &fontamp08_0x4a},
 #else
-  // character: 'J' == ''
-  {0x4a, &fontamp08_0x},
+    // character: 'J' == ''
+    {0x4a, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'K'
-  {0x4b, &fontamp08_0x4b},
+    // character: 'K'
+    {0x4b, &fontamp08_0x4b},
 #else
-  // character: 'K' == ''
-  {0x4b, &fontamp08_0x},
+    // character: 'K' == ''
+    {0x4b, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'L'
-  {0x4c, &fontamp08_0x4c},
+    // character: 'L'
+    {0x4c, &fontamp08_0x4c},
 #else
-  // character: 'L' == ''
-  {0x4c, &fontamp08_0x},
+    // character: 'L' == ''
+    {0x4c, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'M'
-  {0x4d, &fontamp08_0x4d},
+    // character: 'M'
+    {0x4d, &fontamp08_0x4d},
 #else
-  // character: 'M' == ''
-  {0x4d, &fontamp08_0x},
+    // character: 'M' == ''
+    {0x4d, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'N'
-  {0x4e, &fontamp08_0x4e},
+    // character: 'N'
+    {0x4e, &fontamp08_0x4e},
 #else
-  // character: 'N' == ''
-  {0x4e, &fontamp08_0x},
+    // character: 'N' == ''
+    {0x4e, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'O'
-  {0x4f, &fontamp08_0x4f},
+    // character: 'O'
+    {0x4f, &fontamp08_0x4f},
 #else
-  // character: 'O' == ''
-  {0x4f, &fontamp08_0x},
+    // character: 'O' == ''
+    {0x4f, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'P'
-  {0x50, &fontamp08_0x50},
+    // character: 'P'
+    {0x50, &fontamp08_0x50},
 #else
-  // character: 'P' == ''
-  {0x50, &fontamp08_0x},
+    // character: 'P' == ''
+    {0x50, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Q'
-  {0x51, &fontamp08_0x51},
+    // character: 'Q'
+    {0x51, &fontamp08_0x51},
 #else
-  // character: 'Q' == ''
-  {0x51, &fontamp08_0x},
+    // character: 'Q' == ''
+    {0x51, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'R'
-  {0x52, &fontamp08_0x52},
+    // character: 'R'
+    {0x52, &fontamp08_0x52},
 #else
-  // character: 'R' == ''
-  {0x52, &fontamp08_0x},
+    // character: 'R' == ''
+    {0x52, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'S'
-  {0x53, &fontamp08_0x53},
+    // character: 'S'
+    {0x53, &fontamp08_0x53},
 #else
-  // character: 'S' == ''
-  {0x53, &fontamp08_0x},
+    // character: 'S' == ''
+    {0x53, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'T'
-  {0x54, &fontamp08_0x54},
+    // character: 'T'
+    {0x54, &fontamp08_0x54},
 #else
-  // character: 'T' == ''
-  {0x54, &fontamp08_0x},
+    // character: 'T' == ''
+    {0x54, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'U'
-  {0x55, &fontamp08_0x55},
+    // character: 'U'
+    {0x55, &fontamp08_0x55},
 #else
-  // character: 'U' == ''
-  {0x55, &fontamp08_0x},
+    // character: 'U' == ''
+    {0x55, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'V'
-  {0x56, &fontamp08_0x56},
+    // character: 'V'
+    {0x56, &fontamp08_0x56},
 #else
-  // character: 'V' == ''
-  {0x56, &fontamp08_0x},
+    // character: 'V' == ''
+    {0x56, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'W'
-  {0x57, &fontamp08_0x57},
+    // character: 'W'
+    {0x57, &fontamp08_0x57},
 #else
-  // character: 'W' == ''
-  {0x57, &fontamp08_0x},
+    // character: 'W' == ''
+    {0x57, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'X'
-  {0x58, &fontamp08_0x58},
+    // character: 'X'
+    {0x58, &fontamp08_0x58},
 #else
-  // character: 'X' == ''
-  {0x58, &fontamp08_0x},
+    // character: 'X' == ''
+    {0x58, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Y'
-  {0x59, &fontamp08_0x59},
+    // character: 'Y'
+    {0x59, &fontamp08_0x59},
 #else
-  // character: 'Y' == ''
-  {0x59, &fontamp08_0x},
+    // character: 'Y' == ''
+    {0x59, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Z'
-  {0x5a, &fontamp08_0x5a},
+    // character: 'Z'
+    {0x5a, &fontamp08_0x5a},
 #else
-  // character: 'Z' == ''
-  {0x5a, &fontamp08_0x},
+    // character: 'Z' == ''
+    {0x5a, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '['
-  {0x5b, &fontamp08_0x5b},
+    // character: '['
+    {0x5b, &fontamp08_0x5b},
 #else
-  // character: '[' == ''
-  {0x5b, &fontamp08_0x},
+    // character: '[' == ''
+    {0x5b, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '\'
-  {0x5c, &fontamp08_0x5c},
+    // character: '\'
+    {0x5c, &fontamp08_0x5c},
 #else
-  // character: '\' == ''
-  {0x5c, &fontamp08_0x},
+    // character: '\' == ''
+    {0x5c, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: ']'
-  {0x5d, &fontamp08_0x5d},
+    // character: ']'
+    {0x5d, &fontamp08_0x5d},
 #else
-  // character: ']' == ''
-  {0x5d, &fontamp08_0x},
+    // character: ']' == ''
+    {0x5d, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '^'
-  {0x5e, &fontamp08_0x5e},
+    // character: '^'
+    {0x5e, &fontamp08_0x5e},
 #else
-  // character: '^' == ''
-  {0x5e, &fontamp08_0x},
+    // character: '^' == ''
+    {0x5e, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '_'
-  {0x5f, &fontamp08_0x5f},
+    // character: '_'
+    {0x5f, &fontamp08_0x5f},
 #else
-  // character: '_' == ''
-  {0x5f, &fontamp08_0x},
+    // character: '_' == ''
+    {0x5f, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '`'
-  {0x60, &fontamp08_0x60},
+    // character: '`'
+    {0x60, &fontamp08_0x60},
 #else
-  // character: '`' == ''
-  {0x60, &fontamp08_0x},
+    // character: '`' == ''
+    {0x60, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'a'
-  {0x61, &fontamp08_0x61},
+    // character: 'a'
+    {0x61, &fontamp08_0x61},
 #else
-  // character: 'a' == ''
-  {0x61, &fontamp08_0x},
+    // character: 'a' == ''
+    {0x61, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'b'
-  {0x62, &fontamp08_0x62},
+    // character: 'b'
+    {0x62, &fontamp08_0x62},
 #else
-  // character: 'b' == ''
-  {0x62, &fontamp08_0x},
+    // character: 'b' == ''
+    {0x62, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'c'
-  {0x63, &fontamp08_0x63},
+    // character: 'c'
+    {0x63, &fontamp08_0x63},
 #else
-  // character: 'c' == ''
-  {0x63, &fontamp08_0x},
+    // character: 'c' == ''
+    {0x63, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'd'
-  {0x64, &fontamp08_0x64},
+    // character: 'd'
+    {0x64, &fontamp08_0x64},
 #else
-  // character: 'd' == ''
-  {0x64, &fontamp08_0x},
+    // character: 'd' == ''
+    {0x64, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'e'
-  {0x65, &fontamp08_0x65},
+    // character: 'e'
+    {0x65, &fontamp08_0x65},
 #else
-  // character: 'e' == ''
-  {0x65, &fontamp08_0x},
+    // character: 'e' == ''
+    {0x65, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'f'
-  {0x66, &fontamp08_0x66},
+    // character: 'f'
+    {0x66, &fontamp08_0x66},
 #else
-  // character: 'f' == ''
-  {0x66, &fontamp08_0x},
+    // character: 'f' == ''
+    {0x66, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'g'
-  {0x67, &fontamp08_0x67},
+    // character: 'g'
+    {0x67, &fontamp08_0x67},
 #else
-  // character: 'g' == ''
-  {0x67, &fontamp08_0x},
+    // character: 'g' == ''
+    {0x67, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'h'
-  {0x68, &fontamp08_0x68},
+    // character: 'h'
+    {0x68, &fontamp08_0x68},
 #else
-  // character: 'h' == ''
-  {0x68, &fontamp08_0x},
+    // character: 'h' == ''
+    {0x68, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'i'
-  {0x69, &fontamp08_0x69},
+    // character: 'i'
+    {0x69, &fontamp08_0x69},
 #else
-  // character: 'i' == ''
-  {0x69, &fontamp08_0x},
+    // character: 'i' == ''
+    {0x69, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'j'
-  {0x6a, &fontamp08_0x6a},
+    // character: 'j'
+    {0x6a, &fontamp08_0x6a},
 #else
-  // character: 'j' == ''
-  {0x6a, &fontamp08_0x},
+    // character: 'j' == ''
+    {0x6a, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'k'
-  {0x6b, &fontamp08_0x6b},
+    // character: 'k'
+    {0x6b, &fontamp08_0x6b},
 #else
-  // character: 'k' == ''
-  {0x6b, &fontamp08_0x},
+    // character: 'k' == ''
+    {0x6b, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'l'
-  {0x6c, &fontamp08_0x6c},
+    // character: 'l'
+    {0x6c, &fontamp08_0x6c},
 #else
-  // character: 'l' == ''
-  {0x6c, &fontamp08_0x},
+    // character: 'l' == ''
+    {0x6c, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'm'
-  {0x6d, &fontamp08_0x6d},
+    // character: 'm'
+    {0x6d, &fontamp08_0x6d},
 #else
-  // character: 'm' == ''
-  {0x6d, &fontamp08_0x},
+    // character: 'm' == ''
+    {0x6d, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'n'
-  {0x6e, &fontamp08_0x6e},
+    // character: 'n'
+    {0x6e, &fontamp08_0x6e},
 #else
-  // character: 'n' == ''
-  {0x6e, &fontamp08_0x},
+    // character: 'n' == ''
+    {0x6e, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'o'
-  {0x6f, &fontamp08_0x6f},
+    // character: 'o'
+    {0x6f, &fontamp08_0x6f},
 #else
-  // character: 'o' == ''
-  {0x6f, &fontamp08_0x},
+    // character: 'o' == ''
+    {0x6f, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'p'
-  {0x70, &fontamp08_0x70},
+    // character: 'p'
+    {0x70, &fontamp08_0x70},
 #else
-  // character: 'p' == ''
-  {0x70, &fontamp08_0x},
+    // character: 'p' == ''
+    {0x70, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'q'
-  {0x71, &fontamp08_0x71},
+    // character: 'q'
+    {0x71, &fontamp08_0x71},
 #else
-  // character: 'q' == ''
-  {0x71, &fontamp08_0x},
+    // character: 'q' == ''
+    {0x71, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'r'
-  {0x72, &fontamp08_0x72},
+    // character: 'r'
+    {0x72, &fontamp08_0x72},
 #else
-  // character: 'r' == ''
-  {0x72, &fontamp08_0x},
+    // character: 'r' == ''
+    {0x72, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 's'
-  {0x73, &fontamp08_0x73},
+    // character: 's'
+    {0x73, &fontamp08_0x73},
 #else
-  // character: 's' == ''
-  {0x73, &fontamp08_0x},
+    // character: 's' == ''
+    {0x73, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 't'
-  {0x74, &fontamp08_0x74},
+    // character: 't'
+    {0x74, &fontamp08_0x74},
 #else
-  // character: 't' == ''
-  {0x74, &fontamp08_0x},
+    // character: 't' == ''
+    {0x74, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'u'
-  {0x75, &fontamp08_0x75},
+    // character: 'u'
+    {0x75, &fontamp08_0x75},
 #else
-  // character: 'u' == ''
-  {0x75, &fontamp08_0x},
+    // character: 'u' == ''
+    {0x75, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'v'
-  {0x76, &fontamp08_0x76},
+    // character: 'v'
+    {0x76, &fontamp08_0x76},
 #else
-  // character: 'v' == ''
-  {0x76, &fontamp08_0x},
+    // character: 'v' == ''
+    {0x76, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'w'
-  {0x77, &fontamp08_0x77},
+    // character: 'w'
+    {0x77, &fontamp08_0x77},
 #else
-  // character: 'w' == ''
-  {0x77, &fontamp08_0x},
+    // character: 'w' == ''
+    {0x77, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'x'
-  {0x78, &fontamp08_0x78},
+    // character: 'x'
+    {0x78, &fontamp08_0x78},
 #else
-  // character: 'x' == ''
-  {0x78, &fontamp08_0x},
+    // character: 'x' == ''
+    {0x78, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'y'
-  {0x79, &fontamp08_0x79},
+    // character: 'y'
+    {0x79, &fontamp08_0x79},
 #else
-  // character: 'y' == ''
-  {0x79, &fontamp08_0x},
+    // character: 'y' == ''
+    {0x79, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'z'
-  {0x7a, &fontamp08_0x7a},
+    // character: 'z'
+    {0x7a, &fontamp08_0x7a},
 #else
-  // character: 'z' == ''
-  {0x7a, &fontamp08_0x},
+    // character: 'z' == ''
+    {0x7a, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '{'
-  {0x7b, &fontamp08_0x7b},
+    // character: '{'
+    {0x7b, &fontamp08_0x7b},
 #else
-  // character: '{' == ''
-  {0x7b, &fontamp08_0x},
+    // character: '{' == ''
+    {0x7b, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '|'
-  {0x7c, &fontamp08_0x7c},
+    // character: '|'
+    {0x7c, &fontamp08_0x7c},
 #else
-  // character: '|' == ''
-  {0x7c, &fontamp08_0x},
+    // character: '|' == ''
+    {0x7c, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '}'
-  {0x7d, &fontamp08_0x7d},
+    // character: '}'
+    {0x7d, &fontamp08_0x7d},
 #else
-  // character: '}' == ''
-  {0x7d, &fontamp08_0x},
+    // character: '}' == ''
+    {0x7d, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '~'
-  {0x7e, &fontamp08_0x7e},
+    // character: '~'
+    {0x7e, &fontamp08_0x7e},
 #else
-  // character: '~' == ''
-  {0x7e, &fontamp08_0x},
+    // character: '~' == ''
+    {0x7e, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '\x007f'
-  {0x7f, &fontamp08_0x7f},
+    // character: '\x00a0'
+    {0xc2a0, &fontamp08_0xc2a0},
 #else
-  // character: '\x007f' == ''
-  {0x7f, &fontamp08_0x},
+    // character: '\x00a0' == ''
+    {0xc2a0, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '\x00a0'
-  {0xa0, &fontamp08_0xa0},
+    // character: '«'
+    {0xc2ab, &fontamp08_0xc2ab},
 #else
-  // character: '\x00a0' == ''
-  {0xa0, &fontamp08_0x},
+    // character: '«' == ''
+    {0xc2ab, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ў'
-  {0xa1, &fontamp08_0xa1},
+    // character: '°'
+    {0xc2b0, &fontamp08_0xc2b0},
 #else
-  // character: 'Ў' == ''
-  {0xa1, &fontamp08_0x},
+    // character: '°' == ''
+    {0xc2b0, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ў'
-  {0xa2, &fontamp08_0xa2},
+    // character: '±'
+    {0xc2b1, &fontamp08_0xc2b1},
 #else
-  // character: 'ў' == ''
-  {0xa2, &fontamp08_0x},
+    // character: '±' == ''
+    {0xc2b1, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ґ'
-  {0xa5, &fontamp08_0xa5},
+    // character: '·'
+    {0xc2b7, &fontamp08_0xc2b7},
 #else
-  // character: 'Ґ' == ''
-  {0xa5, &fontamp08_0x},
+    // character: '·' == ''
+    {0xc2b7, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ё'
-  {0xa8, &fontamp08_0xa8},
+    // character: '»'
+    {0xc2bb, &fontamp08_0xc2bb},
 #else
-  // character: 'Ё' == ''
-  {0xa8, &fontamp08_0x},
+    // character: '»' == ''
+    {0xc2bb, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Є'
-  {0xaa, &fontamp08_0xaa},
+    // character: 'Ё'
+    {0xd081, &fontamp08_0xd081},
 #else
-  // character: 'Є' == ''
-  {0xaa, &fontamp08_0x},
+    // character: 'Ё' == ''
+    {0xd081, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: '«'
-  {0xab, &fontamp08_0xab},
+    // character: 'Є'
+    {0xd084, &fontamp08_0xd084},
 #else
-  // character: '«' == ''
-  {0xab, &fontamp08_0x},
-#endif
-
-#if (0x0 == 0x0)
-  // character: 'Ї'
-  {0xaf, &fontamp08_0xaf},
-#else
-  // character: 'Ї' == ''
-  {0xaf, &fontamp08_0x},
-#endif
-
-#if (0x0 == 0x0)
-  // character: '°'
-  {0xb0, &fontamp08_0xb0},
-#else
-  // character: '°' == ''
-  {0xb0, &fontamp08_0x},
-#endif
-
-#if (0x0 == 0x0)
-  // character: '±'
-  {0xb1, &fontamp08_0xb1},
-#else
-  // character: '±' == ''
-  {0xb1, &fontamp08_0x},
+    // character: 'Є' == ''
+    {0xd084, &fontamp08_0x},
 #endif
 
 #if (0x049 == 0x0)
-  // character: 'І'
-  {0xb2, &fontamp08_0xb2},
+    // character: 'І'
+    {0xd086, &fontamp08_0xd086},
 #else
-  // character: 'І' == 'I'
-  {0xb2, &fontamp08_0x49},
+    // character: 'І' == 'I'
+    {0xd086, &fontamp08_0x49},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'і'
-  {0xb3, &fontamp08_0xb3},
+    // character: 'Ї'
+    {0xd087, &fontamp08_0xd087},
 #else
-  // character: 'і' == ''
-  {0xb3, &fontamp08_0x},
+    // character: 'Ї' == ''
+    {0xd087, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ґ'
-  {0xb4, &fontamp08_0xb4},
+    // character: 'Ў'
+    {0xd08e, &fontamp08_0xd08e},
 #else
-  // character: 'ґ' == ''
-  {0xb4, &fontamp08_0x},
-#endif
-
-#if (0x0 == 0x0)
-  // character: '·'
-  {0xb7, &fontamp08_0xb7},
-#else
-  // character: '·' == ''
-  {0xb7, &fontamp08_0x},
-#endif
-
-#if (0x0 == 0x0)
-  // character: 'ё'
-  {0xb8, &fontamp08_0xb8},
-#else
-  // character: 'ё' == ''
-  {0xb8, &fontamp08_0x},
-#endif
-
-#if (0x0 == 0x0)
-  // character: 'є'
-  {0xba, &fontamp08_0xba},
-#else
-  // character: 'є' == ''
-  {0xba, &fontamp08_0x},
-#endif
-
-#if (0x0 == 0x0)
-  // character: '»'
-  {0xbb, &fontamp08_0xbb},
-#else
-  // character: '»' == ''
-  {0xbb, &fontamp08_0x},
-#endif
-
-#if (0x0 == 0x0)
-  // character: 'ї'
-  {0xbf, &fontamp08_0xbf},
-#else
-  // character: 'ї' == ''
-  {0xbf, &fontamp08_0x},
+    // character: 'Ў' == ''
+    {0xd08e, &fontamp08_0x},
 #endif
 
 #if (0x041 == 0x0)
-  // character: 'А'
-  {0xc0, &fontamp08_0xc0},
+    // character: 'А'
+    {0xd090, &fontamp08_0xd090},
 #else
-  // character: 'А' == 'A'
-  {0xc0, &fontamp08_0x41},
+    // character: 'А' == 'A'
+    {0xd090, &fontamp08_0x41},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Б'
-  {0xc1, &fontamp08_0xc1},
+    // character: 'Б'
+    {0xd091, &fontamp08_0xd091},
 #else
-  // character: 'Б' == ''
-  {0xc1, &fontamp08_0x},
+    // character: 'Б' == ''
+    {0xd091, &fontamp08_0x},
 #endif
 
 #if (0x042 == 0x0)
-  // character: 'В'
-  {0xc2, &fontamp08_0xc2},
+    // character: 'В'
+    {0xd092, &fontamp08_0xd092},
 #else
-  // character: 'В' == 'B'
-  {0xc2, &fontamp08_0x42},
+    // character: 'В' == 'B'
+    {0xd092, &fontamp08_0x42},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Г'
-  {0xc3, &fontamp08_0xc3},
+    // character: 'Г'
+    {0xd093, &fontamp08_0xd093},
 #else
-  // character: 'Г' == ''
-  {0xc3, &fontamp08_0x},
+    // character: 'Г' == ''
+    {0xd093, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Д'
-  {0xc4, &fontamp08_0xc4},
+    // character: 'Д'
+    {0xd094, &fontamp08_0xd094},
 #else
-  // character: 'Д' == ''
-  {0xc4, &fontamp08_0x},
+    // character: 'Д' == ''
+    {0xd094, &fontamp08_0x},
 #endif
 
 #if (0x045 == 0x0)
-  // character: 'Е'
-  {0xc5, &fontamp08_0xc5},
+    // character: 'Е'
+    {0xd095, &fontamp08_0xd095},
 #else
-  // character: 'Е' == 'E'
-  {0xc5, &fontamp08_0x45},
+    // character: 'Е' == 'E'
+    {0xd095, &fontamp08_0x45},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ж'
-  {0xc6, &fontamp08_0xc6},
+    // character: 'Ж'
+    {0xd096, &fontamp08_0xd096},
 #else
-  // character: 'Ж' == ''
-  {0xc6, &fontamp08_0x},
+    // character: 'Ж' == ''
+    {0xd096, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'З'
-  {0xc7, &fontamp08_0xc7},
+    // character: 'З'
+    {0xd097, &fontamp08_0xd097},
 #else
-  // character: 'З' == ''
-  {0xc7, &fontamp08_0x},
+    // character: 'З' == ''
+    {0xd097, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'И'
-  {0xc8, &fontamp08_0xc8},
+    // character: 'И'
+    {0xd098, &fontamp08_0xd098},
 #else
-  // character: 'И' == ''
-  {0xc8, &fontamp08_0x},
+    // character: 'И' == ''
+    {0xd098, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Й'
-  {0xc9, &fontamp08_0xc9},
+    // character: 'Й'
+    {0xd099, &fontamp08_0xd099},
 #else
-  // character: 'Й' == ''
-  {0xc9, &fontamp08_0x},
+    // character: 'Й' == ''
+    {0xd099, &fontamp08_0x},
 #endif
 
 #if (0x04b == 0x0)
-  // character: 'К'
-  {0xca, &fontamp08_0xca},
+    // character: 'К'
+    {0xd09a, &fontamp08_0xd09a},
 #else
-  // character: 'К' == 'K'
-  {0xca, &fontamp08_0x4b},
+    // character: 'К' == 'K'
+    {0xd09a, &fontamp08_0x4b},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Л'
-  {0xcb, &fontamp08_0xcb},
+    // character: 'Л'
+    {0xd09b, &fontamp08_0xd09b},
 #else
-  // character: 'Л' == ''
-  {0xcb, &fontamp08_0x},
+    // character: 'Л' == ''
+    {0xd09b, &fontamp08_0x},
 #endif
 
 #if (0x04d == 0x0)
-  // character: 'М'
-  {0xcc, &fontamp08_0xcc},
+    // character: 'М'
+    {0xd09c, &fontamp08_0xd09c},
 #else
-  // character: 'М' == 'M'
-  {0xcc, &fontamp08_0x4d},
+    // character: 'М' == 'M'
+    {0xd09c, &fontamp08_0x4d},
 #endif
 
 #if (0x048 == 0x0)
-  // character: 'Н'
-  {0xcd, &fontamp08_0xcd},
+    // character: 'Н'
+    {0xd09d, &fontamp08_0xd09d},
 #else
-  // character: 'Н' == 'H'
-  {0xcd, &fontamp08_0x48},
+    // character: 'Н' == 'H'
+    {0xd09d, &fontamp08_0x48},
 #endif
 
 #if (0x04f == 0x0)
-  // character: 'О'
-  {0xce, &fontamp08_0xce},
+    // character: 'О'
+    {0xd09e, &fontamp08_0xd09e},
 #else
-  // character: 'О' == 'O'
-  {0xce, &fontamp08_0x4f},
+    // character: 'О' == 'O'
+    {0xd09e, &fontamp08_0x4f},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'П'
-  {0xcf, &fontamp08_0xcf},
+    // character: 'П'
+    {0xd09f, &fontamp08_0xd09f},
 #else
-  // character: 'П' == ''
-  {0xcf, &fontamp08_0x},
+    // character: 'П' == ''
+    {0xd09f, &fontamp08_0x},
 #endif
 
 #if (0x050 == 0x0)
-  // character: 'Р'
-  {0xd0, &fontamp08_0xd0},
+    // character: 'Р'
+    {0xd0a0, &fontamp08_0xd0a0},
 #else
-  // character: 'Р' == 'P'
-  {0xd0, &fontamp08_0x50},
+    // character: 'Р' == 'P'
+    {0xd0a0, &fontamp08_0x50},
 #endif
 
 #if (0x043 == 0x0)
-  // character: 'С'
-  {0xd1, &fontamp08_0xd1},
+    // character: 'С'
+    {0xd0a1, &fontamp08_0xd0a1},
 #else
-  // character: 'С' == 'C'
-  {0xd1, &fontamp08_0x43},
+    // character: 'С' == 'C'
+    {0xd0a1, &fontamp08_0x43},
 #endif
 
 #if (0x054 == 0x0)
-  // character: 'Т'
-  {0xd2, &fontamp08_0xd2},
+    // character: 'Т'
+    {0xd0a2, &fontamp08_0xd0a2},
 #else
-  // character: 'Т' == 'T'
-  {0xd2, &fontamp08_0x54},
+    // character: 'Т' == 'T'
+    {0xd0a2, &fontamp08_0x54},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'У'
-  {0xd3, &fontamp08_0xd3},
+    // character: 'У'
+    {0xd0a3, &fontamp08_0xd0a3},
 #else
-  // character: 'У' == ''
-  {0xd3, &fontamp08_0x},
+    // character: 'У' == ''
+    {0xd0a3, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ф'
-  {0xd4, &fontamp08_0xd4},
+    // character: 'Ф'
+    {0xd0a4, &fontamp08_0xd0a4},
 #else
-  // character: 'Ф' == ''
-  {0xd4, &fontamp08_0x},
+    // character: 'Ф' == ''
+    {0xd0a4, &fontamp08_0x},
 #endif
 
 #if (0x058 == 0x0)
-  // character: 'Х'
-  {0xd5, &fontamp08_0xd5},
+    // character: 'Х'
+    {0xd0a5, &fontamp08_0xd0a5},
 #else
-  // character: 'Х' == 'X'
-  {0xd5, &fontamp08_0x58},
+    // character: 'Х' == 'X'
+    {0xd0a5, &fontamp08_0x58},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ц'
-  {0xd6, &fontamp08_0xd6},
+    // character: 'Ц'
+    {0xd0a6, &fontamp08_0xd0a6},
 #else
-  // character: 'Ц' == ''
-  {0xd6, &fontamp08_0x},
+    // character: 'Ц' == ''
+    {0xd0a6, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ч'
-  {0xd7, &fontamp08_0xd7},
+    // character: 'Ч'
+    {0xd0a7, &fontamp08_0xd0a7},
 #else
-  // character: 'Ч' == ''
-  {0xd7, &fontamp08_0x},
+    // character: 'Ч' == ''
+    {0xd0a7, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ш'
-  {0xd8, &fontamp08_0xd8},
+    // character: 'Ш'
+    {0xd0a8, &fontamp08_0xd0a8},
 #else
-  // character: 'Ш' == ''
-  {0xd8, &fontamp08_0x},
+    // character: 'Ш' == ''
+    {0xd0a8, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Щ'
-  {0xd9, &fontamp08_0xd9},
+    // character: 'Щ'
+    {0xd0a9, &fontamp08_0xd0a9},
 #else
-  // character: 'Щ' == ''
-  {0xd9, &fontamp08_0x},
+    // character: 'Щ' == ''
+    {0xd0a9, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ъ'
-  {0xda, &fontamp08_0xda},
+    // character: 'Ъ'
+    {0xd0aa, &fontamp08_0xd0aa},
 #else
-  // character: 'Ъ' == ''
-  {0xda, &fontamp08_0x},
+    // character: 'Ъ' == ''
+    {0xd0aa, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ы'
-  {0xdb, &fontamp08_0xdb},
+    // character: 'Ы'
+    {0xd0ab, &fontamp08_0xd0ab},
 #else
-  // character: 'Ы' == ''
-  {0xdb, &fontamp08_0x},
+    // character: 'Ы' == ''
+    {0xd0ab, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ь'
-  {0xdc, &fontamp08_0xdc},
+    // character: 'Ь'
+    {0xd0ac, &fontamp08_0xd0ac},
 #else
-  // character: 'Ь' == ''
-  {0xdc, &fontamp08_0x},
+    // character: 'Ь' == ''
+    {0xd0ac, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Э'
-  {0xdd, &fontamp08_0xdd},
+    // character: 'Э'
+    {0xd0ad, &fontamp08_0xd0ad},
 #else
-  // character: 'Э' == ''
-  {0xdd, &fontamp08_0x},
+    // character: 'Э' == ''
+    {0xd0ad, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Ю'
-  {0xde, &fontamp08_0xde},
+    // character: 'Ю'
+    {0xd0ae, &fontamp08_0xd0ae},
 #else
-  // character: 'Ю' == ''
-  {0xde, &fontamp08_0x},
+    // character: 'Ю' == ''
+    {0xd0ae, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'Я'
-  {0xdf, &fontamp08_0xdf},
+    // character: 'Я'
+    {0xd0af, &fontamp08_0xd0af},
 #else
-  // character: 'Я' == ''
-  {0xdf, &fontamp08_0x},
+    // character: 'Я' == ''
+    {0xd0af, &fontamp08_0x},
 #endif
 
 #if (0x061 == 0x0)
-  // character: 'а'
-  {0xe0, &fontamp08_0xe0},
+    // character: 'а'
+    {0xd0b0, &fontamp08_0xd0b0},
 #else
-  // character: 'а' == 'a'
-  {0xe0, &fontamp08_0x61},
+    // character: 'а' == 'a'
+    {0xd0b0, &fontamp08_0x61},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'б'
-  {0xe1, &fontamp08_0xe1},
+    // character: 'б'
+    {0xd0b1, &fontamp08_0xd0b1},
 #else
-  // character: 'б' == ''
-  {0xe1, &fontamp08_0x},
+    // character: 'б' == ''
+    {0xd0b1, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'в'
-  {0xe2, &fontamp08_0xe2},
+    // character: 'в'
+    {0xd0b2, &fontamp08_0xd0b2},
 #else
-  // character: 'в' == ''
-  {0xe2, &fontamp08_0x},
+    // character: 'в' == ''
+    {0xd0b2, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'г'
-  {0xe3, &fontamp08_0xe3},
+    // character: 'г'
+    {0xd0b3, &fontamp08_0xd0b3},
 #else
-  // character: 'г' == ''
-  {0xe3, &fontamp08_0x},
+    // character: 'г' == ''
+    {0xd0b3, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'д'
-  {0xe4, &fontamp08_0xe4},
+    // character: 'д'
+    {0xd0b4, &fontamp08_0xd0b4},
 #else
-  // character: 'д' == ''
-  {0xe4, &fontamp08_0x},
+    // character: 'д' == ''
+    {0xd0b4, &fontamp08_0x},
 #endif
 
 #if (0x065 == 0x0)
-  // character: 'е'
-  {0xe5, &fontamp08_0xe5},
+    // character: 'е'
+    {0xd0b5, &fontamp08_0xd0b5},
 #else
-  // character: 'е' == 'e'
-  {0xe5, &fontamp08_0x65},
+    // character: 'е' == 'e'
+    {0xd0b5, &fontamp08_0x65},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ж'
-  {0xe6, &fontamp08_0xe6},
+    // character: 'ж'
+    {0xd0b6, &fontamp08_0xd0b6},
 #else
-  // character: 'ж' == ''
-  {0xe6, &fontamp08_0x},
+    // character: 'ж' == ''
+    {0xd0b6, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'з'
-  {0xe7, &fontamp08_0xe7},
+    // character: 'з'
+    {0xd0b7, &fontamp08_0xd0b7},
 #else
-  // character: 'з' == ''
-  {0xe7, &fontamp08_0x},
+    // character: 'з' == ''
+    {0xd0b7, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'и'
-  {0xe8, &fontamp08_0xe8},
+    // character: 'и'
+    {0xd0b8, &fontamp08_0xd0b8},
 #else
-  // character: 'и' == ''
-  {0xe8, &fontamp08_0x},
+    // character: 'и' == ''
+    {0xd0b8, &fontamp08_0x},
 #endif
 
-#if (0x0c9 == 0x0)
-  // character: 'й'
-  {0xe9, &fontamp08_0xe9},
+#if (0x0d099 == 0x0)
+    // character: 'й'
+    {0xd0b9, &fontamp08_0xd0b9},
 #else
-  // character: 'й' == 'Й'
-  {0xe9, &fontamp08_0xc9},
-#endif
-
-#if (0x0 == 0x0)
-  // character: 'к'
-  {0xea, &fontamp08_0xea},
-#else
-  // character: 'к' == ''
-  {0xea, &fontamp08_0x},
+    // character: 'й' == 'Й'
+    {0xd0b9, &fontamp08_0xd099},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'л'
-  {0xeb, &fontamp08_0xeb},
+    // character: 'к'
+    {0xd0ba, &fontamp08_0xd0ba},
 #else
-  // character: 'л' == ''
-  {0xeb, &fontamp08_0x},
+    // character: 'к' == ''
+    {0xd0ba, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'м'
-  {0xec, &fontamp08_0xec},
+    // character: 'л'
+    {0xd0bb, &fontamp08_0xd0bb},
 #else
-  // character: 'м' == ''
-  {0xec, &fontamp08_0x},
+    // character: 'л' == ''
+    {0xd0bb, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'н'
-  {0xed, &fontamp08_0xed},
+    // character: 'м'
+    {0xd0bc, &fontamp08_0xd0bc},
 #else
-  // character: 'н' == ''
-  {0xed, &fontamp08_0x},
+    // character: 'м' == ''
+    {0xd0bc, &fontamp08_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'н'
+    {0xd0bd, &fontamp08_0xd0bd},
+#else
+    // character: 'н' == ''
+    {0xd0bd, &fontamp08_0x},
 #endif
 
 #if (0x06f == 0x0)
-  // character: 'о'
-  {0xee, &fontamp08_0xee},
+    // character: 'о'
+    {0xd0be, &fontamp08_0xd0be},
 #else
-  // character: 'о' == 'o'
-  {0xee, &fontamp08_0x6f},
+    // character: 'о' == 'o'
+    {0xd0be, &fontamp08_0x6f},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'п'
-  {0xef, &fontamp08_0xef},
+    // character: 'п'
+    {0xd0bf, &fontamp08_0xd0bf},
 #else
-  // character: 'п' == ''
-  {0xef, &fontamp08_0x},
+    // character: 'п' == ''
+    {0xd0bf, &fontamp08_0x},
 #endif
 
 #if (0x070 == 0x0)
-  // character: 'р'
-  {0xf0, &fontamp08_0xf0},
+    // character: 'р'
+    {0xd180, &fontamp08_0xd180},
 #else
-  // character: 'р' == 'p'
-  {0xf0, &fontamp08_0x70},
+    // character: 'р' == 'p'
+    {0xd180, &fontamp08_0x70},
 #endif
 
 #if (0x063 == 0x0)
-  // character: 'с'
-  {0xf1, &fontamp08_0xf1},
+    // character: 'с'
+    {0xd181, &fontamp08_0xd181},
 #else
-  // character: 'с' == 'c'
-  {0xf1, &fontamp08_0x63},
+    // character: 'с' == 'c'
+    {0xd181, &fontamp08_0x63},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'т'
-  {0xf2, &fontamp08_0xf2},
+    // character: 'т'
+    {0xd182, &fontamp08_0xd182},
 #else
-  // character: 'т' == ''
-  {0xf2, &fontamp08_0x},
+    // character: 'т' == ''
+    {0xd182, &fontamp08_0x},
 #endif
 
 #if (0x079 == 0x0)
-  // character: 'у'
-  {0xf3, &fontamp08_0xf3},
+    // character: 'у'
+    {0xd183, &fontamp08_0xd183},
 #else
-  // character: 'у' == 'y'
-  {0xf3, &fontamp08_0x79},
+    // character: 'у' == 'y'
+    {0xd183, &fontamp08_0x79},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ф'
-  {0xf4, &fontamp08_0xf4},
+    // character: 'ф'
+    {0xd184, &fontamp08_0xd184},
 #else
-  // character: 'ф' == ''
-  {0xf4, &fontamp08_0x},
+    // character: 'ф' == ''
+    {0xd184, &fontamp08_0x},
 #endif
 
 #if (0x078 == 0x0)
-  // character: 'х'
-  {0xf5, &fontamp08_0xf5},
+    // character: 'х'
+    {0xd185, &fontamp08_0xd185},
 #else
-  // character: 'х' == 'x'
-  {0xf5, &fontamp08_0x78},
+    // character: 'х' == 'x'
+    {0xd185, &fontamp08_0x78},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ц'
-  {0xf6, &fontamp08_0xf6},
+    // character: 'ц'
+    {0xd186, &fontamp08_0xd186},
 #else
-  // character: 'ц' == ''
-  {0xf6, &fontamp08_0x},
+    // character: 'ц' == ''
+    {0xd186, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ч'
-  {0xf7, &fontamp08_0xf7},
+    // character: 'ч'
+    {0xd187, &fontamp08_0xd187},
 #else
-  // character: 'ч' == ''
-  {0xf7, &fontamp08_0x},
+    // character: 'ч' == ''
+    {0xd187, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ш'
-  {0xf8, &fontamp08_0xf8},
+    // character: 'ш'
+    {0xd188, &fontamp08_0xd188},
 #else
-  // character: 'ш' == ''
-  {0xf8, &fontamp08_0x},
+    // character: 'ш' == ''
+    {0xd188, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'щ'
-  {0xf9, &fontamp08_0xf9},
+    // character: 'щ'
+    {0xd189, &fontamp08_0xd189},
 #else
-  // character: 'щ' == ''
-  {0xf9, &fontamp08_0x},
+    // character: 'щ' == ''
+    {0xd189, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ъ'
-  {0xfa, &fontamp08_0xfa},
+    // character: 'ъ'
+    {0xd18a, &fontamp08_0xd18a},
 #else
-  // character: 'ъ' == ''
-  {0xfa, &fontamp08_0x},
+    // character: 'ъ' == ''
+    {0xd18a, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ы'
-  {0xfb, &fontamp08_0xfb},
+    // character: 'ы'
+    {0xd18b, &fontamp08_0xd18b},
 #else
-  // character: 'ы' == ''
-  {0xfb, &fontamp08_0x},
+    // character: 'ы' == ''
+    {0xd18b, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ь'
-  {0xfc, &fontamp08_0xfc},
+    // character: 'ь'
+    {0xd18c, &fontamp08_0xd18c},
 #else
-  // character: 'ь' == ''
-  {0xfc, &fontamp08_0x},
+    // character: 'ь' == ''
+    {0xd18c, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'э'
-  {0xfd, &fontamp08_0xfd},
+    // character: 'э'
+    {0xd18d, &fontamp08_0xd18d},
 #else
-  // character: 'э' == ''
-  {0xfd, &fontamp08_0x},
+    // character: 'э' == ''
+    {0xd18d, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'ю'
-  {0xfe, &fontamp08_0xfe},
+    // character: 'ю'
+    {0xd18e, &fontamp08_0xd18e},
 #else
-  // character: 'ю' == ''
-  {0xfe, &fontamp08_0x},
+    // character: 'ю' == ''
+    {0xd18e, &fontamp08_0x},
 #endif
 
 #if (0x0 == 0x0)
-  // character: 'я'
-  {0xff, &fontamp08_0xff}
+    // character: 'я'
+    {0xd18f, &fontamp08_0xd18f},
 #else
-  // character: 'я' == ''
-  {0xff, &fontamp08_0x}
+    // character: 'я' == ''
+    {0xd18f, &fontamp08_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'ё'
+    {0xd191, &fontamp08_0xd191},
+#else
+    // character: 'ё' == ''
+    {0xd191, &fontamp08_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'є'
+    {0xd194, &fontamp08_0xd194},
+#else
+    // character: 'є' == ''
+    {0xd194, &fontamp08_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'і'
+    {0xd196, &fontamp08_0xd196},
+#else
+    // character: 'і' == ''
+    {0xd196, &fontamp08_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'ї'
+    {0xd197, &fontamp08_0xd197},
+#else
+    // character: 'ї' == ''
+    {0xd197, &fontamp08_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'ў'
+    {0xd19e, &fontamp08_0xd19e},
+#else
+    // character: 'ў' == ''
+    {0xd19e, &fontamp08_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'Ґ'
+    {0xd290, &fontamp08_0xd290},
+#else
+    // character: 'Ґ' == ''
+    {0xd290, &fontamp08_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'ґ'
+    {0xd291, &fontamp08_0xd291},
+#else
+    // character: 'ґ' == ''
+    {0xd291, &fontamp08_0x},
+#endif
+
+#if (0x0c2a0 == 0x0)
+    // character: ' '
+    {0xe28088, &fontamp08_0xe28088},
+#else
+    // character: ' ' == '\x00a0'
+    {0xe28088, &fontamp08_0xc2a0},
+#endif
+
+#if (0x0 == 0x0)
+    // character: '█'
+    {0xe29688, &fontamp08_0xe29688}
+#else
+    // character: '█' == ''
+    {0xe29688, &fontamp08_0x}
 #endif
 
 };
 
 
-const tFont fontamp08 = { 178, fontamp08_array };
+const tFont fontamp08 = { 179, fontamp08_array };

@@ -3,17 +3,17 @@
 
 #include <inttypes.h>
 
-#define LETTER_SPACE_CHAR   0xA0
+#define LETTER_SPACE_CHAR   0x00E28088  // U+2008
+#define BLOCK_CHAR          0x00E29688  // U+2588
 
 typedef struct {
     const uint8_t *data;
     uint16_t width;
     uint16_t height;
-    uint8_t dataSize;
 } tImage;
 
 typedef struct {
-    uint16_t code;
+    int32_t code;
     const tImage *image;
 } tChar;
 

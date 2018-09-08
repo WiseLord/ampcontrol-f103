@@ -104,7 +104,7 @@ void glcdSetX(int16_t x);
 
 void glcdDrawImage(tImage *img);
 void glcdWriteIcon(uint8_t num, const uint8_t *icons);
-void glcdWriteChar(uint16_t code);
+void glcdWriteChar(int32_t code);
 void glcdWriteString(char *string);
 
 void glcdDrawRect(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color);

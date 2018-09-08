@@ -93,7 +93,7 @@ void glcdSetX(int16_t x)
     glcd->canvas->x = x;
 }
 
-static void findCharOft(uint16_t code, tImage *img)
+static void findCharOft(int32_t code, tImage *img)
 {
     const tFont *font = glcd->font.tfont;
 
@@ -151,12 +151,16 @@ void glcdWriteIcon(uint8_t num, const uint8_t *icons)
     glcd->drawImage(&img);
 }
 
-void glcdWriteChar(uint16_t code)
+void glcdWriteChar(int32_t code)
 {
     tImage img;
     img.data = 0;
 
     findCharOft(code, &img);
+
+    if (img.data == 0) {
+        findCharOft(BLOCK_CHAR, &img);
+    }
 
     if (img.data == 0)
         return;
@@ -167,11 +171,39 @@ void glcdWriteChar(uint16_t code)
 
 void glcdWriteString(char *string)
 {
-    if (*string)
-        glcdWriteChar(*string++);
+    int32_t code = 0;
+    char sym;
+    uint8_t curr = 0;
+
     while (*string) {
-        glcdWriteChar(LETTER_SPACE_CHAR);
-        glcdWriteChar(*string++);
+        sym = *string++;
+
+        if ((sym & 0xC0) == 0x80) {         // Not first byte
+            code <<= 8;
+            code |= sym;
+            if (curr) {
+                curr--;
+            }
+        } else {
+            code = sym;
+            if ((sym & 0x80) == 0x00) {         // one-byte symbol
+                curr = 0;
+            } else if ((sym & 0xE0) == 0xC0) {  // two-byte symbol
+                curr = 1;
+            } else if ((sym & 0xF0) == 0xE0) {  // three-byte symbol
+                curr = 2;
+            } else if ((sym & 0xF8) == 0xF0) {  // four-byte symbol
+                curr = 3;
+            } else {
+                curr = 0;
+            }
+        }
+        if (curr)
+            continue;
+
+        glcdWriteChar(code);
+        if (*string)
+            glcdWriteChar(LETTER_SPACE_CHAR);
     }
 }
 
