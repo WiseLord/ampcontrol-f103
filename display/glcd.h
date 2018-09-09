@@ -49,6 +49,8 @@ typedef struct {
     uint8_t bus;
 } GlcdDriver;
 
+typedef void (*SendDataCallback)(uint16_t data);
+
 //Colors
 #define RGB_TO_565(x)                   (((x >> 8) & 0xF800) | ((x >> 5) & 0x7E0) | ((x >> 3) & 0x1F))
 #define LCD_COLOR_BLACK                 RGB_TO_565(0x000000)
@@ -103,6 +105,7 @@ void glcdSetXY(int16_t x, int16_t y);
 void glcdSetX(int16_t x);
 
 void glcdDrawImage(tImage *img);
+void glcdSendImage(tImage *img, SendDataCallback sendData);
 void glcdWriteIcon(uint8_t num, const uint8_t *icons);
 void glcdWriteChar(int32_t code);
 void glcdWriteString(char *string);

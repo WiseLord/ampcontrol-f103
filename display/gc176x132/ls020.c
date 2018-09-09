@@ -222,10 +222,6 @@ void ls020DrawImage(tImage *img)
     uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
-    uint8_t colorH = glcd.font.color >> 8;
-    uint8_t colorL = glcd.font.color & 0xFF;
-    uint8_t bgColorH = glcd.canvas->color >> 8;
-    uint8_t bgColorL = glcd.canvas->color & 0xFF;
     uint8_t mult = glcd.font.mult;
 
     ls020SetWindow(x0, y0, mult * w, mult * h);
@@ -233,29 +229,7 @@ void ls020DrawImage(tImage *img)
     CLR(LS020_DC);
     CLR(LS020_CS);
 
-    for (uint16_t i = 0; i < w; i++) {
-        for (uint8_t mx = 0; mx < mult; mx++) {
-            for (uint16_t j = 0; j < h + 7 / 8; j++) {
-                uint8_t data = img->data[w * j + i];
-                for (uint8_t bit = 0; bit < 8; bit++) {
-                    for (uint8_t bit = 0; bit < 8; bit++) {
-                        if (data & 0x01) {
-                            for (uint8_t my = 0; my < mult; my++) {
-                                ls020SendSPI(colorH);
-                                ls020SendSPI(colorL);
-                            }
-                        } else {
-                            for (uint8_t my = 0; my < mult; my++) {
-                                ls020SendSPI(bgColorH);
-                                ls020SendSPI(bgColorL);
-                            }
-                        }
-                        data >>= 1;
-                    }
-                }
-            }
-        }
-    }
+    glcdSendImage(img, ls020SendData);
 
     while (TX_BUSY());
     SET(LS020_CS);

@@ -249,8 +249,6 @@ void ili9327DrawImage(tImage *img)
     uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
-    uint16_t color = glcd.font.color;
-    uint16_t bgColor = glcd.canvas->color;
     uint8_t mult = glcd.font.mult;
 
     CLR(ILI9327_CS);
@@ -258,20 +256,8 @@ void ili9327DrawImage(tImage *img)
     ili9327SetWindow(x0, y0, mult * w, mult * h);
 
     ili9327SelectReg(0x2C);
-    for (uint16_t i = 0; i < w; i++) {
-        for (uint8_t mx = 0; mx < mult; mx++) {
-            for (uint16_t j = 0; j < h + 7 / 8; j++) {
-                uint8_t data = img->data[w * j + i];
-                for (uint8_t bit = 0; bit < 8; bit++) {
-                    if (8 * j + bit < h) {
-                        for (uint8_t my = 0; my < mult; my++)
-                            ili9327SendData(data & 0x01 ? color : bgColor);
-                        data >>= 1;
-                    }
-                }
-            }
-        }
-    }
+
+    glcdSendImage(img, ili9327SendData);
 
     SET(ILI9327_CS);
 }

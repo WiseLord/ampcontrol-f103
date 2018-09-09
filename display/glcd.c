@@ -135,6 +135,30 @@ void glcdDrawImage(tImage *img)
     }
 }
 
+void glcdSendImage(tImage *img, SendDataCallback sendData)
+{
+    uint16_t w = img->width;
+    uint16_t h = img->height;
+    uint16_t color = glcd->font.color;
+    uint16_t bgColor = glcd->canvas->color;
+    uint8_t mult = glcd->font.mult;
+
+    for (uint16_t i = 0; i < w; i++) {
+        for (uint8_t mx = 0; mx < mult; mx++) {
+            for (uint16_t j = 0; j < h + 7 / 8; j++) {
+                uint8_t data = img->data[w * j + i];
+                for (uint8_t bit = 0; bit < 8; bit++) {
+                    if (8 * j + bit < h) {
+                        for (uint8_t my = 0; my < mult; my++)
+                            sendData(data & 0x01 ? color : bgColor);
+                        data >>= 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
 void glcdWriteIcon(uint8_t num, const uint8_t *icons)
 {
     tImage img;
