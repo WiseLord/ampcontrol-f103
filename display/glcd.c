@@ -310,7 +310,11 @@ void glcdDrawRect(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color)
     if (glcd->drawRectangle) {
         glcd->drawRectangle(x, y, w, h, color);
     } else {
-        // TODO: draw in pixels
+        for (int16_t i = 0; i < w; i++) {
+            for (int16_t j = 0; j < h; j++) {
+                glcd->drawPixel(x + i, y + j, color);
+            }
+        }
     }
 }
 

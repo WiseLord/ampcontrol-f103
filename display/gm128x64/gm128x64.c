@@ -100,38 +100,50 @@ static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_
 
 static void showTime(RTC_type *rtc, char *wday)
 {
-    glcdSetFont(&fontampdig32);
-    glcdSetXY(4, 0);
+    glcdSetFont(&fontterminus30dig);
+    glcdSetXY(1, 0);
     displayTm(rtc, RTC_HOUR);
     glcdWriteChar(':');
     displayTm(rtc, RTC_MIN);
     glcdWriteChar(':');
     displayTm(rtc, RTC_SEC);
 
-    glcdSetFont(&fontamp24);
-    glcdSetXY(5, 32);
+    glcdSetXY(1, 30);
+    glcdSetFont(&fontterminus22dig);
+
     displayTm(rtc, RTC_DATE);
     glcdWriteChar('.');
     displayTm(rtc, RTC_MONTH);
     glcdWriteChar('.');
     displayTm(rtc, RTC_YEAR);
 
-    glcdSetFont(&fontamp08);
+    glcdSetXY(63, 52);
+    glcdSetFont(&fontterminus12);
     glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetXY(36, 56);
+
+    static char *wdayOld = 0;
+    if (wday != wdayOld) {
+        glcdDrawRect(0, 52, 128, 12, glcd->canvas->color);
+    }
+
+    glcdSetFontAlign(FONT_ALIGN_CENTER);
     glcdWriteString(wday);
+
+    wdayOld = wday;
 }
 
 static void showParam(DispParam *dp)
 {
-    glcdSetFont(&fontamp24);
+    glcdSetFont(&fontterminus24b);
     glcdSetFontColor(LCD_COLOR_WHITE);
+
     glcdSetXY(0, 0);
     glcdWriteString((char *)dp->label);
 
     displayShowBar(dp->min, dp->max, dp->value);
 
-    glcdSetXY(94, 30);
+    glcdSetXY(128, 30);
+    glcdSetFontAlign(FONT_ALIGN_RIGHT);
     glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
 
     glcdSetXY(104, 2);

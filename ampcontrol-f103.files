@@ -67,12 +67,13 @@ display/fonts/font-terminus-18.c
 display/fonts/font-terminus-18b.c
 display/fonts/font-terminus-20.c
 display/fonts/font-terminus-20b.c
-display/fonts/font-terminus-22.c
 display/fonts/font-terminus-22b.c
+display/fonts/font-terminus-22-dig.c
 display/fonts/font-terminus-24.c
 display/fonts/font-terminus-24b.c
 display/fonts/font-terminus-28.c
 display/fonts/font-terminus-28b.c
+display/fonts/font-terminus-30-dig.c
 display/fonts/font-terminus-32.c
 display/fonts/font-terminus-32b.c
 display/fonts/font-terminus-64.c
