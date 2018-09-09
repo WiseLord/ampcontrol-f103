@@ -6,18 +6,16 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
 {
     int8_t time = *((int8_t *)rtc + tm);
 
-    glcdSetFontColor(LCD_COLOR_AQUA);
+    glcdSetFontColor(LCD_COLOR_WHITE);
     glcdWriteChar(LETTER_SPACE_CHAR);
     if (rtc->etm == tm)
-        glcdSetFontColor(LCD_COLOR_YELLOW);
-    glcdWriteChar(LETTER_SPACE_CHAR);
+        glcdSetFontColor(LCD_COLOR_OLIVE);
     if (tm == RTC_YEAR) {
         glcdWriteString("20");
         glcdWriteChar(LETTER_SPACE_CHAR);
     }
     glcdWriteNum(time, 2, '0', 10);
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdSetFontColor(LCD_COLOR_AQUA);
+    glcdSetFontColor(LCD_COLOR_WHITE);
     glcdWriteChar(LETTER_SPACE_CHAR);
 }
 
@@ -32,33 +30,60 @@ static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t va
 
 static void showTime(RTC_type *rtc, char *wday)
 {
-    glcdSetXY(42, 8);
-
-    glcdSetFont(&fontampdig32);
+    glcdSetXY(3, 10);
+    glcdSetFont(&fontterminus80dig);
 
     displayTm(rtc, RTC_HOUR);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteChar(':');
+    glcdWriteChar(LETTER_SPACE_CHAR);
     displayTm(rtc, RTC_MIN);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteChar(':');
+    glcdWriteChar(LETTER_SPACE_CHAR);
     displayTm(rtc, RTC_SEC);
 
-    glcdSetXY(12, 84);
+    glcdSetXY(14, 100);
+    glcdSetFont(&fontterminus64dig);
 
     displayTm(rtc, RTC_DATE);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteChar('.');
+    glcdWriteChar(LETTER_SPACE_CHAR);
     displayTm(rtc, RTC_MONTH);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteChar('.');
+    glcdWriteChar(LETTER_SPACE_CHAR);
     displayTm(rtc, RTC_YEAR);
 
-    glcdSetFont(&fontamp24);
+    glcdSetXY(159, 170);
+    glcdSetFont(&fontterminus64);
     glcdSetFontColor(LCD_COLOR_AQUA);
-    glcdSetXY(48, 160);
+
+    static char *wdayOld = 0;
+    if (wday != wdayOld) {
+        glcdDrawRect(0, 170, 320, 64, glcd->canvas->color);
+    }
+
+    glcdSetFontAlign(FONT_ALIGN_CENTER);
     glcdWriteString(wday);
+
+    wdayOld = wday;
 }
 
 static void showParam(DispParam *dp)
 {
-    glcd->drawRectangle(10, 10, 50, 30, LCD_COLOR_GREEN);
+    glcdSetFont(&fontterminus64);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+
+    glcdSetXY(2, 0);
+    glcdWriteString((char *)dp->label);
+
+    glcdSetXY(320, 160);
+    glcdSetFont(&fontterminus80dig);
+
+    glcdSetFontAlign(FONT_ALIGN_RIGHT);
+    glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
 }
 
 static void showSpectrum(SpectrumData *spData)
@@ -103,5 +128,5 @@ void gc320x240Init(GlcdDriver *driver)
     glcd->canvas = &gc320x240;
     glcdInit(glcd);
 
-    glcdSetFontMult(2);
+    glcdSetFontMult(1);
 }

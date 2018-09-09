@@ -75,6 +75,9 @@ display/fonts/font-terminus-28.c
 display/fonts/font-terminus-28b.c
 display/fonts/font-terminus-32.c
 display/fonts/font-terminus-32b.c
+display/fonts/font-terminus-64.c
+display/fonts/font-terminus-64-dig.c
+display/fonts/font-terminus-80-dig.c
 display/fonts/fonts.h
 
 display/gc176x132/gc176x132.c

@@ -44,10 +44,21 @@ extern const tFont fontterminus28b;
 extern const tFont fontterminus32;
 extern const tFont fontterminus32b;
 
+extern const tFont fontterminus64;
+extern const tFont fontterminus64dig;
+extern const tFont fontterminus80dig;
+
+typedef enum {
+    FONT_ALIGN_LEFT,
+    FONT_ALIGN_CENTER,
+    FONT_ALIGN_RIGHT
+} FontAlign;
+
 typedef struct {
     const tFont *tfont;
     uint16_t color;
 
+    uint8_t align;
     uint8_t fixed;
     uint8_t mult;
     uint8_t direction;
