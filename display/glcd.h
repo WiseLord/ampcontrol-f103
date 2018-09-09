@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "fonts.h"
+#include "fonts/fonts.h"
 #include "icons.h"
 #include "../rtc.h"
 #include "../spectrum.h"

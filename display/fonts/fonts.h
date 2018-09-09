@@ -26,6 +26,24 @@ extern const tFont fontamp08;
 extern const tFont fontamp24;
 extern const tFont fontampdig32;
 
+extern const tFont fontterminus12;
+extern const tFont fontterminus14;
+extern const tFont fontterminus14b;
+extern const tFont fontterminus16;
+extern const tFont fontterminus16b;
+extern const tFont fontterminus18;
+extern const tFont fontterminus18b;
+extern const tFont fontterminus20;
+extern const tFont fontterminus20b;
+extern const tFont fontterminus22;
+extern const tFont fontterminus22b;
+extern const tFont fontterminus24;
+extern const tFont fontterminus24b;
+extern const tFont fontterminus28;
+extern const tFont fontterminus28b;
+extern const tFont fontterminus32;
+extern const tFont fontterminus32b;
+
 typedef struct {
     const tFont *tfont;
     uint16_t color;

@@ -25,7 +25,7 @@ C_SOURCES += timers.c
 C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
 
 # Display source files
-FONTS_SRC = $(wildcard display/font*.c)
+FONTS_SRC = $(wildcard display/fonts/font*.c)
 ICONS_SRC = $(wildcard display/icon*.c)
 C_SOURCES += $(FONTS_SRC)
 C_SOURCES += $(ICONS_SRC)
@@ -111,7 +111,7 @@ DEBUG = 1
 FPU =
 FLOAT-ABI =
 MCU = -mcpu=cortex-m3 -mthumb $(FPU) $(FLOAT-ABI)
-OPT = -Os -fshort-enums -ffunction-sections -fdata-sections
+OPT = -Os -fshort-enums -ffunction-sections -fdata-sections -ffreestanding
 WARN = -Wall -Werror
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) $(WARN)
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) $(WARN)

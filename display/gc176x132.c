@@ -1,10 +1,5 @@
 #include "gc176x132.h"
 
-#include "fonts.h"
-#include "icons.h"
-
-#include "../functions.h"
-
 static GlcdDriver *glcd;
 
 static void displayTm(RTC_type *rtc, uint8_t tm)

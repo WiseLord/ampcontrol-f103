@@ -1,8 +1,5 @@
 #include "gm128x64.h"
 
-#include "fonts.h"
-#include "icons.h"
-
 static GlcdDriver *glcd;
 
 //static void drawHorizLine(uint8_t x1, uint8_t x2, uint8_t y, uint8_t color)
@@ -119,7 +116,6 @@ static void showTime(RTC_type *rtc, char *wday)
     glcdWriteChar('.');
     displayTm(rtc, RTC_YEAR);
 
-//    glcdSetFont(&fontamp08);
     glcdSetFont(&fontamp08);
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetXY(36, 56);
