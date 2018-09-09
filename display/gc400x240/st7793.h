@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "gc400x240.h"
 
 void st7793Init(GlcdDriver **driver);
 void st7793Clear(void);

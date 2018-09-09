@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "gm128x64.h"
 
 // Basic instructions
 #define ST7920_CLEAR                0x01

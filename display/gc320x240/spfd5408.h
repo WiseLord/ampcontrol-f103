@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "gc320x240.h"
 
 void spfd5408Init(GlcdDriver **driver);
 void spfd5408Clear(void);

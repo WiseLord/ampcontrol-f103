@@ -31,41 +31,41 @@ C_SOURCES += $(FONTS_SRC)
 C_SOURCES += $(ICONS_SRC)
 
 ifeq "$(DISPLAY)" "KS0108"
-  C_SOURCES += display/ks0108.c
-  C_SOURCES += display/gm128x64.c
+  C_SOURCES += display/gm128x64/ks0108.c
+  C_SOURCES += display/gm128x64/gm128x64.c
 else ifeq "$(DISPLAY)" "ST7920"
-  C_SOURCES += display/st7920.c
-  C_SOURCES += display/gm128x64.c
+  C_SOURCES += display/gm128x64/st7920.c
+  C_SOURCES += display/gm128x64/gm128x64.c
 else ifeq "$(DISPLAY)" "SSD1306"
-  C_SOURCES += display/ssd1306.c
-  C_SOURCES += display/gm128x64.c
+  C_SOURCES += display/gm128x64/ssd1306.c
+  C_SOURCES += display/gm128x64/gm128x64.c
 else ifeq "$(DISPLAY)" "LS020"
-  C_SOURCES += display/ls020.c
-  C_SOURCES += display/gc176x132.c
+  C_SOURCES += display/gc176x132/ls020.c
+  C_SOURCES += display/gc176x132/gc176x132.c
 else ifeq "$(DISPLAY)" "LPH9157"
-  C_SOURCES += display/lph9157.c
-  C_SOURCES += display/gc176x132.c
+  C_SOURCES += display/gc176x132/lph9157.c
+  C_SOURCES += display/gc176x132/gc176x132.c
 else ifeq "$(DISPLAY)" "SSD1286A"
-  C_SOURCES += display/ssd1286a.c
-  C_SOURCES += display/gc176x132.c
+  C_SOURCES += display/gc176x132/ssd1286a.c
+  C_SOURCES += display/gc176x132/gc176x132.c
 else ifeq "$(DISPLAY)" "ILI9320"
-  C_SOURCES += display/ili9320.c
-  C_SOURCES += display/gc320x240.c
+  C_SOURCES += display/gc320x240/ili9320.c
+  C_SOURCES += display/gc320x240/gc320x240.c
 else ifeq "$(DISPLAY)" "ILI9341"
-  C_SOURCES += display/ili9341.c
-  C_SOURCES += display/gc320x240.c
+  C_SOURCES += display/gc320x240/ili9341.c
+  C_SOURCES += display/gc320x240/gc320x240.c
 else ifeq "$(DISPLAY)" "S6D0139"
-  C_SOURCES += display/s6d0139.c
-  C_SOURCES += display/gc320x240.c
+  C_SOURCES += display/gc320x240/s6d0139.c
+  C_SOURCES += display/gc320x240/gc320x240.c
 else ifeq "$(DISPLAY)" "SPFD5408"
-  C_SOURCES += display/spfd5408.c
-  C_SOURCES += display/gc320x240.c
+  C_SOURCES += display/gc320x240/spfd5408.c
+  C_SOURCES += display/gc320x240/gc320x240.c
 else ifeq "$(DISPLAY)" "ILI9327"
-  C_SOURCES += display/ili9327.c
-  C_SOURCES += display/gc400x240.c
+  C_SOURCES += display/gc400x240/ili9327.c
+  C_SOURCES += display/gc400x240/gc400x240.c
 else ifeq "$(DISPLAY)" "ST7793"
-  C_SOURCES += display/st7793.c
-  C_SOURCES += display/gc400x240.c
+  C_SOURCES += display/gc400x240/st7793.c
+  C_SOURCES += display/gc400x240/gc400x240.c
 endif
 C_SOURCES += display.c
 C_SOURCES += display/glcd.c

@@ -1,12 +1,10 @@
 #include "lph9157.h"
 
+#include "../../pins.h"
+#include "../../functions.h"
+
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_spi.h>
-
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gc176x132.h"
 
 #define LPH9157_WIDTH           132
 #define LPH9157_HEIGHT          176

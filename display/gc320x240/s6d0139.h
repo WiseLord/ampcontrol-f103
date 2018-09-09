@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "gc320x240.h"
 
 void s6d0139Init(GlcdDriver **driver);
 void s6d0139Clear(void);

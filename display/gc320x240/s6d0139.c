@@ -1,9 +1,7 @@
 #include "s6d0139.h"
 
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gc320x240.h"
+#include "../../pins.h"
+#include "../../functions.h"
 
 #define S6D0139_WIDTH           240
 #define S6D0139_HEIGHT          320

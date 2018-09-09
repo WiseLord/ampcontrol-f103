@@ -3,3 +3,8 @@ drivers/CMSIS/Device/ST/STM32F1xx/Include
 drivers/STM32F1xx_HAL_Driver/Inc
 .
 display
+display/gm128x64
+display/gc320x240
+display/fonts
+display/gc400x240
+display/gc176x132

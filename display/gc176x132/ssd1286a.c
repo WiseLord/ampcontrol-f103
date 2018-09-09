@@ -1,12 +1,10 @@
 #include "ssd1286a.h"
 
+#include "../../pins.h"
+#include "../../functions.h"
+
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_spi.h>
-
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gc176x132.h"
 
 #define SSD1286A_WIDTH           132
 #define SSD1286A_HEIGHT          176

@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "gm128x64.h"
 
 #define SSD1306_I2C_ADDR_0              0x78
 #define SSD1306_I2C_ADDR_1              0x7A

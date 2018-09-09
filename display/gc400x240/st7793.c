@@ -1,9 +1,7 @@
 #include "st7793.h"
 
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gc400x240.h"
+#include "../../pins.h"
+#include "../../functions.h"
 
 #define ST7793_WIDTH           240
 #define ST7793_HEIGHT          400

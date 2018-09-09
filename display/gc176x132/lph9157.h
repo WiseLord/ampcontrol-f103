@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "gc176x132.h"
 
 void lph9157Init(GlcdDriver **driver);
 void lph9157Clear(void);

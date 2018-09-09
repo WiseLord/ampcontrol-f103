@@ -5,7 +5,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "../glcd.h"
 
 void gc400x240Init(GlcdDriver *driver);
 

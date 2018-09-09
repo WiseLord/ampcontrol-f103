@@ -5,7 +5,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "../glcd.h"
 
 void gm128x64Init(GlcdDriver *driver);
 

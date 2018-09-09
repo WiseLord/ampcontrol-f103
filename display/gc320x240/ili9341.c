@@ -1,12 +1,10 @@
 #include "ili9341.h"
 
+#include "../../pins.h"
+#include "../../functions.h"
+
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_spi.h>
-
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gc320x240.h"
 
 #define ILI9341_WIDTH           240
 #define ILI9341_HEIGHT          320

@@ -1,9 +1,7 @@
 #include "ili9320.h"
 
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gc320x240.h"
+#include "../../pins.h"
+#include "../../functions.h"
 
 #define ILI9320_WIDTH           240
 #define ILI9320_HEIGHT          320

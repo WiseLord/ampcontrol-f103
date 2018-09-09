@@ -1,9 +1,7 @@
 #include "st7920.h"
 
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gm128x64.h"
+#include "../../pins.h"
+#include "../../functions.h"
 
 static GlcdDriver glcd = {
     .clear = st7920Clear,

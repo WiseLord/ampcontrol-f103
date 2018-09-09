@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "gm128x64.h"
 
 // Display geometry
 #define KS0108_COLS                 64

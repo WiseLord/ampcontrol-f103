@@ -4,29 +4,29 @@
 #include <inttypes.h>
 
 #if defined (_KS0108)
-#include "ks0108.h"
+#include "gm128x64/ks0108.h"
 #elif defined (_ST7920)
-#include "st7920.h"
+#include "gm128x64/st7920.h"
 #elif defined (_SSD1306)
-#include "ssd1306.h"
+#include "gm128x64/ssd1306.h"
 #elif defined (_LS020)
-#include "ls020.h"
+#include "gc176x132/ls020.h"
 #elif defined (_LPH9157)
-#include "lph9157.h"
+#include "gc176x132/lph9157.h"
 #elif defined (_SSD1286A)
-#include "ssd1286a.h"
+#include "gc176x132/ssd1286a.h"
 #elif defined (_ILI9320)
-#include "ili9320.h"
+#include "gc320x240/ili9320.h"
 #elif defined (_ILI9341)
-#include "ili9341.h"
+#include "gc320x240/ili9341.h"
 #elif defined (_S6D0139)
-#include "s6d0139.h"
+#include "gc320x240/s6d0139.h"
 #elif defined (_SPFD5408)
-#include "spfd5408.h"
+#include "gc320x240/spfd5408.h"
 #elif defined (_ILI9327)
-#include "ili9327.h"
+#include "gc400x240/ili9327.h"
 #elif defined (_ST7793)
-#include "st7793.h"
+#include "gc400x240/st7793.h"
 #else
 #error "Unsupported display driver"
 #endif

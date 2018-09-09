@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "glcd.h"
+#include "gc176x132.h"
 
 void ssd1286aInit(GlcdDriver **driver);
 void ssd1286aClear(void);

@@ -1,12 +1,10 @@
 #include "ls020.h"
 
+#include "../../pins.h"
+#include "../../functions.h"
+
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_spi.h>
-
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gc176x132.h"
 
 #define LS020_WIDTH           132
 #define LS020_HEIGHT          176

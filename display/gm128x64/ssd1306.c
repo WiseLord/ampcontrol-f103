@@ -1,13 +1,11 @@
 #include "ssd1306.h"
 
+#include "../../pins.h"
+#include "../../functions.h"
+
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_i2c.h>
 #include <stm32f1xx_ll_rcc.h>
-
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gm128x64.h"
 
 #define I2C_REQUEST_WRITE                       0x00
 #define I2C_REQUEST_READ                        0x01

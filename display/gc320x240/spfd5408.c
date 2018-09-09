@@ -1,9 +1,7 @@
 #include "spfd5408.h"
 
-#include "../pins.h"
-#include "../functions.h"
-
-#include "gc320x240.h"
+#include "../../pins.h"
+#include "../../functions.h"
 
 #define SPFD5408_WIDTH           240
 #define SPFD5408_HEIGHT          320
