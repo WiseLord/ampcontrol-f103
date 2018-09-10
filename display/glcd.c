@@ -72,11 +72,6 @@ void glcdSetFontColor(uint16_t color)
     glcd->font.color = color;
 }
 
-void glcdSetFontMult(uint8_t mult)
-{
-    glcd->font.mult = mult;
-}
-
 void glcdSetFontAlign(uint8_t align)
 {
     glcd->font.align = align;
@@ -125,19 +120,14 @@ void glcdDrawImage(tImage *img)
     uint16_t h = img->height;
     uint16_t color = glcd->font.color;
     uint16_t bgColor = glcd->canvas->color;
-    uint8_t mult = glcd->font.mult;
 
     for (uint16_t j = 0; j < (h + 7) / 8; j++) {
         for (uint16_t i = 0; i < w; i++) {
             uint8_t data = img->data[w * j + i];
             for (uint8_t bit = 0; bit < 8; bit++) {
                 if (8 * j + bit < h) {
-                    for (uint8_t mx = 0; mx < mult; mx++) {
-                        for (uint8_t my = 0; my < mult; my++) {
-                            glcd->drawPixel(glcd->canvas->x + mult * i + mx, glcd->canvas->y + mult * (8 * j + bit) + my,
-                                            data & (1 << bit) ? color : bgColor);
-                        }
-                    }
+                    glcd->drawPixel(glcd->canvas->x + i, glcd->canvas->y + (8 * j + bit),
+                                    data & (1 << bit) ? color : bgColor);
                 }
             }
         }
@@ -150,18 +140,14 @@ void glcdSendImage(tImage *img, SendDataCallback sendData)
     uint16_t h = img->height;
     uint16_t color = glcd->font.color;
     uint16_t bgColor = glcd->canvas->color;
-    uint8_t mult = glcd->font.mult;
 
     for (uint16_t i = 0; i < w; i++) {
-        for (uint8_t mx = 0; mx < mult; mx++) {
-            for (uint16_t j = 0; j < h + 7 / 8; j++) {
-                uint8_t data = img->data[w * j + i];
-                for (uint8_t bit = 0; bit < 8; bit++) {
-                    if (8 * j + bit < h) {
-                        for (uint8_t my = 0; my < mult; my++)
-                            sendData(data & 0x01 ? color : bgColor);
-                        data >>= 1;
-                    }
+        for (uint16_t j = 0; j < h + 7 / 8; j++) {
+            uint8_t data = img->data[w * j + i];
+            for (uint8_t bit = 0; bit < 8; bit++) {
+                if (8 * j + bit < h) {
+                    sendData(data & 0x01 ? color : bgColor);
+                    data >>= 1;
                 }
             }
         }
@@ -198,7 +184,7 @@ void glcdWriteChar(int32_t code)
     img = (tImage *)glcd->font.tfont->chars[pos].image;
 
     glcd->drawImage(img);
-    glcdSetX(glcd->canvas->x + img->width * glcd->font.mult);
+    glcdSetX(glcd->canvas->x + img->width);
 }
 
 static int32_t findSymbolCode(char **string)

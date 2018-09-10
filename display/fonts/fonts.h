@@ -60,9 +60,6 @@ typedef struct {
     uint16_t color;
 
     uint8_t align;
-    uint8_t fixed;
-    uint8_t mult;
-    uint8_t direction;
 } Font;
 
 #endif // FONTS_H

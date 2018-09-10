@@ -189,6 +189,4 @@ void gm128x64Init(GlcdDriver *driver)
     glcd = driver;
     glcd->canvas = &gm128x64;
     glcdInit(glcd);
-
-    glcdSetFontMult(1);
 }

@@ -241,11 +241,10 @@ void ssd1286aDrawImage(tImage *img)
     uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
-    uint8_t mult = glcd.font.mult;
 
     CLR(SSD1286A_CS);
 
-    ssd1286aSetWindow(x0, y0, mult * w, mult * h);
+    ssd1286aSetWindow(x0, y0, w, h);
 
     glcdSendImage(img, ssd1286aSendData);
 

@@ -227,11 +227,10 @@ void s6d0139DrawImage(tImage *img)
     uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
-    uint8_t mult = glcd.font.mult;
 
     CLR(S6D0139_CS);
 
-    s6d0139SetWindow(x0, y0, mult * w, mult * h);
+    s6d0139SetWindow(x0, y0, w, h);
 
     s6d0139SelectReg(0x0022);
 

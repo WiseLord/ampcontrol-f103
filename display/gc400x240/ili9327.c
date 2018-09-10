@@ -249,11 +249,10 @@ void ili9327DrawImage(tImage *img)
     uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
-    uint8_t mult = glcd.font.mult;
 
     CLR(ILI9327_CS);
 
-    ili9327SetWindow(x0, y0, mult * w, mult * h);
+    ili9327SetWindow(x0, y0, w, h);
 
     ili9327SelectReg(0x2C);
 

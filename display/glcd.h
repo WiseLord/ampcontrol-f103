@@ -97,7 +97,6 @@ void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);
 
 void glcdSetFont(const tFont *font);
 void glcdSetFontColor(uint16_t color);
-void glcdSetFontMult(uint8_t mult);
 void glcdSetFontAlign(uint8_t align);
 
 void glcdSetCanvasColor(uint16_t color);
