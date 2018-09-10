@@ -119,23 +119,6 @@ static int16_t findSymbolPos(int32_t code)
     return bPos;
 }
 
-static void findCharOft(int32_t code, tImage *img)
-{
-    const tFont *font = glcd->font.tfont;
-
-    int16_t pos = findSymbolPos(code);
-
-    if (pos >= 0) {
-        img->data = font->chars[pos].image->data;
-        img->width = font->chars[pos].image->width;
-        img->height = font->chars[pos].image->height;
-    } else {
-        img->data = 0;
-    }
-
-    return;
-}
-
 void glcdDrawImage(tImage *img)
 {
     uint16_t w = img->width;
@@ -205,20 +188,17 @@ void glcdWriteIcon(uint8_t num, const uint8_t *icons)
 
 void glcdWriteChar(int32_t code)
 {
-    tImage img;
-    img.data = 0;
+    tImage *img = 0;
 
-    findCharOft(code, &img);
+    int16_t pos = findSymbolPos(code);
 
-    if (img.data == 0) {
-        findCharOft(BLOCK_CHAR, &img);
-    }
-
-    if (img.data == 0)
+    if (pos < 0)
         return;
 
-    glcd->drawImage(&img);
-    glcdSetX(glcd->canvas->x + img.width * glcd->font.mult);
+    img = (tImage *)glcd->font.tfont->chars[pos].image;
+
+    glcd->drawImage(img);
+    glcdSetX(glcd->canvas->x + img->width * glcd->font.mult);
 }
 
 static int32_t findSymbolCode(char **string)
@@ -280,7 +260,7 @@ void glcdWriteString(char *string)
             pos = findSymbolPos(code);
             strLength += font->chars[pos].image->width;
             if (*str) {
-                 strLength += sWidth;
+                strLength += sWidth;
             }
         }
 
