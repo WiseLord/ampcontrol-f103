@@ -4,7 +4,16 @@
 
 #define STR_BUFSIZE             20
 
-static char strbuf[STR_BUFSIZE + 1];   // String buffer
+static char strbuf[STR_BUFSIZE + 1];    // String buffer
+
+uint8_t unRleData[512];           // Storage for uncompressed image
+tImage imgUnRle = {
+    .data = unRleData,
+    .width = 0,
+    .height = 0,
+    .size = 0,
+    .rle = 0
+};
 
 static GlcdDriver *glcd;
 
@@ -183,7 +192,37 @@ void glcdWriteChar(int32_t code)
 
     img = (tImage *)glcd->font.tfont->chars[pos].image;
 
-    glcd->drawImage(img);
+    if (img->rle) {
+        // Uncompress image to storage
+        const uint8_t *inPtr = img->data;
+        uint8_t *outPtr = unRleData;
+
+        while (inPtr < img->data + img->size) {
+            int8_t size = (int8_t)(*inPtr);
+            inPtr++;
+            if (size < 0) {
+                for (uint8_t i = 0; i < -size; i++) {
+                    *outPtr++ = *inPtr++;
+                }
+            } else if (size > 0) {
+                uint8_t data = *inPtr;
+                for (uint8_t i = 0; i < size; i++) {
+                    *outPtr++ = data;
+                }
+                inPtr++;
+            } else {
+                return;
+            }
+        }
+        imgUnRle.width = img->width;
+        imgUnRle.height = img->height;
+        imgUnRle.size = outPtr - unRleData;
+
+        glcd->drawImage(&imgUnRle);
+    } else {
+        glcd->drawImage(img);
+    }
+
     glcdSetX(glcd->canvas->x + img->width);
 }
 
