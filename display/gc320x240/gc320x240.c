@@ -31,7 +31,7 @@ static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t va
 static void showTime(RTC_type *rtc, char *wday)
 {
     glcdSetXY(3, 10);
-    glcdSetFont(&fontterminus80dig);
+    glcdSetFont(&fontterminusdig80);
 
     displayTm(rtc, RTC_HOUR);
     glcdWriteChar(LETTER_SPACE_CHAR);
@@ -44,7 +44,7 @@ static void showTime(RTC_type *rtc, char *wday)
     displayTm(rtc, RTC_SEC);
 
     glcdSetXY(14, 100);
-    glcdSetFont(&fontterminus64dig);
+    glcdSetFont(&fontterminusdig64);
 
     displayTm(rtc, RTC_DATE);
     glcdWriteChar(LETTER_SPACE_CHAR);
@@ -57,7 +57,7 @@ static void showTime(RTC_type *rtc, char *wday)
     displayTm(rtc, RTC_YEAR);
 
     glcdSetXY(159, 170);
-    glcdSetFont(&fontterminus64);
+    glcdSetFont(&fontterminusmod64);
     glcdSetFontColor(LCD_COLOR_AQUA);
 
     static char *wdayOld = 0;
@@ -73,14 +73,14 @@ static void showTime(RTC_type *rtc, char *wday)
 
 static void showParam(DispParam *dp)
 {
-    glcdSetFont(&fontterminus64);
+    glcdSetFont(&fontterminusmod64);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
     glcdSetXY(2, 0);
     glcdWriteString((char *)dp->label);
 
     glcdSetXY(320, 160);
-    glcdSetFont(&fontterminus80dig);
+    glcdSetFont(&fontterminusdig80);
 
     glcdSetFontAlign(FONT_ALIGN_RIGHT);
     glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);

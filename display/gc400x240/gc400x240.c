@@ -34,7 +34,7 @@ static void showTime(RTC_type *rtc, char *wday)
 {
     glcdSetXY(82, 20);
 
-    glcdSetFont(&fontampdig32);
+    glcdSetFont(&fontterminusdig30);
 
     displayTm(rtc, RTC_HOUR);
     glcdWriteChar(':');
@@ -50,7 +50,7 @@ static void showTime(RTC_type *rtc, char *wday)
     glcdWriteChar('.');
     displayTm(rtc, RTC_YEAR);
 
-    glcdSetFont(&fontamp24);
+    glcdSetFont(&fontterminus24b);
     glcdSetFontColor(LCD_COLOR_AQUA);
     glcdSetXY(88, 172);
     glcdWriteString(wday);

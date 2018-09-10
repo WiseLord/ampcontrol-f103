@@ -31,6 +31,8 @@ typedef struct {
     const uint8_t *data;
     uint16_t width;
     uint16_t height;
+    uint16_t size;
+    uint8_t rle;
 } tImage;
 
 typedef struct {
@@ -44,9 +46,13 @@ typedef struct {
 } tFont;
 */
 
+#define no  0x00
+#define yes 0x01
+
 #include <stdint.h>
 
 #include "fonts.h"
+
 $(end_block_header)
 
 $(start_block_images_table)
@@ -55,7 +61,7 @@ static const uint$(img_data_block_size)_t image_data_$(doc_name_ws)_0x$(out_char
     $(out_image_preview)
     $(out_image_data)
 };
-static const tImage $(doc_name_ws)_0x$(out_char_code) = { image_data_$(doc_name_ws)_0x$(out_char_code), $(out_image_width), $(out_image_height)};
+static const tImage $(doc_name_ws)_0x$(out_char_code) = { image_data_$(doc_name_ws)_0x$(out_char_code), $(out_image_width), $(out_image_height), $(out_blocks_count), $(rle)};
 #endif
 $(end_block_images_table)
 

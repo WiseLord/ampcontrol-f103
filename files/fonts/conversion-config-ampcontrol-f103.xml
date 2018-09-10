@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <preset>
-  <name>template-ampcontrol-m32</name>
+  <name>ampcontrol-f103</name>
   <prepare>
     <convType>0</convType>
     <monoType>1</monoType>
@@ -58,7 +58,7 @@ do {
     <blockDefaultOnes>0</blockDefaultOnes>
     <splitToRows>0</splitToRows>
     <compressionRle>0</compressionRle>
-    <compressionRleMinLength>4</compressionRleMinLength>
+    <compressionRleMinLength>3</compressionRleMinLength>
     <blockPrefix><![CDATA[0x]]></blockPrefix>
     <blockSuffix><![CDATA[empty]]></blockSuffix>
     <blockDelimiter><![CDATA[, ]]></blockDelimiter>
@@ -77,7 +77,7 @@ do {
     <codec>UTF-8</codec>
   </font>
   <templates>
-    <images>:/templates/image_convert</images>
-    <fonts>:/templates/font_amp_convert</fonts>
+    <images>/home/STM32/Projects/ampcontrol-f103/files/fonts/template-image-ampcontrol-f103.tmpl</images>
+    <fonts>/home/STM32/Projects/ampcontrol-f103/files/fonts/template-font-ampcontrol-f103.tmpl</fonts>
   </templates>
 </preset>
