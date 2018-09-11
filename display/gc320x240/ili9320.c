@@ -249,7 +249,7 @@ void ili9320DrawImage(tImage *img)
 
     ili9320SelectReg(0x0022);
 
-    glcdSendImage(img, ili9320SendData);
+    DISPDRV_SEND_IMAGE(img, ili9320SendData);
 
     SET(ILI9320_CS);
 }

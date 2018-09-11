@@ -228,7 +228,7 @@ void ls020DrawImage(tImage *img)
     CLR(LS020_DC);
     CLR(LS020_CS);
 
-    glcdSendImage(img, ls020SendData);
+    DISPDRV_SEND_IMAGE(img, ls020SendData);
 
     while (TX_BUSY());
     SET(LS020_CS);

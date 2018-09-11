@@ -226,7 +226,7 @@ void st7793DrawImage(tImage *img)
 
     st7793SelectReg(0x0202);
 
-    glcdSendImage(img, st7793SendData);
+    DISPDRV_SEND_IMAGE(img, st7793SendData);
 
     SET(ST7793_CS);
 }

@@ -256,7 +256,7 @@ void ili9327DrawImage(tImage *img)
 
     ili9327SelectReg(0x2C);
 
-    glcdSendImage(img, ili9327SendData);
+    DISPDRV_SEND_IMAGE(img, ili9327SendData);
 
     SET(ILI9327_CS);
 }

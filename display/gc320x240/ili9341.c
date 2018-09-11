@@ -276,7 +276,7 @@ void ili9341DrawImage(tImage *img)
 
     ili9341SetWindow(x0, y0, w, h);
 
-    glcdSendImage(img, ili9341SendData);
+    DISPDRV_SEND_IMAGE(img, ili9341SendData);
 
     while (TX_BUSY());
     SET(ILI9341_CS);

@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 
+#include "dispdrv.h"
 #include "fonts/fonts.h"
 #include "icons.h"
 #include "../rtc.h"
@@ -106,7 +107,6 @@ void glcdSetX(int16_t x);
 void glcdSetY(int16_t y);
 
 void glcdDrawImage(tImage *img);
-void glcdSendImage(tImage *img, SendDataCallback sendData);
 void glcdWriteIcon(uint8_t num, const uint8_t *icons);
 void glcdWriteChar(int32_t code);
 void glcdWriteString(char *string);

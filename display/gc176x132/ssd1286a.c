@@ -246,7 +246,7 @@ void ssd1286aDrawImage(tImage *img)
 
     ssd1286aSetWindow(x0, y0, w, h);
 
-    glcdSendImage(img, ssd1286aSendData);
+    DISPDRV_SEND_IMAGE(img, ssd1286aSendData);
 
     while (TX_BUSY());
     SET(SSD1286A_CS);

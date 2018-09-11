@@ -178,7 +178,7 @@ void lph9157DrawImage(tImage *img)
 
     lph9157SetWindow(x0, y0, w, h);
 
-    glcdSendImage(img, lph9157SendData);
+    DISPDRV_SEND_IMAGE(img, lph9157SendData);
 
     while (TX_BUSY());
     SET(LPH9157_CS);

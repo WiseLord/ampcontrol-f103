@@ -283,7 +283,7 @@ void spfd5408DrawImage(tImage *img)
 
     spfd5408SelectReg(0x0022);
 
-    glcdSendImage(img, spfd5408SendData);
+    DISPDRV_SEND_IMAGE(img, spfd5408SendData);
 
     SET(SPFD5408_CS);
 }

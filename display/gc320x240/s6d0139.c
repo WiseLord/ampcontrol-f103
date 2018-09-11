@@ -234,7 +234,7 @@ void s6d0139DrawImage(tImage *img)
 
     s6d0139SelectReg(0x0022);
 
-    glcdSendImage(img, s6d0139SendData);
+    DISPDRV_SEND_IMAGE(img, s6d0139SendData);
 
     SET(S6D0139_CS);
 }
