@@ -215,4 +215,7 @@ void pinsInit(void)
 
     pinsInitButtons();
     pinsInitDisplay();
+
+    OUT_INIT(MUTE, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+    OUT_INIT(STBY, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
 }

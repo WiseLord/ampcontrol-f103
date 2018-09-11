@@ -209,4 +209,9 @@ void pinsInit(void);
 #error "Unsupported display driver"
 #endif
 
+#define MUTE_Port              GPIOB
+#define MUTE_Pin               LL_GPIO_PIN_8
+#define STBY_Port              GPIOB
+#define STBY_Pin               LL_GPIO_PIN_9
+
 #endif // PINS_H
