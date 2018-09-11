@@ -14,8 +14,8 @@ static ScreenParam scrPar;
 static SpectrumData spData[SP_CHAN_END];
 
 // TODO: Read from backup memory
-static int8_t brStby = 1;
-static int8_t brWork = 32;
+static int8_t brStby;
+static int8_t brWork;
 
 typedef enum {
     LABEL_SUNDAY,
@@ -73,10 +73,30 @@ const char *txtLabels[LABEL_END] = {
     [LABEL_GAIN4]           = "DVD-плэер",
 };
 
+static void screenReadSettings(void)
+{
+    uint16_t eeData;
+
+    eeData = eeRead(EE_BRIGHTNESS_STBY);
+    brStby = (eeData > GLCD_MAX_BRIGHTNESS ? 2 : (int8_t)(eeData));
+
+    eeData = eeRead(EE_BRIGHTNESS_WORK);
+    brWork = (eeData > GLCD_MAX_BRIGHTNESS ? GLCD_MAX_BRIGHTNESS : (int8_t)(eeData));
+}
+
+void screenSaveSettings(void)
+{
+    eeUpdate(EE_BRIGHTNESS_STBY, brStby);
+    eeUpdate(EE_BRIGHTNESS_WORK, brWork);
+}
+
 void screenInit(void)
 {
     displayInit(&glcd);
     screenClear();
+
+    screenReadSettings();
+
     displaySetBrightness(brStby);
 }
 

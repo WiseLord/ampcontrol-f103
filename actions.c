@@ -186,6 +186,7 @@ void actionHandle(Action action, uint8_t visible)
             screen = SCREEN_STANDBY;
             rtcSetMode(RTC_NOEDIT);
             screenChangeBrighness(ACTION_BR_STBY, 0);
+            screenSaveSettings();
             audioPowerOff();
         }
         break;

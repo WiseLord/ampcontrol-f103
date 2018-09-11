@@ -23,6 +23,8 @@ typedef union {
     RtcMode rtc;
 } ScreenParam;
 
+void screenSaveSettings(void);
+
 void screenInit(void);
 void screenClear(void);
 void screenUpdate(void);

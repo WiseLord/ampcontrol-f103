@@ -9,8 +9,8 @@
 #define EE_EMPTY        (uint16_t)0xFFFF
 
 enum {
-    EE_PAGE_0 = 124,
-    EE_PAGE_1 = 126,
+    EE_PAGE_0 = 60,
+    EE_PAGE_1 = 62,
     EE_PAGE_END
 };
 
@@ -32,6 +32,9 @@ typedef enum {
     EE_AUDIO_PARAM_GAIN2,
     EE_AUDIO_PARAM_GAIN3,
     EE_AUDIO_PARAM_GAIN4,
+
+    EE_BRIGHTNESS_STBY,
+    EE_BRIGHTNESS_WORK,
 
     EE_PARAM_END
 } EE_Param;

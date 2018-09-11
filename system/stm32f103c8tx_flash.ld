@@ -7,8 +7,8 @@ _estack = 0x20005000;    /* end of RAM */
 MEMORY
 {
     RAM (xrw)           : ORIGIN = 0x20000000, LENGTH = 20K
-    FLASH (rx)          : ORIGIN = 0x08000000, LENGTH = 64K
-    FLASH_BONUS (rx)    : ORIGIN = 0x08010000, LENGTH = 60K
+    FLASH (rx)          : ORIGIN = 0x08000000, LENGTH = 60K
+    FLASH_BONUS (rx)    : ORIGIN = 0x08010000, LENGTH = 64K
 }
 
 SECTIONS
