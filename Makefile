@@ -169,7 +169,7 @@ $(BUILD_DIR)/%.o: %.s Makefile
 	$(AS) -c $(CFLAGS) $(AS_DEFS) -o $@ $<
 
 clean:
-	rm -rf $(BUILD_DIR)
+	@rm -rf $(BUILD_DIR)
 
 .PHONY: flash
 flash: $(BIN)
