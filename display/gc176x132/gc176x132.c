@@ -32,7 +32,6 @@ static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t va
 static void showTime(RTC_type *rtc, char *wday)
 {
     glcdSetXY(2, 4);
-    glcdSetFontMult(2);
     glcdSetFont(&fontterminus24b);
 
     displayTm(rtc, RTC_HOUR);
@@ -42,7 +41,6 @@ static void showTime(RTC_type *rtc, char *wday)
     displayTm(rtc, RTC_SEC);
 
     glcdSetXY(12, 64);
-    glcdSetFontMult(1);
     glcdSetFont(&fontterminusdig30);
 
     displayTm(rtc, RTC_DATE);
