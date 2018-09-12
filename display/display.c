@@ -3,6 +3,7 @@
 #include "../pins.h"
 
 static uint8_t brightness;
+static GlcdDriver *glcd;
 
 void displayInit(GlcdDriver **driver)
 {
@@ -33,6 +34,8 @@ void displayInit(GlcdDriver **driver)
 #else
 #error "Unsupported display driver"
 #endif
+
+    glcd = *driver;
 }
 
 void displayPWM(void)
@@ -58,9 +61,9 @@ uint8_t displayGetInput(void)
 {
     uint8_t bus = 0;
 
-#if defined(_8BIT) || defined(_8BIT_A) || defined(_8BIT_B)
-    bus = glcdGetBus();
-#elif defined(_SPI) || defined(_I2C)
+#if defined(_DISP_8BIT) || defined(_DISP_8BIT_A) || defined(_DISP_8BIT_B)
+    bus = glcd->bus;
+#elif defined(_DISP_SPI) || defined(_DISP_I2C)
     bus = INPUT_Port->IDR & 0x00FF;   // Read 8-bit bus
 #else
 #error "Unsupported display driver"

@@ -9,7 +9,7 @@ static GlcdDriver glcd = {
     .drawImage = glcdDrawImage,
 };
 
-#if defined(_8BIT_B)                                // CS active level is 0 (WG12864B)
+#if defined(_DISP_8BIT_B)                                // CS active level is 0 (WG12864B)
 #define KS0108_SET_CS1()    CLR(KS0108_CS1); SET(KS0108_CS2)
 #define KS0108_SET_CS2()    SET(KS0108_CS1); CLR(KS0108_CS2)
 #define KS0108_SET_CS()     CLR(KS0108_CS2); CLR(KS0108_CS1)

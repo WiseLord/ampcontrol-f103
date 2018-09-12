@@ -70,7 +70,7 @@ endif
 C_SOURCES += display.c
 C_SOURCES += display/glcd.c
 C_DEFS += -D_$(DISPLAY)
-C_DEFS += -D_$(DISPVAR)
+C_DEFS += -D_DISP_$(DISPVAR)
 
 # Audio source files
 ifeq "$(findstring TDA7439, $(APROC_LIST))" "TDA7439"

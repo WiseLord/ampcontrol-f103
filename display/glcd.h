@@ -90,10 +90,6 @@ typedef void (*SendDataCallback)(uint16_t data);
 void glcdInit(GlcdDriver *driver);
 void glcdClear(void);
 
-GlcdCanvas *glcdGetCanvas(void);
-
-uint8_t glcdGetBus(void);
-
 void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);
 
 void glcdSetFont(const tFont *font);

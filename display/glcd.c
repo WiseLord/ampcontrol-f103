@@ -29,16 +29,6 @@ void glcdClear(void)
     }
 }
 
-GlcdCanvas *glcdGetCanvas(void)
-{
-    return glcd->canvas;
-}
-
-uint8_t glcdGetBus(void)
-{
-    return glcd->bus;
-}
-
 void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
 {
     uint8_t numdiv;
