@@ -57,32 +57,34 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
 
 static void displayShowBar(int16_t min, int16_t max, int16_t value)
 {
-    uint8_t i, j;
-    uint8_t color;
+    static const int16_t sc = 46; // Scale count
+    static const uint8_t sw = 1; // Scale width
 
-    if (min + max) {
-        value = (uint16_t)91 * (value - min) / (max - min);
-    } else {
-        value = (int16_t)45 * value / max;
+    if (min + max) { // Non-symmectic scale => rescale to 0..sl
+        value = sc * (value - min) / (max - min);
+    } else { // Symmetric scale => rescale to -sl/2..sl/2
+        value = (sc / 2) * value / max;
     }
 
-    for (i = 0; i < 91; i++) {
-        if (((min + max) && (value <= i)) || (!(min + max) &&
-                                              (((value > 0) && ((i < 45) || (value + 45 < i))) ||
-                                               ((value <= 0) && ((i > 45) || (value + 45 > i)))))) {
-            color = 0x00;
-        } else {
-            color = 0x01;
-        }
-        if (!(i & 0x01)) {
-            for (j = 27; j < 38; j++) {
-                if (j == 32) {
-                    glcd->drawPixel(i, j, 1);
-                } else {
-                    glcd->drawPixel(i, j, color);
-                }
+    for (uint16_t i = 0; i < sc; i++) {
+        uint16_t color = LCD_COLOR_WHITE;
+
+        if (min + max) { // Non-symmetric scale
+            if (i >= value) {
+                color = glcd->canvas->color;
+            }
+        } else { // Symmetric scale
+            if ((value > 0 && i >= value + (sc / 2)) ||
+                (value >= 0 && i < (sc / 2 - 1)) ||
+                (value < 0 && i < value + (sc / 2)) ||
+                (value <= 0 && i > (sc / 2))) {
+                color = glcd->canvas->color;
             }
         }
+
+        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 27, sw, 5, color);
+        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 32, sw, 1, LCD_COLOR_WHITE);
+        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 33, sw, 5, color);
     }
 }
 

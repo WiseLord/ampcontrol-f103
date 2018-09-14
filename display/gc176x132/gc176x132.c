@@ -20,13 +20,46 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
     glcdWriteChar(LETTER_SPACE_CHAR);
 }
 
+static void displayShowBar(int16_t min, int16_t max, int16_t value)
+{
+    static const int16_t sc = 46; // Scale count
+    static const uint8_t sw = 1; // Scale width
+
+    if (min + max) { // Non-symmectic scale => rescale to 0..sl
+        value = sc * (value - min) / (max - min);
+    } else { // Symmetric scale => rescale to -sl/2..sl/2
+        value = (sc / 2) * value / max;
+    }
+
+    for (uint16_t i = 0; i < sc; i++) {
+        uint16_t color = LCD_COLOR_WHITE;
+
+        if (min + max) { // Non-symmetric scale
+            if (i >= value) {
+                color = glcd->canvas->color;
+            }
+        } else { // Symmetric scale
+            if ((value > 0 && i >= value + (sc / 2)) ||
+                (value >= 0 && i < (sc / 2 - 1)) ||
+                (value < 0 && i < value + (sc / 2)) ||
+                (value <= 0 && i > (sc / 2))) {
+                color = glcd->canvas->color;
+            }
+        }
+
+        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 27, sw, 5, color);
+        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 32, sw, 1, LCD_COLOR_WHITE);
+        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 33, sw, 5, color);
+    }
+}
+
 static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t value, uint16_t max)
 {
     if (value > max)
         value = max;
 
-    glcd->drawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
-    glcd->drawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
+    glcdDrawRect(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
+    glcdDrawRect(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
 }
 
 static void showTime(RTC_type *rtc, char *wday)
@@ -57,7 +90,20 @@ static void showTime(RTC_type *rtc, char *wday)
 
 static void showParam(DispParam *dp)
 {
-    glcd->drawRectangle(10, 10, 50, 30, LCD_COLOR_GREEN);
+    glcdSetFont(&fontterminus24b);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+
+    glcdSetXY(0, 0);
+    glcdWriteString((char *)dp->label);
+
+    displayShowBar(dp->min, dp->max, dp->value);
+
+    glcdSetXY(128, 30);
+    glcdSetFontAlign(FONT_ALIGN_RIGHT);
+    glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
+
+    glcdSetXY(104, 2);
+    glcdWriteIcon(dp->icon, icons_24);
 }
 
 static void showSpectrum(SpectrumData *spData)
