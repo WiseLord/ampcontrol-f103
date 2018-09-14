@@ -12,4 +12,7 @@ void swTimUpdate(void);
 void swTimSetDisplay(int16_t value);
 int16_t swTimGetDisplay(void);
 
+void swTimSetSpConvert(int16_t value);
+int16_t swTimGetSpConvert(void);
+
 #endif // TIMERS_H

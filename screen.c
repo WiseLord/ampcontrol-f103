@@ -5,6 +5,7 @@
 #include "eemul.h"
 #include "fft.h"
 #include "spectrum.h"
+#include "timers.h"
 
 static GlcdDriver *glcd;
 static Screen screen = SCREEN_STANDBY;
@@ -12,6 +13,7 @@ static Screen screenDefault = SCREEN_SPECTRUM;
 static ScreenParam scrPar;
 
 static SpectrumData spData[SP_CHAN_END];
+static uint8_t spReady = 0;
 
 // TODO: Read from backup memory
 static int8_t brStby;
@@ -200,14 +202,12 @@ static void screenTime(void)
 
 static void screenSpectrum(void)
 {
-    spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
-
-    improveSpectrum(&spData[SP_CHAN_LEFT]);
-    improveSpectrum(&spData[SP_CHAN_RIGHT]);
-
-    if (glcd->canvas->showSpectrum) {
-        glcd->canvas->showSpectrum(spData);
+    if (spReady) {
+        if (glcd->canvas->showSpectrum) {
+            glcd->canvas->showSpectrum(spData);
+        }
     }
+    spReady = 0;
 }
 
 static void screenBrightness()
@@ -275,6 +275,17 @@ void screenShow(void)
     if (screen != screenPrev) {
         if (screen > SCREEN_TIME || screenPrev > SCREEN_TIME)
             screenClear();
+    }
+
+    // Get new spectrum data
+    if (swTimGetSpConvert() <= 0) {
+        spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
+
+        improveSpectrum(&spData[SP_CHAN_LEFT]);
+        improveSpectrum(&spData[SP_CHAN_RIGHT]);
+
+        spReady = 1;
+        swTimSetSpConvert(40);
     }
 
     switch (screen) {

@@ -5,6 +5,7 @@
 #include <stm32f1xx_ll_tim.h>
 
 static volatile int16_t timDisplay = SW_TIM_OFF;
+static volatile int16_t timSpConvert = SW_TIM_OFF;
 
 static void TIM2_Init(void)
 {
@@ -45,6 +46,8 @@ void swTimUpdate(void)
 {
     if (timDisplay > 0)
         timDisplay--;
+    if (timSpConvert > 0)
+        timSpConvert--;
 }
 
 void swTimSetDisplay(int16_t value)
@@ -55,4 +58,14 @@ void swTimSetDisplay(int16_t value)
 int16_t swTimGetDisplay(void)
 {
     return timDisplay;
+}
+
+void swTimSetSpConvert(int16_t value)
+{
+    timSpConvert = value;
+}
+
+int16_t swTimGetSpConvert()
+{
+    return timSpConvert;
 }
