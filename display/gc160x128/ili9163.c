@@ -1,6 +1,7 @@
 #include "ili9163.h"
 
 #include "../dispcanvas.h"
+#include "../dispdrv.h"
 
 #include "../../pins.h"
 #include "../../functions.h"
@@ -9,8 +10,6 @@
 #define ILI9163_HEIGHT          160
 #define ILI9163_PIXELS          (ILI9163_WIDTH * ILI9163_HEIGHT)
 
-static uint8_t bus_requested = 0;
-
 static GlcdDriver glcd = {
     .clear = ili9163Clear,
     .drawPixel = ili9163DrawPixel,
@@ -18,58 +17,11 @@ static GlcdDriver glcd = {
     .drawImage = ili9163DrawImage,
 };
 
-static inline void ili9163SendData(uint16_t data) __attribute__((always_inline));
-static inline void ili9163SendData(uint16_t data)
-{
-    uint8_t dataH = data >> 8;
-    uint8_t dataL = data & 0xFF;
-
-    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
-    CLR(DISP_8BIT_WR);                                // Strob MSB
-    SET(DISP_8BIT_WR);
-    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
-    CLR(DISP_8BIT_WR);                                // Strob LSB
-    SET(DISP_8BIT_WR);
-
-    // If input IRQ requested bus status, switch temporarly to input mode and read bus
-    if (bus_requested) {
-        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
-        DISP_8BIT_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
-        // Small delay to stabilize data before reading
-        volatile uint8_t delay = 2;
-        while (--delay);
-        glcd.bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
-        DISP_8BIT_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
-        bus_requested = 0;
-    }
-}
-
-static inline void ili9163SendDataR(uint8_t dataR) __attribute__((always_inline));
-static inline void ili9163SendDataR(uint8_t dataR)
-{
-    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataR;    // If port bits 7..0 are used
-    CLR(DISP_8BIT_WR);                                // Strob LSB
-    SET(DISP_8BIT_WR);
-
-    // If input IRQ requested bus status, switch temporarly to input mode and read bus
-    if (bus_requested) {
-        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
-        DISP_8BIT_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
-        // Small delay to stabilize data before reading
-        volatile uint8_t delay = 2;
-        while (--delay);
-        glcd.bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
-        DISP_8BIT_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
-        bus_requested = 0;
-    }
-}
-
-
 static inline void ili9163SelectReg(uint8_t reg) __attribute__((always_inline));
 static inline void ili9163SelectReg(uint8_t reg)
 {
     CLR(DISP_8BIT_RS);
-    ili9163SendDataR(reg);
+    dispdrvSendData8(reg);
     SET(DISP_8BIT_RS);
 }
 
@@ -86,99 +38,102 @@ static inline void ili9163InitSeq(void)
     _delay_ms(20);
 
     ili9163SelectReg(0x26); //Set Default Gamma
-    ili9163SendDataR(0x04);
+    dispdrvSendData8(0x04);
 
     ili9163SelectReg(0xB1);
-    ili9163SendDataR(0x0C);
-    ili9163SendDataR(0x14);
+    dispdrvSendData8(0x0C);
+    dispdrvSendData8(0x14);
 
     ili9163SelectReg(0xC0); //Set VRH1[4:0] & VC[2:0] for VCI1 & GVDD
-    ili9163SendDataR(0x0C);
-    ili9163SendDataR(0x05);
+    dispdrvSendData8(0x0C);
+    dispdrvSendData8(0x05);
 
     ili9163SelectReg(0xC1); //Set BT[2:0] for AVDD & VCL & VGH & VGL
-    ili9163SendDataR(0x02);
+    dispdrvSendData8(0x02);
 
     ili9163SelectReg(0xC5); //Set VMH[6:0] & VML[6:0] for VOMH & VCOML
-    ili9163SendDataR(0x29);
-    ili9163SendDataR(0x43);
+    dispdrvSendData8(0x29);
+    dispdrvSendData8(0x43);
 
     ili9163SelectReg(0xC7);
-    ili9163SendDataR(0x40);
+    dispdrvSendData8(0x40);
 
     ili9163SelectReg(0x3a); //Set Color Format
-    ili9163SendDataR(0x05);
+    dispdrvSendData8(0x05);
 
     ili9163SelectReg(0x2A); //Set Column Address
-    ili9163SendDataR(0x00);
-    ili9163SendDataR(0x00);
-    ili9163SendDataR(0x00);
-    ili9163SendDataR(0x7F);
+    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x7F);
 
     ili9163SelectReg(0x2B); //Set Page Address
-    ili9163SendDataR(0x00);
-    ili9163SendDataR(0x00);
-    ili9163SendDataR(0x00);
-    ili9163SendDataR(0x9F);
+    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x9F);
 
     ili9163SelectReg(0x36); //Set Scanning Direction
-    ili9163SendDataR(0x88);
+    dispdrvSendData8(0x88);
 
     ili9163SelectReg(0xB7); //Set Source Output Direction
-    ili9163SendDataR(0x00);
+    dispdrvSendData8(0x00);
 
     ili9163SelectReg(0xf2); //Enable Gamma bit
-    ili9163SendDataR(0x01);
+    dispdrvSendData8(0x01);
 
     ili9163SelectReg(0xE0);
-    ili9163SendDataR(0x36);//p1
-    ili9163SendDataR(0x29);//p2
-    ili9163SendDataR(0x12);//p3
-    ili9163SendDataR(0x22);//p4
-    ili9163SendDataR(0x1C);//p5
-    ili9163SendDataR(0x15);//p6
-    ili9163SendDataR(0x42);//p7
-    ili9163SendDataR(0xB7);//p8
-    ili9163SendDataR(0x2F);//p9
-    ili9163SendDataR(0x13);//p10
-    ili9163SendDataR(0x12);//p11
-    ili9163SendDataR(0x0A);//p12
-    ili9163SendDataR(0x11);//p13
-    ili9163SendDataR(0x0B);//p14
-    ili9163SendDataR(0x06);//p15
+    dispdrvSendData8(0x36);//p1
+    dispdrvSendData8(0x29);//p2
+    dispdrvSendData8(0x12);//p3
+    dispdrvSendData8(0x22);//p4
+    dispdrvSendData8(0x1C);//p5
+    dispdrvSendData8(0x15);//p6
+    dispdrvSendData8(0x42);//p7
+    dispdrvSendData8(0xB7);//p8
+    dispdrvSendData8(0x2F);//p9
+    dispdrvSendData8(0x13);//p10
+    dispdrvSendData8(0x12);//p11
+    dispdrvSendData8(0x0A);//p12
+    dispdrvSendData8(0x11);//p13
+    dispdrvSendData8(0x0B);//p14
+    dispdrvSendData8(0x06);//p15
 
     ili9163SelectReg(0xE1);
-    ili9163SendDataR(0x09);//p1
-    ili9163SendDataR(0x16);//p2
-    ili9163SendDataR(0x2D);//p3
-    ili9163SendDataR(0x0D);//p4
-    ili9163SendDataR(0x13);//p5
-    ili9163SendDataR(0x15);//p6
-    ili9163SendDataR(0x40);//p7
-    ili9163SendDataR(0x48);//p8
-    ili9163SendDataR(0x53);//p9
-    ili9163SendDataR(0x0C);//p10
-    ili9163SendDataR(0x1D);//p11
-    ili9163SendDataR(0x25);//p12
-    ili9163SendDataR(0x2E);//p13
-    ili9163SendDataR(0x34);//p14
-    ili9163SendDataR(0x39);//p15
+    dispdrvSendData8(0x09);//p1
+    dispdrvSendData8(0x16);//p2
+    dispdrvSendData8(0x2D);//p3
+    dispdrvSendData8(0x0D);//p4
+    dispdrvSendData8(0x13);//p5
+    dispdrvSendData8(0x15);//p6
+    dispdrvSendData8(0x40);//p7
+    dispdrvSendData8(0x48);//p8
+    dispdrvSendData8(0x53);//p9
+    dispdrvSendData8(0x0C);//p10
+    dispdrvSendData8(0x1D);//p11
+    dispdrvSendData8(0x25);//p12
+    dispdrvSendData8(0x2E);//p13
+    dispdrvSendData8(0x34);//p14
+    dispdrvSendData8(0x39);//p15
 
     ili9163SelectReg(0x29); // Display On
 
     SET(DISP_8BIT_CS);
 }
 
-static inline void ili9163SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
+static inline void ili9163SetWindow(uint16_t x, uint16_t y, uint16_t w,
+                                    uint16_t h) __attribute__((always_inline));
 static inline void ili9163SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-
     ili9163SelectReg(0x2A);
-    ili9163SendData(y);
-    ili9163SendData(y + h - 1);
+    dispdrvSendData16(y);
+    dispdrvSendData16(y + h - 1);
+
     ili9163SelectReg(0x2B);
-    ili9163SendData(x);
-    ili9163SendData(x + w - 1);
+    dispdrvSendData16(x);
+    dispdrvSendData16(x + w - 1);
+
+    ili9163SelectReg(0x2C);
 }
 
 void ili9163Init(GlcdDriver **driver)
@@ -202,11 +157,6 @@ void ili9163Init(GlcdDriver **driver)
 void ili9163Clear(void)
 {
     ili9163DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
-}
-
-void ili9163BusIRQ(void)
-{
-    bus_requested = 1;
 }
 
 void ili9163Sleep(void)
@@ -236,9 +186,7 @@ void ili9163DrawPixel(int16_t x, int16_t y, uint16_t color)
     CLR(DISP_8BIT_CS);
 
     ili9163SetWindow(x, y, 1, 1);
-
-    ili9163SelectReg(0x2C);
-    ili9163SendData(color);
+    dispdrvSendData16(color);
 
     SET(DISP_8BIT_CS);
 }
@@ -248,10 +196,7 @@ void ili9163DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     CLR(DISP_8BIT_CS);
 
     ili9163SetWindow(x, y, w, h);
-
-    ili9163SelectReg(0x2C);
-    for (uint32_t i = 0; i < w * h; i++)
-        ili9163SendData(color);
+    dispdrvSendFill(w * h, color);
 
     SET(DISP_8BIT_CS);
 }
@@ -262,14 +207,11 @@ void ili9163DrawImage(tImage *img)
     uint16_t h = img->height;
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
-   
+
     CLR(DISP_8BIT_CS);
 
     ili9163SetWindow(x0, y0, w, h);
-
-    ili9163SelectReg(0x2C);
-    
-    DISPDRV_SEND_IMAGE(img, ili9163SendData);
+    dispdrvSendImage(img, w, h);
 
     SET(DISP_8BIT_CS);
 }

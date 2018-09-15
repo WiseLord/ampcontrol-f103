@@ -3,6 +3,8 @@
 
 #include <inttypes.h>
 
+#include "dispdrv.h"
+
 #if defined (_KS0108)
 #include "gm128x64/ks0108.h"
 #elif defined (_ST7920)
@@ -43,24 +45,8 @@
 #define DISPLAY_IRQ ks0108IRQ
 #elif defined(_ST7920)
 #define DISPLAY_IRQ st7920IRQ
-#elif defined(_ILI9163)
-#define DISPLAY_IRQ ili9163BusIRQ
-#elif defined(_ST7735)
-#define DISPLAY_IRQ st7735BusIRQ
-#elif defined(_HX8340)
-#define DISPLAY_IRQ hx8340BusIRQ
-#elif defined(_ILI9320)
-#define DISPLAY_IRQ ili9320BusIRQ
-#elif defined(_S6D0139)
-#define DISPLAY_IRQ s6d0139BusIRQ
-#elif defined(_SPFD5408)
-#define DISPLAY_IRQ spfd5408BusIRQ
-#elif defined(_MC2PA8201)
-#define DISPLAY_IRQ mc2pa8201BusIRQ
-#elif defined(_ILI9327)
-#define DISPLAY_IRQ ili9327BusIRQ
-#elif defined(_ST7793)
-#define DISPLAY_IRQ st7793BusIRQ
+#elif defined(_DISP_SPI)
+#define DISPLAY_IRQ dispdrvBusIRQ
 #else
 #define DISPLAY_IRQ()
 #endif

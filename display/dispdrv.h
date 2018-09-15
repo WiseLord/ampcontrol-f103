@@ -1,19 +1,15 @@
 #ifndef DISPDRV_H
 #define DISPDRV_H
 
-#define DISPDRV_SEND_IMAGE(img, sendData)                       \
-    uint16_t color = glcd.font.color;                           \
-    uint16_t bgColor = glcd.canvas->color;                      \
-    for (uint16_t i = 0; i < w; i++) {                          \
-        for (uint16_t j = 0; j < (h + 7) / 8; j++) {            \
-            uint8_t data = img->data[w * j + i];                \
-            for (uint8_t bit = 0; bit < 8; bit++) {             \
-                if (8 * j + bit < h) {                          \
-                    sendData(data & 0x01 ? color : bgColor);    \
-                    data >>= 1;                                 \
-                }                                               \
-            }                                                   \
-        }                                                       \
-    }                                                           \
+#include "glcd.h"
+
+void dispdrvInit(GlcdDriver *driver);
+void dispdrvBusIRQ(void);
+
+void dispdrvWaitOperation(void);
+void dispdrvSendData8(uint8_t data);
+void dispdrvSendData16(uint16_t data);
+void dispdrvSendFill(uint32_t size, uint16_t color);
+void dispdrvSendImage(tImage *img, uint16_t w, uint16_t h);
 
 #endif // DISPDRV_H

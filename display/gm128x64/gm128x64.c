@@ -1,4 +1,5 @@
 #include "../dispcanvas.h"
+#include "../dispdrv.h"
 
 static GlcdDriver *glcd;
 
@@ -169,4 +170,5 @@ void gm128x64Init(GlcdDriver *driver)
     glcd = driver;
     glcd->canvas = &gm128x64;
     glcdInit(glcd);
+    dispdrvInit(driver);
 }

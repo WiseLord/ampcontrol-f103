@@ -7,7 +7,6 @@
 
 void ili9163Init(GlcdDriver **driver);
 void ili9163Clear(void);
-void ili9163BusIRQ(void);
 
 void ili9163Sleep(void);
 void ili9163Wakeup(void);

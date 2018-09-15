@@ -3,7 +3,6 @@
 
 #include <inttypes.h>
 
-#include "dispdrv.h"
 #include "fonts/fonts.h"
 #include "icons.h"
 #include "../rtc.h"

@@ -7,7 +7,6 @@
 
 void st7793Init(GlcdDriver **driver);
 void st7793Clear(void);
-void st7793BusIRQ(void);
 
 void st7793Sleep(void);
 void st7793Wakeup(void);

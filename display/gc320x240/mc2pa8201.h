@@ -7,7 +7,6 @@
 
 void mc2pa8201Init(GlcdDriver **driver);
 void mc2pa8201Clear(void);
-void mc2pa8201BusIRQ(void);
 
 void mc2pa8201Sleep(void);
 void mc2pa8201Wakeup(void);
