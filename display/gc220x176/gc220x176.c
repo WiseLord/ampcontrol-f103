@@ -58,7 +58,7 @@ static void showTime(RTC_type *rtc, char *wday)
     displayTm(rtc, RTC_YEAR);
 
     glcdSetXY(109, 126);
-    glcdSetFont(&fontterminus44);
+    glcdSetFont(&fontterminusmod44);
     glcdSetFontColor(LCD_COLOR_AQUA);
 
     static char *wdayOld = 0;
@@ -74,7 +74,7 @@ static void showTime(RTC_type *rtc, char *wday)
 
 static void showParam(DispParam *dp)
 {
-    glcdSetFont(&fontterminus44);
+    glcdSetFont(&fontterminusmod44);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
     glcdSetXY(2, 0);
