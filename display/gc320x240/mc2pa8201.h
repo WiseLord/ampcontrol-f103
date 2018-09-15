@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "gc320x240.h"
+#include "../glcd.h"
 
 void mc2pa8201Init(GlcdDriver **driver);
 void mc2pa8201Clear(void);

@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "gc400x240.h"
+#include "../glcd.h"
 
 void ili9327Init(GlcdDriver **driver);
 void ili9327Clear(void);

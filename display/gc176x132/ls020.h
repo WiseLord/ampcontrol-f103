@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "gc176x132.h"
+#include "../glcd.h"
 
 void ls020Init(GlcdDriver **driver);
 void ls020Clear(void);

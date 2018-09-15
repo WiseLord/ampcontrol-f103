@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "gc220x176.h"
+#include "../glcd.h"
 
 void hx8340Init(GlcdDriver **driver);
 void hx8340Clear(void);

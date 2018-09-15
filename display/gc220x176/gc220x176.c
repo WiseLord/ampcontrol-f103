@@ -1,4 +1,4 @@
-#include "gc220x176.h"
+#include "../dispcanvas.h"
 
 static GlcdDriver *glcd;
 

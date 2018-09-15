@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "gc160x128.h"
+#include "../glcd.h"
 
 void ili9163Init(GlcdDriver **driver);
 void ili9163Clear(void);

@@ -1,5 +1,7 @@
 #include "st7735.h"
 
+#include "../dispcanvas.h"
+
 #include "../../pins.h"
 #include "../../functions.h"
 

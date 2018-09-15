@@ -1,5 +1,7 @@
 #include "ssd1306.h"
 
+#include "../dispcanvas.h"
+
 #include "../../pins.h"
 #include "../../functions.h"
 

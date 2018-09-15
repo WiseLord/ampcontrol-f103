@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "gc320x240.h"
+#include "../glcd.h"
 
 // Level 1 commands
 #define ILI9341_NOP                 0x00 // No Operation

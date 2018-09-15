@@ -1,5 +1,7 @@
 #include "ls020.h"
 
+#include "../dispcanvas.h"
+
 #include "../../pins.h"
 #include "../../functions.h"
 

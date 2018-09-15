@@ -79,7 +79,6 @@ display/fonts/font-terminus-mod-64.c
 display/fonts/fonts.h
 
 display/gc176x132/gc176x132.c
-display/gc176x132/gc176x132.h
 display/gc176x132/lph9157.c
 display/gc176x132/lph9157.h
 display/gc176x132/ls020.c
@@ -88,7 +87,6 @@ display/gc176x132/ssd1286a.c
 display/gc176x132/ssd1286a.h
 
 display/gc320x240/gc320x240.c
-display/gc320x240/gc320x240.h
 display/gc320x240/ili9320.c
 display/gc320x240/ili9320.h
 display/gc320x240/ili9341.c
@@ -99,14 +97,12 @@ display/gc320x240/spfd5408.c
 display/gc320x240/spfd5408.h
 
 display/gc400x240/gc400x240.c
-display/gc400x240/gc400x240.h
 display/gc400x240/ili9327.c
 display/gc400x240/ili9327.h
 display/gc400x240/st7793.c
 display/gc400x240/st7793.h
 
 display/gm128x64/gm128x64.c
-display/gm128x64/gm128x64.h
 display/gm128x64/ks0108.c
 display/gm128x64/ks0108.h
 display/gm128x64/ssd1306.c
@@ -114,6 +110,7 @@ display/gm128x64/ssd1306.h
 display/gm128x64/st7920.c
 display/gm128x64/st7920.h
 
+display/dispcanvas.h
 display/display.c
 display/display.h
 display/dispdrv.h
@@ -152,14 +149,12 @@ timers.c
 timers.h
 
 display/gc160x128/gc160x128.c
-display/gc160x128/gc160x128.h
 display/gc160x128/ili9163.c
 display/gc160x128/ili9163.h
 display/gc160x128/st7735.c
 display/gc160x128/st7735.h
 
 display/gc220x176/gc220x176.c
-display/gc220x176/gc220x176.h
 display/gc220x176/hx8340.c
 display/gc220x176/hx8340.h
 

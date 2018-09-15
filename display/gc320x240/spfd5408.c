@@ -1,5 +1,7 @@
 #include "spfd5408.h"
 
+#include "../dispcanvas.h"
+
 #include "../../pins.h"
 #include "../../functions.h"
 

@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 
-#include "gc160x128.h"
+#include "../glcd.h"
 
 void st7735Init(GlcdDriver **driver);
 void st7735Clear(void);

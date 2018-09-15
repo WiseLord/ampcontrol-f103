@@ -1,5 +1,7 @@
 #include "hx8340.h"
 
+#include "../dispcanvas.h"
+
 #include "../../pins.h"
 #include "../../functions.h"
 
