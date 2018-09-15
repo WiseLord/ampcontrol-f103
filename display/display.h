@@ -45,7 +45,7 @@
 #define DISPLAY_IRQ ks0108IRQ
 #elif defined(_ST7920)
 #define DISPLAY_IRQ st7920IRQ
-#elif defined(_DISP_SPI)
+#elif defined(_DISP_8BIT)
 #define DISPLAY_IRQ dispdrvBusIRQ
 #else
 #define DISPLAY_IRQ()
