@@ -16,6 +16,7 @@ typedef struct {
     uint8_t data[FFT_SIZE / 2];
     uint8_t fall[FFT_SIZE / 2];
     uint8_t show[FFT_SIZE / 2];
+    uint8_t peak[FFT_SIZE / 2];
 } SpectrumData;
 
 void spInit(void);

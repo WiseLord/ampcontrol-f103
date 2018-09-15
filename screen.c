@@ -185,6 +185,14 @@ static void improveSpectrum(SpectrumData *sd)
             sd->show[i] = sd->data[i];
             sd->fall[i] = 0;
         }
+
+        if (sd->peak[i] < sd->data[i]) {
+            sd->peak[i] = sd->data[i];
+        } else {
+            if (sd->peak[i]) {
+                sd->peak[i]--;
+            }
+        }
     }
 }
 

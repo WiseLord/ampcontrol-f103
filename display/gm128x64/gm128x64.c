@@ -2,36 +2,6 @@
 
 static GlcdDriver *glcd;
 
-//static void drawHorizLine(uint8_t x1, uint8_t x2, uint8_t y, uint8_t color)
-//{
-//    uint8_t i;
-
-//    // Swap X
-//    if (x1 > x2) {
-//        i = x1;
-//        x1 = x2;
-//        x2 = i;
-//    }
-
-//    for (i = x1; i <= x2; i++)
-//        disp->drawPixel(i, y, color);
-//}
-
-static void drawVertLine(uint8_t x, uint8_t y1, uint8_t y2, uint8_t color)
-{
-    uint8_t i;
-
-    // Swap Y
-    if (y1 > y2) {
-        i = y1;
-        y1 = y2;
-        y2 = i;
-    }
-
-    for (i = y1; i <= y2; i++)
-        glcd->drawPixel(x, i, color);
-}
-
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
     int8_t time = *((int8_t *)rtc + tm);
@@ -88,16 +58,17 @@ static void displayShowBar(int16_t min, int16_t max, int16_t value)
     }
 }
 
-static void drawSpCol(uint8_t xbase, uint8_t w, uint8_t btm, uint8_t val, uint8_t max)
+static void drawSpCol(uint8_t xbase, uint8_t ybase, uint8_t width, uint8_t value, uint8_t max, uint8_t peak)
 {
-    uint8_t i;
+    if (value > max)
+        value = max;
 
-    val = (val < max ? btm - val : btm - max);
+    if (peak > max - 1)
+        peak = max - 1;
 
-    for (i = 0; i < w; i++) {
-        drawVertLine(xbase + i, btm, val, 1);
-        drawVertLine(xbase + i, val > (btm - max) ? val - 1 : val, btm - max, 0);
-    }
+    glcdDrawRect(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
+    glcdDrawRect(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
+    glcdDrawRect(xbase, ybase - peak - 1, width, 1, LCD_COLOR_YELLOW);
 }
 
 static void showTime(RTC_type *rtc, char *wday)
@@ -154,26 +125,33 @@ static void showParam(DispParam *dp)
 
 static void showSpectrum(SpectrumData *spData)
 {
-    uint8_t x, xbase;
-    uint8_t y, ybase;
     uint8_t *buf;
+    uint8_t *peak;
 
     buf = spData[SP_CHAN_LEFT].show;
-    for (x = 0; x < glcd->canvas->width; x++) {
-        xbase = x;
-        y = 0;
+    peak = spData[SP_CHAN_LEFT].peak;
+    for (uint16_t x = 0; x < glcd->canvas->width / 2; x++) {
+        uint16_t xbase = x * 2;
+        uint8_t ybase = 32;
+        uint8_t width = 1;
+        uint8_t value = buf[x] / 3;
+        uint8_t pValue = peak[x] / 3;
+        uint8_t max = 32;
 
-        ybase = buf[x] / 4;
-        drawSpCol(xbase, 1, 31 + y, ybase, 31);
+        drawSpCol(xbase, ybase, width, value + 1, max, pValue);
     }
 
     buf = spData[SP_CHAN_RIGHT].show;
-    for (x = 0; x < glcd->canvas->width; x++) {
-        xbase = x;
-        y = 32;
+    peak = spData[SP_CHAN_RIGHT].peak;
+    for (uint16_t x = 0; x < glcd->canvas->width / 2; x++) {
+        uint16_t xbase = x * 2;
+        uint8_t ybase = 64;
+        uint8_t width = 1;
+        uint8_t value = buf[x] / 3;
+        uint8_t pValue = peak[x] / 3;
+        uint8_t max = 32;
 
-        ybase = buf[x] / 4;
-        drawSpCol(xbase, 1, 31 + y, ybase, 31);
+        drawSpCol(xbase, ybase, width, value + 1, max, pValue);
     }
 }
 
