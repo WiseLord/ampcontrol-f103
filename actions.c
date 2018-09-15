@@ -1,4 +1,4 @@
-﻿#include "actions.h"
+#include "actions.h"
 
 #include "audio/audio.h"
 #include "eemul.h"

@@ -6,18 +6,16 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
 {
     int8_t time = *((int8_t *)rtc + tm);
 
-    glcdSetFontColor(LCD_COLOR_AQUA);
+    glcdSetFontColor(LCD_COLOR_WHITE);
     glcdWriteChar(LETTER_SPACE_CHAR);
     if (rtc->etm == tm)
-        glcdSetFontColor(LCD_COLOR_YELLOW);
-    glcdWriteChar(LETTER_SPACE_CHAR);
+        glcdSetFontColor(LCD_COLOR_OLIVE);
     if (tm == RTC_YEAR) {
         glcdWriteString("20");
         glcdWriteChar(LETTER_SPACE_CHAR);
     }
     glcdWriteNum(time, 2, '0', 10);
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdSetFontColor(LCD_COLOR_AQUA);
+    glcdSetFontColor(LCD_COLOR_WHITE);
     glcdWriteChar(LETTER_SPACE_CHAR);
 }
 
@@ -65,28 +63,45 @@ static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t va
 
 static void showTime(RTC_type *rtc, char *wday)
 {
-    glcdSetXY(82, 20);
-
-    glcdSetFont(&fontterminusdig30);
+    glcdSetXY(43, 10);
+    glcdSetFont(&fontterminusdig80);
 
     displayTm(rtc, RTC_HOUR);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteChar(':');
+    glcdWriteChar(LETTER_SPACE_CHAR);
     displayTm(rtc, RTC_MIN);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteChar(':');
+    glcdWriteChar(LETTER_SPACE_CHAR);
     displayTm(rtc, RTC_SEC);
 
-    glcdSetXY(52, 96);
+    glcdSetXY(54, 100);
+    glcdSetFont(&fontterminusdig64);
 
     displayTm(rtc, RTC_DATE);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteChar('.');
+    glcdWriteChar(LETTER_SPACE_CHAR);
     displayTm(rtc, RTC_MONTH);
+    glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteChar('.');
+    glcdWriteChar(LETTER_SPACE_CHAR);
     displayTm(rtc, RTC_YEAR);
 
-    glcdSetFont(&fontterminus24b);
+    glcdSetXY(199, 170);
+    glcdSetFont(&fontterminusmod64);
     glcdSetFontColor(LCD_COLOR_AQUA);
-    glcdSetXY(88, 172);
+
+    static char *wdayOld = 0;
+    if (wday != wdayOld) {
+        glcdDrawRect(0, 170, 400, 64, glcd->canvas->color);
+    }
+
+    glcdSetFontAlign(FONT_ALIGN_CENTER);
     glcdWriteString(wday);
+
+    wdayOld = wday;
 }
 
 static void showParam(DispParam *dp)

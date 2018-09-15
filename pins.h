@@ -110,6 +110,28 @@ void pinsInit(void);
 #define SSD1306_SDA_Pin         DISP_RST_Pin
 #define SSD1306_SDA_Port        DISP_RST_Port
 
+#elif defined(_ILI9163)
+
+#define ILI9163_DHI_Port        INPUT_Port
+#define ILI9163_DHI_Pin         INPUT_Pin
+#define ILI9163_CS              DISP_CS
+#define ILI9163_RS              DISP_RS
+#define ILI9163_WR              DISP_RW
+#define ILI9163_RD              DISP_RD
+#define ILI9163_RST             DISP_RST
+#define ILI9163_LED             DISP_BCKL
+
+#elif defined(_ST7735)
+
+#define ST7735_DHI_Port        INPUT_Port
+#define ST7735_DHI_Pin         INPUT_Pin
+#define ST7735_CS              DISP_CS
+#define ST7735_RS              DISP_RS
+#define ST7735_WR              DISP_RW
+#define ST7735_RD              DISP_RD
+#define ST7735_RST             DISP_RST
+#define ST7735_LED             DISP_BCKL
+
 #elif defined(_LS020)
 
 #define LS020_CS                DISP_CS
@@ -139,6 +161,17 @@ void pinsInit(void);
 #define SSD1286A_SCK            DISP_SCK
 #define SSD1286A_LED            DISP_BCKL
 #define SSD1286A_SDO            DISP_RD
+
+#elif defined(_HX8340)
+
+#define HX8340_DHI_Port        INPUT_Port
+#define HX8340_DHI_Pin         INPUT_Pin
+#define HX8340_CS              DISP_CS
+#define HX8340_RS              DISP_RS
+#define HX8340_WR              DISP_RW
+#define HX8340_RD              DISP_RD
+#define HX8340_RST             DISP_RST
+#define HX8340_LED             DISP_BCKL
 
 #elif defined(_ILI9320)
 
@@ -182,6 +215,17 @@ void pinsInit(void);
 #define SPFD5408_RD             DISP_RD
 #define SPFD5408_RST            DISP_RST
 #define SPFD5408_LED            DISP_BCKL
+
+#elif defined(_MC2PA8201)
+
+#define MC2PA8201_DHI_Port        INPUT_Port
+#define MC2PA8201_DHI_Pin         INPUT_Pin
+#define MC2PA8201_CS              DISP_CS
+#define MC2PA8201_RS              DISP_RS
+#define MC2PA8201_WR              DISP_RW
+#define MC2PA8201_RD              DISP_RD
+#define MC2PA8201_RST             DISP_RST
+#define MC2PA8201_LED             DISP_BCKL
 
 #elif defined(_ILI9327)
 

@@ -13,12 +13,18 @@ void displayInit(GlcdDriver **driver)
     st7920Init(driver);
 #elif defined (_SSD1306)
     ssd1306Init(driver);
+#elif defined (_ILI9163)
+    ili9163Init(driver);
+#elif defined (_ST7735)
+    st7735Init(driver);
 #elif defined (_LS020)
     ls020Init(driver);
 #elif defined (_LPH9157)
     lph9157Init(driver);
 #elif defined (_SSD1286A)
     ssd1286aInit(driver);
+#elif defined (_HX8340)
+    hx8340Init(driver);
 #elif defined (_ILI9320)
     ili9320Init(driver);
 #elif defined (_ILI9341)
@@ -27,6 +33,8 @@ void displayInit(GlcdDriver **driver)
     s6d0139Init(driver);
 #elif defined (_SPFD5408)
     spfd5408Init(driver);
+#elif defined (_MC2PA8201)
+    mc2pa8201Init(driver);
 #elif defined (_ILI9327)
     ili9327Init(driver);
 #elif defined (_ST7793)

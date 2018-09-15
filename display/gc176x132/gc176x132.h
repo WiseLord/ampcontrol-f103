@@ -1,7 +1,7 @@
 #ifndef GC176X132_H
 #define GC176X132_H
 
-// Abstract graphical color display with 320x240 resolution
+// Abstract graphical color display with 176x132 resolution
 
 #include <inttypes.h>
 

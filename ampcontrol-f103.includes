@@ -8,3 +8,5 @@ display/gc320x240
 display/fonts
 display/gc400x240
 display/gc176x132
+display/gc160x128
+display/gc220x176
