@@ -32,10 +32,10 @@ static inline void ssd1286aSendCmd(uint8_t cmd) __attribute__((always_inline));
 static inline void ssd1286aSendCmd(uint8_t cmd)
 {
     while (TX_BUSY());
-    CLR(SSD1286A_DC);
+    CLR(DISP_SPI_DC);
     LL_SPI_TransmitData8(SPI1, cmd);
     while (TX_BUSY());
-    SET(SSD1286A_DC);
+    SET(DISP_SPI_DC);
 }
 
 static inline void ssd1286aSendData(uint16_t data) __attribute__((always_inline));
@@ -52,7 +52,7 @@ static void ssd1286aInitSeq(void)
 {
     _delay_ms(50);
 
-    CLR(SSD1286A_CS);
+    CLR(DISP_SPI_CS);
 
     ssd1286aSendCmd(0x00);
     ssd1286aSendSPI(0x00);
@@ -91,7 +91,7 @@ static void ssd1286aInitSeq(void)
     ssd1286aSendSPI(0x33);
 
     while (TX_BUSY());
-    SET(SSD1286A_CS);
+    SET(DISP_SPI_CS);
 }
 
 
@@ -140,13 +140,13 @@ void ssd1286aInit(GlcdDriver **driver)
     // Configure Hardware SPI
     ssd1286aInitSPI();
 
-    CLR(SSD1286A_RST);
+    CLR(DISP_SPI_RST);
     _delay_ms(100);
-    SET(SSD1286A_RST);
+    SET(DISP_SPI_RST);
 
     // Init magic
     ssd1286aInitSeq();
-    SET(SSD1286A_LED);
+    SET(DISP_SPI_LED);
 }
 
 void ssd1286aClear(void)
@@ -156,7 +156,7 @@ void ssd1286aClear(void)
 
 void ssd1286aSleep(void)
 {
-    CLR(SSD1286A_CS);
+    CLR(DISP_SPI_CS);
 
     ssd1286aSendCmd(0x07);
     ssd1286aSendSPI(0x00);
@@ -175,12 +175,12 @@ void ssd1286aSleep(void)
     ssd1286aSendSPI(0x00);
 
     while (TX_BUSY());
-    SET(SSD1286A_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ssd1286aWakeup(void)
 {
-    CLR(SSD1286A_CS);
+    CLR(DISP_SPI_CS);
 
     ssd1286aSendCmd(0x10);
     ssd1286aSendSPI(0x1f);
@@ -205,16 +205,16 @@ void ssd1286aWakeup(void)
     ssd1286aSendSPI(0x33);
 
     while (TX_BUSY());
-    SET(SSD1286A_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ssd1286aDrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(SSD1286A_CS);
+    CLR(DISP_SPI_CS);
     ssd1286aSetWindow(x, y, 1, 1);
     ssd1286aSendData(color);
     while (TX_BUSY());
-    SET(SSD1286A_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ssd1286aDrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
@@ -222,7 +222,7 @@ void ssd1286aDrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
     uint8_t colorH = color >> 8;
     uint8_t colorL = color & 0xFF;
 
-    CLR(SSD1286A_CS);
+    CLR(DISP_SPI_CS);
 
     ssd1286aSetWindow(x, y, w, h);
 
@@ -234,7 +234,7 @@ void ssd1286aDrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
     }
 
     while (TX_BUSY());
-    SET(SSD1286A_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ssd1286aDrawImage(tImage *img)
@@ -244,12 +244,12 @@ void ssd1286aDrawImage(tImage *img)
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
 
-    CLR(SSD1286A_CS);
+    CLR(DISP_SPI_CS);
 
     ssd1286aSetWindow(x0, y0, w, h);
 
     DISPDRV_SEND_IMAGE(img, ssd1286aSendData);
 
     while (TX_BUSY());
-    SET(SSD1286A_CS);
+    SET(DISP_SPI_CS);
 }

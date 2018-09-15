@@ -24,22 +24,22 @@ static inline void s6d0139SendData(uint16_t data)
     uint8_t dataH = data >> 8;
     uint8_t dataL = data & 0xFF;
 
-    S6D0139_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
-    CLR(S6D0139_WR);                                // Strob MSB
-    SET(S6D0139_WR);
-    S6D0139_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
-    CLR(S6D0139_WR);                                // Strob LSB
-    SET(S6D0139_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob MSB
+    SET(DISP_8BIT_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob LSB
+    SET(DISP_8BIT_WR);
 
     // If input IRQ requested bus status, switch temporarly to input mode and read bus
     if (bus_requested) {
-        S6D0139_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
-        S6D0139_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
+        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
+        DISP_8BIT_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
         while (--delay);
-        glcd.bus = S6D0139_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
-        S6D0139_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        glcd.bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
+        DISP_8BIT_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
 }
@@ -47,9 +47,9 @@ static inline void s6d0139SendData(uint16_t data)
 static inline void s6d0139SelectReg(uint16_t reg) __attribute__((always_inline));
 static inline void s6d0139SelectReg(uint16_t reg)
 {
-    CLR(S6D0139_RS);
+    CLR(DISP_8BIT_RS);
     s6d0139SendData(reg);
-    SET(S6D0139_RS);
+    SET(DISP_8BIT_RS);
 }
 
 static void s6d0139WriteReg(uint16_t reg, uint16_t data)
@@ -63,7 +63,7 @@ static inline void s6d0139InitSeq(void)
     // Wait for reset
     _delay_ms(50);
 
-    CLR(S6D0139_CS);
+    CLR(DISP_8BIT_CS);
 
     s6d0139WriteReg(0x0000, 0x0001);    // Start Oscillation
     _delay_ms(10);
@@ -113,7 +113,7 @@ static inline void s6d0139InitSeq(void)
     _delay_ms(40);
     s6d0139WriteReg(0x0007, 0x0017);    // Display control1
 
-    SET(S6D0139_CS);
+    SET(DISP_8BIT_CS);
 }
 
 static inline void s6d0139SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
@@ -132,15 +132,15 @@ void s6d0139Init(GlcdDriver **driver)
     *driver = &glcd;
     gc320x240Init(*driver);
 
-    SET(S6D0139_LED);
-    SET(S6D0139_RD);
-    SET(S6D0139_WR);
-    SET(S6D0139_RS);
-    SET(S6D0139_CS);
+    SET(DISP_8BIT_LED);
+    SET(DISP_8BIT_RD);
+    SET(DISP_8BIT_WR);
+    SET(DISP_8BIT_RS);
+    SET(DISP_8BIT_CS);
 
-    CLR(S6D0139_RST);
+    CLR(DISP_8BIT_RST);
     _delay_ms(1);
-    SET(S6D0139_RST);
+    SET(DISP_8BIT_RST);
 
     s6d0139InitSeq();
 }
@@ -157,7 +157,7 @@ void s6d0139BusIRQ(void)
 
 void s6d0139Sleep(void)
 {
-    CLR(S6D0139_CS);
+    CLR(DISP_8BIT_CS);
 
     s6d0139WriteReg(0x0007, 0x0000);    // Display OFF
     // Power Off Sequence
@@ -169,12 +169,12 @@ void s6d0139Sleep(void)
     _delay_ms(200);
     s6d0139WriteReg(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
-    SET(S6D0139_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void s6d0139Wakeup(void)
 {
-    CLR(S6D0139_CS);
+    CLR(DISP_8BIT_CS);
 
     // Power On Sequence
     s6d0139WriteReg(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
@@ -195,24 +195,24 @@ void s6d0139Wakeup(void)
     _delay_ms(40);
     s6d0139WriteReg(0x0007, 0x0017);    // 262K color and display ON
 
-    SET(S6D0139_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void s6d0139DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(S6D0139_CS);
+    CLR(DISP_8BIT_CS);
 
     s6d0139SetWindow(x, y, 1, 1);
 
     s6d0139SelectReg(0x0022);
     s6d0139SendData(color);
 
-    SET(S6D0139_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void s6d0139DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(S6D0139_CS);
+    CLR(DISP_8BIT_CS);
 
     s6d0139SetWindow(x, y, w, h);
 
@@ -220,7 +220,7 @@ void s6d0139DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     for (uint32_t i = 0; i < w * h; i++)
         s6d0139SendData(color);
 
-    SET(S6D0139_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void s6d0139DrawImage(tImage *img)
@@ -230,7 +230,7 @@ void s6d0139DrawImage(tImage *img)
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
 
-    CLR(S6D0139_CS);
+    CLR(DISP_8BIT_CS);
 
     s6d0139SetWindow(x0, y0, w, h);
 
@@ -238,5 +238,5 @@ void s6d0139DrawImage(tImage *img)
 
     DISPDRV_SEND_IMAGE(img, s6d0139SendData);
 
-    SET(S6D0139_CS);
+    SET(DISP_8BIT_CS);
 }

@@ -24,22 +24,22 @@ static inline void st7793SendData(uint16_t data)
     uint8_t dataH = data >> 8;
     uint8_t dataL = data & 0xFF;
 
-    ST7793_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
-    CLR(ST7793_WR);                                // Strob MSB
-    SET(ST7793_WR);
-    ST7793_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
-    CLR(ST7793_WR);                                // Strob LSB
-    SET(ST7793_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob MSB
+    SET(DISP_8BIT_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob LSB
+    SET(DISP_8BIT_WR);
 
     // If input IRQ requested bus status, switch temporarly to input mode and read bus
     if (bus_requested) {
-        ST7793_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
-        ST7793_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
+        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
+        DISP_8BIT_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
         while (--delay);
-        glcd.bus = ST7793_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
-        ST7793_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        glcd.bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
+        DISP_8BIT_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
 }
@@ -47,9 +47,9 @@ static inline void st7793SendData(uint16_t data)
 static inline void st7793SelectReg(uint16_t reg) __attribute__((always_inline));
 static inline void st7793SelectReg(uint16_t reg)
 {
-    CLR(ST7793_RS);
+    CLR(DISP_8BIT_RS);
     st7793SendData(reg);
-    SET(ST7793_RS);
+    SET(DISP_8BIT_RS);
 }
 
 static void st7793WriteReg(uint16_t reg, uint16_t data)
@@ -63,7 +63,7 @@ static inline void st7793InitSeq(void)
     // Wait for reset
     _delay_ms(200);
 
-    CLR(ST7793_CS);
+    CLR(DISP_8BIT_CS);
 
     //-------------Display Control Setting-------------------------------------//
 
@@ -121,7 +121,7 @@ static inline void st7793InitSeq(void)
     st7793WriteReg(0x0200, 0x0000);
     st7793WriteReg(0x0201, 0x0000);
 
-    SET(ST7793_CS);
+    SET(DISP_8BIT_CS);
 }
 
 static inline void st7793SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
@@ -142,15 +142,15 @@ void st7793Init(GlcdDriver **driver)
     *driver = &glcd;
     gc400x240Init(*driver);
 
-    SET(ST7793_LED);
-    SET(ST7793_RD);
-    SET(ST7793_WR);
-    SET(ST7793_RS);
-    SET(ST7793_CS);
+    SET(DISP_8BIT_LED);
+    SET(DISP_8BIT_RD);
+    SET(DISP_8BIT_WR);
+    SET(DISP_8BIT_RS);
+    SET(DISP_8BIT_CS);
 
-    CLR(ST7793_RST);
+    CLR(DISP_8BIT_RST);
     _delay_ms(1);
-    SET(ST7793_RST);
+    SET(DISP_8BIT_RST);
 
     st7793InitSeq();
 }
@@ -167,19 +167,19 @@ void st7793BusIRQ(void)
 
 void st7793Sleep(void)
 {
-    CLR(ST7793_CS);
+    CLR(DISP_8BIT_CS);
 
     st7793WriteReg(0x0007, 0x0000);
     _delay_ms(50);
     st7793WriteReg(0x0102, 0x0180);
     _delay_ms(200);
 
-    SET(ST7793_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void st7793Wakeup(void)
 {
-    CLR(ST7793_CS);
+    CLR(DISP_8BIT_CS);
 
     // Power On Sequence
     _delay_ms(200);
@@ -187,24 +187,24 @@ void st7793Wakeup(void)
     _delay_ms(50);
     st7793WriteReg(0x0007, 0x0100);
 
-    SET(ST7793_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void st7793DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(ST7793_CS);
+    CLR(DISP_8BIT_CS);
 
     st7793SetWindow(x, y, 1, 1);
 
     st7793SelectReg(0x0202);
     st7793SendData(color);
 
-    SET(ST7793_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(ST7793_CS);
+    CLR(DISP_8BIT_CS);
 
     st7793SetWindow(x, y, w, h);
 
@@ -212,7 +212,7 @@ void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
     for (uint32_t i = 0; i < w * h; i++)
         st7793SendData(color);
 
-    SET(ST7793_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void st7793DrawImage(tImage *img)
@@ -222,7 +222,7 @@ void st7793DrawImage(tImage *img)
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
 
-    CLR(ST7793_CS);
+    CLR(DISP_8BIT_CS);
 
     st7793SetWindow(x0, y0, w, h);
 
@@ -230,5 +230,5 @@ void st7793DrawImage(tImage *img)
 
     DISPDRV_SEND_IMAGE(img, st7793SendData);
 
-    SET(ST7793_CS);
+    SET(DISP_8BIT_CS);
 }

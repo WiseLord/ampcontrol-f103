@@ -32,10 +32,10 @@ static inline void lph9157SendCmd(uint8_t cmd) __attribute__((always_inline));
 static inline void lph9157SendCmd(uint8_t cmd)
 {
     while (TX_BUSY());
-    CLR(LPH9157_DC);
+    CLR(DISP_SPI_DC);
     LL_SPI_TransmitData8(SPI1, cmd);
     while (TX_BUSY());
-    SET(LPH9157_DC);
+    SET(DISP_SPI_DC);
 }
 
 static inline void lph9157SendData(uint16_t data) __attribute__((always_inline));
@@ -52,7 +52,7 @@ static void lph9157InitSeq(void)
 {
     _delay_ms(50);
 
-    CLR(LPH9157_CS);
+    CLR(DISP_SPI_CS);
 
     lph9157SendCmd(0x01);
     lph9157SendCmd(0x11);
@@ -65,7 +65,7 @@ static void lph9157InitSeq(void)
     lph9157SendCmd(0x29);
 
     while (TX_BUSY());
-    SET(LPH9157_CS);
+    SET(DISP_SPI_CS);
 }
 
 void lph9157SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
@@ -110,11 +110,11 @@ void lph9157Init(GlcdDriver **driver)
     lph9157InitSPI();
 
 
-    SET(LPH9157_RST);
+    SET(DISP_SPI_RST);
 
     // Init magic
     lph9157InitSeq();
-    SET(LPH9157_LED);
+    SET(DISP_SPI_LED);
 }
 
 void lph9157Clear(void)
@@ -124,29 +124,29 @@ void lph9157Clear(void)
 
 void lph9157Sleep(void)
 {
-    CLR(LPH9157_CS);
+    CLR(DISP_SPI_CS);
     lph9157SendCmd(0x10);
     lph9157SendCmd(0x28);
     while (TX_BUSY());
-    SET(LPH9157_CS);
+    SET(DISP_SPI_CS);
 }
 
 void lph9157Wakeup(void)
 {
-    CLR(LPH9157_CS);
+    CLR(DISP_SPI_CS);
     lph9157SendCmd(0x11);
     lph9157SendCmd(0x29);
     while (TX_BUSY());
-    SET(LPH9157_CS);
+    SET(DISP_SPI_CS);
 }
 
 void lph9157DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(LPH9157_CS);
+    CLR(DISP_SPI_CS);
     lph9157SetWindow(x, y, 1, 1);
     lph9157SendData(color);
     while (TX_BUSY());
-    SET(LPH9157_CS);
+    SET(DISP_SPI_CS);
 }
 
 void lph9157DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
@@ -154,7 +154,7 @@ void lph9157DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     uint8_t colorH = color >> 8;
     uint8_t colorL = color & 0xFF;
 
-    CLR(LPH9157_CS);
+    CLR(DISP_SPI_CS);
 
     lph9157SetWindow(x, y, w, h);
 
@@ -166,7 +166,7 @@ void lph9157DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     }
 
     while (TX_BUSY());
-    SET(LPH9157_CS);
+    SET(DISP_SPI_CS);
 }
 
 void lph9157DrawImage(tImage *img)
@@ -176,12 +176,12 @@ void lph9157DrawImage(tImage *img)
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
 
-    CLR(LPH9157_CS);
+    CLR(DISP_SPI_CS);
 
     lph9157SetWindow(x0, y0, w, h);
 
     DISPDRV_SEND_IMAGE(img, lph9157SendData);
 
     while (TX_BUSY());
-    SET(LPH9157_CS);
+    SET(DISP_SPI_CS);
 }

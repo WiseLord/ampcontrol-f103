@@ -24,22 +24,22 @@ static inline void spfd5408SendData(uint16_t data)
     uint8_t dataH = data >> 8;
     uint8_t dataL = data & 0xFF;
 
-    SPFD5408_DHI_Port->BSRR = 0x00FF0000 | dataH;   // If port bits 7..0 are used
-    CLR(SPFD5408_WR);                               // Strob MSB
-    SET(SPFD5408_WR);
-    SPFD5408_DHI_Port->BSRR = 0x00FF0000 | dataL;   // If port bits 7..0 are used
-    CLR(SPFD5408_WR);                               // Strob LSB
-    SET(SPFD5408_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataH;   // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                               // Strob MSB
+    SET(DISP_8BIT_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataL;   // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                               // Strob LSB
+    SET(DISP_8BIT_WR);
 
     // If input IRQ requested bus status, switch temporarly to input mode and read bus
     if (bus_requested) {
-        SPFD5408_DHI_Port->BSRR = 0x000000FF;       // Set 1 on all data lines
-        SPFD5408_DHI_Port->CRL = 0x88888888;        // SET CNF=10, MODE=00 - Input pullup
+        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;       // Set 1 on all data lines
+        DISP_8BIT_DHI_Port->CRL = 0x88888888;        // SET CNF=10, MODE=00 - Input pullup
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
         while (--delay);
-        glcd.bus = SPFD5408_DHI_Port->IDR & 0x00FF; // Read 8-bit bus
-        SPFD5408_DHI_Port->CRL = 0x33333333;        // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        glcd.bus = DISP_8BIT_DHI_Port->IDR & 0x00FF; // Read 8-bit bus
+        DISP_8BIT_DHI_Port->CRL = 0x33333333;        // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
 }
@@ -47,9 +47,9 @@ static inline void spfd5408SendData(uint16_t data)
 static inline void spfd5408SelectReg(uint16_t reg) __attribute__((always_inline));
 static inline void spfd5408SelectReg(uint16_t reg)
 {
-    CLR(SPFD5408_RS);
+    CLR(DISP_8BIT_RS);
     spfd5408SendData(reg);
-    SET(SPFD5408_RS);
+    SET(DISP_8BIT_RS);
 }
 
 static void spfd5408WriteReg(uint16_t reg, uint16_t data)
@@ -63,7 +63,7 @@ static inline void spfd5408InitSeq(void)
     // Wait for reset
     _delay_ms(50);
 
-    CLR(SPFD5408_CS);
+    CLR(DISP_8BIT_CS);
     // Initial Sequence
     spfd5408WriteReg(0x0000, 0x0000);
     spfd5408WriteReg(0x0001, 0x0100);
@@ -150,7 +150,7 @@ static inline void spfd5408InitSeq(void)
     _delay_ms(150);
 
 
-    SET(SPFD5408_CS);
+    SET(DISP_8BIT_CS);
 }
 
 static inline void spfd5408SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
@@ -171,15 +171,15 @@ void spfd5408Init(GlcdDriver **driver)
     *driver = &glcd;
     gc320x240Init(*driver);
 
-    SET(SPFD5408_LED);
-    SET(SPFD5408_RD);
-    SET(SPFD5408_WR);
-    SET(SPFD5408_RS);
-    SET(SPFD5408_CS);
+    SET(DISP_8BIT_LED);
+    SET(DISP_8BIT_RD);
+    SET(DISP_8BIT_WR);
+    SET(DISP_8BIT_RS);
+    SET(DISP_8BIT_CS);
 
-    CLR(SPFD5408_RST);
+    CLR(DISP_8BIT_RST);
     _delay_ms(1);
-    SET(SPFD5408_RST);
+    SET(DISP_8BIT_RST);
 
     spfd5408InitSeq();
 }
@@ -196,7 +196,7 @@ void spfd5408BusIRQ(void)
 
 void spfd5408Sleep(void)
 {
-    CLR(SPFD5408_CS);
+    CLR(DISP_8BIT_CS);
 
     spfd5408WriteReg(0x0007, 0x0000);   // Display OFF
     // Power Off Sequence
@@ -212,12 +212,12 @@ void spfd5408Sleep(void)
     _delay_ms(20);
     spfd5408WriteReg(0x0010, 0x0002);   // SAP, BT[3:0], AP, DSTB, SLP, STB
 
-    SET(SPFD5408_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void spfd5408Wakeup(void)
 {
-    CLR(SPFD5408_CS);
+    CLR(DISP_8BIT_CS);
 
     // Power On Sequence
     spfd5408WriteReg(0x0010, 0x0000);
@@ -244,24 +244,24 @@ void spfd5408Wakeup(void)
 
     spfd5408WriteReg(0x0007, 0x0173);   // 262K color and display ON
 
-    SET(SPFD5408_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void spfd5408DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(SPFD5408_CS);
+    CLR(DISP_8BIT_CS);
 
     spfd5408SetWindow(x, y, 1, 1);
 
     spfd5408SelectReg(0x0022);
     spfd5408SendData(color);
 
-    SET(SPFD5408_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void spfd5408DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(SPFD5408_CS);
+    CLR(DISP_8BIT_CS);
 
     spfd5408SetWindow(x, y, w, h);
 
@@ -269,7 +269,7 @@ void spfd5408DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
     for (uint32_t i = 0; i < w * h; i++)
         spfd5408SendData(color);
 
-    SET(SPFD5408_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void spfd5408DrawImage(tImage *img)
@@ -279,7 +279,7 @@ void spfd5408DrawImage(tImage *img)
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
 
-    CLR(SPFD5408_CS);
+    CLR(DISP_8BIT_CS);
 
     spfd5408SetWindow(x0, y0, w, h);
 
@@ -287,5 +287,5 @@ void spfd5408DrawImage(tImage *img)
 
     DISPDRV_SEND_IMAGE(img, spfd5408SendData);
 
-    SET(SPFD5408_CS);
+    SET(DISP_8BIT_CS);
 }

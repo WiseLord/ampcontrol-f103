@@ -41,8 +41,8 @@ static inline void ls020SendData(uint16_t data)
 static void ls020InitSeq(void)
 {
     _delay_ms(50);
-    SET(LS020_DC);
-    CLR(LS020_CS);
+    SET(DISP_SPI_DC);
+    CLR(DISP_SPI_CS);
 
     ls020SendData(0xFDFD);
     ls020SendData(0xFDFD);
@@ -84,14 +84,14 @@ static void ls020InitSeq(void)
     ls020SendData(0x0020);
 
     while (TX_BUSY());
-    SET(LS020_CS);
+    SET(DISP_SPI_CS);
 }
 
 
 void ls020SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-    SET(LS020_DC);
-    CLR(LS020_CS);
+    SET(DISP_SPI_DC);
+    CLR(DISP_SPI_CS);
 
     ls020SendData(0x0800 + LS020_WIDTH - y - h);
     ls020SendData(0x0900 + LS020_WIDTH - y - 1);
@@ -101,7 +101,7 @@ void ls020SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     ls020SendData(0x0B00 + x + w - 1);
 
     while (TX_BUSY());
-    SET(LS020_CS);
+    SET(DISP_SPI_CS);
 }
 
 static void ls020InitSPI()
@@ -132,13 +132,13 @@ void ls020Init(GlcdDriver **driver)
     // Configure Hardware SPI
     ls020InitSPI();
 
-    CLR(LS020_RST);
+    CLR(DISP_SPI_RST);
     _delay_ms(100);
-    SET(LS020_RST);
+    SET(DISP_SPI_RST);
 
     // Init magic
     ls020InitSeq();
-    SET(LS020_LED);
+    SET(DISP_SPI_LED);
 }
 
 void ls020Clear(void)
@@ -148,8 +148,8 @@ void ls020Clear(void)
 
 void ls020Sleep(void)
 {
-    SET(LS020_DC);
-    CLR(LS020_CS);
+    SET(DISP_SPI_DC);
+    CLR(DISP_SPI_CS);
     ls020SendData(0xEF00);
     ls020SendData(0x7E04);
     ls020SendData(0xEFB0);
@@ -177,7 +177,7 @@ void ls020Sleep(void)
     ls020SendData(0xEF00);
     ls020SendData(0x7F01);
     while (TX_BUSY());
-    SET(LS020_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ls020Wakeup(void)
@@ -190,11 +190,11 @@ void ls020DrawPixel(int16_t x, int16_t y, uint16_t color)
 
     ls020SetWindow(x, y, 1, 1);
 
-    CLR(LS020_DC);
-    CLR(LS020_CS);
+    CLR(DISP_SPI_DC);
+    CLR(DISP_SPI_CS);
     ls020SendData(color);
     while (TX_BUSY());
-    SET(LS020_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ls020DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
@@ -204,8 +204,8 @@ void ls020DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t
 
     ls020SetWindow(x, y, w, h);
 
-    CLR(LS020_DC);
-    CLR(LS020_CS);
+    CLR(DISP_SPI_DC);
+    CLR(DISP_SPI_CS);
 
     for (uint16_t i = 0; i < w; i++) {
         for (uint16_t j = 0; j < h; j++) {
@@ -215,7 +215,7 @@ void ls020DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t
     }
 
     while (TX_BUSY());
-    SET(LS020_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ls020DrawImage(tImage *img)
@@ -227,11 +227,11 @@ void ls020DrawImage(tImage *img)
 
     ls020SetWindow(x0, y0, w, h);
 
-    CLR(LS020_DC);
-    CLR(LS020_CS);
+    CLR(DISP_SPI_DC);
+    CLR(DISP_SPI_CS);
 
     DISPDRV_SEND_IMAGE(img, ls020SendData);
 
     while (TX_BUSY());
-    SET(LS020_CS);
+    SET(DISP_SPI_CS);
 }

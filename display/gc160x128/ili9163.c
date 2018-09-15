@@ -24,22 +24,22 @@ static inline void ili9163SendData(uint16_t data)
     uint8_t dataH = data >> 8;
     uint8_t dataL = data & 0xFF;
 
-    ILI9163_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
-    CLR(ILI9163_WR);                                // Strob MSB
-    SET(ILI9163_WR);
-    ILI9163_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
-    CLR(ILI9163_WR);                                // Strob LSB
-    SET(ILI9163_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob MSB
+    SET(DISP_8BIT_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob LSB
+    SET(DISP_8BIT_WR);
 
     // If input IRQ requested bus status, switch temporarly to input mode and read bus
     if (bus_requested) {
-        ILI9163_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
-        ILI9163_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
+        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
+        DISP_8BIT_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
         while (--delay);
-        glcd.bus = ILI9163_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
-        ILI9163_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        glcd.bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
+        DISP_8BIT_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
 }
@@ -47,19 +47,19 @@ static inline void ili9163SendData(uint16_t data)
 static inline void ili9163SendDataR(uint8_t dataR) __attribute__((always_inline));
 static inline void ili9163SendDataR(uint8_t dataR)
 {
-    ILI9163_DHI_Port->BSRR = 0x00FF0000 | dataR;    // If port bits 7..0 are used
-    CLR(ILI9163_WR);                                // Strob LSB
-    SET(ILI9163_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataR;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob LSB
+    SET(DISP_8BIT_WR);
 
     // If input IRQ requested bus status, switch temporarly to input mode and read bus
     if (bus_requested) {
-        ILI9163_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
-        ILI9163_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
+        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
+        DISP_8BIT_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
         while (--delay);
-        glcd.bus = ILI9163_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
-        ILI9163_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        glcd.bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
+        DISP_8BIT_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
 }
@@ -68,9 +68,9 @@ static inline void ili9163SendDataR(uint8_t dataR)
 static inline void ili9163SelectReg(uint8_t reg) __attribute__((always_inline));
 static inline void ili9163SelectReg(uint8_t reg)
 {
-    CLR(ILI9163_RS);
+    CLR(DISP_8BIT_RS);
     ili9163SendDataR(reg);
-    SET(ILI9163_RS);
+    SET(DISP_8BIT_RS);
 }
 
 static inline void ili9163InitSeq(void)
@@ -78,7 +78,7 @@ static inline void ili9163InitSeq(void)
     // Wait for reset
     _delay_ms(50);
 
-    CLR(ILI9163_CS);
+    CLR(DISP_8BIT_CS);
 
     // Initial Sequence
     //************* Start Initial Sequence **********//
@@ -166,7 +166,7 @@ static inline void ili9163InitSeq(void)
 
     ili9163SelectReg(0x29); // Display On
 
-    SET(ILI9163_CS);
+    SET(DISP_8BIT_CS);
 }
 
 static inline void ili9163SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
@@ -186,15 +186,15 @@ void ili9163Init(GlcdDriver **driver)
     *driver = &glcd;
     gc160x128Init(*driver);
 
-    SET(ILI9163_LED);
-    SET(ILI9163_RD);
-    SET(ILI9163_WR);
-    SET(ILI9163_RS);
-    SET(ILI9163_CS);
+    SET(DISP_8BIT_LED);
+    SET(DISP_8BIT_RD);
+    SET(DISP_8BIT_WR);
+    SET(DISP_8BIT_RS);
+    SET(DISP_8BIT_CS);
 
-    CLR(ILI9163_RST);
+    CLR(DISP_8BIT_RST);
     _delay_ms(1);
-    SET(ILI9163_RST);
+    SET(DISP_8BIT_RST);
 
     ili9163InitSeq();
 }
@@ -211,41 +211,41 @@ void ili9163BusIRQ(void)
 
 void ili9163Sleep(void)
 {
-    CLR(ILI9163_CS);
+    CLR(DISP_8BIT_CS);
 
     ili9163SelectReg(0x28);    // Display OFF
     _delay_ms(100);
     ili9163SelectReg(0x10);
 
-    SET(ILI9163_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void ili9163Wakeup(void)
 {
-    CLR(ILI9163_CS);
+    CLR(DISP_8BIT_CS);
 
     ili9163SelectReg(0x11);    // Display OFF
     _delay_ms(100);
     ili9163SelectReg(0x29);
 
-    SET(ILI9163_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void ili9163DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(ILI9163_CS);
+    CLR(DISP_8BIT_CS);
 
     ili9163SetWindow(x, y, 1, 1);
 
     ili9163SelectReg(0x2C);
     ili9163SendData(color);
 
-    SET(ILI9163_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void ili9163DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(ILI9163_CS);
+    CLR(DISP_8BIT_CS);
 
     ili9163SetWindow(x, y, w, h);
 
@@ -253,7 +253,7 @@ void ili9163DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     for (uint32_t i = 0; i < w * h; i++)
         ili9163SendData(color);
 
-    SET(ILI9163_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void ili9163DrawImage(tImage *img)
@@ -263,7 +263,7 @@ void ili9163DrawImage(tImage *img)
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
    
-    CLR(ILI9163_CS);
+    CLR(DISP_8BIT_CS);
 
     ili9163SetWindow(x0, y0, w, h);
 
@@ -271,5 +271,5 @@ void ili9163DrawImage(tImage *img)
     
     DISPDRV_SEND_IMAGE(img, ili9163SendData);
 
-    SET(ILI9163_CS);
+    SET(DISP_8BIT_CS);
 }

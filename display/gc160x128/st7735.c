@@ -24,22 +24,22 @@ static inline void st7735SendData(uint16_t data)
     uint8_t dataH = data >> 8;
     uint8_t dataL = data & 0xFF;
 
-    ST7735_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
-    CLR(ST7735_WR);                                // Strob MSB
-    SET(ST7735_WR);
-    ST7735_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
-    CLR(ST7735_WR);                                // Strob LSB
-    SET(ST7735_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataH;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob MSB
+    SET(DISP_8BIT_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataL;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob LSB
+    SET(DISP_8BIT_WR);
 
     // If input IRQ requested bus status, switch temporarly to input mode and read bus
     if (bus_requested) {
-        ST7735_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
-        ST7735_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
+        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
+        DISP_8BIT_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
         while (--delay);
-        glcd.bus = ST7735_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
-        ST7735_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        glcd.bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
+        DISP_8BIT_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
 }
@@ -47,19 +47,19 @@ static inline void st7735SendData(uint16_t data)
 static inline void st7735SendDataR(uint8_t dataR) __attribute__((always_inline));
 static inline void st7735SendDataR(uint8_t dataR)
 {
-    ST7735_DHI_Port->BSRR = 0x00FF0000 | dataR;    // If port bits 7..0 are used
-    CLR(ST7735_WR);                                // Strob LSB
-    SET(ST7735_WR);
+    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | dataR;    // If port bits 7..0 are used
+    CLR(DISP_8BIT_WR);                                // Strob LSB
+    SET(DISP_8BIT_WR);
 
     // If input IRQ requested bus status, switch temporarly to input mode and read bus
     if (bus_requested) {
-        ST7735_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
-        ST7735_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
+        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;        // Set 1 on all data lines
+        DISP_8BIT_DHI_Port->CRL = 0x88888888;         // SET CNF=10, MODE=00 - Input pullup
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
         while (--delay);
-        glcd.bus = ST7735_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
-        ST7735_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        glcd.bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;  // Read 8-bit bus
+        DISP_8BIT_DHI_Port->CRL = 0x33333333;         // Set CNF=00, MODE=11 - Output push-pull 50 MHz
         bus_requested = 0;
     }
 }
@@ -68,9 +68,9 @@ static inline void st7735SendDataR(uint8_t dataR)
 static inline void st7735SelectReg(uint8_t reg) __attribute__((always_inline));
 static inline void st7735SelectReg(uint8_t reg)
 {
-    CLR(ST7735_RS);
+    CLR(DISP_8BIT_RS);
     st7735SendDataR(reg);
-    SET(ST7735_RS);
+    SET(DISP_8BIT_RS);
 }
 
 static inline void st7735InitSeq(void)
@@ -78,7 +78,7 @@ static inline void st7735InitSeq(void)
     // Wait for reset
     _delay_ms(50);
 
-    CLR(ST7735_CS);
+    CLR(DISP_8BIT_CS);
 
     // Initial Sequence
     //************* Start Initial Sequence **********//
@@ -165,7 +165,7 @@ static inline void st7735InitSeq(void)
 
         st7735SelectReg(0x29); // Display On
 
-    SET(ST7735_CS);
+    SET(DISP_8BIT_CS);
 }
 
 static inline void st7735SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
@@ -185,15 +185,15 @@ void st7735Init(GlcdDriver **driver)
     *driver = &glcd;
     gc160x128Init(*driver);
 
-    SET(ST7735_LED);
-    SET(ST7735_RD);
-    SET(ST7735_WR);
-    SET(ST7735_RS);
-    SET(ST7735_CS);
+    SET(DISP_8BIT_LED);
+    SET(DISP_8BIT_RD);
+    SET(DISP_8BIT_WR);
+    SET(DISP_8BIT_RS);
+    SET(DISP_8BIT_CS);
 
-    CLR(ST7735_RST);
+    CLR(DISP_8BIT_RST);
     _delay_ms(1);
-    SET(ST7735_RST);
+    SET(DISP_8BIT_RST);
 
     st7735InitSeq();
 }
@@ -210,41 +210,41 @@ void st7735BusIRQ(void)
 
 void st7735Sleep(void)
 {
-    CLR(ST7735_CS);
+    CLR(DISP_8BIT_CS);
 
     st7735SelectReg(0x28);    // Display OFF
     _delay_ms(100);
     st7735SelectReg(0x10);
 
-    SET(ST7735_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void st7735Wakeup(void)
 {
-    CLR(ST7735_CS);
+    CLR(DISP_8BIT_CS);
 
     st7735SelectReg(0x11);    // Display OFF
     _delay_ms(100);
     st7735SelectReg(0x29);
 
-    SET(ST7735_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void st7735DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(ST7735_CS);
+    CLR(DISP_8BIT_CS);
 
     st7735SetWindow(x, y, 1, 1);
 
     st7735SelectReg(0x2C);
     st7735SendData(color);
 
-    SET(ST7735_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void st7735DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(ST7735_CS);
+    CLR(DISP_8BIT_CS);
 
     st7735SetWindow(x, y, w, h);
 
@@ -252,7 +252,7 @@ void st7735DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
     for (uint32_t i = 0; i < w * h; i++)
         st7735SendData(color);
 
-    SET(ST7735_CS);
+    SET(DISP_8BIT_CS);
 }
 
 void st7735DrawImage(tImage *img)
@@ -262,7 +262,7 @@ void st7735DrawImage(tImage *img)
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
 
-    CLR(ST7735_CS);
+    CLR(DISP_8BIT_CS);
 
     st7735SetWindow(x0, y0, w, h);
 
@@ -270,5 +270,5 @@ void st7735DrawImage(tImage *img)
     
     DISPDRV_SEND_IMAGE(img, st7735SendData);
 
-    SET(ST7735_CS);
+    SET(DISP_8BIT_CS);
 }

@@ -80,8 +80,6 @@ void pinsInit(void);
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
-#if defined(_KS0108)
-
 #define KS0108_DATA_Port        INPUT_Port
 #define KS0108_DATA_Pin         INPUT_Pin
 #define KS0108_DI               DISP_CS
@@ -92,8 +90,6 @@ void pinsInit(void);
 #define KS0108_RST              DISP_RST
 #define KS0108_BCKL             DISP_BCKL
 
-#elif defined(_ST7920)
-
 #define ST7920_DATA_Port        INPUT_Port
 #define ST7920_DATA_Pin         INPUT_Pin
 #define ST7920_RS               DISP_CS
@@ -103,159 +99,32 @@ void pinsInit(void);
 #define ST7920_RST              DISP_RST
 #define ST7920_BCKL             DISP_BCKL
 
-#elif defined(_SSD1306)
+#define DISP_I2C_SCK_Pin        DISP_RS_Pin
+#define DISP_I2C_SCK_Port       DISP_RS_Port
+#define DISP_I2C_SDA_Pin        DISP_RST_Pin
+#define DISP_I2C_SDA_Port       DISP_RST_Port
 
-#define SSD1306_SCK_Pin         DISP_RS_Pin
-#define SSD1306_SCK_Port        DISP_RS_Port
-#define SSD1306_SDA_Pin         DISP_RST_Pin
-#define SSD1306_SDA_Port        DISP_RST_Port
+#define DISP_8BIT_DHI_Port      INPUT_Port
+#define DISP_8BIT_DHI_Pin       INPUT_Pin
+#define DISP_8BIT_CS            DISP_CS
+#define DISP_8BIT_RS            DISP_RS
+#define DISP_8BIT_WR            DISP_RW
+#define DISP_8BIT_RD            DISP_RD
+#define DISP_8BIT_RST           DISP_RST
+#define DISP_8BIT_LED           DISP_BCKL
 
-#elif defined(_ILI9163)
+#define DISP_SPI_CS             DISP_CS
+#define DISP_SPI_RST            DISP_RST
+#define DISP_SPI_DC             DISP_RS
+#define DISP_SPI_SDI            DISP_RW
+#define DISP_SPI_SCK            DISP_SCK
+#define DISP_SPI_LED            DISP_BCKL
+#define DISP_SPI_SDO            DISP_RD
 
-#define ILI9163_DHI_Port        INPUT_Port
-#define ILI9163_DHI_Pin         INPUT_Pin
-#define ILI9163_CS              DISP_CS
-#define ILI9163_RS              DISP_RS
-#define ILI9163_WR              DISP_RW
-#define ILI9163_RD              DISP_RD
-#define ILI9163_RST             DISP_RST
-#define ILI9163_LED             DISP_BCKL
 
-#elif defined(_ST7735)
-
-#define ST7735_DHI_Port        INPUT_Port
-#define ST7735_DHI_Pin         INPUT_Pin
-#define ST7735_CS              DISP_CS
-#define ST7735_RS              DISP_RS
-#define ST7735_WR              DISP_RW
-#define ST7735_RD              DISP_RD
-#define ST7735_RST             DISP_RST
-#define ST7735_LED             DISP_BCKL
-
-#elif defined(_LS020)
-
-#define LS020_CS                DISP_CS
-#define LS020_RST               DISP_RST
-#define LS020_DC                DISP_RS
-#define LS020_SDI               DISP_RW
-#define LS020_SCK               DISP_SCK
-#define LS020_LED               DISP_BCKL
-#define LS020_SDO               DISP_RD
-
-#elif defined(_LPH9157)
-
-#define LPH9157_CS              DISP_CS
-#define LPH9157_RST             DISP_RST
-#define LPH9157_DC              DISP_RS
-#define LPH9157_SDI             DISP_RW
-#define LPH9157_SCK             DISP_SCK
-#define LPH9157_LED             DISP_BCKL
-#define LPH9157_SDO             DISP_RD
-
-#elif defined(_SSD1286A)
-
-#define SSD1286A_CS             DISP_CS
-#define SSD1286A_RST            DISP_RST
-#define SSD1286A_DC             DISP_RS
-#define SSD1286A_SDI            DISP_RW
-#define SSD1286A_SCK            DISP_SCK
-#define SSD1286A_LED            DISP_BCKL
-#define SSD1286A_SDO            DISP_RD
-
-#elif defined(_HX8340)
-
-#define HX8340_DHI_Port        INPUT_Port
-#define HX8340_DHI_Pin         INPUT_Pin
-#define HX8340_CS              DISP_CS
-#define HX8340_RS              DISP_RS
-#define HX8340_WR              DISP_RW
-#define HX8340_RD              DISP_RD
-#define HX8340_RST             DISP_RST
-#define HX8340_LED             DISP_BCKL
-
-#elif defined(_ILI9320)
-
-#define ILI9320_DHI_Port        INPUT_Port
-#define ILI9320_DHI_Pin         INPUT_Pin
-#define ILI9320_CS              DISP_CS
-#define ILI9320_RS              DISP_RS
-#define ILI9320_WR              DISP_RW
-#define ILI9320_RD              DISP_RD
-#define ILI9320_RST             DISP_RST
-#define ILI9320_LED             DISP_BCKL
-
-#elif defined(_ILI9341)
-
-#define ILI9341_CS              DISP_CS
-#define ILI9341_RST             DISP_RST
-#define ILI9341_DC              DISP_RS
-#define ILI9341_SDI             DISP_RW
-#define ILI9341_SCK             DISP_SCK
-#define ILI9341_LED             DISP_BCKL
-#define ILI9341_SDO             DISP_RD
-
-#elif defined(_S6D0139)
-
-#define S6D0139_DHI_Port        INPUT_Port
-#define S6D0139_DHI_Pin         INPUT_Pin
-#define S6D0139_CS              DISP_CS
-#define S6D0139_RS              DISP_RS
-#define S6D0139_WR              DISP_RW
-#define S6D0139_RD              DISP_RD
-#define S6D0139_RST             DISP_RST
-#define S6D0139_LED             DISP_BCKL
-
-#elif defined(_SPFD5408)
-
-#define SPFD5408_DHI_Port       INPUT_Port
-#define SPFD5408_DHI_Pin        INPUT_Pin
-#define SPFD5408_CS             DISP_CS
-#define SPFD5408_RS             DISP_RS
-#define SPFD5408_WR             DISP_RW
-#define SPFD5408_RD             DISP_RD
-#define SPFD5408_RST            DISP_RST
-#define SPFD5408_LED            DISP_BCKL
-
-#elif defined(_MC2PA8201)
-
-#define MC2PA8201_DHI_Port        INPUT_Port
-#define MC2PA8201_DHI_Pin         INPUT_Pin
-#define MC2PA8201_CS              DISP_CS
-#define MC2PA8201_RS              DISP_RS
-#define MC2PA8201_WR              DISP_RW
-#define MC2PA8201_RD              DISP_RD
-#define MC2PA8201_RST             DISP_RST
-#define MC2PA8201_LED             DISP_BCKL
-
-#elif defined(_ILI9327)
-
-#define ILI9327_DHI_Port        INPUT_Port
-#define ILI9327_DHI_Pin         INPUT_Pin
-#define ILI9327_CS              DISP_CS
-#define ILI9327_RS              DISP_RS
-#define ILI9327_WR              DISP_RW
-#define ILI9327_RD              DISP_RD
-#define ILI9327_RST             DISP_RST
-#define ILI9327_LED             DISP_BCKL
-
-#elif defined(_ST7793)
-
-#define ST7793_DHI_Port        INPUT_Port
-#define ST7793_DHI_Pin         INPUT_Pin
-#define ST7793_CS              DISP_CS
-#define ST7793_RS              DISP_RS
-#define ST7793_WR              DISP_RW
-#define ST7793_RD              DISP_RD
-#define ST7793_RST             DISP_RST
-#define ST7793_LED             DISP_BCKL
-
-#else
-#error "Unsupported display driver"
-#endif
-
-#define MUTE_Port              GPIOB
-#define MUTE_Pin               LL_GPIO_PIN_8
-#define STBY_Port              GPIOB
-#define STBY_Pin               LL_GPIO_PIN_9
+#define MUTE_Port               GPIOB
+#define MUTE_Pin                LL_GPIO_PIN_8
+#define STBY_Port               GPIOB
+#define STBY_Pin                LL_GPIO_PIN_9
 
 #endif // PINS_H

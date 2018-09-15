@@ -32,10 +32,10 @@ static inline void ili9341SendCmd(uint8_t cmd) __attribute__((always_inline));
 static inline void ili9341SendCmd(uint8_t cmd)
 {
     while (TX_BUSY());
-    CLR(ILI9341_DC);
+    CLR(DISP_SPI_DC);
     LL_SPI_TransmitData8(SPI1, cmd);
     while (TX_BUSY());
-    SET(ILI9341_DC);
+    SET(DISP_SPI_DC);
 }
 
 static inline void ili9341SendData(uint16_t data) __attribute__((always_inline));
@@ -52,7 +52,7 @@ static void ili9341InitSeq(void)
 {
     _delay_ms(50);
 
-    CLR(ILI9341_CS);
+    CLR(DISP_SPI_CS);
 
     ili9341SendCmd(ILI9341_SWRESET);
     _delay_ms(10);
@@ -164,7 +164,7 @@ static void ili9341InitSeq(void)
     ili9341SendCmd(ILI9341_DISPON);
 
     while (TX_BUSY());
-    SET(ILI9341_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ili9341SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
@@ -208,13 +208,13 @@ void ili9341Init(GlcdDriver **driver)
     // Configure Hardware SPI
     ili9341InitSPI();
 
-    CLR(ILI9341_RST);
+    CLR(DISP_SPI_RST);
     _delay_ms(100);
-    SET(ILI9341_RST);
+    SET(DISP_SPI_RST);
 
     // Init magic
     ili9341InitSeq();
-    SET(ILI9341_LED);
+    SET(DISP_SPI_LED);
 }
 
 void ili9341Clear(void)
@@ -224,27 +224,27 @@ void ili9341Clear(void)
 
 void ili9341Sleep(void)
 {
-    CLR(ILI9341_CS);
+    CLR(DISP_SPI_CS);
     ili9341SendCmd(ILI9341_SLPIN);
     while (TX_BUSY());
-    SET(ILI9341_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ili9341Wakeup(void)
 {
-    CLR(ILI9341_CS);
+    CLR(DISP_SPI_CS);
     ili9341SendCmd(ILI9341_SLPOUT);
     while (TX_BUSY());
-    SET(ILI9341_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ili9341DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(ILI9341_CS);
+    CLR(DISP_SPI_CS);
     ili9341SetWindow(x, y, 1, 1);
     ili9341SendData(color);
     while (TX_BUSY());
-    SET(ILI9341_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
@@ -252,7 +252,7 @@ void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     uint8_t colorH = color >> 8;
     uint8_t colorL = color & 0xFF;
 
-    CLR(ILI9341_CS);
+    CLR(DISP_SPI_CS);
 
     ili9341SetWindow(x, y, w, h);
 
@@ -264,7 +264,7 @@ void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     }
 
     while (TX_BUSY());
-    SET(ILI9341_CS);
+    SET(DISP_SPI_CS);
 }
 
 void ili9341DrawImage(tImage *img)
@@ -274,12 +274,12 @@ void ili9341DrawImage(tImage *img)
     uint16_t x0 = glcd.canvas->x;
     uint16_t y0 = glcd.canvas->y;
 
-    CLR(ILI9341_CS);
+    CLR(DISP_SPI_CS);
 
     ili9341SetWindow(x0, y0, w, h);
 
     DISPDRV_SEND_IMAGE(img, ili9341SendData);
 
     while (TX_BUSY());
-    SET(ILI9341_CS);
+    SET(DISP_SPI_CS);
 }
