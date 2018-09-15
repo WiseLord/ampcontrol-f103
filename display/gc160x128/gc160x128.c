@@ -19,6 +19,39 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
     glcdWriteChar(LETTER_SPACE_CHAR);
 }
 
+static void drawShowBar(int16_t value, int16_t min, int16_t max)
+{
+    static const int16_t sc = 80; // Scale count
+    static const uint8_t sw = 1; // Scale width
+
+    if (min + max) { // Non-symmectic scale => rescale to 0..sl
+        value = sc * (value - min) / (max - min);
+    } else { // Symmetric scale => rescale to -sl/2..sl/2
+        value = (sc / 2) * value / max;
+    }
+
+    for (uint16_t i = 0; i < sc; i++) {
+        uint16_t color = LCD_COLOR_WHITE;
+
+        if (min + max) { // Non-symmetric scale
+            if (i >= value) {
+                color = glcd->canvas->color;
+            }
+        } else { // Symmetric scale
+            if ((value > 0 && i >= value + (sc / 2)) ||
+                (value >= 0 && i < (sc / 2 - 1)) ||
+                (value < 0 && i < value + (sc / 2)) ||
+                (value <= 0 && i > (sc / 2))) {
+                color = glcd->canvas->color;
+            }
+        }
+
+        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 34, sw, 6, color);
+        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 40, sw, 2, LCD_COLOR_WHITE);
+        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 42, sw, 6, color);
+    }
+}
+
 static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t value, uint16_t max)
 {
     if (value > max)
@@ -78,6 +111,8 @@ static void showParam(DispParam *dp)
 
     glcdSetXY(2, 0);
     glcdWriteString((char *)dp->label);
+
+    drawShowBar(dp->value, dp->min, dp->max);
 
     glcdSetXY(157, 88);
     glcdSetFont(&fontterminusdig40);
