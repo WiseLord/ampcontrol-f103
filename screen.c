@@ -34,16 +34,20 @@ typedef enum {
     LABEL_BASS,
     LABEL_MIDDLE,
     LABEL_TREBLE,
-    LABEL_PREAMP,
     LABEL_FRONTREAR,
     LABEL_BALANCE,
     LABEL_CENTER,
     LABEL_SUBWOOFER,
+    LABEL_PREAMP,
+
     LABEL_GAIN0,
     LABEL_GAIN1,
     LABEL_GAIN2,
     LABEL_GAIN3,
     LABEL_GAIN4,
+    LABEL_GAIN5,
+    LABEL_GAIN6,
+    LABEL_GAIN7,
 
     LABEL_END
 } TxtLabel;
@@ -63,19 +67,111 @@ const char *txtLabels[LABEL_END] = {
     [LABEL_BASS]            = "Тэмбр НЧ",
     [LABEL_MIDDLE]          = "Тэмбр СЧ",
     [LABEL_TREBLE]          = "Тэмбр ВЧ",
-    [LABEL_PREAMP]          = "Пасіленне",
     [LABEL_FRONTREAR]       = "Фронт/тыл",
     [LABEL_BALANCE]         = "Баланс",
     [LABEL_CENTER]          = "Цэнтр",
     [LABEL_SUBWOOFER]       = "Сабвуфер",
+    [LABEL_PREAMP]          = "Пасіленне",
+
     [LABEL_GAIN0]           = "FM цюнэр",
     [LABEL_GAIN1]           = "Камп'ютар",
     [LABEL_GAIN2]           = "Тэлевізар",
     [LABEL_GAIN3]           = "Bluetooth",
     [LABEL_GAIN4]           = "DVD-плэер",
+    [LABEL_GAIN5]           = "Уваход 5",
+    [LABEL_GAIN6]           = "Уваход 6",
+    [LABEL_GAIN7]           = "Уваход 7",
 };
 
-static void screenReadSettings(void)
+static void improveSpectrum(SpectrumData *sd)
+{
+    for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
+        if (sd->data[i] < sd->show[i]) {
+            if (sd->show[i] >= sd->fall[i]) {
+                sd->show[i] -= sd->fall[i];
+                sd->fall[i]++;
+            } else {
+                sd->show[i] = 0;
+            }
+        }
+
+        if (sd->data[i] > sd->show[i]) {
+            sd->show[i] = sd->data[i];
+            sd->fall[i] = 0;
+        }
+
+        if (sd->peak[i] < sd->data[i]) {
+            sd->peak[i] = sd->data[i];
+        } else {
+            if (sd->peak[i]) {
+                sd->peak[i]--;
+            }
+        }
+    }
+}
+
+static void screenCheckClear(void)
+{
+    static Screen scrPrev = SCREEN_STANDBY;
+    static ScreenParam scrParPrev;
+
+    uint8_t clearFlag = 0;
+    AudioProc *aProc = audioProcGet();
+
+    // Check if we need to clear screen
+    if (screen != scrPrev) {
+        clearFlag = 1;
+        switch (screen) {
+        case SCREEN_TIME:
+        case SCREEN_STANDBY:
+            if (scrPrev == SCREEN_STANDBY || scrPrev == SCREEN_TIME) {
+                clearFlag = 0;
+            }
+            break;
+        case SCREEN_AUDIO_PARAM:
+            if (scrPrev == SCREEN_AUDIO_INPUT && scrPar.audio == AUDIO_PARAM_GAIN) {
+                clearFlag = 0;
+            }
+            break;
+        case SCREEN_AUDIO_INPUT:
+            if (scrPrev == SCREEN_AUDIO_PARAM) {
+                if (scrParPrev.audio == AUDIO_PARAM_GAIN) {
+                    if (aProc->input != INPUT_TUNER) {
+                        clearFlag = 0;
+                    }
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    } else {
+        switch (screen) {
+        case SCREEN_AUDIO_PARAM:
+            if (scrPar.audio != scrParPrev.audio) {
+                clearFlag = 1;
+            }
+            break;
+        case SCREEN_AUDIO_INPUT:
+            if (scrPar.input != scrParPrev.input) {
+                clearFlag = 1;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+// Save current screen as previous
+    scrPrev = screen;
+    scrParPrev = scrPar;
+
+    if (clearFlag) {
+        screenClear();
+    }
+}
+
+void screenReadSettings(void)
 {
     uint16_t eeData;
 
@@ -91,6 +187,7 @@ void screenSaveSettings(void)
     eeUpdate(EE_BRIGHTNESS_STBY, brStby);
     eeUpdate(EE_BRIGHTNESS_WORK, brWork);
 }
+
 
 void screenInit(void)
 {
@@ -112,6 +209,7 @@ void screenUpdate(void)
     glcdUpdate();
 }
 
+
 void screenSet(Screen value)
 {
     screen = value;
@@ -122,10 +220,12 @@ Screen screenGet()
     return screen;
 }
 
+
 void screenSetParam(ScreenParam param)
 {
     scrPar = param;
 }
+
 
 void screenSetDefault(Screen value)
 {
@@ -136,6 +236,7 @@ Screen screenGetDefault(void)
 {
     return screenDefault;
 }
+
 
 int8_t screenGetBrightness(uint8_t mode)
 {
@@ -169,34 +270,50 @@ void screenChangeBrighness(uint8_t mode, int8_t diff)
     screenSetBrightness(mode, br);
 }
 
-static void improveSpectrum(SpectrumData *sd)
+void screenShow(void)
 {
-    for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
-        if (sd->data[i] < sd->show[i]) {
-            if (sd->show[i] >= sd->fall[i]) {
-                sd->show[i] -= sd->fall[i];
-                sd->fall[i]++;
-            } else {
-                sd->show[i] = 0;
-            }
-        }
+    screenCheckClear();
 
-        if (sd->data[i] > sd->show[i]) {
-            sd->show[i] = sd->data[i];
-            sd->fall[i] = 0;
-        }
+    // Get new spectrum data
+    if (swTimGetSpConvert() <= 0) {
+        spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
 
-        if (sd->peak[i] < sd->data[i]) {
-            sd->peak[i] = sd->data[i];
-        } else {
-            if (sd->peak[i]) {
-                sd->peak[i]--;
-            }
-        }
+        improveSpectrum(&spData[SP_CHAN_LEFT]);
+        improveSpectrum(&spData[SP_CHAN_RIGHT]);
+
+        spReady = 1;
+        swTimSetSpConvert(40);
     }
+
+    switch (screen) {
+    case SCREEN_STANDBY:
+    case SCREEN_TIME:
+        screenShowTime();
+        break;
+    case SCREEN_SPECTRUM:
+        screenShowSpectrum();
+        break;
+    case SCREEN_BRIGHTNESS:
+        screenShowBrightness();
+        break;
+    case SCREEN_AUDIO_INPUT:
+        screenShowInput();
+        break;
+    case SCREEN_AUDIO_PARAM:
+        screenShowAudioParam();
+        break;
+
+    case SCREEN_TEST:
+        screenTest();
+        break;
+    default:
+        break;
+    }
+
+    screenUpdate();
 }
 
-static void screenTime(void)
+void screenShowTime(void)
 {
     RTC_type rtc;
     rtc.etm = rtcGetMode();
@@ -208,7 +325,7 @@ static void screenTime(void)
     }
 }
 
-static void screenSpectrum(void)
+void screenShowSpectrum(void)
 {
     if (spReady) {
         if (glcd->canvas->showSpectrum) {
@@ -218,7 +335,7 @@ static void screenSpectrum(void)
     spReady = 0;
 }
 
-static void screenBrightness()
+void screenShowBrightness(void)
 {
     DispParam dp;
 
@@ -234,7 +351,24 @@ static void screenBrightness()
     }
 }
 
-static void screenAudioParam()
+void screenShowInput(void)
+{
+    AudioProc *aProc = audioProcGet();
+
+    if (aProc->input == INPUT_TUNER) {
+        DispTuner dt;
+        dt.tuner = tunerGet();
+
+        if (glcd->canvas->showTuner) {
+            glcd->canvas->showTuner(&dt);
+        }
+    } else {
+        scrPar.audio = AUDIO_PARAM_GAIN;
+        screenShowAudioParam();
+    }
+}
+
+void screenShowAudioParam(void)
 {
     AudioProc *aProc = audioProcGet();
     AudioParam aPar = scrPar.audio;
@@ -243,19 +377,24 @@ static void screenAudioParam()
         aPar = AUDIO_PARAM_VOLUME;
 
     DispParam dp;
-    dp.label = txtLabels[LABEL_VOLUME + aPar];
+    if (aPar == AUDIO_PARAM_GAIN) {
+        dp.label = txtLabels[LABEL_GAIN0 + aProc->input];
+        dp.icon = ICON24_TUNER + aProc->input;
+    } else {
+        dp.label = txtLabels[LABEL_VOLUME + aPar];
+        dp.icon = ICON24_VOLUME + aPar;
+    }
     dp.value = aProc->item[aPar].value;
     dp.min = aProc->item[aPar].grid->min;
     dp.max = aProc->item[aPar].grid->max;
     dp.step = aProc->item[aPar].grid->step;
-    dp.icon = ICON24_VOLUME + aPar;
 
     if (glcd->canvas->showParam) {
         glcd->canvas->showParam(&dp);
     }
 }
 
-static void screenTest()
+void screenTest(void)
 {
     glcdSetFont(&fontterminus12);
     glcdSetFontColor(LCD_COLOR_WHITE);
@@ -273,59 +412,4 @@ static void screenTest()
         value = (uint16_t *)(FLASH_BASE + EE_PAGE_SIZE * EE_PAGE_1 + 2 * i);
         glcdWriteNum(*value, 4, '0', 16);
     }
-}
-
-void screenShow(void)
-{
-    static Screen screenPrev = SCREEN_STANDBY;
-    static ScreenParam scrParPrev;
-
-    if (screen != screenPrev) {
-        if (screen > SCREEN_TIME || screenPrev > SCREEN_TIME)
-            screenClear();
-    }
-
-    // Get new spectrum data
-    if (swTimGetSpConvert() <= 0) {
-        spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
-
-        improveSpectrum(&spData[SP_CHAN_LEFT]);
-        improveSpectrum(&spData[SP_CHAN_RIGHT]);
-
-        spReady = 1;
-        swTimSetSpConvert(40);
-    }
-
-    switch (screen) {
-    case SCREEN_STANDBY:
-        screenTime();
-        break;
-    case SCREEN_TIME:
-        screenTime();
-        break;
-    case SCREEN_SPECTRUM:
-        screenSpectrum();
-        break;
-    case SCREEN_BRIGHTNESS:
-        screenBrightness();
-        break;
-    case SCREEN_AUDIO_INPUT:
-    case SCREEN_AUDIO_PARAM:
-        if (scrPar.audio != scrParPrev.audio)
-            screenClear();
-        screenAudioParam();
-        break;
-
-    case SCREEN_TEST:
-        screenTest();
-        break;
-    default:
-        break;
-    }
-
-    // Save current screen as previous
-    screenPrev = screen;
-    scrParPrev = scrPar;
-
-    screenUpdate();
 }

@@ -22,12 +22,31 @@ static void actionNextAudioParam(AudioProc *aProc)
 {
     do {
         scrPar.audio++;
-        if (scrPar.audio == AUDIO_PARAM_GAIN0)
+        if (scrPar.audio >= AUDIO_PARAM_END)
             scrPar.audio = AUDIO_PARAM_VOLUME;
-        else if (scrPar.audio >= AUDIO_PARAM_END) {
-            scrPar.audio = AUDIO_PARAM_GAIN0;
-        }
     } while (aProc->item[scrPar.audio].grid->step == 0);
+}
+
+static void actionNextAudioInput(AudioProc *aProc)
+{
+    scrPar.input++;
+    if (scrPar.input >= aProc->inCnt)
+        scrPar.input = 0;
+}
+
+void actionChangeCurrentInput(int8_t diff)
+{
+    AudioProc *aProc = audioProcGet();
+
+    if (aProc->input == INPUT_TUNER) {
+        screenSet(SCREEN_AUDIO_PARAM);
+        scrPar.audio = AUDIO_PARAM_VOLUME;
+        actionSet(ACTION_AUDIO_PARAM_CHANGE, diff);
+    } else {
+        screenSet(SCREEN_AUDIO_PARAM);
+        scrPar.audio = AUDIO_PARAM_GAIN;
+        actionSet(ACTION_AUDIO_PARAM_CHANGE, diff);
+    }
 }
 
 static void actionHandleButtons(void)
@@ -79,7 +98,7 @@ static void actionRemapButtons(void)
             break;
         case BTN_D1:
             if (screen == SCREEN_STANDBY)
-               action.type = ACTION_TEST;
+                action.type = ACTION_TEST;
             break;
         case BTN_D2:
             break;
@@ -143,11 +162,14 @@ static void actionHandleEncoder(void)
             case SCREEN_BRIGHTNESS:
                 actionSet(ACTION_BR_WORK, encCnt);
                 break;
+            case SCREEN_AUDIO_INPUT:
+                actionChangeCurrentInput(encCnt);
+                break;
             case SCREEN_SPECTRUM:
                 screenSet(SCREEN_AUDIO_PARAM);
                 scrPar.audio = AUDIO_PARAM_VOLUME;
             default:
-                actionSet(ACTION_AUDIO_CHANGE, encCnt);
+                actionSet(ACTION_AUDIO_PARAM_CHANGE, encCnt);
                 break;
             }
         }
@@ -218,11 +240,11 @@ void actionHandle(Action action, uint8_t visible)
     case ACTION_AUDIO_INPUT:
         dispTime = 5000;
         if (screen == SCREEN_AUDIO_INPUT) {
-            actionNextAudioParam(aProc);
-            audioSetInput(scrPar.audio - AUDIO_PARAM_GAIN0);
+            actionNextAudioInput(aProc);
+            audioSetInput(scrPar.input);
         } else {
             screen = SCREEN_AUDIO_INPUT;
-            scrPar.audio = AUDIO_PARAM_GAIN0 + aProc->input;
+            scrPar.input = aProc->input;
         }
         break;
     case ACTION_AUDIO_PARAM:
@@ -234,7 +256,7 @@ void actionHandle(Action action, uint8_t visible)
             scrPar.audio = AUDIO_PARAM_VOLUME;
         }
         break;
-    case ACTION_AUDIO_CHANGE:
+    case ACTION_AUDIO_PARAM_CHANGE:
         dispTime = 5000;
         audioChangeParam(scrPar.audio, action.value);
         break;

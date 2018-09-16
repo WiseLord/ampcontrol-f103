@@ -27,10 +27,17 @@ static void audioReadSettings()
     eeData = eeRead(EE_AUDIO_INPUT);
     aProc.input = (eeData == EE_EMPTY ? 0 : eeData);
 
-    for (AudioParam par = AUDIO_PARAM_VOLUME; par < AUDIO_PARAM_END; par++) {
-        eeData = eeRead(EE_AUDIO_PARAM_VOLUME + (par - AUDIO_PARAM_VOLUME));
-        aProc.item[par].value = (eeData == EE_EMPTY ? 0 : (int8_t)eeData);
+    for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
+        eeData = eeRead(par);
+        aProc.item[par - EE_AUDIO_PARAM_VOLUME].value = (eeData == EE_EMPTY ? 0 : (int8_t)eeData);
     }
+
+    for (EE_Param par = EE_AUDIO_GAIN0; par <= EE_AUDIO_GAIN7; par++) {
+        eeData = eeRead(par);
+        aProc.gain[par - EE_AUDIO_GAIN0] = (eeData == EE_EMPTY ? -8 : (int8_t)eeData);
+    }
+
+    aProc.item[AUDIO_PARAM_GAIN].value = aProc.gain[aProc.input];
 }
 
 static void audioSaveSettings()
@@ -41,8 +48,12 @@ static void audioSaveSettings()
     eeUpdate(EE_AUDIO_FLAG, aProc.flag);
     eeUpdate(EE_AUDIO_INPUT, aProc.input);
 
-    for (AudioParam par = AUDIO_PARAM_VOLUME; par < AUDIO_PARAM_END; par++) {
-        eeUpdate(EE_AUDIO_PARAM_VOLUME + (par - AUDIO_PARAM_VOLUME), aProc.item[par].value);
+    for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
+        eeUpdate(par, aProc.item[par - EE_AUDIO_PARAM_VOLUME].value);
+    }
+
+    for (EE_Param par = EE_AUDIO_GAIN0; par <= EE_AUDIO_GAIN7; par++) {
+        eeUpdate(par, aProc.gain[par - EE_AUDIO_GAIN0]);
     }
 }
 
@@ -79,7 +90,7 @@ void audioPowerOn(void)
     audioSetFlag(AUDIO_FLAG_MUTE, FLAG_ON);
     audioSetInput(aProc.input);
 
-    for (AudioParam param = AUDIO_PARAM_GAIN0 - 1; param >= AUDIO_PARAM_VOLUME; param--) {
+    for (AudioParam param = AUDIO_PARAM_GAIN - 1; param >= AUDIO_PARAM_VOLUME; param--) {
         audioSetParam(param, aProc.item[param].value);
     }
 
@@ -97,6 +108,7 @@ void audioSetInput(uint8_t value)
         value = 0;
 
     aProc.input = value;
+    aProc.item[AUDIO_PARAM_GAIN].value = aProc.gain[aProc.input];
 
     if (aProc.setInput) {
         aProc.setInput();
@@ -117,6 +129,10 @@ void audioSetParam(AudioParam param, int8_t value)
         value = max;
 
     aProc.item[param].value = value;
+
+    if (param == AUDIO_PARAM_GAIN) {
+        aProc.gain[aProc.input] = value;
+    }
 
     if (aProc.item[param].set) {
         aProc.item[param].set();

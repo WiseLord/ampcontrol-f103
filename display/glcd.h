@@ -7,6 +7,7 @@
 #include "icons.h"
 #include "../rtc.h"
 #include "../spectrum.h"
+#include "../tuner/tuner.h"
 
 typedef enum {
     GLCD_Landscape_1,
@@ -25,6 +26,10 @@ typedef struct {
 } DispParam;
 
 typedef struct {
+    Tuner *tuner;
+} DispTuner;
+
+typedef struct {
     uint16_t width;
     uint16_t height;
     int16_t x;
@@ -34,6 +39,7 @@ typedef struct {
     void (*showTime)(RTC_type *rtc, char *wday);
     void (*showParam)(DispParam *dp);
     void (*showSpectrum)(SpectrumData *spData);
+    void (*showTuner)(DispTuner *dt);
 } GlcdCanvas;
 
 typedef struct {

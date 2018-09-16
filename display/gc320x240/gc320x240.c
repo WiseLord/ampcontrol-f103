@@ -158,6 +158,28 @@ static void showSpectrum(SpectrumData *spData)
     }
 }
 
+static void showTuner(DispTuner *dt)
+{
+    Tuner *tuner = dt->tuner;
+
+    glcdSetFont(&fontterminusmod64);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetXY(2, 0);
+
+    glcdWriteString("FM ");
+    tuner->freq = 10250;
+    tuner->freqMin = 8700;
+    tuner->freqMax = 10800;
+
+    drawShowBar(tuner->freq, tuner->freqMin, tuner->freqMax);
+
+    glcdWriteNum(tuner->freq / 100, 3, ' ', 10);
+    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteChar('.');
+    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteNum(tuner->freq % 100, 2, '0', 10);
+}
+
 GlcdCanvas gc320x240 = {
     .width = 320,
     .height = 240,
@@ -165,6 +187,7 @@ GlcdCanvas gc320x240 = {
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
+    .showTuner = showTuner,
 };
 
 void gc320x240Init(GlcdDriver *driver)

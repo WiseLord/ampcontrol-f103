@@ -4,22 +4,20 @@
 #include <inttypes.h>
 
 #define STEP_MULT   8
+#define MAX_INPUTS  8
 
 typedef enum {
     AUDIO_PARAM_VOLUME = 0,
     AUDIO_PARAM_BASS,
     AUDIO_PARAM_MIDDLE,
     AUDIO_PARAM_TREBLE,
-    AUDIO_PARAM_PREAMP,
     AUDIO_PARAM_FRONTREAR,
     AUDIO_PARAM_BALANCE,
     AUDIO_PARAM_CENTER,
     AUDIO_PARAM_SUBWOOFER,
-    AUDIO_PARAM_GAIN0,
-    AUDIO_PARAM_GAIN1,
-    AUDIO_PARAM_GAIN2,
-    AUDIO_PARAM_GAIN3,
-    AUDIO_PARAM_GAIN4,
+    AUDIO_PARAM_PREAMP,
+
+    AUDIO_PARAM_GAIN,
 
     AUDIO_PARAM_END
 } AudioParam;
@@ -63,6 +61,7 @@ typedef struct {
     AudioIC ic;
     AudioFlag flag;
     AudioItem item[AUDIO_PARAM_END];
+    int8_t gain[MAX_INPUTS];
     uint8_t input;
     uint8_t inCnt;
 } AudioProc;

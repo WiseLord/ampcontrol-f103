@@ -35,10 +35,8 @@ void tda7439Init(AudioProc *audioProc)
     aProc->item[AUDIO_PARAM_BALANCE].grid = &grid_n15_15_1;
     aProc->item[AUDIO_PARAM_BALANCE].set = tda7439SetSpeakers;
 
-    for (uint8_t i = 0; i < TDA7439_IN_CNT; i++) {
-        aProc->item[AUDIO_PARAM_GAIN0 + i].grid = &grid_0_30_2;
-        aProc->item[AUDIO_PARAM_GAIN0 + i].set = tda7439SetInput;
-    }
+    aProc->item[AUDIO_PARAM_GAIN].grid = &grid_0_30_2;
+    aProc->item[AUDIO_PARAM_GAIN].set = tda7439SetInput;
 }
 
 void tda7439SetSpeakers(void)
@@ -90,7 +88,7 @@ void tda7439SetInput(void)
     I2CStart(TDA7439_I2C_ADDR);
     I2CWriteByte(TDA7439_INPUT_SELECT | TDA7439_AUTO_INC);
     I2CWriteByte(TDA7439_IN_CNT - 1 - aProc->input);
-    I2CWriteByte(aProc->item[AUDIO_PARAM_GAIN0 + aProc->input].value);
+    I2CWriteByte(aProc->item[AUDIO_PARAM_GAIN].value);
     I2CStop();
 }
 
