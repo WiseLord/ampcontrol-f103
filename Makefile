@@ -82,6 +82,13 @@ endif
 C_SOURCES += audio/audio.c
 C_DEFS += $(addprefix -D_, $(APROC_LIST))
 
+# Tuner source files
+ifeq "$(findstring RDA5807, $(TUNER_LIST))" "RDA5807"
+  C_SOURCES += tuner/rd580x.c
+endif
+C_SOURCES += tuner/tuner.c
+C_DEFS += $(addprefix -D_, $(TUNER_LIST))
+
 C_SOURCES += \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \

@@ -36,6 +36,8 @@ typedef enum {
     EE_BRIGHTNESS_STBY,
     EE_BRIGHTNESS_WORK,
 
+    EE_TUNER_IC,
+
     EE_PARAM_END
 } EE_Param;
 
