@@ -167,9 +167,6 @@ static void showTuner(DispTuner *dt)
     glcdSetXY(2, 0);
 
     glcdWriteString("FM ");
-    tuner->freq = 10250;
-    tuner->freqMin = 8700;
-    tuner->freqMax = 10800;
 
     drawShowBar(tuner->freq, tuner->freqMin, tuner->freqMax);
 

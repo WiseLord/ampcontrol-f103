@@ -14,7 +14,7 @@ static void setNothing(void) {}
 
 static AudioProc aProc;
 
-static void audioReadSettings()
+static void audioReadSettings(void)
 {
     uint16_t eeData;
 
@@ -40,7 +40,7 @@ static void audioReadSettings()
     aProc.item[AUDIO_PARAM_GAIN].value = aProc.gain[aProc.input];
 }
 
-static void audioSaveSettings()
+static void audioSaveSettings(void)
 {
     aProc.flag &= ~AUDIO_FLAG_MUTE; // Do not save mute
 
@@ -57,7 +57,7 @@ static void audioSaveSettings()
     }
 }
 
-void audioInit()
+void audioInit(void)
 {
     // Reset grid and function pointers
     aProc.setFlag = setNothing;

@@ -7,6 +7,7 @@
 #include "screen.h"
 #include "spectrum.h"
 #include "timers.h"
+#include "tuner/tuner.h"
 
 static Action action = {ACTION_NONE, 0};
 
@@ -36,17 +37,9 @@ static void actionNextAudioInput(AudioProc *aProc)
 
 void actionChangeCurrentInput(int8_t diff)
 {
-    AudioProc *aProc = audioProcGet();
-
-    if (aProc->input == INPUT_TUNER) {
-        screenSet(SCREEN_AUDIO_PARAM);
-        scrPar.audio = AUDIO_PARAM_VOLUME;
-        actionSet(ACTION_AUDIO_PARAM_CHANGE, diff);
-    } else {
-        screenSet(SCREEN_AUDIO_PARAM);
-        scrPar.audio = AUDIO_PARAM_GAIN;
-        actionSet(ACTION_AUDIO_PARAM_CHANGE, diff);
-    }
+    screenSet(SCREEN_AUDIO_PARAM);
+    scrPar.audio = AUDIO_PARAM_GAIN;
+    actionSet(ACTION_AUDIO_PARAM_CHANGE, diff);
 }
 
 static void actionHandleButtons(void)
@@ -81,8 +74,10 @@ static void actionRemapButtons(void)
             action.type = ACTION_RTC_MODE;
             break;
         case BTN_D3:
+            action.type = ACTION_PREV;
             break;
         case BTN_D4:
+            action.type = ACTION_NEXT;
             break;
         case BTN_D5:
             action.type = ACTION_AUDIO_PARAM;
@@ -125,6 +120,16 @@ static void actionRemapActions(void)
     case ACTION_STANDBY:
         if (CMD_SWITCH == action.value) {
             action.value = (SCREEN_STANDBY == screen ? CMD_OFF : CMD_ON);
+        }
+        break;
+    case ACTION_PREV:
+    case ACTION_NEXT:
+        switch (screen) {
+        case SCREEN_TUNER:
+            action.type = ACTION_TUNER_PREV + (action.type - ACTION_PREV);
+            break;
+        default:
+            break;
         }
         break;
     default:
@@ -210,6 +215,7 @@ void actionHandle(Action action, uint8_t visible)
             screenChangeBrighness(ACTION_BR_STBY, 0);
             screenSaveSettings();
             audioPowerOff();
+            tunerPowerOff();
         }
         break;
 
@@ -259,6 +265,12 @@ void actionHandle(Action action, uint8_t visible)
     case ACTION_AUDIO_PARAM_CHANGE:
         dispTime = 5000;
         audioChangeParam(scrPar.audio, action.value);
+        break;
+    case ACTION_TUNER_PREV:
+        tunerNextStation(TUNER_DIR_DOWN);
+        break;
+    case ACTION_TUNER_NEXT:
+        tunerNextStation(TUNER_DIR_UP);
         break;
 
     case ACTION_BR_WORK:

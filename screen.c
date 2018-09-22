@@ -234,6 +234,11 @@ void screenSetDefault(Screen value)
 
 Screen screenGetDefault(void)
 {
+    AudioProc *aProc = audioProcGet();
+
+    if (INPUT_TUNER == aProc->input)
+        return SCREEN_TUNER;
+
     return screenDefault;
 }
 
@@ -302,6 +307,9 @@ void screenShow(void)
     case SCREEN_AUDIO_PARAM:
         screenShowAudioParam();
         break;
+    case SCREEN_TUNER:
+        screenShowTuner();
+        break;
 
     case SCREEN_TEST:
         screenTest();
@@ -353,19 +361,8 @@ void screenShowBrightness(void)
 
 void screenShowInput(void)
 {
-    AudioProc *aProc = audioProcGet();
-
-    if (aProc->input == INPUT_TUNER) {
-        DispTuner dt;
-        dt.tuner = tunerGet();
-
-        if (glcd->canvas->showTuner) {
-            glcd->canvas->showTuner(&dt);
-        }
-    } else {
-        scrPar.audio = AUDIO_PARAM_GAIN;
-        screenShowAudioParam();
-    }
+    scrPar.audio = AUDIO_PARAM_GAIN;
+    screenShowAudioParam();
 }
 
 void screenShowAudioParam(void)
@@ -391,6 +388,16 @@ void screenShowAudioParam(void)
 
     if (glcd->canvas->showParam) {
         glcd->canvas->showParam(&dp);
+    }
+}
+
+void screenShowTuner(void)
+{
+    DispTuner dt;
+    dt.tuner = tunerGet();
+
+    if (glcd->canvas->showTuner) {
+        glcd->canvas->showTuner(&dt);
     }
 }
 
