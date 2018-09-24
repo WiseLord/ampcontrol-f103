@@ -62,6 +62,8 @@ else ifeq "$(DISPLAY)" "ILI9327"
   C_SOURCES += display/gc400x240/ili9327.c
 else ifeq "$(DISPLAY)" "ST7793"
   C_SOURCES += display/gc400x240/st7793.c
+else ifeq "$(DISPLAY)" "ILI9481"
+  C_SOURCES += display/gc480x320/ili9481.c
 endif
 C_SOURCES += display.c
 C_SOURCES += display/dispdrv.c
@@ -72,6 +74,7 @@ C_SOURCES += display/gc176x132/gc176x132.c
 C_SOURCES += display/gc220x176/gc220x176.c
 C_SOURCES += display/gc320x240/gc320x240.c
 C_SOURCES += display/gc400x240/gc400x240.c
+C_SOURCES += display/gc480x320/gc480x320.c
 C_DEFS += -D_$(DISPLAY)
 C_DEFS += -D_DISP_$(DISPVAR)
 

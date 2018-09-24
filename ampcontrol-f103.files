@@ -34,8 +34,11 @@ display/fonts/font-terminus-dig-42.c
 display/fonts/font-terminus-dig-58.c
 display/fonts/font-terminus-dig-64.c
 display/fonts/font-terminus-dig-80.c
+display/fonts/font-terminus-dig-96.c
+display/fonts/font-terminus-dig-120.c
 display/fonts/font-terminus-mod-44.c
 display/fonts/font-terminus-mod-64.c
+display/fonts/font-terminus-mod-96.c
 display/gc160x128/gc160x128.c
 display/gc160x128/ili9163.c
 display/gc160x128/ili9163.h
@@ -67,6 +70,9 @@ display/gc400x240/ili9327.c
 display/gc400x240/ili9327.h
 display/gc400x240/st7793.c
 display/gc400x240/st7793.h
+display/gc480x320/gc480x320.c
+display/gc480x320/ili9481.c
+display/gc480x320/ili9481.h
 display/glcd.c
 display/glcd.h
 display/gm128x64/gm128x64.c

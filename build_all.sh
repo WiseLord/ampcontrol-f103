@@ -44,3 +44,6 @@ compile_display "MC2PA8201" "8BIT"
 # 400x240 color displays
 compile_display "ILI9327"   "8BIT"
 compile_display "ST7793"    "8BIT"
+
+# 480x320 color displays
+compile_display "ILI9481"   "8BIT"
