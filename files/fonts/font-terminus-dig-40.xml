@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<data name="font-terminus-dig-40" type="font">
+<data type="font" name="font-terminus-dig-40">
     <family>xos4 Terminus</family>
     <size>18</size>
     <ascent>19</ascent>

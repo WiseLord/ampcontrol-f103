@@ -44,6 +44,7 @@ extern const tFont fontterminus32b;
 // Modified fonts - full character set
 extern const tFont fontterminusmod44;
 extern const tFont fontterminusmod64;
+extern const tFont fontterminusmod96;
 // Modified fonts - for digits only
 extern const tFont fontterminusdig22;
 extern const tFont fontterminusdig30;
@@ -52,6 +53,8 @@ extern const tFont fontterminusdig42;
 extern const tFont fontterminusdig58;
 extern const tFont fontterminusdig64;
 extern const tFont fontterminusdig80;
+extern const tFont fontterminusdig96;
+extern const tFont fontterminusdig120;
 
 typedef enum {
     FONT_ALIGN_LEFT,

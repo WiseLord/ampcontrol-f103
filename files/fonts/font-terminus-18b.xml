@@ -12,7 +12,7 @@
     <multiplicityWidth>1</multiplicityWidth>
     <multiplicityHeight>1</multiplicityHeight>
     <string> !"#$%&amp;'()*+,-./0123456789:;&lt;=>?\x0040ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~«°±·»ЁЄІЇЎАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёєіїўҐґ █</string>
-    <converted>/home/STM32/Projects/ampcontrol-f103/display/font-terminus-18b.c</converted>
+    <converted>/home/STM32/Projects/ampcontrol-f103/display/fonts/font-terminus-18b.c</converted>
     <chars>
         <char code="0020" character=" ">
             <picture format="png">iVBORw0KGgoAAAANSUhEUgAAAAgAAAASCAYAAABmQp92AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAGUlEQVQokWP8////fwY8gAmf5KiCUQXoAABhXwQgOuXu4wAAAABJRU5ErkJggg==</picture>
