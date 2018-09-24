@@ -55,51 +55,51 @@ void tda7439SetSpeakers(void)
             spRight = volMin;
     }
 
-    I2CStart(TDA7439_I2C_ADDR);
-    I2CWriteByte(TDA7439_VOLUME_RIGHT | TDA7439_AUTO_INC);
-    I2CWriteByte(-spRight);
-    I2CWriteByte(-spLeft);
-    I2CStop();
+    i2cAmpStart(TDA7439_I2C_ADDR);
+    i2cAmpWrite(TDA7439_VOLUME_RIGHT | TDA7439_AUTO_INC);
+    i2cAmpWrite(-spRight);
+    i2cAmpWrite(-spLeft);
+    i2cAmpStop();
 }
 
 void tda7439SetBMT(void)
 {
     int8_t val;
 
-    I2CStart(TDA7439_I2C_ADDR);
-    I2CWriteByte(TDA7439_BASS | TDA7439_AUTO_INC);
+    i2cAmpStart(TDA7439_I2C_ADDR);
+    i2cAmpWrite(TDA7439_BASS | TDA7439_AUTO_INC);
     for (AudioParam par = AUDIO_PARAM_BASS; par <= AUDIO_PARAM_TREBLE; par++) {
         val = aProc->item[par].value;
-        I2CWriteByte(val > 0 ? 15 - val : 7 + val);
+        i2cAmpWrite(val > 0 ? 15 - val : 7 + val);
     }
-    I2CStop();
+    i2cAmpStop();
 }
 
 void tda7439SetPreamp(void)
 {
-    I2CStart(TDA7439_I2C_ADDR);
-    I2CWriteByte(TDA7439_PREAMP);
-    I2CWriteByte(-aProc->item[AUDIO_PARAM_PREAMP].value);
-    I2CStop();
+    i2cAmpStart(TDA7439_I2C_ADDR);
+    i2cAmpWrite(TDA7439_PREAMP);
+    i2cAmpWrite(-aProc->item[AUDIO_PARAM_PREAMP].value);
+    i2cAmpStop();
 }
 
 void tda7439SetInput(void)
 {
-    I2CStart(TDA7439_I2C_ADDR);
-    I2CWriteByte(TDA7439_INPUT_SELECT | TDA7439_AUTO_INC);
-    I2CWriteByte(TDA7439_IN_CNT - 1 - aProc->input);
-    I2CWriteByte(aProc->item[AUDIO_PARAM_GAIN].value);
-    I2CStop();
+    i2cAmpStart(TDA7439_I2C_ADDR);
+    i2cAmpWrite(TDA7439_INPUT_SELECT | TDA7439_AUTO_INC);
+    i2cAmpWrite(TDA7439_IN_CNT - 1 - aProc->input);
+    i2cAmpWrite(aProc->item[AUDIO_PARAM_GAIN].value);
+    i2cAmpStop();
 }
 
 void tda7439SetMute(void)
 {
     if (aProc->flag & AUDIO_FLAG_MUTE) {
-        I2CStart(TDA7439_I2C_ADDR);
-        I2CWriteByte(TDA7439_VOLUME_RIGHT | TDA7439_AUTO_INC);
-        I2CWriteByte(TDA7439_SPEAKER_MUTE);
-        I2CWriteByte(TDA7439_SPEAKER_MUTE);
-        I2CStop();
+        i2cAmpStart(TDA7439_I2C_ADDR);
+        i2cAmpWrite(TDA7439_VOLUME_RIGHT | TDA7439_AUTO_INC);
+        i2cAmpWrite(TDA7439_SPEAKER_MUTE);
+        i2cAmpWrite(TDA7439_SPEAKER_MUTE);
+        i2cAmpStop();
     } else {
         tda7439SetSpeakers();
     }

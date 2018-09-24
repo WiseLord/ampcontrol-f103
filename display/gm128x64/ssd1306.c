@@ -2,6 +2,7 @@
 
 #include "../dispcanvas.h"
 
+#include "../../i2c.h"
 #include "../../pins.h"
 #include "../../functions.h"
 
@@ -77,75 +78,24 @@ static const uint8_t dispAreaSeq[] = {
 };
 #endif
 
-static void _I2CStart(uint8_t addr)
-{
-    LL_I2C_AcknowledgeNextData(I2C2, LL_I2C_ACK);
-
-    LL_I2C_GenerateStartCondition(I2C2);
-    while (!LL_I2C_IsActiveFlag_SB(I2C2));
-
-    LL_I2C_TransmitData8(I2C2, addr | I2C_REQUEST_WRITE);
-
-    while (!LL_I2C_IsActiveFlag_ADDR(I2C2));
-    LL_I2C_ClearFlag_ADDR(I2C2);
-}
-
-static void _I2CWriteByte(uint8_t data)
-{
-    while (!LL_I2C_IsActiveFlag_TXE(I2C2));
-
-    LL_I2C_TransmitData8(I2C2, data);
-}
-
-static void _I2CStop()
-{
-    while (!LL_I2C_IsActiveFlag_TXE(I2C2));
-
-    LL_I2C_GenerateStopCondition(I2C2);
-}
-
-static void ssd1306InitI2C()
-{
-    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C2);
-
-    LL_I2C_Disable(I2C2);
-
-    LL_I2C_DisableOwnAddress2(I2C2);
-    LL_I2C_DisableGeneralCall(I2C2);
-    LL_I2C_EnableClockStretching(I2C2);
-
-    LL_I2C_InitTypeDef I2C_InitStruct;
-    I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-    I2C_InitStruct.ClockSpeed = 400000;
-    I2C_InitStruct.DutyCycle = LL_I2C_DUTYCYCLE_16_9;
-    I2C_InitStruct.OwnAddress1 = 0;
-    I2C_InitStruct.TypeAcknowledge = LL_I2C_ACK;
-    I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
-    LL_I2C_Init(I2C2, &I2C_InitStruct);
-
-    LL_I2C_SetOwnAddress2(I2C2, 0);
-
-    LL_I2C_Enable(I2C2);
-}
-
 void ssd1306Init(GlcdDriver **driver)
 {
     *driver = &glcd;
     gm128x64Init(*driver);
 
     // Configure Hardware I2C
-    ssd1306InitI2C();
+    i2cInit(I2C_LCD, 400000);
 
     uint8_t i;
 
-    _I2CStart(ssd1306Addr);
-    _I2CWriteByte(SSD1306_I2C_COMMAND);
+    i2cLcdStart(ssd1306Addr);
+    i2cLcdWrite(SSD1306_I2C_COMMAND);
 
     for (i = 0; i < sizeof(initSeq); i++) {
-        _I2CWriteByte(initSeq[i]);
+        i2cLcdWrite(initSeq[i]);
     }
 
-    _I2CStop();
+    i2cLcdStop();
 }
 
 void ssd1306UpdateFb()
@@ -156,36 +106,36 @@ void ssd1306UpdateFb()
 #ifdef SSD1306_USE_PAGE_ADDRESSING
     uint8_t page;
     for (page = 0; page < 8; page++) {
-        _I2CStart(ssd1306Addr);
-        _I2CWriteByte(SSD1306_I2C_COMMAND);
-        _I2CWriteByte(SSD1306_SETLOWCOLUMN);
-        _I2CWriteByte(SSD1306_SETHIGHCOLUMN);
-        _I2CWriteByte(SSD1306_PAGE_START + page);
-        _I2CStop();
+        i2cLcdStart(ssd1306Addr);
+        i2cLcdWrite(SSD1306_I2C_COMMAND);
+        i2cLcdWrite(SSD1306_SETLOWCOLUMN);
+        i2cLcdWrite(SSD1306_SETHIGHCOLUMN);
+        i2cLcdWrite(SSD1306_PAGE_START + page);
+        i2cLcdStop();
 
-        _I2CStart(ssd1306Addr);
-        _I2CWriteByte(SSD1306_I2C_DATA_SEQ);
+        i2cLcdStart(ssd1306Addr);
+        i2cLcdWrite(SSD1306_I2C_DATA_SEQ);
         for (i = 0; i < SSD1306_WIDTH; i++) {
-            _I2CWriteByte(*fbP++);
+            i2cLcdWrite(*fbP++);
         }
-        _I2CStop();
+        i2cLcdStop();
     }
 #else
-    _I2CStart(ssd1306Addr);
-    _I2CWriteByte(SSD1306_I2C_COMMAND);
+    i2cLcdStart(ssd1306Addr);
+    i2cLcdWrite(SSD1306_I2C_COMMAND);
 
     for (i = 0; i < sizeof(dispAreaSeq); i++)
-        _I2CWriteByte(dispAreaSeq[i]);
+        i2cLcdWrite(dispAreaSeq[i]);
 
-    _I2CStop();
+    i2cLcdStop();
 
-    _I2CStart(ssd1306Addr);
-    _I2CWriteByte(SSD1306_I2C_DATA_SEQ);
+    i2cLcdStart(ssd1306Addr);
+    i2cLcdWrite(SSD1306_I2C_DATA_SEQ);
 
     for (i = 0; i < SSD1306_BUFFERSIZE; i++)
-        _I2CWriteByte(*fbP++);
+        i2cLcdWrite(*fbP++);
 
-    _I2CStop();
+    i2cLcdStop();
 #endif
 }
 
@@ -225,11 +175,11 @@ void ssd1306SetBrightness(uint8_t br)
     if (br < SSD1306_MAX_BRIGHTNESS)
         rawBr = br * 8;
 
-    _I2CStart(ssd1306Addr);
-    _I2CWriteByte(SSD1306_I2C_COMMAND);
+    i2cLcdStart(ssd1306Addr);
+    i2cLcdWrite(SSD1306_I2C_COMMAND);
 
-    _I2CWriteByte(SSD1306_SETCONTRAST);
-    _I2CWriteByte(rawBr);
+    i2cLcdWrite(SSD1306_SETCONTRAST);
+    i2cLcdWrite(rawBr);
 
-    _I2CStop();
+    i2cLcdStop();
 }

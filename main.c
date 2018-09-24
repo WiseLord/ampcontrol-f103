@@ -7,6 +7,7 @@
 #include "actions.h"
 #include "eemul.h"
 #include "functions.h"
+#include "i2c.h"
 #include "input.h"
 #include "pins.h"
 #include "rtc.h"
@@ -84,6 +85,7 @@ int main(void)
     spInit();
 
     pinsInit();
+    i2cInit(I2C_AMP, 100000);
     audioInit();
     tunerInit();
     screenInit();

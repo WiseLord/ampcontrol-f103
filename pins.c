@@ -91,11 +91,23 @@ static void pinsInitDisplay(void)
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
 
-    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    LL_GPIO_Init(DISP_I2C_Port, &GPIO_InitStruct);
 
 #else
 #error "Unsupported display driver"
 #endif
+}
+
+static void pinsInitAmpI2c(void)
+{
+    LL_GPIO_InitTypeDef GPIO_InitStruct;
+
+    GPIO_InitStruct.Pin = AMP_I2C_SCK_Pin | AMP_I2C_SDA_Pin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+
+    LL_GPIO_Init(AMP_I2C_Port, &GPIO_InitStruct);
 }
 
 void pinsInit(void)
@@ -110,6 +122,8 @@ void pinsInit(void)
 
     pinsInitButtons();
     pinsInitDisplay();
+
+    pinsInitAmpI2c();
 
     OUT_INIT(MUTE, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
     OUT_INIT(STBY, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);

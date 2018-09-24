@@ -99,10 +99,9 @@ void pinsInit(void);
 #define ST7920_RST              DISP_RST
 #define ST7920_BCKL             DISP_BCKL
 
+#define DISP_I2C_Port           GPIOB
 #define DISP_I2C_SCK_Pin        DISP_RS_Pin
-#define DISP_I2C_SCK_Port       DISP_RS_Port
 #define DISP_I2C_SDA_Pin        DISP_RST_Pin
-#define DISP_I2C_SDA_Port       DISP_RST_Port
 
 #define DISP_8BIT_DHI_Port      INPUT_Port
 #define DISP_8BIT_DHI_Pin       INPUT_Pin
@@ -126,5 +125,9 @@ void pinsInit(void);
 #define MUTE_Pin                LL_GPIO_PIN_8
 #define STBY_Port               GPIOB
 #define STBY_Pin                LL_GPIO_PIN_9
+
+#define AMP_I2C_Port            GPIOB
+#define AMP_I2C_SCK_Pin         LL_GPIO_PIN_6
+#define AMP_I2C_SDA_Pin         LL_GPIO_PIN_7
 
 #endif // PINS_H
