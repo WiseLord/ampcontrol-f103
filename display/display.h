@@ -39,6 +39,8 @@
 #include "gc400x240/st7793.h"
 #elif defined (_ILI9481)
 #include "gc480x320/ili9481.h"
+#elif defined (_R61581)
+#include "gc480x320/r61581.h"
 #else
 #error "Unsupported display driver"
 #endif

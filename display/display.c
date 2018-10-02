@@ -41,6 +41,8 @@ void displayInit(GlcdDriver **driver)
     st7793Init(driver);
 #elif defined (_ILI9481)
     ili9481Init(driver);
+#elif defined (_R61581)
+    r61581Init(driver);
 #else
 #error "Unsupported display driver"
 #endif
