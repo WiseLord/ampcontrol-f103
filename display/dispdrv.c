@@ -9,6 +9,7 @@
 #ifdef _DISP_8BIT
 static uint8_t bus_requested = 0;
 #endif
+static uint8_t brightness;
 
 static GlcdDriver *glcd;
 
@@ -81,19 +82,86 @@ static inline void dispdrvSendWord(uint16_t data)
 #endif
 }
 
-void dispdrvInit(GlcdDriver *driver)
+void dispdrvInit(GlcdDriver **driver)
 {
-    glcd = driver;
+#if defined (_KS0108)
+    ks0108Init(driver);
+#elif defined (_ST7920)
+    st7920Init(driver);
+#elif defined (_SSD1306)
+    ssd1306Init(driver);
+#elif defined (_ILI9163)
+    ili9163Init(driver);
+#elif defined (_ST7735)
+    st7735Init(driver);
+#elif defined (_LS020)
+    ls020Init(driver);
+#elif defined (_LPH9157)
+    lph9157Init(driver);
+#elif defined (_SSD1286A)
+    ssd1286aInit(driver);
+#elif defined (_HX8340)
+    hx8340Init(driver);
+#elif defined (_ILI9320)
+    ili9320Init(driver);
+#elif defined (_ILI9341)
+    ili9341Init(driver);
+#elif defined (_S6D0139)
+    s6d0139Init(driver);
+#elif defined (_SPFD5408)
+    spfd5408Init(driver);
+#elif defined (_MC2PA8201)
+    mc2pa8201Init(driver);
+#elif defined (_ILI9327)
+    ili9327Init(driver);
+#elif defined (_ST7793)
+    st7793Init(driver);
+#elif defined (_ILI9481)
+    ili9481Init(driver);
+#elif defined (_R61581)
+    r61581Init(driver);
+#else
+#error "Unsupported display driver"
+#endif
+
+    glcd = *driver;
 
 #ifdef _DISP_SPI
     dispdrvInitSPI();
 #endif
 }
 
+void dispdrvPwm(void)
+{
+    static uint8_t br;
+
+    if (++br >= GLCD_MAX_BRIGHTNESS)
+        br = GLCD_MIN_BRIGHTNESS;
+
+    if (br == brightness) {
+        CLR(DISP_BCKL);
+    } else if (br == 0) {
+        SET(DISP_BCKL);
+    }
+}
+
+void dispdrvSetBrightness(uint8_t value)
+{
+    brightness = value;
+}
+
+uint8_t dispdrvGetBus(void)
+{
+    return ~glcd->bus;
+}
+
 void dispdrvBusIRQ(void)
 {
 #ifdef _DISP_8BIT
     bus_requested = 1;
+#endif
+#if defined(_DISP_SPI) || defined(_DISP_I2C)
+    glcd->bus = INPUT_Port->IDR & 0x00FF;   // Read 8-bit bus
 #endif
 }
 

@@ -1,6 +1,6 @@
 #include "input.h"
 
-#include "display/display.h"
+#include "display/dispdrv.h"
 #include "pins.h"
 
 static volatile int8_t encRes = 0;
@@ -25,12 +25,11 @@ void inputPoll(void)
     static volatile uint8_t encPrev = ENC_NO;
 
     // Current state
-    uint8_t btnNow = displayGetInput();
-    uint8_t encNow = btnNow & 0xFF;
+    uint8_t btnNow = dispdrvGetBus();
 
     // If encoder event has happened, inc/dec encoder counter
     if (encRes) {
-        encNow = btnNow & ENC_AB;
+        uint8_t encNow = btnNow & ENC_AB;
         btnNow &= ~ENC_AB;
 
         if ((encPrev == ENC_NO && encNow == ENC_A) ||

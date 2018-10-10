@@ -5,11 +5,8 @@ audio/audio.c
 audio/audio.h
 audio/tda7439.c
 audio/tda7439.h
-display/dispcanvas.h
 display/dispdrv.c
 display/dispdrv.h
-display/display.c
-display/display.h
 display/fonts/fonts.h
 display/fonts/font-terminus-12.c
 display/fonts/font-terminus-14b.c

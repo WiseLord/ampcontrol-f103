@@ -4,7 +4,7 @@
 #include <stm32f1xx_ll_rtc.h>
 #include <stm32f1xx_ll_tim.h>
 
-#include "display/display.h"
+#include "display/dispdrv.h"
 #include "input.h"
 #include "rtc.h"
 #include "spectrum.h"
@@ -75,7 +75,7 @@ void TIM2_IRQHandler(void)
 
         // Callbacks
         DISPLAY_IRQ();
-        displayPWM();
+        dispdrvPwm();
         spConvertADC();
     }
 }

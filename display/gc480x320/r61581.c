@@ -1,6 +1,5 @@
 #include "r61581.h"
 
-#include "../dispcanvas.h"
 #include "../dispdrv.h"
 
 #include "../../pins.h"

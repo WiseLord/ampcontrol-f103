@@ -1,6 +1,6 @@
 #include "screen.h"
 
-#include "display/display.h"
+#include "display/dispdrv.h"
 #include "actions.h"
 #include "eemul.h"
 #include "fft.h"
@@ -191,12 +191,12 @@ void screenSaveSettings(void)
 
 void screenInit(void)
 {
-    displayInit(&glcd);
+    dispdrvInit(&glcd);
     screenClear();
 
     screenReadSettings();
 
-    displaySetBrightness(brStby);
+    dispdrvSetBrightness(brStby);
 }
 
 void screenClear(void)
@@ -258,7 +258,7 @@ void screenSetBrightness(uint8_t mode, int8_t value)
     else
         brStby = value;
 
-    displaySetBrightness(value);
+    dispdrvSetBrightness(value);
 }
 
 void screenChangeBrighness(uint8_t mode, int8_t diff)

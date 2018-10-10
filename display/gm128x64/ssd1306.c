@@ -1,10 +1,9 @@
 #include "ssd1306.h"
 
-#include "../dispcanvas.h"
-
-#include "../../i2c.h"
+#include "../dispdrv.h"
 #include "../../pins.h"
 #include "../../functions.h"
+#include "../../i2c.h"
 
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_i2c.h>
