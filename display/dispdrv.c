@@ -84,6 +84,10 @@ static inline void dispdrvSendWord(uint16_t data)
 
 void dispdrvInit(GlcdDriver **driver)
 {
+#ifdef _DISP_SPI
+    dispdrvInitSPI();
+#endif
+
 #if defined (_KS0108)
     ks0108Init(driver);
 #elif defined (_ST7920)
@@ -125,10 +129,6 @@ void dispdrvInit(GlcdDriver **driver)
 #endif
 
     glcd = *driver;
-
-#ifdef _DISP_SPI
-    dispdrvInitSPI();
-#endif
 }
 
 void dispdrvPwm(void)

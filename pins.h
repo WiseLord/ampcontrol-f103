@@ -74,28 +74,28 @@ void pinsInit(void);
 #define DISP_RW_Port            GPIOB
 #define DISP_RW_Pin             LL_GPIO_PIN_5
 #define DISP_RS_Port            GPIOB
-#define DISP_RS_Pin             LL_GPIO_PIN_10
+#define DISP_RS_Pin             LL_GPIO_PIN_6
 #define DISP_RST_Port           GPIOB
-#define DISP_RST_Pin            LL_GPIO_PIN_11
+#define DISP_RST_Pin            LL_GPIO_PIN_7
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
 #define KS0108_DATA_Port        INPUT_Port
 #define KS0108_DATA_Pin         INPUT_Pin
-#define KS0108_DI               DISP_CS
+#define KS0108_DI               DISP_RS
 #define KS0108_RW               DISP_RW
 #define KS0108_E                DISP_SCK
-#define KS0108_CS1              DISP_RS
+#define KS0108_CS1              DISP_CS
 #define KS0108_CS2              DISP_RD
 #define KS0108_RST              DISP_RST
 #define KS0108_BCKL             DISP_BCKL
 
 #define ST7920_DATA_Port        INPUT_Port
 #define ST7920_DATA_Pin         INPUT_Pin
-#define ST7920_RS               DISP_CS
+#define ST7920_RS               DISP_RS
 #define ST7920_RW               DISP_RW
 #define ST7920_E                DISP_SCK
-#define ST7920_PSB              DISP_RS
+#define ST7920_PSB              DISP_CS
 #define ST7920_RST              DISP_RST
 #define ST7920_BCKL             DISP_BCKL
 
@@ -127,7 +127,7 @@ void pinsInit(void);
 #define STBY_Pin                LL_GPIO_PIN_9
 
 #define AMP_I2C_Port            GPIOB
-#define AMP_I2C_SCK_Pin         LL_GPIO_PIN_6
-#define AMP_I2C_SDA_Pin         LL_GPIO_PIN_7
+#define AMP_I2C_SCK_Pin         LL_GPIO_PIN_10
+#define AMP_I2C_SDA_Pin         LL_GPIO_PIN_11
 
 #endif // PINS_H

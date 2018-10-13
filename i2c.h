@@ -10,10 +10,10 @@
 #define I2C_WRITE       0
 #define I2C_READ        1
 
-#define I2C_AMP         I2C1
-#define I2C_LCD         I2C2
-#define I2C_AMP_PERIF   LL_APB1_GRP1_PERIPH_I2C1
-#define I2C_LCD_PERIF   LL_APB1_GRP1_PERIPH_I2C2
+#define I2C_LCD         I2C1
+#define I2C_AMP         I2C2
+#define I2C_LCD_PERIF   LL_APB1_GRP1_PERIPH_I2C1
+#define I2C_AMP_PERIF   LL_APB1_GRP1_PERIPH_I2C2
 
 uint8_t i2cInit(I2C_TypeDef *I2Cx, uint32_t ClockSpeed);
 uint8_t i2cStart(I2C_TypeDef *I2Cx, uint8_t addr);
