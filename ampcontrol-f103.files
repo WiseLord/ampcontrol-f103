@@ -158,5 +158,11 @@ system/stm32f10x-openocd.cfg
 system/system_stm32f1xx.c
 timers.c
 timers.h
+tuner/rda580x.c
+tuner/rda580x.h
+tuner/rda580x_regs.h
+tuner/si470x.c
+tuner/si470x.h
+tuner/si470x_regs.h
 tuner/tuner.c
 tuner/tuner.h

@@ -1,7 +1,17 @@
 #include "i2c.h"
 
 #include <stm32f1xx_ll_bus.h>
+#include <stm32f1xx_ll_cortex.h>
 #include <stm32f1xx_ll_i2c.h>
+
+#define I2C_SEND_TIMEOUT_TXE_MS              5
+#define I2C_SEND_TIMEOUT_SB_MS               5
+#define I2C_SEND_TIMEOUT_ADDR_MS             5
+
+static uint8_t i2cBuf[I2C_BUF_SIZE];
+static uint8_t i2cBytes = 0;
+static uint8_t i2cAddr = 0;
+static uint32_t i2cTimeout = 0;
 
 uint8_t i2cInit(I2C_TypeDef *I2Cx, uint32_t ClockSpeed)
 {
@@ -38,11 +48,18 @@ uint8_t i2cStart(I2C_TypeDef *I2Cx, uint8_t addr)
     LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
 
     LL_I2C_GenerateStartCondition(I2Cx);
-    while (!LL_I2C_IsActiveFlag_SB(I2Cx));
+
+    i2cTimeout = I2C_SEND_TIMEOUT_SB_MS;
+    while (!LL_I2C_IsActiveFlag_SB(I2Cx)) {
+
+    }
 
     LL_I2C_TransmitData8(I2Cx, addr | I2C_WRITE);
 
-    while (!LL_I2C_IsActiveFlag_ADDR(I2Cx));
+    while (!LL_I2C_IsActiveFlag_ADDR(I2Cx)) {
+
+    }
+
     LL_I2C_ClearFlag_ADDR(I2Cx);
 
     return 0;
@@ -66,53 +83,71 @@ uint8_t i2cWrite(I2C_TypeDef *I2Cx, uint8_t data)
     return 0;
 }
 
-uint8_t i2cRead(I2C_TypeDef *I2Cx, uint8_t ack)
+
+void i2cBegin(I2C_TypeDef *I2Cx, uint8_t addr)
 {
-    // TODO
-    return 0;
+    i2cBytes = 0;
+    i2cAddr = addr;
 }
 
-
-uint8_t i2cAmpStart(uint8_t addr)
+void i2cSend(I2C_TypeDef *I2Cx, uint8_t data)
 {
-    return 0;
-    return i2cStart(I2C_AMP, addr);
+    i2cBuf[i2cBytes++] = data;
 }
 
-uint8_t i2cAmpStop(void)
+void i2cTransfer(I2C_TypeDef *I2Cx)
 {
-    return 0;
-    return i2cStop(I2C_AMP);
-}
+    // Handle start
+    LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
+    LL_I2C_GenerateStartCondition(I2Cx);
 
-uint8_t i2cAmpWrite(uint8_t data)
-{
-    return 0;
-    return i2cWrite(I2C_AMP, data);
-}
+    i2cTimeout = I2C_SEND_TIMEOUT_SB_MS;
+    while (!LL_I2C_IsActiveFlag_SB(I2Cx)) {
+        if (LL_SYSTICK_IsActiveCounterFlag()) {
+            if (i2cTimeout-- == 0) {
+                // TODO: handle error
+                return;
+            }
+        }
+    }
 
-uint8_t i2cAmpRead(uint8_t ack)
-{
-    return i2cRead(I2C_AMP, ack);
-}
+    LL_I2C_TransmitData8(I2Cx, i2cAddr | I2C_WRITE);
 
+    i2cTimeout = I2C_SEND_TIMEOUT_ADDR_MS;
+    while (!LL_I2C_IsActiveFlag_ADDR(I2Cx)) {
+        if (LL_SYSTICK_IsActiveCounterFlag()) {
+            if (i2cTimeout-- == 0) {
+                // TODO: handle error
+                return;
+            }
+        }
+    }
 
-uint8_t i2cLcdStart(uint8_t addr)
-{
-    return i2cStart(I2C_LCD, addr);
-}
+    LL_I2C_ClearFlag_ADDR(I2Cx);
 
-uint8_t i2cLcdStop(void)
-{
-    return i2cStop(I2C_LCD);
-}
+    for (uint8_t i = 0; i < i2cBytes; i++) {
 
-uint8_t i2cLcdWrite(uint8_t data)
-{
-    return i2cWrite(I2C_LCD, data);
-}
+        i2cTimeout = I2C_SEND_TIMEOUT_TXE_MS;
+        while (!LL_I2C_IsActiveFlag_TXE(I2Cx)) {
+            if (LL_SYSTICK_IsActiveCounterFlag()) {
+                if (i2cTimeout-- == 0) {
+                    // TODO: handle error
+                    return;
+                }
+            }
+        }
 
-uint8_t i2cLcdRead(uint8_t ack)
-{
-    return i2cRead(I2C_LCD, ack);
+        LL_I2C_TransmitData8(I2Cx, i2cBuf[i]);
+    }
+
+    while (!LL_I2C_IsActiveFlag_TXE(I2Cx)) {
+        if (LL_SYSTICK_IsActiveCounterFlag()) {
+            if (i2cTimeout-- == 0) {
+                // TODO: handle error
+                return;
+            }
+        }
+    }
+
+    LL_I2C_GenerateStopCondition(I2Cx);
 }

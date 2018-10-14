@@ -85,6 +85,7 @@ int main(void)
     spInit();
 
     pinsInit();
+
     i2cInit(I2C_AMP, 100000);
     audioInit();
     tunerInit();

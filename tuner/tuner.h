@@ -3,6 +3,13 @@
 
 #include <inttypes.h>
 
+#ifdef _RDA580X
+#include "rda580x.h"
+#endif
+#ifdef _SI470X
+#include "si470x.h"
+#endif
+
 #define TUNER_DIR_UP        (1)
 #define TUNER_DIR_DOWN      (-1)
 
@@ -28,7 +35,7 @@ typedef enum {
 
 typedef struct {
     void (*setFlag)(void);
-    void (*setFreq)(void);
+    void (*setFreq)(uint16_t freq);
     TunerIC ic;
     TunerFlag flag;
     uint16_t freq;

@@ -130,4 +130,15 @@ void pinsInit(void);
 #define AMP_I2C_SCK_Pin         LL_GPIO_PIN_10
 #define AMP_I2C_SDA_Pin         LL_GPIO_PIN_11
 
+
+// SI470X Reset pins
+#define SI470X_SCLK_Port        AMP_I2C_Port
+#define SI470X_SCLK_Pin         AMP_I2C_SCK_Pin
+#define SI470X_SDIO_Port        AMP_I2C_Port
+#define SI470X_SDIO_Pin         AMP_I2C_SDA_Pin
+// TODO: Use the same RST as display uses
+#define SI470X_RST_Port         GPIOB
+#define SI470X_RST_Pin          LL_GPIO_PIN_14
+
+
 #endif // PINS_H

@@ -16,6 +16,10 @@ static void tunerReadSettings(void)
 
     eeData = eeRead(EE_TUNER_FLAG);
     tuner.flag = (eeData == EE_EMPTY ? TUNER_FLAG_INIT : eeData);
+
+    tuner.freqMin = 8700;
+    tuner.freqMax = 10800;
+    tuner.ic = TUNER_IC_RDA5807;
 }
 
 static void tunerSaveSettings(void)
@@ -27,8 +31,22 @@ static void tunerSaveSettings(void)
 void tunerInit()
 {
     tunerReadSettings();
-    tuner.freqMin = 8700;
-    tuner.freqMax = 10800;
+
+    switch (tuner.ic) {
+#ifdef _RDA580X
+    case TUNER_IC_RDA5807:
+        tuner.setFreq = rda580xSetFreq;
+        rda580xInit();
+        break;
+#endif
+#ifdef _SI470X
+    case TUNER_IC_SI4703:
+        si470xInit();
+        break;
+#endif
+    default:
+        break;
+    }
 }
 
 Tuner *tunerGet()
@@ -56,7 +74,7 @@ void tunerSetFreq(uint16_t value)
     tuner.freq = value;
 
     if (tuner.setFreq) {
-        tuner.setFreq();
+        tuner.setFreq(value);
     }
 }
 

@@ -5,6 +5,10 @@
 
 #include "display/glcd.h"
 
+#ifdef _SI470X
+#include "tuner/si470x.h"
+#endif
+
 static void pinsInitButtons(void)
 {
     LL_GPIO_InitTypeDef gpio;
@@ -122,6 +126,11 @@ void pinsInit(void)
 
     pinsInitButtons();
     pinsInitDisplay();
+
+
+#ifdef _SI470X
+    si470xReset();
+#endif
 
     pinsInitAmpI2c();
 

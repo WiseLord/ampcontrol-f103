@@ -2,7 +2,7 @@ DISPLAY = ILI9341
 DISPVAR = 8BIT
 
 APROC_LIST = TDA7439 TDA731X PT232X
-TUNER_LIST =
+TUNER_LIST = RDA580X
 FEATURE_LIST =
 
 TARGET = ampcontrol_f103_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
@@ -87,8 +87,11 @@ C_SOURCES += audio/audio.c
 C_DEFS += $(addprefix -D_, $(APROC_LIST))
 
 # Tuner source files
-ifeq "$(findstring RDA5807, $(TUNER_LIST))" "RDA5807"
-  C_SOURCES += tuner/rd580x.c
+ifeq "$(findstring RDA580X, $(TUNER_LIST))" "RDA580X"
+  C_SOURCES += tuner/rda580x.c
+endif
+ifeq "$(findstring SI470X, $(TUNER_LIST))" "SI470X"
+  C_SOURCES += tuner/si470x.c
 endif
 C_SOURCES += tuner/tuner.c
 C_DEFS += $(addprefix -D_, $(TUNER_LIST))
