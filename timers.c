@@ -6,6 +6,7 @@
 
 static volatile int16_t timDisplay = SW_TIM_OFF;
 static volatile int16_t timSpConvert = SW_TIM_OFF;
+static volatile int16_t timTunerPoll = SW_TIM_OFF;
 
 static void TIM2_Init(void)
 {
@@ -48,6 +49,8 @@ void swTimUpdate(void)
         timDisplay--;
     if (timSpConvert > 0)
         timSpConvert--;
+    if (timTunerPoll > 0)
+        timTunerPoll--;
 }
 
 void swTimSetDisplay(int16_t value)
@@ -68,4 +71,14 @@ void swTimSetSpConvert(int16_t value)
 int16_t swTimGetSpConvert()
 {
     return timSpConvert;
+}
+
+void swTimSetTunerPoll(int16_t value)
+{
+    timTunerPoll = value;
+}
+
+int16_t swTimGetTunerPoll()
+{
+    return timTunerPoll;
 }

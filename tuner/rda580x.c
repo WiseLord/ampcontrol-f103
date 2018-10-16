@@ -10,6 +10,7 @@
 #define RDA5807_RDBUF_SIZE          12
 
 static uint8_t wrBuf[RDA5807_WRBUF_SIZE];
+static uint8_t rdBuf[RDA5807_RDBUF_SIZE];
 
 static void rda580xWriteReg(uint8_t reg)
 {
@@ -19,7 +20,7 @@ static void rda580xWriteReg(uint8_t reg)
     i2cSend(I2C_AMP, reg);
     i2cSend(I2C_AMP, *wrAddr++);
     i2cSend(I2C_AMP, *wrAddr++);
-    i2cTransfer(I2C_AMP);
+    i2cTransmit(I2C_AMP);
 }
 
 static void rda580xSetBit(uint8_t idx, uint8_t bit, uint8_t cond)
@@ -69,6 +70,12 @@ void rda580xSetFreq(uint16_t value)
     wrBuf[3] &= ~RDA580X_TUNE;
 }
 
+void rda580xSeek(int8_t direction)
+{
+    wrBuf[0] |= RDA580X_SEEK;
+    rda580xSetBit(0, RDA580X_SEEKUP, direction > 0);
+    wrBuf[0] &= ~RDA580X_SEEK;
+}
 
 void rda580xSetMute(uint8_t value)
 {
@@ -91,4 +98,20 @@ void rda580xSetVolume(int8_t value)
 void rda580xSetPower(uint8_t value)
 {
     rda580xSetBit(1, RDA580X_ENABLE, value);
+}
+
+void rda580xUpdateStatus()
+{
+    i2cBegin(I2C_AMP, RDA5807M_I2C_SEQ_ADDR);
+//    i2cReceive(I2C_AMP, rdBuf, RDA5807_RDBUF_SIZE);
+    i2cReceive(I2C_AMP, rdBuf, 2);
+}
+
+uint16_t rda580xGetFreq()
+{
+    uint16_t chan = rdBuf[0] & RDA580X_READCHAN_9_8;
+    chan <<= 8;
+    chan |= rdBuf[1];
+
+    return chan * 10 + 8700;
 }

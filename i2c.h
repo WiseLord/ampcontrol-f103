@@ -24,6 +24,7 @@ uint8_t i2cWrite(I2C_TypeDef *I2Cx, uint8_t data);
 
 void i2cBegin(I2C_TypeDef *I2Cx, uint8_t addr);
 void i2cSend(I2C_TypeDef *I2Cx, uint8_t data);
-void i2cTransfer(I2C_TypeDef *I2Cx);
+void i2cTransmit(I2C_TypeDef *I2Cx);
+void i2cReceive(I2C_TypeDef *I2Cx, uint8_t *buf, uint8_t size);
 
 #endif // I2C_H

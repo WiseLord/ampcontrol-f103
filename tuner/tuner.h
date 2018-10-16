@@ -36,6 +36,7 @@ typedef enum {
 typedef struct {
     void (*setFlag)(void);
     void (*setFreq)(uint16_t freq);
+    void (*updateStatus)(void);
     TunerIC ic;
     TunerFlag flag;
     uint16_t freq;
@@ -53,5 +54,7 @@ void tunerSetFreq(uint16_t value);
 void tunerSetFlag(TunerFlag flag, uint8_t value);
 
 void tunerNextStation(int8_t direction);
+
+void tunerUpdateStatus(void);
 
 #endif // TUNER_H

@@ -174,6 +174,10 @@ static void showTuner(DispTuner *dt)
     glcdWriteChar('.');
     glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteNum(tuner->freq % 100, 2, '0', 10);
+
+    glcdSetFont(&fontterminusmod64);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetXY(2, 120);
 }
 
 GlcdCanvas gc320x240 = {

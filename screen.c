@@ -145,6 +145,12 @@ static void screenCheckClear(void)
         default:
             break;
         }
+        // Enable/disable tuner polling
+        if (screen == SCREEN_TUNER) {
+            swTimSetTunerPoll(0);
+        } else {
+            swTimSetTunerPoll(SW_TIM_OFF);
+        }
     } else {
         switch (screen) {
         case SCREEN_AUDIO_PARAM:
@@ -280,7 +286,7 @@ void screenShow(void)
     screenCheckClear();
 
     // Get new spectrum data
-    if (swTimGetSpConvert() <= 0) {
+    if (swTimGetSpConvert() == 0) {
         spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
 
         improveSpectrum(&spData[SP_CHAN_LEFT]);
@@ -395,6 +401,11 @@ void screenShowTuner(void)
 {
     DispTuner dt;
     dt.tuner = tunerGet();
+
+    if (swTimGetTunerPoll() == 0) {
+        tunerUpdateStatus();
+        swTimSetTunerPoll(100);
+    }
 
     if (glcd->canvas->showTuner) {
         glcd->canvas->showTuner(&dt);

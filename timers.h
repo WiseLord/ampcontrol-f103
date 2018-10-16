@@ -15,4 +15,7 @@ int16_t swTimGetDisplay(void);
 void swTimSetSpConvert(int16_t value);
 int16_t swTimGetSpConvert(void);
 
+void swTimSetTunerPoll(int16_t value);
+int16_t swTimGetTunerPoll(void);
+
 #endif // TIMERS_H

@@ -36,6 +36,7 @@ void tunerInit()
 #ifdef _RDA580X
     case TUNER_IC_RDA5807:
         tuner.setFreq = rda580xSetFreq;
+        tuner.updateStatus = rda580xUpdateStatus;
         rda580xInit();
         break;
 #endif
@@ -49,7 +50,7 @@ void tunerInit()
     }
 }
 
-Tuner *tunerGet()
+Tuner *tunerGet(void)
 {
     return &tuner;
 }
@@ -92,5 +93,17 @@ void tunerSetFlag(TunerFlag flag, uint8_t value)
 
 void tunerNextStation(int8_t direction)
 {
-    tunerSetFreq(tuner.freq + 10 * direction);
+//    tunerSetFreq(tuner.freq + 10 * direction);
+    rda580xSeek(direction);
+}
+
+void tunerUpdateStatus(void)
+{
+//    tuner.rdFreq++;
+
+    if (tuner.updateStatus) {
+        tuner.updateStatus();
+
+        tuner.freq = rda580xGetFreq();
+    }
 }
