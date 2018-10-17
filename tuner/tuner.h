@@ -26,19 +26,37 @@ typedef enum {
     TUNER_FLAG_INIT     = 0x0000,
 
     TUNER_FLAG_MUTE     = 0x0001,
+    TUNER_FLAG_BASS     = 0x0002,
 
     TUNER_FLAG_STEREO   = 0x0010,
     TUNER_FLAG_RDS      = 0x0020,
-
-    TUNER_FLAG_BASS     = 0x0100,
 } TunerFlag;
 
 typedef struct {
-    void (*setFlag)(void);
     void (*setFreq)(uint16_t freq);
+    void (*seek)(int8_t direction);
+
+    void (*setMute)(uint8_t value);
+    void (*setBass)(uint8_t value);
+    void (*setStereo)(uint8_t value);
+    void (*setRds)(uint8_t value);
+
+    void (*setPower)(uint8_t value);
+
+    void (*setVolume)(int8_t value);
+
     void (*updateStatus)(void);
+
+    uint16_t (*getFreq)(void);  // Actual frequency
+    uint8_t (*getRssi)(void);   // Signal level
+} TunerDriverApi;
+
+typedef struct {
+    TunerDriverApi api;
     TunerIC ic;
-    TunerFlag flag;
+
+    TunerFlag flags;
+
     uint16_t freq;
     uint16_t freqMin;
     uint16_t freqMax;
@@ -47,8 +65,7 @@ typedef struct {
 void tunerInit(void);
 Tuner *tunerGet(void);
 
-void tunerPowerOn(void);
-void tunerPowerOff(void);
+void tunerSetPower(uint16_t value);
 
 void tunerSetFreq(uint16_t value);
 void tunerSetFlag(TunerFlag flag, uint8_t value);

@@ -208,6 +208,7 @@ void actionHandle(Action action, uint8_t visible)
             screen = SCREEN_TIME;
             screenChangeBrighness(ACTION_BR_WORK, 0);
             dispTime = 1000;
+            tunerSetPower(1);
         } else {
             dispTime = SW_TIM_OFF;
             screen = SCREEN_STANDBY;
@@ -215,7 +216,7 @@ void actionHandle(Action action, uint8_t visible)
             screenChangeBrighness(ACTION_BR_STBY, 0);
             screenSaveSettings();
             audioPowerOff();
-            tunerPowerOff();
+            tunerSetPower(0);
         }
         break;
 

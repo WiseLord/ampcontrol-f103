@@ -42,7 +42,7 @@ typedef enum {
 
     EE_TUNER_IC,
     EE_TUNER_FREQ,
-    EE_TUNER_FLAG,
+    EE_TUNER_FLAGS,
 
     EE_PARAM_END
 } EE_Param;
