@@ -21,6 +21,9 @@ C_SOURCES += rtc.c
 C_SOURCES += screen.c
 C_SOURCES += spectrum.c
 C_SOURCES += timers.c
+C_SOURCES += tr/labels.c
+C_SOURCES += tr/labels_by.c
+C_SOURCES += tr/labels_ru.c
 
 C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
 

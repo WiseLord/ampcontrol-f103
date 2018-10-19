@@ -1,6 +1,7 @@
 #include "screen.h"
 
 #include "display/dispdrv.h"
+#include "tr/labels.h"
 #include "actions.h"
 #include "eemul.h"
 #include "fft.h"
@@ -18,70 +19,6 @@ static uint8_t spReady = 0;
 // TODO: Read from backup memory
 static int8_t brStby;
 static int8_t brWork;
-
-typedef enum {
-    LABEL_SUNDAY,
-    LABEL_MONDAY,
-    LABEL_TUESDAY,
-    LABEL_WEDNESDAY,
-    LABEL_THURSDAY,
-    LABEL_FRIDAY,
-    LABEL_SATURDAY,
-
-    LABEL_BRIGNTNESS,
-
-    LABEL_VOLUME,
-    LABEL_BASS,
-    LABEL_MIDDLE,
-    LABEL_TREBLE,
-    LABEL_FRONTREAR,
-    LABEL_BALANCE,
-    LABEL_CENTER,
-    LABEL_SUBWOOFER,
-    LABEL_PREAMP,
-
-    LABEL_GAIN0,
-    LABEL_GAIN1,
-    LABEL_GAIN2,
-    LABEL_GAIN3,
-    LABEL_GAIN4,
-    LABEL_GAIN5,
-    LABEL_GAIN6,
-    LABEL_GAIN7,
-
-    LABEL_END
-} TxtLabel;
-
-const char *txtLabels[LABEL_END] = {
-    [LABEL_SUNDAY]          = "НЯДЗЕЛЯ",
-    [LABEL_MONDAY]          = "ПАНЯДЗЕЛАК",
-    [LABEL_TUESDAY]         = "АЎТОРАК",
-    [LABEL_WEDNESDAY]       = "СЕРАДА",
-    [LABEL_THURSDAY]        = "ЧАЦВЕР",
-    [LABEL_FRIDAY]          = "ПЯТНІЦА",
-    [LABEL_SATURDAY]        = "СУБОТА",
-
-    [LABEL_BRIGNTNESS]      = "Яркасць",
-
-    [LABEL_VOLUME]          = "Гучнасць",
-    [LABEL_BASS]            = "Тэмбр НЧ",
-    [LABEL_MIDDLE]          = "Тэмбр СЧ",
-    [LABEL_TREBLE]          = "Тэмбр ВЧ",
-    [LABEL_FRONTREAR]       = "Фронт/тыл",
-    [LABEL_BALANCE]         = "Баланс",
-    [LABEL_CENTER]          = "Цэнтр",
-    [LABEL_SUBWOOFER]       = "Сабвуфер",
-    [LABEL_PREAMP]          = "Пасіленне",
-
-    [LABEL_GAIN0]           = "FM цюнэр",
-    [LABEL_GAIN1]           = "Камп'ютар",
-    [LABEL_GAIN2]           = "Тэлевізар",
-    [LABEL_GAIN3]           = "Bluetooth",
-    [LABEL_GAIN4]           = "DVD-плэер",
-    [LABEL_GAIN5]           = "Уваход 5",
-    [LABEL_GAIN6]           = "Уваход 6",
-    [LABEL_GAIN7]           = "Уваход 7",
-};
 
 static void improveSpectrum(SpectrumData *sd)
 {
@@ -197,6 +134,8 @@ void screenSaveSettings(void)
 
 void screenInit(void)
 {
+    labelsInit();
+
     dispdrvInit(&glcd);
     screenClear();
 
@@ -331,6 +270,7 @@ void screenShowTime(void)
 {
     RTC_type rtc;
     rtc.etm = rtcGetMode();
+    const char **txtLabels = labelsGet();
 
     rtcGetTime(&rtc);
 
@@ -352,6 +292,7 @@ void screenShowSpectrum(void)
 void screenShowBrightness(void)
 {
     DispParam dp;
+    const char **txtLabels = labelsGet();
 
     dp.label = txtLabels[LABEL_BRIGNTNESS];
     dp.value = screenGetBrightness(ACTION_BR_WORK);
@@ -375,6 +316,7 @@ void screenShowAudioParam(void)
 {
     AudioProc *aProc = audioProcGet();
     AudioParam aPar = scrPar.audio;
+    const char **txtLabels = labelsGet();
 
     if (aPar >= AUDIO_PARAM_END)
         aPar = AUDIO_PARAM_VOLUME;
