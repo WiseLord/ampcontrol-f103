@@ -193,16 +193,14 @@ void ili9163DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     SET(DISP_8BIT_CS);
 }
 
-void ili9163DrawImage(tImage *img)
+void ili9163DrawImage(tImage *img, int16_t x, int16_t y)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
-    uint16_t x0 = glcd.canvas->x;
-    uint16_t y0 = glcd.canvas->y;
 
     CLR(DISP_8BIT_CS);
 
-    ili9163SetWindow(x0, y0, w, h);
+    ili9163SetWindow(x, y, w, h);
     dispdrvSendImage(img, w, h);
 
     SET(DISP_8BIT_CS);

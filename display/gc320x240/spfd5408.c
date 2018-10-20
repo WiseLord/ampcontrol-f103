@@ -230,16 +230,14 @@ void spfd5408DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
     SET(DISP_8BIT_CS);
 }
 
-void spfd5408DrawImage(tImage *img)
+void spfd5408DrawImage(tImage *img, int16_t x, int16_t y)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
-    uint16_t x0 = glcd.canvas->x;
-    uint16_t y0 = glcd.canvas->y;
 
     CLR(DISP_8BIT_CS);
 
-    spfd5408SetWindow(x0, y0, w, h);
+    spfd5408SetWindow(x, y, w, h);
     dispdrvSendImage(img, w, h);
 
     SET(DISP_8BIT_CS);

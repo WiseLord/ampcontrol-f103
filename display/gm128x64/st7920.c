@@ -5,7 +5,6 @@
 #include "../../functions.h"
 
 static GlcdDriver glcd = {
-    .clear = st7920Clear,
     .drawPixel = st7920DrawPixel,
     .drawImage = glcdDrawImage,
 };

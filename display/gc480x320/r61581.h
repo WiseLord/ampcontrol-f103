@@ -13,6 +13,6 @@ void r61581Wakeup(void);
 void r61581DrawPixel(int16_t x, int16_t y, uint16_t color);
 void r61581DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
 
-void r61581DrawImage(tImage *img);
+void r61581DrawImage(tImage *img, int16_t x, int16_t y);
 
 #endif // R61581_H

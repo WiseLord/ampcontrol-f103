@@ -215,16 +215,14 @@ void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     SET(DISP_SPI_CS);
 }
 
-void ili9341DrawImage(tImage *img)
+void ili9341DrawImage(tImage *img, int16_t x, int16_t y)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
-    uint16_t x0 = glcd.canvas->x;
-    uint16_t y0 = glcd.canvas->y;
 
     CLR(DISP_SPI_CS);
 
-    ili9341SetWindow(x0, y0, w, h);
+    ili9341SetWindow(x, y, w, h);
     dispdrvSendImage(img, w, h);
 
     dispdrvWaitOperation();

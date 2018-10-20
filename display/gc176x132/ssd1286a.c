@@ -180,16 +180,14 @@ void ssd1286aDrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
     SET(DISP_SPI_CS);
 }
 
-void ssd1286aDrawImage(tImage *img)
+void ssd1286aDrawImage(tImage *img, int16_t x, int16_t y)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
-    uint16_t x0 = glcd.canvas->x;
-    uint16_t y0 = glcd.canvas->y;
 
     CLR(DISP_SPI_CS);
 
-    ssd1286aSetWindow(x0, y0, w, h);
+    ssd1286aSetWindow(x, y, w, h);
     dispdrvSendImage(img, w, h);
 
     dispdrvWaitOperation();

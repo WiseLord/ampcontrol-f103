@@ -45,7 +45,7 @@ typedef struct {
 typedef struct {
     void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
     void (*drawRectangle)(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
-    void (*drawImage)(tImage *img);
+    void (*drawImage)(tImage *img, int16_t x, int16_t y);
     void (*updateFB)(void);
 
     GlcdCanvas *canvas;
@@ -106,7 +106,7 @@ void glcdSetXY(int16_t x, int16_t y);
 void glcdSetX(int16_t x);
 void glcdSetY(int16_t y);
 
-void glcdDrawImage(tImage *img);
+void glcdDrawImage(tImage *img, int16_t x, int16_t y);
 void glcdWriteIcon(uint8_t num, const uint8_t *icons);
 void glcdWriteChar(int32_t code);
 void glcdWriteString(char *string);

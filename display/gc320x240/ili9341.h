@@ -13,6 +13,6 @@ void ili9341Wakeup(void);
 void ili9341DrawPixel(int16_t x, int16_t y, uint16_t color);
 void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
 
-void ili9341DrawImage(tImage *img);
+void ili9341DrawImage(tImage *img, int16_t x, int16_t y);
 
 #endif // ILI9341_H

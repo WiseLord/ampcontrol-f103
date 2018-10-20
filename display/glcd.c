@@ -111,7 +111,7 @@ static int16_t findSymbolPos(int32_t code)
     return bPos;
 }
 
-void glcdDrawImage(tImage *img)
+void glcdDrawImage(tImage *img, int16_t x, int16_t y)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -123,7 +123,7 @@ void glcdDrawImage(tImage *img)
             uint8_t data = img->data[w * j + i];
             for (uint8_t bit = 0; bit < 8; bit++) {
                 if (8 * j + bit < h) {
-                    glcd->drawPixel(glcd->canvas->x + i, glcd->canvas->y + (8 * j + bit),
+                    glcd->drawPixel(x + i, y + (8 * j + bit),
                                     data & (1 << bit) ? color : bgColor);
                 }
             }
@@ -146,7 +146,9 @@ void glcdWriteIcon(uint8_t num, const uint8_t *icons)
 
     img.data = icons + (img.width * img.height / 8 * num);
 
-    glcd->drawImage(&img);
+    if (glcd->drawImage) {
+        glcd->drawImage(&img, glcd->canvas->x, glcd->canvas->y);
+    }
 }
 
 void glcdWriteChar(int32_t code)
@@ -186,9 +188,11 @@ void glcdWriteChar(int32_t code)
         imgUnRle.height = img->height;
         imgUnRle.size = outPtr - unRleData;
 
-        glcd->drawImage(&imgUnRle);
-    } else {
-        glcd->drawImage(img);
+        img = &imgUnRle;
+    }
+
+    if (glcd->drawImage) {
+        glcd->drawImage(img, glcd->canvas->x, glcd->canvas->y);
     }
 
     glcdSetX(glcd->canvas->x + img->width);
