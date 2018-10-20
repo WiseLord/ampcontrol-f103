@@ -8,6 +8,8 @@
 #define LPH9157_PIXELS          (LPH9157_WIDTH * LPH9157_HEIGHT)
 
 static DispDriver drv = {
+    .width = LPH9157_HEIGHT,
+    .height = LPH9157_WIDTH,
     .drawPixel = lph9157DrawPixel,
     .drawRectangle = lph9157DrawRectangle,
     .drawImage = lph9157DrawImage,

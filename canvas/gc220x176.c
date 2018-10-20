@@ -1,6 +1,16 @@
-#include "../glcd.h"
+#include "canvas.h"
 
-static Glcd *glcd;
+static void showTime(RTC_type *rtc, char *wday);
+static void showParam(DispParam *dp);
+static void showSpectrum(SpectrumData *spData);
+//static void showTuner(DispTuner *dt);
+
+static Canvas canvas = {
+    .showTime = showTime,
+    .showParam = showParam,
+    .showSpectrum = showSpectrum,
+//    .showTuner = showTuner,
+};
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
@@ -24,8 +34,8 @@ static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t va
     if (value > max)
         value = max;
 
-    glcd->drv->drawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
-    glcd->drv->drawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
+    glcdDrawRect(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
+    glcdDrawRect(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
 }
 
 static void showTime(RTC_type *rtc, char *wday)
@@ -62,7 +72,7 @@ static void showTime(RTC_type *rtc, char *wday)
 
     static char *wdayOld = 0;
     if (wday != wdayOld) {
-        glcdDrawRect(0, 124, 220, 32, glcd->canvas->color);
+        glcdDrawRect(0, 124, 220, 32, canvas.color);
     }
 
     glcdSetFontAlign(FONT_ALIGN_CENTER);
@@ -91,7 +101,7 @@ static void showSpectrum(SpectrumData *spData)
     uint8_t *buf;
 
     buf = spData[SP_CHAN_LEFT].show;
-    for (uint16_t x = 0; x < (glcd->canvas->width + 1) / 3; x++) {
+    for (uint16_t x = 0; x < (canvas.glcd->drv->width + 1) / 3; x++) {
         uint16_t xbase = x * 3;
         uint16_t ybase = 88;
         uint16_t width = 2;
@@ -102,7 +112,7 @@ static void showSpectrum(SpectrumData *spData)
     }
 
     buf = spData[SP_CHAN_RIGHT].show;
-    for (uint16_t x = 0; x < (glcd->canvas->width + 1) / 3; x++) {
+    for (uint16_t x = 0; x < (canvas.glcd->drv->width + 1) / 3; x++) {
         uint16_t xbase = x * 3;
         uint16_t ybase = 176;
         uint16_t width = 2;
@@ -113,17 +123,7 @@ static void showSpectrum(SpectrumData *spData)
     }
 }
 
-GlcdCanvas gc220x176 = {
-    .width = 220,
-    .height = 176,
-
-    .showTime = showTime,
-    .showParam = showParam,
-    .showSpectrum = showSpectrum,
-};
-
-void gc220x176Init(Glcd *driver)
+void gc220x176Init(Canvas **value)
 {
-    glcd = driver;
-    glcd->canvas = &gc220x176;
+    *value = &canvas;
 }

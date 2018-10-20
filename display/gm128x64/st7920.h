@@ -45,12 +45,6 @@
 #define ST7920_COMMAND              0
 #define ST7920_DATA                 1
 
-#define ST7920_SIZE_X               128
-#define ST7920_SIZE_Y               64
-
-#define ST7920_MIN_BRIGHTNESS       0
-#define ST7920_MAX_BRIGHTNESS       32
-
 #define ST7920_PHASE_SET_PAGE       32
 #define ST7920_PHASE_SET_ADDR       33
 

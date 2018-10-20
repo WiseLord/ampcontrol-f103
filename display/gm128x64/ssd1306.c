@@ -19,6 +19,8 @@
 #define SSD1306_BUFFERSIZE              (SSD1306_WIDTH * SSD1306_HEIGHT / 8)
 
 static DispDriver drv = {
+    .width = SSD1306_WIDTH,
+    .height = SSD1306_HEIGHT,
     .drawPixel = ssd1306DrawPixel,
     .updateFB = ssd1306UpdateFb,
 };

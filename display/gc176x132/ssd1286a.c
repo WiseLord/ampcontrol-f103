@@ -8,6 +8,8 @@
 #define SSD1286A_PIXELS          (SSD1286A_WIDTH * SSD1286A_HEIGHT)
 
 static DispDriver drv = {
+    .width = SSD1286A_HEIGHT,
+    .height = SSD1286A_WIDTH,
     .drawPixel = ssd1286aDrawPixel,
     .drawRectangle = ssd1286aDrawRectangle,
     .drawImage = ssd1286aDrawImage,

@@ -8,6 +8,8 @@
 #define SPFD5408_PIXELS          (SPFD5408_WIDTH * SPFD5408_HEIGHT)
 
 static DispDriver drv = {
+    .width = SPFD5408_HEIGHT,
+    .height = SPFD5408_WIDTH,
     .drawPixel = spfd5408DrawPixel,
     .drawRectangle = spfd5408DrawRectangle,
     .drawImage = spfd5408DrawImage,

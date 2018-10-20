@@ -8,6 +8,8 @@
 #define ILI9320_PIXELS          (ILI9320_WIDTH * ILI9320_HEIGHT)
 
 static DispDriver drv = {
+    .width = ILI9320_HEIGHT,
+    .height = ILI9320_WIDTH,
     .drawPixel = ili9320DrawPixel,
     .drawRectangle = ili9320DrawRectangle,
     .drawImage = ili9320DrawImage,

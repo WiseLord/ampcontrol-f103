@@ -8,6 +8,8 @@
 #define ST7793_PIXELS          (ST7793_WIDTH * ST7793_HEIGHT)
 
 static DispDriver drv = {
+    .width = ST7793_HEIGHT,
+    .height = ST7793_WIDTH,
     .drawPixel = st7793DrawPixel,
     .drawRectangle = st7793DrawRectangle,
     .drawImage = st7793DrawImage,

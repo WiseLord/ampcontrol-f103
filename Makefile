@@ -74,15 +74,17 @@ else ifeq "$(DISPLAY)" "R61581"
 endif
 C_SOURCES += display/dispdrv.c
 C_SOURCES += display/glcd.c
-C_SOURCES += display/gm128x64/gm128x64.c
-C_SOURCES += display/gc160x128/gc160x128.c
-C_SOURCES += display/gc176x132/gc176x132.c
-C_SOURCES += display/gc220x176/gc220x176.c
-C_SOURCES += display/gc320x240/gc320x240.c
-C_SOURCES += display/gc400x240/gc400x240.c
-C_SOURCES += display/gc480x320/gc480x320.c
 C_DEFS += -D_$(DISPLAY)
 C_DEFS += -D_DISP_$(DISPVAR)
+
+C_SOURCES += canvas/canvas.c
+C_SOURCES += canvas/gm128x64.c
+C_SOURCES += canvas/gc160x128.c
+C_SOURCES += canvas/gc176x132.c
+C_SOURCES += canvas/gc220x176.c
+C_SOURCES += canvas/gc320x240.c
+C_SOURCES += canvas/gc400x240.c
+C_SOURCES += canvas/gc480x320.c
 
 # Audio source files
 ifeq "$(findstring TDA7439, $(APROC_LIST))" "TDA7439"

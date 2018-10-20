@@ -8,6 +8,8 @@
 #define MC2PA8201_PIXELS          (MC2PA8201_WIDTH * MC2PA8201_HEIGHT)
 
 static DispDriver drv = {
+    .width = MC2PA8201_HEIGHT,
+    .height = MC2PA8201_WIDTH,
     .drawPixel = mc2pa8201DrawPixel,
     .drawRectangle = mc2pa8201DrawRectangle,
     .drawImage = mc2pa8201DrawImage,

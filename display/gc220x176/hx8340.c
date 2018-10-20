@@ -8,6 +8,8 @@
 #define HX8340_PIXELS          (HX8340_WIDTH * HX8340_HEIGHT)
 
 static DispDriver drv = {
+    .width = HX8340_HEIGHT,
+    .height = HX8340_WIDTH,
     .drawPixel = hx8340DrawPixel,
     .drawRectangle = hx8340DrawRectangle,
     .drawImage = hx8340DrawImage,

@@ -4,19 +4,12 @@
 
 #define STR_BUFSIZE             20
 
-// Canvas variants
-void gc160x128Init(Glcd *driver);
-void gc176x132Init(Glcd *driver);
-void gc220x176Init(Glcd *driver);
-void gc320x240Init(Glcd *driver);
-void gc400x240Init(Glcd *driver);
-void gc480x320Init(Glcd *driver);
-void gm128x64Init(Glcd *driver);
-
 static char strbuf[STR_BUFSIZE + 1];    // String buffer
 
-uint8_t unRleData[512];           // Storage for uncompressed image
-tImage imgUnRle = {
+static Glcd glcd;
+
+static uint8_t unRleData[512];           // Storage for uncompressed image
+static tImage imgUnRle = {
     .data = unRleData,
     .width = 0,
     .height = 0,
@@ -24,37 +17,18 @@ tImage imgUnRle = {
     .rle = 0
 };
 
-static Glcd glcd;
-
-void glcdInit(Glcd **driver)
+void glcdInit(Glcd **value)
 {
     dispdrvInit(&glcd.drv);
-
 #if defined (_KS0108A) || defined(_KS0108B) || defined (_ST7920) || defined (_SSD1306)
-    gm128x64Init(&glcd);
     glcd.drv->drawImage = glcdDrawImage;
-#elif defined (_ILI9163) || defined (_ST7735)
-    gc160x128Init(&glcd);
-#elif defined (_LS020) || defined (_LPH9157) || defined (_SSD1286A)
-    gc176x132Init(&glcd);
-#elif defined (_HX8340)
-    gc220x176Init(&glcd);
-#elif defined (_ILI9320) || defined (_ILI9341) || defined (_S6D0139) || defined (_SPFD5408) || defined (_MC2PA8201)
-    gc320x240Init(&glcd);
-#elif defined (_ILI9327) || defined (_ST7793)
-    gc400x240Init(&glcd);
-#elif defined (_ILI9481) || defined (_R61581)
-    gc480x320Init(&glcd);
-#else
-#error "Unsupported display driver"
 #endif
-
-    *driver = &glcd;
+    *value = &glcd;
 }
 
-void glcdClear(void)
+void glcdFill(uint16_t color)
 {
-    glcdDrawRect(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
+    glcdDrawRect(0, 0, glcd.drv->width, glcd.drv->height, color);
 }
 
 void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
@@ -99,29 +73,29 @@ void glcdSetFontColor(uint16_t color)
     glcd.font.color = color;
 }
 
+void glcdSetFontBgColor(uint16_t color)
+{
+    glcd.font.bgColor = color;
+}
+
 void glcdSetFontAlign(uint8_t align)
 {
     glcd.font.align = align;
 }
 
-void glcdSetCanvasColor(uint16_t color)
-{
-    glcd.canvas->color = color;
-}
-
 void glcdSetXY(int16_t x, int16_t y)
 {
-    glcd.canvas->x = x;
-    glcd.canvas->y = y;
+    glcd.x = x;
+    glcd.y = y;
 }
 
 void glcdSetX(int16_t x)
 {
-    glcd.canvas->x = x;
+    glcd.x = x;
 }
 void glcdSetY(int16_t y)
 {
-    glcd.canvas->y = y;
+    glcd.y = y;
 }
 
 static int16_t findSymbolPos(int32_t code)
@@ -159,7 +133,7 @@ void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t b
     }
 }
 
-void glcdWriteIcon(uint8_t num, const uint8_t *icons)
+void glcdWriteIcon(uint8_t num, const uint8_t *icons, uint16_t color, uint16_t bgColor)
 {
     tImage img;
     img.data = 0;
@@ -175,7 +149,7 @@ void glcdWriteIcon(uint8_t num, const uint8_t *icons)
     img.data = icons + (img.width * img.height / 8 * num);
 
     if (glcd.drv->drawImage) {
-        glcd.drv->drawImage(&img, glcd.canvas->x, glcd.canvas->y, glcd.font.color, glcd.canvas->color);
+        glcd.drv->drawImage(&img, glcd.x, glcd.y, color, bgColor);
     }
 }
 
@@ -220,10 +194,10 @@ void glcdWriteChar(int32_t code)
     }
 
     if (glcd.drv->drawImage) {
-        glcd.drv->drawImage(img, glcd.canvas->x, glcd.canvas->y, glcd.font.color, glcd.canvas->color);
+        glcd.drv->drawImage(img, glcd.x, glcd.y, glcd.font.color, glcd.font.bgColor);
     }
 
-    glcdSetX(glcd.canvas->x + img->width);
+    glcdSetX(glcd.x + img->width);
 }
 
 static int32_t findSymbolCode(char **string)
@@ -290,9 +264,9 @@ void glcdWriteString(char *string)
         }
 
         if (glcd.font.align == FONT_ALIGN_CENTER) {
-            glcdSetX(glcd.canvas->x - strLength / 2);
+            glcdSetX(glcd.x - strLength / 2);
         } else if (glcd.font.align == FONT_ALIGN_RIGHT) {
-            glcdSetX(glcd.canvas->x - strLength);
+            glcdSetX(glcd.x - strLength);
         }
 
         // Reset align after string finished

@@ -1,5 +1,6 @@
 #include "screen.h"
 
+#include "canvas/canvas.h"
 #include "display/glcd.h"
 #include "tr/labels.h"
 #include "actions.h"
@@ -8,7 +9,7 @@
 #include "spectrum.h"
 #include "timers.h"
 
-static Glcd *glcd;
+static Canvas *canvas;
 
 static Screen screen = SCREEN_STANDBY;
 static Screen screenDefault = SCREEN_SPECTRUM;
@@ -114,7 +115,7 @@ static void screenCheckChange(void)
         }
     }
 
-// Save current screen as previous
+    // Save current screen and screen parameter
     scrPrev = screen;
     scrParPrev = scrPar;
 
@@ -145,7 +146,11 @@ void screenInit(void)
 {
     labelsInit();
 
+    Glcd *glcd;
+
     glcdInit(&glcd);
+    canvasInit(&canvas);
+    canvas->glcd = glcd;
 
     screenClear();
 
@@ -156,7 +161,9 @@ void screenInit(void)
 
 void screenClear(void)
 {
-    glcdClear();
+    glcdFill(canvas->color);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetFontBgColor(canvas->color);
 }
 
 void screenUpdate(void)
@@ -286,16 +293,16 @@ void screenShowTime(void)
 
     rtcGetTime(&rtc);
 
-    if (glcd->canvas->showTime) {
-        glcd->canvas->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
+    if (canvas->showTime) {
+        canvas->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
     }
 }
 
 void screenShowSpectrum(void)
 {
     if (spReady) {
-        if (glcd->canvas->showSpectrum) {
-            glcd->canvas->showSpectrum(spData);
+        if (canvas->showSpectrum) {
+            canvas->showSpectrum(spData);
         }
     }
     spReady = 0;
@@ -313,8 +320,8 @@ void screenShowBrightness(void)
     dp.step = 1 * 8;
     dp.icon = ICON24_BRIGHTNESS;
 
-    if (glcd->canvas->showParam) {
-        glcd->canvas->showParam(&dp);
+    if (canvas->showParam) {
+        canvas->showParam(&dp);
     }
 }
 
@@ -346,8 +353,8 @@ void screenShowAudioParam(void)
     dp.max = aProc->item[aPar].grid->max;
     dp.step = aProc->item[aPar].grid->step;
 
-    if (glcd->canvas->showParam) {
-        glcd->canvas->showParam(&dp);
+    if (canvas->showParam) {
+        canvas->showParam(&dp);
     }
 }
 
@@ -361,8 +368,8 @@ void screenShowTuner(void)
         swTimSetTunerPoll(100);
     }
 
-    if (glcd->canvas->showTuner) {
-        glcd->canvas->showTuner(&dt);
+    if (canvas->showTuner) {
+        canvas->showTuner(&dt);
     }
 }
 

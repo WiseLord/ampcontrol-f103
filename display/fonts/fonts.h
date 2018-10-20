@@ -65,6 +65,7 @@ typedef enum {
 typedef struct {
     const tFont *tfont;
     uint16_t color;
+    uint16_t bgColor;
 
     uint8_t align;
 } Font;

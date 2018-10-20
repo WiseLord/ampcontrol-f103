@@ -8,6 +8,8 @@
 #define LS020_PIXELS          (LS020_WIDTH * LS020_HEIGHT)
 
 static DispDriver drv = {
+    .width = LS020_HEIGHT,
+    .height = LS020_WIDTH,
     .drawPixel = ls020DrawPixel,
     .drawRectangle = ls020DrawRectangle,
     .drawImage = ls020DrawImage,

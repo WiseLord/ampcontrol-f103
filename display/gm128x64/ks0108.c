@@ -5,6 +5,8 @@
 #include "../../functions.h"
 
 static DispDriver drv = {
+    .width = KS0108_COLS,
+    .height = KS0108_ROWS * 8,
     .drawPixel = ks0108DrawPixel,
 };
 

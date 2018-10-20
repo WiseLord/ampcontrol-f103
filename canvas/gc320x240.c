@@ -1,6 +1,16 @@
-#include "../glcd.h"
+#include "canvas.h"
 
-static Glcd *glcd;
+static void showTime(RTC_type *rtc, char *wday);
+static void showParam(DispParam *dp);
+static void showSpectrum(SpectrumData *spData);
+static void showTuner(DispTuner *dt);
+
+static Canvas canvas = {
+    .showTime = showTime,
+    .showParam = showParam,
+    .showSpectrum = showSpectrum,
+    .showTuner = showTuner,
+};
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
@@ -35,24 +45,27 @@ static void drawShowBar(int16_t value, int16_t min, int16_t max)
 
         if (min + max) { // Non-symmetric scale
             if (i >= value) {
-                color = glcd->canvas->color;
+                color = canvas.color;
             }
         } else { // Symmetric scale
             if ((value > 0 && i >= value + (sc / 2)) ||
                 (value >= 0 && i < (sc / 2 - 1)) ||
                 (value < 0 && i < value + (sc / 2)) ||
                 (value <= 0 && i > (sc / 2))) {
-                color = glcd->canvas->color;
+                color = canvas.color;
             }
         }
 
-        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 84, sw, 14, color);
-        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 98, sw, 2, LCD_COLOR_WHITE);
-        glcdDrawRect(i * (glcd->canvas->width / sc) + 1, 100, sw, 14, color);
+        uint16_t width = canvas.glcd->drv->width;
+
+        glcdDrawRect(i * (width / sc) + 1, 84, sw, 14, color);
+        glcdDrawRect(i * (width / sc) + 1, 98, sw, 2, LCD_COLOR_WHITE);
+        glcdDrawRect(i * (width / sc) + 1, 100, sw, 14, color);
     }
 }
 
-static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint8_t value, uint8_t max, uint8_t peak)
+static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint8_t value, uint8_t max,
+                      uint8_t peak)
 {
     if (value > max)
         value = max;
@@ -100,7 +113,7 @@ static void showTime(RTC_type *rtc, char *wday)
     static char *wdayOld = 0;
     if (wday != wdayOld) {
         // Clear the area with weekday label
-        glcdDrawRect(0, 170, glcd->canvas->width, 64, glcd->canvas->color);
+        glcdDrawRect(0, 170, canvas.glcd->drv->width, 64, canvas.color);
     }
 
     glcdSetFontAlign(FONT_ALIGN_CENTER);
@@ -119,7 +132,7 @@ static void showParam(DispParam *dp)
 
     drawShowBar(dp->value, dp->min, dp->max);
 
-    glcdSetXY(glcd->canvas->width, 176);
+    glcdSetXY(canvas.glcd->drv->width, 176);
     glcdSetFontAlign(FONT_ALIGN_RIGHT);
     glcdSetFont(&fontterminusdig64);
     glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
@@ -132,7 +145,7 @@ static void showSpectrum(SpectrumData *spData)
 
     buf = spData[SP_CHAN_LEFT].show;
     peak = spData[SP_CHAN_LEFT].peak;
-    for (uint16_t x = 0; x < (glcd->canvas->width + 1) / 3; x++) {
+    for (uint16_t x = 0; x < (canvas.glcd->drv->width + 1) / 3; x++) {
         uint16_t xbase = x * 3;
         uint16_t ybase = 120;
         uint16_t width = 2;
@@ -145,7 +158,7 @@ static void showSpectrum(SpectrumData *spData)
 
     buf = spData[SP_CHAN_RIGHT].show;
     peak = spData[SP_CHAN_RIGHT].peak;
-    for (uint16_t x = 0; x < (glcd->canvas->width + 1) / 3; x++) {
+    for (uint16_t x = 0; x < (canvas.glcd->drv->width + 1) / 3; x++) {
         uint16_t xbase = x * 3;
         uint16_t ybase = 240;
         uint16_t width = 2;
@@ -180,18 +193,7 @@ static void showTuner(DispTuner *dt)
     glcdSetXY(2, 120);
 }
 
-GlcdCanvas gc320x240 = {
-    .width = 320,
-    .height = 240,
-
-    .showTime = showTime,
-    .showParam = showParam,
-    .showSpectrum = showSpectrum,
-    .showTuner = showTuner,
-};
-
-void gc320x240Init(Glcd *driver)
+void gc320x240Init(Canvas **value)
 {
-    glcd = driver;
-    glcd->canvas = &gc320x240;
+    *value = &canvas;
 }

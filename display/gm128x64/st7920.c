@@ -4,11 +4,16 @@
 #include "../../pins.h"
 #include "../../functions.h"
 
+#define ST7920_WIDTH                128
+#define ST7920_HEIGHT               64
+
 static DispDriver drv = {
+    .width = ST7920_WIDTH,
+    .height = ST7920_HEIGHT,
     .drawPixel = st7920DrawPixel,
 };
 
-static uint8_t fb[ST7920_SIZE_X / 4][ST7920_SIZE_Y / 2];
+static uint8_t fb[ST7920_WIDTH / 4][ST7920_HEIGHT / 2];
 
 static inline void st7920SetPort(uint8_t data) __attribute__((always_inline));
 static void st7920SetPort(uint8_t data)
@@ -110,8 +115,8 @@ void st7920Clear()
 {
     uint8_t i, j;
 
-    for (i = 0; i < ST7920_SIZE_X / 4; i++) {
-        for (j = 0; j < ST7920_SIZE_Y / 2; j++) {
+    for (i = 0; i < ST7920_WIDTH / 4; i++) {
+        for (j = 0; j < ST7920_HEIGHT / 2; j++) {
             fb[i][j] = 0x00;
         }
     }
@@ -121,9 +126,9 @@ void st7920DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
     uint8_t bit;
 
-    if (x >= ST7920_SIZE_X)
+    if (x >= ST7920_WIDTH)
         return;
-    if (y >= ST7920_SIZE_Y)
+    if (y >= ST7920_HEIGHT)
         return;
 
     bit = 0x80 >> (x & 0x07);
