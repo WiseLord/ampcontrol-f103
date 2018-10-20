@@ -1,14 +1,13 @@
 #include "lph9157.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define LPH9157_WIDTH           132
 #define LPH9157_HEIGHT          176
 #define LPH9157_PIXELS          (LPH9157_WIDTH * LPH9157_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = lph9157DrawPixel,
     .drawRectangle = lph9157DrawRectangle,
     .drawImage = lph9157DrawImage,
@@ -28,16 +27,16 @@ static inline void lph9157SendCmd(uint8_t cmd)
 
 static void lph9157InitSeq(void)
 {
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_SPI_CS);
 
     lph9157SendCmd(0x01);
     lph9157SendCmd(0x11);
-    _delay_ms(20);
+    LL_mDelay(20);
     lph9157SendCmd(0x3a);
     dispdrvSendData8(0x05);
-    _delay_ms(20);
+    LL_mDelay(20);
     lph9157SendCmd(0x36);
     dispdrvSendData8(0x40);
     lph9157SendCmd(0x29);
@@ -59,10 +58,9 @@ void lph9157SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     lph9157SendCmd(0x2C);
 }
 
-void lph9157Init(GlcdDriver **driver)
+void lph9157Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc176x132Init(*driver);
+    *driver = &drv;
 
     SET(DISP_SPI_RST);
 
@@ -115,7 +113,7 @@ void lph9157DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     SET(DISP_SPI_CS);
 }
 
-void lph9157DrawImage(tImage *img, int16_t x, int16_t y)
+void lph9157DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -123,7 +121,7 @@ void lph9157DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_SPI_CS);
 
     lph9157SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     dispdrvWaitOperation();
     SET(DISP_SPI_CS);

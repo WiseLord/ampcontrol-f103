@@ -1,14 +1,13 @@
 #include "ls020.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define LS020_WIDTH           132
 #define LS020_HEIGHT          176
 #define LS020_PIXELS          (LS020_WIDTH * LS020_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = ls020DrawPixel,
     .drawRectangle = ls020DrawRectangle,
     .drawImage = ls020DrawImage,
@@ -16,13 +15,13 @@ static GlcdDriver glcd = {
 
 static void ls020InitSeq(void)
 {
-    _delay_ms(50);
+    LL_mDelay(50);
     SET(DISP_SPI_DC);
     CLR(DISP_SPI_CS);
 
     dispdrvSendData16(0xFDFD);
     dispdrvSendData16(0xFDFD);
-    _delay_ms(50);
+    LL_mDelay(50);
     dispdrvSendData16(0xEF00);
     dispdrvSendData16(0xEE04);
     dispdrvSendData16(0x1B04);
@@ -33,7 +32,7 @@ static void ls020InitSeq(void)
     dispdrvSendData16(0x7F3F);
     dispdrvSendData16(0xEE04);
     dispdrvSendData16(0x4306);
-    _delay_ms(50);
+    LL_mDelay(50);
     dispdrvSendData16(0xEF90);
     dispdrvSendData16(0x0983);
     dispdrvSendData16(0x0800);
@@ -54,7 +53,7 @@ static void ls020InitSeq(void)
     dispdrvSendData16(0xE202);
     dispdrvSendData16(0xE276);
     dispdrvSendData16(0xE183);
-    _delay_ms(50);
+    LL_mDelay(50);
     dispdrvSendData16(0x8001);
     dispdrvSendData16(0xEF90);
     dispdrvSendData16(0x0020);
@@ -80,13 +79,12 @@ void ls020SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     SET(DISP_SPI_CS);
 }
 
-void ls020Init(GlcdDriver **driver)
+void ls020Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc176x132Init(*driver);
+    *driver = &drv;
 
     CLR(DISP_SPI_RST);
-    _delay_ms(100);
+    LL_mDelay(100);
     SET(DISP_SPI_RST);
 
     // Init magic
@@ -159,7 +157,7 @@ void ls020DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t
     SET(DISP_SPI_CS);
 }
 
-void ls020DrawImage(tImage *img, int16_t x, int16_t y)
+void ls020DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -169,7 +167,7 @@ void ls020DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_SPI_DC);
     CLR(DISP_SPI_CS);
 
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     dispdrvWaitOperation();
     SET(DISP_SPI_CS);

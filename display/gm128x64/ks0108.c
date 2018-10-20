@@ -1,15 +1,14 @@
 #include "ks0108.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
 #include "../../functions.h"
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = ks0108DrawPixel,
-    .drawImage = glcdDrawImage,
 };
 
-#if defined(_DISP_8BIT_B)                                // CS active level is 0 (WG12864B)
+#if defined(_KS0108B)                               // CS active level is 0 (WG12864B)
 #define KS0108_SET_CS1()    CLR(KS0108_CS1); SET(KS0108_CS2)
 #define KS0108_SET_CS2()    SET(KS0108_CS1); CLR(KS0108_CS2)
 #define KS0108_SET_CS()     CLR(KS0108_CS2); CLR(KS0108_CS1)
@@ -63,7 +62,7 @@ void ks0108IRQ(void)
     static uint8_t phase = KS0108_PHASE_SET_PAGE;
     static uint8_t cs;
 
-    glcd.bus = ks0108ReadPin();                     // Read pins
+    drv.bus = ks0108ReadPin();                     // Read pins
     ks0108SetDdrOut();                              // Set data lines as outputs
 
     if (phase == KS0108_PHASE_SET_PAGE) {           // Phase 1 (Y)
@@ -102,10 +101,9 @@ void ks0108IRQ(void)
     }
 }
 
-void ks0108Init(GlcdDriver **driver)
+void ks0108Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gm128x64Init(*driver);
+    *driver = &drv;
 
     CLR(KS0108_RW);
     CLR(KS0108_DI);
@@ -121,7 +119,7 @@ void ks0108Init(GlcdDriver **driver)
     KS0108_SET_CS();
     ks0108WriteCmd(KS0108_DISPLAY_START_LINE);
     ks0108WriteCmd(KS0108_DISPLAY_ON);
-    _delay_ms(10);
+    LL_mDelay(10);
 
     SET(KS0108_DI);                             // Go to data mode
 }

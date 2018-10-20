@@ -33,7 +33,9 @@ ICONS_SRC = $(wildcard display/icon*.c)
 C_SOURCES += $(FONTS_SRC)
 C_SOURCES += $(ICONS_SRC)
 
-ifeq "$(DISPLAY)" "KS0108"
+ifeq "$(DISPLAY)" "KS0108A"
+  C_SOURCES += display/gm128x64/ks0108.c
+else ifeq "$(DISPLAY)" "KS0108B"
   C_SOURCES += display/gm128x64/ks0108.c
 else ifeq "$(DISPLAY)" "ST7920"
   C_SOURCES += display/gm128x64/st7920.c

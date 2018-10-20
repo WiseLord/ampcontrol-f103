@@ -1,14 +1,13 @@
 #include "hx8340.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define HX8340_WIDTH           176
 #define HX8340_HEIGHT          220
 #define HX8340_PIXELS          (HX8340_WIDTH * HX8340_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = hx8340DrawPixel,
     .drawRectangle = hx8340DrawRectangle,
     .drawImage = hx8340DrawImage,
@@ -31,7 +30,7 @@ static void hx8340WriteReg(uint8_t reg, uint8_t dataR)
 static inline void hx8340InitSeq(void)
 {
     // Wait for reset
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_8BIT_CS);
 
@@ -77,13 +76,13 @@ static inline void hx8340InitSeq(void)
     hx8340WriteReg(0x01, 0x00); //SLP='0', out sleep
     hx8340WriteReg(0x1C, 0x03); //AP=011
     hx8340WriteReg(0x19, 0x06); // VOMG=1,PON=1, DK=0,
-    _delay_ms(5);
+    LL_mDelay(5);
 
     //Display ON Setting
     hx8340WriteReg(0x26, 0x84); //PT=10,GON=0, DTE=0, D=0100
-    _delay_ms(40);
+    LL_mDelay(40);
     hx8340WriteReg(0x26, 0xB8); //PT=10,GON=1, DTE=1, D=1000
-    _delay_ms(40);
+    LL_mDelay(40);
     hx8340WriteReg(0x26, 0xBC); //PT=10,GON=1, DTE=1, D=1100
 
     //Set GRAM Area
@@ -116,10 +115,9 @@ static inline void hx8340SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t 
     hx8340SelectReg(0x22);
 }
 
-void hx8340Init(GlcdDriver **driver)
+void hx8340Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc220x176Init(*driver);
+    *driver = &drv;
 
     SET(DISP_8BIT_LED);
     SET(DISP_8BIT_RD);
@@ -128,7 +126,7 @@ void hx8340Init(GlcdDriver **driver)
     SET(DISP_8BIT_CS);
 
     CLR(DISP_8BIT_RST);
-    _delay_ms(1);
+    LL_mDelay(1);
     SET(DISP_8BIT_RST);
 
     hx8340InitSeq();
@@ -139,13 +137,13 @@ void hx8340Sleep(void)
     CLR(DISP_8BIT_CS);
 
     hx8340WriteReg(0x26, 0xB8); //GON=’1’ DTE=’1’ D[1:0]=’10’
-    _delay_ms(40);
+    LL_mDelay(40);
     hx8340WriteReg(0x19, 0x01); //VCOMG=’0’, PON=’0’, DK=’1’
-    _delay_ms(40);
+    LL_mDelay(40);
     hx8340WriteReg(0x26, 0xA4); //GON=’1’ DTE=’0’ D[1:0]=’01’
-    _delay_ms(40);
+    LL_mDelay(40);
     hx8340WriteReg(0x26, 0x84); //GON=’0’ DTE=’0’ D[1:0]=’01’
-    _delay_ms(40);
+    LL_mDelay(40);
     hx8340WriteReg(0x1C, 0x00); //AP[2:0]=’000’
     hx8340WriteReg(0x01, 0x02); //SLP=’1’
     hx8340WriteReg(0x01, 0x00); //OSC_EN=’0’
@@ -162,11 +160,11 @@ void hx8340Wakeup(void)
     hx8340WriteReg(0x01, 0x00); //SLP='0', out sleep
     hx8340WriteReg(0x1C, 0x03); //AP=011
     hx8340WriteReg(0x19, 0x06); // VOMG=1,PON=1, DK=0,
-    _delay_ms(5);
+    LL_mDelay(5);
     hx8340WriteReg(0x26, 0x84); //PT=10,GON=0, DTE=0, D=0100
-    _delay_ms(40);
+    LL_mDelay(40);
     hx8340WriteReg(0x26, 0xB8); //PT=10,GON=1, DTE=1, D=1000
-    _delay_ms(40);
+    LL_mDelay(40);
     hx8340WriteReg(0x26, 0xBC); //PT=10,GON=1, DTE=1, D=1100
 
     SET(DISP_8BIT_CS);
@@ -192,7 +190,7 @@ void hx8340DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
     SET(DISP_8BIT_CS);
 }
 
-void hx8340DrawImage(tImage *img, int16_t x, int16_t y)
+void hx8340DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -200,7 +198,7 @@ void hx8340DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_8BIT_CS);
 
     hx8340SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     SET(DISP_8BIT_CS);
 }

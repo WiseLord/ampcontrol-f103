@@ -1,15 +1,13 @@
 #include "r61581.h"
 
-#include "../dispdrv.h"
-
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define R61581_WIDTH            320
 #define R61581_HEIGHT           480
 #define R61581_PIXELS           (R61581_WIDTH * R61581_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = r61581DrawPixel,
     .drawRectangle = r61581DrawRectangle,
     .drawImage = r61581DrawImage,
@@ -26,7 +24,7 @@ static inline void r61581SelectReg(uint8_t reg)
 static inline void r61581InitSeq(void)
 {
     // Wait for reset
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_8BIT_CS);
 
@@ -36,7 +34,7 @@ static inline void r61581InitSeq(void)
     dispdrvSendData8(0x00); // Enable all
 
     r61581SelectReg(0x28);  // Set display off
-    _delay_ms(30);
+    LL_mDelay(30);
 
     r61581SelectReg(0xB3);  // Frame memory access and interface setting
     dispdrvSendData8(0x02); // WEMODE=1
@@ -109,10 +107,10 @@ static inline void r61581InitSeq(void)
     dispdrvSendData8(0x04);
 
     r61581SelectReg(0x11);  // Exit sleep mode
-    _delay_ms(150);
+    LL_mDelay(150);
 
     r61581SelectReg(0x29);  // Set display on
-    _delay_ms(30);
+    LL_mDelay(30);
 
     SET(DISP_8BIT_CS);
 }
@@ -132,10 +130,9 @@ static inline void r61581SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t 
     r61581SelectReg(0x2C);
 }
 
-void r61581Init(GlcdDriver **driver)
+void r61581Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc480x320Init(*driver);
+    *driver = &drv;
 
     SET(DISP_8BIT_LED);
     SET(DISP_8BIT_RD);
@@ -144,7 +141,7 @@ void r61581Init(GlcdDriver **driver)
     SET(DISP_8BIT_CS);
 
     CLR(DISP_8BIT_RST);
-    _delay_ms(1);
+    LL_mDelay(1);
     SET(DISP_8BIT_RST);
 
     r61581InitSeq();
@@ -155,7 +152,7 @@ void r61581Sleep(void)
     CLR(DISP_8BIT_CS);
 
     r61581SelectReg(0x28);    // Display OFF
-    _delay_ms(100);
+    LL_mDelay(100);
     r61581SelectReg(0x10);
 
     SET(DISP_8BIT_CS);
@@ -166,7 +163,7 @@ void r61581Wakeup(void)
     CLR(DISP_8BIT_CS);
 
     r61581SelectReg(0x11);    // Display ON
-    _delay_ms(100);
+    LL_mDelay(100);
     r61581SelectReg(0x29);
 
     SET(DISP_8BIT_CS);
@@ -192,7 +189,7 @@ void r61581DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
     SET(DISP_8BIT_CS);
 }
 
-void r61581DrawImage(tImage *img, int16_t x, int16_t y)
+void r61581DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -200,7 +197,7 @@ void r61581DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_8BIT_CS);
 
     r61581SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     SET(DISP_8BIT_CS);
 }

@@ -1,15 +1,14 @@
-﻿#include "ili9341.h"
+#include "ili9341.h"
 #include "ili9341_regs.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define ILI9341_WIDTH           240
 #define ILI9341_HEIGHT          320
 #define ILI9341_PIXELS          (ILI9341_WIDTH * ILI9341_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = ili9341DrawPixel,
     .drawRectangle = ili9341DrawRectangle,
     .drawImage = ili9341DrawImage,
@@ -29,12 +28,12 @@ static inline void ili9341SendCmd(uint8_t cmd)
 
 static void ili9341InitSeq(void)
 {
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_SPI_CS);
 
     ili9341SendCmd(ILI9341_SWRESET);
-    _delay_ms(10);
+    LL_mDelay(10);
     ili9341SendCmd(ILI9341_DISPOFF);
 
     ili9341SendCmd(ILI9341_PWCTRLB);
@@ -159,13 +158,12 @@ void ili9341SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     ili9341SendCmd(ILI9341_RAMWR);
 }
 
-void ili9341Init(GlcdDriver **driver)
+void ili9341Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc320x240Init(*driver);
+    *driver = &drv;
 
     CLR(DISP_SPI_RST);
-    _delay_ms(100);
+    LL_mDelay(100);
     SET(DISP_SPI_RST);
 
     // Init magic
@@ -215,7 +213,7 @@ void ili9341DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     SET(DISP_SPI_CS);
 }
 
-void ili9341DrawImage(tImage *img, int16_t x, int16_t y)
+void ili9341DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -223,7 +221,7 @@ void ili9341DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_SPI_CS);
 
     ili9341SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     dispdrvWaitOperation();
     SET(DISP_SPI_CS);

@@ -1,14 +1,13 @@
 #include "spfd5408.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define SPFD5408_WIDTH           240
 #define SPFD5408_HEIGHT          320
 #define SPFD5408_PIXELS          (SPFD5408_WIDTH * SPFD5408_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = spfd5408DrawPixel,
     .drawRectangle = spfd5408DrawRectangle,
     .drawImage = spfd5408DrawImage,
@@ -31,7 +30,7 @@ static void spfd5408WriteReg(uint16_t reg, uint16_t data)
 static inline void spfd5408InitSeq(void)
 {
     // Wait for reset
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_8BIT_CS);
     // Initial Sequence
@@ -50,15 +49,15 @@ static inline void spfd5408InitSeq(void)
 
     // Power On Sequence
     spfd5408WriteReg(0x0010, 0x14B0);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0011, 0x0007);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0017, 0x0001);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0012, 0x01B8);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0013, 0x1300);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0029, 0x000F);
 
     // Adjust the Gamma Curve
@@ -117,7 +116,7 @@ static inline void spfd5408InitSeq(void)
     spfd5408WriteReg(0x00F0, 0x0000);
 
     spfd5408WriteReg(0x0007, 0x0173);   // 262K color and display ON
-    _delay_ms(150);
+    LL_mDelay(150);
 
 
     SET(DISP_8BIT_CS);
@@ -139,10 +138,9 @@ static inline void spfd5408SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_
     spfd5408SelectReg(0x0022);
 }
 
-void spfd5408Init(GlcdDriver **driver)
+void spfd5408Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc320x240Init(*driver);
+    *driver = &drv;
 
     SET(DISP_8BIT_LED);
     SET(DISP_8BIT_RD);
@@ -151,7 +149,7 @@ void spfd5408Init(GlcdDriver **driver)
     SET(DISP_8BIT_CS);
 
     CLR(DISP_8BIT_RST);
-    _delay_ms(1);
+    LL_mDelay(1);
     SET(DISP_8BIT_RST);
 
     spfd5408InitSeq();
@@ -164,15 +162,15 @@ void spfd5408Sleep(void)
     spfd5408WriteReg(0x0007, 0x0000);   // Display OFF
     // Power Off Sequence
     spfd5408WriteReg(0x0010, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0011, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0017, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0012, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0013, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0010, 0x0002);   // SAP, BT[3:0], AP, DSTB, SLP, STB
 
     SET(DISP_8BIT_CS);
@@ -184,25 +182,25 @@ void spfd5408Wakeup(void)
 
     // Power On Sequence
     spfd5408WriteReg(0x0010, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0011, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0017, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0012, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0013, 0x0000);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0010, 0x14B0);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0011, 0x0007);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0017, 0x0001);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0012, 0x01B8);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0013, 0x1300);
-    _delay_ms(20);
+    LL_mDelay(20);
     spfd5408WriteReg(0x0029, 0x000F);
 
     spfd5408WriteReg(0x0007, 0x0173);   // 262K color and display ON
@@ -230,7 +228,7 @@ void spfd5408DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
     SET(DISP_8BIT_CS);
 }
 
-void spfd5408DrawImage(tImage *img, int16_t x, int16_t y)
+void spfd5408DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -238,7 +236,7 @@ void spfd5408DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_8BIT_CS);
 
     spfd5408SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     SET(DISP_8BIT_CS);
 }

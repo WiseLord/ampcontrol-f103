@@ -1,6 +1,6 @@
 #include "screen.h"
 
-#include "display/dispdrv.h"
+#include "display/glcd.h"
 #include "tr/labels.h"
 #include "actions.h"
 #include "eemul.h"
@@ -8,7 +8,8 @@
 #include "spectrum.h"
 #include "timers.h"
 
-static GlcdDriver *glcd;
+static Glcd *glcd;
+
 static Screen screen = SCREEN_STANDBY;
 static Screen screenDefault = SCREEN_SPECTRUM;
 static ScreenParam scrPar;
@@ -127,10 +128,10 @@ void screenReadSettings(void)
     uint16_t eeData;
 
     eeData = eeRead(EE_BRIGHTNESS_STBY);
-    brStby = (eeData > GLCD_MAX_BRIGHTNESS ? 2 : (int8_t)(eeData));
+    brStby = (eeData > LCD_BR_MAX ? 2 : (int8_t)(eeData));
 
     eeData = eeRead(EE_BRIGHTNESS_WORK);
-    brWork = (eeData > GLCD_MAX_BRIGHTNESS ? GLCD_MAX_BRIGHTNESS : (int8_t)(eeData));
+    brWork = (eeData > LCD_BR_MAX ? LCD_BR_MAX : (int8_t)(eeData));
 }
 
 void screenSaveSettings(void)
@@ -144,7 +145,8 @@ void screenInit(void)
 {
     labelsInit();
 
-    dispdrvInit(&glcd);
+    glcdInit(&glcd);
+
     screenClear();
 
     screenReadSettings();
@@ -220,10 +222,10 @@ void screenChangeBrighness(uint8_t mode, int8_t diff)
 
     br += diff;
 
-    if (br > GLCD_MAX_BRIGHTNESS)
-        br = GLCD_MAX_BRIGHTNESS;
-    if (br < GLCD_MIN_BRIGHTNESS)
-        br = GLCD_MIN_BRIGHTNESS;
+    if (br > LCD_BR_MAX)
+        br = LCD_BR_MAX;
+    if (br < LCD_BR_MIN)
+        br = LCD_BR_MIN;
 
     screenSetBrightness(mode, br);
 }
@@ -306,8 +308,8 @@ void screenShowBrightness(void)
 
     dp.label = txtLabels[LABEL_BRIGNTNESS];
     dp.value = screenGetBrightness(ACTION_BR_WORK);
-    dp.min = GLCD_MIN_BRIGHTNESS;
-    dp.max = GLCD_MAX_BRIGHTNESS;
+    dp.min = LCD_BR_MIN;
+    dp.max = LCD_BR_MAX;
     dp.step = 1 * 8;
     dp.icon = ICON24_BRIGHTNESS;
 

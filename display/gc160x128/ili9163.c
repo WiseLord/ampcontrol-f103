@@ -1,14 +1,13 @@
 #include "ili9163.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define ILI9163_WIDTH           128
 #define ILI9163_HEIGHT          160
 #define ILI9163_PIXELS          (ILI9163_WIDTH * ILI9163_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = ili9163DrawPixel,
     .drawRectangle = ili9163DrawRectangle,
     .drawImage = ili9163DrawImage,
@@ -25,14 +24,14 @@ static inline void ili9163SelectReg(uint8_t reg)
 static inline void ili9163InitSeq(void)
 {
     // Wait for reset
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_8BIT_CS);
 
     // Initial Sequence
     //************* Start Initial Sequence **********//
     ili9163SelectReg(0x11); //Exit Sleep
-    _delay_ms(20);
+    LL_mDelay(20);
 
     ili9163SelectReg(0x26); //Set Default Gamma
     dispdrvSendData8(0x04);
@@ -133,10 +132,9 @@ static inline void ili9163SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t
     ili9163SelectReg(0x2C);
 }
 
-void ili9163Init(GlcdDriver **driver)
+void ili9163Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc160x128Init(*driver);
+    *driver = &drv;
 
     SET(DISP_8BIT_LED);
     SET(DISP_8BIT_RD);
@@ -145,7 +143,7 @@ void ili9163Init(GlcdDriver **driver)
     SET(DISP_8BIT_CS);
 
     CLR(DISP_8BIT_RST);
-    _delay_ms(1);
+    LL_mDelay(1);
     SET(DISP_8BIT_RST);
 
     ili9163InitSeq();
@@ -156,7 +154,7 @@ void ili9163Sleep(void)
     CLR(DISP_8BIT_CS);
 
     ili9163SelectReg(0x28);    // Display OFF
-    _delay_ms(100);
+    LL_mDelay(100);
     ili9163SelectReg(0x10);
 
     SET(DISP_8BIT_CS);
@@ -167,7 +165,7 @@ void ili9163Wakeup(void)
     CLR(DISP_8BIT_CS);
 
     ili9163SelectReg(0x11);    // Display OFF
-    _delay_ms(100);
+    LL_mDelay(100);
     ili9163SelectReg(0x29);
 
     SET(DISP_8BIT_CS);
@@ -193,7 +191,7 @@ void ili9163DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     SET(DISP_8BIT_CS);
 }
 
-void ili9163DrawImage(tImage *img, int16_t x, int16_t y)
+void ili9163DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -201,7 +199,7 @@ void ili9163DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_8BIT_CS);
 
     ili9163SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     SET(DISP_8BIT_CS);
 }

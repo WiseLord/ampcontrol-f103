@@ -2,8 +2,7 @@
 #define ST7920_H
 
 #include <inttypes.h>
-
-#include "../glcd.h"
+#include "../dispdrv.h"
 
 // Basic instructions
 #define ST7920_CLEAR                0x01
@@ -55,7 +54,7 @@
 #define ST7920_PHASE_SET_PAGE       32
 #define ST7920_PHASE_SET_ADDR       33
 
-void st7920Init(GlcdDriver **driver);
+void st7920Init(DispDriver **driver);
 void st7920Clear();
 void st7920IRQ();
 

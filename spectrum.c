@@ -108,7 +108,7 @@ static void spInitADC(void)
     if (LL_ADC_IsEnabled(ADC1) == 0) {
         LL_ADC_Enable(ADC1);
 
-        _delay_us(1);
+        while (!LL_ADC_IsEnabled(ADC1));
 
         // Run ADC self calibration
         LL_ADC_StartCalibration(ADC1);

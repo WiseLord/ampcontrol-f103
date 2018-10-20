@@ -2,8 +2,7 @@
 #define SSD1306_H
 
 #include <inttypes.h>
-
-#include "../glcd.h"
+#include "../dispdrv.h"
 
 #define SSD1306_I2C_ADDR_0              0x78
 #define SSD1306_I2C_ADDR_1              0x7A
@@ -17,7 +16,7 @@
 #define SSD1306_MIN_BRIGHTNESS          0
 #define SSD1306_MAX_BRIGHTNESS          32
 
-void ssd1306Init(GlcdDriver **driver);
+void ssd1306Init(DispDriver **driver);
 void ssd1306Clear();
 
 void ssd1306DrawPixel(int16_t x, int16_t y, uint16_t color);

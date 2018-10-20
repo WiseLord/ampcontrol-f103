@@ -1,6 +1,6 @@
-#include "../dispdrv.h"
+#include "../glcd.h"
 
-static GlcdDriver *glcd;
+static Glcd *glcd;
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
@@ -57,8 +57,8 @@ static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t va
     if (value > max)
         value = max;
 
-    glcd->drawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
-    glcd->drawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
+    glcd->drv->drawRectangle(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
+    glcd->drv->drawRectangle(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
 }
 
 static void showTime(RTC_type *rtc, char *wday)
@@ -157,9 +157,8 @@ GlcdCanvas gc160x128 = {
     .showSpectrum = showSpectrum,
 };
 
-void gc160x128Init(GlcdDriver *driver)
+void gc160x128Init(Glcd *driver)
 {
     glcd = driver;
     glcd->canvas = &gc160x128;
-    glcdInit(glcd);
 }

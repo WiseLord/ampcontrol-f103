@@ -1,12 +1,11 @@
 #include "st7920.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
 #include "../../functions.h"
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = st7920DrawPixel,
-    .drawImage = glcdDrawImage,
 };
 
 static uint8_t fb[ST7920_SIZE_X / 4][ST7920_SIZE_Y / 2];
@@ -52,7 +51,7 @@ void st7920IRQ(void)
     static uint8_t page = 0;
     static uint8_t phase = ST7920_PHASE_SET_PAGE;
 
-    glcd.bus = st7920ReadPin();                         // Read pins
+    drv.bus = st7920ReadPin();                         // Read pins
     st7920SetDdrOut();                                  // Set data lines as outputs
 
     if (phase == ST7920_PHASE_SET_PAGE) {               // Phase 1 (Y)
@@ -80,10 +79,9 @@ void st7920IRQ(void)
     }
 }
 
-void st7920Init(GlcdDriver **driver)
+void st7920Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gm128x64Init(*driver);
+    *driver = &drv;
 
     CLR(ST7920_RW);
     CLR(ST7920_RS);
@@ -96,7 +94,7 @@ void st7920Init(GlcdDriver **driver)
     CLR(ST7920_RST);
     _delay_us(1);
     SET(ST7920_RST);
-    _delay_ms(50);
+    LL_mDelay(50);
 
     // Init display in graphics mode
     st7920WriteCmd(ST7920_FUNCTION | ST7920_8BIT);

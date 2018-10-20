@@ -1,14 +1,13 @@
 #include "st7793.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define ST7793_WIDTH           240
 #define ST7793_HEIGHT          400
 #define ST7793_PIXELS          (ST7793_WIDTH * ST7793_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = st7793DrawPixel,
     .drawRectangle = st7793DrawRectangle,
     .drawImage = st7793DrawImage,
@@ -31,7 +30,7 @@ static void st7793WriteReg(uint16_t reg, uint16_t data)
 static inline void st7793InitSeq(void)
 {
     // Wait for reset
-    _delay_ms(200);
+    LL_mDelay(200);
 
     CLR(DISP_8BIT_CS);
 
@@ -55,7 +54,7 @@ static inline void st7793InitSeq(void)
     st7793WriteReg(0x0759, 0x0070);
 
     //--------------End Power Control Registers Initial ------------------------//
-    _delay_ms(100);
+    LL_mDelay(100);
     //--------------Display Windows 240 X 400-----------------------------------//
 
     st7793WriteReg(0x0210, 0x0000);
@@ -64,7 +63,7 @@ static inline void st7793InitSeq(void)
     st7793WriteReg(0x0213, 0x018f);
 
     //--------------End Display Windows 240 X 400-------------------------------//
-    _delay_ms(10);
+    LL_mDelay(10);
     //--------------Gamma Cluster Setting---------------------------------------//
 
     st7793WriteReg(0x0380, 0x0100);
@@ -87,7 +86,7 @@ static inline void st7793InitSeq(void)
     //---------------End Vcom Setting-------------------------------------------//
 
     st7793WriteReg(0x0007, 0x0100);
-    _delay_ms(200);
+    LL_mDelay(200);
     st7793WriteReg(0x0200, 0x0000);
     st7793WriteReg(0x0201, 0x0000);
 
@@ -111,10 +110,9 @@ static inline void st7793SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t 
     st7793SelectReg(0x0202);
 }
 
-void st7793Init(GlcdDriver **driver)
+void st7793Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc400x240Init(*driver);
+    *driver = &drv;
 
     SET(DISP_8BIT_LED);
     SET(DISP_8BIT_RD);
@@ -123,7 +121,7 @@ void st7793Init(GlcdDriver **driver)
     SET(DISP_8BIT_CS);
 
     CLR(DISP_8BIT_RST);
-    _delay_ms(1);
+    LL_mDelay(1);
     SET(DISP_8BIT_RST);
 
     st7793InitSeq();
@@ -134,9 +132,9 @@ void st7793Sleep(void)
     CLR(DISP_8BIT_CS);
 
     st7793WriteReg(0x0007, 0x0000);
-    _delay_ms(50);
+    LL_mDelay(50);
     st7793WriteReg(0x0102, 0x0180);
-    _delay_ms(200);
+    LL_mDelay(200);
 
     SET(DISP_8BIT_CS);
 }
@@ -146,9 +144,9 @@ void st7793Wakeup(void)
     CLR(DISP_8BIT_CS);
 
     // Power On Sequence
-    _delay_ms(200);
+    LL_mDelay(200);
     st7793WriteReg(0x0102, 0x01b0);
-    _delay_ms(50);
+    LL_mDelay(50);
     st7793WriteReg(0x0007, 0x0100);
 
     SET(DISP_8BIT_CS);
@@ -174,7 +172,7 @@ void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
     SET(DISP_8BIT_CS);
 }
 
-void st7793DrawImage(tImage *img, int16_t x, int16_t y)
+void st7793DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -182,7 +180,7 @@ void st7793DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_8BIT_CS);
 
     st7793SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     SET(DISP_8BIT_CS);
 }

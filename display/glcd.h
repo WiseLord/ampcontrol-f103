@@ -5,16 +5,10 @@
 
 #include "fonts/fonts.h"
 #include "icons.h"
+#include "dispdrv.h"
 #include "../rtc.h"
 #include "../spectrum.h"
 #include "../tuner/tuner.h"
-
-typedef enum {
-    GLCD_Landscape_1,
-    GLCD_Portrait_1,
-    GLCD_Landscape_2,
-    GLCD_Portrait_2,
-} GlcdOrientation;
 
 typedef struct {
     const char *label;
@@ -43,16 +37,10 @@ typedef struct {
 } GlcdCanvas;
 
 typedef struct {
-    void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
-    void (*drawRectangle)(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
-    void (*drawImage)(tImage *img, int16_t x, int16_t y);
-    void (*updateFB)(void);
-
+    DispDriver *drv;
     GlcdCanvas *canvas;
     Font font;
-
-    uint8_t bus;
-} GlcdDriver;
+} Glcd;
 
 typedef void (*SendDataCallback)(uint16_t data);
 
@@ -88,10 +76,7 @@ typedef void (*SendDataCallback)(uint16_t data);
 #define LCD_COLOR_WITCH_HAZE            RGB_TO_565(0xFFFF80)
 #define LCD_COLOR_WHITE                 RGB_TO_565(0xFFFFFF)
 
-#define GLCD_MIN_BRIGHTNESS             0
-#define GLCD_MAX_BRIGHTNESS             32
-
-void glcdInit(GlcdDriver *driver);
+void glcdInit(Glcd **driver);
 void glcdClear(void);
 
 void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);
@@ -106,7 +91,7 @@ void glcdSetXY(int16_t x, int16_t y);
 void glcdSetX(int16_t x);
 void glcdSetY(int16_t y);
 
-void glcdDrawImage(tImage *img, int16_t x, int16_t y);
+void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
 void glcdWriteIcon(uint8_t num, const uint8_t *icons);
 void glcdWriteChar(int32_t code);
 void glcdWriteString(char *string);

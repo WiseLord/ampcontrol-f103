@@ -2,8 +2,7 @@
 
 #include <stm32f103xb.h>
 #include <stm32f1xx.h>
-
-#include "functions.h"
+#include <stm32f1xx_ll_utils.h>
 
 #define EE_DATA_OFT     1 // Cell 0 is used for the header
 
@@ -132,7 +131,7 @@ static void eeSwapPage(void)
 
 void eeInit()
 {
-    _delay_ms(1);
+    LL_mDelay(1);
 
     uint16_t head0 = *(uint16_t *)(FLASH_BASE + EE_PAGE_SIZE * EE_PAGE_0);
     uint16_t head1 = *(uint16_t *)(FLASH_BASE + EE_PAGE_SIZE * EE_PAGE_1);

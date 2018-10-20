@@ -1,14 +1,13 @@
 #include "st7735.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define ST7735_WIDTH           128
 #define ST7735_HEIGHT          160
 #define ST7735_PIXELS          (ST7735_WIDTH * ST7735_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = st7735DrawPixel,
     .drawRectangle = st7735DrawRectangle,
     .drawImage = st7735DrawImage,
@@ -25,14 +24,14 @@ static inline void st7735SelectReg(uint8_t reg)
 static inline void st7735InitSeq(void)
 {
     // Wait for reset
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_8BIT_CS);
 
     // Initial Sequence
     //************* Start Initial Sequence **********//
     st7735SelectReg(0x11); //Exit Sleep
-    _delay_ms(20);
+    LL_mDelay(20);
 
     st7735SelectReg(0x21); //Display Inversion On
 
@@ -132,10 +131,9 @@ static inline void st7735SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t 
     st7735SelectReg(0x2C);
 }
 
-void st7735Init(GlcdDriver **driver)
+void st7735Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc160x128Init(*driver);
+    *driver = &drv;
 
     SET(DISP_8BIT_LED);
     SET(DISP_8BIT_RD);
@@ -144,7 +142,7 @@ void st7735Init(GlcdDriver **driver)
     SET(DISP_8BIT_CS);
 
     CLR(DISP_8BIT_RST);
-    _delay_ms(1);
+    LL_mDelay(1);
     SET(DISP_8BIT_RST);
 
     st7735InitSeq();
@@ -155,7 +153,7 @@ void st7735Sleep(void)
     CLR(DISP_8BIT_CS);
 
     st7735SelectReg(0x28);    // Display OFF
-    _delay_ms(100);
+    LL_mDelay(100);
     st7735SelectReg(0x10);
 
     SET(DISP_8BIT_CS);
@@ -166,7 +164,7 @@ void st7735Wakeup(void)
     CLR(DISP_8BIT_CS);
 
     st7735SelectReg(0x11);    // Display OFF
-    _delay_ms(100);
+    LL_mDelay(100);
     st7735SelectReg(0x29);
 
     SET(DISP_8BIT_CS);
@@ -192,7 +190,7 @@ void st7735DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
     SET(DISP_8BIT_CS);
 }
 
-void st7735DrawImage(tImage *img, int16_t x, int16_t y)
+void st7735DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -200,7 +198,7 @@ void st7735DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_8BIT_CS);
 
     st7735SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     SET(DISP_8BIT_CS);
 }

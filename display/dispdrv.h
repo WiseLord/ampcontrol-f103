@@ -1,9 +1,22 @@
 #ifndef DISPDRV_H
 #define DISPDRV_H
 
-#include "glcd.h"
+#include <inttypes.h>
+#include "fonts/fonts.h"
 
-#if defined (_KS0108)
+typedef struct {
+    void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
+    void (*drawRectangle)(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
+    void (*drawImage)(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+    void (*updateFB)(void);
+
+    uint8_t bus;
+} DispDriver;
+
+#define LCD_BR_MIN                      0
+#define LCD_BR_MAX                      32
+
+#if defined (_KS0108A) || defined(_KS0108B)
 #include "gm128x64/ks0108.h"
 #elif defined (_ST7920)
 #include "gm128x64/st7920.h"
@@ -43,7 +56,7 @@
 #error "Unsupported display driver"
 #endif
 
-#if defined(_KS0108)
+#if defined(_KS0108A) || defined(_KS0108B)
 #define DISPLAY_IRQ ks0108IRQ
 #elif defined(_ST7920)
 #define DISPLAY_IRQ st7920IRQ
@@ -51,16 +64,7 @@
 #define DISPLAY_IRQ dispdrvBusIRQ
 #endif
 
-// Canvas variants
-void gc160x128Init(GlcdDriver *driver);
-void gc176x132Init(GlcdDriver *driver);
-void gc220x176Init(GlcdDriver *driver);
-void gc320x240Init(GlcdDriver *driver);
-void gc400x240Init(GlcdDriver *driver);
-void gc480x320Init(GlcdDriver *driver);
-void gm128x64Init(GlcdDriver *driver);
-
-void dispdrvInit(GlcdDriver **glcd);
+void dispdrvInit(DispDriver **glcd);
 void dispdrvPwm(void);
 void dispdrvSetBrightness(uint8_t value);
 uint8_t dispdrvGetBus(void);
@@ -71,6 +75,6 @@ void dispdrvWaitOperation(void);
 void dispdrvSendData8(uint8_t data);
 void dispdrvSendData16(uint16_t data);
 void dispdrvSendFill(uint32_t size, uint16_t color);
-void dispdrvSendImage(tImage *img, uint16_t w, uint16_t h);
+void dispdrvSendImage(tImage *img, uint16_t color, uint16_t bgColor);
 
 #endif // DISPDRV_H

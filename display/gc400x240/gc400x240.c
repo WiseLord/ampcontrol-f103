@@ -1,6 +1,6 @@
-#include "../dispdrv.h"
+#include "../glcd.h"
 
-static GlcdDriver *glcd;
+static Glcd *glcd;
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
@@ -155,9 +155,8 @@ GlcdCanvas gc400x240 = {
     .showSpectrum = showSpectrum,
 };
 
-void gc400x240Init(GlcdDriver *driver)
+void gc400x240Init(Glcd *driver)
 {
     glcd = driver;
     glcd->canvas = &gc400x240;
-    glcdInit(glcd);
 }

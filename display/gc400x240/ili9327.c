@@ -1,14 +1,13 @@
 #include "ili9327.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define ILI9327_WIDTH           240
 #define ILI9327_HEIGHT          400
 #define ILI9327_PIXELS          (ILI9327_WIDTH * ILI9327_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = ili9327DrawPixel,
     .drawRectangle = ili9327DrawRectangle,
     .drawImage = ili9327DrawImage,
@@ -25,7 +24,7 @@ static inline void ili9327SelectReg(uint8_t reg)
 static inline void ili9327InitSeq(void)
 {
     // Wait for reset
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_8BIT_CS);
 
@@ -34,7 +33,7 @@ static inline void ili9327InitSeq(void)
     dispdrvSendData8(0x20);
 
     ili9327SelectReg(0x11);
-    _delay_ms(100);
+    LL_mDelay(100);
 
     ili9327SelectReg(0xD1);
     dispdrvSendData8(0x00);
@@ -122,10 +121,9 @@ static inline void ili9327SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t
     ili9327SelectReg(0x2C);
 }
 
-void ili9327Init(GlcdDriver **driver)
+void ili9327Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc400x240Init(*driver);
+    *driver = &drv;
 
     SET(DISP_8BIT_LED);
     SET(DISP_8BIT_RD);
@@ -134,7 +132,7 @@ void ili9327Init(GlcdDriver **driver)
     SET(DISP_8BIT_CS);
 
     CLR(DISP_8BIT_RST);
-    _delay_ms(1);
+    LL_mDelay(1);
     SET(DISP_8BIT_RST);
 
     ili9327InitSeq();
@@ -145,7 +143,7 @@ void ili9327Sleep(void)
     CLR(DISP_8BIT_CS);
 
     ili9327SelectReg(0x28);    // Display OFF
-    _delay_ms(100);
+    LL_mDelay(100);
     ili9327SelectReg(0x10);
 
     SET(DISP_8BIT_CS);
@@ -156,7 +154,7 @@ void ili9327Wakeup(void)
     CLR(DISP_8BIT_CS);
 
     ili9327SelectReg(0x11);    // Display ON
-    _delay_ms(100);
+    LL_mDelay(100);
     ili9327SelectReg(0x29);
 
     SET(DISP_8BIT_CS);
@@ -182,7 +180,7 @@ void ili9327DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     SET(DISP_8BIT_CS);
 }
 
-void ili9327DrawImage(tImage *img, int16_t x, int16_t y)
+void ili9327DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -190,7 +188,7 @@ void ili9327DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_8BIT_CS);
 
     ili9327SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     SET(DISP_8BIT_CS);
 }

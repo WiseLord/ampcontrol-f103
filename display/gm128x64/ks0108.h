@@ -2,8 +2,7 @@
 #define KS0108_H
 
 #include <inttypes.h>
-
-#include "../glcd.h"
+#include "../dispdrv.h"
 
 // Display geometry
 #define KS0108_COLS                 64
@@ -30,7 +29,7 @@
 #define KS0108_PHASE_SET_PAGE       64
 #define KS0108_PHASE_SET_ADDR       65
 
-void ks0108Init(GlcdDriver **driver);
+void ks0108Init(DispDriver **driver);
 void ks0108Clear(void);
 void ks0108IRQ(void);
 

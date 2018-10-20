@@ -1,14 +1,13 @@
 #include "ssd1286a.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define SSD1286A_WIDTH           132
 #define SSD1286A_HEIGHT          176
 #define SSD1286A_PIXELS          (SSD1286A_WIDTH * SSD1286A_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = ssd1286aDrawPixel,
     .drawRectangle = ssd1286aDrawRectangle,
     .drawImage = ssd1286aDrawImage,
@@ -28,7 +27,7 @@ static inline void ssd1286aSendCmd(uint8_t cmd)
 
 static void ssd1286aInitSeq(void)
 {
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_SPI_CS);
 
@@ -90,13 +89,12 @@ void ssd1286aSetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     ssd1286aSendCmd(0x22);
 }
 
-void ssd1286aInit(GlcdDriver **driver)
+void ssd1286aInit(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc176x132Init(*driver);
+    *driver = &drv;
 
     CLR(DISP_SPI_RST);
-    _delay_ms(100);
+    LL_mDelay(100);
     SET(DISP_SPI_RST);
 
     // Init magic
@@ -136,19 +134,19 @@ void ssd1286aWakeup(void)
     dispdrvSendData8(0x1f);
     dispdrvSendData8(0x92);
 
-    _delay_ms(20);
+    LL_mDelay(20);
 
     ssd1286aSendCmd(0x11);
     dispdrvSendData8(0x61);
     dispdrvSendData8(0x1c);
 
-    _delay_ms(20);
+    LL_mDelay(20);
 
     ssd1286aSendCmd(0x12);
     dispdrvSendData8(0x04);
     dispdrvSendData8(0x0f);
 
-    _delay_ms(20);
+    LL_mDelay(20);
 
     ssd1286aSendCmd(0x07);
     dispdrvSendData8(0x00);
@@ -180,7 +178,7 @@ void ssd1286aDrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
     SET(DISP_SPI_CS);
 }
 
-void ssd1286aDrawImage(tImage *img, int16_t x, int16_t y)
+void ssd1286aDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -188,7 +186,7 @@ void ssd1286aDrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_SPI_CS);
 
     ssd1286aSetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     dispdrvWaitOperation();
     SET(DISP_SPI_CS);

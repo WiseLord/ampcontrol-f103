@@ -1,14 +1,13 @@
 #include "s6d0139.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 
 #define S6D0139_WIDTH           240
 #define S6D0139_HEIGHT          320
 #define S6D0139_PIXELS          (S6D0139_WIDTH * S6D0139_HEIGHT)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = s6d0139DrawPixel,
     .drawRectangle = s6d0139DrawRectangle,
     .drawImage = s6d0139DrawImage,
@@ -31,23 +30,23 @@ static void s6d0139WriteReg(uint16_t reg, uint16_t data)
 static inline void s6d0139InitSeq(void)
 {
     // Wait for reset
-    _delay_ms(50);
+    LL_mDelay(50);
 
     CLR(DISP_8BIT_CS);
 
     s6d0139WriteReg(0x0000, 0x0001);    // Start Oscillation
-    _delay_ms(10);
+    LL_mDelay(10);
     s6d0139WriteReg(0x0007, 0x0000);    // Display control1
     s6d0139WriteReg(0x0013, 0x0000);    // Power control4 setting
     s6d0139WriteReg(0x0011, 0x2604);    // Power control2 setting
     s6d0139WriteReg(0x0014, 0x0015);    // Power control5 setting
     s6d0139WriteReg(0x0010, 0x3C00);    // Power control1 setting
     s6d0139WriteReg(0x0013, 0x0040);    // Power control4 setting
-    _delay_ms(10);
+    LL_mDelay(10);
     s6d0139WriteReg(0x0013, 0x0060);    // Power control4 setting
-    _delay_ms(50);
+    LL_mDelay(50);
     s6d0139WriteReg(0x0013, 0x0070);    // Power control4 setting
-    _delay_ms(40);
+    LL_mDelay(40);
 
     s6d0139WriteReg(0x0001, 0x0127);    // Driver output setting (240x320 mode, GS=0, SS=1)
     s6d0139WriteReg(0x0002, 0x0700);    // LCD driving waveform setting
@@ -80,7 +79,7 @@ static inline void s6d0139InitSeq(void)
     s6d0139WriteReg(0x0047, 0x013F);    // window addr set for y0    (319)
     s6d0139WriteReg(0x0048, 0x0000);    // window addr set for y1    (0)
     s6d0139WriteReg(0x0007, 0x0011);    // Display control1
-    _delay_ms(40);
+    LL_mDelay(40);
     s6d0139WriteReg(0x0007, 0x0017);    // Display control1
 
     SET(DISP_8BIT_CS);
@@ -99,10 +98,9 @@ static inline void s6d0139SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t
     s6d0139SelectReg(0x0022);
 }
 
-void s6d0139Init(GlcdDriver **driver)
+void s6d0139Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gc320x240Init(*driver);
+    *driver = &drv;
 
     SET(DISP_8BIT_LED);
     SET(DISP_8BIT_RD);
@@ -111,7 +109,7 @@ void s6d0139Init(GlcdDriver **driver)
     SET(DISP_8BIT_CS);
 
     CLR(DISP_8BIT_RST);
-    _delay_ms(1);
+    LL_mDelay(1);
     SET(DISP_8BIT_RST);
 
     s6d0139InitSeq();
@@ -128,7 +126,7 @@ void s6d0139Sleep(void)
     s6d0139WriteReg(0x0013, 0x0000);    // VREG1OUT voltage
 
     s6d0139WriteReg(0x0014, 0x0000);    // VDV[4:0] for VCOM amplitude
-    _delay_ms(200);
+    LL_mDelay(200);
     s6d0139WriteReg(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
     SET(DISP_8BIT_CS);
@@ -143,18 +141,18 @@ void s6d0139Wakeup(void)
     s6d0139WriteReg(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
     s6d0139WriteReg(0x0013, 0x0000);    // VREG1OUT voltage
     s6d0139WriteReg(0x0014, 0x0000);    // VDV[4:0] for VCOM amplitude
-    _delay_ms(200);
+    LL_mDelay(200);
     s6d0139WriteReg(0x0007, 0x0000);    // Display control1
     s6d0139WriteReg(0x0013, 0x0000);    // Power control4 setting
     s6d0139WriteReg(0x0011, 0x2604);    // Power control2 setting
     s6d0139WriteReg(0x0014, 0x0015);    // Power control5 setting
     s6d0139WriteReg(0x0010, 0x3C00);    // Power control1 setting
     s6d0139WriteReg(0x0013, 0x0040);    // Power control4 setting
-    _delay_ms(10);
+    LL_mDelay(10);
     s6d0139WriteReg(0x0013, 0x0060);    // Power control4 setting
-    _delay_ms(50);
+    LL_mDelay(50);
     s6d0139WriteReg(0x0013, 0x0070);    // Power control4 setting
-    _delay_ms(40);
+    LL_mDelay(40);
     s6d0139WriteReg(0x0007, 0x0017);    // 262K color and display ON
 
     SET(DISP_8BIT_CS);
@@ -180,7 +178,7 @@ void s6d0139DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     SET(DISP_8BIT_CS);
 }
 
-void s6d0139DrawImage(tImage *img, int16_t x, int16_t y)
+void s6d0139DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;
     uint16_t h = img->height;
@@ -188,7 +186,7 @@ void s6d0139DrawImage(tImage *img, int16_t x, int16_t y)
     CLR(DISP_8BIT_CS);
 
     s6d0139SetWindow(x, y, w, h);
-    dispdrvSendImage(img, w, h);
+    dispdrvSendImage(img, color, bgColor);
 
     SET(DISP_8BIT_CS);
 }

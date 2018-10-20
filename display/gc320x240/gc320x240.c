@@ -1,6 +1,6 @@
-#include "../dispdrv.h"
+#include "../glcd.h"
 
-static GlcdDriver *glcd;
+static Glcd *glcd;
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
@@ -190,9 +190,8 @@ GlcdCanvas gc320x240 = {
     .showTuner = showTuner,
 };
 
-void gc320x240Init(GlcdDriver *driver)
+void gc320x240Init(Glcd *driver)
 {
     glcd = driver;
     glcd->canvas = &gc320x240;
-    glcdInit(glcd);
 }

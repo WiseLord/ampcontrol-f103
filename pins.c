@@ -22,7 +22,7 @@ static void pinsInitButtons(void)
 
 static void pinsInitDisplay(void)
 {
-#if defined(_KS0108)
+#if defined(_KS0108A) || defined(_KS0108B)
     LL_GPIO_InitTypeDef initDef;
 
     initDef.Mode = LL_GPIO_MODE_OUTPUT;

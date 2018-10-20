@@ -1,9 +1,8 @@
 #include "ssd1306.h"
 #include "ssd1306_regs.h"
 
-#include "../dispdrv.h"
+#include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-#include "../../functions.h"
 #include "../../i2c.h"
 
 #include <stm32f1xx_ll_bus.h>
@@ -19,9 +18,8 @@
 #define SSD1306_HEIGHT                  64
 #define SSD1306_BUFFERSIZE              (SSD1306_WIDTH * SSD1306_HEIGHT / 8)
 
-static GlcdDriver glcd = {
+static DispDriver drv = {
     .drawPixel = ssd1306DrawPixel,
-    .drawImage = glcdDrawImage,
     .updateFB = ssd1306UpdateFb,
 };
 
@@ -81,10 +79,9 @@ static const uint8_t dispAreaSeq[] = {
 };
 #endif
 
-void ssd1306Init(GlcdDriver **driver)
+void ssd1306Init(DispDriver **driver)
 {
-    *driver = &glcd;
-    gm128x64Init(*driver);
+    *driver = &drv;
 
     // Configure Hardware I2C
     i2cInit(I2C_LCD, 400000);

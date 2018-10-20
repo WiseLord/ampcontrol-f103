@@ -1,17 +1,16 @@
 #include "dispdrv.h"
 
-#include "../pins.h"
-#include "../functions.h"
-
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_spi.h>
+#include <stm32f1xx_ll_utils.h>
+#include "../pins.h"
 
 #ifdef _DISP_8BIT
 static uint8_t bus_requested = 0;
 #endif
 static uint8_t brightness;
 
-static GlcdDriver *glcd;
+static DispDriver *drv;
 
 #define TX_BUSY()               (LL_SPI_IsActiveFlag_BSY(SPI1) || !LL_SPI_IsActiveFlag_TXE(SPI1))
 
@@ -71,10 +70,10 @@ static inline void dispdrvReadInput()
         volatile uint8_t delay = 2;
         while (--delay);
 #ifdef _DISP_HI_BYTE
-        glcd->bus = (DISP_8BIT_DHI_Port->IDR & 0xFF00) >> 8;
+        drv->bus = (DISP_8BIT_DHI_Port->IDR & 0xFF00) >> 8;
         DISP_8BIT_DHI_Port->CRH = 0x33333333;
 #else
-        glcd->bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;   // Read 8-bit bus
+        drv->bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;    // Read 8-bit bus
         DISP_8BIT_DHI_Port->CRL = 0x33333333;           // Set CNF=00, MODE=11 - Output push-pull 50 MHz
 #endif
         bus_requested = 0;
@@ -96,13 +95,13 @@ static inline void dispdrvSendWord(uint16_t data)
 #endif
 }
 
-void dispdrvInit(GlcdDriver **driver)
+void dispdrvInit(DispDriver **driver)
 {
 #ifdef _DISP_SPI
     dispdrvInitSPI();
 #endif
 
-#if defined (_KS0108)
+#if defined (_KS0108A) || defined(_KS0108B)
     ks0108Init(driver);
 #elif defined (_ST7920)
     st7920Init(driver);
@@ -142,15 +141,15 @@ void dispdrvInit(GlcdDriver **driver)
 #error "Unsupported display driver"
 #endif
 
-    glcd = *driver;
+    drv = *driver;
 }
 
 void dispdrvPwm(void)
 {
     static uint8_t br;
 
-    if (++br >= GLCD_MAX_BRIGHTNESS)
-        br = GLCD_MIN_BRIGHTNESS;
+    if (++br >= LCD_BR_MAX)
+        br = LCD_BR_MIN;
 
     if (br == brightness) {
         CLR(DISP_BCKL);
@@ -166,7 +165,7 @@ void dispdrvSetBrightness(uint8_t value)
 
 uint8_t dispdrvGetBus(void)
 {
-    return ~glcd->bus;
+    return ~drv->bus;
 }
 
 void dispdrvBusIRQ(void)
@@ -175,7 +174,7 @@ void dispdrvBusIRQ(void)
     bus_requested = 1;
 #endif
 #if defined(_DISP_SPI) || defined(_DISP_I2C)
-    glcd->bus = INPUT_Port->IDR & 0x00FF;   // Read 8-bit bus
+    drv->bus = INPUT_Port->IDR & 0x00FF;   // Read 8-bit bus
 #endif
 }
 
@@ -207,10 +206,10 @@ void dispdrvSendFill(uint32_t size, uint16_t color)
     }
 }
 
-void dispdrvSendImage(tImage *img, uint16_t w, uint16_t h)
+void dispdrvSendImage(tImage *img, uint16_t color, uint16_t bgColor)
 {
-    uint16_t color = glcd->font.color;
-    uint16_t bgColor = glcd->canvas->color;
+    uint16_t w = img->width;
+    uint16_t h = img->height;
 
     for (uint16_t i = 0; i < w; i++) {
         for (uint16_t j = 0; j < (h + 7) / 8; j++) {

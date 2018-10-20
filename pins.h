@@ -44,24 +44,16 @@ void pinsInit(void);
         OTYPE(p, t);        \
     } while (0);
 
-#define BTN_0_Port              GPIOA
 #define BTN_0_Pin               LL_GPIO_PIN_0
-#define BTN_1_Port              GPIOA
 #define BTN_1_Pin               LL_GPIO_PIN_1
-#define BTN_2_Port              GPIOA
 #define BTN_2_Pin               LL_GPIO_PIN_2
-#define BTN_3_Port              GPIOA
 #define BTN_3_Pin               LL_GPIO_PIN_3
-#define BTN_4_Port              GPIOA
 #define BTN_4_Pin               LL_GPIO_PIN_4
-#define BTN_5_Port              GPIOA
 #define BTN_5_Pin               LL_GPIO_PIN_5
-#define ENC_A_Port              GPIOA
 #define ENC_A_Pin               LL_GPIO_PIN_6
-#define ENC_B_Port              GPIOA
 #define ENC_B_Pin               LL_GPIO_PIN_7
 
-#define INPUT_Port              BTN_0_Port
+#define INPUT_Port              GPIOA
 #define INPUT_Pin               (BTN_0_Pin | BTN_1_Pin | BTN_2_Pin | BTN_3_Pin | \
                                  BTN_4_Pin | BTN_5_Pin | ENC_A_Pin | ENC_B_Pin)
 
