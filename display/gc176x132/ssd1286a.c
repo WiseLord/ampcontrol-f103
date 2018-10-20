@@ -9,7 +9,6 @@
 #define SSD1286A_PIXELS          (SSD1286A_WIDTH * SSD1286A_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = ssd1286aClear,
     .drawPixel = ssd1286aDrawPixel,
     .drawRectangle = ssd1286aDrawRectangle,
     .drawImage = ssd1286aDrawImage,
@@ -103,11 +102,6 @@ void ssd1286aInit(GlcdDriver **driver)
     // Init magic
     ssd1286aInitSeq();
     SET(DISP_SPI_LED);
-}
-
-void ssd1286aClear(void)
-{
-    ssd1286aDrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, glcd.canvas->color);
 }
 
 void ssd1286aSleep(void)

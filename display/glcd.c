@@ -24,9 +24,7 @@ void glcdInit(GlcdDriver *driver)
 
 void glcdClear(void)
 {
-    if (glcd->clear) {
-        glcd->clear();
-    }
+    glcdDrawRect(0, 0, glcd->canvas->width, glcd->canvas->height, LCD_COLOR_BLACK);
 }
 
 void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)

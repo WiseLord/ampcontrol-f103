@@ -6,7 +6,6 @@
 #include "../glcd.h"
 
 void lph9157Init(GlcdDriver **driver);
-void lph9157Clear(void);
 
 void lph9157Sleep(void);
 void lph9157Wakeup(void);

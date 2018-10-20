@@ -6,7 +6,6 @@
 #include "../glcd.h"
 
 void ls020Init(GlcdDriver **driver);
-void ls020Clear(void);
 
 void ls020Sleep(void);
 void ls020Wakeup(void);

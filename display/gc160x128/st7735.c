@@ -9,7 +9,6 @@
 #define ST7735_PIXELS          (ST7735_WIDTH * ST7735_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = st7735Clear,
     .drawPixel = st7735DrawPixel,
     .drawRectangle = st7735DrawRectangle,
     .drawImage = st7735DrawImage,
@@ -149,11 +148,6 @@ void st7735Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     st7735InitSeq();
-}
-
-void st7735Clear(void)
-{
-    st7735DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void st7735Sleep(void)

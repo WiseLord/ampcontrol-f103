@@ -6,7 +6,6 @@
 #include "../glcd.h"
 
 void ili9341Init(GlcdDriver **driver);
-void ili9341Clear(void);
 
 void ili9341Sleep(void);
 void ili9341Wakeup(void);

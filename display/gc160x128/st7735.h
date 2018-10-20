@@ -6,7 +6,6 @@
 #include "../glcd.h"
 
 void st7735Init(GlcdDriver **driver);
-void st7735Clear(void);
 
 void st7735Sleep(void);
 void st7735Wakeup(void);

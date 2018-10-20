@@ -9,7 +9,6 @@
 #define ILI9163_PIXELS          (ILI9163_WIDTH * ILI9163_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = ili9163Clear,
     .drawPixel = ili9163DrawPixel,
     .drawRectangle = ili9163DrawRectangle,
     .drawImage = ili9163DrawImage,
@@ -150,11 +149,6 @@ void ili9163Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     ili9163InitSeq();
-}
-
-void ili9163Clear(void)
-{
-    ili9163DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void ili9163Sleep(void)

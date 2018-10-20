@@ -9,7 +9,6 @@
 #define LPH9157_PIXELS          (LPH9157_WIDTH * LPH9157_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = lph9157Clear,
     .drawPixel = lph9157DrawPixel,
     .drawRectangle = lph9157DrawRectangle,
     .drawImage = lph9157DrawImage,
@@ -70,11 +69,6 @@ void lph9157Init(GlcdDriver **driver)
     // Init magic
     lph9157InitSeq();
     SET(DISP_SPI_LED);
-}
-
-void lph9157Clear(void)
-{
-    lph9157DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, glcd.canvas->color);
 }
 
 void lph9157Sleep(void)

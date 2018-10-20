@@ -6,8 +6,6 @@
 #include "../glcd.h"
 
 void spfd5408Init(GlcdDriver **driver);
-void spfd5408Clear(void);
-void spfd5408BusIRQ(void);
 
 void spfd5408Sleep(void);
 void spfd5408Wakeup(void);

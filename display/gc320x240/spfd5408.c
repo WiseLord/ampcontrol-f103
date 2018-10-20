@@ -9,7 +9,6 @@
 #define SPFD5408_PIXELS          (SPFD5408_WIDTH * SPFD5408_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = spfd5408Clear,
     .drawPixel = spfd5408DrawPixel,
     .drawRectangle = spfd5408DrawRectangle,
     .drawImage = spfd5408DrawImage,
@@ -156,11 +155,6 @@ void spfd5408Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     spfd5408InitSeq();
-}
-
-void spfd5408Clear(void)
-{
-    spfd5408DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void spfd5408Sleep(void)

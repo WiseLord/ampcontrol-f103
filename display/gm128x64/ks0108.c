@@ -5,7 +5,6 @@
 #include "../../functions.h"
 
 static GlcdDriver glcd = {
-    .clear = ks0108Clear,
     .drawPixel = ks0108DrawPixel,
     .drawImage = glcdDrawImage,
 };

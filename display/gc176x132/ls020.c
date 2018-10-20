@@ -9,29 +9,11 @@
 #define LS020_PIXELS          (LS020_WIDTH * LS020_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = ls020Clear,
     .drawPixel = ls020DrawPixel,
     .drawRectangle = ls020DrawRectangle,
     .drawImage = ls020DrawImage,
 };
-/*
-static inline void ls020SendSPI(uint8_t data) __attribute__((always_inline));
-static inline void ls020SendSPI(uint8_t data)
-{
-    while (!LL_SPI_IsActiveFlag_TXE(SPI1));
-    LL_SPI_TransmitData8(SPI1, data);
-}
 
-static inline void dispdrvSendData16(uint16_t data) __attribute__((always_inline));
-static inline void dispdrvSendData16(uint16_t data)
-{
-    uint8_t dataH = data >> 8;
-    uint8_t dataL = data & 0xFF;
-
-    ls020SendSPI(dataH);
-    ls020SendSPI(dataL);
-}
-*/
 static void ls020InitSeq(void)
 {
     _delay_ms(50);
@@ -110,11 +92,6 @@ void ls020Init(GlcdDriver **driver)
     // Init magic
     ls020InitSeq();
     SET(DISP_SPI_LED);
-}
-
-void ls020Clear(void)
-{
-    ls020DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, glcd.canvas->color);
 }
 
 void ls020Sleep(void)

@@ -6,7 +6,6 @@
 #include "../glcd.h"
 
 void ssd1286aInit(GlcdDriver **driver);
-void ssd1286aClear(void);
 
 void ssd1286aSleep(void);
 void ssd1286aWakeup(void);

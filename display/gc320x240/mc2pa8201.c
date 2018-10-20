@@ -9,7 +9,6 @@
 #define MC2PA8201_PIXELS          (MC2PA8201_WIDTH * MC2PA8201_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = mc2pa8201Clear,
     .drawPixel = mc2pa8201DrawPixel,
     .drawRectangle = mc2pa8201DrawRectangle,
     .drawImage = mc2pa8201DrawImage,
@@ -108,11 +107,6 @@ void mc2pa8201Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     mc2pa8201InitSeq();
-}
-
-void mc2pa8201Clear(void)
-{
-    mc2pa8201DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void mc2pa8201Sleep(void)

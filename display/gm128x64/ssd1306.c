@@ -1,4 +1,5 @@
 #include "ssd1306.h"
+#include "ssd1306_regs.h"
 
 #include "../dispdrv.h"
 #include "../../pins.h"
@@ -14,8 +15,11 @@
 #define I2C_SPEEDCLOCK                          400000
 #define I2C_DUTYCYCLE                           LL_I2C_DUTYCYCLE_2
 
+#define SSD1306_WIDTH                   128
+#define SSD1306_HEIGHT                  64
+#define SSD1306_BUFFERSIZE              (SSD1306_WIDTH * SSD1306_HEIGHT / 8)
+
 static GlcdDriver glcd = {
-    .clear = ssd1306Clear,
     .drawPixel = ssd1306DrawPixel,
     .drawImage = glcdDrawImage,
     .updateFB = ssd1306UpdateFb,

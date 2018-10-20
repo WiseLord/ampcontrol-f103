@@ -6,7 +6,6 @@
 #include "../glcd.h"
 
 void hx8340Init(GlcdDriver **driver);
-void hx8340Clear(void);
 
 void hx8340Sleep(void);
 void hx8340Wakeup(void);

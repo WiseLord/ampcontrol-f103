@@ -9,7 +9,6 @@
 #define HX8340_PIXELS          (HX8340_WIDTH * HX8340_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = hx8340Clear,
     .drawPixel = hx8340DrawPixel,
     .drawRectangle = hx8340DrawRectangle,
     .drawImage = hx8340DrawImage,
@@ -133,11 +132,6 @@ void hx8340Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     hx8340InitSeq();
-}
-
-void hx8340Clear(void)
-{
-    hx8340DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void hx8340Sleep(void)

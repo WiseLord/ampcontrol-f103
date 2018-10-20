@@ -6,7 +6,6 @@
 #include "../glcd.h"
 
 void s6d0139Init(GlcdDriver **driver);
-void s6d0139Clear(void);
 
 void s6d0139Sleep(void);
 void s6d0139Wakeup(void);

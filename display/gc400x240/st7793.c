@@ -9,7 +9,6 @@
 #define ST7793_PIXELS          (ST7793_WIDTH * ST7793_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = st7793Clear,
     .drawPixel = st7793DrawPixel,
     .drawRectangle = st7793DrawRectangle,
     .drawImage = st7793DrawImage,
@@ -128,11 +127,6 @@ void st7793Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     st7793InitSeq();
-}
-
-void st7793Clear(void)
-{
-    st7793DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void st7793Sleep(void)

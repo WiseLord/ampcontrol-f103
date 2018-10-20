@@ -9,7 +9,6 @@
 #define ILI9481_PIXELS          (ILI9481_WIDTH * ILI9481_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = ili9481Clear,
     .drawPixel = ili9481DrawPixel,
     .drawRectangle = ili9481DrawRectangle,
     .drawImage = ili9481DrawImage,
@@ -139,11 +138,6 @@ void ili9481Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     ili9481InitSeq();
-}
-
-void ili9481Clear(void)
-{
-    ili9481DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void ili9481Sleep(void)

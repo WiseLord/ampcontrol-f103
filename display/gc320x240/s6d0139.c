@@ -9,7 +9,6 @@
 #define S6D0139_PIXELS          (S6D0139_WIDTH * S6D0139_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = s6d0139Clear,
     .drawPixel = s6d0139DrawPixel,
     .drawRectangle = s6d0139DrawRectangle,
     .drawImage = s6d0139DrawImage,
@@ -116,11 +115,6 @@ void s6d0139Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     s6d0139InitSeq();
-}
-
-void s6d0139Clear(void)
-{
-    s6d0139DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void s6d0139Sleep(void)

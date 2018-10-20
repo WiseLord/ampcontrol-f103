@@ -56,6 +56,7 @@ display/gc320x240/ili9320.c
 display/gc320x240/ili9320.h
 display/gc320x240/ili9341.c
 display/gc320x240/ili9341.h
+display/gc320x240/ili9341_regs.h
 display/gc320x240/mc2pa8201.c
 display/gc320x240/mc2pa8201.h
 display/gc320x240/s6d0139.c
@@ -79,6 +80,7 @@ display/gm128x64/ks0108.c
 display/gm128x64/ks0108.h
 display/gm128x64/ssd1306.c
 display/gm128x64/ssd1306.h
+display/gm128x64/ssd1306_regs.h
 display/gm128x64/st7920.c
 display/gm128x64/st7920.h
 display/icons-24.c

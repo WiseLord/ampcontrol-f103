@@ -10,7 +10,6 @@
 #define R61581_PIXELS           (R61581_WIDTH * R61581_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = r61581Clear,
     .drawPixel = r61581DrawPixel,
     .drawRectangle = r61581DrawRectangle,
     .drawImage = r61581DrawImage,
@@ -149,11 +148,6 @@ void r61581Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     r61581InitSeq();
-}
-
-void r61581Clear(void)
-{
-    r61581DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void r61581Sleep(void)

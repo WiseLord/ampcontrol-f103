@@ -9,7 +9,6 @@
 #define ILI9320_PIXELS          (ILI9320_WIDTH * ILI9320_HEIGHT)
 
 static GlcdDriver glcd = {
-    .clear = ili9320Clear,
     .drawPixel = ili9320DrawPixel,
     .drawRectangle = ili9320DrawRectangle,
     .drawImage = ili9320DrawImage,
@@ -137,11 +136,6 @@ void ili9320Init(GlcdDriver **driver)
     SET(DISP_8BIT_RST);
 
     ili9320InitSeq();
-}
-
-void ili9320Clear(void)
-{
-    ili9320DrawRectangle(0, 0, glcd.canvas->width, glcd.canvas->height, LCD_COLOR_BLACK);
 }
 
 void ili9320Sleep(void)

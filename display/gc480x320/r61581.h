@@ -6,7 +6,6 @@
 #include "../glcd.h"
 
 void r61581Init(GlcdDriver **driver);
-void r61581Clear(void);
 
 void r61581Sleep(void);
 void r61581Wakeup(void);
