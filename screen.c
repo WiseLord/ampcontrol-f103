@@ -47,7 +47,7 @@ static void improveSpectrum(SpectrumData *sd)
     }
 }
 
-static void screenCheckClear(void)
+static void screenCheckChange(void)
 {
     static Screen scrPrev = SCREEN_STANDBY;
     static ScreenParam scrParPrev;
@@ -82,11 +82,19 @@ static void screenCheckClear(void)
         default:
             break;
         }
+
         // Enable/disable tuner polling
         if (screen == SCREEN_TUNER) {
             swTimSetTunerPoll(0);
         } else {
             swTimSetTunerPoll(SW_TIM_OFF);
+        }
+
+        // Handle standby/work brightness
+        if (screen == SCREEN_STANDBY) {
+            screenChangeBrighness(ACTION_BR_STBY, 0);
+        } else {
+            screenChangeBrighness(ACTION_BR_WORK, 0);
         }
     } else {
         switch (screen) {
@@ -222,10 +230,10 @@ void screenChangeBrighness(uint8_t mode, int8_t diff)
 
 void screenShow(void)
 {
-    screenCheckClear();
+    screenCheckChange();
 
     // Get new spectrum data
-    if (swTimGetSpConvert() == 0) {
+    if (swTimGetSpConvert() <= 0) {
         spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
 
         improveSpectrum(&spData[SP_CHAN_LEFT]);
@@ -254,6 +262,8 @@ void screenShow(void)
         break;
     case SCREEN_TUNER:
         screenShowTuner();
+        break;
+    case SCREEN_SETUP:
         break;
 
     case SCREEN_TEST:

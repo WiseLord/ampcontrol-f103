@@ -23,6 +23,8 @@ typedef enum {
 
     SCREEN_TUNER,
 
+    SCREEN_SETUP,
+
     SCREEN_TEST,
 
     SCREEN_END

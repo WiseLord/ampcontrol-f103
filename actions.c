@@ -102,6 +102,8 @@ static void actionRemapButtons(void)
         case BTN_D4:
             break;
         case BTN_D5:
+            if (screen == SCREEN_STANDBY)
+                action.type = ACTION_ENTER_SETUP;
             break;
         default:
             break;
@@ -136,7 +138,18 @@ static void actionRemapActions(void)
         break;
     }
 
-    if (SCREEN_STANDBY == screen && ACTION_STANDBY != action.type && ACTION_TEST != action.type) {
+    if (SCREEN_STANDBY == screen &&
+        (ACTION_STANDBY != action.type &&
+         ACTION_TEST != action.type &&
+         ACTION_ENTER_SETUP != action.type)) {
+        actionSet(ACTION_NONE, 0);
+    }
+
+    if (SCREEN_TEST == screen) {
+        actionSet(ACTION_NONE, 0);
+    }
+
+    if (SCREEN_SETUP == screen) {
         actionSet(ACTION_NONE, 0);
     }
 }
@@ -206,14 +219,12 @@ void actionHandle(Action action, uint8_t visible)
     case ACTION_STANDBY:
         if (action.value == CMD_OFF) {
             screen = SCREEN_TIME;
-            screenChangeBrighness(ACTION_BR_WORK, 0);
             dispTime = 1000;
             tunerSetPower(1);
         } else {
             dispTime = SW_TIM_OFF;
             screen = SCREEN_STANDBY;
             rtcSetMode(RTC_NOEDIT);
-            screenChangeBrighness(ACTION_BR_STBY, 0);
             screenSaveSettings();
             audioPowerOff();
             tunerSetPower(0);
@@ -283,16 +294,27 @@ void actionHandle(Action action, uint8_t visible)
     case ACTION_TIMER_EXPIRED:
         rtcSetMode(RTC_NOEDIT);
         if (SCREEN_STANDBY != screen) {
-            screen = screenGetDefault();
+            switch (screen) {
+            case SCREEN_TEST:
+            case SCREEN_SETUP:
+                screen = SCREEN_STANDBY;
+                break;
+            default:
+                screen = screenGetDefault();
+                break;
+            }
         }
         dispTime = SW_TIM_OFF;
         break;
 
+    case ACTION_ENTER_SETUP:
+        screen = SCREEN_SETUP;
+        dispTime = 10000;
+        break;
+
     case ACTION_TEST:
-        if (screen != SCREEN_TEST) {
-            screen = SCREEN_TEST;
-            dispTime = SW_TIM_OFF;
-        }
+        screen = SCREEN_TEST;
+        dispTime = 5000;
         break;
     default:
         break;
