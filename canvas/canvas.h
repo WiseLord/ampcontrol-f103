@@ -7,6 +7,7 @@
 #include "../rtc.h"
 #include "../spectrum.h"
 #include "../tuner/tuner.h"
+#include "../menu.h"
 
 typedef struct {
     const char *label;
@@ -28,6 +29,7 @@ typedef struct {
     void (*showParam)(DispParam *dp);
     void (*showSpectrum)(SpectrumData *spData);
     void (*showTuner)(DispTuner *dt);
+    void (*showMenu)(void);
 
     uint16_t color;
 } Canvas;

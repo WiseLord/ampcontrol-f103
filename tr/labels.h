@@ -1,6 +1,8 @@
 #ifndef TR_H
 #define TR_H
 
+#include "../menu.h"
+
 typedef enum {
     LANG_BY,
     LANG_RU,
@@ -37,6 +39,10 @@ typedef enum {
     LABEL_GAIN5,
     LABEL_GAIN6,
     LABEL_GAIN7,
+
+    // Menu
+    LABEL_MENU,
+    LABEL_MENU_END = LABEL_MENU + (MENU_END - MENU_SETUP),
 
     LABEL_END
 } Label;

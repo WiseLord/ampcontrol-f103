@@ -9,6 +9,7 @@
 #include "functions.h"
 #include "i2c.h"
 #include "input.h"
+#include "menu.h"
 #include "pins.h"
 #include "rtc.h"
 #include "screen.h"
@@ -91,6 +92,7 @@ int main(void)
     tunerInit();
     screenInit();
     inputInit();
+    menuInit();
     rtcInit();
     timersInit();
 

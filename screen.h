@@ -63,6 +63,7 @@ void screenShowBrightness(void);
 void screenShowInput(void);
 void screenShowAudioParam(void);
 void screenShowTuner(void);
+void screenShowMenu(void);
 
 void screenTest(void);
 

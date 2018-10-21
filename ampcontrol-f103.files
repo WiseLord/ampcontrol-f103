@@ -156,6 +156,8 @@ input.c
 input.h
 main.c
 Makefile
+menu.c
+menu.h
 pins.c
 pins.h
 rtc.c

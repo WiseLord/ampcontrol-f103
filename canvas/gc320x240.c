@@ -4,13 +4,20 @@ static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
 static void showSpectrum(SpectrumData *spData);
 static void showTuner(DispTuner *dt);
+static void showMenu(void);
 
 static Canvas canvas = {
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
     .showTuner = showTuner,
+    .showMenu = showMenu,
 };
+
+void gc320x240Init(Canvas **value)
+{
+    *value = &canvas;
+}
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
@@ -193,7 +200,29 @@ static void showTuner(DispTuner *dt)
     glcdSetXY(2, 120);
 }
 
-void gc320x240Init(Canvas **value)
+static void showMenu(void)
 {
-    *value = &canvas;
+    Menu *menu = menuGet();
+
+    // Show header
+    char *parentName = menuGetName(menu->parent);
+    glcdSetFont(&fontterminus32);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+
+    glcdSetXY(2, 0);
+    glcdWriteString(parentName);
+    glcdDrawRect(0, 35, 320, 2, LCD_COLOR_WHITE);
+
+    glcdSetFont(&fontterminus22b);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+
+    const uint8_t ih = 25;  // Menu item height
+
+    for (uint8_t idx = 0; idx < 8; idx++) {
+        char *name = menuGetName(menu->idx[idx]);
+        glcdSetXY(4, 41 + ih * idx);
+        glcdWriteString(name);
+        glcdDrawFrame(0, 40 + ih * idx, 319, 40 + ih - 1 + ih * idx,
+                      menu->active == menu->idx[idx] ? LCD_COLOR_WHITE : canvas.color);
+    }
 }

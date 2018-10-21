@@ -34,6 +34,27 @@ const char *labels_default[LABEL_END] = {
     [LABEL_GAIN5]           = "Input 5",
     [LABEL_GAIN6]           = "Input 6",
     [LABEL_GAIN7]           = "Input 7",
+
+    [LABEL_MENU + MENU_NULL]            = "Menu",
+
+    [LABEL_MENU + MENU_SETUP]           = "Settings",
+    [LABEL_MENU + MENU_SETUP_AUDIO]     = "Audio",
+    [LABEL_MENU + MENU_SETUP_TUNER]     = "Tuner",
+    [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Spectrum",
+    [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Display",
+    [LABEL_MENU + MENU_SETUP_INPUT]     = "Input",
+
+    [LABEL_MENU + MENU_TUNER_IC]        = "IC",
+    [LABEL_MENU + MENU_TUNER_FREQ_MIN]  = "Min. freq",
+    [LABEL_MENU + MENU_TUNER_FREQ_MAX]  = "Max. freq",
+    [LABEL_MENU + MENU_TUNER_STEP]      = "Scan step",
+    [LABEL_MENU + MENU_TUNER_MONO]      = "Force mono",
+    [LABEL_MENU + MENU_TUNER_RDS]       = "Enable RDS",
+    [LABEL_MENU + MENU_TUNER_BASS]      = "Bass boost",
+    [LABEL_MENU + MENU_TUNER_BAND]      = "Tuner band",
+    [LABEL_MENU + MENU_TUNER_DE]        = "Deemphasys",
+    [LABEL_MENU + MENU_TUNER_SOFTMUTE]  = "Soft mute",
+
 };
 
 const char *labels[LABEL_END];

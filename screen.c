@@ -6,6 +6,7 @@
 #include "actions.h"
 #include "eemul.h"
 #include "fft.h"
+#include "menu.h"
 #include "spectrum.h"
 #include "timers.h"
 
@@ -273,6 +274,7 @@ void screenShow(void)
         screenShowTuner();
         break;
     case SCREEN_SETUP:
+        screenShowMenu();
         break;
 
     case SCREEN_TEST:
@@ -370,6 +372,13 @@ void screenShowTuner(void)
 
     if (canvas->showTuner) {
         canvas->showTuner(&dt);
+    }
+}
+
+void screenShowMenu(void)
+{
+    if (canvas->showMenu) {
+        canvas->showMenu();
     }
 }
 
