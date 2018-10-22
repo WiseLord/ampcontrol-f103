@@ -92,7 +92,6 @@ int main(void)
     tunerInit();
     screenInit();
     inputInit();
-    menuInit();
     rtcInit();
     timersInit();
 

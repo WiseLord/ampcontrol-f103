@@ -153,14 +153,14 @@ void glcdWriteIcon(uint8_t num, const uint8_t *icons, uint16_t color, uint16_t b
     }
 }
 
-void glcdWriteChar(int32_t code)
+uint16_t glcdWriteChar(int32_t code)
 {
     tImage *img = 0;
 
     int16_t pos = findSymbolPos(code);
 
     if (pos < 0)
-        return;
+        return 0;
 
     img = (tImage *)glcd.font.tfont->chars[pos].image;
 
@@ -183,7 +183,7 @@ void glcdWriteChar(int32_t code)
                 }
                 inPtr++;
             } else {
-                return;
+                return 0;
             }
         }
         imgUnRle.width = img->width;
@@ -198,6 +198,8 @@ void glcdWriteChar(int32_t code)
     }
 
     glcdSetX(glcd.x + img->width);
+
+    return img->width;
 }
 
 static int32_t findSymbolCode(char **string)
@@ -242,10 +244,11 @@ static int32_t findSymbolCode(char **string)
     return BLOCK_CHAR;
 }
 
-void glcdWriteString(char *string)
+uint16_t glcdWriteString(char *string)
 {
     int32_t code = 0;
     char *str = string;
+    uint16_t ret = 0;
 
     const tFont *font = glcd.font.tfont;
 
@@ -278,10 +281,12 @@ void glcdWriteString(char *string)
     while (*str) {
         code = findSymbolCode(&str);
 
-        glcdWriteChar(code);
+        ret += glcdWriteChar(code);
         if (*str)
-            glcdWriteChar(LETTER_SPACE_CHAR);
+            ret += glcdWriteChar(LETTER_SPACE_CHAR);
     }
+
+    return ret;
 }
 
 void glcdDrawRect(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color)

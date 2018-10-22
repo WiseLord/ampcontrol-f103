@@ -15,6 +15,8 @@ typedef enum {
     MENU_SETUP_DISPLAY,
     MENU_SETUP_INPUT,
 
+    MENU_AUDIO_IC,
+
     MENU_TUNER_IC,
     MENU_TUNER_FREQ_MIN,
     MENU_TUNER_FREQ_MAX,
@@ -26,28 +28,43 @@ typedef enum {
     MENU_TUNER_DE,
     MENU_TUNER_SOFTMUTE,
 
+    MENU_SPECTURM_MODE,
+    MENU_SPECTRUM_SPEED,
+
+    MENU_DISPLAY_BR_STBY,
+
+    MENU_INPUT_ENC_RES,
+
     MENU_END
 } MenuIdx;
 
-typedef struct {
-    MenuIdx parent;
-} MenuItem;
+typedef enum {
+    MENU_TYPE_PARENT,
+    MENU_TYPE_BOOL,
+    MENU_TYPE_NUMBER,
+    MENU_TYPE_ENUM,
+
+    MENU_TYPE_END
+} MenuType;
 
 typedef struct {
     MenuIdx parent;
     MenuIdx active;
-    uint8_t idx[MENU_MAX_LEN];
-    uint8_t size;
-    uint8_t oft;
-} Menu;
+    uint8_t list[MENU_MAX_LEN];
+    uint8_t listSize;       // Total number of items in current menu
 
-void menuInit(void);
-void menuSetActive(MenuIdx index);
+    uint8_t dispSize;       // Number of items display able to show
+    int8_t dispOft;         // First visible item offset on display
+} Menu;
 
 Menu *menuGet(void);
 
+void menuSetActive(MenuIdx index);
 MenuIdx menuGetParent(MenuIdx index);
+MenuIdx menuGetFirstChild(void);
+void menuMove(int8_t diff);
 
 char *menuGetName(MenuIdx index);
+MenuType menuGetType(MenuIdx index);
 
 #endif // MENU_H

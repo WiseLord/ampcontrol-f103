@@ -3,6 +3,7 @@
 #include "audio/audio.h"
 #include "eemul.h"
 #include "input.h"
+#include "menu.h"
 #include "rtc.h"
 #include "screen.h"
 #include "spectrum.h"
@@ -35,7 +36,7 @@ static void actionNextAudioInput(AudioProc *aProc)
         scrPar.input = 0;
 }
 
-void actionChangeCurrentInput(int8_t diff)
+static void actionChangeCurrentInput(int8_t diff)
 {
     screenSet(SCREEN_AUDIO_PARAM);
     scrPar.audio = AUDIO_PARAM_GAIN;
@@ -80,7 +81,7 @@ static void actionRemapButtons(void)
             action.type = ACTION_NEXT;
             break;
         case BTN_D5:
-            action.type = ACTION_AUDIO_PARAM;
+            action.type = ACTION_OK;
             break;
         default:
             break;
@@ -102,8 +103,10 @@ static void actionRemapButtons(void)
         case BTN_D4:
             break;
         case BTN_D5:
-            if (screen == SCREEN_STANDBY)
-                action.type = ACTION_ENTER_SETUP;
+            if (screen == SCREEN_STANDBY) {
+                action.type = ACTION_MENU_SELECT;
+                action.value = MENU_SETUP_AUDIO;
+            }
             break;
         default:
             break;
@@ -125,10 +128,36 @@ static void actionRemapActions(void)
         }
         break;
     case ACTION_PREV:
+        switch (screen) {
+        case SCREEN_TUNER:
+            action.type = ACTION_TUNER_PREV;
+            break;
+        case SCREEN_MENU:
+            action.type = ACTION_MENU_CHANGE;
+            action.value = -1;
+            break;
+        default:
+            break;
+        }
+        break;
     case ACTION_NEXT:
         switch (screen) {
         case SCREEN_TUNER:
-            action.type = ACTION_TUNER_PREV + (action.type - ACTION_PREV);
+            action.type = ACTION_TUNER_NEXT;
+            break;
+        case SCREEN_MENU:
+            action.type = ACTION_MENU_CHANGE;
+            action.value = +1;
+            break;
+        default:
+            break;
+        }
+        break;
+    case ACTION_OK:
+        switch (screen) {
+        case SCREEN_MENU:
+            action.type = ACTION_MENU_SELECT;
+            action.value = menuGetFirstChild();
             break;
         default:
             break;
@@ -141,7 +170,7 @@ static void actionRemapActions(void)
     if (SCREEN_STANDBY == screen &&
         (ACTION_STANDBY != action.type &&
          ACTION_TEST != action.type &&
-         ACTION_ENTER_SETUP != action.type)) {
+         ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 
@@ -149,7 +178,9 @@ static void actionRemapActions(void)
         actionSet(ACTION_NONE, 0);
     }
 
-    if (SCREEN_SETUP == screen) {
+    if (SCREEN_MENU == screen &&
+        (ACTION_MENU_CHANGE != action.type &&
+         ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 }
@@ -182,6 +213,9 @@ static void actionHandleEncoder(void)
                 break;
             case SCREEN_AUDIO_INPUT:
                 actionChangeCurrentInput(encCnt);
+                break;
+            case SCREEN_MENU:
+                actionSet(ACTION_MENU_CHANGE, encCnt);
                 break;
             case SCREEN_SPECTRUM:
                 screenSet(SCREEN_AUDIO_PARAM);
@@ -265,7 +299,7 @@ void actionHandle(Action action, uint8_t visible)
             scrPar.input = aProc->input;
         }
         break;
-    case ACTION_AUDIO_PARAM:
+    case ACTION_OK:
         dispTime = 5000;
         if (screen == SCREEN_AUDIO_PARAM) {
             actionNextAudioParam(aProc);
@@ -296,7 +330,7 @@ void actionHandle(Action action, uint8_t visible)
         if (SCREEN_STANDBY != screen) {
             switch (screen) {
             case SCREEN_TEST:
-            case SCREEN_SETUP:
+            case SCREEN_MENU:
                 screen = SCREEN_STANDBY;
                 break;
             default:
@@ -307,8 +341,15 @@ void actionHandle(Action action, uint8_t visible)
         dispTime = SW_TIM_OFF;
         break;
 
-    case ACTION_ENTER_SETUP:
-        screen = SCREEN_SETUP;
+    case ACTION_MENU_SELECT:
+        menuSetActive(action.value);
+        scrPar.parent = menuGet()->parent;
+        screen = SCREEN_MENU;
+        dispTime = 10000;
+        break;
+    case ACTION_MENU_CHANGE:
+        menuMove(action.value);
+        scrPar.parent = menuGet()->parent;
         dispTime = 10000;
         break;
 

@@ -23,7 +23,7 @@ typedef enum {
 
     SCREEN_TUNER,
 
-    SCREEN_SETUP,
+    SCREEN_MENU,
 
     SCREEN_TEST,
 
@@ -34,6 +34,7 @@ typedef union {
     AudioParam audio;
     uint8_t input;
     RtcMode rtc;
+    uint8_t parent;
 } ScreenParam;
 
 void screenReadSettings(void);

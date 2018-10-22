@@ -1,5 +1,8 @@
 #include "canvas.h"
 
+// On 320x240 we can draw max 8 menu items + menu header
+#define MENU_SIZE_VISIBLE   8
+
 static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
 static void showSpectrum(SpectrumData *spData);
@@ -17,6 +20,7 @@ static Canvas canvas = {
 void gc320x240Init(Canvas **value)
 {
     *value = &canvas;
+    menuGet()->dispSize = MENU_SIZE_VISIBLE;
 }
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
@@ -200,6 +204,45 @@ static void showTuner(DispTuner *dt)
     glcdSetXY(2, 120);
 }
 
+static void showMenuItem(uint8_t idx)
+{
+    Menu *menu = menuGet();
+    uint16_t width = canvas.glcd->drv->width;
+    MenuIdx menuIdx = menu->list[idx];
+    char *name = menuGetName(menuIdx);
+    uint8_t active = (menu->active == menu->list[idx]);
+
+    const uint8_t ih = 25;  // Menu item height
+    uint16_t y_pos = 40 + ih * (idx - menu->dispOft);
+
+    glcdDrawFrame(0, y_pos, width - 1, y_pos + ih - 1, active ? LCD_COLOR_WHITE : canvas.color);
+
+    glcdSetFont(&fontterminus22b);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+
+    glcdSetXY(4, y_pos + 1);
+    if (menu->list[idx] != MENU_NULL) {
+        glcdWriteString("  ");
+    } else {
+        glcdWriteString("< ");
+    }
+    glcdWriteString(name);
+
+    uint16_t x = canvas.glcd->x;
+
+    glcdSetXY(width - 4, y_pos + 1);
+    uint16_t strLen = 0;
+
+    if (menuGetType(menuIdx) == MENU_TYPE_PARENT) {
+        if (menu->list[idx] != MENU_NULL) {
+            glcdSetFontAlign(FONT_ALIGN_RIGHT);
+            strLen = glcdWriteString(">");
+        }
+    }
+
+    glcdDrawRect(x, y_pos + 1, width - 4 - x - strLen, 22, canvas.color);
+}
+
 static void showMenu(void)
 {
     Menu *menu = menuGet();
@@ -213,16 +256,9 @@ static void showMenu(void)
     glcdWriteString(parentName);
     glcdDrawRect(0, 35, 320, 2, LCD_COLOR_WHITE);
 
-    glcdSetFont(&fontterminus22b);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-
-    const uint8_t ih = 25;  // Menu item height
-
-    for (uint8_t idx = 0; idx < 8; idx++) {
-        char *name = menuGetName(menu->idx[idx]);
-        glcdSetXY(4, 41 + ih * idx);
-        glcdWriteString(name);
-        glcdDrawFrame(0, 40 + ih * idx, 319, 40 + ih - 1 + ih * idx,
-                      menu->active == menu->idx[idx] ? LCD_COLOR_WHITE : canvas.color);
+    for (uint8_t idx = 0; idx < menu->listSize; idx++) {
+        if (idx >= menu->dispOft && idx < MENU_SIZE_VISIBLE + menu->dispOft) {
+            showMenuItem(idx);
+        }
     }
 }

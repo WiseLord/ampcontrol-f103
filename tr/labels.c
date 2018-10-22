@@ -35,7 +35,9 @@ const char *labels_default[LABEL_END] = {
     [LABEL_GAIN6]           = "Input 6",
     [LABEL_GAIN7]           = "Input 7",
 
-    [LABEL_MENU + MENU_NULL]            = "Menu",
+    [LABEL_MENU + MENU_NULL]            = "Up menu",
+
+    [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
 
     [LABEL_MENU + MENU_SETUP]           = "Settings",
     [LABEL_MENU + MENU_SETUP_AUDIO]     = "Audio",
@@ -44,7 +46,7 @@ const char *labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Display",
     [LABEL_MENU + MENU_SETUP_INPUT]     = "Input",
 
-    [LABEL_MENU + MENU_TUNER_IC]        = "IC",
+    [LABEL_MENU + MENU_TUNER_IC]        = "Tuner IC",
     [LABEL_MENU + MENU_TUNER_FREQ_MIN]  = "Min. freq",
     [LABEL_MENU + MENU_TUNER_FREQ_MAX]  = "Max. freq",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Scan step",
@@ -55,6 +57,12 @@ const char *labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_DE]        = "Deemphasys",
     [LABEL_MENU + MENU_TUNER_SOFTMUTE]  = "Soft mute",
 
+    [LABEL_MENU + MENU_SPECTURM_MODE]   = "Display mode",
+    [LABEL_MENU + MENU_SPECTRUM_SPEED]  = "Fall speed",
+
+    [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Standby brightness",
+
+    [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Encoder resolution",
 };
 
 const char *labels[LABEL_END];

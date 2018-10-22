@@ -42,7 +42,7 @@ typedef enum {
 
     // Menu
     LABEL_MENU,
-    LABEL_MENU_END = LABEL_MENU + (MENU_END - MENU_SETUP),
+    LABEL_MENU_END = LABEL_MENU + (MENU_END - MENU_NULL - 1),
 
     LABEL_END
 } Label;

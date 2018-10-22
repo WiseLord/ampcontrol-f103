@@ -111,6 +111,11 @@ static void screenCheckChange(void)
                 clearFlag = 1;
             }
             break;
+        case SCREEN_MENU:
+            if (scrPar.parent != scrParPrev.parent) {
+                clearFlag = 1;
+            }
+            break;
         default:
             break;
         }
@@ -273,7 +278,7 @@ void screenShow(void)
     case SCREEN_TUNER:
         screenShowTuner();
         break;
-    case SCREEN_SETUP:
+    case SCREEN_MENU:
         screenShowMenu();
         break;
 
