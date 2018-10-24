@@ -348,7 +348,7 @@ void actionHandle(Action action, uint8_t visible)
         dispTime = 10000;
         break;
     case ACTION_MENU_CHANGE:
-        menuMove(action.value);
+        menuChange(action.value);
         scrPar.parent = menuGet()->parent;
         dispTime = 10000;
         break;

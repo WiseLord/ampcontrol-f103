@@ -5,7 +5,7 @@ static Lang lang = LANG_END;
 extern char *const labels_by[LABEL_END];
 extern char *const labels_ru[LABEL_END];
 
-const char *labels_default[LABEL_END] = {
+const char *const labels_default[LABEL_END] = {
     [LABEL_SUNDAY]          = "SUNDAY",
     [LABEL_MONDAY]          = "MONDAY",
     [LABEL_TUESDAY]         = "TUESDAY",
@@ -35,6 +35,18 @@ const char *labels_default[LABEL_END] = {
     [LABEL_GAIN6]           = "Input 6",
     [LABEL_GAIN7]           = "Input 7",
 
+    [LABEL_BOOL_OFF]        = "OFF",
+    [LABEL_BOOL_ON]         = "ON",
+
+    [LABEL_TUNER_IC_NO]         = "---",
+    [LABEL_TUNER_IC_RDA5807]    = "RDA5807",
+    [LABEL_TUNER_IC_SI4703]     = "Si4703",
+
+    [LABEL_AUDIO_IC_NO]         = "---",
+    [LABEL_AUDIO_IC_TDA7439]    = "TDA7439",
+    [LABEL_AUDIO_IC_TDA7313]    = "TDA7313",
+    [LABEL_AUDIO_IC_PT232X]     = "PT232x",
+
     [LABEL_MENU + MENU_NULL]            = "Up menu",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
@@ -47,13 +59,11 @@ const char *labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_INPUT]     = "Input",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner IC",
-    [LABEL_MENU + MENU_TUNER_FREQ_MIN]  = "Min. freq",
-    [LABEL_MENU + MENU_TUNER_FREQ_MAX]  = "Max. freq",
+    [LABEL_MENU + MENU_TUNER_BAND]      = "Tuner band",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Scan step",
     [LABEL_MENU + MENU_TUNER_MONO]      = "Force mono",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Enable RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass boost",
-    [LABEL_MENU + MENU_TUNER_BAND]      = "Tuner band",
     [LABEL_MENU + MENU_TUNER_DE]        = "Deemphasys",
     [LABEL_MENU + MENU_TUNER_SOFTMUTE]  = "Soft mute",
 

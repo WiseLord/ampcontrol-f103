@@ -112,7 +112,7 @@ void tunerSetFlag(TunerFlag flag, uint8_t value)
             tuner.api.setBass(value);
         }
         break;
-    case TUNER_FLAG_STEREO:
+    case TUNER_FLAG_MONO:
         if (tuner.api.setStereo) {
             tuner.api.setStereo(value);
         }

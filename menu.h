@@ -60,11 +60,12 @@ typedef struct {
 Menu *menuGet(void);
 
 void menuSetActive(MenuIdx index);
-MenuIdx menuGetParent(MenuIdx index);
-MenuIdx menuGetFirstChild(void);
-void menuMove(int8_t diff);
+void menuChange(int8_t diff);
 
-char *menuGetName(MenuIdx index);
+MenuIdx menuGetFirstChild(void);
+
 MenuType menuGetType(MenuIdx index);
+char *menuGetName(MenuIdx index);
+char *menuGetValueStr(MenuIdx index);
 
 #endif // MENU_H

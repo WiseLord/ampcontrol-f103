@@ -15,7 +15,6 @@
 
 typedef enum {
     TUNER_IC_NO = 0,
-
     TUNER_IC_RDA5807,
     TUNER_IC_SI4703,
 
@@ -28,7 +27,7 @@ typedef enum {
     TUNER_FLAG_MUTE     = 0x0001,
     TUNER_FLAG_BASS     = 0x0002,
 
-    TUNER_FLAG_STEREO   = 0x0010,
+    TUNER_FLAG_MONO     = 0x0010,
     TUNER_FLAG_RDS      = 0x0020,
 } TunerFlag;
 

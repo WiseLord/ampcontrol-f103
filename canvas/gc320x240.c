@@ -231,14 +231,8 @@ static void showMenuItem(uint8_t idx)
     uint16_t x = canvas.glcd->x;
 
     glcdSetXY(width - 4, y_pos + 1);
-    uint16_t strLen = 0;
-
-    if (menuGetType(menuIdx) == MENU_TYPE_PARENT) {
-        if (menu->list[idx] != MENU_NULL) {
-            glcdSetFontAlign(FONT_ALIGN_RIGHT);
-            strLen = glcdWriteString(">");
-        }
-    }
+    glcdSetFontAlign(FONT_ALIGN_RIGHT);
+    uint16_t strLen = glcdWriteString(menuGetValueStr(menuIdx));
 
     glcdDrawRect(x, y_pos + 1, width - 4 - x - strLen, 22, canvas.color);
 }

@@ -51,7 +51,8 @@ typedef void (*SendDataCallback)(uint16_t data);
 void glcdInit(Glcd **value);
 void glcdFill(uint16_t color);
 
-void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);
+char * glcdPrepareNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);
+uint16_t glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);
 
 void glcdSetFont(const tFont *font);
 void glcdSetFontColor(uint16_t color);

@@ -31,7 +31,7 @@ void glcdFill(uint16_t color)
     glcdDrawRect(0, 0, glcd.drv->width, glcd.drv->height, color);
 }
 
-void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
+char *glcdPrepareNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
 {
     uint8_t numdiv;
     uint8_t sign = lead;
@@ -60,7 +60,14 @@ void glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
     if (i >= 0)
         strbuf[i] = sign;
 
-    glcdWriteString(strbuf);
+    return strbuf;
+}
+
+uint16_t glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
+{
+    char *str = glcdPrepareNum(number, width, lead, radix);
+
+    return glcdWriteString(str);
 }
 
 void glcdSetFont(const tFont *font)

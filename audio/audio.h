@@ -24,7 +24,6 @@ typedef enum {
 
 typedef enum {
     AUDIO_IC_NO = 0,
-
     AUDIO_IC_TDA7439,
     AUDIO_IC_TDA7313,
     AUDIO_IC_PT232X,

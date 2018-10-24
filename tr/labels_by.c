@@ -1,6 +1,6 @@
 #include "labels.h"
 
-const char *labels_by[LABEL_END] = {
+const char * const labels_by[LABEL_END] = {
     [LABEL_SUNDAY]          = "НЯДЗЕЛЯ",
     [LABEL_MONDAY]          = "ПАНЯДЗЕЛАК",
     [LABEL_TUESDAY]         = "АЎТОРАК",
