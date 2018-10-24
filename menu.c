@@ -75,8 +75,11 @@ Menu *menuGet(void)
 
 void menuSetActive(MenuIdx index)
 {
-    if (menu.active == index)
+    if (menu.active == index) {
+        menu.selected = !menu.selected;
         return;
+    }
+    menu.selected = 0;
 
     menu.active = (index != MENU_NULL) ? index : menu.parent;
     menu.parent = menuItems[index].parent;
@@ -107,7 +110,11 @@ void menuSetActive(MenuIdx index)
 
 void menuChange(int8_t diff)
 {
-    menuMove(diff);
+    if (menu.selected) {
+
+    } else {
+        menuMove(diff);
+    }
 }
 
 MenuIdx menuGetFirstChild(void)
@@ -146,10 +153,10 @@ char *menuGetValueStr(MenuIdx index)
 
     switch (index) {
     case MENU_AUDIO_IC:
-        ret = labels[LABEL_AUDIO_IC_NO + audioProcGet()->ic];
+        ret = labels[LABEL_AUDIO_IC + audioProcGet()->ic];
         break;
     case MENU_TUNER_IC:
-        ret = labels[LABEL_TUNER_IC_NO + tunerGet()->ic];
+        ret = labels[LABEL_TUNER_IC + tunerGet()->ic];
         break;
 
     case MENU_TUNER_MONO:
@@ -162,7 +169,7 @@ char *menuGetValueStr(MenuIdx index)
         ret = labels[LABEL_BOOL_OFF + (tunerGet()->flags & TUNER_FLAG_BASS)];
         break;
     default:
-        ret = "---";
+        ret = "--";
         break;
     }
 

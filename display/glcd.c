@@ -253,6 +253,11 @@ static int32_t findSymbolCode(char **string)
 
 uint16_t glcdWriteString(char *string)
 {
+    return glcdWriteStringFramed(string, 0);
+}
+
+uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
+{
     int32_t code = 0;
     char *str = string;
     uint16_t ret = 0;
@@ -264,6 +269,8 @@ uint16_t glcdWriteString(char *string)
         int16_t pos = findSymbolPos(LETTER_SPACE_CHAR);
         uint16_t sWidth = font->chars[pos].image->width;
 
+        if (framed)
+            strLength += sWidth;
         while (*str) {
             code = findSymbolCode(&str);
             pos = findSymbolPos(code);
@@ -272,6 +279,8 @@ uint16_t glcdWriteString(char *string)
                 strLength += sWidth;
             }
         }
+        if (framed)
+            strLength += sWidth;
 
         if (glcd.font.align == FONT_ALIGN_CENTER) {
             glcdSetX(glcd.x - strLength / 2);
@@ -285,6 +294,8 @@ uint16_t glcdWriteString(char *string)
 
     str = string;
 
+    if (framed)
+        ret += glcdWriteChar(LETTER_SPACE_CHAR);
     while (*str) {
         code = findSymbolCode(&str);
 
@@ -292,6 +303,8 @@ uint16_t glcdWriteString(char *string)
         if (*str)
             ret += glcdWriteChar(LETTER_SPACE_CHAR);
     }
+    if (framed)
+        ret += glcdWriteChar(LETTER_SPACE_CHAR);
 
     return ret;
 }

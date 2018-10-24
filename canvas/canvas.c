@@ -28,4 +28,5 @@ void canvasInit(Canvas **canvas)
 #else
 #error "Unsupported display driver"
 #endif
+    (*canvas)->color = LCD_COLOR_BLACK;
 }

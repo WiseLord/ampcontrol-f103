@@ -212,15 +212,17 @@ static void showMenuItem(uint8_t idx)
     char *name = menuGetName(menuIdx);
     uint8_t active = (menu->active == menu->list[idx]);
 
-    const uint8_t ih = 25;  // Menu item height
-    uint16_t y_pos = 40 + ih * (idx - menu->dispOft);
+    const uint8_t ih = 26;  // Menu item height
+    uint16_t y_pos = 32 + ih * (idx - menu->dispOft);
 
+    // Draw selection frame
     glcdDrawFrame(0, y_pos, width - 1, y_pos + ih - 1, active ? LCD_COLOR_WHITE : canvas.color);
 
+    // Draw menu name
     glcdSetFont(&fontterminus22b);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
-    glcdSetXY(4, y_pos + 1);
+    glcdSetXY(4, y_pos + 2);
     if (menu->list[idx] != MENU_NULL) {
         glcdWriteString("  ");
     } else {
@@ -228,13 +230,24 @@ static void showMenuItem(uint8_t idx)
     }
     glcdWriteString(name);
 
+    // Draw menu value
     uint16_t x = canvas.glcd->x;
-
-    glcdSetXY(width - 4, y_pos + 1);
+    glcdSetXY(width - 2, y_pos + 2);
     glcdSetFontAlign(FONT_ALIGN_RIGHT);
-    uint16_t strLen = glcdWriteString(menuGetValueStr(menuIdx));
 
-    glcdDrawRect(x, y_pos + 1, width - 4 - x - strLen, 22, canvas.color);
+    // Inverse value color if selected
+    uint16_t color = canvas.glcd->font.color;
+    uint16_t bgColor = canvas.glcd->font.bgColor;
+    if (active && menu->selected) {
+        glcdSetFontColor(bgColor);
+        glcdSetFontBgColor(color);
+    }
+    uint16_t strLen = glcdWriteStringFramed(menuGetValueStr(menuIdx), 1);
+    glcdSetFontColor(color);
+    glcdSetFontBgColor(bgColor);
+
+    // Fill space between name and value
+    glcdDrawRect(x, y_pos + 1, width - 2 - x - strLen, 22, canvas.color);
 }
 
 static void showMenu(void)
@@ -243,12 +256,12 @@ static void showMenu(void)
 
     // Show header
     char *parentName = menuGetName(menu->parent);
-    glcdSetFont(&fontterminus32);
+    glcdSetFont(&fontterminus28b);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
     glcdSetXY(2, 0);
     glcdWriteString(parentName);
-    glcdDrawRect(0, 35, 320, 2, LCD_COLOR_WHITE);
+    glcdDrawRect(0, 29, 320, 1, canvas.glcd->font.color);
 
     for (uint8_t idx = 0; idx < menu->listSize; idx++) {
         if (idx >= menu->dispOft && idx < MENU_SIZE_VISIBLE + menu->dispOft) {

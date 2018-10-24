@@ -52,6 +52,7 @@ typedef struct {
     MenuIdx active;
     uint8_t list[MENU_MAX_LEN];
     uint8_t listSize;       // Total number of items in current menu
+    uint8_t selected;
 
     uint8_t dispSize;       // Number of items display able to show
     int8_t dispOft;         // First visible item offset on display

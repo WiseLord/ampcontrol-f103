@@ -3,6 +3,9 @@
 
 #include "../menu.h"
 
+#include "../tuner/tuner.h"
+#include "../audio/audio.h"
+
 typedef enum {
     LANG_BY,
     LANG_RU,
@@ -34,16 +37,13 @@ typedef enum {
     LABEL_BOOL_OFF,
     LABEL_BOOL_ON,
 
-    LABEL_AUDIO_IC_NO,
-    LABEL_AUDIO_IC_TDA7439,
-    LABEL_AUDIO_IC_TDA7313,
-    LABEL_AUDIO_IC_PT232X,
+    LABEL_TUNER_IC,
+    LABEL_TUNER_END = LABEL_TUNER_IC + (TUNER_IC_END - TUNER_IC_NO),
 
-    LABEL_TUNER_IC_NO,
-    LABEL_TUNER_IC_RDA5807,
-    LABEL_TUNER_IC_SI4703,
+    LABEL_AUDIO_IC = LABEL_TUNER_END,
+    LABEL_AUDIO_IC_END = LABEL_AUDIO_IC + (AUDIO_IC_END - AUDIO_IC_NO),
 
-    LABEL_GAIN0,
+    LABEL_GAIN0 = LABEL_AUDIO_IC_END,
     LABEL_GAIN1,
     LABEL_GAIN2,
     LABEL_GAIN3,
@@ -54,9 +54,9 @@ typedef enum {
 
     // Menu
     LABEL_MENU,
-    LABEL_MENU_END = LABEL_MENU + (MENU_END - MENU_NULL - 1),
+    LABEL_MENU_END = LABEL_MENU + (MENU_END - MENU_NULL),
 
-    LABEL_END
+    LABEL_END = LABEL_MENU_END,
 } Label;
 
 void labelsSetLang(Lang value);
