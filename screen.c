@@ -82,6 +82,9 @@ static void screenCheckChange(void)
                 }
             }
             break;
+        case SCREEN_MENU:
+            menuGet()->selected = 0;
+            break;
         default:
             break;
         }
@@ -281,10 +284,6 @@ void screenShow(void)
     case SCREEN_MENU:
         screenShowMenu();
         break;
-
-    case SCREEN_TEST:
-        screenTest();
-        break;
     default:
         break;
     }
@@ -384,25 +383,5 @@ void screenShowMenu(void)
 {
     if (canvas->showMenu) {
         canvas->showMenu();
-    }
-}
-
-void screenTest(void)
-{
-    glcdSetFont(&fontterminus12);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-
-    uint16_t *value;
-
-    for (uint8_t i = 0; i < 16; i++) {
-        glcdSetXY((i % 2) ? 28 : 0, 12 * (i / 2));
-        value = (uint16_t *)(FLASH_BASE + EE_PAGE_SIZE * EE_PAGE_0 + 2 * i);
-        glcdWriteNum(*value, 4, '0', 16);
-    }
-
-    for (uint8_t i = 0; i < 16; i++) {
-        glcdSetXY((i % 2) ? 92 : 64, 12 * (i / 2));
-        value = (uint16_t *)(FLASH_BASE + EE_PAGE_SIZE * EE_PAGE_1 + 2 * i);
-        glcdWriteNum(*value, 4, '0', 16);
     }
 }

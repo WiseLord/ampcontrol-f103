@@ -174,10 +174,6 @@ static void actionRemapActions(void)
         actionSet(ACTION_NONE, 0);
     }
 
-    if (SCREEN_TEST == screen) {
-        actionSet(ACTION_NONE, 0);
-    }
-
     if (SCREEN_MENU == screen &&
         (ACTION_MENU_CHANGE != action.type &&
          ACTION_MENU_SELECT != action.type)) {
@@ -329,7 +325,6 @@ void actionHandle(Action action, uint8_t visible)
         rtcSetMode(RTC_NOEDIT);
         if (SCREEN_STANDBY != screen) {
             switch (screen) {
-            case SCREEN_TEST:
             case SCREEN_MENU:
                 screen = SCREEN_STANDBY;
                 break;
@@ -353,10 +348,6 @@ void actionHandle(Action action, uint8_t visible)
         dispTime = 10000;
         break;
 
-    case ACTION_TEST:
-        screen = SCREEN_TEST;
-        dispTime = 5000;
-        break;
     default:
         break;
     }

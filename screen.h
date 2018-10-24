@@ -25,8 +25,6 @@ typedef enum {
 
     SCREEN_MENU,
 
-    SCREEN_TEST,
-
     SCREEN_END
 } Screen;
 
@@ -65,7 +63,5 @@ void screenShowInput(void);
 void screenShowAudioParam(void);
 void screenShowTuner(void);
 void screenShowMenu(void);
-
-void screenTest(void);
 
 #endif // SCREEN_H
