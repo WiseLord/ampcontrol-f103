@@ -19,7 +19,6 @@ static void tunerReadSettings(void)
 
     tuner.freqMin = 8700;
     tuner.freqMax = 10800;
-    tuner.ic = TUNER_IC_RDA5807;
 }
 
 static void tunerSaveSettings(void)

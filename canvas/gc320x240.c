@@ -247,7 +247,7 @@ static void showMenuItem(uint8_t idx)
     glcdSetFontBgColor(bgColor);
 
     // Fill space between name and value
-    glcdDrawRect(x, y_pos + 1, width - 2 - x - strLen, 22, canvas.color);
+    glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, 22, canvas.color);
 }
 
 static void showMenu(void)

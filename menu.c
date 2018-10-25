@@ -68,6 +68,92 @@ static void menuMove(int8_t diff)
     }
 }
 
+static int16_t menuGetValue(MenuIdx index)
+{
+    int16_t ret = 0;
+
+    switch (index) {
+    case MENU_AUDIO_IC:
+        ret = audioProcGet()->ic;
+        break;
+    case MENU_TUNER_IC:
+        ret = tunerGet()->ic;
+        break;
+
+    case MENU_TUNER_MONO:
+        ret = (tunerGet()->flags & TUNER_FLAG_MONO) ? 1 : 0;
+        break;
+    case MENU_TUNER_RDS:
+        ret = (tunerGet()->flags & TUNER_FLAG_RDS) ? 1 : 0;
+        break;
+    case MENU_TUNER_BASS:
+        ret = (tunerGet()->flags & TUNER_FLAG_BASS) ? 1 : 0;
+        break;
+    default:
+        ret = 0;
+        break;
+    }
+
+    return ret;
+}
+
+static void menuStoreCurrentValue(void)
+{
+    switch (menu.active) {
+    case MENU_AUDIO_IC:
+        audioProcGet()->ic = menu.value;
+        eeUpdate(EE_AUDIO_IC, audioProcGet()->ic);
+        break;
+    case MENU_TUNER_IC:
+        tunerGet()->ic = menu.value;
+        eeUpdate(EE_TUNER_IC, tunerGet()->ic);
+        break;
+
+    case MENU_TUNER_MONO:
+        menu.value ? (tunerGet()->flags |= TUNER_FLAG_MONO) : (tunerGet()->flags &= ~TUNER_FLAG_MONO);
+        eeUpdate(EE_TUNER_FLAGS, tunerGet()->flags);
+        break;
+    case MENU_TUNER_RDS:
+        menu.value ? (tunerGet()->flags |= TUNER_FLAG_RDS) : (tunerGet()->flags &= ~TUNER_FLAG_RDS);
+        eeUpdate(EE_TUNER_FLAGS, tunerGet()->flags);
+        break;
+    case MENU_TUNER_BASS:
+        menu.value ? (tunerGet()->flags |= TUNER_FLAG_BASS) : (tunerGet()->flags &= ~TUNER_FLAG_BASS);
+        eeUpdate(EE_TUNER_FLAGS, tunerGet()->flags);
+        break;
+    default:
+        break;
+    }
+}
+
+static void menuValueChange(int8_t diff)
+{
+    if (menuItems[menu.active].type == MENU_TYPE_BOOL) {
+        if (diff)
+            menu.value = !menu.value;
+        return;
+    }
+
+    menu.value += diff;
+
+    switch (menu.active) {
+    case MENU_AUDIO_IC:
+        if (menu.value >= AUDIO_IC_END)
+            menu.value = AUDIO_IC_NO;
+        if (menu.value < AUDIO_IC_NO)
+            menu.value = AUDIO_IC_END - 1;
+        break;
+    case MENU_TUNER_IC:
+        if (menu.value >= TUNER_IC_END)
+            menu.value = TUNER_IC_NO;
+        if (menu.value < TUNER_IC_NO)
+            menu.value = TUNER_IC_END - 1;
+        break;
+    default:
+        break;
+    }
+}
+
 Menu *menuGet(void)
 {
     return &menu;
@@ -77,8 +163,15 @@ void menuSetActive(MenuIdx index)
 {
     if (menu.active == index) {
         menu.selected = !menu.selected;
+
+        if (menu.selected)
+            menu.value = menuGetValue(menu.active);
+        else
+            menuStoreCurrentValue();
+
         return;
     }
+
     menu.selected = 0;
 
     menu.active = (index != MENU_NULL) ? index : menu.parent;
@@ -111,7 +204,7 @@ void menuSetActive(MenuIdx index)
 void menuChange(int8_t diff)
 {
     if (menu.selected) {
-
+        menuValueChange(diff);
     } else {
         menuMove(diff);
     }
@@ -130,11 +223,6 @@ MenuIdx menuGetFirstChild(void)
     return menu.active;
 }
 
-MenuType menuGetType(MenuIdx index)
-{
-    return menuItems[index].type;
-}
-
 char *menuGetName(MenuIdx index)
 {
     const char **txtLabels = labelsGet();
@@ -144,29 +232,32 @@ char *menuGetName(MenuIdx index)
 
 char *menuGetValueStr(MenuIdx index)
 {
-    char **labels = (char**)labelsGet();
+    char **labels = (char **)labelsGet();
     char *ret = ">";
 
+    // Parent menu type
     if (menuItems[index].type == MENU_TYPE_PARENT) {
         return (index == MENU_NULL) ? "" : ret;
     }
 
+    int16_t value = menuGetValue(index);
+
+    if (index == menu.active && menu.selected)
+        value = menu.value;
+
+    // Bool menu type
+    if (menuItems[index].type == MENU_TYPE_BOOL) {
+        ret = labels[LABEL_BOOL_OFF + value];
+        return ret;
+    }
+
+    // Enum menu types
     switch (index) {
     case MENU_AUDIO_IC:
-        ret = labels[LABEL_AUDIO_IC + audioProcGet()->ic];
+        ret = labels[LABEL_AUDIO_IC + value];
         break;
     case MENU_TUNER_IC:
-        ret = labels[LABEL_TUNER_IC + tunerGet()->ic];
-        break;
-
-    case MENU_TUNER_MONO:
-        ret = labels[LABEL_BOOL_OFF + (tunerGet()->flags & TUNER_FLAG_MONO)];
-        break;
-    case MENU_TUNER_RDS:
-        ret = labels[LABEL_BOOL_OFF + (tunerGet()->flags & TUNER_FLAG_RDS)];
-        break;
-    case MENU_TUNER_BASS:
-        ret = labels[LABEL_BOOL_OFF + (tunerGet()->flags & TUNER_FLAG_BASS)];
+        ret = labels[LABEL_TUNER_IC + value];
         break;
     default:
         ret = "--";

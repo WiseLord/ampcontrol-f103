@@ -53,6 +53,7 @@ typedef struct {
     uint8_t list[MENU_MAX_LEN];
     uint8_t listSize;       // Total number of items in current menu
     uint8_t selected;
+    int16_t value;
 
     uint8_t dispSize;       // Number of items display able to show
     int8_t dispOft;         // First visible item offset on display
@@ -65,7 +66,6 @@ void menuChange(int8_t diff);
 
 MenuIdx menuGetFirstChild(void);
 
-MenuType menuGetType(MenuIdx index);
 char *menuGetName(MenuIdx index);
 char *menuGetValueStr(MenuIdx index);
 
