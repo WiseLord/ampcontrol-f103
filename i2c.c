@@ -44,47 +44,6 @@ uint8_t i2cInit(I2C_TypeDef *I2Cx, uint32_t ClockSpeed)
     return 0;
 }
 
-uint8_t i2cStart(I2C_TypeDef *I2Cx, uint8_t addr)
-{
-    LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
-
-    LL_I2C_GenerateStartCondition(I2Cx);
-
-    i2cTimeout = I2C_SEND_TIMEOUT_SB_MS;
-    while (!LL_I2C_IsActiveFlag_SB(I2Cx)) {
-
-    }
-
-    LL_I2C_TransmitData8(I2Cx, addr | I2C_WRITE);
-
-    while (!LL_I2C_IsActiveFlag_ADDR(I2Cx)) {
-
-    }
-
-    LL_I2C_ClearFlag_ADDR(I2Cx);
-
-    return 0;
-}
-
-uint8_t i2cStop(I2C_TypeDef *I2Cx)
-{
-    while (!LL_I2C_IsActiveFlag_TXE(I2Cx));
-
-    LL_I2C_GenerateStopCondition(I2Cx);
-
-    return 0;
-}
-
-uint8_t i2cWrite(I2C_TypeDef *I2Cx, uint8_t data)
-{
-    while (!LL_I2C_IsActiveFlag_TXE(I2Cx));
-
-    LL_I2C_TransmitData8(I2Cx, data);
-
-    return 0;
-}
-
-
 void i2cBegin(I2C_TypeDef *I2Cx, uint8_t addr)
 {
     i2cBytes = 0;
@@ -155,6 +114,67 @@ void i2cTransmit(I2C_TypeDef *I2Cx)
 
 void i2cReceive(I2C_TypeDef *I2Cx, uint8_t *buf, uint8_t size)
 {
+
+    LL_I2C_GenerateStartCondition(I2Cx);
+
+    i2cTimeout = I2C_SEND_TIMEOUT_SB_MS;
+    while (!LL_I2C_IsActiveFlag_SB(I2Cx)) {
+        if (LL_SYSTICK_IsActiveCounterFlag()) {
+            if (i2cTimeout-- == 0) {
+                // TODO: handle error
+                return;
+            }
+        }
+    }
+
+    //Send device address again + read
+    LL_I2C_TransmitData8(I2Cx, i2cAddr | I2C_READ);
+
+    i2cTimeout = I2C_SEND_TIMEOUT_ADDR_MS;
+    while (!LL_I2C_IsActiveFlag_ADDR(I2Cx)) {
+        if (LL_SYSTICK_IsActiveCounterFlag()) {
+            if (i2cTimeout-- == 0) {
+                // TODO: handle error
+                return;
+            }
+        }
+    }
+
+    //Read out data MSB, send ACK
+    LL_I2C_ClearFlag_ADDR(I2Cx);
+    LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
+
+    i2cTimeout = I2C_SEND_TIMEOUT_RXE_MS;
+    while (!LL_I2C_IsActiveFlag_RXNE(I2Cx)) {
+        if (LL_SYSTICK_IsActiveCounterFlag()) {
+            if (i2cTimeout-- == 0) {
+                // TODO: handle error
+                return;
+            }
+        }
+    }
+    *buf++ = LL_I2C_ReceiveData8(I2Cx);
+
+    //Read out data LSB, send NACK
+    i2cTimeout = I2C_SEND_TIMEOUT_RXE_MS;
+    while (!LL_I2C_IsActiveFlag_RXNE(I2Cx)) {
+        if (LL_SYSTICK_IsActiveCounterFlag()) {
+            if (i2cTimeout-- == 0) {
+                // TODO: handle error
+                return;
+            }
+        }
+    }
+    *buf++ = LL_I2C_ReceiveData8(I2Cx);
+    LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_NACK);
+
+    LL_I2C_GenerateStopCondition(I2Cx);
+}
+
+#ifdef HIDE
+
+void i2cReceive(I2C_TypeDef *I2Cx, uint8_t *buf, uint8_t size)
+{
 //    if (size == 1) {
 //        // Send START condition
 //        LL_I2C_GenerateStartCondition(I2Cx);
@@ -215,65 +235,8 @@ void i2cReceive(I2C_TypeDef *I2Cx, uint8_t *buf, uint8_t size)
 //        // Enable Acknowledgement to be ready for another reception
 //        LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
 //    }
-
-
-    LL_I2C_GenerateStartCondition(I2Cx);
-
-    i2cTimeout = I2C_SEND_TIMEOUT_SB_MS;
-    while (!LL_I2C_IsActiveFlag_SB(I2Cx)) {
-        if (LL_SYSTICK_IsActiveCounterFlag()) {
-            if (i2cTimeout-- == 0) {
-                // TODO: handle error
-                return;
-            }
-        }
-    }
-
-    //Send device address again + read
-    LL_I2C_TransmitData8(I2Cx, i2cAddr | I2C_READ);
-
-    i2cTimeout = I2C_SEND_TIMEOUT_ADDR_MS;
-    while (!LL_I2C_IsActiveFlag_ADDR(I2Cx)) {
-        if (LL_SYSTICK_IsActiveCounterFlag()) {
-            if (i2cTimeout-- == 0) {
-                // TODO: handle error
-                return;
-            }
-        }
-    }
-
-    //Read out data MSB, send ACK
-    LL_I2C_ClearFlag_ADDR(I2Cx);
-    LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_ACK);
-
-    i2cTimeout = I2C_SEND_TIMEOUT_RXE_MS;
-    while (!LL_I2C_IsActiveFlag_RXNE(I2Cx)) {
-        if (LL_SYSTICK_IsActiveCounterFlag()) {
-            if (i2cTimeout-- == 0) {
-                // TODO: handle error
-                return;
-            }
-        }
-    }
-    *buf++ = LL_I2C_ReceiveData8(I2Cx);
-
-    //Read out data LSB, send NACK
-    i2cTimeout = I2C_SEND_TIMEOUT_RXE_MS;
-    while (!LL_I2C_IsActiveFlag_RXNE(I2Cx)) {
-        if (LL_SYSTICK_IsActiveCounterFlag()) {
-            if (i2cTimeout-- == 0) {
-                // TODO: handle error
-                return;
-            }
-        }
-    }
-    *buf++ = LL_I2C_ReceiveData8(I2Cx);
-    LL_I2C_AcknowledgeNextData(I2Cx, LL_I2C_NACK);
-
-    LL_I2C_GenerateStopCondition(I2Cx);
 }
 
-#ifdef HIDE
 void I2C_Master_BufferRead(I2C_TypeDef *I2Cx, uint8_t *pBuffer,  uint32_t NumByteToRead,
                            uint8_t SlaveAddress)
 {
@@ -471,13 +434,14 @@ void I2C_Master_BufferRead(I2C_TypeDef *I2Cx, uint8_t *pBuffer,  uint32_t NumByt
 
 
 
-uint16_t MLX90640_I2CReadWord(uint8_t slave_address, uint16_t start_address) {
+uint16_t MLX90640_I2CReadWord(uint8_t slave_address, uint16_t start_address)
+{
 
     uint16_t puff;
-    volatile uint8_t reg_m,reg_l,dat_m,dat_l;
+    volatile uint8_t reg_m, reg_l, dat_m, dat_l;
 
-    reg_m = (uint8_t) ((start_address & 0xFF00) >> 8);	//Address MSB
-    reg_l = (uint8_t) (start_address & 0x00FF); 	    //Address LSB
+    reg_m = (uint8_t) ((start_address & 0xFF00) >> 8);  //Address MSB
+    reg_l = (uint8_t) (start_address & 0x00FF);         //Address LSB
 
 
     while (LL_I2C_IsActiveFlag_BUSY(I2C1)) {

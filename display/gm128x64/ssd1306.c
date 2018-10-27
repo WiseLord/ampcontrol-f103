@@ -90,14 +90,14 @@ void ssd1306Init(DispDriver **driver)
 
     uint8_t i;
 
-    i2cStart(I2C_LCD, ssd1306Addr);
-    i2cWrite(I2C_LCD, SSD1306_I2C_COMMAND);
+    i2cBegin(I2C_LCD, ssd1306Addr);
+    i2cSend(I2C_LCD, SSD1306_I2C_COMMAND);
 
     for (i = 0; i < sizeof(initSeq); i++) {
-        i2cWrite(I2C_LCD, initSeq[i]);
+        i2cSend(I2C_LCD, initSeq[i]);
     }
 
-    i2cStop(I2C_LCD);
+    i2cTransmit(I2C_LCD);
 }
 
 void ssd1306UpdateFb()
@@ -108,36 +108,36 @@ void ssd1306UpdateFb()
 #ifdef SSD1306_USE_PAGE_ADDRESSING
     uint8_t page;
     for (page = 0; page < 8; page++) {
-        i2cStart(I2C_LCD, ssd1306Addr);
-        i2cWrite(I2C_LCD, SSD1306_I2C_COMMAND);
-        i2cWrite(I2C_LCD, SSD1306_SETLOWCOLUMN);
-        i2cWrite(I2C_LCD, SSD1306_SETHIGHCOLUMN);
-        i2cWrite(I2C_LCD, SSD1306_PAGE_START + page);
-        i2cStop(I2C_LCD);
+        i2cBegin(I2C_LCD, ssd1306Addr);
+        i2cSend(I2C_LCD, SSD1306_I2C_COMMAND);
+        i2cSend(I2C_LCD, SSD1306_SETLOWCOLUMN);
+        i2cSend(I2C_LCD, SSD1306_SETHIGHCOLUMN);
+        i2cSend(I2C_LCD, SSD1306_PAGE_START + page);
+        i2cTransmit(I2C_LCD);
 
-        i2cStart(I2C_LCD, ssd1306Addr);
-        i2cWrite(I2C_LCD, SSD1306_I2C_DATA_SEQ);
+        i2cBegin(I2C_LCD, ssd1306Addr);
+        i2cSend(I2C_LCD, SSD1306_I2C_DATA_SEQ);
         for (i = 0; i < SSD1306_WIDTH; i++) {
-            i2cWrite(I2C_LCD, *fbP++);
+            i2cSend(I2C_LCD, *fbP++);
         }
-        i2cStop(I2C_LCD);
+        i2cTransmit(I2C_LCD);
     }
 #else
-    i2cStart(I2C_LCD, ssd1306Addr);
-    i2cWrite(I2C_LCD, SSD1306_I2C_COMMAND);
+    i2cBegin(I2C_LCD, ssd1306Addr);
+    i2cSend(I2C_LCD, SSD1306_I2C_COMMAND);
 
     for (i = 0; i < sizeof(dispAreaSeq); i++)
-        i2cWrite(I2C_LCD, dispAreaSeq[i]);
+        i2cSend(I2C_LCD, dispAreaSeq[i]);
 
-    i2cStop(I2C_LCD);
+    i2cTransmit(I2C_LCD);
 
-    i2cStart(I2C_LCD, ssd1306Addr);
-    i2cWrite(I2C_LCD, SSD1306_I2C_DATA_SEQ);
+    i2cBegin(I2C_LCD, ssd1306Addr);
+    i2cSend(I2C_LCD, SSD1306_I2C_DATA_SEQ);
 
     for (i = 0; i < SSD1306_BUFFERSIZE; i++)
-        i2cWrite(I2C_LCD, *fbP++);
+        i2cSend(I2C_LCD, *fbP++);
 
-    i2cStop(I2C_LCD);
+    i2cTransmit(I2C_LCD);
 #endif
 }
 
@@ -177,11 +177,11 @@ void ssd1306SetBrightness(uint8_t br)
     if (br < SSD1306_MAX_BRIGHTNESS)
         rawBr = br * 8;
 
-    i2cStart(I2C_LCD, ssd1306Addr);
-    i2cWrite(I2C_LCD, SSD1306_I2C_COMMAND);
+    i2cBegin(I2C_LCD, ssd1306Addr);
+    i2cSend(I2C_LCD, SSD1306_I2C_COMMAND);
 
-    i2cWrite(I2C_LCD, SSD1306_SETCONTRAST);
-    i2cWrite(I2C_LCD, rawBr);
+    i2cSend(I2C_LCD, SSD1306_SETCONTRAST);
+    i2cSend(I2C_LCD, rawBr);
 
-    i2cStop(I2C_LCD);
+    i2cTransmit(I2C_LCD);
 }
