@@ -66,7 +66,7 @@ static void actionRemapButtons(void)
         switch (action.value) {
         case BTN_D0:
             action.type = ACTION_STANDBY;
-            action.value = CMD_SWITCH;
+            action.value = STBY_SWITCH;
             break;
         case BTN_D1:
             action.type = ACTION_AUDIO_INPUT;
@@ -123,8 +123,8 @@ static void actionRemapActions(void)
 
     switch (action.type) {
     case ACTION_STANDBY:
-        if (CMD_SWITCH == action.value) {
-            action.value = (SCREEN_STANDBY == screen ? CMD_OFF : CMD_ON);
+        if (STBY_SWITCH == action.value) {
+            action.value = (SCREEN_STANDBY == screen ? STBY_EXIT : STBY_ENTER);
         }
         break;
     case ACTION_PREV:
@@ -185,7 +185,9 @@ static void actionHandleTimers(void)
 {
     if (ACTION_NONE == action.type) {
         if (swTimGetDisplay() == 0) {
-            action.type = ACTION_TIMER_EXPIRED;
+            action.type = ACTION_DISP_EXPIRED;
+        } else if (swTimGetInitHw() == 0) {
+            action.type = ACTION_INIT_HW;
         }
     }
 }
@@ -247,18 +249,28 @@ void actionHandle(Action action, uint8_t visible)
 
     switch (action.type) {
     case ACTION_STANDBY:
-        if (action.value == CMD_OFF) {
+        if (action.value == STBY_EXIT) {
             screen = SCREEN_TIME;
-            dispTime = 1000;
-            tunerSetPower(1);
+            dispTime = 800;
+            swTimSetInitHw(500);
         } else {
             dispTime = SW_TIM_OFF;
             screen = SCREEN_STANDBY;
             rtcSetMode(RTC_NOEDIT);
             screenSaveSettings();
+
             audioPowerOff();
             tunerSetPower(0);
         }
+        break;
+    case ACTION_INIT_HW:
+        swTimSetInitHw(SW_TIM_OFF);
+        tunerInit();
+        tunerSetPower(1);
+        tunerSetFreq(tunerGet()->freq);
+        tunerSetFlag(TUNER_FLAG_MUTE, 0);
+
+        audioInit();
         break;
 
     case ACTION_RTC_MODE:
@@ -321,7 +333,7 @@ void actionHandle(Action action, uint8_t visible)
         screenChangeBrighness(action.type, action.value);
         break;
 
-    case ACTION_TIMER_EXPIRED:
+    case ACTION_DISP_EXPIRED:
         rtcSetMode(RTC_NOEDIT);
         if (SCREEN_STANDBY != screen) {
             switch (screen) {

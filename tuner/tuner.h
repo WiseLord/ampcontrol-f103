@@ -24,37 +24,27 @@ typedef struct {
     void (*setFreq)(uint16_t freq);
     void (*seek)(int8_t direction);
 
+    void (*setVolume)(int8_t value);
+
     void (*setMute)(uint8_t value);
-    void (*setBass)(uint8_t value);
-    void (*setStereo)(uint8_t value);
+    void (*setBassBoost)(uint8_t value);
+    void (*setForcedMono)(uint8_t value);
     void (*setRds)(uint8_t value);
 
     void (*setPower)(uint8_t value);
 
-    void (*setVolume)(int8_t value);
-
     void (*updateStatus)(void);
 
-    uint16_t (*getFreq)(void);  // Actual frequency
+    uint16_t (*getFreq)(void);
     uint8_t (*getRssi)(void);   // Signal level
 } TunerApi;
 
 typedef struct {
     TunerIC ic;
-    TunerBand band;
-    TunerStep step;
-    TunerDeemph deemph;
-} TunerParam;
-
-typedef struct {
     TunerApi api;
     TunerParam par;
 
-    TunerFlag flags;
-
     uint16_t freq;
-    uint16_t freqMin;
-    uint16_t freqMax;
 } Tuner;
 
 void tunerInit(void);

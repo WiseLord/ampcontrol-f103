@@ -12,6 +12,8 @@
 static uint8_t wrBuf[RDA5807_WRBUF_SIZE];
 static uint8_t rdBuf[RDA5807_RDBUF_SIZE];
 
+TunerParam *tPar;
+
 static void rda580xWriteReg(uint8_t reg)
 {
     uint8_t *wrAddr = &wrBuf[2 * reg - 4];
@@ -37,29 +39,83 @@ static void rda580xSetBit(uint8_t idx, uint8_t bit, uint8_t cond)
 static void rda580xInitRegs(void)
 {
     wrBuf[0] = RDA580X_DHIZ;
-    wrBuf[1] = RDA580X_CLK_MODE_32768 | RDA580X_ENABLE;
+    if (tPar->flags & TUNER_FLAG_BASS)
+        wrBuf[0] |= RDA5807_BASS;
+    if (tPar->flags & TUNER_FLAG_MONO)
+        wrBuf[0] |= RDA580X_MONO;
+    wrBuf[1] = RDA580X_SKMODE | RDA580X_CLK_MODE_32768;
+    if (tPar->flags & TUNER_FLAG_RDS)
+        wrBuf[1] |= RDA5807_RDS_EN;
+    rda580xWriteReg(0x02);
 
     wrBuf[2] = 0x00;
-    wrBuf[3] = RDA580X_BAND_US_EUROPE | RDA580X_SPACE_100;
+    wrBuf[3] = 0x00;
+    switch (tPar->band) {
+    case TUNER_BAND_FM_JAPAN:
+        wrBuf[3] |= RDA580X_BAND_JAPAN;
+        tPar->fMin = 7600;
+        tPar->fMax = 9100;
+        break;
+    case TUNER_BAND_FM_WORLDWIDE:
+        wrBuf[3] |= RDA580X_BAND_WORLDWIDE;
+        tPar->fMin = 7600;
+        tPar->fMax = 10800;
+        break;
+    case TUNER_BAND_FM_EASTEUROPE:
+        wrBuf[3] |= RDA580X_BAND_EASTEUROPE;
+        tPar->fMin = 6500;
+        tPar->fMax = 7600;
+        break;
+    default:
+        wrBuf[3] |= RDA580X_BAND_US_EUROPE;
+        tPar->fMin = 8700;
+        tPar->fMax = 10800;
+        break;
+    }
+    switch (tPar->step) {
+    case TUNER_STEP_50K:
+        wrBuf[3] |= RDA580X_SPACE_50;
+        tPar->fStep = 5;
+        break;
+    case TUNER_STEP_200K:
+        wrBuf[3] |= RDA580X_SPACE_200;
+        tPar->fStep = 20;
+        break;
+    default:
+        wrBuf[3] |= RDA580X_SPACE_100;
+        tPar->fStep = 10;
+        break;
+    }
+    rda580xWriteReg(0x03);
 
+    wrBuf[4] = RDA580X_SOFTMUTE_EN;
+    if (tPar->deemph != TUNER_DEEMPH_75u)
+        wrBuf[4] |= RDA580X_DE;
+    wrBuf[5] |= RDA580X_GPIO3_ST_IND;
+    rda580xWriteReg(0x04);
+
+    wrBuf[6] = 0x08; // TODO: handle seek threshold
     wrBuf[7] = RDA580X_LNA_PORT_SEL_LNAP;
+    wrBuf[7] |= tPar->volume;
+    rda580xWriteReg(0x05);
+
+    // Nothing do with register 06 for now
+
+    wrBuf[10] = RDA5807_TH_SOFRBLEND_DEF | RDA5807_65M_50M_MODE;
+    wrBuf[11] = RDA5807_SEEK_TH_OLD_DEF | RDA5807_SOFTBLEND_EN; // TODO: handle softblend
+    rda580xWriteReg(0x07);
 }
 
-void rda580xInit(void)
+void rda580xInit(TunerParam *param)
 {
+    tPar = param;
+
     rda580xInitRegs();
-
-    rda580xSetPower(1);
-
-    rda580xSetMute(0);
-    rda580xSetVolume(0);
-
-    rda580xSetFreq(9890);
 }
 
 void rda580xSetFreq(uint16_t value)
 {
-    uint16_t chan = (value - 8700) / 10;
+    uint16_t chan = (value - tPar->fMin) / tPar->fStep;
 
     wrBuf[2] = (chan >> 2) & RDA580X_CHAN_9_2;
     wrBuf[3] &= ~RDA580X_CHAN_1_0;
@@ -77,11 +133,6 @@ void rda580xSeek(int8_t direction)
     wrBuf[0] &= ~RDA580X_SEEK;
 }
 
-void rda580xSetMute(uint8_t value)
-{
-    rda580xSetBit(0, RDA580X_DMUTE, !value);
-}
-
 void rda580xSetVolume(int8_t value)
 {
     if (value < RDA580X_VOL_MIN)
@@ -93,6 +144,26 @@ void rda580xSetVolume(int8_t value)
     wrBuf[7] |= value;
 
     rda580xWriteReg(0x05);
+}
+
+void rda580xSetMute(uint8_t value)
+{
+    rda580xSetBit(0, RDA580X_DMUTE, !value);
+}
+
+void rda580xSetBassBoost(uint8_t value)
+{
+    rda580xSetBit(0, RDA5807_BASS, value);
+}
+
+void rda580xSetForcedMono(uint8_t value)
+{
+    rda580xSetBit(0, RDA580X_MONO, value);
+}
+
+void rda580xSetRds(uint8_t value)
+{
+    rda580xSetBit(1, RDA5807_RDS_EN, value);
 }
 
 void rda580xSetPower(uint8_t value)
@@ -107,11 +178,11 @@ void rda580xUpdateStatus()
     i2cReceive(I2C_AMP, rdBuf, 2);
 }
 
-uint16_t rda580xGetFreq()
+uint16_t rda580xGetFreq(void)
 {
     uint16_t chan = rdBuf[0] & RDA580X_READCHAN_9_8;
     chan <<= 8;
     chan |= rdBuf[1];
 
-    return chan * 10 + 8700;
+    return chan * tPar->fStep + tPar->fMin;
 }

@@ -4,6 +4,9 @@
 #define TUNER_DIR_UP        (1)
 #define TUNER_DIR_DOWN      (-1)
 
+#define TUNER_VOLUME_MIN    0
+#define TUNER_VOLUME_MAX    15
+
 typedef enum {
     TUNER_FLAG_INIT     = 0x0000,
 
@@ -37,5 +40,25 @@ typedef enum {
 
     TUNER_DEEMPH_END,
 } TunerDeemph;
+
+typedef enum {
+    TUNER_FREQ_CURR,
+    TUNER_FREQ_MIN,
+    TUNER_FREQ_MAX,
+
+    TUNER_FREQ_END,
+} TunerFreq;
+
+typedef struct {
+    TunerFlag flags;
+    TunerBand band;
+    TunerStep step;
+    TunerDeemph deemph;
+    uint8_t volume;
+
+    uint16_t fMin;
+    uint16_t fMax;
+    uint8_t fStep;
+} TunerParam;
 
 #endif // TUNERDEFS_H

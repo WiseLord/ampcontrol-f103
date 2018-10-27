@@ -31,9 +31,10 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_TUNER_BAND]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM},
     [MENU_TUNER_STEP]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM},
     [MENU_TUNER_DEEMPH]     = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM},
-    [MENU_TUNER_MONO]       = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL},
+    [MENU_TUNER_FMONO]      = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL},
     [MENU_TUNER_RDS]        = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL},
     [MENU_TUNER_BASS]       = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL},
+    [MENU_TUNER_VOLUME]     = {MENU_SETUP_TUNER,        MENU_TYPE_NUMBER},
 
     [MENU_SPECTURM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM},
     [MENU_SPECTRUM_SPEED]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM},
@@ -45,8 +46,6 @@ static const MenuItem menuItems[MENU_END] = {
 
 static void menuMove(int8_t diff)
 {
-    diff > 0 ? diff = 1 : diff < 0 ? diff = -1 : 0;
-
     int8_t newIdx = 0;
 
     for (int8_t idx = 0; idx < MENU_MAX_LEN; idx++) {
@@ -70,15 +69,17 @@ static void menuMove(int8_t diff)
 static int16_t menuGetValue(MenuIdx index)
 {
     int16_t ret = 0;
+    AudioProc *aproc = audioProcGet();
+    Tuner *tuner = tunerGet();
     TunerParam *tPar = tunerGetPar();
 
     switch (index) {
     case MENU_AUDIO_IC:
-        ret = tPar->ic;
+        ret = aproc->ic;
         break;
 
     case MENU_TUNER_IC:
-        ret = tPar->ic;
+        ret = tuner->ic;
         break;
     case MENU_TUNER_BAND:
         ret = tPar->band;
@@ -90,14 +91,18 @@ static int16_t menuGetValue(MenuIdx index)
         ret = tPar->deemph;
         break;
 
-    case MENU_TUNER_MONO:
-        ret = (tunerGet()->flags & TUNER_FLAG_MONO) ? 1 : 0;
+    case MENU_TUNER_FMONO:
+        ret = (tPar->flags & TUNER_FLAG_MONO) ? 1 : 0;
         break;
     case MENU_TUNER_RDS:
-        ret = (tunerGet()->flags & TUNER_FLAG_RDS) ? 1 : 0;
+        ret = (tPar->flags & TUNER_FLAG_RDS) ? 1 : 0;
         break;
     case MENU_TUNER_BASS:
-        ret = (tunerGet()->flags & TUNER_FLAG_BASS) ? 1 : 0;
+        ret = (tPar->flags & TUNER_FLAG_BASS) ? 1 : 0;
+        break;
+
+    case MENU_TUNER_VOLUME:
+        ret = tPar->volume;
         break;
     default:
         ret = 0;
@@ -109,17 +114,19 @@ static int16_t menuGetValue(MenuIdx index)
 
 static void menuStoreCurrentValue(void)
 {
+    AudioProc *aproc = audioProcGet();
+    Tuner *tuner = tunerGet();
     TunerParam *tPar = tunerGetPar();
 
     switch (menu.active) {
     case MENU_AUDIO_IC:
-        audioProcGet()->ic = menu.value;
-        eeUpdate(EE_AUDIO_IC, audioProcGet()->ic);
+        aproc->ic = menu.value;
+        eeUpdate(EE_AUDIO_IC, aproc->ic);
         break;
 
     case MENU_TUNER_IC:
-        tPar->ic = menu.value;
-        eeUpdate(EE_TUNER_IC, tPar->ic);
+        tuner->ic = menu.value;
+        eeUpdate(EE_TUNER_IC, tuner->ic);
         break;
     case MENU_TUNER_BAND:
         tPar->band = menu.value;
@@ -131,20 +138,25 @@ static void menuStoreCurrentValue(void)
         break;
     case MENU_TUNER_DEEMPH:
         tPar->deemph = menu.value;
-        eeUpdate(EE_TUNER_STEP, tPar->deemph);
+        eeUpdate(EE_TUNER_DEEMPH, tPar->deemph);
         break;
 
-    case MENU_TUNER_MONO:
-        menu.value ? (tunerGet()->flags |= TUNER_FLAG_MONO) : (tunerGet()->flags &= ~TUNER_FLAG_MONO);
-        eeUpdate(EE_TUNER_FLAGS, tunerGet()->flags);
+    case MENU_TUNER_FMONO:
+        menu.value ? (tPar->flags |= TUNER_FLAG_MONO) : (tPar->flags &= ~TUNER_FLAG_MONO);
+        eeUpdate(EE_TUNER_FLAGS, tPar->flags);
         break;
     case MENU_TUNER_RDS:
-        menu.value ? (tunerGet()->flags |= TUNER_FLAG_RDS) : (tunerGet()->flags &= ~TUNER_FLAG_RDS);
-        eeUpdate(EE_TUNER_FLAGS, tunerGet()->flags);
+        menu.value ? (tPar->flags |= TUNER_FLAG_RDS) : (tPar->flags &= ~TUNER_FLAG_RDS);
+        eeUpdate(EE_TUNER_FLAGS, tPar->flags);
         break;
     case MENU_TUNER_BASS:
-        menu.value ? (tunerGet()->flags |= TUNER_FLAG_BASS) : (tunerGet()->flags &= ~TUNER_FLAG_BASS);
-        eeUpdate(EE_TUNER_FLAGS, tunerGet()->flags);
+        menu.value ? (tPar->flags |= TUNER_FLAG_BASS) : (tPar->flags &= ~TUNER_FLAG_BASS);
+        eeUpdate(EE_TUNER_FLAGS, tPar->flags);
+        break;
+
+    case MENU_TUNER_VOLUME:
+        tPar->volume = menu.value;
+        eeUpdate(EE_TUNER_VOLUME, tPar->volume);
         break;
     default:
         break;
@@ -164,9 +176,9 @@ static void menuValueChange(int8_t diff)
     switch (menu.active) {
     case MENU_AUDIO_IC:
         if (menu.value >= AUDIO_IC_END)
-            menu.value = AUDIO_IC_NO;
-        if (menu.value < AUDIO_IC_NO)
             menu.value = AUDIO_IC_END - 1;
+        if (menu.value < AUDIO_IC_NO)
+            menu.value = AUDIO_IC_NO;
         break;
     case MENU_TUNER_IC:
         if (menu.value >= TUNER_IC_END)
@@ -176,21 +188,27 @@ static void menuValueChange(int8_t diff)
         break;
     case MENU_TUNER_BAND:
         if (menu.value >= TUNER_BAND_END)
-            menu.value = TUNER_BAND_FM_US_EUROPE;
-        if (menu.value < TUNER_BAND_FM_US_EUROPE)
             menu.value = TUNER_BAND_END - 1;
+        if (menu.value < TUNER_BAND_FM_US_EUROPE)
+            menu.value = TUNER_BAND_FM_US_EUROPE;
         break;
     case MENU_TUNER_STEP:
         if (menu.value >= TUNER_STEP_END)
-            menu.value = TUNER_STEP_50K;
-        if (menu.value < TUNER_STEP_50K)
             menu.value = TUNER_STEP_END - 1;
+        if (menu.value < TUNER_STEP_50K)
+            menu.value = TUNER_STEP_50K;
         break;
     case MENU_TUNER_DEEMPH:
         if (menu.value >= TUNER_DEEMPH_END)
-            menu.value = TUNER_DEEMPH_50u;
-        if (menu.value < TUNER_DEEMPH_50u)
             menu.value = TUNER_DEEMPH_END - 1;
+        if (menu.value < TUNER_DEEMPH_50u)
+            menu.value = TUNER_DEEMPH_50u;
+        break;
+    case MENU_TUNER_VOLUME:
+        if (menu.value > TUNER_VOLUME_MAX)
+            menu.value = TUNER_VOLUME_MAX;
+        if (menu.value < TUNER_VOLUME_MIN)
+            menu.value = TUNER_VOLUME_MIN;
         break;
     default:
         break;
@@ -246,6 +264,11 @@ void menuSetActive(MenuIdx index)
 
 void menuChange(int8_t diff)
 {
+    if (diff > 0)
+        diff = 1;
+    else if (diff < 0)
+        diff = -1;
+
     if (menu.selected) {
         menuValueChange(diff);
     } else {
@@ -291,6 +314,11 @@ char *menuGetValueStr(MenuIdx index)
     // Bool menu type
     if (menuItems[index].type == MENU_TYPE_BOOL) {
         ret = labels[LABEL_BOOL_OFF + value];
+        return ret;
+    }
+
+    if (menuItems[index].type == MENU_TYPE_NUMBER) {
+        ret = glcdPrepareNum(value, 5, ' ', 10);
         return ret;
     }
 

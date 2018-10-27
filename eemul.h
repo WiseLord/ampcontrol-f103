@@ -46,6 +46,7 @@ typedef enum {
     EE_TUNER_BAND,
     EE_TUNER_STEP,
     EE_TUNER_DEEMPH,
+    EE_TUNER_VOLUME,
 
     EE_PARAM_END
 } EE_Param;

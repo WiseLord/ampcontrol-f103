@@ -73,10 +73,11 @@ const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner IC",
     [LABEL_MENU + MENU_TUNER_BAND]      = "Tuner band",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Scan step",
-    [LABEL_MENU + MENU_TUNER_MONO]      = "Force mono",
+    [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Deemphasys",
+    [LABEL_MENU + MENU_TUNER_FMONO]     = "Force mono",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Enable RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass boost",
-    [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Deemphasys",
+    [LABEL_MENU + MENU_TUNER_VOLUME]    = "Volume",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Display mode",
     [LABEL_MENU + MENU_SPECTRUM_SPEED]  = "Fall speed",

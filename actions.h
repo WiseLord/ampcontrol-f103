@@ -3,9 +3,9 @@
 
 #include <inttypes.h>
 
-#define CMD_OFF         0
-#define CMD_ON          1
-#define CMD_SWITCH      2
+#define STBY_EXIT       0
+#define STBY_ENTER      1
+#define STBY_SWITCH     2
 
 #define ACTION_HIDDEN   0
 #define ACTION_VISIBLE  1
@@ -17,6 +17,7 @@ typedef enum {
     ACTION_BTN_LONG,
 
     ACTION_STANDBY,
+    ACTION_INIT_HW,
 
     ACTION_PREV,
     ACTION_NEXT,
@@ -53,7 +54,7 @@ typedef enum {
     ACTION_BR_WORK,
     ACTION_BR_STBY,
 
-    ACTION_TIMER_EXPIRED,
+    ACTION_DISP_EXPIRED,
 
     ACTION_MENU_SELECT,
     ACTION_MENU_CHANGE,

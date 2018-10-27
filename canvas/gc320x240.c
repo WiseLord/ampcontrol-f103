@@ -184,6 +184,9 @@ static void showSpectrum(SpectrumData *spData)
 static void showTuner(DispTuner *dt)
 {
     Tuner *tuner = dt->tuner;
+    uint16_t freq = tunerGet()->freq;
+    uint16_t freqMin = tuner->par.fMin;
+    uint16_t freqMax = tuner->par.fMax;
 
     glcdSetFont(&fontterminusmod64);
     glcdSetFontColor(LCD_COLOR_WHITE);
@@ -191,13 +194,13 @@ static void showTuner(DispTuner *dt)
 
     glcdWriteString("FM ");
 
-    drawShowBar(tuner->freq, tuner->freqMin, tuner->freqMax);
+    drawShowBar(freq, freqMin, freqMax);
 
-    glcdWriteNum(tuner->freq / 100, 3, ' ', 10);
+    glcdWriteNum(freq / 100, 3, ' ', 10);
     glcdWriteChar(LETTER_SPACE_CHAR);
     glcdWriteChar('.');
     glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteNum(tuner->freq % 100, 2, '0', 10);
+    glcdWriteNum(freq % 100, 2, '0', 10);
 
     glcdSetFont(&fontterminusmod64);
     glcdSetFontColor(LCD_COLOR_WHITE);

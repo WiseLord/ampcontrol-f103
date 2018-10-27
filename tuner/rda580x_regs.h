@@ -38,7 +38,7 @@
 #define RDA580X_TUNE                0x10 // Tune enable (1)
 #define RDA580X_BAND                0x0C // Tuner band selection
 #define RDA580X_BAND_US_EUROPE      0x00 // 87..108 MHz
-#define RDA580X_BAND_JAPAN          0x04 // 76..97 MHz
+#define RDA580X_BAND_JAPAN          0x04 // 76..91 MHz
 #define RDA580X_BAND_WORLDWIDE      0x08 // 76..108 MHz
 #define RDA580X_BAND_EASTEUROPE     0x0C // 65..76 MHz
 #define RDA580X_SPACE               0x03 // Stations grid selection
@@ -113,11 +113,13 @@
 #define RDA5807_R_DELY              0x01 // Right channel data delay 1T (1)
 
 // 10 register (07H)
-#define RDA5807_TH_SOFRBLEND        0x7C // 5 bits for noise soft blend, default 10000
+#define RDA5807_TH_SOFRBLEND        0x7C // 5 bits for noise soft blend
+#define RDA5807_TH_SOFRBLEND_DEF    0x40 // default 10000
 #define RDA5807_65M_50M_MODE        0x02 // For BAND=11, 50..76MHz (0), default 1
 
 // 11 register (07L)
 #define RDA5807_SEEK_TH_OLD         0xFC // 6 bits seek treshold in old seek mode, valid for SKMODE=1
+#define RDA5807_SEEK_TH_OLD_DEF     0x80 // default
 #define RDA5807_SOFTBLEND_EN        0x02 // Softblend enable (1)
 #define RDA5807_FREQ_MODE           0x01 // Manual freq setup (1) for 12,13 regs
 
