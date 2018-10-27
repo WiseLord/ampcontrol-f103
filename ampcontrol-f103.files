@@ -184,3 +184,4 @@ tuner/si470x.h
 tuner/si470x_regs.h
 tuner/tuner.c
 tuner/tuner.h
+tuner/tunerdefs.h

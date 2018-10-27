@@ -43,6 +43,9 @@ typedef enum {
     EE_TUNER_IC,
     EE_TUNER_FREQ,
     EE_TUNER_FLAGS,
+    EE_TUNER_BAND,
+    EE_TUNER_STEP,
+    EE_TUNER_DEEMPH,
 
     EE_PARAM_END
 } EE_Param;
@@ -51,5 +54,8 @@ void eeInit(void);
 
 void eeUpdate(EE_Param param, int16_t data);
 uint16_t eeRead(EE_Param param);
+
+uint16_t eeReadU(EE_Param param, uint16_t def);
+int16_t eeReadI(EE_Param param, int16_t def);
 
 #endif // EEEMUL_H

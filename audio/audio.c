@@ -16,25 +16,16 @@ static AudioProc aProc;
 
 static void audioReadSettings(void)
 {
-    uint16_t eeData;
-
-    eeData = eeRead(EE_AUDIO_IC);
-    aProc.ic = (eeData == EE_EMPTY ? AUDIO_IC_TDA7439 : eeData);
-
-    eeData = eeRead(EE_AUDIO_FLAG);
-    aProc.flag = (eeData == EE_EMPTY ? AUDIO_FLAG_INIT : eeData);
-
-    eeData = eeRead(EE_AUDIO_INPUT);
-    aProc.input = (eeData == EE_EMPTY ? 0 : eeData);
+    aProc.ic = eeReadU(EE_AUDIO_IC, AUDIO_IC_TDA7439);
+    aProc.flag = eeReadU(EE_AUDIO_FLAG, AUDIO_FLAG_INIT);
+    aProc.input = eeReadU(EE_AUDIO_INPUT, 0);
 
     for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
-        eeData = eeRead(par);
-        aProc.item[par - EE_AUDIO_PARAM_VOLUME].value = (eeData == EE_EMPTY ? 0 : (int8_t)eeData);
+        aProc.item[par - EE_AUDIO_PARAM_VOLUME].value = eeReadI(par, 0);
     }
 
     for (EE_Param par = EE_AUDIO_GAIN0; par <= EE_AUDIO_GAIN7; par++) {
-        eeData = eeRead(par);
-        aProc.gain[par - EE_AUDIO_GAIN0] = (eeData == EE_EMPTY ? -8 : (int8_t)eeData);
+        aProc.gain[par - EE_AUDIO_GAIN0] = eeReadI(par, 0);
     }
 
     aProc.item[AUDIO_PARAM_GAIN].value = aProc.gain[aProc.input];

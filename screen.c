@@ -135,13 +135,19 @@ static void screenCheckChange(void)
 
 void screenReadSettings(void)
 {
-    uint16_t eeData;
+    brStby = eeReadU(EE_BRIGHTNESS_STBY, 3);
+    if (brStby < LCD_BR_MIN) {
+        brStby = LCD_BR_MIN;
+    } else if (brStby > LCD_BR_MAX) {
+        brStby = LCD_BR_MAX;
+    }
 
-    eeData = eeRead(EE_BRIGHTNESS_STBY);
-    brStby = (eeData > LCD_BR_MAX ? 2 : (int8_t)(eeData));
-
-    eeData = eeRead(EE_BRIGHTNESS_WORK);
-    brWork = (eeData > LCD_BR_MAX ? LCD_BR_MAX : (int8_t)(eeData));
+    brWork = eeReadU(EE_BRIGHTNESS_WORK, LCD_BR_MAX);
+    if (brWork < LCD_BR_MIN) {
+        brWork = LCD_BR_MIN;
+    } else if (brWork > LCD_BR_MAX) {
+        brWork = LCD_BR_MAX;
+    }
 }
 
 void screenSaveSettings(void)

@@ -3,15 +3,14 @@
 
 #include <inttypes.h>
 
+#include "tunerdefs.h"
+
 #ifdef _RDA580X
 #include "rda580x.h"
 #endif
 #ifdef _SI470X
 #include "si470x.h"
 #endif
-
-#define TUNER_DIR_UP        (1)
-#define TUNER_DIR_DOWN      (-1)
 
 typedef enum {
     TUNER_IC_NO = 0,
@@ -20,16 +19,6 @@ typedef enum {
 
     TUNER_IC_END
 } TunerIC;
-
-typedef enum {
-    TUNER_FLAG_INIT     = 0x0000,
-
-    TUNER_FLAG_MUTE     = 0x0001,
-    TUNER_FLAG_BASS     = 0x0002,
-
-    TUNER_FLAG_MONO     = 0x0010,
-    TUNER_FLAG_RDS      = 0x0020,
-} TunerFlag;
 
 typedef struct {
     void (*setFreq)(uint16_t freq);
@@ -48,11 +37,18 @@ typedef struct {
 
     uint16_t (*getFreq)(void);  // Actual frequency
     uint8_t (*getRssi)(void);   // Signal level
-} TunerDriverApi;
+} TunerApi;
 
 typedef struct {
-    TunerDriverApi api;
     TunerIC ic;
+    TunerBand band;
+    TunerStep step;
+    TunerDeemph deemph;
+} TunerParam;
+
+typedef struct {
+    TunerApi api;
+    TunerParam par;
 
     TunerFlag flags;
 
@@ -63,6 +59,7 @@ typedef struct {
 
 void tunerInit(void);
 Tuner *tunerGet(void);
+TunerParam *tunerGetPar(void);
 
 void tunerSetPower(uint16_t value);
 

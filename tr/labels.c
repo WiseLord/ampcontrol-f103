@@ -42,6 +42,18 @@ const char *const labels_default[LABEL_END] = {
     [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
     [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
 
+    [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "US/Europe FM",
+    [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Japan FM",
+    [LABEL_TUNER_BAND + TUNER_BAND_FM_WORLDWIDE]    = "Worldwide FM",
+    [LABEL_TUNER_BAND + TUNER_BAND_FM_EASTEUROPE]   = "East Europe FM",
+
+    [LABEL_TUNER_STEP + TUNER_STEP_50K]     = "50kHz",
+    [LABEL_TUNER_STEP + TUNER_STEP_100K]    = "100kHz",
+    [LABEL_TUNER_STEP + TUNER_STEP_200K]    = "200kHz",
+
+    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50us",
+    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75us",
+
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "No",
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
@@ -64,8 +76,7 @@ const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_MONO]      = "Force mono",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Enable RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass boost",
-    [LABEL_MENU + MENU_TUNER_DE]        = "Deemphasys",
-    [LABEL_MENU + MENU_TUNER_SOFTMUTE]  = "Soft mute",
+    [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Deemphasys",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Display mode",
     [LABEL_MENU + MENU_SPECTRUM_SPEED]  = "Fall speed",
