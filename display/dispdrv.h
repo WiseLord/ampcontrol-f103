@@ -37,6 +37,8 @@ typedef struct {
 #include "gc176x132/ssd1286a.h"
 #elif defined (_HX8340)
 #include "gc220x176/hx8340.h"
+#elif defined (_ILI9225)
+#include "gc220x176/ili9225.h"
 #elif defined (_ILI9320)
 #include "gc320x240/ili9320.h"
 #elif defined (_ILI9341)

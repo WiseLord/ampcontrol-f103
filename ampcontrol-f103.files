@@ -5,6 +5,7 @@ audio/audio.c
 audio/audio.h
 audio/tda7439.c
 audio/tda7439.h
+build_all.sh
 canvas/canvas.c
 canvas/canvas.h
 display/dispdrv.c
@@ -69,6 +70,8 @@ display/gc176x132/ssd1286a.h
 
 display/gc220x176/hx8340.c
 display/gc220x176/hx8340.h
+display/gc220x176/ili9225.c
+display/gc220x176/ili9225.h
 
 display/gc320x240/ili9320.c
 display/gc320x240/ili9320.h

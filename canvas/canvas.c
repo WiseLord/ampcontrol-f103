@@ -17,7 +17,7 @@ void canvasInit(Canvas **canvas)
     gc160x128Init(canvas);
 #elif defined (_LS020) || defined (_LPH9157) || defined (_SSD1286A)
     gc176x132Init(canvas);
-#elif defined (_HX8340)
+#elif defined (_HX8340) || defined (_ILI9225)
     gc220x176Init(canvas);
 #elif defined (_ILI9320) || defined (_ILI9341) || defined (_S6D0139) || defined (_SPFD5408) || defined (_MC2PA8201)
     gc320x240Init(canvas);

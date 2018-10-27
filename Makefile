@@ -54,6 +54,8 @@ else ifeq "$(DISPLAY)" "SSD1286A"
   C_SOURCES += display/gc176x132/ssd1286a.c
 else ifeq "$(DISPLAY)" "HX8340"
   C_SOURCES += display/gc220x176/hx8340.c
+else ifeq "$(DISPLAY)" "ILI9225"
+  C_SOURCES += display/gc220x176/ili9225.c
 else ifeq "$(DISPLAY)" "ILI9320"
   C_SOURCES += display/gc320x240/ili9320.c
 else ifeq "$(DISPLAY)" "ILI9341"

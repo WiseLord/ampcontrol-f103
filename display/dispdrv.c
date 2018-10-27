@@ -119,6 +119,8 @@ void dispdrvInit(DispDriver **driver)
     ssd1286aInit(driver);
 #elif defined (_HX8340)
     hx8340Init(driver);
+#elif defined (_ILI9225)
+    ili9225Init(driver);
 #elif defined (_ILI9320)
     ili9320Init(driver);
 #elif defined (_ILI9341)
