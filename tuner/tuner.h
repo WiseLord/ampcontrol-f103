@@ -2,6 +2,7 @@
 #define TUNER_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "tunerdefs.h"
 
@@ -26,12 +27,12 @@ typedef struct {
 
     void (*setVolume)(int8_t value);
 
-    void (*setMute)(uint8_t value);
-    void (*setBassBoost)(uint8_t value);
-    void (*setForcedMono)(uint8_t value);
-    void (*setRds)(uint8_t value);
+    void (*setMute)(bool value);
+    void (*setBassBoost)(bool value);
+    void (*setForcedMono)(bool value);
+    void (*setRds)(bool value);
 
-    void (*setPower)(uint8_t value);
+    void (*setPower)(bool value);
 
     void (*updateStatus)(void);
 
@@ -54,7 +55,7 @@ TunerParam *tunerGetPar(void);
 void tunerSetPower(uint16_t value);
 
 void tunerSetFreq(uint16_t value);
-void tunerSetFlag(TunerFlag flag, uint8_t value);
+void tunerSetFlag(TunerFlag flag, bool value);
 
 void tunerNextStation(int8_t direction);
 

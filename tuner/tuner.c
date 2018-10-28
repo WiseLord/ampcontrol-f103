@@ -1,5 +1,7 @@
 #include "tuner.h"
 
+#include <string.h>
+
 #include "../eemul.h"
 
 static Tuner tuner;
@@ -25,6 +27,8 @@ static void tunerSaveSettings(void)
 
 void tunerInit()
 {
+    memset(&tuner, 0, sizeof(tuner));
+
     tunerReadSettings();
 
     switch (tuner.ic) {
@@ -100,7 +104,7 @@ void tunerSetFreq(uint16_t value)
     }
 }
 
-void tunerSetFlag(TunerFlag flag, uint8_t value)
+void tunerSetFlag(TunerFlag flag, bool value)
 {
     if (value)
         tuner.par.flags |= flag;

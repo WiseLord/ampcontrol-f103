@@ -146,27 +146,27 @@ void rda580xSetVolume(int8_t value)
     rda580xWriteReg(0x05);
 }
 
-void rda580xSetMute(uint8_t value)
+void rda580xSetMute(bool value)
 {
     rda580xSetBit(0, RDA580X_DMUTE, !value);
 }
 
-void rda580xSetBassBoost(uint8_t value)
+void rda580xSetBassBoost(bool value)
 {
     rda580xSetBit(0, RDA5807_BASS, value);
 }
 
-void rda580xSetForcedMono(uint8_t value)
+void rda580xSetForcedMono(bool value)
 {
     rda580xSetBit(0, RDA580X_MONO, value);
 }
 
-void rda580xSetRds(uint8_t value)
+void rda580xSetRds(bool value)
 {
     rda580xSetBit(1, RDA5807_RDS_EN, value);
 }
 
-void rda580xSetPower(uint8_t value)
+void rda580xSetPower(bool value)
 {
     rda580xSetBit(1, RDA580X_ENABLE, value);
 }

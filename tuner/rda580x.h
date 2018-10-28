@@ -2,6 +2,7 @@
 #define RDA5807X_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "tunerdefs.h"
 
@@ -14,12 +15,12 @@ void rda580xSetFreq(uint16_t value);
 void rda580xSeek(int8_t direction);
 
 void rda580xSetVolume(int8_t value);
-void rda580xSetMute(uint8_t value);
-void rda580xSetBassBoost(uint8_t value);
-void rda580xSetForcedMono(uint8_t value);
-void rda580xSetRds(uint8_t value);
+void rda580xSetMute(bool value);
+void rda580xSetBassBoost(bool value);
+void rda580xSetForcedMono(bool value);
+void rda580xSetRds(bool value);
 
-void rda580xSetPower(uint8_t value);
+void rda580xSetPower(bool value);
 
 void rda580xUpdateStatus(void);
 
