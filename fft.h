@@ -1,7 +1,7 @@
 #ifndef FFT_H
 #define FFT_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #define FFT_SIZE    256
 #define FFT_LOG2    8

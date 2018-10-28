@@ -1,7 +1,7 @@
 #ifndef ACTIONS_H
 #define ACTIONS_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #define STBY_EXIT       0
 #define STBY_ENTER      1

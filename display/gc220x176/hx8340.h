@@ -1,7 +1,7 @@
 #ifndef HX8340_H
 #define HX8340_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void hx8340Init(DispDriver **driver);

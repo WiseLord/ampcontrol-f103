@@ -1,7 +1,7 @@
 #ifndef MC2PA8201_H
 #define MC2PA8201_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void mc2pa8201Init(DispDriver **driver);

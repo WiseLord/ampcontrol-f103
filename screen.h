@@ -1,7 +1,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #include "audio/audio.h"
 #include "rtc.h"

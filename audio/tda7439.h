@@ -1,7 +1,7 @@
 #ifndef TDA7439_H
 #define TDA7439_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "audio.h"
 
 // I2C address

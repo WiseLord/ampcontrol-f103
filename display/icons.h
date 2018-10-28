@@ -1,7 +1,7 @@
 #ifndef ICONS_H
 #define ICONS_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 enum {
     ICON24_VOLUME = 0,

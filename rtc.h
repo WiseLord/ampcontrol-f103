@@ -1,7 +1,7 @@
 #ifndef RTC_H
 #define RTC_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 typedef enum {
     RTC_HOUR,

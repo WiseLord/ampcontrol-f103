@@ -1,7 +1,7 @@
 #ifndef LS020_H
 #define LS020_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void ls020Init(DispDriver **driver);

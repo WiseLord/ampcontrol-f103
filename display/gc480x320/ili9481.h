@@ -1,7 +1,7 @@
 #ifndef ILI9481_H
 #define ILI9481_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void ili9481Init(DispDriver **driver);

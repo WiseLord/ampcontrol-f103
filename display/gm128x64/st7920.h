@@ -1,7 +1,7 @@
 #ifndef ST7920_H
 #define ST7920_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 // Basic instructions

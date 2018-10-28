@@ -1,7 +1,7 @@
 #ifndef SPECTRUM_H
 #define SPECTRUM_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #include "fft.h"
 

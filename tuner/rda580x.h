@@ -1,7 +1,7 @@
 #ifndef RDA5807X_H
 #define RDA5807X_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #include "tunerdefs.h"
 

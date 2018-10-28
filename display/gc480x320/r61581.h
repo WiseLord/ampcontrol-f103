@@ -1,7 +1,7 @@
 #ifndef R61581_H
 #define R61581_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void r61581Init(DispDriver **driver);

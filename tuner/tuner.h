@@ -1,7 +1,7 @@
 #ifndef TUNER_H
 #define TUNER_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #include "tunerdefs.h"
 

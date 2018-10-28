@@ -1,7 +1,7 @@
 #ifndef ST7793_H
 #define ST7793_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void st7793Init(DispDriver **driver);

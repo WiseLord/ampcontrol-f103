@@ -1,7 +1,7 @@
 #ifndef S6D0139_H
 #define S6D0139_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void s6d0139Init(DispDriver **driver);

@@ -1,7 +1,7 @@
 #ifndef DISPDRV_H
 #define DISPDRV_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "fonts/fonts.h"
 
 typedef struct {

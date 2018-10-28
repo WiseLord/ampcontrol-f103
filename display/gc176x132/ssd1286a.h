@@ -1,7 +1,7 @@
 #ifndef SSD1286A_H
 #define SSD1286A_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void ssd1286aInit(DispDriver **driver);

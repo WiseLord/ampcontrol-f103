@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #define BTN_NO                  0x00
 

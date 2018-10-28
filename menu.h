@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #define MENU_MAX_LEN    16
 

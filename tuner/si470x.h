@@ -1,7 +1,7 @@
 #ifndef SI470X_H
 #define SI470X_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #define SI470X_I2C_ADDR             0x20
 

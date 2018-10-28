@@ -1,7 +1,7 @@
 #ifndef FONTS_H
 #define FONTS_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #define LETTER_SPACE_CHAR   0x00E28088  // U+2008
 #define BLOCK_CHAR          0x00E29688  // U+2588

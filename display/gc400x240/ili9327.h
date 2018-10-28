@@ -1,7 +1,7 @@
 #ifndef ILI9327_H
 #define ILI9327_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void ili9327Init(DispDriver **driver);

@@ -1,7 +1,7 @@
 #ifndef I2C_H
 #define I2C_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include <stm32f103xb.h>
 #include <stm32f1xx_ll_bus.h>
 

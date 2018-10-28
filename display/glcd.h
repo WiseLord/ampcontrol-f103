@@ -1,7 +1,7 @@
 #ifndef GLCD_H
 #define GLCD_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #include "fonts/fonts.h"
 #include "icons.h"

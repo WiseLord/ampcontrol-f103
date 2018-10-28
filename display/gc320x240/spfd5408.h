@@ -1,7 +1,7 @@
 #ifndef SPFD5408_H
 #define SPFD5408_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void spfd5408Init(DispDriver **driver);

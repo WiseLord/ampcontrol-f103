@@ -1,7 +1,7 @@
 #ifndef TIMERS_H
 #define TIMERS_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #define SW_TIM_OFF       -1
 

@@ -1,7 +1,7 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #include "../display/glcd.h"
 #include "../rtc.h"

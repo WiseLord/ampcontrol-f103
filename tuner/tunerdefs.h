@@ -1,6 +1,7 @@
 #ifndef TUNERDEFS_H
 #define TUNERDEFS_H
 
+#include <stdint.h>
 #define TUNER_DIR_UP        (1)
 #define TUNER_DIR_DOWN      (-1)
 

@@ -1,7 +1,7 @@
 #ifndef LPH9157_H
 #define LPH9157_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void lph9157Init(DispDriver **driver);

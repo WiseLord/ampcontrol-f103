@@ -1,7 +1,7 @@
 #ifndef ST7735_H
 #define ST7735_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 void st7735Init(DispDriver **driver);

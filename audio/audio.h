@@ -1,7 +1,7 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include <inttypes.h>
+#include <stdint.h>
 
 #define STEP_MULT   8
 #define MAX_INPUTS  8

@@ -1,7 +1,7 @@
 #ifndef KS0108_H
 #define KS0108_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include "../dispdrv.h"
 
 // Display geometry
