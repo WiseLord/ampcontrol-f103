@@ -2,25 +2,11 @@
 #define AUDIO_H
 
 #include <stdint.h>
+#include <stdbool.h>
+
+#include "audiodefs.h"
 
 #define STEP_MULT   8
-#define MAX_INPUTS  8
-
-typedef enum {
-    AUDIO_PARAM_VOLUME = 0,
-    AUDIO_PARAM_BASS,
-    AUDIO_PARAM_MIDDLE,
-    AUDIO_PARAM_TREBLE,
-    AUDIO_PARAM_FRONTREAR,
-    AUDIO_PARAM_BALANCE,
-    AUDIO_PARAM_CENTER,
-    AUDIO_PARAM_SUBWOOFER,
-    AUDIO_PARAM_PREAMP,
-
-    AUDIO_PARAM_GAIN,
-
-    AUDIO_PARAM_END
-} AudioParam;
 
 typedef enum {
     AUDIO_IC_NO = 0,
@@ -31,49 +17,32 @@ typedef enum {
     AUDIO_IC_END
 } AudioIC;
 
-typedef enum {
-    AUDIO_FLAG_INIT     = 0x0000,
+typedef struct {
+    void (*setTune)(AudioTune tune, int8_t value);
+    void (*setInput)(uint8_t value);
 
-    AUDIO_FLAG_MUTE     = 0x0001,
+    void (*setMute)(bool value);
 
-    AUDIO_FLAG_LOUDNESS = 0x0010,
-    AUDIO_FLAG_SURROUND = 0x0020,
-    AUDIO_FLAG_EFFECT3D = 0x0040,
-    AUDIO_FLAG_BYPASS   = 0x0080,
-} AudioFlag;
+    void (*setPower)(bool value);
+} AudioApi;
 
 typedef struct {
-    int16_t min;     // Minimum in steps
-    int16_t max;     // Maximum in steps
-    uint8_t step;    // Step multiplied by STEP_MULT (to handle 1.25 and so on)
-} AudioGrid;
-
-typedef struct {
-    void (*set)(void);
-    const AudioGrid *grid;
-    int8_t value;   // Value in steps
-} AudioItem;
-
-typedef struct {
-    void (*setFlag)(void);
-    void (*setInput)(void);
     AudioIC ic;
-    AudioFlag flag;
-    AudioItem item[AUDIO_PARAM_END];
-    int8_t gain[MAX_INPUTS];
-    uint8_t input;
-    uint8_t inCnt;
+    AudioApi api;
+    AudioParam par;
 } AudioProc;
 
 void audioInit(void);
-AudioProc *audioProcGet(void);
+AudioProc *audioGet(void);
+AudioParam *audioGetPar(void);
 
-void audioPowerOn(void);
-void audioPowerOff(void);
+void audioSetPower(bool value);
+
+void audioSetTune(AudioTune tune, int8_t value);
+void audioChangeTune(AudioTune tune, int8_t diff);
 
 void audioSetInput(uint8_t value);
-void audioSetParam(AudioParam param, int8_t value);
-void audioChangeParam(AudioParam param, int8_t diff);
-void audioSetFlag(AudioFlag flag, uint8_t value);
+void audioSetFlag(AudioFlag flag, bool value);
+
 
 #endif // AUDIO_H

@@ -56,7 +56,7 @@ static void screenCheckChange(void)
     static ScreenParam scrParPrev;
 
     uint8_t clearFlag = 0;
-    AudioProc *aProc = audioProcGet();
+    AudioProc *aProc = audioGet();
 
     // Check if we need to clear screen
     if (screen != scrPrev) {
@@ -69,14 +69,14 @@ static void screenCheckChange(void)
             }
             break;
         case SCREEN_AUDIO_PARAM:
-            if (scrPrev == SCREEN_AUDIO_INPUT && scrPar.audio == AUDIO_PARAM_GAIN) {
+            if (scrPrev == SCREEN_AUDIO_INPUT && scrPar.tune == AUDIO_TUNE_GAIN) {
                 clearFlag = 0;
             }
             break;
         case SCREEN_AUDIO_INPUT:
             if (scrPrev == SCREEN_AUDIO_PARAM) {
-                if (scrParPrev.audio == AUDIO_PARAM_GAIN) {
-                    if (aProc->input != INPUT_TUNER) {
+                if (scrParPrev.tune == AUDIO_TUNE_GAIN) {
+                    if (aProc->par.input != INPUT_TUNER) {
                         clearFlag = 0;
                     }
                 }
@@ -105,7 +105,7 @@ static void screenCheckChange(void)
     } else {
         switch (screen) {
         case SCREEN_AUDIO_PARAM:
-            if (scrPar.audio != scrParPrev.audio) {
+            if (scrPar.tune != scrParPrev.tune) {
                 clearFlag = 1;
             }
             break;
@@ -211,9 +211,9 @@ void screenSetDefault(Screen value)
 
 Screen screenGetDefault(void)
 {
-    AudioProc *aProc = audioProcGet();
+    AudioProc *aProc = audioGet();
 
-    if (INPUT_TUNER == aProc->input)
+    if (INPUT_TUNER == aProc->par.input)
         return SCREEN_TUNER;
 
     return screenDefault;
@@ -339,31 +339,33 @@ void screenShowBrightness(void)
 
 void screenShowInput(void)
 {
-    scrPar.audio = AUDIO_PARAM_GAIN;
+    scrPar.tune = AUDIO_TUNE_GAIN;
     screenShowAudioParam();
 }
 
 void screenShowAudioParam(void)
 {
-    AudioProc *aProc = audioProcGet();
-    AudioParam aPar = scrPar.audio;
+    AudioProc *aProc = audioGet();
+    AudioTune aTune = scrPar.tune;
     const char **txtLabels = labelsGet();
 
-    if (aPar >= AUDIO_PARAM_END)
-        aPar = AUDIO_PARAM_VOLUME;
+    if (aTune >= AUDIO_TUNE_END)
+        aTune = AUDIO_TUNE_VOLUME;
 
     DispParam dp;
-    if (aPar == AUDIO_PARAM_GAIN) {
-        dp.label = txtLabels[LABEL_GAIN0 + aProc->input];
-        dp.icon = ICON24_TUNER + aProc->input;
+    if (aTune == AUDIO_TUNE_GAIN) {
+        dp.label = txtLabels[LABEL_GAIN0 + aProc->par.input];
+        dp.icon = ICON24_TUNER + aProc->par.input;
     } else {
-        dp.label = txtLabels[LABEL_VOLUME + aPar];
-        dp.icon = ICON24_VOLUME + aPar;
+        dp.label = txtLabels[LABEL_VOLUME + aTune];
+        dp.icon = ICON24_VOLUME + aTune;
     }
-    dp.value = aProc->item[aPar].value;
-    dp.min = aProc->item[aPar].grid->min;
-    dp.max = aProc->item[aPar].grid->max;
-    dp.step = aProc->item[aPar].grid->step;
+    dp.value = aProc->par.item[aTune].value;
+    const AudioGrid *grid = aProc->par.item[aTune].grid;
+
+    dp.min = grid ? grid->min : 0;
+    dp.max = grid ? grid->max : 0;
+    dp.step = grid ? grid->step : 0;
 
     if (canvas->showParam) {
         canvas->showParam(&dp);

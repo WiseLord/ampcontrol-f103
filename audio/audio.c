@@ -1,5 +1,7 @@
 #include "audio.h"
 
+#include <string.h>
+
 #include "../eemul.h"
 
 #ifdef _TDA7439
@@ -9,53 +11,45 @@
 #define FLAG_ON     1
 #define FLAG_OFF    0
 
-static const AudioGrid grid_0_0_0 = {  0,  0, 0.00 * STEP_MULT};    // Not implemented
-static void setNothing(void) {}
-
 static AudioProc aProc;
 
 static void audioReadSettings(void)
 {
     aProc.ic = eeReadU(EE_AUDIO_IC, AUDIO_IC_TDA7439);
-    aProc.flag = eeReadU(EE_AUDIO_FLAG, AUDIO_FLAG_INIT);
-    aProc.input = eeReadU(EE_AUDIO_INPUT, 0);
+    aProc.par.flags = eeReadU(EE_AUDIO_FLAG, AUDIO_FLAG_INIT);
+    aProc.par.input = eeReadU(EE_AUDIO_INPUT, 0);
 
     for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
-        aProc.item[par - EE_AUDIO_PARAM_VOLUME].value = eeReadI(par, 0);
+        aProc.par.item[par - EE_AUDIO_PARAM_VOLUME].value = eeReadI(par, 0);
     }
 
     for (EE_Param par = EE_AUDIO_GAIN0; par <= EE_AUDIO_GAIN7; par++) {
-        aProc.gain[par - EE_AUDIO_GAIN0] = eeReadI(par, 0);
+        aProc.par.gain[par - EE_AUDIO_GAIN0] = eeReadI(par, 0);
     }
 
-    aProc.item[AUDIO_PARAM_GAIN].value = aProc.gain[aProc.input];
+    aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
 }
 
 static void audioSaveSettings(void)
 {
-    aProc.flag &= ~AUDIO_FLAG_MUTE; // Do not save mute
+    aProc.par.flags &= ~AUDIO_FLAG_MUTE; // Do not save mute
 
     eeUpdate(EE_AUDIO_IC, aProc.ic);
-    eeUpdate(EE_AUDIO_FLAG, aProc.flag);
-    eeUpdate(EE_AUDIO_INPUT, aProc.input);
+    eeUpdate(EE_AUDIO_FLAG, aProc.par.flags);
+    eeUpdate(EE_AUDIO_INPUT, aProc.par.input);
 
     for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
-        eeUpdate(par, aProc.item[par - EE_AUDIO_PARAM_VOLUME].value);
+        eeUpdate(par, aProc.par.item[par - EE_AUDIO_PARAM_VOLUME].value);
     }
 
     for (EE_Param par = EE_AUDIO_GAIN0; par <= EE_AUDIO_GAIN7; par++) {
-        eeUpdate(par, aProc.gain[par - EE_AUDIO_GAIN0]);
+        eeUpdate(par, aProc.par.gain[par - EE_AUDIO_GAIN0]);
     }
 }
 
 void audioInit(void)
 {
-    // Reset grid and function pointers
-    aProc.setFlag = setNothing;
-    for (AudioParam par = 0; par < AUDIO_PARAM_END; par++) {
-        aProc.item[par].grid = &grid_0_0_0;
-        aProc.item[par].set = setNothing;
-    }
+    memset(&aProc, 0, sizeof(aProc));
 
     audioReadSettings();
 
@@ -63,7 +57,12 @@ void audioInit(void)
     switch (aProc.ic) {
 #ifdef _TDA7439
     case AUDIO_IC_TDA7439:
-        tda7439Init(&aProc);
+        aProc.api.setTune = tda7439SetTune;
+        aProc.api.setInput = tda7439SetInput;
+
+        aProc.api.setMute = tda7439SetMute;
+
+        tda7439Init(&aProc.par);
         break;
 #endif
     default:
@@ -71,85 +70,109 @@ void audioInit(void)
     }
 }
 
-AudioProc *audioProcGet(void)
+AudioProc *audioGet(void)
 {
     return &aProc;
 }
 
-void audioPowerOn(void)
+AudioParam *audioGetPar(void)
 {
-    audioSetFlag(AUDIO_FLAG_MUTE, FLAG_ON);
-    audioSetInput(aProc.input);
+    return &aProc.par;
+}
 
-    for (AudioParam param = AUDIO_PARAM_GAIN - 1; param >= AUDIO_PARAM_VOLUME; param--) {
-        audioSetParam(param, aProc.item[param].value);
+void audioSetPower(bool value)
+{
+    audioSetFlag(AUDIO_FLAG_MUTE, !value);
+
+    if (!value) {
+        audioSaveSettings();
+    } else {
+        audioSetInput(aProc.par.input);
+
+        audioSetFlag(AUDIO_FLAG_LOUDNESS, aProc.par.flags & AUDIO_FLAG_LOUDNESS);
+        audioSetFlag(AUDIO_FLAG_SURROUND, aProc.par.flags & AUDIO_FLAG_SURROUND);
+        audioSetFlag(AUDIO_FLAG_EFFECT3D, aProc.par.flags & AUDIO_FLAG_EFFECT3D);
+        audioSetFlag(AUDIO_FLAG_BYPASS, aProc.par.flags & AUDIO_FLAG_BYPASS);
+
+        for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END; tune++) {
+            audioSetTune(tune, aProc.par.item[tune].value);
+        }
     }
 
-    audioSetFlag(AUDIO_FLAG_MUTE, FLAG_OFF);
-}
-
-void audioPowerOff(void)
-{
-    audioSaveSettings();
-}
-
-void audioSetInput(uint8_t value)
-{
-    if (value >= aProc.inCnt)
-        value = 0;
-
-    aProc.input = value;
-    aProc.item[AUDIO_PARAM_GAIN].value = aProc.gain[aProc.input];
-
-    if (aProc.setInput) {
-        aProc.setInput();
+    if (aProc.api.setPower) {
+        aProc.api.setPower(value);
     }
 }
 
-void audioSetParam(AudioParam param, int8_t value)
+void audioSetTune(AudioTune tune, int8_t value)
 {
-    if (param >= AUDIO_PARAM_END)
+    if (tune >= AUDIO_TUNE_END)
         return;
 
-    int8_t min = aProc.item[param].grid->min;
-    int8_t max = aProc.item[param].grid->max;
+    if (aProc.par.item[tune].grid == 0)
+        return;
 
-    if (value < min)
+    int8_t min = aProc.par.item[tune].grid->min;
+    int8_t max = aProc.par.item[tune].grid->max;
+
+    if (value < min) {
         value = min;
-    else if (value > max)
+    } else if (value > max) {
         value = max;
-
-    aProc.item[param].value = value;
-
-    if (param == AUDIO_PARAM_GAIN) {
-        aProc.gain[aProc.input] = value;
     }
 
-    if (aProc.item[param].set) {
-        aProc.item[param].set();
+    aProc.par.item[tune].value = value;
+    if (tune == AUDIO_TUNE_GAIN) {
+        aProc.par.gain[aProc.par.input] = value;
+    }
+
+    if (aProc.api.setTune) {
+        aProc.api.setTune(tune, value);
     }
 }
 
-void audioChangeParam(AudioParam param, int8_t diff)
+void audioChangeTune(AudioTune tune, int8_t diff)
 {
-    if (param >= AUDIO_PARAM_END)
+    if (tune >= AUDIO_TUNE_END)
         return;
 
-    int8_t value = aProc.item[param].value;
+    int8_t value = aProc.par.item[tune].value;
 
     value += diff;
 
-    audioSetParam(param, value);
+    audioSetTune(tune, value);
 }
 
-void audioSetFlag(AudioFlag flag, uint8_t value)
+
+void audioSetInput(uint8_t value)
+{
+    if (value >= aProc.par.inCnt)
+        value = 0;
+
+    aProc.par.input = value;
+    aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
+
+    if (aProc.api.setInput) {
+        aProc.api.setInput(value);
+    }
+
+    audioSetTune(AUDIO_TUNE_GAIN, aProc.par.gain[value]);
+}
+
+void audioSetFlag(AudioFlag flag, bool value)
 {
     if (value)
-        aProc.flag |= flag;
+        aProc.par.flags |= flag;
     else
-        aProc.flag &= ~flag;
+        aProc.par.flags &= ~flag;
 
-    if (aProc.setFlag) {
-        aProc.setFlag();
+    switch (flag) {
+    case AUDIO_FLAG_MUTE:
+        if (aProc.api.setMute) {
+            aProc.api.setMute(value);
+        }
+        break;
+    default:
+        break;
     }
 }

@@ -29,7 +29,7 @@ typedef enum {
 } Screen;
 
 typedef union {
-    AudioParam audio;
+    AudioTune tune;
     uint8_t input;
     RtcMode rtc;
     uint8_t parent;

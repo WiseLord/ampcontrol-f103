@@ -69,7 +69,7 @@ static void menuMove(int8_t diff)
 static int16_t menuGetValue(MenuIdx index)
 {
     int16_t ret = 0;
-    AudioProc *aproc = audioProcGet();
+    AudioProc *aproc = audioGet();
     Tuner *tuner = tunerGet();
     TunerParam *tPar = tunerGetPar();
 
@@ -114,7 +114,7 @@ static int16_t menuGetValue(MenuIdx index)
 
 static void menuStoreCurrentValue(void)
 {
-    AudioProc *aproc = audioProcGet();
+    AudioProc *aproc = audioGet();
     Tuner *tuner = tunerGet();
     TunerParam *tPar = tunerGetPar();
 

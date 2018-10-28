@@ -2,105 +2,121 @@
 
 #include "../i2c.h"
 
+// I2C address
+#define TDA7439_I2C_ADDR            0x88
+
+// I2C function selection
+#define TDA7439_INPUT_SELECT        0x00
+#define TDA7439_INPUT_GAIN          0x01
+#define TDA7439_PREAMP              0x02
+#define TDA7439_BASS                0x03
+#define TDA7439_MIDDLE              0x04
+#define TDA7439_TREBLE              0x05
+#define TDA7439_VOLUME_RIGHT        0x06
+#define TDA7439_VOLUME_LEFT         0x07
+
+#define TDA7439_SPEAKER_MUTE        0x7F
+
+// I2C autoincrement flag
+#define TDA7439_AUTO_INC            0x10
+
+// Number of inputs
+#define TDA7439_IN_CNT              4
+
 static const AudioGrid grid_n79_0_1  = {-79,  0, 1.00 * 8};   // -79..0dB with 1dB step
 static const AudioGrid grid_n14_14_2 = { -7,  7, 2.00 * 8};   // -14..14dB with 2dB step
 static const AudioGrid grid_n15_15_1 = {-15, 15, 1.00 * 8};   // -15..15dB with 1dB step
 static const AudioGrid grid_n47_0_1  = {-47,  0, 1.00 * 8};   // -47..0dB with 1dB step
 static const AudioGrid grid_0_30_2   = {  0, 15, 2.00 * 8};   // 0..30dB with 2dB step
 
-static AudioProc *aProc;
+static AudioParam *aPar;
 
-void tda7439Init(AudioProc *audioProc)
+void tda7439Init(AudioParam *param)
 {
-    aProc = audioProc;
-    aProc->inCnt = TDA7439_IN_CNT;
-    aProc->setFlag = tda7439SetMute;
-    aProc->setInput = tda7439SetInput;
+    aPar = param;
+    param->inCnt = TDA7439_IN_CNT;
 
-    aProc->item[AUDIO_PARAM_VOLUME].grid = &grid_n79_0_1;
-    aProc->item[AUDIO_PARAM_VOLUME].set = tda7439SetSpeakers;
+    param->item[AUDIO_TUNE_VOLUME].grid = &grid_n79_0_1;
+    param->item[AUDIO_TUNE_BASS].grid = &grid_n14_14_2;
+    param->item[AUDIO_TUNE_MIDDLE].grid = &grid_n14_14_2;
+    param->item[AUDIO_TUNE_TREBLE].grid = &grid_n14_14_2;
+    param->item[AUDIO_TUNE_PREAMP].grid = &grid_n47_0_1;
+    param->item[AUDIO_TUNE_BALANCE].grid = &grid_n15_15_1;
+    param->item[AUDIO_TUNE_GAIN].grid = &grid_0_30_2;
 
-    aProc->item[AUDIO_PARAM_BASS].grid = &grid_n14_14_2;
-    aProc->item[AUDIO_PARAM_BASS].set = tda7439SetBMT;
-
-    aProc->item[AUDIO_PARAM_MIDDLE].grid = &grid_n14_14_2;
-    aProc->item[AUDIO_PARAM_MIDDLE].set = tda7439SetBMT;
-
-    aProc->item[AUDIO_PARAM_TREBLE].grid = &grid_n14_14_2;
-    aProc->item[AUDIO_PARAM_TREBLE].set = tda7439SetBMT;
-
-    aProc->item[AUDIO_PARAM_PREAMP].grid = &grid_n47_0_1;
-    aProc->item[AUDIO_PARAM_PREAMP].set = tda7439SetPreamp;
-
-    aProc->item[AUDIO_PARAM_BALANCE].grid = &grid_n15_15_1;
-    aProc->item[AUDIO_PARAM_BALANCE].set = tda7439SetSpeakers;
-
-    aProc->item[AUDIO_PARAM_GAIN].grid = &grid_0_30_2;
-    aProc->item[AUDIO_PARAM_GAIN].set = tda7439SetInput;
+    tda7439SetMute(true);
 }
 
-void tda7439SetSpeakers(void)
+void tda7439SetTune(AudioTune tune, int8_t value)
 {
-    int8_t spLeft = aProc->item[AUDIO_PARAM_VOLUME].value;
-    int8_t spRight = aProc->item[AUDIO_PARAM_VOLUME].value;
-    int8_t volMin = aProc->item[AUDIO_PARAM_VOLUME].grid->min;
+    int8_t spLeft = aPar->item[AUDIO_TUNE_VOLUME].value;
+    int8_t spRight = aPar->item[AUDIO_TUNE_VOLUME].value;
+    int8_t volMin = aPar->item[AUDIO_TUNE_VOLUME].grid->min;
 
-    if (aProc->item[AUDIO_PARAM_BALANCE].value > 0) {
-        spLeft -= aProc->item[AUDIO_PARAM_BALANCE].value;
+    if (aPar->item[AUDIO_TUNE_BALANCE].value > 0) {
+        spLeft -= aPar->item[AUDIO_TUNE_BALANCE].value;
         if (spLeft < volMin)
             spLeft = volMin;
     } else {
-        spRight += aProc->item[AUDIO_PARAM_BALANCE].value;
+        spRight += aPar->item[AUDIO_TUNE_BALANCE].value;
         if (spRight < volMin)
             spRight = volMin;
     }
 
-    i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
-    i2cSend(I2C_AMP, TDA7439_VOLUME_RIGHT | TDA7439_AUTO_INC);
-    i2cSend(I2C_AMP, -spRight);
-    i2cSend(I2C_AMP, -spLeft);
-    i2cTransmit(I2C_AMP);
-}
-
-void tda7439SetBMT(void)
-{
-    int8_t val;
-
-    i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
-    i2cSend(I2C_AMP, TDA7439_BASS | TDA7439_AUTO_INC);
-    for (AudioParam par = AUDIO_PARAM_BASS; par <= AUDIO_PARAM_TREBLE; par++) {
-        val = aProc->item[par].value;
+    switch (tune) {
+    case AUDIO_TUNE_VOLUME:
+    case AUDIO_TUNE_BALANCE:
+        i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
+        i2cSend(I2C_AMP, TDA7439_VOLUME_RIGHT | TDA7439_AUTO_INC);
+        i2cSend(I2C_AMP, -spRight);
+        i2cSend(I2C_AMP, -spLeft);
+        i2cTransmit(I2C_AMP);
+        break;
+    case AUDIO_TUNE_BASS:
+    case AUDIO_TUNE_MIDDLE:
+    case AUDIO_TUNE_TREBLE:
+        i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
+        i2cSend(I2C_AMP, TDA7439_BASS + (tune - AUDIO_TUNE_BASS));
+        int8_t val = aPar->item[tune].value;
         i2cSend(I2C_AMP, val > 0 ? 15 - val : 7 + val);
+        i2cTransmit(I2C_AMP);
+        break;
+    case AUDIO_TUNE_PREAMP:
+        i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
+        i2cSend(I2C_AMP, TDA7439_PREAMP);
+        i2cSend(I2C_AMP, -aPar->item[tune].value);
+        i2cTransmit(I2C_AMP);
+        break;
+    case AUDIO_TUNE_GAIN:
+        i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
+        i2cSend(I2C_AMP, TDA7439_INPUT_GAIN);
+        i2cSend(I2C_AMP,  aPar->item[tune].value);
+        i2cTransmit(I2C_AMP);
+        break;
+    default:
+        break;
     }
-    i2cTransmit(I2C_AMP);
+
 }
 
-void tda7439SetPreamp(void)
-{
-    i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
-    i2cSend(I2C_AMP, TDA7439_PREAMP);
-    i2cSend(I2C_AMP, -aProc->item[AUDIO_PARAM_PREAMP].value);
-    i2cTransmit(I2C_AMP);
-}
-
-void tda7439SetInput(void)
+void tda7439SetInput(uint8_t value)
 {
     i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7439_INPUT_SELECT | TDA7439_AUTO_INC);
-    i2cSend(I2C_AMP, TDA7439_IN_CNT - 1 - aProc->input);
-    i2cSend(I2C_AMP, aProc->item[AUDIO_PARAM_GAIN].value);
+    i2cSend(I2C_AMP, TDA7439_IN_CNT - 1 - aPar->input);
+    i2cSend(I2C_AMP, value);
     i2cTransmit(I2C_AMP);
 }
 
-void tda7439SetMute(void)
+void tda7439SetMute(bool value)
 {
-    if (aProc->flag & AUDIO_FLAG_MUTE) {
+    if (value) {
         i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7439_VOLUME_RIGHT | TDA7439_AUTO_INC);
         i2cSend(I2C_AMP, TDA7439_SPEAKER_MUTE);
         i2cSend(I2C_AMP, TDA7439_SPEAKER_MUTE);
         i2cTransmit(I2C_AMP);
     } else {
-        tda7439SetSpeakers();
+        tda7439SetTune(AUDIO_TUNE_VOLUME, aPar->item[AUDIO_TUNE_VOLUME].value);
     }
 }

@@ -1,5 +1,7 @@
 #include "actions.h"
 
+#include <stddef.h>
+
 #include "audio/audio.h"
 #include "eemul.h"
 #include "input.h"
@@ -23,23 +25,23 @@ static void actionSet(ActionType type, int16_t value)
 static void actionNextAudioParam(AudioProc *aProc)
 {
     do {
-        scrPar.audio++;
-        if (scrPar.audio >= AUDIO_PARAM_END)
-            scrPar.audio = AUDIO_PARAM_VOLUME;
-    } while (aProc->item[scrPar.audio].grid->step == 0);
+        scrPar.tune++;
+        if (scrPar.tune >= AUDIO_TUNE_END)
+            scrPar.tune = AUDIO_TUNE_VOLUME;
+    } while (aProc->par.item[scrPar.tune].grid == NULL);
 }
 
 static void actionNextAudioInput(AudioProc *aProc)
 {
     scrPar.input++;
-    if (scrPar.input >= aProc->inCnt)
+    if (scrPar.input >= aProc->par.inCnt)
         scrPar.input = 0;
 }
 
 static void actionChangeCurrentInput(int8_t diff)
 {
     screenSet(SCREEN_AUDIO_PARAM);
-    scrPar.audio = AUDIO_PARAM_GAIN;
+    scrPar.tune = AUDIO_TUNE_GAIN;
     actionSet(ACTION_AUDIO_PARAM_CHANGE, diff);
 }
 
@@ -217,7 +219,7 @@ static void actionHandleEncoder(void)
                 break;
             case SCREEN_SPECTRUM:
                 screenSet(SCREEN_AUDIO_PARAM);
-                scrPar.audio = AUDIO_PARAM_VOLUME;
+                scrPar.tune = AUDIO_TUNE_VOLUME;
             default:
                 actionSet(ACTION_AUDIO_PARAM_CHANGE, encCnt);
                 break;
@@ -244,7 +246,7 @@ Action actionUserGet(void)
 void actionHandle(Action action, uint8_t visible)
 {
     Screen screen = screenGet();
-    AudioProc *aProc = audioProcGet();
+    AudioProc *aProc = audioGet();
     int16_t dispTime = 0;
 
     switch (action.type) {
@@ -259,18 +261,22 @@ void actionHandle(Action action, uint8_t visible)
             rtcSetMode(RTC_NOEDIT);
             screenSaveSettings();
 
-            audioPowerOff();
-            tunerSetPower(0);
+            audioSetFlag(AUDIO_FLAG_MUTE, true);
+            audioSetPower(false);
+
+            tunerSetFlag(TUNER_FLAG_MUTE, true);
+            tunerSetPower(false);
         }
         break;
     case ACTION_INIT_HW:
         swTimSetInitHw(SW_TIM_OFF);
         tunerInit();
-        tunerSetPower(1);
+        tunerSetPower(true);
         tunerSetFreq(tunerGet()->freq);
-        tunerSetFlag(TUNER_FLAG_MUTE, 0);
+        tunerSetFlag(TUNER_FLAG_MUTE, false);
 
         audioInit();
+        audioSetPower(true);
         break;
 
     case ACTION_RTC_MODE:
@@ -304,7 +310,7 @@ void actionHandle(Action action, uint8_t visible)
             audioSetInput(scrPar.input);
         } else {
             screen = SCREEN_AUDIO_INPUT;
-            scrPar.input = aProc->input;
+            scrPar.input = aProc->par.input;
         }
         break;
     case ACTION_OK:
@@ -313,12 +319,12 @@ void actionHandle(Action action, uint8_t visible)
             actionNextAudioParam(aProc);
         } else {
             screen = SCREEN_AUDIO_PARAM;
-            scrPar.audio = AUDIO_PARAM_VOLUME;
+            scrPar.tune = AUDIO_TUNE_VOLUME;
         }
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
         dispTime = 5000;
-        audioChangeParam(scrPar.audio, action.value);
+        audioChangeTune(scrPar.tune, action.value);
         break;
     case ACTION_TUNER_PREV:
         tunerNextStation(TUNER_DIR_DOWN);

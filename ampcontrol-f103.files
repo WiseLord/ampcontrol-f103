@@ -3,6 +3,7 @@ actions.h
 .astylerc
 audio/audio.c
 audio/audio.h
+audio/audiodefs.h
 audio/tda7439.c
 audio/tda7439.h
 build_all.sh

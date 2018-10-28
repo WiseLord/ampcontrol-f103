@@ -74,11 +74,9 @@ TunerParam *tunerGetPar(void)
     return &tuner.par;
 }
 
-void tunerSetPower(uint16_t value)
+void tunerSetPower(bool value)
 {
-    if (value) {
-
-    } else {
+    if (!value) {
         tunerSaveSettings();
     }
 
@@ -92,10 +90,11 @@ void tunerSetFreq(uint16_t value)
     uint16_t freqMin = tuner.par.fMin;
     uint16_t freqMax = tuner.par.fMax;
 
-    if (value < freqMin)
+    if (value < freqMin) {
         value = freqMin;
-    else if (value > freqMax)
+    } else if (value > freqMax) {
         value = freqMax;
+    }
 
     tuner.freq = value;
 

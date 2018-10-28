@@ -52,7 +52,7 @@ void tunerInit(void);
 Tuner *tunerGet(void);
 TunerParam *tunerGetPar(void);
 
-void tunerSetPower(uint16_t value);
+void tunerSetPower(bool value);
 
 void tunerSetFreq(uint16_t value);
 void tunerSetFlag(TunerFlag flag, bool value);
