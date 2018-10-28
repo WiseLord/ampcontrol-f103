@@ -7,7 +7,7 @@ static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
 static void showSpectrum(SpectrumData *spData);
 //static void showTuner(DispTuner *dt);
-//static void showMenu(void);
+static void showMenu(void);
 
 static Canvas canvas = {
     .width = 400,
@@ -16,12 +16,13 @@ static Canvas canvas = {
     .showParam = showParam,
     .showSpectrum = showSpectrum,
     //.showTuner = showTuner,
-    //.showMenu = showMenu,
+    .showMenu = showMenu,
 };
 
 void gc400x240Init(Canvas **value)
 {
     *value = &canvas;
+    menuGet()->dispSize = MENU_SIZE_VISIBLE;
 }
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
@@ -168,4 +169,9 @@ static void showSpectrum(SpectrumData *spData)
 
         drawSpCol(xbase, ybase, width, value + 1, max);
     }
+}
+
+static void showMenu(void)
+{
+    canvasShowMenu(&fontterminus28b, &fontterminus22b);
 }

@@ -1,18 +1,29 @@
 #include "canvas.h"
 
+// On 128x64 we can draw max 4 menu items + menu header
+#define MENU_SIZE_VISIBLE   3
+
 static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
 static void showSpectrum(SpectrumData *spData);
 //static void showTuner(DispTuner *dt);
+static void showMenu(void);
 
 static Canvas canvas = {
     .width = 128,
-    .height = 644,
+    .height = 64,
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
 //    .showTuner = showTuner,
+    .showMenu = showMenu,
 };
+
+void gm128x64Init(Canvas **value)
+{
+    *value = &canvas;
+    menuGet()->dispSize = MENU_SIZE_VISIBLE;
+}
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
 {
@@ -169,7 +180,7 @@ static void showSpectrum(SpectrumData *spData)
     }
 }
 
-void gm128x64Init(Canvas **value)
+static void showMenu(void)
 {
-    *value = &canvas;
+    canvasShowMenu(&fontterminus14b, &fontterminus12);
 }

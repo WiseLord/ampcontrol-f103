@@ -304,8 +304,11 @@ uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
     return ret;
 }
 
-void glcdDrawRect(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color)
+void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
+    if (w < 0 || h < 0)
+        return;
+
     if (glcd.drv->drawRectangle) {
         glcd.drv->drawRectangle(x, y, w, h, color);
     } else {
@@ -317,7 +320,7 @@ void glcdDrawRect(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color)
     }
 }
 
-void glcdDrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
+void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {
     if (x0 == x1) {                 // Vertical
         if (y0 > y1) {              // Swap
@@ -358,7 +361,7 @@ void glcdDrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t c
     }
 }
 
-void glcdDrawFrame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
+void glcdDrawFrame(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {
     glcdDrawLine(x0, y0, x0, y1, color);
     glcdDrawLine(x0, y1, x1, y1, color);

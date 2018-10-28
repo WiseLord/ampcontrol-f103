@@ -31,6 +31,7 @@ extern const tFont fontterminus14b;
 extern const tFont fontterminus16;
 extern const tFont fontterminus16b;
 extern const tFont fontterminus18;
+extern const tFont fontterminus18b;
 extern const tFont fontterminus20;
 extern const tFont fontterminus20b;
 extern const tFont fontterminus22;

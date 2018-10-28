@@ -1,13 +1,13 @@
 #include "canvas.h"
 
 // On 160x128 we can draw max 4 menu items + menu header
-#define MENU_SIZE_VISIBLE   4
+#define MENU_SIZE_VISIBLE   7
 
 static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
 static void showSpectrum(SpectrumData *spData);
 //static void showTuner(DispTuner *dt);
-//static void showMenu(void);
+static void showMenu(void);
 
 static Canvas canvas = {
     .width = 160,
@@ -16,7 +16,7 @@ static Canvas canvas = {
     .showParam = showParam,
     .showSpectrum = showSpectrum,
     //.showTuner = showTuner,
-    //.showMenu = showMenu,
+    .showMenu = showMenu,
 };
 
 void gc160x128Init(Canvas **value)
@@ -171,4 +171,9 @@ static void showSpectrum(SpectrumData *spData)
 
         drawSpCol(xbase, ybase, width, value + 1, max);
     }
+}
+
+static void showMenu(void)
+{
+    canvasShowMenu(&fontterminus14b, &fontterminus12);
 }

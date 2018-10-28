@@ -71,7 +71,7 @@ const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_INPUT]     = "Input",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner IC",
-    [LABEL_MENU + MENU_TUNER_BAND]      = "Tuner band",
+    [LABEL_MENU + MENU_TUNER_BAND]      = "Band",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Scan step",
     [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Deemphasys",
     [LABEL_MENU + MENU_TUNER_FMONO]     = "Force mono",

@@ -259,7 +259,7 @@ void screenShow(void)
 
     // Get new spectrum data
     if (swTimGetSpConvert() <= 0) {
-        swTimSetSpConvert(10);
+        swTimSetSpConvert(25);
         spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
 
         improveSpectrum(&spData[SP_CHAN_LEFT]);
