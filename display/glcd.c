@@ -8,7 +8,7 @@ static char strbuf[STR_BUFSIZE + 1];    // String buffer
 
 static Glcd glcd;
 
-static uint8_t unRleData[512];           // Storage for uncompressed image
+static uint8_t unRleData[1024];           // Storage for uncompressed image
 static tImage imgUnRle = {
     .data = unRleData,
     .width = 0,
@@ -24,11 +24,6 @@ void glcdInit(Glcd **value)
     glcd.drv->drawImage = glcdDrawImage;
 #endif
     *value = &glcd;
-}
-
-void glcdFill(uint16_t color)
-{
-    glcdDrawRect(0, 0, glcd.drv->width, glcd.drv->height, color);
 }
 
 char *glcdPrepareNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)

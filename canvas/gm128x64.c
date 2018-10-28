@@ -6,6 +6,8 @@ static void showSpectrum(SpectrumData *spData);
 //static void showTuner(DispTuner *dt);
 
 static Canvas canvas = {
+    .width = 128,
+    .height = 644,
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
@@ -62,7 +64,7 @@ static void displayShowBar(int16_t min, int16_t max, int16_t value)
             }
         }
 
-        uint16_t width = canvas.glcd->drv->width;
+        uint16_t width = canvas.width;
 
         glcdDrawRect(i * (width / sc) + 1, 27, sw, 5, color);
         glcdDrawRect(i * (width / sc) + 1, 32, sw, 1, LCD_COLOR_WHITE);
@@ -142,7 +144,7 @@ static void showSpectrum(SpectrumData *spData)
 
     buf = spData[SP_CHAN_LEFT].show;
     peak = spData[SP_CHAN_LEFT].peak;
-    for (uint16_t x = 0; x < canvas.glcd->drv->width / 2; x++) {
+    for (uint16_t x = 0; x < canvas.width / 2; x++) {
         uint16_t xbase = x * 2;
         uint8_t ybase = 32;
         uint8_t width = 1;
@@ -155,7 +157,7 @@ static void showSpectrum(SpectrumData *spData)
 
     buf = spData[SP_CHAN_RIGHT].show;
     peak = spData[SP_CHAN_RIGHT].peak;
-    for (uint16_t x = 0; x < canvas.glcd->drv->width / 2; x++) {
+    for (uint16_t x = 0; x < canvas.width / 2; x++) {
         uint16_t xbase = x * 2;
         uint8_t ybase = 64;
         uint8_t width = 1;

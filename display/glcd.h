@@ -49,7 +49,6 @@ typedef void (*SendDataCallback)(uint16_t data);
 #define LCD_COLOR_WHITE                 RGB_TO_565(0xFFFFFF)
 
 void glcdInit(Glcd **value);
-void glcdFill(uint16_t color);
 
 char * glcdPrepareNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);
 uint16_t glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix);

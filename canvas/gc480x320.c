@@ -1,22 +1,28 @@
 #include "canvas.h"
 
+// On 320x240 we can draw max 10 menu items + menu header
+#define MENU_SIZE_VISIBLE   10
+
 static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
 static void showSpectrum(SpectrumData *spData);
-//static void showTuner(DispTuner *dt);
-//static void showMenu(void);
+static void showTuner(DispTuner *dt);
+static void showMenu(void);
 
 static Canvas canvas = {
+    .width = 480,
+    .height = 320,
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
-    //.showTuner = showTuner,
-    //.showMenu = showMenu,
+    .showTuner = showTuner,
+    .showMenu = showMenu,
 };
 
 void gc480x320Init(Canvas **value)
 {
     *value = &canvas;
+    menuGet()->dispSize = MENU_SIZE_VISIBLE;
 }
 
 static void displayTm(RTC_type *rtc, uint8_t tm)
@@ -35,7 +41,6 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdWriteChar(LETTER_SPACE_CHAR);
 }
-
 static void drawShowBar(int16_t value, int16_t min, int16_t max)
 {
     static const int16_t sc = 80; // Scale count
@@ -63,11 +68,11 @@ static void drawShowBar(int16_t value, int16_t min, int16_t max)
             }
         }
 
-        uint16_t width = canvas.glcd->drv->width;
+        uint16_t width = canvas.width;
 
-        glcdDrawRect(i * (width / sc) + 1, 100, sw, 14, color);
-        glcdDrawRect(i * (width / sc) + 1, 114, sw, 2, LCD_COLOR_WHITE);
-        glcdDrawRect(i * (width / sc) + 1, 116, sw, 14, color);
+        glcdDrawRect(i * (width / sc) + 1, 110, sw, 16, color);
+        glcdDrawRect(i * (width / sc) + 1, 126, sw, 2, LCD_COLOR_WHITE);
+        glcdDrawRect(i * (width / sc) + 1, 128, sw, 16, color);
     }
 }
 
@@ -127,7 +132,6 @@ static void showTime(RTC_type *rtc, char *wday)
 
     wdayOld = wday;
 }
-
 static void showParam(DispParam *dp)
 {
     glcdSetFont(&fontterminusmod96);
@@ -138,8 +142,8 @@ static void showParam(DispParam *dp)
 
     drawShowBar(dp->value, dp->min, dp->max);
 
-    glcdSetXY(471, 200);
-    glcdSetFont(&fontterminusdig120);
+    glcdSetXY(canvas.width, 224);
+    glcdSetFont(&fontterminusdig96);
     glcdSetFontAlign(FONT_ALIGN_RIGHT);
     glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
 }
@@ -151,7 +155,7 @@ static void showSpectrum(SpectrumData *spData)
 
     buf = spData[SP_CHAN_LEFT].show;
     peak = spData[SP_CHAN_LEFT].peak;
-    for (uint16_t x = 0; x < (canvas.glcd->drv->width + 1) / 4; x++) {
+    for (uint16_t x = 0; x < (canvas.width + 1) / 4; x++) {
         uint16_t xbase = x * 4;
         uint16_t ybase = 160;
         uint16_t width = 2;
@@ -164,7 +168,7 @@ static void showSpectrum(SpectrumData *spData)
 
     buf = spData[SP_CHAN_RIGHT].show;
     peak = spData[SP_CHAN_RIGHT].peak;
-    for (uint16_t x = 0; x < (canvas.glcd->drv->width + 1) / 4; x++) {
+    for (uint16_t x = 0; x < (canvas.width + 1) / 4; x++) {
         uint16_t xbase = x * 4;
         uint16_t ybase = 320;
         uint16_t width = 2;
@@ -174,4 +178,35 @@ static void showSpectrum(SpectrumData *spData)
 
         drawSpCol(xbase, ybase, width, value + 1, max, pValue);
     }
+}
+
+static void showTuner(DispTuner *dt)
+{
+    Tuner *tuner = dt->tuner;
+    uint16_t freq = tunerGet()->freq;
+    uint16_t freqMin = tuner->par.fMin;
+    uint16_t freqMax = tuner->par.fMax;
+
+    glcdSetFont(&fontterminusmod96);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetXY(2, 0);
+
+    glcdWriteString("FM ");
+
+    drawShowBar(freq, freqMin, freqMax);
+
+    glcdWriteNum(freq / 100, 3, ' ', 10);
+    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteChar('.');
+    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteNum(freq % 100, 2, '0', 10);
+
+    glcdSetFont(&fontterminusmod64);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetXY(2, 120);
+}
+
+static void showMenu(void)
+{
+    canvasShowMenu(&fontterminus32b, &fontterminus24b);
 }

@@ -10,6 +10,8 @@ static void showTuner(DispTuner *dt);
 static void showMenu(void);
 
 static Canvas canvas = {
+    .width = 320,
+    .height = 240,
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
@@ -67,7 +69,7 @@ static void drawShowBar(int16_t value, int16_t min, int16_t max)
             }
         }
 
-        uint16_t width = canvas.glcd->drv->width;
+        uint16_t width = canvas.width;
 
         glcdDrawRect(i * (width / sc) + 1, 84, sw, 14, color);
         glcdDrawRect(i * (width / sc) + 1, 98, sw, 2, LCD_COLOR_WHITE);
@@ -124,7 +126,7 @@ static void showTime(RTC_type *rtc, char *wday)
     static char *wdayOld = 0;
     if (wday != wdayOld) {
         // Clear the area with weekday label
-        glcdDrawRect(0, 170, canvas.glcd->drv->width, 64, canvas.color);
+        glcdDrawRect(0, 170, canvas.width, 64, canvas.color);
     }
 
     glcdSetFontAlign(FONT_ALIGN_CENTER);
@@ -143,7 +145,7 @@ static void showParam(DispParam *dp)
 
     drawShowBar(dp->value, dp->min, dp->max);
 
-    glcdSetXY(canvas.glcd->drv->width, 176);
+    glcdSetXY(canvas.width, 176);
     glcdSetFontAlign(FONT_ALIGN_RIGHT);
     glcdSetFont(&fontterminusdig64);
     glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
@@ -156,7 +158,7 @@ static void showSpectrum(SpectrumData *spData)
 
     buf = spData[SP_CHAN_LEFT].show;
     peak = spData[SP_CHAN_LEFT].peak;
-    for (uint16_t x = 0; x < (canvas.glcd->drv->width + 1) / 3; x++) {
+    for (uint16_t x = 0; x < (canvas.width + 1) / 3; x++) {
         uint16_t xbase = x * 3;
         uint16_t ybase = 120;
         uint16_t width = 2;
@@ -169,7 +171,7 @@ static void showSpectrum(SpectrumData *spData)
 
     buf = spData[SP_CHAN_RIGHT].show;
     peak = spData[SP_CHAN_RIGHT].peak;
-    for (uint16_t x = 0; x < (canvas.glcd->drv->width + 1) / 3; x++) {
+    for (uint16_t x = 0; x < (canvas.width + 1) / 3; x++) {
         uint16_t xbase = x * 3;
         uint16_t ybase = 240;
         uint16_t width = 2;
@@ -207,68 +209,7 @@ static void showTuner(DispTuner *dt)
     glcdSetXY(2, 120);
 }
 
-static void showMenuItem(uint8_t idx)
-{
-    Menu *menu = menuGet();
-    uint16_t width = canvas.glcd->drv->width;
-    MenuIdx menuIdx = menu->list[idx];
-    char *name = menuGetName(menuIdx);
-    uint8_t active = (menu->active == menu->list[idx]);
-
-    const uint8_t ih = 26;  // Menu item height
-    uint16_t y_pos = 32 + ih * (idx - menu->dispOft);
-
-    // Draw selection frame
-    glcdDrawFrame(0, y_pos, width - 1, y_pos + ih - 1, active ? LCD_COLOR_WHITE : canvas.color);
-
-    // Draw menu name
-    glcdSetFont(&fontterminus22b);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-
-    glcdSetXY(4, y_pos + 2);
-    if (menu->list[idx] != MENU_NULL) {
-        glcdWriteString("  ");
-    } else {
-        glcdWriteString("< ");
-    }
-    glcdWriteString(name);
-
-    // Draw menu value
-    uint16_t x = canvas.glcd->x;
-    glcdSetXY(width - 2, y_pos + 2);
-    glcdSetFontAlign(FONT_ALIGN_RIGHT);
-
-    // Inverse value color if selected
-    uint16_t color = canvas.glcd->font.color;
-    uint16_t bgColor = canvas.glcd->font.bgColor;
-    if (active && menu->selected) {
-        glcdSetFontColor(bgColor);
-        glcdSetFontBgColor(color);
-    }
-    uint16_t strLen = glcdWriteStringFramed(menuGetValueStr(menuIdx), 1);
-    glcdSetFontColor(color);
-    glcdSetFontBgColor(bgColor);
-
-    // Fill space between name and value
-    glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, 22, canvas.color);
-}
-
 static void showMenu(void)
 {
-    Menu *menu = menuGet();
-
-    // Show header
-    char *parentName = menuGetName(menu->parent);
-    glcdSetFont(&fontterminus28b);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-
-    glcdSetXY(2, 0);
-    glcdWriteString(parentName);
-    glcdDrawRect(0, 29, 320, 1, canvas.glcd->font.color);
-
-    for (uint8_t idx = 0; idx < menu->listSize; idx++) {
-        if (idx >= menu->dispOft && idx < MENU_SIZE_VISIBLE + menu->dispOft) {
-            showMenuItem(idx);
-        }
-    }
+    canvasShowMenu(&fontterminus28b, &fontterminus22b);
 }

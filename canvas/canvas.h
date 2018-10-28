@@ -2,6 +2,7 @@
 #define CANVAS_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 #include "../display/glcd.h"
 #include "../rtc.h"
@@ -24,6 +25,8 @@ typedef struct {
 
 typedef struct {
     Glcd *glcd;
+    uint16_t width;
+    uint16_t height;
 
     void (*showTime)(RTC_type *rtc, char *wday);
     void (*showParam)(DispParam *dp);
@@ -35,5 +38,7 @@ typedef struct {
 } Canvas;
 
 void canvasInit(Canvas **canvas);
+
+void canvasShowMenu(const tFont *fontHeader, const tFont *fontItem);
 
 #endif // CANVAS_H

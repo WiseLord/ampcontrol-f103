@@ -1,5 +1,8 @@
 #include "canvas.h"
 
+// On 400x240 we can draw max 8 menu items + menu header
+#define MENU_SIZE_VISIBLE   8
+
 static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
 static void showSpectrum(SpectrumData *spData);
@@ -7,6 +10,8 @@ static void showSpectrum(SpectrumData *spData);
 //static void showMenu(void);
 
 static Canvas canvas = {
+    .width = 400,
+    .height = 240,
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
@@ -63,7 +68,7 @@ static void drawShowBar(int16_t value, int16_t min, int16_t max)
             }
         }
 
-        uint16_t width = canvas.glcd->drv->width;
+        uint16_t width = canvas.width;
 
         glcdDrawRect(i * (width / sc) + 1, 84, sw, 14, color);
         glcdDrawRect(i * (width / sc) + 1, 98, sw, 2, LCD_COLOR_WHITE);
@@ -143,7 +148,7 @@ static void showSpectrum(SpectrumData *spData)
     uint8_t *buf;
 
     buf = spData[SP_CHAN_LEFT].show;
-    for (uint16_t x = 0; x < (canvas.glcd->drv->width - 16) / 3; x++) {
+    for (uint16_t x = 0; x < (canvas.width - 16) / 3; x++) {
         uint16_t xbase = x * 4;
         uint16_t ybase = 120;
         uint16_t width = 2;
@@ -154,7 +159,7 @@ static void showSpectrum(SpectrumData *spData)
     }
 
     buf = spData[SP_CHAN_RIGHT].show;
-    for (uint16_t x = 0; x < (canvas.glcd->drv->width - 16) / 3; x++) {
+    for (uint16_t x = 0; x < (canvas.width - 16) / 3; x++) {
         uint16_t xbase = x * 4;
         uint16_t ybase = 240;
         uint16_t width = 2;

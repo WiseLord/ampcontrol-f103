@@ -176,7 +176,8 @@ void screenInit(void)
 
 void screenClear(void)
 {
-    glcdFill(canvas->color);
+    glcdDrawRect(0, 0, canvas->width, canvas->height, canvas->color);
+
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetFontBgColor(canvas->color);
 }
@@ -258,13 +259,13 @@ void screenShow(void)
 
     // Get new spectrum data
     if (swTimGetSpConvert() <= 0) {
+        swTimSetSpConvert(10);
         spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
 
         improveSpectrum(&spData[SP_CHAN_LEFT]);
         improveSpectrum(&spData[SP_CHAN_RIGHT]);
 
         spReady = 1;
-        swTimSetSpConvert(40);
     }
 
     switch (screen) {
