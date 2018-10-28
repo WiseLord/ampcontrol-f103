@@ -3,14 +3,14 @@
 
 #include <stm32f103xb.h>
 
-#define EE_PAGE_STEP    2
+#define EE_PAGE_STEP    4
 #define EE_PAGE_SIZE    1024
 
 #define EE_EMPTY        (uint16_t)0xFFFF
 
 enum {
-    EE_PAGE_0 = 60,
-    EE_PAGE_1 = 62,
+    EE_PAGE_0 = 120,
+    EE_PAGE_1 = 124,
     EE_PAGE_END
 };
 
