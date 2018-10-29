@@ -1,6 +1,10 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #include "audio/audio.h"
@@ -63,5 +67,9 @@ void screenShowInput(void);
 void screenShowAudioParam(void);
 void screenShowTuner(void);
 void screenShowMenu(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SCREEN_H

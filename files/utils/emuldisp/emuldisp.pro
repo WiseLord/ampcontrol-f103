@@ -42,12 +42,37 @@ SOURCES += \
     ../../../display/fonts/font-terminus-mod-96.c \
     ../../../display/icons-24.c \
     ../../../display/icons-32.c \
-    ../../../display/glcd.c
+    ../../../display/glcd.c \
+    ../../../canvas/canvas.c \
+    ../../../canvas/gc160x128.c \
+    ../../../canvas/gc176x132.c \
+    ../../../canvas/gc220x176.c \
+    ../../../canvas/gc320x240.c \
+    ../../../canvas/gc400x240.c \
+    ../../../canvas/gc480x320.c \
+    ../../../canvas/gm128x64.c \
+    ../../../menu.c \
+    ../../../tuner/tuner.c \
+    ../../../audio/audio.c \
+    main.cpp \
+    ../../../tr/labels_by.c \
+    ../../../tr/labels_ru.c \
+    ../../../tr/labels.c \
+    emulscreen.c
 
 HEADERS += \
     emuldisp.h \
     ../../../display/fonts/fonts.h \
     ../../../display/icons.h \
     ../../../display/glcd.h \r \
-    ../../../display/dispdrv.h
+    ../../../display/dispdrv.h \
+    ../../../canvas/canvas.h \
+    ../../../menu.h \
+    ../../../tuner/tuner.h \
+    ../../../audio/audio.h \
+    ../../../audio/audiodefs.h \
+    ../../../tuner/tunerdefs.h \
+    ../../../tr/labels.h \
+    ../../../rtc.h \
+    emulscreen.h
     ../../../display/dispdrv.h

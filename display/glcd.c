@@ -205,7 +205,7 @@ uint16_t glcdWriteChar(int32_t code)
 static int32_t findSymbolCode(char **string)
 {
     int32_t code = 0;
-    char sym;
+    uint8_t sym;
     uint8_t curr = 0;
 
     char *str = *string;

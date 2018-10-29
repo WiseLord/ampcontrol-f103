@@ -1,6 +1,10 @@
 #ifndef MENU_H
 #define MENU_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define MENU_MAX_LEN    16
@@ -66,5 +70,9 @@ MenuIdx menuGetFirstChild(void);
 
 char *menuGetName(MenuIdx index);
 char *menuGetValueStr(MenuIdx index);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // MENU_H

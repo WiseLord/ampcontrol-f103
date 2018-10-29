@@ -50,7 +50,7 @@ static void drawShowBar(int16_t value, int16_t min, int16_t max)
     if (min + max) { // Non-symmectic scale => rescale to 0..sl
         value = sc * (value - min) / (max - min);
     } else { // Symmetric scale => rescale to -sl/2..sl/2
-        value = (sc / 2) * value / max;
+        value = (sc / 2) * value / (max ? max : 1);
     }
 
     for (uint16_t i = 0; i < sc; i++) {

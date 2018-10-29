@@ -1,6 +1,10 @@
 #ifndef TR_H
 #define TR_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "../menu.h"
 
 #include "../tuner/tuner.h"
@@ -72,5 +76,9 @@ void labelsSetLang(Lang value);
 const char **labelsGet(void);
 
 void labelsInit(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // TR_H

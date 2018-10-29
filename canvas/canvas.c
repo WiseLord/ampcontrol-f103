@@ -1,14 +1,5 @@
 #include "canvas.h"
 
-// Canvas variants
-void gc160x128Init(Canvas **driver);
-void gc176x132Init(Canvas **driver);
-void gc220x176Init(Canvas **driver);
-void gc320x240Init(Canvas **driver);
-void gc400x240Init(Canvas **driver);
-void gc480x320Init(Canvas **driver);
-void gm128x64Init(Canvas **driver);
-
 Canvas *canvas;
 
 void canvasInit(Canvas **value)
@@ -28,7 +19,11 @@ void canvasInit(Canvas **value)
 #elif defined (_ILI9481) || defined (_R61581)
     gc480x320Init(value);
 #else
+#ifdef EMUL_DISP
+    emulCanvasInit(value);
+#else
 #error "Unsupported display driver"
+#endif
 #endif
     (*value)->color = LCD_COLOR_BLACK;
 

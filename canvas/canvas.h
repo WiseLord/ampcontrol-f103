@@ -1,6 +1,10 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -37,8 +41,24 @@ typedef struct {
     uint16_t color;
 } Canvas;
 
+// Canvas variants
+void gc160x128Init(Canvas **driver);
+void gc176x132Init(Canvas **driver);
+void gc220x176Init(Canvas **driver);
+void gc320x240Init(Canvas **driver);
+void gc400x240Init(Canvas **driver);
+void gc480x320Init(Canvas **driver);
+void gm128x64Init(Canvas **driver);
+#ifdef EMUL_DISP
+void emulCanvasInit(Canvas **driver);
+#endif
+
 void canvasInit(Canvas **canvas);
 
 void canvasShowMenu(const tFont *fontHeader, const tFont *fontItem);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CANVAS_H

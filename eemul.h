@@ -1,7 +1,11 @@
 #ifndef EEEMUL_H
 #define EEEMUL_H
 
-#include <stm32f103xb.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <stdint.h>
 
 #define EE_PAGE_STEP    4
 #define EE_PAGE_SIZE    1024
@@ -58,5 +62,9 @@ uint16_t eeRead(EE_Param param);
 
 uint16_t eeReadU(EE_Param param, uint16_t def);
 int16_t eeReadI(EE_Param param, int16_t def);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // EEEMUL_H
