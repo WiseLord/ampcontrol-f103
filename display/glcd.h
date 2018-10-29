@@ -1,6 +1,10 @@
 #ifndef GLCD_H
 #define GLCD_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #include "fonts/fonts.h"
@@ -76,5 +80,9 @@ void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
 void glcdDrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color);
 
 void glcdUpdate(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // GLCD_H

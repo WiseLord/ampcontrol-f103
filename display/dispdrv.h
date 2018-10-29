@@ -1,6 +1,10 @@
 #ifndef DISPDRV_H
 #define DISPDRV_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "fonts/fonts.h"
 
@@ -58,7 +62,9 @@ typedef struct {
 #elif defined (_R61581)
 #include "gc480x320/r61581.h"
 #else
+#ifndef EMUL_DISP
 #error "Unsupported display driver"
+#endif
 #endif
 
 #if defined(_KS0108A) || defined(_KS0108B)
@@ -81,5 +87,9 @@ void dispdrvSendData8(uint8_t data);
 void dispdrvSendData16(uint16_t data);
 void dispdrvSendFill(uint32_t size, uint16_t color);
 void dispdrvSendImage(tImage *img, uint16_t color, uint16_t bgColor);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // DISPDRV_H

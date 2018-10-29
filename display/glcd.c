@@ -1,7 +1,5 @@
 #include "glcd.h"
 
-#include "../pins.h"
-
 #define STR_BUFSIZE             20
 
 static char strbuf[STR_BUFSIZE + 1];    // String buffer
