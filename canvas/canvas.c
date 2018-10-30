@@ -2,6 +2,11 @@
 
 Canvas *canvas;
 
+#define COLOR_CANVAS    LCD_COLOR_BLACK
+
+#define COLOR_SPECTRUM_COLUMN   LCD_COLOR_ELECTRIC_BLUE
+#define COLOR_SPECTRUM_PEAK     LCD_COLOR_WITCH_HAZE
+
 void canvasInit(Canvas **value)
 {
 #if defined (_KS0108A) || defined(_KS0108B) || defined (_ST7920) || defined (_SSD1306)
@@ -30,7 +35,73 @@ void canvasInit(Canvas **value)
     canvas = *value;
 }
 
-static void canvasShowMenuItem(uint8_t idx, const tFont *fontItem)
+
+static void canvasDrawSpectrumColumn(bool clear, uint16_t x, uint16_t y, uint8_t w, uint16_t h,
+                                     uint8_t s, uint8_t os, uint8_t p, uint8_t op)
+{
+    if (s == 0) {
+        s = 1;
+    }
+    if (s >= h) {
+        s = h - 1;
+    }
+    if (p >= h) {
+        p = h - 1;
+    }
+    if (os >= h) {
+        os = h - 1;
+    }
+    if (op >= h) {
+        op = h - 1;
+    }
+
+    if (clear) {
+        glcdDrawRect(x, y + h - s, w, s, COLOR_SPECTRUM_COLUMN);
+
+        if (p > s) {
+            glcdDrawRect(x, y + h - p, w, 1, COLOR_SPECTRUM_PEAK);
+        }
+        return;
+    }
+
+    if (s > os) {
+        glcdDrawRect(x, y + h - s, w, s - os, COLOR_SPECTRUM_COLUMN);
+
+    } else if (s < os) {
+        glcdDrawRect(x, y + h - os, w, os - s, canvas->color);
+    }
+
+    if (p > s) {
+        glcdDrawRect(x, y + h - p, w, 1, COLOR_SPECTRUM_PEAK);
+    }
+    if (op > p && op > s) {
+        glcdDrawRect(x, y + h - op, w, 1, canvas->color);
+    }
+
+}
+
+void canvasShowSpectrum(bool clear, SpectrumData *spData, uint8_t step, uint8_t oft, uint8_t width)
+{
+    const uint16_t height = canvas->height / 2;                 // Height of spectrum column
+    const uint16_t num = (canvas->width + width - 1) / step;    // Number of spectrum columns
+
+    for (uint8_t chan = SP_CHAN_LEFT; chan < SP_CHAN_END; chan++) {
+        uint8_t *show = spData[chan].show;
+        uint8_t *peak = spData[chan].peak;
+        uint8_t *old_show = spData[chan].old_show;
+        uint8_t *old_peak = spData[chan].old_peak;
+
+        for (uint16_t col = 0; col < num; col++) {
+            uint16_t x = oft + col * step;
+            uint16_t y = chan * height;
+            canvasDrawSpectrumColumn(clear, x, y, width, height,
+                                     *show++, *old_show++, *peak++, *old_peak++);
+        }
+    }
+}
+
+
+static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
 {
     int16_t fIh = fontItem->chars[0].image->height;
 
@@ -103,7 +174,7 @@ void canvasShowMenu(const tFont *fontHeader, const tFont *fontItem)
 
     for (uint8_t idx = 0; idx < menu->listSize; idx++) {
         if (idx >= menu->dispOft && idx < items + menu->dispOft) {
-            canvasShowMenuItem(idx, fontItem);
+            canvasDrawMenuItem(idx, fontItem);
         }
     }
 }

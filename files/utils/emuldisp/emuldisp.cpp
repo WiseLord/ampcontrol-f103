@@ -5,6 +5,8 @@
 #include "../../../menu.h"
 #include "../../../screen.h"
 
+#include "emulscreen.h"
+
 #define RGB(x) QColor(QRgb( ((x & 0xF800) << 8) | ((x & 0xE000) << 3) | \
                             ((x & 0x07E0) << 5) | ((x & 0x0600) >> 1) | \
                             ((x & 0x001F) << 3) | ((x & 0x001C) >> 3) ))

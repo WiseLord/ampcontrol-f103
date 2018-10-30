@@ -5,7 +5,7 @@
 
 static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
-static void showSpectrum(SpectrumData *spData);
+static void showSpectrum(bool clear, SpectrumData *spData);
 //static void showTuner(DispTuner *dt);
 static void showMenu(void);
 
@@ -83,19 +83,6 @@ static void displayShowBar(int16_t min, int16_t max, int16_t value)
     }
 }
 
-static void drawSpCol(uint8_t xbase, uint8_t ybase, uint8_t width, uint8_t value, uint8_t max, uint8_t peak)
-{
-    if (value > max)
-        value = max;
-
-    if (peak > max - 1)
-        peak = max - 1;
-
-    glcdDrawRect(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
-    glcdDrawRect(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
-    glcdDrawRect(xbase, ybase - peak - 1, width, 1, LCD_COLOR_YELLOW);
-}
-
 static void showTime(RTC_type *rtc, char *wday)
 {
     glcdSetFont(&fontterminusdig30);
@@ -148,36 +135,14 @@ static void showParam(DispParam *dp)
     glcdWriteIcon(dp->icon, icons_24, LCD_COLOR_WHITE, canvas.color);
 }
 
-static void showSpectrum(SpectrumData *spData)
+static void showSpectrum(bool clear, SpectrumData *spData)
 {
-    uint8_t *buf;
-    uint8_t *peak;
+    const uint8_t step = 2;     // Step in pixels between spectrum columns
+    const uint8_t oft = 0;      // Offset of spectrum column inside step
 
-    buf = spData[SP_CHAN_LEFT].show;
-    peak = spData[SP_CHAN_LEFT].peak;
-    for (uint16_t x = 0; x < canvas.width / 2; x++) {
-        uint16_t xbase = x * 2;
-        uint8_t ybase = 32;
-        uint8_t width = 1;
-        uint8_t value = buf[x] / 3;
-        uint8_t pValue = peak[x] / 3;
-        uint8_t max = 32;
+    const uint8_t width = 1;    // Width of spectrum column
 
-        drawSpCol(xbase, ybase, width, value + 1, max, pValue);
-    }
-
-    buf = spData[SP_CHAN_RIGHT].show;
-    peak = spData[SP_CHAN_RIGHT].peak;
-    for (uint16_t x = 0; x < canvas.width / 2; x++) {
-        uint16_t xbase = x * 2;
-        uint8_t ybase = 64;
-        uint8_t width = 1;
-        uint8_t value = buf[x] / 3;
-        uint8_t pValue = peak[x] / 3;
-        uint8_t max = 32;
-
-        drawSpCol(xbase, ybase, width, value + 1, max, pValue);
-    }
+    canvasShowSpectrum(clear, spData, step, oft, width);
 }
 
 static void showMenu(void)

@@ -5,7 +5,7 @@
 
 static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
-static void showSpectrum(SpectrumData *spData);
+static void showSpectrum(bool clear, SpectrumData *spData);
 //static void showTuner(DispTuner *dt);
 static void showMenu(void);
 
@@ -77,15 +77,6 @@ static void displayShowBar(int16_t min, int16_t max, int16_t value)
     }
 }
 
-static void drawSpCol(uint16_t xbase, uint16_t ybase, uint8_t width, uint16_t value, uint16_t max)
-{
-    if (value > max)
-        value = max;
-
-    glcdDrawRect(xbase, ybase - value, width, value, LCD_COLOR_AQUA);
-    glcdDrawRect(xbase, ybase - max, width, max - value, LCD_COLOR_BLACK);
-}
-
 static void showTime(RTC_type *rtc, char *wday)
 {
     glcdSetXY(4, 8);
@@ -147,31 +138,14 @@ static void showParam(DispParam *dp)
     glcdWriteIcon(dp->icon, icons_24, LCD_COLOR_WHITE, canvas.color);
 }
 
-static void showSpectrum(SpectrumData *spData)
+static void showSpectrum(bool clear, SpectrumData *spData)
 {
-    uint8_t *buf;
+    const uint8_t step = 2;     // Step in pixels between spectrum columns
+    const uint8_t oft = 0;      // Offset of spectrum column inside step
 
-    buf = spData[SP_CHAN_LEFT].show;
-    for (uint16_t x = 0; x < (canvas.width + 1) / 2; x++) {
-        uint16_t xbase = x * 2;
-        uint16_t ybase = 66;
-        uint16_t width = 1;
-        uint16_t value = buf[x];
-        uint16_t max = 65;
+    const uint8_t width = 1;    // Width of spectrum column
 
-        drawSpCol(xbase, ybase, width, value + 1, max);
-    }
-
-    buf = spData[SP_CHAN_RIGHT].show;
-    for (uint16_t x = 0; x < (canvas.width + 1) / 2; x++) {
-        uint16_t xbase = x * 2;
-        uint16_t ybase = 132;
-        uint16_t width = 1;
-        uint16_t value = buf[x];
-        uint16_t max = 65;
-
-        drawSpCol(xbase, ybase, width, value + 1, max);
-    }
+    canvasShowSpectrum(clear, spData, step, oft, width);
 }
 
 static void showMenu(void)

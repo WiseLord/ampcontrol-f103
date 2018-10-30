@@ -47,7 +47,7 @@ void screenShow(void)
         screenShowTime();
         break;
     case SCREEN_SPECTRUM:
-        screenShowSpectrum();
+        screenShowSpectrum(true);
         break;
     case SCREEN_BRIGHTNESS:
         screenShowBrightness();
@@ -94,10 +94,17 @@ void screenShowTime(void)
     }
 }
 
-void screenShowSpectrum(void)
+void screenShowSpectrum(bool clear)
 {
+    for (int i = 0; i < FFT_SIZE / 2; i++) {
+        spData[SP_CHAN_LEFT].show[i] = i / 2;
+        spData[SP_CHAN_RIGHT].show[i] = i / 2;
+        spData[SP_CHAN_LEFT].peak[i] = i;
+        spData[SP_CHAN_RIGHT].peak[i] = i;
+    }
+
     if (canvas->showSpectrum) {
-        canvas->showSpectrum(spData);
+        canvas->showSpectrum(clear, spData);
     }
 }
 

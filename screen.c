@@ -26,6 +26,7 @@ static int8_t brWork;
 static void improveSpectrum(SpectrumData *sd)
 {
     for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
+        sd->old_show[i] = sd->show[i];
         if (sd->data[i] < sd->show[i]) {
             if (sd->show[i] >= sd->fall[i]) {
                 sd->show[i] -= sd->fall[i];
@@ -37,11 +38,12 @@ static void improveSpectrum(SpectrumData *sd)
 
         if (sd->data[i] > sd->show[i]) {
             sd->show[i] = sd->data[i];
-            sd->fall[i] = 0;
+            sd->fall[i] = 1;
         }
 
-        if (sd->peak[i] < sd->data[i]) {
-            sd->peak[i] = sd->data[i];
+        sd->old_peak[i] = sd->peak[i];
+        if (sd->peak[i] <= sd->data[i]) {
+            sd->peak[i] = sd->data[i] + 1;
         } else {
             if (sd->peak[i]) {
                 sd->peak[i]--;
@@ -50,34 +52,35 @@ static void improveSpectrum(SpectrumData *sd)
     }
 }
 
-static void screenCheckChange(void)
+static bool screenCheckClear(void)
 {
+    bool clear = false;
+
     static Screen scrPrev = SCREEN_STANDBY;
     static ScreenParam scrParPrev;
 
-    uint8_t clearFlag = 0;
     AudioProc *aProc = audioGet();
 
     // Check if we need to clear screen
     if (screen != scrPrev) {
-        clearFlag = 1;
+        clear = true;
         switch (screen) {
         case SCREEN_TIME:
         case SCREEN_STANDBY:
             if (scrPrev == SCREEN_STANDBY || scrPrev == SCREEN_TIME) {
-                clearFlag = 0;
+                clear = false;
             }
             break;
         case SCREEN_AUDIO_PARAM:
             if (scrPrev == SCREEN_AUDIO_INPUT && scrPar.tune == AUDIO_TUNE_GAIN) {
-                clearFlag = 0;
+                clear = false;
             }
             break;
         case SCREEN_AUDIO_INPUT:
             if (scrPrev == SCREEN_AUDIO_PARAM) {
                 if (scrParPrev.tune == AUDIO_TUNE_GAIN) {
                     if (aProc->par.input != INPUT_TUNER) {
-                        clearFlag = 0;
+                        clear = false;
                     }
                 }
             }
@@ -106,17 +109,17 @@ static void screenCheckChange(void)
         switch (screen) {
         case SCREEN_AUDIO_PARAM:
             if (scrPar.tune != scrParPrev.tune) {
-                clearFlag = 1;
+                clear = true;
             }
             break;
         case SCREEN_AUDIO_INPUT:
             if (scrPar.input != scrParPrev.input) {
-                clearFlag = 1;
+                clear = true;
             }
             break;
         case SCREEN_MENU:
             if (scrPar.parent != scrParPrev.parent) {
-                clearFlag = 1;
+                clear = true;
             }
             break;
         default:
@@ -128,9 +131,7 @@ static void screenCheckChange(void)
     scrPrev = screen;
     scrParPrev = scrPar;
 
-    if (clearFlag) {
-        screenClear();
-    }
+    return clear;
 }
 
 void screenReadSettings(void)
@@ -255,17 +256,19 @@ void screenChangeBrighness(uint8_t mode, int8_t diff)
 
 void screenShow(void)
 {
-    screenCheckChange();
+    bool clear = screenCheckClear();
 
     // Get new spectrum data
     if (swTimGetSpConvert() <= 0) {
-        swTimSetSpConvert(25);
+        swTimSetSpConvert(20);
         spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
 
-        improveSpectrum(&spData[SP_CHAN_LEFT]);
-        improveSpectrum(&spData[SP_CHAN_RIGHT]);
 
         spReady = 1;
+    }
+
+    if (clear) {
+        screenClear();
     }
 
     switch (screen) {
@@ -274,7 +277,7 @@ void screenShow(void)
         screenShowTime();
         break;
     case SCREEN_SPECTRUM:
-        screenShowSpectrum();
+        screenShowSpectrum(clear);
         break;
     case SCREEN_BRIGHTNESS:
         screenShowBrightness();
@@ -311,14 +314,23 @@ void screenShowTime(void)
     }
 }
 
-void screenShowSpectrum(void)
+void screenShowSpectrum(bool clear)
 {
+    static bool spClear = false;
+
+    if (clear) {
+        spClear = true;
+    }
+
     if (spReady) {
         if (canvas->showSpectrum) {
-            canvas->showSpectrum(spData);
+            improveSpectrum(&spData[SP_CHAN_LEFT]);
+            improveSpectrum(&spData[SP_CHAN_RIGHT]);
+            canvas->showSpectrum(spClear, spData);
+            spClear = false;
         }
+        spReady = 0;
     }
-    spReady = 0;
 }
 
 void screenShowBrightness(void)
