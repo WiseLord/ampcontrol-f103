@@ -23,9 +23,11 @@ static uint8_t spReady = 0;
 static int8_t brStby;
 static int8_t brWork;
 
-static void improveSpectrum(SpectrumData *sd)
+static void improveSpectrum(SpectrumData *sd, uint16_t height)
 {
     for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
+        sd->data[i] = height * sd->data[i] / N_DB;
+
         sd->old_show[i] = sd->show[i];
         if (sd->data[i] < sd->show[i]) {
             if (sd->show[i] >= sd->fall[i]) {
@@ -263,7 +265,6 @@ void screenShow(void)
         swTimSetSpConvert(20);
         spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
 
-
         spReady = 1;
     }
 
@@ -323,8 +324,8 @@ void screenShowSpectrum(bool clear)
 
     if (spReady) {
         if (canvas->showSpectrum) {
-            improveSpectrum(&spData[SP_CHAN_LEFT]);
-            improveSpectrum(&spData[SP_CHAN_RIGHT]);
+            improveSpectrum(&spData[SP_CHAN_LEFT], canvas->height / 2);
+            improveSpectrum(&spData[SP_CHAN_RIGHT], canvas->height / 2);
             canvas->showSpectrum(spClear, spData);
             spClear = false;
         }

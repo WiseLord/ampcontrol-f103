@@ -8,7 +8,7 @@
 
 #define N_WAVE      1024
 #define N_HANN      1024
-#define N_DB        128
+#define N_DB        256
 
 int16_t fft_sin(int16_t phi);
 int16_t fft_cos(int16_t phi);

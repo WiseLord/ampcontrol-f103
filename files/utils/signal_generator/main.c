@@ -10,7 +10,7 @@
 #define SIGNAL_SCALE    32767
 #define HAMM_SCALE      65535
 
-#define N_DB        128
+#define N_DB        256
 #define DB_MAX      65535
 
 int16_t input[FFT_SIZE];

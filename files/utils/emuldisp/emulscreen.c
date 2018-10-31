@@ -97,8 +97,8 @@ void screenShowSpectrum(bool clear)
     for (int i = 0; i < FFT_SIZE / 2; i++) {
         spData[SP_CHAN_LEFT].show[i] = i / 2;
         spData[SP_CHAN_RIGHT].show[i] = i / 2;
-        spData[SP_CHAN_LEFT].peak[i] = i;
-        spData[SP_CHAN_RIGHT].peak[i] = i;
+        spData[SP_CHAN_LEFT].peak[i] = N_DB - i;
+        spData[SP_CHAN_RIGHT].peak[i] = N_DB - i;
     }
 
     if (canvas->showSpectrum) {
