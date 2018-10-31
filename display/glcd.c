@@ -98,7 +98,7 @@ void glcdSetY(int16_t y)
     glcd.y = y;
 }
 
-static int16_t findSymbolPos(int32_t code)
+int16_t glcdFontSymbolPos(int32_t code)
 {
     int16_t bPos = -1;
 
@@ -157,7 +157,7 @@ uint16_t glcdWriteChar(int32_t code)
 {
     tImage *img = 0;
 
-    int16_t pos = findSymbolPos(code);
+    int16_t pos = glcdFontSymbolPos(code);
 
     if (pos < 0)
         return 0;
@@ -259,14 +259,14 @@ uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
 
     if (glcd.font.align != FONT_ALIGN_LEFT) {
         uint16_t strLength = 0;
-        int16_t pos = findSymbolPos(LETTER_SPACE_CHAR);
+        int16_t pos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
         uint16_t sWidth = font->chars[pos].image->width;
 
         if (framed)
             strLength += sWidth;
         while (*str) {
             code = findSymbolCode(&str);
-            pos = findSymbolPos(code);
+            pos = glcdFontSymbolPos(code);
             strLength += font->chars[pos].image->width;
             if (*str) {
                 strLength += sWidth;

@@ -60,7 +60,7 @@ void screenChangeBrighness(uint8_t mode, int8_t diff);
 
 void screenShow(void);
 
-void screenShowTime(void);
+void screenShowTime(bool clear);
 void screenShowSpectrum(bool clear);
 void screenShowBrightness(void);
 void screenShowInput(void);

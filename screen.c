@@ -274,7 +274,7 @@ void screenShow(void)
     switch (screen) {
     case SCREEN_STANDBY:
     case SCREEN_TIME:
-        screenShowTime();
+        screenShowTime(clear);
         break;
     case SCREEN_SPECTRUM:
         screenShowSpectrum(clear);
@@ -301,16 +301,15 @@ void screenShow(void)
     screenUpdate();
 }
 
-void screenShowTime(void)
+void screenShowTime(bool clear)
 {
     RTC_type rtc;
     rtc.etm = rtcGetMode();
-    const char **txtLabels = labelsGet();
 
     rtcGetTime(&rtc);
 
     if (canvas->showTime) {
-        canvas->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
+        canvas->showTime(clear, &rtc);
     }
 }
 

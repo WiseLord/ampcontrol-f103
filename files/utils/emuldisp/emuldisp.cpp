@@ -32,16 +32,18 @@ void EmulDisp::drawPixel(int16_t x, int16_t y, uint16_t color)
 
     painter->begin(this);
     painter->setPen(pen);
-#if EMUL_DISP_SCALE == 3
-    painter->drawPoint(3 * x + 1, 3 * y + 1);
-    painter->drawPoint(3 * x + 1, 3 * y + 2);
-    painter->drawPoint(3 * x + 2, 3 * y + 1);
-    painter->drawPoint(3 * x + 2, 3 * y + 2);
+#if EMUL_DISP_SCALE >=3
+    for (uint8_t i = 0; i < EMUL_DISP_SCALE - 1; i++) {
+        for (uint8_t j = 0; j < EMUL_DISP_SCALE - 1; j++) {
+            painter->drawPoint(EMUL_DISP_SCALE * x + i, EMUL_DISP_SCALE * y + j);
+        }
+    }
 #elif EMUL_DISP_SCALE == 2
-    painter->drawPoint(2 * x + 0, 2 * y + 0);
-    painter->drawPoint(2 * x + 0, 2 * y + 1);
-    painter->drawPoint(2 * x + 1, 2 * y + 0);
-    painter->drawPoint(2 * x + 1, 2 * y + 1);
+    for (uint8_t i = 0; i < EMUL_DISP_SCALE; i++) {
+        for (uint8_t j = 0; j < EMUL_DISP_SCALE; j++) {
+            painter->drawPoint(EMUL_DISP_SCALE * x + i, EMUL_DISP_SCALE * y + j);
+        }
+    }
 #else
     painter->drawPoint(x, y);
 #endif
@@ -50,8 +52,8 @@ void EmulDisp::drawPixel(int16_t x, int16_t y, uint16_t color)
 
 void EmulDisp::setSize(uint16_t w, uint16_t h)
 {
-#if EMUL_DISP_SCALE == 3
-    this->resize(3 * w + 1, 3 * h + 1);
+#if EMUL_DISP_SCALE >= 3
+    this->resize(EMUL_DISP_SCALE * w + 1, EMUL_DISP_SCALE * h + 1);
 #elif EMUL_DISP_SCALE == 2
     this->resize(2 * w + 0, 2 * h + 0);
 #else
@@ -69,7 +71,7 @@ void EmulDisp::paintEvent(QPaintEvent *pe)
 void EmulDisp::drawScreen()
 {
     painter->begin(this);
-    painter->fillRect(0, 0, this->width(), this->height(), QColor(QRgb(0x101010)));
+    painter->fillRect(0, 0, this->width(), this->height(), Qt::darkGray);
     painter->end();
 
     glcdDrawRect(0, 0, this->width() & 0xFFFF, this->height() & 0xFFFF, LCD_COLOR_BLACK);

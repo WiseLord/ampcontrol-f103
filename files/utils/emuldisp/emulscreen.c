@@ -44,7 +44,7 @@ void screenShow(void)
     switch (screen) {
     case SCREEN_STANDBY:
     case SCREEN_TIME:
-        screenShowTime();
+        screenShowTime(true);
         break;
     case SCREEN_SPECTRUM:
         screenShowSpectrum(true);
@@ -69,7 +69,7 @@ void screenShow(void)
     }
 }
 
-void screenShowTime(void)
+void screenShowTime(bool clear)
 {
     time_t t = time(NULL);
     struct tm *lt = localtime(&t);
@@ -85,12 +85,10 @@ void screenShowTime(void)
 
     rtc.wday = lt->tm_wday;
 
-    rtc.etm = RTC_MIN;
-
-    const char **txtLabels = labelsGet();
+    rtc.etm = RTC_HOUR;
 
     if (canvas->showTime) {
-        canvas->showTime(&rtc, (char *)txtLabels[LABEL_SUNDAY + rtc.wday]);
+        canvas->showTime(clear, &rtc);
     }
 }
 
