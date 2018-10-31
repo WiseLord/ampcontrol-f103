@@ -35,6 +35,44 @@ void canvasInit(Canvas **value)
     canvas = *value;
 }
 
+void canvasDrawBar(int16_t value, int16_t min, int16_t max, BarParams *bar)
+{
+    const int16_t sc = bar->sc;         // Scale count
+    const uint8_t sw = bar->sw;         // Scale width
+    const uint16_t barPos = bar->pos;
+    const uint8_t barHalf = bar->half;
+    const uint8_t barMiddle = bar->middle;
+
+    if (min + max) { // Non-symmectic scale => rescale to 0..sl
+        value = sc * (value - min) / (max - min);
+    } else { // Symmetric scale => rescale to -sl/2..sl/2
+        value = (sc / 2) * value / (max ? max : 1);
+    }
+
+    for (uint16_t i = 0; i < sc; i++) {
+        uint16_t color = LCD_COLOR_WHITE;
+
+        if (min + max) { // Non-symmetric scale
+            if (i >= value) {
+                color = canvas->color;
+            }
+        } else { // Symmetric scale
+            if ((value > 0 && i >= value + (sc / 2)) ||
+                (value >= 0 && i < (sc / 2 - 1)) ||
+                (value < 0 && i < value + (sc / 2)) ||
+                (value <= 0 && i > (sc / 2))) {
+                color = canvas->color;
+            }
+        }
+
+        uint16_t width = canvas->width;
+
+        glcdDrawRect(i * (width / sc) + 1, barPos, sw, barHalf, color);
+        glcdDrawRect(i * (width / sc) + 1, barPos + barHalf, sw, barMiddle, LCD_COLOR_WHITE);
+        glcdDrawRect(i * (width / sc) + 1, barPos + barHalf + barMiddle, sw, barHalf, color);
+    }
+}
+
 
 static void canvasDrawSpectrumColumn(bool clear, uint16_t x, uint16_t y, uint8_t w, uint16_t h,
                                      uint8_t s, uint8_t os, uint8_t p, uint8_t op)
@@ -149,6 +187,28 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
 
     // Fill space between name and value
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->color);
+}
+
+void canvasShowTuner(DispTuner *dt, const tFont *fmFont, BarParams *bar)
+{
+    Tuner *tuner = dt->tuner;
+    uint16_t freq = tunerGet()->freq;
+    uint16_t freqMin = tuner->par.fMin;
+    uint16_t freqMax = tuner->par.fMax;
+
+    glcdSetFont(fmFont);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetXY(2, 0);
+
+    glcdWriteString("FM ");
+
+    canvasDrawBar(freq, freqMin, freqMax, bar);
+
+    glcdWriteNum(freq / 100, 3, ' ', 10);
+    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteChar('.');
+    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteNum(freq % 100, 2, '0', 10);
 }
 
 void canvasShowMenu(const tFont *fontHeader, const tFont *fontItem)

@@ -19,6 +19,14 @@ static Canvas canvas = {
     .showMenu = showMenu,
 };
 
+static BarParams bar = {
+    .sc = 80,
+    .sw = 3,
+    .pos = 110,
+    .half = 14,
+    .middle = 2,
+};
+
 void gc480x320Init(Canvas **value)
 {
     *value = &canvas;
@@ -40,40 +48,6 @@ static void displayTm(RTC_type *rtc, uint8_t tm)
     glcdWriteNum(time, 2, '0', 10);
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdWriteChar(LETTER_SPACE_CHAR);
-}
-static void drawShowBar(int16_t value, int16_t min, int16_t max)
-{
-    static const int16_t sc = 80; // Scale count
-    static const uint8_t sw = 3; // Scale width
-
-    if (min + max) { // Non-symmectic scale => rescale to 0..sl
-        value = sc * (value - min) / (max - min);
-    } else { // Symmetric scale => rescale to -sl/2..sl/2
-        value = (sc / 2) * value / max;
-    }
-
-    for (uint16_t i = 0; i < sc; i++) {
-        uint16_t color = LCD_COLOR_WHITE;
-
-        if (min + max) { // Non-symmetric scale
-            if (i >= value) {
-                color = canvas.color;
-            }
-        } else { // Symmetric scale
-            if ((value > 0 && i >= value + (sc / 2)) ||
-                (value >= 0 && i < (sc / 2 - 1)) ||
-                (value < 0 && i < value + (sc / 2)) ||
-                (value <= 0 && i > (sc / 2))) {
-                color = canvas.color;
-            }
-        }
-
-        uint16_t width = canvas.width;
-
-        glcdDrawRect(i * (width / sc) + 1, 110, sw, 16, color);
-        glcdDrawRect(i * (width / sc) + 1, 126, sw, 2, LCD_COLOR_WHITE);
-        glcdDrawRect(i * (width / sc) + 1, 128, sw, 16, color);
-    }
 }
 
 static void showTime(RTC_type *rtc, char *wday)
@@ -127,7 +101,7 @@ static void showParam(DispParam *dp)
     glcdSetXY(2, 0);
     glcdWriteString((char *)dp->label);
 
-    drawShowBar(dp->value, dp->min, dp->max);
+//    canvasDrawBar(dp->value, dp->min, dp->max);
 
     glcdSetXY(canvas.width, 224);
     glcdSetFont(&fontterminusdig96);
@@ -137,28 +111,9 @@ static void showParam(DispParam *dp)
 
 static void showTuner(DispTuner *dt)
 {
-    Tuner *tuner = dt->tuner;
-    uint16_t freq = tunerGet()->freq;
-    uint16_t freqMin = tuner->par.fMin;
-    uint16_t freqMax = tuner->par.fMax;
+    const tFont *fmFont = &fontterminusmod96;
 
-    glcdSetFont(&fontterminusmod96);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetXY(2, 0);
-
-    glcdWriteString("FM ");
-
-    drawShowBar(freq, freqMin, freqMax);
-
-    glcdWriteNum(freq / 100, 3, ' ', 10);
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteChar('.');
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteNum(freq % 100, 2, '0', 10);
-
-    glcdSetFont(&fontterminusmod64);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetXY(2, 120);
+    canvasShowTuner(dt, fmFont, &bar);
 }
 
 

@@ -7,6 +7,6 @@
 #define EMUL_DISP_HEIGHT    64
 #define EMUL_DISP_SCALE     2
 
-#define EMUL_SCREEN         SCREEN_SPECTRUM
+#define EMUL_SCREEN         SCREEN_TUNER
 
 #endif // EMULSCREEN_H

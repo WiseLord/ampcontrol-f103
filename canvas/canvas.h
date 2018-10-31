@@ -28,6 +28,14 @@ typedef struct {
 } DispTuner;
 
 typedef struct {
+    int16_t sc;
+    uint8_t sw;
+    uint16_t pos;
+    uint8_t half;
+    uint8_t middle;
+} BarParams;
+
+typedef struct {
     Glcd *glcd;
     uint16_t width;
     uint16_t height;
@@ -55,7 +63,10 @@ void emulCanvasInit(Canvas **driver);
 
 void canvasInit(Canvas **canvas);
 
+void canvasDrawBar(int16_t value, int16_t min, int16_t max, BarParams *bar);
+
 void canvasShowSpectrum(bool clear, SpectrumData *spData, uint8_t step, uint8_t oft, uint8_t width);
+void canvasShowTuner(DispTuner *dt, const tFont *fmFont, BarParams *bar);
 void canvasShowMenu(const tFont *fontHeader, const tFont *fontItem);
 
 #ifdef __cplusplus

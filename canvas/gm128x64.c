@@ -6,7 +6,7 @@
 static void showTime(RTC_type *rtc, char *wday);
 static void showParam(DispParam *dp);
 static void showSpectrum(bool clear, SpectrumData *spData);
-//static void showTuner(DispTuner *dt);
+static void showTuner(DispTuner *dt);
 static void showMenu(void);
 
 static Canvas canvas = {
@@ -15,10 +15,17 @@ static Canvas canvas = {
     .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
-//    .showTuner = showTuner,
+    .showTuner = showTuner,
     .showMenu = showMenu,
 };
 
+static BarParams bar = {
+    .sc = 64,
+    .sw = 1,
+    .pos = 26,
+    .half = 4,
+    .middle = 2,
+};
 void gm128x64Init(Canvas **value)
 {
     *value = &canvas;
@@ -133,6 +140,13 @@ static void showParam(DispParam *dp)
 
     glcdSetXY(104, 2);
     glcdWriteIcon(dp->icon, icons_24, LCD_COLOR_WHITE, canvas.color);
+}
+
+static void showTuner(DispTuner *dt)
+{
+    const tFont *fmFont = &fontterminus24;
+
+    canvasShowTuner(dt, fmFont, &bar);
 }
 
 static void showSpectrum(bool clear, SpectrumData *spData)
