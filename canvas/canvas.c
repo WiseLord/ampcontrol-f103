@@ -35,13 +35,13 @@ void canvasInit(Canvas **value)
     canvas = *value;
 }
 
-void canvasDrawBar(int16_t value, int16_t min, int16_t max, const CanvasBar *bar)
+void canvasDrawBar(int16_t value, int16_t min, int16_t max)
 {
-    const int16_t sc = bar->sc;         // Scale count
-    const uint8_t sw = bar->sw;         // Scale width
-    const uint16_t barPos = bar->pos;
-    const uint8_t barHalf = bar->half;
-    const uint8_t barMiddle = bar->middle;
+    const int16_t sc = canvas->par->bar.sc;         // Scale count
+    const uint8_t sw = canvas->par->bar.sw;         // Scale width
+    const uint16_t barPos = canvas->par->bar.pos;
+    const uint8_t barHalf = canvas->par->bar.half;
+    const uint8_t barMiddle = canvas->par->bar.middle;
 
     if (min + max) { // Non-symmectic scale => rescale to 0..sl
         value = sc * (value - min) / (max - min);
@@ -95,7 +95,7 @@ static void canvasDrawTm(RTC_type *rtc, uint8_t tm)
     glcdSetFontBgColor(LCD_COLOR_BLACK);
 }
 
-void canvasShowTime(bool clear, const CanvasTime *ctPar, RTC_type *rtc)
+void canvasShowTime(bool clear, RTC_type *rtc)
 {
     (void)clear;
 
@@ -104,12 +104,12 @@ void canvasShowTime(bool clear, const CanvasTime *ctPar, RTC_type *rtc)
     uint16_t timeLen;
 
     // HH:MM:SS
-    glcdSetFont(ctPar->hmsFont);
+    glcdSetFont(canvas->par->time.hmsFont);
     zeroPos = glcdFontSymbolPos('0');
     ltspPos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
-    timeLen = 6 * (ctPar->hmsFont->chars[zeroPos].image->width);    // 6 digits HHMMSS
-    timeLen += 15 * (ctPar->hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
-    glcdSetXY((canvas->width - timeLen) / 2, ctPar->hmsY);
+    timeLen = 6 * (canvas->par->time.hmsFont->chars[zeroPos].image->width);    // 6 digits HHMMSS
+    timeLen += 15 * (canvas->par->time.hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
+    glcdSetXY((canvas->width - timeLen) / 2, canvas->par->time.hmsY);
 
     canvasDrawTm(rtc, RTC_HOUR);
     glcdWriteChar(LETTER_SPACE_CHAR);
@@ -122,12 +122,12 @@ void canvasShowTime(bool clear, const CanvasTime *ctPar, RTC_type *rtc)
     canvasDrawTm(rtc, RTC_SEC);
 
     // DD:MM:YYYY
-    glcdSetFont(ctPar->dmyFont);
+    glcdSetFont(canvas->par->time.dmyFont);
     zeroPos = glcdFontSymbolPos('0');
     ltspPos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
-    timeLen = 8 * (ctPar->dmyFont->chars[zeroPos].image->width);    // 8 digits HHMMSS
-    timeLen += 17 * (ctPar->dmyFont->chars[ltspPos].image->width);  // 15 letter spaces + 2 '.'
-    glcdSetXY((canvas->width - timeLen) / 2, ctPar->dmyY);
+    timeLen = 8 * (canvas->par->time.dmyFont->chars[zeroPos].image->width);    // 8 digits HHMMSS
+    timeLen += 17 * (canvas->par->time.dmyFont->chars[ltspPos].image->width);  // 15 letter spaces + 2 '.'
+    glcdSetXY((canvas->width - timeLen) / 2, canvas->par->time.dmyY);
 
     canvasDrawTm(rtc, RTC_DATE);
     glcdWriteChar(LETTER_SPACE_CHAR);
@@ -140,19 +140,20 @@ void canvasShowTime(bool clear, const CanvasTime *ctPar, RTC_type *rtc)
     canvasDrawTm(rtc, RTC_YEAR);
 
     // Weekday
-    glcdSetFont(ctPar->wdFont);
+    glcdSetFont(canvas->par->time.wdFont);
     glcdSetFontColor(LCD_COLOR_AQUA);
 
     static int8_t wdayOld = 0;
     int8_t wday = rtc->wday;
     if (wday != wdayOld)    // Clear the area with weekday label
-        glcdDrawRect(0, ctPar->wdY, canvas->width, ctPar->wdFont->chars[0].image->height, canvas->color);
+        glcdDrawRect(0, canvas->par->time.wdY, canvas->width,
+                     canvas->par->time.wdFont->chars[0].image->height, canvas->color);
     wdayOld = wday;
 
     const char **txtLabels = labelsGet();
     char *wdayLabel = (char *)txtLabels[LABEL_SUNDAY + wday];
 
-    glcdSetXY(canvas->width / 2, ctPar->wdY);
+    glcdSetXY(canvas->width / 2, canvas->par->time.wdY);
     glcdSetFontAlign(FONT_ALIGN_CENTER);
     glcdWriteString(wdayLabel);
 }
@@ -272,7 +273,7 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->color);
 }
 
-void canvasShowTuner(DispTuner *dt, const tFont *fmFont, const CanvasBar *bar)
+void canvasShowTuner(DispTuner *dt, const tFont *fmFont)
 {
     Tuner *tuner = dt->tuner;
     uint16_t freq = tunerGet()->freq;
@@ -285,7 +286,7 @@ void canvasShowTuner(DispTuner *dt, const tFont *fmFont, const CanvasBar *bar)
 
     glcdWriteString("FM ");
 
-    canvasDrawBar(freq, freqMin, freqMax, bar);
+    canvasDrawBar(freq, freqMin, freqMax);
 
     glcdWriteNum(freq / 100, 3, ' ', 10);
     glcdWriteChar(LETTER_SPACE_CHAR);
@@ -294,20 +295,19 @@ void canvasShowTuner(DispTuner *dt, const tFont *fmFont, const CanvasBar *bar)
     glcdWriteNum(freq % 100, 2, '0', 10);
 }
 
-void canvasShowMenu(const tFont *fontHeader, const tFont *fontItem)
+void canvasShowMenu(void)
 {
-
     Menu *menu = menuGet();
 
-    int16_t fHh = fontHeader->chars[0].image->height;
-    int16_t fIh = fontItem->chars[0].image->height;
+    int16_t fHh = canvas->par->menu.headFont->chars[0].image->height;
+    int16_t fIh = canvas->par->menu.menuFont->chars[0].image->height;
     uint8_t items = menu->dispSize;
 
     int16_t dividerPos = (canvas->height - (fIh + 4) * items + fHh) / 2;
 
     // Show header
     char *parentName = menuGetName(menu->parent);
-    glcdSetFont(fontHeader);
+    glcdSetFont(canvas->par->menu.headFont);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
     glcdSetXY(2, 0);
@@ -317,7 +317,7 @@ void canvasShowMenu(const tFont *fontHeader, const tFont *fontItem)
 
     for (uint8_t idx = 0; idx < menu->listSize; idx++) {
         if (idx >= menu->dispOft && idx < items + menu->dispOft) {
-            canvasDrawMenuItem(idx, fontItem);
+            canvasDrawMenuItem(idx, canvas->par->menu.menuFont);
         }
     }
 }

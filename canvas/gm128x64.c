@@ -9,6 +9,8 @@ static void showSpectrum(bool clear, SpectrumData *spData);
 static void showTuner(DispTuner *dt);
 static void showMenu(void);
 
+static const CanvasParam canvasParam;
+
 static Canvas canvas = {
     .width = 128,
     .height = 64,
@@ -17,23 +19,26 @@ static Canvas canvas = {
     .showSpectrum = showSpectrum,
     .showTuner = showTuner,
     .showMenu = showMenu,
+
+    .par = &canvasParam,
 };
 
-static CanvasBar canvasBar = {
-    .sc = 64,
-    .sw = 1,
-    .pos = 26,
-    .half = 4,
-    .middle = 2,
-};
+static const CanvasParam canvasParam = {
+    .time.hmsFont = &fontterminusdig30,
+    .time.dmyFont = &fontterminusdig22,
+    .time.wdFont = &fontterminus12,
+    .time.hmsY = 0,
+    .time.dmyY = 30,
+    .time.wdY = 52,
 
-static const CanvasTime canvasTime = {
-    .hmsFont = &fontterminusdig30,
-    .dmyFont = &fontterminusdig22,
-    .wdFont = &fontterminus12,
-    .hmsY = 0,
-    .dmyY = 30,
-    .wdY = 52,
+    .bar.sc = 64,
+    .bar.sw = 1,
+    .bar.pos = 26,
+    .bar.half = 4,
+    .bar.middle = 2,
+
+    .menu.headFont = &fontterminus14b,
+    .menu.menuFont = &fontterminus12,
 };
 
 void gm128x64Init(Canvas **value)
@@ -44,7 +49,7 @@ void gm128x64Init(Canvas **value)
 
 static void showTime(bool clear, RTC_type *rtc)
 {
-    canvasShowTime(clear, &canvasTime, rtc);
+    canvasShowTime(clear, rtc);
 }
 
 static void showParam(DispParam *dp)
@@ -55,7 +60,7 @@ static void showParam(DispParam *dp)
     glcdSetXY(0, 0);
     glcdWriteString((char *)dp->label);
 
-    canvasDrawBar(dp->value, dp->min, dp->max, &canvasBar);
+    canvasDrawBar(dp->value, dp->min, dp->max);
 
     glcdSetXY(canvas.width, 30);
     glcdSetFontAlign(FONT_ALIGN_RIGHT);
@@ -80,10 +85,10 @@ static void showTuner(DispTuner *dt)
 {
     const tFont *fmFont = &fontterminus24;
 
-    canvasShowTuner(dt, fmFont, &canvasBar);
+    canvasShowTuner(dt, fmFont);
 }
 
 static void showMenu(void)
 {
-    canvasShowMenu(&fontterminus14b, &fontterminus12);
+    canvasShowMenu();
 }

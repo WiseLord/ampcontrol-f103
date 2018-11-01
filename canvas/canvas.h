@@ -29,22 +29,26 @@ typedef struct {
 } DispTuner;
 
 typedef struct {
-    int16_t sc;
-    uint8_t sw;
-    uint16_t pos;
-    uint8_t half;
-    uint8_t middle;
-} CanvasBar;
-
-typedef struct {
-    const tFont *hmsFont;
-    const tFont *dmyFont;
-    const tFont *wdFont;
-
-    uint8_t hmsY;
-    uint8_t dmyY;
-    uint8_t wdY;
-} CanvasTime;
+    struct {
+        const tFont *hmsFont;
+        const tFont *dmyFont;
+        const tFont *wdFont;
+        uint8_t hmsY;
+        uint8_t dmyY;
+        uint8_t wdY;
+    } time;
+    struct {
+        int16_t sc;
+        uint8_t sw;
+        uint16_t pos;
+        uint8_t half;
+        uint8_t middle;
+    } bar;
+    struct {
+        const tFont *headFont;
+        const tFont *menuFont;
+    } menu;
+} CanvasParam;
 
 typedef struct {
     Glcd *glcd;
@@ -58,6 +62,8 @@ typedef struct {
     void (*showMenu)(void);
 
     uint16_t color;
+
+    const CanvasParam *par;
 } Canvas;
 
 // Canvas variants
@@ -74,12 +80,12 @@ void emulCanvasInit(Canvas **driver);
 
 void canvasInit(Canvas **canvas);
 
-void canvasDrawBar(int16_t value, int16_t min, int16_t max, const CanvasBar *bar);
+void canvasDrawBar(int16_t value, int16_t min, int16_t max);
 
-void canvasShowTime(bool clear, const CanvasTime *ct, RTC_type *rtc);
+void canvasShowTime(bool clear, RTC_type *rtc);
 void canvasShowSpectrum(bool clear, SpectrumData *spData, uint8_t step, uint8_t oft, uint8_t width);
-void canvasShowTuner(DispTuner *dt, const tFont *fmFont, const CanvasBar *bar);
-void canvasShowMenu(const tFont *fontHeader, const tFont *fontItem);
+void canvasShowTuner(DispTuner *dt, const tFont *fmFont);
+void canvasShowMenu(void);
 
 #ifdef __cplusplus
 }
