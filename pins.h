@@ -2,6 +2,7 @@
 #define PINS_H
 
 #include <stm32f1xx_ll_gpio.h>
+#include <stm32f1xx_ll_exti.h>
 
 void pinsInit(void);
 
@@ -56,6 +57,12 @@ void pinsInit(void);
 #define INPUT_Port              GPIOA
 #define INPUT_Pin               (BTN_0_Pin | BTN_1_Pin | BTN_2_Pin | BTN_3_Pin | \
                                  BTN_4_Pin | BTN_5_Pin | ENC_A_Pin | ENC_B_Pin)
+
+#define RC_Port                 GPIOA
+#define RC_Pin                  LL_GPIO_PIN_8
+#define RC_ExtiLine             LL_EXTI_LINE_8
+#define RC_AR_ExtiPort          LL_GPIO_AF_EXTI_PORTA
+#define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
 
 #define DISP_CS_Port            GPIOA
 #define DISP_CS_Pin             LL_GPIO_PIN_15

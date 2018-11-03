@@ -11,6 +11,7 @@
 #include "input.h"
 #include "menu.h"
 #include "pins.h"
+#include "rc.h"
 #include "rtc.h"
 #include "screen.h"
 #include "spectrum.h"
@@ -92,6 +93,7 @@ int main(void)
     tunerInit();
     screenInit();
     inputInit();
+    rcInit();
     rtcInit();
     timersInit();
 

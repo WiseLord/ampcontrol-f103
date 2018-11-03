@@ -20,6 +20,21 @@ static void pinsInitButtons(void)
     LL_GPIO_Init(INPUT_Port, &gpio);
 }
 
+static void pinsInitRc(void)
+{
+    LL_EXTI_InitTypeDef exti;
+
+    LL_GPIO_AF_SetEXTISource(RC_AR_ExtiPort, RC_AR_ExtiLine);
+
+    exti.Line_0_31 = RC_ExtiLine;
+    exti.LineCommand = ENABLE;
+    exti.Mode = LL_EXTI_MODE_IT;
+    exti.Trigger = LL_EXTI_TRIGGER_RISING_FALLING;
+    LL_EXTI_Init(&exti);
+
+    IN_F(RC);
+}
+
 static void pinsInitDisplay(void)
 {
 #if defined(_KS0108A) || defined(_KS0108B)
@@ -125,8 +140,8 @@ void pinsInit(void)
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
 
     pinsInitButtons();
+    pinsInitRc();
     pinsInitDisplay();
-
 
 #ifdef _SI470X
     si470xReset();

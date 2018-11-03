@@ -6,6 +6,8 @@
 
 #include "display/dispdrv.h"
 #include "input.h"
+#include "pins.h"
+#include "rc.h"
 #include "rtc.h"
 #include "spectrum.h"
 #include "timers.h"
@@ -77,5 +79,16 @@ void TIM2_IRQHandler(void)
         DISPLAY_IRQ();
         dispdrvPwm();
         spConvertADC();
+    }
+}
+
+void EXTI9_5_IRQHandler()
+{
+    if (LL_EXTI_IsActiveFlag_0_31(RC_ExtiLine) != RESET) {
+        // Clear RC line interrupt
+        LL_EXTI_ClearFlag_0_31(RC_ExtiLine);
+
+        // Callback
+        rcIRQ();
     }
 }

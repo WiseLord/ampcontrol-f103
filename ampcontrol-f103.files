@@ -165,6 +165,8 @@ menu.c
 menu.h
 pins.c
 pins.h
+rc.c
+rc.h
 rtc.c
 rtc.h
 screen.c
