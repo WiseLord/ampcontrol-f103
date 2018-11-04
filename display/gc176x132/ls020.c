@@ -18,8 +18,8 @@ static DispDriver drv = {
 static void ls020InitSeq(void)
 {
     LL_mDelay(50);
-    SET(DISP_SPI_DC);
-    CLR(DISP_SPI_CS);
+    SET(DISP_RS);
+    CLR(DISP_CS);
 
     dispdrvSendData16(0xFDFD);
     dispdrvSendData16(0xFDFD);
@@ -61,14 +61,14 @@ static void ls020InitSeq(void)
     dispdrvSendData16(0x0020);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 
 void ls020SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-    SET(DISP_SPI_DC);
-    CLR(DISP_SPI_CS);
+    SET(DISP_RS);
+    CLR(DISP_CS);
 
     dispdrvSendData16(0x0800 + LS020_WIDTH - y - h);
     dispdrvSendData16(0x0900 + LS020_WIDTH - y - 1);
@@ -78,26 +78,26 @@ void ls020SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     dispdrvSendData16(0x0B00 + x + w - 1);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void ls020Init(DispDriver **driver)
 {
     *driver = &drv;
 
-    CLR(DISP_SPI_RST);
+    CLR(DISP_RST);
     LL_mDelay(100);
-    SET(DISP_SPI_RST);
+    SET(DISP_RST);
 
     // Init magic
     ls020InitSeq();
-    SET(DISP_SPI_LED);
+    SET(DISP_BCKL);
 }
 
 void ls020Sleep(void)
 {
-    SET(DISP_SPI_DC);
-    CLR(DISP_SPI_CS);
+    SET(DISP_RS);
+    CLR(DISP_CS);
     dispdrvSendData16(0xEF00);
     dispdrvSendData16(0x7E04);
     dispdrvSendData16(0xEFB0);
@@ -126,7 +126,7 @@ void ls020Sleep(void)
     dispdrvSendData16(0x7F01);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void ls020Wakeup(void)
@@ -138,25 +138,25 @@ void ls020DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
     ls020SetWindow(x, y, 1, 1);
 
-    CLR(DISP_SPI_DC);
-    CLR(DISP_SPI_CS);
+    CLR(DISP_RS);
+    CLR(DISP_CS);
     dispdrvSendData16(color);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void ls020DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
     ls020SetWindow(x, y, w, h);
 
-    CLR(DISP_SPI_DC);
-    CLR(DISP_SPI_CS);
+    CLR(DISP_RS);
+    CLR(DISP_CS);
 
     dispdrvSendFill(w * h, color);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void ls020DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -166,11 +166,11 @@ void ls020DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t 
 
     ls020SetWindow(x, y, w, h);
 
-    CLR(DISP_SPI_DC);
-    CLR(DISP_SPI_CS);
+    CLR(DISP_RS);
+    CLR(DISP_CS);
 
     dispdrvSendImage(img, color, bgColor);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }

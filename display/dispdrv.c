@@ -44,12 +44,12 @@ static inline void dispdrvSendByte(uint8_t data)
     LL_SPI_TransmitData8(SPI1, data);
 #else
 #ifdef _DISP_HI_BYTE
-    DISP_8BIT_DHI_Port->BSRR = 0xFF000000 | (data << 8);
+    DISP_DATA_HI_Port->BSRR = 0xFF000000 | (data << 8);
 #else
-    DISP_8BIT_DHI_Port->BSRR = 0x00FF0000 | data;       // If port bits 7..0 are used
+    DISP_DATA_HI_Port->BSRR = 0x00FF0000 | data;        // If port bits 7..0 are used
 #endif
-    CLR(DISP_8BIT_WR);                                  // Strob MSB
-    SET(DISP_8BIT_WR);
+    CLR(DISP_WR);                                       // Strob MSB
+    SET(DISP_WR);
 #endif
 }
 
@@ -60,21 +60,21 @@ static inline void dispdrvReadInput()
     // If input IRQ requested bus status, switch temporarly to input mode and read bus
     if (bus_requested) {
 #ifdef _DISP_HI_BYTE
-        DISP_8BIT_DHI_Port->BSRR = 0x0000FF00;
-        DISP_8BIT_DHI_Port->CRH = 0x88888888;
+        DISP_DATA_HI_Port->BSRR = 0x0000FF00;
+        DISP_DATA_HI_Port->CRH = 0x88888888;
 #else
-        DISP_8BIT_DHI_Port->BSRR = 0x000000FF;          // Set 1 on all data lines
-        DISP_8BIT_DHI_Port->CRL = 0x88888888;           // SET CNF=10, MODE=00 - Input pullup
+        DISP_DATA_HI_Port->BSRR = 0x000000FF;           // Set 1 on all data lines
+        DISP_DATA_HI_Port->CRL = 0x88888888;            // SET CNF=10, MODE=00 - Input pullup
 #endif
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
         while (--delay);
 #ifdef _DISP_HI_BYTE
-        drv->bus = (DISP_8BIT_DHI_Port->IDR & 0xFF00) >> 8;
-        DISP_8BIT_DHI_Port->CRH = 0x33333333;
+        drv->bus = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
+        DISP_DATA_HI_Port->CRH = 0x33333333;
 #else
-        drv->bus = DISP_8BIT_DHI_Port->IDR & 0x00FF;    // Read 8-bit bus
-        DISP_8BIT_DHI_Port->CRL = 0x33333333;           // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+        drv->bus = DISP_DATA_HI_Port->IDR & 0x00FF;     // Read 8-bit bus
+        DISP_DATA_HI_Port->CRL = 0x33333333;            // Set CNF=00, MODE=11 - Output push-pull 50 MHz
 #endif
         bus_requested = 0;
     }

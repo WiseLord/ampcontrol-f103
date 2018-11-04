@@ -45,6 +45,8 @@ void pinsInit(void);
         OTYPE(p, t);        \
     } while (0);
 
+
+// Input pins (buttons and encoder)
 #define BTN_0_Pin               LL_GPIO_PIN_0
 #define BTN_1_Pin               LL_GPIO_PIN_1
 #define BTN_2_Pin               LL_GPIO_PIN_2
@@ -58,20 +60,25 @@ void pinsInit(void);
 #define INPUT_Pin               (BTN_0_Pin | BTN_1_Pin | BTN_2_Pin | BTN_3_Pin | \
                                  BTN_4_Pin | BTN_5_Pin | ENC_A_Pin | ENC_B_Pin)
 
+// Remote control pins
 #define RC_Port                 GPIOA
 #define RC_Pin                  LL_GPIO_PIN_8
 #define RC_ExtiLine             LL_EXTI_LINE_8
 #define RC_AR_ExtiPort          LL_GPIO_AF_EXTI_PORTA
 #define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
 
+// TFT LCD pins
+#define DISP_DATA_HI_Port       GPIOA
+#define DISP_DATA_HI_Pin        (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
+                                 LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
+
+// TFT parallel (8-bit) wiring
 #define DISP_CS_Port            GPIOA
 #define DISP_CS_Pin             LL_GPIO_PIN_15
-#define DISP_SCK_Port           GPIOB
-#define DISP_SCK_Pin            LL_GPIO_PIN_3
 #define DISP_RD_Port            GPIOB
 #define DISP_RD_Pin             LL_GPIO_PIN_4
-#define DISP_RW_Port            GPIOB
-#define DISP_RW_Pin             LL_GPIO_PIN_5
+#define DISP_WR_Port            GPIOB
+#define DISP_WR_Pin             LL_GPIO_PIN_5
 #define DISP_RS_Port            GPIOB
 #define DISP_RS_Pin             LL_GPIO_PIN_6
 #define DISP_RST_Port           GPIOB
@@ -79,52 +86,46 @@ void pinsInit(void);
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
+// TFT serial (SPI 3 lines) wiring
+#define DISP_SPI_SCK_Port       GPIOB
+#define DISP_SPI_SCK_Pin        LL_GPIO_PIN_3
+#define DISP_SPI_DC             DISP_RS
+#define DISP_SPI_SDI            DISP_WR
+#define DISP_SPI_SDO            DISP_RD
+
+// TFT I2C (SSD1306) wiring
+#define DISP_I2C_Port           GPIOB
+#define DISP_I2C_SCK_Pin        DISP_RS_Pin
+#define DISP_I2C_SDA_Pin        DISP_RST_Pin
+
+// KS0108 wiring
 #define KS0108_DATA_Port        INPUT_Port
 #define KS0108_DATA_Pin         INPUT_Pin
 #define KS0108_DI               DISP_RS
-#define KS0108_RW               DISP_RW
-#define KS0108_E                DISP_SCK
+#define KS0108_RW               DISP_WR
+#define KS0108_E                DISP_SPI_SCK
 #define KS0108_CS1              DISP_CS
 #define KS0108_CS2              DISP_RD
 #define KS0108_RST              DISP_RST
 #define KS0108_BCKL             DISP_BCKL
 
+// ST7920 wiring
 #define ST7920_DATA_Port        INPUT_Port
 #define ST7920_DATA_Pin         INPUT_Pin
 #define ST7920_RS               DISP_RS
-#define ST7920_RW               DISP_RW
-#define ST7920_E                DISP_SCK
+#define ST7920_RW               DISP_WR
+#define ST7920_E                DISP_SPI_SCK
 #define ST7920_PSB              DISP_CS
 #define ST7920_RST              DISP_RST
 #define ST7920_BCKL             DISP_BCKL
 
-#define DISP_I2C_Port           GPIOB
-#define DISP_I2C_SCK_Pin        DISP_RS_Pin
-#define DISP_I2C_SDA_Pin        DISP_RST_Pin
-
-#define DISP_8BIT_DHI_Port      INPUT_Port
-#define DISP_8BIT_DHI_Pin       INPUT_Pin
-#define DISP_8BIT_CS            DISP_CS
-#define DISP_8BIT_RS            DISP_RS
-#define DISP_8BIT_WR            DISP_RW
-#define DISP_8BIT_RD            DISP_RD
-#define DISP_8BIT_RST           DISP_RST
-#define DISP_8BIT_LED           DISP_BCKL
-
-#define DISP_SPI_CS             DISP_CS
-#define DISP_SPI_RST            DISP_RST
-#define DISP_SPI_DC             DISP_RS
-#define DISP_SPI_SDI            DISP_RW
-#define DISP_SPI_SCK            DISP_SCK
-#define DISP_SPI_LED            DISP_BCKL
-#define DISP_SPI_SDO            DISP_RD
-
-
+// Mute and Standby lines
 #define MUTE_Port               GPIOB
 #define MUTE_Pin                LL_GPIO_PIN_8
 #define STBY_Port               GPIOB
 #define STBY_Pin                LL_GPIO_PIN_9
 
+// Main I2C bus
 #define AMP_I2C_Port            GPIOB
 #define AMP_I2C_SCK_Pin         LL_GPIO_PIN_10
 #define AMP_I2C_SDA_Pin         LL_GPIO_PIN_11

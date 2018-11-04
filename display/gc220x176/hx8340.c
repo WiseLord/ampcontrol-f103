@@ -18,9 +18,9 @@ static DispDriver drv = {
 static inline void hx8340SelectReg(uint8_t reg) __attribute__((always_inline));
 static inline void hx8340SelectReg(uint8_t reg)
 {
-    CLR(DISP_8BIT_RS);
+    CLR(DISP_RS);
     dispdrvSendData8(reg);
-    SET(DISP_8BIT_RS);
+    SET(DISP_RS);
 }
 
 static void hx8340WriteReg(uint8_t reg, uint8_t dataR)
@@ -34,7 +34,7 @@ static inline void hx8340InitSeq(void)
     // Wait for reset
     LL_mDelay(50);
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     // Initial Sequence
     //Driving ability Setting
@@ -101,7 +101,7 @@ static inline void hx8340InitSeq(void)
 
     hx8340WriteReg(0x16, 0x48);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 static inline void hx8340SetWindow(uint16_t x, uint16_t y, uint16_t w,
@@ -121,22 +121,22 @@ void hx8340Init(DispDriver **driver)
 {
     *driver = &drv;
 
-    SET(DISP_8BIT_LED);
-    SET(DISP_8BIT_RD);
-    SET(DISP_8BIT_WR);
-    SET(DISP_8BIT_RS);
-    SET(DISP_8BIT_CS);
+    SET(DISP_BCKL);
+    SET(DISP_RD);
+    SET(DISP_WR);
+    SET(DISP_RS);
+    SET(DISP_CS);
 
-    CLR(DISP_8BIT_RST);
+    CLR(DISP_RST);
     LL_mDelay(1);
-    SET(DISP_8BIT_RST);
+    SET(DISP_RST);
 
     hx8340InitSeq();
 }
 
 void hx8340Sleep(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     hx8340WriteReg(0x26, 0xB8); //GON=’1’ DTE=’1’ D[1:0]=’10’
     LL_mDelay(40);
@@ -150,12 +150,12 @@ void hx8340Sleep(void)
     hx8340WriteReg(0x01, 0x02); //SLP=’1’
     hx8340WriteReg(0x01, 0x00); //OSC_EN=’0’
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void hx8340Wakeup(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     hx8340WriteReg(0x18, 0x44); //I/P_RADJ,N/P_RADJ, Normal mode 60Hz
     hx8340WriteReg(0x21, 0x01); //OSC_EN='1', start Osc
@@ -169,27 +169,27 @@ void hx8340Wakeup(void)
     LL_mDelay(40);
     hx8340WriteReg(0x26, 0xBC); //PT=10,GON=1, DTE=1, D=1100
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void hx8340DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     hx8340SetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void hx8340DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     hx8340SetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void hx8340DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -197,10 +197,10 @@ void hx8340DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t
     uint16_t w = img->width;
     uint16_t h = img->height;
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     hx8340SetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }

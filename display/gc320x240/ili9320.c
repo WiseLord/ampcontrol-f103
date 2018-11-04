@@ -18,9 +18,9 @@ static DispDriver drv = {
 static inline void ili9320SelectReg(uint16_t reg) __attribute__((always_inline));
 static inline void ili9320SelectReg(uint16_t reg)
 {
-    CLR(DISP_8BIT_RS);
+    CLR(DISP_RS);
     dispdrvSendData16(reg);
-    SET(DISP_8BIT_RS);
+    SET(DISP_RS);
 }
 
 static void ili9320WriteReg(uint16_t reg, uint16_t data)
@@ -34,7 +34,7 @@ static inline void ili9320InitSeq(void)
     // Wait for reset
     LL_mDelay(50);
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     // Initial Sequence
     ili9320WriteReg(0x00E5, 0x8000);    // Set the Vcore voltage and this setting is must
@@ -101,7 +101,7 @@ static inline void ili9320InitSeq(void)
 
     ili9320WriteReg(0x0007, 0x0173);    // 262K color and display ON
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 static inline void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w,
@@ -125,22 +125,22 @@ void ili9320Init(DispDriver **driver)
 {
     *driver = &drv;
 
-    SET(DISP_8BIT_LED);
-    SET(DISP_8BIT_RD);
-    SET(DISP_8BIT_WR);
-    SET(DISP_8BIT_RS);
-    SET(DISP_8BIT_CS);
+    SET(DISP_BCKL);
+    SET(DISP_RD);
+    SET(DISP_WR);
+    SET(DISP_RS);
+    SET(DISP_CS);
 
-    CLR(DISP_8BIT_RST);
+    CLR(DISP_RST);
     LL_mDelay(1);
-    SET(DISP_8BIT_RST);
+    SET(DISP_RST);
 
     ili9320InitSeq();
 }
 
 void ili9320Sleep(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     ili9320WriteReg(0x0007, 0x0000);    // Display OFF
     // Power Off Sequence
@@ -151,12 +151,12 @@ void ili9320Sleep(void)
     LL_mDelay(200);
     ili9320WriteReg(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void ili9320Wakeup(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     // Power On Sequence
     ili9320WriteReg(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
@@ -174,27 +174,27 @@ void ili9320Wakeup(void)
 
     ili9320WriteReg(0x0007, 0x0173);    // 262K color and display ON
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void ili9320DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     ili9320SetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void ili9320DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     ili9320SetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void ili9320DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -202,10 +202,10 @@ void ili9320DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
     uint16_t w = img->width;
     uint16_t h = img->height;
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     ili9320SetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }

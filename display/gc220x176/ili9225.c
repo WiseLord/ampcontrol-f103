@@ -18,9 +18,9 @@ static DispDriver drv = {
 static inline void ili9225SelectReg(uint16_t reg) __attribute__((always_inline));
 static inline void ili9225SelectReg(uint16_t reg)
 {
-    CLR(DISP_8BIT_RS);
+    CLR(DISP_RS);
     dispdrvSendData16(reg);
-    SET(DISP_8BIT_RS);
+    SET(DISP_RS);
 }
 
 static void ili9225WriteReg(uint16_t reg, uint16_t data)
@@ -34,7 +34,7 @@ static inline void ili9225InitSeq(void)
     // Wait for reset
     LL_mDelay(50);
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     // Start Initial Sequence
     ili9225WriteReg(0x0001, 0x011C);    // set SS and NL bit
@@ -87,7 +87,7 @@ static inline void ili9225InitSeq(void)
 
     ili9225WriteReg(0x0007, 0x1017);  // 65K color and display ON
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 static inline void ili9225SetWindow(uint16_t x, uint16_t y, uint16_t w,
@@ -111,59 +111,59 @@ void ili9225Init(DispDriver **driver)
 {
     *driver = &drv;
 
-    SET(DISP_8BIT_LED);
-    SET(DISP_8BIT_RD);
-    SET(DISP_8BIT_WR);
-    SET(DISP_8BIT_RS);
-    SET(DISP_8BIT_CS);
+    SET(DISP_BCKL);
+    SET(DISP_RD);
+    SET(DISP_WR);
+    SET(DISP_RS);
+    SET(DISP_CS);
 
-    CLR(DISP_8BIT_RST);
+    CLR(DISP_RST);
     LL_mDelay(1);
-    SET(DISP_8BIT_RST);
+    SET(DISP_RST);
 
     ili9225InitSeq();
 }
 
 void ili9225Sleep(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     ili9225WriteReg(0x0007, 0x0000);    // Display OFF
     LL_mDelay(50);
     ili9225WriteReg(0x0010, 0x0A01);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void ili9225Wakeup(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     ili9225WriteReg(0x0010, 0x0A00);    // SAP, BT[3:0], AP, DSTB, SLP, STB
     LL_mDelay(50);
     ili9225WriteReg(0x0007, 0x1017);    // 65K color and display ON
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void ili9225DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     ili9225SetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void ili9225DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     ili9225SetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void ili9225DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -171,10 +171,10 @@ void ili9225DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
     uint16_t w = img->width;
     uint16_t h = img->height;
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     ili9225SetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }

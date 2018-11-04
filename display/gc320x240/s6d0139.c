@@ -18,9 +18,9 @@ static DispDriver drv = {
 static inline void s6d0139SelectReg(uint16_t reg) __attribute__((always_inline));
 static inline void s6d0139SelectReg(uint16_t reg)
 {
-    CLR(DISP_8BIT_RS);
+    CLR(DISP_RS);
     dispdrvSendData16(reg);
-    SET(DISP_8BIT_RS);
+    SET(DISP_RS);
 }
 
 static void s6d0139WriteReg(uint16_t reg, uint16_t data)
@@ -34,7 +34,7 @@ static inline void s6d0139InitSeq(void)
     // Wait for reset
     LL_mDelay(50);
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     s6d0139WriteReg(0x0000, 0x0001);    // Start Oscillation
     LL_mDelay(10);
@@ -84,7 +84,7 @@ static inline void s6d0139InitSeq(void)
     LL_mDelay(40);
     s6d0139WriteReg(0x0007, 0x0017);    // Display control1
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 static inline void s6d0139SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
@@ -104,22 +104,22 @@ void s6d0139Init(DispDriver **driver)
 {
     *driver = &drv;
 
-    SET(DISP_8BIT_LED);
-    SET(DISP_8BIT_RD);
-    SET(DISP_8BIT_WR);
-    SET(DISP_8BIT_RS);
-    SET(DISP_8BIT_CS);
+    SET(DISP_BCKL);
+    SET(DISP_RD);
+    SET(DISP_WR);
+    SET(DISP_RS);
+    SET(DISP_CS);
 
-    CLR(DISP_8BIT_RST);
+    CLR(DISP_RST);
     LL_mDelay(1);
-    SET(DISP_8BIT_RST);
+    SET(DISP_RST);
 
     s6d0139InitSeq();
 }
 
 void s6d0139Sleep(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     s6d0139WriteReg(0x0007, 0x0000);    // Display OFF
     // Power Off Sequence
@@ -131,12 +131,12 @@ void s6d0139Sleep(void)
     LL_mDelay(200);
     s6d0139WriteReg(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void s6d0139Wakeup(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     // Power On Sequence
     s6d0139WriteReg(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
@@ -157,27 +157,27 @@ void s6d0139Wakeup(void)
     LL_mDelay(40);
     s6d0139WriteReg(0x0007, 0x0017);    // 262K color and display ON
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void s6d0139DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     s6d0139SetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void s6d0139DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     s6d0139SetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void s6d0139DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -185,10 +185,10 @@ void s6d0139DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
     uint16_t w = img->width;
     uint16_t h = img->height;
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     s6d0139SetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }

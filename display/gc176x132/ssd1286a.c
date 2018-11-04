@@ -19,19 +19,19 @@ static inline void ssd1286aSendCmd(uint8_t cmd) __attribute__((always_inline));
 static inline void ssd1286aSendCmd(uint8_t cmd)
 {
     dispdrvWaitOperation();
-    CLR(DISP_SPI_DC);
+    CLR(DISP_RS);
 
     dispdrvSendData8(cmd);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_DC);
+    SET(DISP_RS);
 }
 
 static void ssd1286aInitSeq(void)
 {
     LL_mDelay(50);
 
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     ssd1286aSendCmd(0x00);
     dispdrvSendData8(0x00);
@@ -70,7 +70,7 @@ static void ssd1286aInitSeq(void)
     dispdrvSendData8(0x33);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 
@@ -95,18 +95,18 @@ void ssd1286aInit(DispDriver **driver)
 {
     *driver = &drv;
 
-    CLR(DISP_SPI_RST);
+    CLR(DISP_RST);
     LL_mDelay(100);
-    SET(DISP_SPI_RST);
+    SET(DISP_RST);
 
     // Init magic
     ssd1286aInitSeq();
-    SET(DISP_SPI_LED);
+    SET(DISP_BCKL);
 }
 
 void ssd1286aSleep(void)
 {
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     ssd1286aSendCmd(0x07);
     dispdrvSendData8(0x00);
@@ -125,12 +125,12 @@ void ssd1286aSleep(void)
     dispdrvSendData8(0x00);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void ssd1286aWakeup(void)
 {
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     ssd1286aSendCmd(0x10);
     dispdrvSendData8(0x1f);
@@ -155,29 +155,29 @@ void ssd1286aWakeup(void)
     dispdrvSendData8(0x33);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void ssd1286aDrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     ssd1286aSetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void ssd1286aDrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     ssd1286aSetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void ssd1286aDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -185,11 +185,11 @@ void ssd1286aDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16
     uint16_t w = img->width;
     uint16_t h = img->height;
 
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     ssd1286aSetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }

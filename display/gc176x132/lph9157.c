@@ -19,19 +19,19 @@ static inline void lph9157SendCmd(uint8_t cmd) __attribute__((always_inline));
 static inline void lph9157SendCmd(uint8_t cmd)
 {
     dispdrvWaitOperation();
-    CLR(DISP_SPI_DC);
+    CLR(DISP_RS);
 
     dispdrvSendData8(cmd);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_DC);
+    SET(DISP_RS);
 }
 
 static void lph9157InitSeq(void)
 {
     LL_mDelay(50);
 
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     lph9157SendCmd(0x01);
     lph9157SendCmd(0x11);
@@ -44,7 +44,7 @@ static void lph9157InitSeq(void)
     lph9157SendCmd(0x29);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void lph9157SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
@@ -64,55 +64,55 @@ void lph9157Init(DispDriver **driver)
 {
     *driver = &drv;
 
-    SET(DISP_SPI_RST);
+    SET(DISP_RST);
 
     // Init magic
     lph9157InitSeq();
-    SET(DISP_SPI_LED);
+    SET(DISP_BCKL);
 }
 
 void lph9157Sleep(void)
 {
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     lph9157SendCmd(0x10);
     lph9157SendCmd(0x28);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void lph9157Wakeup(void)
 {
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     lph9157SendCmd(0x11);
     lph9157SendCmd(0x29);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void lph9157DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     lph9157SetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void lph9157DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     lph9157SetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }
 
 void lph9157DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -120,11 +120,11 @@ void lph9157DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
     uint16_t w = img->width;
     uint16_t h = img->height;
 
-    CLR(DISP_SPI_CS);
+    CLR(DISP_CS);
 
     lph9157SetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
     dispdrvWaitOperation();
-    SET(DISP_SPI_CS);
+    SET(DISP_CS);
 }

@@ -18,9 +18,9 @@ static DispDriver drv = {
 static inline void st7793SelectReg(uint16_t reg) __attribute__((always_inline));
 static inline void st7793SelectReg(uint16_t reg)
 {
-    CLR(DISP_8BIT_RS);
+    CLR(DISP_RS);
     dispdrvSendData16(reg);
-    SET(DISP_8BIT_RS);
+    SET(DISP_RS);
 }
 
 static void st7793WriteReg(uint16_t reg, uint16_t data)
@@ -34,7 +34,7 @@ static inline void st7793InitSeq(void)
     // Wait for reset
     LL_mDelay(200);
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     //-------------Display Control Setting-------------------------------------//
 
@@ -92,7 +92,7 @@ static inline void st7793InitSeq(void)
     st7793WriteReg(0x0200, 0x0000);
     st7793WriteReg(0x0201, 0x0000);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 static inline void st7793SetWindow(uint16_t x, uint16_t y, uint16_t w,
@@ -116,34 +116,34 @@ void st7793Init(DispDriver **driver)
 {
     *driver = &drv;
 
-    SET(DISP_8BIT_LED);
-    SET(DISP_8BIT_RD);
-    SET(DISP_8BIT_WR);
-    SET(DISP_8BIT_RS);
-    SET(DISP_8BIT_CS);
+    SET(DISP_BCKL);
+    SET(DISP_RD);
+    SET(DISP_WR);
+    SET(DISP_RS);
+    SET(DISP_CS);
 
-    CLR(DISP_8BIT_RST);
+    CLR(DISP_RST);
     LL_mDelay(1);
-    SET(DISP_8BIT_RST);
+    SET(DISP_RST);
 
     st7793InitSeq();
 }
 
 void st7793Sleep(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     st7793WriteReg(0x0007, 0x0000);
     LL_mDelay(50);
     st7793WriteReg(0x0102, 0x0180);
     LL_mDelay(200);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void st7793Wakeup(void)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     // Power On Sequence
     LL_mDelay(200);
@@ -151,27 +151,27 @@ void st7793Wakeup(void)
     LL_mDelay(50);
     st7793WriteReg(0x0007, 0x0100);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void st7793DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     st7793SetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     st7793SetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
 
 void st7793DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -179,10 +179,10 @@ void st7793DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t
     uint16_t w = img->width;
     uint16_t h = img->height;
 
-    CLR(DISP_8BIT_CS);
+    CLR(DISP_CS);
 
     st7793SetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
-    SET(DISP_8BIT_CS);
+    SET(DISP_CS);
 }
