@@ -6,6 +6,8 @@
 #include "tuner/tuner.h"
 #include "eemul.h"
 
+#define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC},
+
 static Menu menu;
 
 typedef struct {
@@ -14,7 +16,7 @@ typedef struct {
 } MenuItem;
 
 static const MenuItem menuItems[MENU_END] = {
-    //                          parent menu
+//   menu index                parent menu              menu type
     [MENU_NULL]             = {MENU_NULL,               MENU_TYPE_PARENT},
 
     [MENU_SETUP]            = {MENU_NULL,               MENU_TYPE_PARENT},
@@ -24,6 +26,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SETUP_SPECTRUM]   = {MENU_SETUP,              MENU_TYPE_PARENT},
     [MENU_SETUP_DISPLAY]    = {MENU_SETUP,              MENU_TYPE_PARENT},
     [MENU_SETUP_INPUT]      = {MENU_SETUP,              MENU_TYPE_PARENT},
+    [MENU_SETUP_RC]         = {MENU_SETUP,              MENU_TYPE_PARENT},
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
 
@@ -42,6 +45,8 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER},
 
     [MENU_INPUT_ENC_RES]    = {MENU_SETUP_INPUT,        MENU_TYPE_NUMBER},
+
+    FOREACH_CMD(GENERATE_MENU_ITEM)
 };
 
 static void menuMove(int8_t diff)
@@ -109,6 +114,10 @@ static int16_t menuGetValue(MenuIdx index)
         break;
     }
 
+    if (index >= MENU_RC_STBY_SWITCH && index < MENU_RC_STBY_SWITCH + RC_CMD_END) {
+        ret = rcGetCode(index - MENU_RC_STBY_SWITCH);
+    }
+
     return ret;
 }
 
@@ -161,6 +170,12 @@ static void menuStoreCurrentValue(void)
     default:
         break;
     }
+
+
+    if (menu.active >= MENU_RC_STBY_SWITCH && menu.active < MENU_RC_STBY_SWITCH + RC_CMD_END) {
+        rcSaveCode(menu.active - MENU_RC_STBY_SWITCH, (uint16_t)menu.value);
+    }
+
 }
 
 static void menuValueChange(int8_t diff)
@@ -168,6 +183,13 @@ static void menuValueChange(int8_t diff)
     if (menuItems[menu.active].type == MENU_TYPE_BOOL) {
         if (diff)
             menu.value = !menu.value;
+        return;
+    }
+
+    if (menuItems[menu.active].type == MENU_TYPE_RC) {
+        RcData rcData = rcRead(false);
+
+        menu.value = ((rcData.addr & 0xFF) << 8) | rcData.cmd;
         return;
     }
 
@@ -319,6 +341,11 @@ char *menuGetValueStr(MenuIdx index)
 
     if (menuItems[index].type == MENU_TYPE_NUMBER) {
         ret = glcdPrepareNum(value, 5, ' ', 10);
+        return ret;
+    }
+
+    if (menuItems[index].type == MENU_TYPE_RC) {
+        ret = glcdPrepareNum((uint16_t)value, 4, '0', 16);
         return ret;
     }
 

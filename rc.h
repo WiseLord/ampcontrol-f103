@@ -8,6 +8,10 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "cmd.h"
+
+#define GENERATE_RC_CMD(RC)    RC_CMD_ ## RC,
+
 typedef enum {
     RC_TYPE_NONE = 0,
 
@@ -25,11 +29,22 @@ typedef struct {
     bool ready;
 } RcData;
 
+typedef enum {
+    FOREACH_CMD(GENERATE_RC_CMD)
+
+    RC_CMD_END
+} RcCmd;
+
 void rcInit(void);
 void rcIRQ(void);
 void rcOvfIRQ(void);
 
 RcData rcRead(bool clear);
+
+uint16_t rcGetCode(RcCmd cmd);
+void rcSaveCode(uint16_t cmd, uint16_t value);
+
+RcCmd rcGetCmd(RcData *rcData);
 
 #ifdef __cplusplus
 }

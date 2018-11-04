@@ -7,7 +7,11 @@ extern "C" {
 
 #include <stdint.h>
 
+#include "cmd.h"
+
 #define MENU_MAX_LEN    16
+
+#define GENERATE_MENU_RC(CMD)    MENU_RC_ ## CMD,
 
 typedef enum {
     MENU_NULL = 0,
@@ -18,6 +22,7 @@ typedef enum {
     MENU_SETUP_SPECTRUM,
     MENU_SETUP_DISPLAY,
     MENU_SETUP_INPUT,
+    MENU_SETUP_RC,
 
     MENU_AUDIO_IC,
 
@@ -37,6 +42,8 @@ typedef enum {
 
     MENU_INPUT_ENC_RES,
 
+    FOREACH_CMD(GENERATE_MENU_RC)
+
     MENU_END
 } MenuIdx;
 
@@ -45,6 +52,7 @@ typedef enum {
     MENU_TYPE_BOOL,
     MENU_TYPE_NUMBER,
     MENU_TYPE_ENUM,
+    MENU_TYPE_RC,
 
     MENU_TYPE_END
 } MenuType;

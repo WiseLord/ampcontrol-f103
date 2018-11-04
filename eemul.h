@@ -6,11 +6,14 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include "rc.h"
 
 #define EE_PAGE_STEP    4
 #define EE_PAGE_SIZE    1024
 
 #define EE_EMPTY        (uint16_t)0xFFFF
+
+#define GENERATE_EE_RC(CMD)  EE_RC_ ## CMD,
 
 enum {
     EE_PAGE_0 = 120,
@@ -51,6 +54,8 @@ typedef enum {
     EE_TUNER_STEP,
     EE_TUNER_DEEMPH,
     EE_TUNER_VOLUME,
+
+    FOREACH_CMD(GENERATE_EE_RC)
 
     EE_PARAM_END
 } EE_Param;

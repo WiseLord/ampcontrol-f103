@@ -9,6 +9,7 @@ audio/tda7439.h
 build_all.sh
 canvas/canvas.c
 canvas/canvas.h
+cmd.h
 display/dispdrv.c
 display/dispdrv.h
 display/fonts/fonts.h

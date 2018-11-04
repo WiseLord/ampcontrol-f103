@@ -95,8 +95,6 @@ static void actionRemapButtons(void)
             action.type = ACTION_BR_WORK;
             break;
         case BTN_D1:
-            if (screen == SCREEN_STANDBY)
-                action.type = ACTION_TEST;
             break;
         case BTN_D2:
             break;
@@ -171,7 +169,7 @@ static void actionRemapActions(void)
 
     if (SCREEN_STANDBY == screen &&
         (ACTION_STANDBY != action.type &&
-         ACTION_TEST != action.type &&
+         ACTION_RC_CMD != action.type &&
          ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
@@ -194,12 +192,12 @@ static void actionHandleTimers(void)
     }
 }
 
-static void actionHandleEncoder(void)
+static void actionHandleEncoder(int8_t diff)
 {
     Screen screen = screenGet();
 
     if (ACTION_NONE == action.type) {
-        int8_t encCnt = getEncoder();
+        int8_t encCnt = diff ? diff : getEncoder();
 
         if (encCnt) {
             switch (screen) {
@@ -228,15 +226,57 @@ static void actionHandleEncoder(void)
     }
 }
 
+static void actionHandleRemote(void)
+{
+    Screen screen = screenGet();
+
+    RcData rcData = rcRead(true);
+
+    if (!rcData.ready)
+        return;
+
+    if (screen == SCREEN_MENU) {
+        if (!rcData.repeat) {
+            action.type = ACTION_MENU_CHANGE;
+            action.value = 0;
+        }
+    } else {
+        RcCmd rcCmd = rcGetCmd(&rcData);
+
+        // Emulate encoder
+        switch (rcCmd) {
+        case RC_CMD_PARAM_UP:
+            actionHandleEncoder(+1);
+            break;
+        case RC_CMD_PARAM_DOWN:
+            actionHandleEncoder(-1);
+            break;
+        default:
+            break;
+        }
+
+        if (!rcData.repeat) {
+            switch (rcCmd) {
+            case RC_CMD_STBY_SWITCH:
+                actionSet(ACTION_STANDBY, STBY_SWITCH);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
 Action actionUserGet(void)
 {
     actionSet(ACTION_NONE, 0);
 
     actionHandleButtons();
     actionRemapButtons();
+    actionHandleRemote();
     actionRemapActions();
 
-    actionHandleEncoder();
+    actionHandleEncoder(0);
 
     actionHandleTimers();
 

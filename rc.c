@@ -4,6 +4,10 @@
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_tim.h>
 
+#include "eemul.h"
+
+static uint16_t rcCode[RC_CMD_END]; // Array with rc commands
+
 typedef enum {
     STATE_NEC_IDLE = 0,
     STATE_NEC_INIT,
@@ -61,8 +65,8 @@ static void rcDecodeNecSam (bool rc, uint16_t delay)
             } else if (NEC_NEAR(delay, NEC_REPEAT) && ovfCnt < NEC_REPEAT_LIMIT) {
                 ovfCnt = 0;
                 // Ready repeated data
-                rcData.repeat = 1;
-                rcData.ready = 1;
+                rcData.repeat = true;
+                rcData.ready = true;
             }
         } else if (seq.state == STATE_NEC_RECEIVE) {
             seq.bit++;
@@ -81,10 +85,7 @@ static void rcDecodeNecSam (bool rc, uint16_t delay)
                     ovfCnt = 0;
                     // Ready new data
                     rcData.type = seq.type;
-                    if (ovfCnt < NEC_REPEAT_LIMIT)
-                        rcData.repeat = 1;
-                    else
-                        rcData.repeat = 0;
+                    rcData.repeat = false;
                     if ((uint8_t)(~seq.haddr) == seq.laddr) {
                         rcData.addr = seq.laddr;
                     } else {
@@ -111,9 +112,12 @@ static void rcDecodeNecSam (bool rc, uint16_t delay)
     }
 }
 
-
 void rcInit(void)
 {
+    for (RcCmd cmd = 0; cmd < RC_CMD_END; cmd++) {
+        rcCode[cmd] = eeReadU(EE_RC_STBY_SWITCH + cmd, EE_EMPTY);
+    }
+
     NVIC_SetPriority(EXTI9_5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
     NVIC_EnableIRQ(EXTI9_5_IRQn);
 }
@@ -146,4 +150,35 @@ RcData rcRead(bool clear)
     }
 
     return ret;
+}
+
+uint16_t rcGetCode(RcCmd cmd)
+{
+    if (cmd >= RC_CMD_END)
+        return EE_EMPTY;
+
+    return rcCode[cmd];
+}
+
+void rcSaveCode(uint16_t cmd, uint16_t value)
+{
+    if (cmd >= RC_CMD_END)
+        return;
+
+    rcCode[cmd] = value;
+    eeUpdate(EE_RC_STBY_SWITCH + cmd, value);
+}
+
+RcCmd rcGetCmd(RcData *rcData)
+{
+    uint16_t raw = ((rcData->addr << 8) & 0xFF00) | (rcData->cmd & 0x00FF);
+
+    RcCmd cmd;
+    for (cmd = 0; cmd < RC_CMD_END; cmd++) {
+        if (rcCode[cmd] == raw) {
+            return cmd;
+        }
+    }
+
+    return RC_CMD_END;
 }

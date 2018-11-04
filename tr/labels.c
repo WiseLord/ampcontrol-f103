@@ -1,5 +1,9 @@
 #include "labels.h"
 
+#include "../rc.h"
+
+#define GENERATE_MENU_RC_TEXT(CMD)    [LABEL_MENU + MENU_RC_ ## CMD] =  # CMD,
+
 static Lang lang = LANG_END;
 
 extern char *const labels_by[LABEL_END];
@@ -69,6 +73,7 @@ const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Spectrum",
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Display",
     [LABEL_MENU + MENU_SETUP_INPUT]     = "Input",
+    [LABEL_MENU + MENU_SETUP_RC]        = "Remote",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner IC",
     [LABEL_MENU + MENU_TUNER_BAND]      = "Band",
@@ -85,6 +90,8 @@ const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Standby brightness",
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Encoder resolution",
+
+    FOREACH_CMD(GENERATE_MENU_RC_TEXT)
 };
 
 const char *labels[LABEL_END];

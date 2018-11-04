@@ -59,7 +59,7 @@ typedef enum {
     ACTION_MENU_SELECT,
     ACTION_MENU_CHANGE,
 
-    ACTION_TEST,
+    ACTION_RC_CMD,
 
     ACTION_TYPE_END
 } ActionType;
