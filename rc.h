@@ -10,8 +10,10 @@ extern "C" {
 
 void rcInit(void);
 void rcIRQ(void);
+void rcOvfIRQ(void);
 
 bool rcGetValue(void);
+uint16_t rcGetOvfCnt(void);
 
 #ifdef __cplusplus
 }

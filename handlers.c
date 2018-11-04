@@ -82,6 +82,16 @@ void TIM2_IRQHandler(void)
     }
 }
 
+void TIM3_IRQHandler(void)
+{
+    if (LL_TIM_IsActiveFlag_UPDATE(TIM3)) {
+        // Clear the update interrupt flag
+        LL_TIM_ClearFlag_UPDATE(TIM3);
+
+        rcOvfIRQ();
+    }
+}
+
 void EXTI9_5_IRQHandler()
 {
     if (LL_EXTI_IsActiveFlag_0_31(RC_ExtiLine) != RESET) {
