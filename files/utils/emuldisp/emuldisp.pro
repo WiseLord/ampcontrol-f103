@@ -58,7 +58,7 @@ SOURCES += \
     ../../../tr/labels_by.c \
     ../../../tr/labels_ru.c \
     ../../../tr/labels.c \
-    emulscreen.c
+	emulscreen.c
 
 HEADERS += \
     emuldisp.h \
@@ -74,5 +74,6 @@ HEADERS += \
     ../../../tuner/tunerdefs.h \
     ../../../tr/labels.h \
     ../../../rtc.h \
-    emulscreen.h
+    emulscreen.h \
+    ../../../rc.h
     ../../../display/dispdrv.h
