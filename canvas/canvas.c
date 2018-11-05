@@ -73,6 +73,28 @@ void canvasDrawBar(int16_t value, int16_t min, int16_t max)
     }
 }
 
+/*
+static uint16_t level2color(uint8_t value)
+{
+    uint16_t color = 0;
+
+    if (value >= 0 && value < 64) {
+        color = 0x001F;
+        color |= (value << 5);
+    } else if (value >= 64 && value < 128) {
+        color = 0x07E0;
+        color |= (31 - ((value - 64) / 2));
+    } else if (value >= 128 && value < 192) {
+        color = 0x07E0;
+        color |= ((value / 2) << 11);
+    } else if (value >= 192 && value < 256) {
+        color = 0xF800;
+        color |= ((63 - value) << 5);
+    }
+
+    return color;
+}
+*/
 
 static void canvasDrawTm(RTC_type *rtc, uint8_t tm)
 {
