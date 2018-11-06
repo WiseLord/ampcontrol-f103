@@ -63,12 +63,7 @@ void lph9157SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 void lph9157Init(DispDriver **driver)
 {
     *driver = &drv;
-
-    SET(DISP_RST);
-
-    // Init magic
     lph9157InitSeq();
-    SET(DISP_BCKL);
 }
 
 void lph9157Sleep(void)

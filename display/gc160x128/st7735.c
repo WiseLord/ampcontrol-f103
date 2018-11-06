@@ -136,17 +136,6 @@ static inline void st7735SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t 
 void st7735Init(DispDriver **driver)
 {
     *driver = &drv;
-
-    SET(DISP_BCKL);
-    SET(DISP_RD);
-    SET(DISP_WR);
-    SET(DISP_RS);
-    SET(DISP_CS);
-
-    CLR(DISP_RST);
-    LL_mDelay(1);
-    SET(DISP_RST);
-
     st7735InitSeq();
 }
 

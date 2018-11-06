@@ -95,17 +95,6 @@ static inline void mc2pa8201SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16
 void mc2pa8201Init(DispDriver **driver)
 {
     *driver = &drv;
-
-    SET(DISP_BCKL);
-    SET(DISP_RD);
-    SET(DISP_WR);
-    SET(DISP_RS);
-    SET(DISP_CS);
-
-    CLR(DISP_RST);
-    LL_mDelay(1);
-    SET(DISP_RST);
-
     mc2pa8201InitSeq();
 }
 

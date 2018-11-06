@@ -88,18 +88,10 @@ void st7920Init(DispDriver **driver)
 {
     *driver = &drv;
 
+    // Stay always in write mode
     CLR(ST7920_RW);
-    CLR(ST7920_RS);
-    CLR(ST7920_E);
-
     // Switch display to parallel mode
     SET(ST7920_PSB);
-
-    // Hardware reset
-    CLR(ST7920_RST);
-    _delay_us(1);
-    SET(ST7920_RST);
-    LL_mDelay(50);
 
     // Init display in graphics mode
     st7920WriteCmd(ST7920_FUNCTION | ST7920_8BIT);

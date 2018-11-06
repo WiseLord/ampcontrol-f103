@@ -84,14 +84,7 @@ void ls020SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 void ls020Init(DispDriver **driver)
 {
     *driver = &drv;
-
-    CLR(DISP_RST);
-    LL_mDelay(100);
-    SET(DISP_RST);
-
-    // Init magic
     ls020InitSeq();
-    SET(DISP_BCKL);
 }
 
 void ls020Sleep(void)

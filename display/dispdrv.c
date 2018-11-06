@@ -99,7 +99,17 @@ void dispdrvInit(DispDriver **driver)
 {
 #ifdef _DISP_SPI
     dispdrvInitSPI();
+#else
+    SET(DISP_RD);
+    SET(DISP_WR);
+    SET(DISP_RS);
+    SET(DISP_CS);
 #endif
+
+    CLR(DISP_RST);
+    LL_mDelay(5);
+    SET(DISP_RST);
+    LL_mDelay(50);
 
 #if defined (_KS0108A) || defined(_KS0108B)
     ks0108Init(driver);
@@ -142,6 +152,8 @@ void dispdrvInit(DispDriver **driver)
 #else
 #error "Unsupported display driver"
 #endif
+
+    SET(DISP_BCKL);
 
     drv = *driver;
 }

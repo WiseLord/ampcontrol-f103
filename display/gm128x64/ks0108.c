@@ -107,15 +107,8 @@ void ks0108Init(DispDriver **driver)
 {
     *driver = &drv;
 
+    // Stay always in write mode
     CLR(KS0108_RW);
-    CLR(KS0108_DI);
-    CLR(KS0108_E);
-
-    // Hardware reset
-    CLR(KS0108_RST);
-    _delay_us(1);
-    SET(KS0108_RST);
-    _delay_us(1);
 
     // Init both controller
     KS0108_SET_CS();

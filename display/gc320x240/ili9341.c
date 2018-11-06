@@ -163,14 +163,7 @@ void ili9341SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 void ili9341Init(DispDriver **driver)
 {
     *driver = &drv;
-
-    CLR(DISP_RST);
-    LL_mDelay(100);
-    SET(DISP_RST);
-
-    // Init magic
     ili9341InitSeq();
-    SET(DISP_BCKL);
 }
 
 void ili9341Sleep(void)

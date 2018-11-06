@@ -94,14 +94,7 @@ void ssd1286aSetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 void ssd1286aInit(DispDriver **driver)
 {
     *driver = &drv;
-
-    CLR(DISP_RST);
-    LL_mDelay(100);
-    SET(DISP_RST);
-
-    // Init magic
     ssd1286aInitSeq();
-    SET(DISP_BCKL);
 }
 
 void ssd1286aSleep(void)
