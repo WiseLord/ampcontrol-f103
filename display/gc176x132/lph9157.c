@@ -49,13 +49,17 @@ static void lph9157InitSeq(void)
 
 void lph9157SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-    lph9157SendCmd(0x2a);
-    dispdrvSendData8(y);
-    dispdrvSendData8(y + h - 1);
+    lph9157SendCmd(0x2A);
+    dispdrvSendData8(y >> 8);
+    dispdrvSendData8(y & 0xFF);
+    dispdrvSendData8((y + h - 1) >> 8);
+    dispdrvSendData8((y + h - 1) & 0xFF);
 
-    lph9157SendCmd(0x2b);
-    dispdrvSendData8(x);
-    dispdrvSendData8(x + w - 1);
+    lph9157SendCmd(0x2B);
+    dispdrvSendData8(x >> 8);
+    dispdrvSendData8(x & 0xFF);
+    dispdrvSendData8((x + w - 1) >> 8);
+    dispdrvSendData8((x + w - 1) & 0xFF);
 
     lph9157SendCmd(0x2C);
 }

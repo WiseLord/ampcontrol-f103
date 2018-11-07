@@ -124,12 +124,16 @@ static inline void ili9163SetWindow(uint16_t x, uint16_t y, uint16_t w,
 static inline void ili9163SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
     ili9163SelectReg(0x2A);
-    dispdrvSendData16(y);
-    dispdrvSendData16(y + h - 1);
+    dispdrvSendData8(y >> 8);
+    dispdrvSendData8(y & 0xFF);
+    dispdrvSendData8((y + h - 1) >> 8);
+    dispdrvSendData8((y + h - 1) & 0xFF);
 
     ili9163SelectReg(0x2B);
-    dispdrvSendData16(x);
-    dispdrvSendData16(x + w - 1);
+    dispdrvSendData8(x >> 8);
+    dispdrvSendData8(x & 0xFF);
+    dispdrvSendData8((x + w - 1) >> 8);
+    dispdrvSendData8((x + w - 1) & 0xFF);
 
     ili9163SelectReg(0x2C);
 }
