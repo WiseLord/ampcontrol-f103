@@ -80,8 +80,8 @@ static void pinsInitDisplay(void)
     initDef.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     initDef.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 
-    initDef.Pin = DISP_DATA_HI_Pin;
-    LL_GPIO_Init(DISP_DATA_HI_Port, &initDef);
+    initDef.Pin = DISP_DATA_LO_Pin;
+    LL_GPIO_Init(DISP_DATA_LO_Port, &initDef);
 
     OUT_INIT(DISP_RS,  LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
     OUT_INIT(DISP_CS,  LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);

@@ -150,12 +150,16 @@ static void ili9341InitSeq(void)
 void ili9341SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
     ili9341SendCmd(ILI9341_PASET);
-    dispdrvSendData16(x);
-    dispdrvSendData16(x + w - 1);
+    dispdrvSendData8(x >> 8);
+    dispdrvSendData8(x & 0xFF);
+    dispdrvSendData8((x + w - 1) >> 8);
+    dispdrvSendData8((x + w - 1) & 0xFF);
 
     ili9341SendCmd(ILI9341_CASET);
-    dispdrvSendData16(y);
-    dispdrvSendData16(y + h - 1);
+    dispdrvSendData8(y >> 8);
+    dispdrvSendData8(y & 0xFF);
+    dispdrvSendData8((y + h - 1) >> 8);
+    dispdrvSendData8((y + h - 1) & 0xFF);
 
     ili9341SendCmd(ILI9341_RAMWR);
 }

@@ -43,12 +43,13 @@ static inline void dispdrvSendByte(uint8_t data)
     while (!LL_SPI_IsActiveFlag_TXE(SPI1));
     LL_SPI_TransmitData8(SPI1, data);
 #else
-#ifdef _DISP_HI_BYTE
+#if defined(_DISP_HI_BYTE) && !defined(_DISP_16BIT)
     DISP_DATA_HI_Port->BSRR = 0xFF000000 | (data << 8);
-#else
-    DISP_DATA_HI_Port->BSRR = 0x00FF0000 | data;        // If port bits 7..0 are used
 #endif
-    CLR(DISP_WR);                                       // Strob MSB
+#if defined(_DISP_LO_BYTE) || defined(_DISP_16BIT)
+    DISP_DATA_LO_Port->BSRR = 0x00FF0000 | data;
+#endif
+    CLR(DISP_WR);
     SET(DISP_WR);
 #endif
 }
@@ -62,9 +63,10 @@ static inline void dispdrvReadInput()
 #ifdef _DISP_HI_BYTE
         DISP_DATA_HI_Port->BSRR = 0x0000FF00;
         DISP_DATA_HI_Port->CRH = 0x88888888;
-#else
-        DISP_DATA_HI_Port->BSRR = 0x000000FF;           // Set 1 on all data lines
-        DISP_DATA_HI_Port->CRL = 0x88888888;            // SET CNF=10, MODE=00 - Input pullup
+#endif
+#ifdef _DISP_LO_BYTE
+        DISP_DATA_LO_Port->BSRR = 0x000000FF;           // Set 1 on all data lines
+        DISP_DATA_LO_Port->CRL = 0x88888888;            // SET CNF=10, MODE=00 - Input pullup
 #endif
         // Small delay to stabilize data before reading
         volatile uint8_t delay = 2;
@@ -72,9 +74,10 @@ static inline void dispdrvReadInput()
 #ifdef _DISP_HI_BYTE
         drv->bus = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
         DISP_DATA_HI_Port->CRH = 0x33333333;
-#else
-        drv->bus = DISP_DATA_HI_Port->IDR & 0x00FF;     // Read 8-bit bus
-        DISP_DATA_HI_Port->CRL = 0x33333333;            // Set CNF=00, MODE=11 - Output push-pull 50 MHz
+#endif
+#ifdef _DISP_LO_BYTE
+        drv->bus = DISP_DATA_LO_Port->IDR & 0x00FF;     // Read 8-bit bus
+        DISP_DATA_LO_Port->CRL = 0x33333333;            // Set CNF=00, MODE=11 - Output push-pull 50 MHz
 #endif
         bus_requested = 0;
     }
@@ -84,12 +87,19 @@ static inline void dispdrvReadInput()
 static inline void dispdrvSendWord(uint16_t data) __attribute__((always_inline));
 static inline void dispdrvSendWord(uint16_t data)
 {
+#ifdef _DISP_16BIT
+    DISP_DATA_HI_Port->BSRR = 0xFF000000 | (data & 0xFF00);
+    DISP_DATA_LO_Port->BSRR = 0x00FF0000 | (data & 0x00FF);
+
+    CLR(DISP_WR);
+    SET(DISP_WR);
+#else
     uint8_t dataH = data >> 8;
     uint8_t dataL = data & 0xFF;
 
     dispdrvSendByte(dataH);
     dispdrvSendByte(dataL);
-
+#endif
 #ifdef _DISP_8BIT
     dispdrvReadInput();
 #endif

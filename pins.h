@@ -68,8 +68,8 @@ void pinsInit(void);
 #define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
 
 // TFT LCD pins
-#define DISP_DATA_HI_Port       GPIOA
-#define DISP_DATA_HI_Pin        (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
+#define DISP_DATA_LO_Port       GPIOA
+#define DISP_DATA_LO_Pin        (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
                                  LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
 
 // TFT parallel (8-bit) wiring
