@@ -37,12 +37,11 @@ SOURCES += \
     ../../../display/fonts/font-terminus-dig-80.c \
     ../../../display/fonts/font-terminus-dig-96.c \
     ../../../display/fonts/font-terminus-dig-120.c \
-    ../../../display/fonts/font-terminus-mod-44.c \
-    ../../../display/fonts/font-terminus-mod-64.c \
-    ../../../display/fonts/font-terminus-mod-96.c \
-    ../../../display/icons-24.c \
-    ../../../display/icons-32.c \
-    ../../../display/glcd.c \
+	../../../display/fonts/font-terminus-mod-22x2.c \
+	../../../display/fonts/font-terminus-mod-24x2.c \
+	../../../display/fonts/font-terminus-mod-32x2.c \
+	../../../display/fonts/font-terminus-mod-32x3.c \
+	 ../../../display/glcd.c \
     ../../../canvas/canvas.c \
     ../../../canvas/gc160x128.c \
     ../../../canvas/gc176x132.c \
@@ -58,12 +57,13 @@ SOURCES += \
     ../../../tr/labels_by.c \
     ../../../tr/labels_ru.c \
     ../../../tr/labels.c \
-	emulscreen.c
+	emulscreen.c \
+    ../../../display/fonts/icons-amp-48.c
+    ../../../display/fonts/icons-amp-48.c
 
 HEADERS += \
     emuldisp.h \
     ../../../display/fonts/fonts.h \
-    ../../../display/icons.h \
     ../../../display/glcd.h \r \
     ../../../display/dispdrv.h \
     ../../../canvas/canvas.h \
@@ -76,4 +76,5 @@ HEADERS += \
     ../../../rtc.h \
     emulscreen.h \
     ../../../rc.h
+    ../../../display/fonts/icons.h
     ../../../display/dispdrv.h

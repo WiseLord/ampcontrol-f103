@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<data type="font" name="font-terminus-mod-44">
+<data type="font" name="font-terminus-mod-22x2">
     <family>xos4 Terminus</family>
     <size>22</size>
     <ascent>22</ascent>
@@ -12,7 +12,7 @@
     <multiplicityWidth>1</multiplicityWidth>
     <multiplicityHeight>1</multiplicityHeight>
     <string> !"#$%&amp;'()*+,-./0123456789:;&lt;=>?\x0040ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~«°±·»ЁЄІЇЎАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёєіїўҐґ █</string>
-    <converted>/home/STM32/Projects/ampcontrol-f103/display/fonts/font-terminus-mod-44.c</converted>
+    <converted>/home/STM32/Projects/ampcontrol-f103/display/fonts/font-terminus-mod-22x2.c</converted>
     <chars>
         <char code="0020" character=" ">
             <picture format="png">iVBORw0KGgoAAAANSUhEUgAAABAAAAAsCAYAAABsSzi3AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAKUlEQVRIie3MoQEAAAjDMOD/n8cRGETqm06SOjSXGQAAAAAAAAAA+AsscsgEVAuldWoAAAAASUVORK5CYII=</picture>

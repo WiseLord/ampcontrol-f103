@@ -30,10 +30,8 @@ C_SOURCES += tr/labels_ru.c
 C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
 
 # Display source files
-FONTS_SRC = $(wildcard display/fonts/font*.c)
-ICONS_SRC = $(wildcard display/icon*.c)
-C_SOURCES += $(FONTS_SRC)
-C_SOURCES += $(ICONS_SRC)
+C_SOURCES += $(wildcard display/fonts/font*.c)
+C_SOURCES += $(wildcard display/fonts/icon*.c)
 
 ifeq "$(DISPLAY)" "KS0108A"
   C_SOURCES += display/gm128x64/ks0108.c

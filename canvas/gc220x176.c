@@ -26,7 +26,7 @@ static Canvas canvas = {
 static const CanvasParam canvasParam = {
     .time.hmsFont = &fontterminusdig58,
     .time.dmyFont = &fontterminusdig40,
-    .time.wdFont = &fontterminusmod44,
+    .time.wdFont = &fontterminus32,
     .time.hmsY = 10,
     .time.dmyY = 78,
     .time.wdY = 126,
@@ -54,7 +54,7 @@ static void showTime(bool clear, RTC_type *rtc)
 
 static void showParam(DispParam *dp)
 {
-    glcdSetFont(&fontterminusmod44);
+    glcdSetFont(&fontterminus32);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
     glcdSetXY(2, 0);
@@ -64,7 +64,7 @@ static void showParam(DispParam *dp)
 
     glcdSetXY(canvas.width, 118);
     glcdSetFontAlign(FONT_ALIGN_RIGHT);
-    glcdSetFont(&fontterminusmod64);
+    glcdSetFont(&fontterminusmod32x2);
     glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
 }
 
@@ -80,7 +80,7 @@ static void showSpectrum(bool clear, SpectrumData *spData)
 
 static void showTuner(DispTuner *dt)
 {
-    const tFont *fmFont = &fontterminusmod44;
+    const tFont *fmFont = &fontterminusmod22x2;
 
     canvasShowTuner(dt, fmFont);
 }

@@ -116,7 +116,7 @@ void screenShowBrightness(void)
     dp.min = LCD_BR_MIN;
     dp.max = LCD_BR_MAX;
     dp.step = 1 * 8;
-    dp.icon = ICON24_BRIGHTNESS;
+    dp.icon = ICON_BRIGHTNESS;
 
     if (canvas->showParam) {
         canvas->showParam(&dp);
@@ -143,10 +143,10 @@ void screenShowAudioParam(void)
     DispParam dp;
     if (aTune == AUDIO_TUNE_GAIN) {
         dp.label = txtLabels[LABEL_GAIN0 + input];
-        dp.icon = ICON24_TUNER + input;
+        dp.icon = ICON_TUNER + input;
     } else {
         dp.label = txtLabels[LABEL_VOLUME + aTune];
-        dp.icon = ICON24_VOLUME + aTune;
+        dp.icon = ICON_VOLUME + aTune;
     }
     dp.value = value;
 

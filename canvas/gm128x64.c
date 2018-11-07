@@ -68,7 +68,7 @@ static void showParam(DispParam *dp)
     glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
 
     glcdSetXY(104, 2);
-    glcdWriteIcon(dp->icon, icons_24, LCD_COLOR_WHITE, canvas.color);
+//    glcdWriteIcon(dp->icon, icons_24, LCD_COLOR_WHITE, canvas.color);
 }
 
 static void showSpectrum(bool clear, SpectrumData *spData)

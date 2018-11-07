@@ -133,24 +133,15 @@ void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t b
     }
 }
 
-void glcdWriteIcon(uint8_t num, const uint8_t *icons, uint16_t color, uint16_t bgColor)
+void glcdWriteIcon(uint8_t num, const tFont *iFont, uint16_t color, uint16_t bgColor)
 {
-    tImage img;
-    img.data = 0;
+    tImage *img;
 
-    if (icons == icons_24) {
-        img.width = img.height = 24;
-    } else if (icons == icons_32) {
-        img.width = img.height = 32;
-    } else {
-        return;
-    }
+    img = (tImage *)iFont->chars[num].image;
 
-    img.data = icons + (img.width * img.height / 8 * num);
-
-    if (glcd.drv->drawImage) {
-        glcd.drv->drawImage(&img, glcd.x, glcd.y, color, bgColor);
-    }
+   if (glcd.drv->drawImage) {
+       glcd.drv->drawImage(img, glcd.x, glcd.y, color, bgColor);
+   }
 }
 
 uint16_t glcdWriteChar(int32_t code)

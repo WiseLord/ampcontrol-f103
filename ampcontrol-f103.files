@@ -39,9 +39,11 @@ display/fonts/font-terminus-dig-64.c
 display/fonts/font-terminus-dig-80.c
 display/fonts/font-terminus-dig-96.c
 display/fonts/font-terminus-dig-120.c
-display/fonts/font-terminus-mod-44.c
-display/fonts/font-terminus-mod-64.c
-display/fonts/font-terminus-mod-96.c
+display/fonts/font-terminus-mod-22x2.c
+display/fonts/font-terminus-mod-24x2.c
+display/fonts/font-terminus-mod-32x2.c
+display/fonts/font-terminus-mod-32x3.c
+display/fonts/icons-amp-48.c
 
 canvas/gm128x64.c
 canvas/gc160x128.c
@@ -99,9 +101,6 @@ display/gc480x320/r61581.h
 
 display/glcd.c
 display/glcd.h
-display/icons-24.c
-display/icons-32.c
-display/icons.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
