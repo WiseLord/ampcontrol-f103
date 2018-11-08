@@ -30,9 +30,10 @@ void canvasInit(Canvas **value)
 #error "Unsupported display driver"
 #endif
 #endif
-    (*value)->color = LCD_COLOR_BLACK;
 
     canvas = *value;
+    canvas->color = LCD_COLOR_BLACK;
+    menuGet()->dispSize = canvas->par->menu.itemCnt;
 }
 
 static void canvasDrawBar(int16_t value, int16_t min, int16_t max)
@@ -344,8 +345,10 @@ void canvasShowSpectrum(bool clear, SpectrumData *spData)
     }
 }
 
-void canvasShowTuner(DispTuner *dt, const tFont *fmFont)
+void canvasShowTuner(DispTuner *dt)
 {
+    const tFont *fmFont = canvas->par->tuner.lblFont;
+
     Tuner *tuner = dt->tuner;
     uint16_t freq = tunerGet()->freq;
     uint16_t freqMin = tuner->par.fMin;

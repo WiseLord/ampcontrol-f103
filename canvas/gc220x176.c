@@ -1,17 +1,5 @@
 #include "canvas.h"
 
-static void showTuner(DispTuner *dt);
-
-static const CanvasParam canvasParam;
-
-static Canvas canvas = {
-    .width = 220,
-    .height = 176,
-    .showTuner = showTuner,
-
-    .par = &canvasParam,
-};
-
 static const CanvasParam canvasParam = {
     .time.hmsFont = &fontterminusdig58,
     .time.dmyFont = &fontterminusdig40,
@@ -39,17 +27,18 @@ static const CanvasParam canvasParam = {
     .sp.step = 3,
     .sp.oft = 1,
     .sp.width = 2,
+
+    .tuner.lblFont = &fontterminus32,
+};
+
+static Canvas canvas = {
+    .width = 220,
+    .height = 176,
+
+    .par = &canvasParam,
 };
 
 void gc220x176Init(Canvas **value)
 {
     *value = &canvas;
-    menuGet()->dispSize = canvas.par->menu.itemCnt;
-}
-
-static void showTuner(DispTuner *dt)
-{
-    const tFont *fmFont = &fontterminusmod22x2;
-
-    canvasShowTuner(dt, fmFont);
 }

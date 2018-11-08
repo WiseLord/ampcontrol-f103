@@ -61,14 +61,16 @@ typedef struct {
         uint8_t oft;                // Offset of visible part of the column
         uint8_t width;              // Width of visible part of the column
     } sp;
+    struct {
+        const tFont *lblFont;       // Font of the tuner label
+    } tuner;
 } CanvasParam;
 
 typedef struct {
     Glcd *glcd;
+
     uint16_t width;
     uint16_t height;
-
-    void (*showTuner)(DispTuner *dt);
 
     uint16_t color;
 
@@ -93,7 +95,7 @@ void canvasShowTime(bool clear, RTC_type *rtc);
 void canvasShowMenu(void);
 void canvasShowTune(DispParam *dp);
 void canvasShowSpectrum(bool clear, SpectrumData *spData);
-void canvasShowTuner(DispTuner *dt, const tFont *fmFont);
+void canvasShowTuner(DispTuner *dt);
 
 #ifdef __cplusplus
 }

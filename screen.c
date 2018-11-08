@@ -387,9 +387,7 @@ void screenShowTuner(void)
         swTimSetTunerPoll(100);
     }
 
-    if (canvas->showTuner) {
-        canvas->showTuner(&dt);
-    }
+    canvasShowTuner(&dt);
 }
 
 void screenShowMenu(void)
