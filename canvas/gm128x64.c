@@ -1,6 +1,5 @@
 #include "canvas.h"
 
-static void showTime(bool clear, RTC_type *rtc);
 static void showParam(DispParam *dp);
 static void showSpectrum(bool clear, SpectrumData *spData);
 static void showTuner(DispTuner *dt);
@@ -10,7 +9,6 @@ static const CanvasParam canvasParam;
 static Canvas canvas = {
     .width = 128,
     .height = 64,
-    .showTime = showTime,
     .showParam = showParam,
     .showSpectrum = showSpectrum,
     .showTuner = showTuner,
@@ -41,11 +39,6 @@ void gm128x64Init(Canvas **value)
 {
     *value = &canvas;
     menuGet()->dispSize = canvas.par->menu.itemCnt;
-}
-
-static void showTime(bool clear, RTC_type *rtc)
-{
-    canvasShowTime(clear, rtc);
 }
 
 static void showParam(DispParam *dp)

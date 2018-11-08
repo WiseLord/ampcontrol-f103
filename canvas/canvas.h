@@ -30,12 +30,12 @@ typedef struct {
 
 typedef struct {
     struct {
-        const tFont *hmsFont;
-        const tFont *dmyFont;
-        const tFont *wdFont;
-        uint8_t hmsY;
-        uint8_t dmyY;
-        uint8_t wdY;
+        const tFont *hmsFont;       // Font to draw hours/minutes/seconds
+        const tFont *dmyFont;       // Font to draw day/month/year
+        const tFont *wdFont;        // Font to draw weekday
+        uint8_t hmsY;               // Y position of hours/minutes/seconds
+        uint8_t dmyY;               // Y position of day/month/year
+        uint8_t wdY;                // Y position of weekday
     } time;
     struct {
         int16_t sc;
@@ -56,7 +56,6 @@ typedef struct {
     uint16_t width;
     uint16_t height;
 
-    void (*showTime)(bool clear, RTC_type *rtc);
     void (*showParam)(DispParam *dp);
     void (*showSpectrum)(bool clear, SpectrumData *spData);
     void (*showTuner)(DispTuner *dt);

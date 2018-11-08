@@ -309,9 +309,7 @@ void screenShowTime(bool clear)
 
     rtcGetTime(&rtc);
 
-    if (canvas->showTime) {
-        canvas->showTime(clear, &rtc);
-    }
+    canvasShowTime(clear, &rtc);
 }
 
 void screenShowSpectrum(bool clear)
