@@ -1,13 +1,9 @@
 #include "canvas.h"
 
-// On 320x240 we can draw max 8 menu items + menu header
-#define MENU_SIZE_VISIBLE   8
-
 static void showTime(bool clear, RTC_type *rtc);
 static void showParam(DispParam *dp);
 static void showSpectrum(bool clear, SpectrumData *spData);
 static void showTuner(DispTuner *dt);
-static void showMenu(void);
 
 static const CanvasParam canvasParam;
 
@@ -18,7 +14,6 @@ static Canvas canvas = {
     .showParam = showParam,
     .showSpectrum = showSpectrum,
     .showTuner = showTuner,
-    .showMenu = showMenu,
 
     .par = &canvasParam,
 };
@@ -39,12 +34,13 @@ static const CanvasParam canvasParam = {
 
     .menu.headFont = &fontterminus28b,
     .menu.menuFont = &fontterminus22b,
+    .menu.itemCnt = 8,
 };
 
 void gc320x240Init(Canvas **value)
 {
     *value = &canvas;
-    menuGet()->dispSize = MENU_SIZE_VISIBLE;
+    menuGet()->dispSize = canvas.par->menu.itemCnt;
 }
 
 static void showTime(bool clear, RTC_type *rtc)
@@ -86,9 +82,4 @@ static void showTuner(DispTuner *dt)
     const tFont *fmFont = &fontterminusmod32x2;
 
     canvasShowTuner(dt, fmFont);
-}
-
-static void showMenu(void)
-{
-    canvasShowMenu();
 }

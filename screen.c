@@ -402,7 +402,5 @@ void screenShowTuner(void)
 
 void screenShowMenu(void)
 {
-    if (canvas->showMenu) {
-        canvas->showMenu();
-    }
+    canvasShowMenu();
 }

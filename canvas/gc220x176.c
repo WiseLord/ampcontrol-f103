@@ -1,13 +1,9 @@
 #include "canvas.h"
 
-// On 220x176 we can draw max 8 menu items + menu header
-#define MENU_SIZE_VISIBLE   7
-
 static void showTime(bool clear, RTC_type *rtc);
 static void showParam(DispParam *dp);
 static void showSpectrum(bool clear, SpectrumData *spData);
 static void showTuner(DispTuner *dt);
-static void showMenu(void);
 
 static const CanvasParam canvasParam;
 
@@ -18,7 +14,6 @@ static Canvas canvas = {
     .showParam = showParam,
     .showSpectrum = showSpectrum,
     .showTuner = showTuner,
-    .showMenu = showMenu,
 
     .par = &canvasParam,
 };
@@ -39,12 +34,13 @@ static const CanvasParam canvasParam = {
 
     .menu.headFont = &fontterminus20b,
     .menu.menuFont = &fontterminus18,
+    .menu.itemCnt = 7,
 };
 
 void gc220x176Init(Canvas **value)
 {
     *value = &canvas;
-    menuGet()->dispSize = MENU_SIZE_VISIBLE;
+    menuGet()->dispSize = canvas.par->menu.itemCnt;
 }
 
 static void showTime(bool clear, RTC_type *rtc)
@@ -83,9 +79,4 @@ static void showTuner(DispTuner *dt)
     const tFont *fmFont = &fontterminusmod22x2;
 
     canvasShowTuner(dt, fmFont);
-}
-
-static void showMenu(void)
-{
-    canvasShowMenu();
 }

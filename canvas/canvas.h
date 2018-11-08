@@ -45,8 +45,9 @@ typedef struct {
         uint8_t middle;
     } bar;
     struct {
-        const tFont *headFont;
-        const tFont *menuFont;
+        const tFont *headFont;      // Font to draw menu header
+        const tFont *menuFont;      // Foft to draw menu item
+        const uint8_t itemCnt;      // Number of items can be shown
     } menu;
 } CanvasParam;
 
@@ -59,7 +60,6 @@ typedef struct {
     void (*showParam)(DispParam *dp);
     void (*showSpectrum)(bool clear, SpectrumData *spData);
     void (*showTuner)(DispTuner *dt);
-    void (*showMenu)(void);
 
     uint16_t color;
 
