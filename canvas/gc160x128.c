@@ -1,6 +1,5 @@
 #include "canvas.h"
 
-static void showParam(DispParam *dp);
 static void showSpectrum(bool clear, SpectrumData *spData);
 static void showTuner(DispTuner *dt);
 
@@ -9,7 +8,6 @@ static const CanvasParam canvasParam;
 static Canvas canvas = {
     .width = 160,
     .height = 128,
-    .showParam = showParam,
     .showSpectrum = showSpectrum,
     .showTuner = showTuner,
 
@@ -33,28 +31,18 @@ static const CanvasParam canvasParam = {
     .menu.headFont = &fontterminus14b,
     .menu.menuFont = &fontterminus12,
     .menu.itemCnt = 7,
+
+    .tune.lblFont = &fontterminus28,
+    .tune.valFont = &fontterminusdig40,
+    .tune.valY = 88,
+    .tune.iconSet = &iconsamp48,
+    .tune.iconColor = LCD_COLOR_AQUA,
 };
 
 void gc160x128Init(Canvas **value)
 {
     *value = &canvas;
     menuGet()->dispSize = canvas.par->menu.itemCnt;
-}
-
-static void showParam(DispParam *dp)
-{
-    glcdSetFont(&fontterminus28);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-
-    glcdSetXY(2, 0);
-    glcdWriteString((char *)dp->label);
-
-    canvasDrawBar(dp->value, dp->min, dp->max);
-
-    glcdSetXY(canvas.width, 88);
-    glcdSetFontAlign(FONT_ALIGN_RIGHT);
-    glcdSetFont(&fontterminusdig40);
-    glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
 }
 
 static void showSpectrum(bool clear, SpectrumData *spData)

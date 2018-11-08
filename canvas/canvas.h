@@ -47,8 +47,15 @@ typedef struct {
     struct {
         const tFont *headFont;      // Font to draw menu header
         const tFont *menuFont;      // Foft to draw menu item
-        const uint8_t itemCnt;      // Number of items can be shown
+        uint8_t itemCnt;            // Number of items can be shown
     } menu;
+    struct {
+        const tFont *lblFont;       // Foft to draw tune label
+        const tFont *valFont;       // Foft to draw tune label
+        uint16_t valY;              // Y position of the tune value
+        const tFont *iconSet;       // Tune icon set
+        uint16_t iconColor;         // Tune icon color
+    } tune;
 } CanvasParam;
 
 typedef struct {
@@ -56,7 +63,6 @@ typedef struct {
     uint16_t width;
     uint16_t height;
 
-    void (*showParam)(DispParam *dp);
     void (*showSpectrum)(bool clear, SpectrumData *spData);
     void (*showTuner)(DispTuner *dt);
 
@@ -79,12 +85,11 @@ void emulCanvasInit(Canvas **driver);
 
 void canvasInit(Canvas **canvas);
 
-void canvasDrawBar(int16_t value, int16_t min, int16_t max);
-
 void canvasShowTime(bool clear, RTC_type *rtc);
+void canvasShowMenu(void);
+void canvasShowTune(DispParam *dp);
 void canvasShowSpectrum(bool clear, SpectrumData *spData, uint8_t step, uint8_t oft, uint8_t width);
 void canvasShowTuner(DispTuner *dt, const tFont *fmFont);
-void canvasShowMenu(void);
 
 #ifdef __cplusplus
 }

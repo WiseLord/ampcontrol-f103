@@ -343,9 +343,7 @@ void screenShowBrightness(void)
     dp.step = 1 * 8;
     dp.icon = ICON_BRIGHTNESS;
 
-    if (canvas->showParam) {
-        canvas->showParam(&dp);
-    }
+    canvasShowTune(&dp);
 }
 
 void screenShowInput(void)
@@ -378,9 +376,7 @@ void screenShowAudioParam(void)
     dp.max = grid ? grid->max : 0;
     dp.step = grid ? grid->step : 0;
 
-    if (canvas->showParam) {
-        canvas->showParam(&dp);
-    }
+    canvasShowTune(&dp);
 }
 
 void screenShowTuner(void)

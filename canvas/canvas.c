@@ -35,7 +35,7 @@ void canvasInit(Canvas **value)
     canvas = *value;
 }
 
-void canvasDrawBar(int16_t value, int16_t min, int16_t max)
+static void canvasDrawBar(int16_t value, int16_t min, int16_t max)
 {
     const int16_t sc = canvas->par->bar.sc;         // Scale count
     const uint8_t sw = canvas->par->bar.sw;         // Scale width
@@ -117,6 +117,101 @@ static void canvasDrawTm(RTC_type *rtc, uint8_t tm)
     glcdSetFontBgColor(LCD_COLOR_BLACK);
 }
 
+static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
+{
+    int16_t fIh = fontItem->chars[0].image->height;
+
+    Menu *menu = menuGet();
+    uint8_t items = menu->dispSize;
+
+    uint16_t width = canvas->width;
+    MenuIdx menuIdx = menu->list[idx];
+    char *name = menuGetName(menuIdx);
+    uint8_t active = (menu->active == menu->list[idx]);
+
+    const uint8_t ih = fIh + 4; // Menu item height
+    uint16_t y_pos = canvas->height - ih * (items - idx + menu->dispOft);
+
+    // Draw selection frame
+    glcdDrawFrame(0, y_pos, width - 1, y_pos + ih - 1, active ? LCD_COLOR_WHITE : canvas->color);
+
+    // Draw menu name
+    glcdSetFont(fontItem);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+
+    glcdSetXY(4, y_pos + 2);
+    if (menu->list[idx] != MENU_NULL) {
+        glcdWriteString("  ");
+    } else {
+        glcdWriteString("< ");
+    }
+    glcdWriteString(name);
+
+    // Draw menu value
+    uint16_t x = canvas->glcd->x;
+    glcdSetXY(width - 2, y_pos + 2);
+    glcdSetFontAlign(FONT_ALIGN_RIGHT);
+
+    // Inverse value color if selected
+    uint16_t color = canvas->glcd->font.color;
+    uint16_t bgColor = canvas->glcd->font.bgColor;
+    if (active && menu->selected) {
+        glcdSetFontColor(bgColor);
+        glcdSetFontBgColor(color);
+    }
+    uint16_t strLen = glcdWriteStringFramed(menuGetValueStr(menuIdx), 1);
+    glcdSetFontColor(color);
+    glcdSetFontBgColor(bgColor);
+
+    // Fill space between name and value
+    glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->color);
+}
+
+static void canvasDrawSpectrumColumn(bool clear, uint16_t x, uint16_t y, uint8_t w, uint16_t h,
+                                     uint8_t s, uint8_t os, uint8_t p, uint8_t op)
+{
+    if (s == 0) {
+        s = 1;
+    }
+    if (s >= h) {
+        s = h - 1;
+    }
+    if (p >= h) {
+        p = h - 1;
+    }
+    if (os >= h) {
+        os = h - 1;
+    }
+    if (op >= h) {
+        op = h - 1;
+    }
+
+    if (clear) {
+        glcdDrawRect(x, y + h - s, w, s, COLOR_SPECTRUM_COLUMN);
+
+        if (p > s) {
+            glcdDrawRect(x, y + h - p, w, 1, COLOR_SPECTRUM_PEAK);
+        }
+        return;
+    }
+
+    if (s > os) {
+        glcdDrawRect(x, y + h - s, w, s - os, COLOR_SPECTRUM_COLUMN);
+
+    } else if (s < os) {
+        glcdDrawRect(x, y + h - os, w, os - s, canvas->color);
+    }
+
+    if (p > s) {
+        glcdDrawRect(x, y + h - p, w, 1, COLOR_SPECTRUM_PEAK);
+    }
+    if (op > p && op > s) {
+        glcdDrawRect(x, y + h - op, w, 1, canvas->color);
+    }
+
+}
+
+
 void canvasShowTime(bool clear, RTC_type *rtc)
 {
     (void)clear;
@@ -180,143 +275,6 @@ void canvasShowTime(bool clear, RTC_type *rtc)
     glcdWriteString(wdayLabel);
 }
 
-static void canvasDrawSpectrumColumn(bool clear, uint16_t x, uint16_t y, uint8_t w, uint16_t h,
-                                     uint8_t s, uint8_t os, uint8_t p, uint8_t op)
-{
-    if (s == 0) {
-        s = 1;
-    }
-    if (s >= h) {
-        s = h - 1;
-    }
-    if (p >= h) {
-        p = h - 1;
-    }
-    if (os >= h) {
-        os = h - 1;
-    }
-    if (op >= h) {
-        op = h - 1;
-    }
-
-    if (clear) {
-        glcdDrawRect(x, y + h - s, w, s, COLOR_SPECTRUM_COLUMN);
-
-        if (p > s) {
-            glcdDrawRect(x, y + h - p, w, 1, COLOR_SPECTRUM_PEAK);
-        }
-        return;
-    }
-
-    if (s > os) {
-        glcdDrawRect(x, y + h - s, w, s - os, COLOR_SPECTRUM_COLUMN);
-
-    } else if (s < os) {
-        glcdDrawRect(x, y + h - os, w, os - s, canvas->color);
-    }
-
-    if (p > s) {
-        glcdDrawRect(x, y + h - p, w, 1, COLOR_SPECTRUM_PEAK);
-    }
-    if (op > p && op > s) {
-        glcdDrawRect(x, y + h - op, w, 1, canvas->color);
-    }
-
-}
-
-void canvasShowSpectrum(bool clear, SpectrumData *spData, uint8_t step, uint8_t oft, uint8_t width)
-{
-    const uint16_t height = canvas->height / 2;                 // Height of spectrum column
-    const uint16_t num = (canvas->width + width - 1) / step;    // Number of spectrum columns
-
-    for (uint8_t chan = SP_CHAN_LEFT; chan < SP_CHAN_END; chan++) {
-        uint8_t *show = spData[chan].show;
-        uint8_t *peak = spData[chan].peak;
-        uint8_t *old_show = spData[chan].old_show;
-        uint8_t *old_peak = spData[chan].old_peak;
-
-        for (uint16_t col = 0; col < num; col++) {
-            uint16_t x = oft + col * step;
-            uint16_t y = chan * height;
-            canvasDrawSpectrumColumn(clear, x, y, width, height,
-                                     *show++, *old_show++, *peak++, *old_peak++);
-        }
-    }
-}
-
-
-static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
-{
-    int16_t fIh = fontItem->chars[0].image->height;
-
-    Menu *menu = menuGet();
-    uint8_t items = menu->dispSize;
-
-    uint16_t width = canvas->width;
-    MenuIdx menuIdx = menu->list[idx];
-    char *name = menuGetName(menuIdx);
-    uint8_t active = (menu->active == menu->list[idx]);
-
-    const uint8_t ih = fIh + 4; // Menu item height
-    uint16_t y_pos = canvas->height - ih * (items - idx + menu->dispOft);
-
-    // Draw selection frame
-    glcdDrawFrame(0, y_pos, width - 1, y_pos + ih - 1, active ? LCD_COLOR_WHITE : canvas->color);
-
-    // Draw menu name
-    glcdSetFont(fontItem);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-
-    glcdSetXY(4, y_pos + 2);
-    if (menu->list[idx] != MENU_NULL) {
-        glcdWriteString("  ");
-    } else {
-        glcdWriteString("< ");
-    }
-    glcdWriteString(name);
-
-    // Draw menu value
-    uint16_t x = canvas->glcd->x;
-    glcdSetXY(width - 2, y_pos + 2);
-    glcdSetFontAlign(FONT_ALIGN_RIGHT);
-
-    // Inverse value color if selected
-    uint16_t color = canvas->glcd->font.color;
-    uint16_t bgColor = canvas->glcd->font.bgColor;
-    if (active && menu->selected) {
-        glcdSetFontColor(bgColor);
-        glcdSetFontBgColor(color);
-    }
-    uint16_t strLen = glcdWriteStringFramed(menuGetValueStr(menuIdx), 1);
-    glcdSetFontColor(color);
-    glcdSetFontBgColor(bgColor);
-
-    // Fill space between name and value
-    glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->color);
-}
-
-void canvasShowTuner(DispTuner *dt, const tFont *fmFont)
-{
-    Tuner *tuner = dt->tuner;
-    uint16_t freq = tunerGet()->freq;
-    uint16_t freqMin = tuner->par.fMin;
-    uint16_t freqMax = tuner->par.fMax;
-
-    glcdSetFont(fmFont);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetXY(2, 0);
-
-    glcdWriteString("FM ");
-
-    canvasDrawBar(freq, freqMin, freqMax);
-
-    glcdWriteNum(freq / 100, 3, ' ', 10);
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteChar('.');
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteNum(freq % 100, 2, '0', 10);
-}
-
 void canvasShowMenu(void)
 {
     Menu *menu = menuGet();
@@ -342,4 +300,64 @@ void canvasShowMenu(void)
             canvasDrawMenuItem(idx, canvas->par->menu.menuFont);
         }
     }
+}
+
+void canvasShowTune(DispParam *dp)
+{
+    glcdSetFont(canvas->par->tune.lblFont);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+
+    glcdSetXY(0, 0);
+    glcdWriteString((char *)dp->label);
+
+    canvasDrawBar(dp->value, dp->min, dp->max);
+    glcdSetXY(canvas->width, canvas->par->tune.valY);
+    glcdSetFontAlign(FONT_ALIGN_RIGHT);
+    glcdSetFont(canvas->par->tune.valFont);
+    glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
+
+    glcdSetXY(canvas->width - 48, 0);
+    glcdWriteIcon(dp->icon, canvas->par->tune.iconSet, canvas->par->tune.iconColor, canvas->color);
+}
+
+void canvasShowSpectrum(bool clear, SpectrumData *spData, uint8_t step, uint8_t oft, uint8_t width)
+{
+    const uint16_t height = canvas->height / 2;                 // Height of spectrum column
+    const uint16_t num = (canvas->width + width - 1) / step;    // Number of spectrum columns
+
+    for (uint8_t chan = SP_CHAN_LEFT; chan < SP_CHAN_END; chan++) {
+        uint8_t *show = spData[chan].show;
+        uint8_t *peak = spData[chan].peak;
+        uint8_t *old_show = spData[chan].old_show;
+        uint8_t *old_peak = spData[chan].old_peak;
+
+        for (uint16_t col = 0; col < num; col++) {
+            uint16_t x = oft + col * step;
+            uint16_t y = chan * height;
+            canvasDrawSpectrumColumn(clear, x, y, width, height,
+                                     *show++, *old_show++, *peak++, *old_peak++);
+        }
+    }
+}
+
+void canvasShowTuner(DispTuner *dt, const tFont *fmFont)
+{
+    Tuner *tuner = dt->tuner;
+    uint16_t freq = tunerGet()->freq;
+    uint16_t freqMin = tuner->par.fMin;
+    uint16_t freqMax = tuner->par.fMax;
+
+    glcdSetFont(fmFont);
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetXY(2, 0);
+
+    glcdWriteString("FM ");
+
+    canvasDrawBar(freq, freqMin, freqMax);
+
+    glcdWriteNum(freq / 100, 3, ' ', 10);
+    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteChar('.');
+    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteNum(freq % 100, 2, '0', 10);
 }
