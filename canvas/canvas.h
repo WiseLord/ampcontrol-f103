@@ -56,6 +56,11 @@ typedef struct {
         const tFont *iconSet;       // Tune icon set
         uint16_t iconColor;         // Tune icon color
     } tune;
+    struct {
+        uint8_t step;               // Step in pixels between spectrum columns
+        uint8_t oft;                // Offset of visible part of the column
+        uint8_t width;              // Width of visible part of the column
+    } sp;
 } CanvasParam;
 
 typedef struct {
@@ -63,7 +68,6 @@ typedef struct {
     uint16_t width;
     uint16_t height;
 
-    void (*showSpectrum)(bool clear, SpectrumData *spData);
     void (*showTuner)(DispTuner *dt);
 
     uint16_t color;
@@ -88,7 +92,7 @@ void canvasInit(Canvas **canvas);
 void canvasShowTime(bool clear, RTC_type *rtc);
 void canvasShowMenu(void);
 void canvasShowTune(DispParam *dp);
-void canvasShowSpectrum(bool clear, SpectrumData *spData, uint8_t step, uint8_t oft, uint8_t width);
+void canvasShowSpectrum(bool clear, SpectrumData *spData);
 void canvasShowTuner(DispTuner *dt, const tFont *fmFont);
 
 #ifdef __cplusplus

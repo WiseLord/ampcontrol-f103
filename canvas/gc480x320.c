@@ -1,6 +1,5 @@
 #include "canvas.h"
 
-static void showSpectrum(bool clear, SpectrumData *spData);
 static void showTuner(DispTuner *dt);
 
 static const CanvasParam canvasParam;
@@ -8,7 +7,6 @@ static const CanvasParam canvasParam;
 static Canvas canvas = {
     .width = 480,
     .height = 320,
-    .showSpectrum = showSpectrum,
     .showTuner = showTuner,
 
     .par = &canvasParam,
@@ -37,22 +35,16 @@ static const CanvasParam canvasParam = {
     .tune.valY = 140,
     .tune.iconSet = &iconsamp48,
     .tune.iconColor = LCD_COLOR_AQUA,
+
+    .sp.step = 5,
+    .sp.oft = 1,
+    .sp.width = 3,
 };
 
 void gc480x320Init(Canvas **value)
 {
     *value = &canvas;
     menuGet()->dispSize = canvas.par->menu.itemCnt;
-}
-
-static void showSpectrum(bool clear, SpectrumData *spData)
-{
-    const uint8_t step = 5;     // Step in pixels between spectrum columns
-    const uint8_t oft = 1;      // Offset of spectrum column inside step
-
-    const uint8_t width = 3;    // Width of spectrum column
-
-    canvasShowSpectrum(clear, spData, step, oft, width);
 }
 
 static void showTuner(DispTuner *dt)

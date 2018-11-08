@@ -321,12 +321,10 @@ void screenShowSpectrum(bool clear)
     }
 
     if (spReady) {
-        if (canvas->showSpectrum) {
-            improveSpectrum(&spData[SP_CHAN_LEFT], canvas->height / 2);
-            improveSpectrum(&spData[SP_CHAN_RIGHT], canvas->height / 2);
-            canvas->showSpectrum(spClear, spData);
-            spClear = false;
-        }
+        improveSpectrum(&spData[SP_CHAN_LEFT], canvas->height / 2);
+        improveSpectrum(&spData[SP_CHAN_RIGHT], canvas->height / 2);
+        canvasShowSpectrum(spClear, spData);
+        spClear = false;
         spReady = 0;
     }
 }

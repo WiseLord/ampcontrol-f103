@@ -279,11 +279,11 @@ void canvasShowMenu(void)
 {
     Menu *menu = menuGet();
 
-    int16_t fHh = canvas->par->menu.headFont->chars[0].image->height;
-    int16_t fIh = canvas->par->menu.menuFont->chars[0].image->height;
-    uint8_t items = menu->dispSize;
+    const int16_t fHh = canvas->par->menu.headFont->chars[0].image->height;
+    const int16_t fIh = canvas->par->menu.menuFont->chars[0].image->height;
+    const uint8_t items = menu->dispSize;
 
-    int16_t dividerPos = (canvas->height - (fIh + 4) * items + fHh) / 2;
+    const int16_t dividerPos = (canvas->height - (fIh + 4) * items + fHh) / 2;
 
     // Show header
     char *parentName = menuGetName(menu->parent);
@@ -320,8 +320,12 @@ void canvasShowTune(DispParam *dp)
     glcdWriteIcon(dp->icon, canvas->par->tune.iconSet, canvas->par->tune.iconColor, canvas->color);
 }
 
-void canvasShowSpectrum(bool clear, SpectrumData *spData, uint8_t step, uint8_t oft, uint8_t width)
+void canvasShowSpectrum(bool clear, SpectrumData *spData)
 {
+    const uint8_t step = canvas->par->sp.step;
+    const uint8_t oft = canvas->par->sp.oft;
+    const uint8_t width = canvas->par->sp.width;
+
     const uint16_t height = canvas->height / 2;                 // Height of spectrum column
     const uint16_t num = (canvas->width + width - 1) / step;    // Number of spectrum columns
 
