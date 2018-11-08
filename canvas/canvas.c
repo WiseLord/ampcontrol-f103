@@ -345,12 +345,11 @@ void canvasShowSpectrum(bool clear, SpectrumData *spData)
     }
 }
 
-void canvasShowTuner(DispTuner *dt)
+void canvasShowTuner(Tuner *tuner)
 {
     const tFont *fmFont = canvas->par->tuner.lblFont;
 
-    Tuner *tuner = dt->tuner;
-    uint16_t freq = tunerGet()->freq;
+    uint16_t freq = tuner->freq;
     uint16_t freqMin = tuner->par.fMin;
     uint16_t freqMax = tuner->par.fMax;
 

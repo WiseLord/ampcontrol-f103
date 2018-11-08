@@ -87,9 +87,7 @@ void screenShowTime(bool clear)
 
     rtc.etm = RTC_HOUR;
 
-    if (canvas->showTime) {
-        canvas->showTime(clear, &rtc);
-    }
+    canvasShowTime(clear, &rtc);
 }
 
 void screenShowSpectrum(bool clear)
@@ -101,9 +99,7 @@ void screenShowSpectrum(bool clear)
         spData[SP_CHAN_RIGHT].peak[i] = N_DB - i;
     }
 
-    if (canvas->showSpectrum) {
-        canvas->showSpectrum(clear, spData);
-    }
+    canvasShowSpectrum(clear, spData);
 }
 
 void screenShowBrightness(void)
@@ -118,9 +114,7 @@ void screenShowBrightness(void)
     dp.step = 1 * 8;
     dp.icon = ICON_BRIGHTNESS;
 
-    if (canvas->showParam) {
-        canvas->showParam(&dp);
-    }
+    canvasShowTune(&dp);
 }
 
 void screenShowInput(void)
@@ -154,23 +148,18 @@ void screenShowAudioParam(void)
     dp.max = 0;
     dp.step = 1;
 
-    if (canvas->showParam) {
-        canvas->showParam(&dp);
-    }
+    canvasShowTune(&dp);
 }
 
 void screenShowTuner(void)
 {
-    DispTuner dt;
-    dt.tuner = tunerGet();
+    Tuner *tuner = tunerGet();
 
-    dt.tuner->freq = 10120;
-    dt.tuner->par.fMin = 8700;
-    dt.tuner->par.fMax = 10800;
+    tuner->freq = 10120;
+    tuner->par.fMin = 8700;
+    tuner->par.fMax = 10800;
 
-    if (canvas->showTuner) {
-        canvas->showTuner(&dt);
-    }
+    canvasShowTuner(tuner);
 }
 
 void screenShowMenu(void)
@@ -182,7 +171,5 @@ void screenShowMenu(void)
     menuChange(+1);
     menuSetActive(MENU_TUNER_STEP);
 
-    if (canvas->showMenu) {
-        canvas->showMenu();
-    }
+    canvasShowMenu();
 }

@@ -379,15 +379,14 @@ void screenShowAudioParam(void)
 
 void screenShowTuner(void)
 {
-    DispTuner dt;
-    dt.tuner = tunerGet();
+    Tuner *tuner = tunerGet();
 
     if (swTimGetTunerPoll() == 0) {
         tunerUpdateStatus();
         swTimSetTunerPoll(100);
     }
 
-    canvasShowTuner(&dt);
+    canvasShowTuner(tuner);
 }
 
 void screenShowMenu(void)

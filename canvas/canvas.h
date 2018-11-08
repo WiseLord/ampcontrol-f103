@@ -25,10 +25,6 @@ typedef struct {
 } DispParam;
 
 typedef struct {
-    Tuner *tuner;
-} DispTuner;
-
-typedef struct {
     struct {
         const tFont *hmsFont;       // Font to draw hours/minutes/seconds
         const tFont *dmyFont;       // Font to draw day/month/year
@@ -38,11 +34,11 @@ typedef struct {
         uint8_t wdY;                // Y position of weekday
     } time;
     struct {
-        int16_t sc;
-        uint8_t sw;
-        uint16_t pos;
-        uint8_t half;
-        uint8_t middle;
+        int16_t sc;                 // Count of bar lines
+        uint8_t sw;                 // Width of bar line
+        uint16_t pos;               // Y pos of the bar
+        uint8_t half;               // Height of upper/lower bar part
+        uint8_t middle;             // Height of middle bar part
     } bar;
     struct {
         const tFont *headFont;      // Font to draw menu header
@@ -95,7 +91,7 @@ void canvasShowTime(bool clear, RTC_type *rtc);
 void canvasShowMenu(void);
 void canvasShowTune(DispParam *dp);
 void canvasShowSpectrum(bool clear, SpectrumData *spData);
-void canvasShowTuner(DispTuner *dt);
+void canvasShowTuner(Tuner *tuner);
 
 #ifdef __cplusplus
 }
