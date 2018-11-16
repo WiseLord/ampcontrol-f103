@@ -36,7 +36,8 @@ typedef struct {
     struct {
         int16_t sc;                 // Count of bar lines
         uint8_t sw;                 // Width of bar line
-        uint16_t pos;               // Y pos of the bar
+        uint16_t barY;              // Y pos of the bar
+        uint16_t barW;              // Width of the bar
         uint8_t half;               // Height of upper/lower bar part
         uint8_t middle;             // Height of middle bar part
     } bar;

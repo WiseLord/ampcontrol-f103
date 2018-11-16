@@ -40,9 +40,10 @@ static void canvasDrawBar(int16_t value, int16_t min, int16_t max)
 {
     const int16_t sc = canvas->par->bar.sc;         // Scale count
     const uint8_t sw = canvas->par->bar.sw;         // Scale width
-    const uint16_t barPos = canvas->par->bar.pos;
+    const uint16_t barPos = canvas->par->bar.barY;
     const uint8_t barHalf = canvas->par->bar.half;
     const uint8_t barMiddle = canvas->par->bar.middle;
+    const uint16_t width = canvas->par->bar.barW;
 
     if (min + max) { // Non-symmectic scale => rescale to 0..sl
         value = sc * (value - min) / (max - min);
@@ -66,11 +67,9 @@ static void canvasDrawBar(int16_t value, int16_t min, int16_t max)
             }
         }
 
-        uint16_t width = canvas->width;
-
-        glcdDrawRect(i * (width / sc) + 1, barPos, sw, barHalf, color);
-        glcdDrawRect(i * (width / sc) + 1, barPos + barHalf, sw, barMiddle, LCD_COLOR_WHITE);
-        glcdDrawRect(i * (width / sc) + 1, barPos + barHalf + barMiddle, sw, barHalf, color);
+        glcdDrawRect(i * (width / sc), barPos, sw, barHalf, color);
+        glcdDrawRect(i * (width / sc), barPos + barHalf, sw, barMiddle, LCD_COLOR_WHITE);
+        glcdDrawRect(i * (width / sc), barPos + barHalf + barMiddle, sw, barHalf, color);
     }
 }
 

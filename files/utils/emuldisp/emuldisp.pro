@@ -37,6 +37,7 @@ SOURCES += \
     ../../../display/fonts/font-terminus-dig-80.c \
     ../../../display/fonts/font-terminus-dig-96.c \
     ../../../display/fonts/font-terminus-dig-120.c \
+	../../../display/fonts/font-terminus-mod-18x3.c \
 	../../../display/fonts/font-terminus-mod-22x2.c \
 	../../../display/fonts/font-terminus-mod-24x2.c \
 	../../../display/fonts/font-terminus-mod-32x2.c \

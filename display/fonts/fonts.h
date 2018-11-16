@@ -57,6 +57,7 @@ extern const tFont fontterminus28b;
 extern const tFont fontterminus32;
 extern const tFont fontterminus32b;
 // Modified fonts - full character set
+extern const tFont fontterminusmod18x3;
 extern const tFont fontterminusmod22x2;
 extern const tFont fontterminusmod24x2;
 extern const tFont fontterminusmod32x2;

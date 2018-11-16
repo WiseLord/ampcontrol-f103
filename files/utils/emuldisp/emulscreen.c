@@ -146,7 +146,7 @@ void screenShowAudioParam(void)
 
     dp.min = -79;
     dp.max = 0;
-    dp.step = 1;
+    dp.step = 1 * 8;
 
     canvasShowTune(&dp);
 }

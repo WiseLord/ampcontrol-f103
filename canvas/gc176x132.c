@@ -10,7 +10,8 @@ static const CanvasParam canvasParam = {
 
     .bar.sc = 88,
     .bar.sw = 1,
-    .bar.pos = 36,
+    .bar.barY = 36,
+    .bar.barW = 176,
     .bar.half = 6,
     .bar.middle = 2,
 
