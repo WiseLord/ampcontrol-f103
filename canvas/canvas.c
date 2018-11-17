@@ -7,33 +7,42 @@ Canvas *canvas;
 #define COLOR_SPECTRUM_COLUMN   LCD_COLOR_ELECTRIC_BLUE
 #define COLOR_SPECTRUM_PEAK     LCD_COLOR_WITCH_HAZE
 
-void canvasInit(Canvas **value)
+void canvasInit(void)
 {
 #if defined (_KS0108A) || defined(_KS0108B) || defined (_ST7920) || defined (_SSD1306)
-    gm128x64Init(value);
+    gm128x64Init(&canvas);
 #elif defined (_ILI9163) || defined (_ST7735)
-    gc160x128Init(value);
+    gc160x128Init(&canvas);
 #elif defined (_LS020) || defined (_LPH9157) || defined (_SSD1286A)
-    gc176x132Init(value);
+    gc176x132Init(&canvas);
 #elif defined (_HX8340) || defined (_ILI9225)
-    gc220x176Init(value);
+    gc220x176Init(&canvas);
 #elif defined (_ILI9320) || defined (_ILI9341) || defined (_S6D0139) || defined (_SPFD5408) || defined (_MC2PA8201)
-    gc320x240Init(value);
+    gc320x240Init(&canvas);
 #elif defined (_ILI9327) || defined (_ST7793)
-    gc400x240Init(value);
+    gc400x240Init(&canvas);
 #elif defined (_ILI9481) || defined (_R61581)
-    gc480x320Init(value);
+    gc480x320Init(&canvas);
 #else
 #ifdef EMUL_DISP
-    emulCanvasInit(value);
+    emulCanvasInit(&canvas);
 #else
 #error "Unsupported display driver"
 #endif
 #endif
 
-    canvas = *value;
+    glcdInit(&canvas->glcd);
+
     canvas->color = LCD_COLOR_BLACK;
     menuGet()->dispSize = canvas->par->menu.itemCnt;
+}
+
+void canvasClear(void)
+{
+    glcdDrawRect(0, 0, canvas->width, canvas->height, canvas->color);
+
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetFontBgColor(canvas->color);
 }
 
 static void canvasDrawBar(int16_t value, int16_t min, int16_t max)
@@ -167,7 +176,38 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->color);
 }
 
-static void canvasDrawSpectrumColumn(bool clear, uint16_t x, uint16_t y, uint8_t w, uint16_t h,
+static void canvasImproveSpectrum(SpChan *chan, uint16_t height)
+{
+    for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
+        chan->raw[i] = height * chan->raw[i] / N_DB;
+
+        chan->old_show[i] = chan->show[i];
+        if (chan->raw[i] < chan->show[i]) {
+            if (chan->show[i] >= chan->fall[i]) {
+                chan->show[i] -= chan->fall[i];
+                chan->fall[i]++;
+            } else {
+                chan->show[i] = 0;
+            }
+        }
+
+        if (chan->raw[i] > chan->show[i]) {
+            chan->show[i] = chan->raw[i];
+            chan->fall[i] = 1;
+        }
+
+        chan->old_peak[i] = chan->peak[i];
+        if (chan->peak[i] <= chan->raw[i]) {
+            chan->peak[i] = chan->raw[i] + 1;
+        } else {
+            if (chan->peak[i]) {
+                chan->peak[i]--;
+            }
+        }
+    }
+}
+
+static void canvasDrawSpectrumColumn(bool redraw, uint16_t x, uint16_t y, uint8_t w, uint16_t h,
                                      uint8_t s, uint8_t os, uint8_t p, uint8_t op)
 {
     if (s == 0) {
@@ -186,7 +226,7 @@ static void canvasDrawSpectrumColumn(bool clear, uint16_t x, uint16_t y, uint8_t
         op = h - 1;
     }
 
-    if (clear) {
+    if (redraw) {
         glcdDrawRect(x, y + h - s, w, s, COLOR_SPECTRUM_COLUMN);
 
         if (p > s) {
@@ -211,6 +251,27 @@ static void canvasDrawSpectrumColumn(bool clear, uint16_t x, uint16_t y, uint8_t
 
 }
 
+static void canvasDrawSpectrumChan(uint8_t chan, Spectrum *sp, uint16_t y, uint16_t height)
+{
+    const uint8_t step = canvas->par->sp.step;
+    const uint8_t oft = canvas->par->sp.oft;
+    const uint8_t width = canvas->par->sp.width;
+
+    const uint16_t num = (canvas->width + width - 1) / step;    // Number of spectrum columns
+
+    canvasImproveSpectrum(&sp->chan[chan], canvas->height / 2);
+
+    uint8_t *show = sp->chan[chan].show;
+    uint8_t *peak = sp->chan[chan].peak;
+    uint8_t *old_show = sp->chan[chan].old_show;
+    uint8_t *old_peak = sp->chan[chan].old_peak;
+
+    for (uint16_t col = 0; col < num; col++) {
+        uint16_t x = oft + col * step;
+        canvasDrawSpectrumColumn(sp->redraw, x, y, width, height,
+                                 *show++, *old_show++, *peak++, *old_peak++);
+    }
+}
 
 void canvasShowTime(bool clear, RTC_type *rtc)
 {
@@ -225,7 +286,8 @@ void canvasShowTime(bool clear, RTC_type *rtc)
     zeroPos = glcdFontSymbolPos('0');
     ltspPos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
     timeLen = 6 * (canvas->par->time.hmsFont->chars[zeroPos].image->width);    // 6 digits HHMMSS
-    timeLen += 15 * (canvas->par->time.hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
+    timeLen += 15 *
+               (canvas->par->time.hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
     glcdSetXY((canvas->width - timeLen) / 2, canvas->par->time.hmsY);
 
     canvasDrawTm(rtc, RTC_HOUR);
@@ -243,7 +305,8 @@ void canvasShowTime(bool clear, RTC_type *rtc)
     zeroPos = glcdFontSymbolPos('0');
     ltspPos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
     timeLen = 8 * (canvas->par->time.dmyFont->chars[zeroPos].image->width);    // 8 digits HHMMSS
-    timeLen += 17 * (canvas->par->time.dmyFont->chars[ltspPos].image->width);  // 15 letter spaces + 2 '.'
+    timeLen += 17 *
+               (canvas->par->time.dmyFont->chars[ltspPos].image->width);  // 15 letter spaces + 2 '.'
     glcdSetXY((canvas->width - timeLen) / 2, canvas->par->time.dmyY);
 
     canvasDrawTm(rtc, RTC_DATE);
@@ -302,48 +365,65 @@ void canvasShowMenu(void)
     }
 }
 
-void canvasShowTune(DispParam *dp)
+void canvasShowTune(bool clear, DispParam *dp, Spectrum *sp)
 {
     const tFont *iconSet = canvas->par->tune.iconSet;
+    static int16_t valueOld;
 
-    glcdSetFont(canvas->par->tune.lblFont);
-    glcdSetFontColor(LCD_COLOR_WHITE);
+    if (clear) {
+        // Label
+        glcdSetFont(canvas->par->tune.lblFont);
+        glcdSetFontColor(LCD_COLOR_WHITE);
+        glcdSetXY(0, 0);
+        glcdWriteString((char *)dp->label);
+        // Icon
+        glcdSetXY(canvas->width - iconSet->chars[0].image->width, 0);
+        glcdWriteIcon(dp->icon, iconSet, canvas->par->tune.iconColor, canvas->color);
+    }
+    if (clear || valueOld != dp->value) {
+        // Bar
+        canvasDrawBar(dp->value, dp->min, dp->max);
+        // Value
+        glcdSetXY(canvas->width, canvas->par->tune.valY);
+        glcdSetFontAlign(FONT_ALIGN_RIGHT);
+        glcdSetFont(canvas->par->tune.valFont);
+        glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
+    }
+    valueOld = dp->value;
 
-    glcdSetXY(0, 0);
-    glcdWriteString((char *)dp->label);
+    glcdDrawLine(0, canvas->height / 2, canvas->width - 1, canvas->height / 2, LCD_COLOR_WHITE);
 
-    canvasDrawBar(dp->value, dp->min, dp->max);
-    glcdSetXY(canvas->width, canvas->par->tune.valY);
-    glcdSetFontAlign(FONT_ALIGN_RIGHT);
-    glcdSetFont(canvas->par->tune.valFont);
-    glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
+    // Spectrum
+    if (!sp->ready) {
+        return;
+    }
 
-    glcdSetXY(canvas->width - iconSet->chars[0].image->width, 0);
-    glcdWriteIcon(dp->icon, iconSet, canvas->par->tune.iconColor, canvas->color);
+    const uint8_t chan = SP_CHAN_LEFT;
+    const uint16_t height = canvas->height / 2;
+
+    uint16_t y = canvas->height / 2;
+
+    canvasDrawSpectrumChan(chan, sp, y, height);
+
+    sp->redraw = false;
+    sp->ready = false;
 }
 
-void canvasShowSpectrum(bool clear, SpectrumData *spData)
+void canvasShowSpectrum(bool clear, Spectrum *sp)
 {
-    const uint8_t step = canvas->par->sp.step;
-    const uint8_t oft = canvas->par->sp.oft;
-    const uint8_t width = canvas->par->sp.width;
+    if (!sp->ready) {
+        return;
+    }
 
-    const uint16_t height = canvas->height / 2;                 // Height of spectrum column
-    const uint16_t num = (canvas->width + width - 1) / step;    // Number of spectrum columns
+    const uint16_t height = canvas->height / 2;
 
     for (uint8_t chan = SP_CHAN_LEFT; chan < SP_CHAN_END; chan++) {
-        uint8_t *show = spData[chan].show;
-        uint8_t *peak = spData[chan].peak;
-        uint8_t *old_show = spData[chan].old_show;
-        uint8_t *old_peak = spData[chan].old_peak;
-
-        for (uint16_t col = 0; col < num; col++) {
-            uint16_t x = oft + col * step;
-            uint16_t y = chan * height;
-            canvasDrawSpectrumColumn(clear, x, y, width, height,
-                                     *show++, *old_show++, *peak++, *old_peak++);
-        }
+        uint16_t y = chan * height;
+        canvasDrawSpectrumChan(chan, sp, y, height);
     }
+
+    sp->redraw = false;
+    sp->ready = false;
 }
 
 void canvasShowTuner(Tuner *tuner)

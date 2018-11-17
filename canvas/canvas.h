@@ -86,12 +86,13 @@ void gm128x64Init(Canvas **driver);
 void emulCanvasInit(Canvas **driver);
 #endif
 
-void canvasInit(Canvas **canvas);
+void canvasInit(void);
+void canvasClear(void);
 
 void canvasShowTime(bool clear, RTC_type *rtc);
 void canvasShowMenu(void);
-void canvasShowTune(DispParam *dp);
-void canvasShowSpectrum(bool clear, SpectrumData *spData);
+void canvasShowTune(bool clear, DispParam *dp, Spectrum *sp);
+void canvasShowSpectrum(bool clear, Spectrum *spData);
 void canvasShowTuner(Tuner *tuner);
 
 #ifdef __cplusplus

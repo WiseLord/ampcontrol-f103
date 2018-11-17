@@ -10,7 +10,7 @@ static const CanvasParam canvasParam = {
 
     .bar.sc = 60,
     .bar.sw = 2,
-    .bar.barY = 64,
+    .bar.barY = 72,
     .bar.barW = 240,
     .bar.half = 11,
     .bar.middle = 3,
@@ -21,7 +21,7 @@ static const CanvasParam canvasParam = {
 
     .tune.lblFont = &fontterminusmod18x3,
     .tune.valFont = &fontterminusmod18x3,
-    .tune.valY = 48,
+    .tune.valY = 56,
     .tune.iconSet = &iconsamp48,
     .tune.iconColor = LCD_COLOR_WHITE,
 

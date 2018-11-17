@@ -10,49 +10,15 @@
 #include "spectrum.h"
 #include "timers.h"
 
-static Canvas *canvas;
-
 static Screen screen = SCREEN_STANDBY;
 static Screen screenDefault = SCREEN_SPECTRUM;
 static ScreenParam scrPar;
 
-static SpectrumData spData[SP_CHAN_END];
-static uint8_t spReady = 0;
+static Spectrum spectrum;
 
 // TODO: Read from backup memory
 static int8_t brStby;
 static int8_t brWork;
-
-static void improveSpectrum(SpectrumData *sd, uint16_t height)
-{
-    for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
-        sd->data[i] = height * sd->data[i] / N_DB;
-
-        sd->old_show[i] = sd->show[i];
-        if (sd->data[i] < sd->show[i]) {
-            if (sd->show[i] >= sd->fall[i]) {
-                sd->show[i] -= sd->fall[i];
-                sd->fall[i]++;
-            } else {
-                sd->show[i] = 0;
-            }
-        }
-
-        if (sd->data[i] > sd->show[i]) {
-            sd->show[i] = sd->data[i];
-            sd->fall[i] = 1;
-        }
-
-        sd->old_peak[i] = sd->peak[i];
-        if (sd->peak[i] <= sd->data[i]) {
-            sd->peak[i] = sd->data[i] + 1;
-        } else {
-            if (sd->peak[i]) {
-                sd->peak[i]--;
-            }
-        }
-    }
-}
 
 static bool screenCheckClear(void)
 {
@@ -163,33 +129,11 @@ void screenSaveSettings(void)
 void screenInit(void)
 {
     labelsInit();
-
-    Glcd *glcd;
-
-    glcdInit(&glcd);
-    canvasInit(&canvas);
-    canvas->glcd = glcd;
-
-    screenClear();
-
+    canvasInit();
+    canvasClear();
     screenReadSettings();
-
     dispdrvSetBrightness(brStby);
 }
-
-void screenClear(void)
-{
-    glcdDrawRect(0, 0, canvas->width, canvas->height, canvas->color);
-
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetFontBgColor(canvas->color);
-}
-
-void screenUpdate(void)
-{
-    glcdUpdate();
-}
-
 
 void screenSet(Screen value)
 {
@@ -263,13 +207,13 @@ void screenShow(void)
     // Get new spectrum data
     if (swTimGetSpConvert() <= 0) {
         swTimSetSpConvert(20);
-        spGetADC(spData[SP_CHAN_LEFT].data, spData[SP_CHAN_RIGHT].data);
-
-        spReady = 1;
+        spGetADC(spectrum.chan[SP_CHAN_LEFT].raw, spectrum.chan[SP_CHAN_RIGHT].raw);
+        spectrum.ready = true;
     }
 
     if (clear) {
-        screenClear();
+        canvasClear();
+        spectrum.redraw = true;
     }
 
     switch (screen) {
@@ -299,7 +243,7 @@ void screenShow(void)
         break;
     }
 
-    screenUpdate();
+    glcdUpdate();
 }
 
 void screenShowTime(bool clear)
@@ -314,19 +258,7 @@ void screenShowTime(bool clear)
 
 void screenShowSpectrum(bool clear)
 {
-    static bool spClear = false;
-
-    if (clear) {
-        spClear = true;
-    }
-
-    if (spReady) {
-        improveSpectrum(&spData[SP_CHAN_LEFT], canvas->height / 2);
-        improveSpectrum(&spData[SP_CHAN_RIGHT], canvas->height / 2);
-        canvasShowSpectrum(spClear, spData);
-        spClear = false;
-        spReady = 0;
-    }
+    canvasShowSpectrum(clear, &spectrum);
 }
 
 void screenShowBrightness(bool clear)
@@ -341,7 +273,7 @@ void screenShowBrightness(bool clear)
     dp.step = 1 * 8;
     dp.icon = ICON_BRIGHTNESS;
 
-    canvasShowTune(&dp);
+    canvasShowTune(clear, &dp, &spectrum);
 }
 
 void screenShowInput(bool clear)
@@ -374,7 +306,7 @@ void screenShowAudioParam(bool clear)
     dp.max = grid ? grid->max : 0;
     dp.step = grid ? grid->step : 0;
 
-    canvasShowTune(&dp);
+    canvasShowTune(clear, &dp, &spectrum);
 }
 
 void screenShowTuner(void)

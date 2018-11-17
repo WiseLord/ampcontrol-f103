@@ -43,8 +43,6 @@ void screenReadSettings(void);
 void screenSaveSettings(void);
 
 void screenInit(void);
-void screenClear(void);
-void screenUpdate(void);
 
 void screenSet(Screen value);
 Screen screenGet(void);
