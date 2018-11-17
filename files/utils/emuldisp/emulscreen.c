@@ -15,7 +15,7 @@ static Screen screen = EMUL_SCREEN;
 
 static ScreenParam scrPar;
 static Canvas *canvas;
-static SpectrumData spData[SP_CHAN_END];
+static Spectrum spectrum;
 
 void emulCanvasInit(Canvas **value)
 {
@@ -75,15 +75,15 @@ void screenShowTime(bool clear)
     struct tm *lt = localtime(&t);
 
     RTC_type rtc;
-    rtc.hour = lt->tm_hour;
-    rtc.min = lt->tm_min;
-    rtc.sec = lt->tm_sec;
+    rtc.hour = (int8_t)lt->tm_hour;
+    rtc.min = (int8_t)lt->tm_min;
+    rtc.sec = (int8_t)lt->tm_sec;
 
-    rtc.date = lt->tm_mday;
-    rtc.month = lt->tm_mon;
-    rtc.year = lt->tm_year - 100;
+    rtc.date = (int8_t)lt->tm_mday;
+    rtc.month = (int8_t)lt->tm_mon;
+    rtc.year = (int8_t)lt->tm_year - 100;
 
-    rtc.wday = lt->tm_wday;
+    rtc.wday = (int8_t)lt->tm_wday;
 
     rtc.etm = RTC_HOUR;
 
@@ -92,14 +92,14 @@ void screenShowTime(bool clear)
 
 void screenShowSpectrum(bool clear)
 {
-    for (int i = 0; i < FFT_SIZE / 2; i++) {
-        spData[SP_CHAN_LEFT].show[i] = i / 2;
-        spData[SP_CHAN_RIGHT].show[i] = i / 2;
-        spData[SP_CHAN_LEFT].peak[i] = N_DB - i;
-        spData[SP_CHAN_RIGHT].peak[i] = N_DB - i;
+    for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
+        spectrum.chan[SP_CHAN_LEFT].show[i] = i / 2;
+        spectrum.chan[SP_CHAN_RIGHT].show[i] = i / 2;
+        spectrum.chan[SP_CHAN_LEFT].peak[i] = (uint8_t)N_DB - i;
+        spectrum.chan[SP_CHAN_RIGHT].peak[i] = (uint8_t)N_DB - i;
     }
 
-    canvasShowSpectrum(clear, spData);
+    canvasShowSpectrum(clear, &spectrum);
 }
 
 void screenShowBrightness(bool clear)
@@ -114,7 +114,7 @@ void screenShowBrightness(bool clear)
     dp.step = 1 * 8;
     dp.icon = ICON_BRIGHTNESS;
 
-    canvasShowTune(&dp);
+    canvasShowTune(clear, &dp, &spectrum);
 }
 
 void screenShowInput(bool clear)
@@ -140,7 +140,7 @@ void screenShowAudioParam(bool clear)
         dp.icon = ICON_TUNER + input;
     } else {
         dp.label = txtLabels[LABEL_VOLUME + aTune];
-        dp.icon = ICON_VOLUME + aTune;
+        dp.icon = (uint8_t)(ICON_VOLUME + aTune);
     }
     dp.value = value;
 
@@ -148,7 +148,7 @@ void screenShowAudioParam(bool clear)
     dp.max = 0;
     dp.step = 1 * 8;
 
-    canvasShowTune(&dp);
+    canvasShowTune(clear, &dp, &spectrum);
 }
 
 void screenShowTuner(void)

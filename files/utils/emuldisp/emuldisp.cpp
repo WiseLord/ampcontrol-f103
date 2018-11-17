@@ -5,6 +5,9 @@
 #include "../../../menu.h"
 #include "../../../screen.h"
 
+#include "../../../display/glcd.h"
+#include "../../../canvas/canvas.h"
+
 #include "emulscreen.h"
 
 #define RGB(x) QColor(QRgb( ((x & 0xF800) << 8) | ((x & 0xE000) << 3) | \
@@ -18,12 +21,7 @@ EmulDisp::EmulDisp(QWidget *parent) :
     painter = new QPainter;
 
     labelsInit();
-    glcdInit(&this->glcd);
-    canvasInit(&this->canvas);
-    canvas->glcd = this->glcd;
-
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetFontBgColor(canvas->color);
+    canvasInit();
 }
 
 void EmulDisp::drawPixel(int16_t x, int16_t y, uint16_t color)
@@ -74,7 +72,7 @@ void EmulDisp::drawScreen()
     painter->fillRect(0, 0, this->width(), this->height(), Qt::darkGray);
     painter->end();
 
-    glcdDrawRect(0, 0, this->width() & 0xFFFF, this->height() & 0xFFFF, LCD_COLOR_BLACK);
+    glcdDrawRect(0, 0, static_cast<int16_t>((this->width() & 0xFFFF)), static_cast<int16_t>(this->height() & 0xFFFF), LCD_COLOR_BLACK);
 
     screenShow();
 }

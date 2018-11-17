@@ -4,9 +4,6 @@
 #include <QWidget>
 #include <QPainter>
 
-#include "../../../display/glcd.h"
-#include "../../../canvas/canvas.h"
-
 namespace Ui {
 class EmulDisp;
 }
@@ -29,9 +26,6 @@ private:
     Ui::EmulDisp *ui;
 
     QPainter *painter;
-
-    Glcd *glcd;
-    Canvas *canvas;
 
 protected:
     virtual void paintEvent(QPaintEvent *pe);

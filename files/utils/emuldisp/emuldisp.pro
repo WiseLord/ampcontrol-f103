@@ -45,10 +45,10 @@ SOURCES += \
 	../../../display/fonts/font-terminus-mod-24x3.c \
 	../../../display/fonts/font-terminus-mod-32x2.c \
 	../../../display/fonts/font-terminus-mod-32x3.c \
-	../../../display/fonts/icons-amp-24.c \
-	../../../display/fonts/icons-amp-32.c \
-	../../../display/fonts/icons-amp-48.c \
-	../../../display/fonts/icons-amp-64.c \
+	../../../display/icons/icons-amp-24.c \
+	../../../display/icons/icons-amp-32.c \
+	../../../display/icons/icons-amp-48.c \
+	../../../display/icons/icons-amp-64.c \
 	../../../display/glcd.c \
     ../../../canvas/canvas.c \
     ../../../canvas/gc160x128.c \
@@ -70,7 +70,8 @@ HEADERS += \
     emuldisp.h \
 	emulscreen.h \
     ../../../display/fonts/fonts.h \
-    ../../../display/glcd.h \r \
+	../../../display/icons/icons.h \
+	../../../display/glcd.h \r \
     ../../../display/dispdrv.h \
     ../../../canvas/canvas.h \
     ../../../menu.h \
