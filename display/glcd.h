@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 
 #include "fonts/fonts.h"
+#include "icons/icons.h"
 #include "dispdrv.h"
 
 typedef struct {

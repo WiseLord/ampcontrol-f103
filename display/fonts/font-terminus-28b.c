@@ -51,7 +51,7 @@ typedef struct {
 
 #include <stdint.h>
 
-#include "fonts.h"
+#include "../fonts/fonts.h"
 
 
 
