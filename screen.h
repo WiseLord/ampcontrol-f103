@@ -62,9 +62,9 @@ void screenShow(void);
 
 void screenShowTime(bool clear);
 void screenShowSpectrum(bool clear);
-void screenShowBrightness(void);
-void screenShowInput(void);
-void screenShowAudioParam(void);
+void screenShowBrightness(bool clear);
+void screenShowInput(bool clear);
+void screenShowAudioParam(bool clear);
 void screenShowTuner(void);
 void screenShowMenu(void);
 

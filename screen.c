@@ -281,13 +281,13 @@ void screenShow(void)
         screenShowSpectrum(clear);
         break;
     case SCREEN_BRIGHTNESS:
-        screenShowBrightness();
+        screenShowBrightness(clear);
         break;
     case SCREEN_AUDIO_INPUT:
-        screenShowInput();
+        screenShowInput(clear);
         break;
     case SCREEN_AUDIO_PARAM:
-        screenShowAudioParam();
+        screenShowAudioParam(clear);
         break;
     case SCREEN_TUNER:
         screenShowTuner();
@@ -329,7 +329,7 @@ void screenShowSpectrum(bool clear)
     }
 }
 
-void screenShowBrightness(void)
+void screenShowBrightness(bool clear)
 {
     DispParam dp;
     const char **txtLabels = labelsGet();
@@ -344,13 +344,13 @@ void screenShowBrightness(void)
     canvasShowTune(&dp);
 }
 
-void screenShowInput(void)
+void screenShowInput(bool clear)
 {
     scrPar.tune = AUDIO_TUNE_GAIN;
-    screenShowAudioParam();
+    screenShowAudioParam(clear);
 }
 
-void screenShowAudioParam(void)
+void screenShowAudioParam(bool clear)
 {
     AudioProc *aProc = audioGet();
     AudioTune aTune = scrPar.tune;

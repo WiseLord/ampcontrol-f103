@@ -304,6 +304,8 @@ void canvasShowMenu(void)
 
 void canvasShowTune(DispParam *dp)
 {
+    const tFont *iconSet = canvas->par->tune.iconSet;
+
     glcdSetFont(canvas->par->tune.lblFont);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
@@ -316,8 +318,8 @@ void canvasShowTune(DispParam *dp)
     glcdSetFont(canvas->par->tune.valFont);
     glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
 
-    glcdSetXY(canvas->width - 48, 0);
-    glcdWriteIcon(dp->icon, canvas->par->tune.iconSet, canvas->par->tune.iconColor, canvas->color);
+    glcdSetXY(canvas->width - iconSet->chars[0].image->width, 0);
+    glcdWriteIcon(dp->icon, iconSet, canvas->par->tune.iconColor, canvas->color);
 }
 
 void canvasShowSpectrum(bool clear, SpectrumData *spData)

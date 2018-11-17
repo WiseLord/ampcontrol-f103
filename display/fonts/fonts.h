@@ -60,6 +60,7 @@ extern const tFont fontterminus32b;
 extern const tFont fontterminusmod18x3;
 extern const tFont fontterminusmod22x2;
 extern const tFont fontterminusmod24x2;
+extern const tFont fontterminusmod24x3;
 extern const tFont fontterminusmod32x2;
 extern const tFont fontterminusmod32x3;
 // Modified fonts - for digits only

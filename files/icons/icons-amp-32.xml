@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<data name="icons-amp-32" type="font">
+<data type="font" name="icons-amp-32">
     <family>Liberation Sans</family>
     <size>14</size>
     <ascent>18</ascent>
@@ -24,7 +24,7 @@
             <picture format="png">iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA3klEQVRYhe1WQRLEIAgDp///MnuygyyIIrbbneZktUNCUBSJiCAARGy+g2Gg8IAyqDankVtzIzisBUQ8s+LjCvkdFVD8X3RECSVMB4joJNHqG625RAFos+FjIjKJshwIl6A6tCqk1GA88Ah+woFbBVziQK/G2xyohF6G6Q7wjORR1LDFAa/dAvQdirjyVYLafHrklriIiNApyGzNwwLkvaC1b20tTYAmxpvbJiATz9kDsr7aBdZ7PywL4OBEkY3XxJp9FXtEs6Uwn2QeQdazfFrAKqHEM4/hK+AV8FcCPoq4fUhjS31wAAAAAElFTkSuQmCC</picture>
         </char>
         <char code="0020" character=" ">
-            <picture format="png">iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAyElEQVRYhe2WyQ7DIAxE7Yr//+XpCQkhCGMzJGoV37J5Hl7jAGABc3czMwt+NrVPRnx0f/ZMBsAIZCAogJXjNh1RiCUA6zALcQnAhn1UmCxEmb0YrXJ3NwAGQBcBxq5OzYBsA/QQo+tjAKP8y7uABcnaFoBiHEsi8BjATuglANV2UlFUwtk1faQLbp2ErVhmIBXVn82RQcTA1QXUi7MHW6aAdZQRpwAYh1lxGoB1nKmnUBfMBNo6iFp4EKm6ptpvL6MX4AX4C4AveEdnQdb3f0UAAAAASUVORK5CYII=</picture>
+            <picture format="png">iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA1klEQVRYhcWWQQ7FIAhE4cf7X3n+qgkxlMCAlp1pZV5BpioAyFCoqoiIVFL+psWrMQLAio8AdMTbAF3xFkBWXFXDdykA5svf9pQBquJ2JL29JQC25xFEGoAtu2dONtfKJO+apaoKAAHAV4CJqPTP+ijADuGtjwF4/W9PAQsSxTGA7ME9XoHPALK+cX0K9lg3hKOr2vUpuOqEVuzNkJb3cDpGjIiBfH5Au7jNVWoBW6moFeUzUIWIxCkABiLaQ09BFsKeg1GACkQUbR/oQowYUQdizAlZiD/nOXBC6HD5dQAAAABJRU5ErkJggg==</picture>
         </char>
         <char code="0021" character="!">
             <picture format="png">iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA7klEQVRYhe2WSw7DIAxEbdT7X9ldgQzxHyJVKrMN9rw4dGokIgJFiKg9miS16LVGewAA+HimXgNEBEQc56LQDwBe6JlKgFnwCSA6LkmaMZ+KWQ8AVDH33jh1BzLm0VETUeg+PC6hZ+gZZ2UCSOanjLuaZiRp51OZAFoBN3zDfADwn450ySrmqRywICJJyJW9I1MSrm8rTUSSlAHpCfRC3nA3nNIAXsPd3JfU/CPv6gIMgJMRm+k1RfEJiOxm1NaCHYhKr7EP8NBZcyD6l1xZ63DdiitLaea8C2A117Tz2cwkPL18SPqdHLgAF+BvAb6XT6wzU0smdQAAAABJRU5ErkJggg==</picture>

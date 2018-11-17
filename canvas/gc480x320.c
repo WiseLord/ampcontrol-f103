@@ -8,20 +8,20 @@ static const CanvasParam canvasParam = {
     .time.dmyY = 124,
     .time.wdY = 224,
 
-    .bar.sc = 80,
+    .bar.sc = 76,
     .bar.sw = 3,
-    .bar.barY = 110,
-    .bar.barW = 480,
-    .bar.half = 14,
+    .bar.barY = 96,
+    .bar.barW = 380,
+    .bar.half = 15,
     .bar.middle = 2,
 
     .menu.headFont = &fontterminus32b,
     .menu.menuFont = &fontterminus24b,
     .menu.itemCnt = 10,
 
-    .tune.lblFont = &fontterminusmod32x3,
-    .tune.valFont = &fontterminusdig96,
-    .tune.valY = 140,
+    .tune.lblFont = &fontterminusmod24x3,
+    .tune.valFont = &fontterminusmod24x3,
+    .tune.valY = 76,
     .tune.iconSet = &iconsamp64,
     .tune.iconColor = LCD_COLOR_AQUA,
 
