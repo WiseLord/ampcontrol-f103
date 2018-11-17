@@ -22,7 +22,7 @@ static const CanvasParam canvasParam = {
     .tune.lblFont = &fontterminus32,
     .tune.valFont = &fontterminusmod32x2,
     .tune.valY = 118,
-    .tune.iconSet = &iconsamp48,
+    .tune.iconSet = &iconsamp32,
     .tune.iconColor = LCD_COLOR_AQUA,
 
     .sp.step = 3,

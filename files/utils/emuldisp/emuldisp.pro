@@ -11,6 +11,8 @@ DEFINES += EMUL_DISP
 
 SOURCES += \
     emuldisp.cpp \
+	emulscreen.c \
+	main.cpp \
     ../../../display/fonts/font-terminus-12.c \
     ../../../display/fonts/font-terminus-14.c \
     ../../../display/fonts/font-terminus-14b.c \
@@ -42,7 +44,11 @@ SOURCES += \
 	../../../display/fonts/font-terminus-mod-24x2.c \
 	../../../display/fonts/font-terminus-mod-32x2.c \
 	../../../display/fonts/font-terminus-mod-32x3.c \
-	 ../../../display/glcd.c \
+	../../../display/fonts/icons-amp-24.c \
+	../../../display/fonts/icons-amp-32.c \
+	../../../display/fonts/icons-amp-48.c \
+	../../../display/fonts/icons-amp-64.c \
+	../../../display/glcd.c \
     ../../../canvas/canvas.c \
     ../../../canvas/gc160x128.c \
     ../../../canvas/gc176x132.c \
@@ -54,16 +60,14 @@ SOURCES += \
     ../../../menu.c \
     ../../../tuner/tuner.c \
     ../../../audio/audio.c \
-    main.cpp \
     ../../../tr/labels_by.c \
     ../../../tr/labels_ru.c \
     ../../../tr/labels.c \
-	emulscreen.c \
-    ../../../display/fonts/icons-amp-48.c
-    ../../../display/fonts/icons-amp-48.c
+
 
 HEADERS += \
     emuldisp.h \
+	emulscreen.h \
     ../../../display/fonts/fonts.h \
     ../../../display/glcd.h \r \
     ../../../display/dispdrv.h \
@@ -75,7 +79,4 @@ HEADERS += \
     ../../../tuner/tunerdefs.h \
     ../../../tr/labels.h \
     ../../../rtc.h \
-    emulscreen.h \
-    ../../../rc.h
-    ../../../display/fonts/icons.h
-    ../../../display/dispdrv.h
+	../../../rc.h \

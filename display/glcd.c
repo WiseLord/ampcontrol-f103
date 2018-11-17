@@ -15,6 +15,40 @@ static tImage imgUnRle = {
     .rle = 0
 };
 
+static tImage *glcdUnRleImg(const tImage *img)
+{
+    imgUnRle.width = img->width;
+    imgUnRle.height = img->height;
+
+    if (img->rle) {
+        // Uncompress image to storage
+        const uint8_t *inPtr = img->data;
+        uint8_t *outPtr = unRleData;
+
+        while (inPtr < img->data + img->size) {
+            int8_t size = (int8_t)(*inPtr);
+            inPtr++;
+            if (size < 0) {
+                for (uint8_t i = 0; i < -size; i++) {
+                    *outPtr++ = *inPtr++;
+                }
+            } else if (size > 0) {
+                uint8_t data = *inPtr;
+                for (uint8_t i = 0; i < size; i++) {
+                    *outPtr++ = data;
+                }
+                inPtr++;
+            } else {
+                return 0;
+            }
+        }
+        imgUnRle.size = (uint16_t)(outPtr - unRleData);
+    } else {
+        imgUnRle.size = img->size;
+    }
+    return &imgUnRle;
+}
+
 void glcdInit(Glcd **value)
 {
     dispdrvInit(&glcd.drv);
@@ -100,19 +134,19 @@ void glcdSetY(int16_t y)
 
 int16_t glcdFontSymbolPos(int32_t code)
 {
-    int16_t bPos = -1;
+    int16_t sPos = -1;
 
     const tFont *font = glcd.font.tfont;
-    for (uint16_t i = 0; i < font->length; i++) {
+    for (int16_t i = 0; i < font->length; i++) {
         if (font->chars[i].code == code) {
             return i;
         }
         if (font->chars[i].code == BLOCK_CHAR) {
-            bPos = i;
+            sPos = i;
         }
     }
 
-    return bPos;
+    return sPos;
 }
 
 void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -133,15 +167,28 @@ void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t b
     }
 }
 
-void glcdWriteIcon(uint8_t num, const tFont *iFont, uint16_t color, uint16_t bgColor)
+uint16_t glcdWriteIcon(uint16_t code, const tFont *iFont, uint16_t color, uint16_t bgColor)
 {
     tImage *img;
 
-    img = (tImage *)iFont->chars[num].image;
+    // Find icon pos
+    uint16_t iPos = 0;
+    for (uint16_t i = 0; i < iFont->length; i++) {
+        if (iFont->chars[i].code == code) {
+            iPos = i;
+            break;
+        }
+    }
 
-   if (glcd.drv->drawImage) {
-       glcd.drv->drawImage(img, glcd.x, glcd.y, color, bgColor);
-   }
+    img = glcdUnRleImg(iFont->chars[iPos].image);
+
+    if (glcd.drv->drawImage) {
+        glcd.drv->drawImage(img, glcd.x, glcd.y, color, bgColor);
+    }
+
+    glcdSetX(glcd.x + img->width);
+
+    return img->width;
 }
 
 uint16_t glcdWriteChar(int32_t code)
@@ -153,36 +200,7 @@ uint16_t glcdWriteChar(int32_t code)
     if (pos < 0)
         return 0;
 
-    img = (tImage *)glcd.font.tfont->chars[pos].image;
-
-    if (img->rle) {
-        // Uncompress image to storage
-        const uint8_t *inPtr = img->data;
-        uint8_t *outPtr = unRleData;
-
-        while (inPtr < img->data + img->size) {
-            int8_t size = (int8_t)(*inPtr);
-            inPtr++;
-            if (size < 0) {
-                for (uint8_t i = 0; i < -size; i++) {
-                    *outPtr++ = *inPtr++;
-                }
-            } else if (size > 0) {
-                uint8_t data = *inPtr;
-                for (uint8_t i = 0; i < size; i++) {
-                    *outPtr++ = data;
-                }
-                inPtr++;
-            } else {
-                return 0;
-            }
-        }
-        imgUnRle.width = img->width;
-        imgUnRle.height = img->height;
-        imgUnRle.size = outPtr - unRleData;
-
-        img = &imgUnRle;
-    }
+    img = glcdUnRleImg(glcd.font.tfont->chars[pos].image);
 
     if (glcd.drv->drawImage) {
         glcd.drv->drawImage(img, glcd.x, glcd.y, glcd.font.color, glcd.font.bgColor);

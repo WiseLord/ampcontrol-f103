@@ -39,11 +39,15 @@ display/fonts/font-terminus-dig-64.c
 display/fonts/font-terminus-dig-80.c
 display/fonts/font-terminus-dig-96.c
 display/fonts/font-terminus-dig-120.c
+display/fonts/font-terminus-mod-18x3.c
 display/fonts/font-terminus-mod-22x2.c
 display/fonts/font-terminus-mod-24x2.c
 display/fonts/font-terminus-mod-32x2.c
 display/fonts/font-terminus-mod-32x3.c
+display/fonts/icons-amp-24.c
+display/fonts/icons-amp-32.c
 display/fonts/icons-amp-48.c
+display/fonts/icons-amp-64.c
 
 canvas/gm128x64.c
 canvas/gc160x128.c
