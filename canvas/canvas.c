@@ -388,10 +388,9 @@ void canvasShowTune(bool clear, DispParam *dp, Spectrum *sp)
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
         glcdSetFont(canvas->par->tune.valFont);
         glcdWriteNum((dp->value * dp->step) / 8, 3, ' ', 10);
+        glcdDrawLine(0, canvas->height / 2, canvas->width - 1, canvas->height / 2, LCD_COLOR_WHITE);
     }
     valueOld = dp->value;
-
-    glcdDrawLine(0, canvas->height / 2, canvas->width - 1, canvas->height / 2, LCD_COLOR_WHITE);
 
     // Spectrum
     if (!sp->ready) {

@@ -74,15 +74,6 @@ static void pinsInitDisplay(void)
 
 #elif defined(_DISP_8BIT)
 
-    LL_GPIO_InitTypeDef initDef;
-
-    initDef.Mode = LL_GPIO_MODE_OUTPUT;
-    initDef.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-    initDef.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-
-    initDef.Pin = DISP_DATA_LO_Pin;
-    LL_GPIO_Init(DISP_DATA_LO_Port, &initDef);
-
     OUT_INIT(DISP_RS,  LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
     OUT_INIT(DISP_CS,  LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
     OUT_INIT(DISP_WR,  LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);

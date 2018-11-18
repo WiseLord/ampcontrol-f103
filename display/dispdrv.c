@@ -1,18 +1,22 @@
 #include "dispdrv.h"
 
+#include <stdbool.h>
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 #include "../pins.h"
 
 #ifdef _DISP_8BIT
-static uint8_t bus_requested = 0;
+static volatile bool bus_requested = false;
 #endif
 static uint8_t brightness;
 
 static DispDriver *drv;
 
-#define TX_BUSY()               (LL_SPI_IsActiveFlag_BSY(SPI1) || !LL_SPI_IsActiveFlag_TXE(SPI1))
+#define TX_BUSY()           (LL_SPI_IsActiveFlag_BSY(SPI1) || !LL_SPI_IsActiveFlag_TXE(SPI1))
+
+#define BUS_MODE_OUT        0x33333333  // CNF=0b00, MODE=0b11 => Output push-pull 50 MHz
+#define BUS_MODE_IN         0x88888888  // CNF=0b10, MODE=0b00 - Input pullup
 
 #ifdef _DISP_SPI
 static void dispdrvInitSPI()
@@ -55,34 +59,54 @@ static inline void dispdrvSendByte(uint8_t data)
 }
 
 #ifdef _DISP_8BIT
+
+static inline void dispdrvBusIn(void) __attribute__((always_inline));
+static inline void dispdrvBusIn(void)
+{
+#ifdef _DISP_HI_BYTE
+    DISP_DATA_HI_Port->BSRR = 0x0000FF00;   // Set HIGH level on all data lines
+    DISP_DATA_HI_Port->CRH = BUS_MODE_IN;
+#endif
+#ifdef _DISP_LO_BYTE
+    DISP_DATA_LO_Port->BSRR = 0x000000FF;   // Set HIGH level on all data lines
+    DISP_DATA_LO_Port->CRL = BUS_MODE_IN;
+#endif
+}
+
+static inline void dispdrvBusOut(void) __attribute__((always_inline));
+static inline void dispdrvBusOut(void)
+{
+#ifdef _DISP_HI_BYTE
+    DISP_DATA_HI_Port->CRH = BUS_MODE_OUT;
+#endif
+#ifdef _DISP_LO_BYTE
+    DISP_DATA_LO_Port->CRL = BUS_MODE_OUT;
+#endif
+}
+
+static inline uint32_t dispDrvGetBusMode(void) __attribute__((always_inline));
+static inline uint32_t dispDrvGetBusMode(void)
+{
+#ifdef _DISP_HI_BYTE
+    return DISP_DATA_HI_Port->CRH;
+#endif
+#ifdef _DISP_LO_BYTE
+    return DISP_DATA_LO_Port->CRL;
+#endif
+}
+
 static inline void dispdrvReadInput() __attribute__((always_inline));
 static inline void dispdrvReadInput()
 {
-    // If input IRQ requested bus status, switch temporarly to input mode and read bus
-    if (bus_requested) {
 #ifdef _DISP_HI_BYTE
-        DISP_DATA_HI_Port->BSRR = 0x0000FF00;
-        DISP_DATA_HI_Port->CRH = 0x88888888;
+    drv->bus = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
 #endif
 #ifdef _DISP_LO_BYTE
-        DISP_DATA_LO_Port->BSRR = 0x000000FF;           // Set 1 on all data lines
-        DISP_DATA_LO_Port->CRL = 0x88888888;            // SET CNF=10, MODE=00 - Input pullup
+    drv->bus = DISP_DATA_LO_Port->IDR & 0x00FF;
 #endif
-        // Small delay to stabilize data before reading
-        volatile uint8_t delay = 2;
-        while (--delay);
-#ifdef _DISP_HI_BYTE
-        drv->bus = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
-        DISP_DATA_HI_Port->CRH = 0x33333333;
-#endif
-#ifdef _DISP_LO_BYTE
-        drv->bus = DISP_DATA_LO_Port->IDR & 0x00FF;     // Read 8-bit bus
-        DISP_DATA_LO_Port->CRL = 0x33333333;            // Set CNF=00, MODE=11 - Output push-pull 50 MHz
-#endif
-        bus_requested = 0;
-    }
 }
-#endif
+
+#endif // _DISP_8BIT
 
 static inline void dispdrvSendWord(uint16_t data) __attribute__((always_inline));
 static inline void dispdrvSendWord(uint16_t data)
@@ -94,14 +118,22 @@ static inline void dispdrvSendWord(uint16_t data)
     CLR(DISP_WR);
     SET(DISP_WR);
 #else
+#ifdef _DISP_8BIT
+    dispdrvBusOut();
+#endif
     uint8_t dataH = data >> 8;
     uint8_t dataL = data & 0xFF;
-
     dispdrvSendByte(dataH);
     dispdrvSendByte(dataL);
+#ifdef _DISP_8BIT
+    dispdrvBusIn();
+#endif
 #endif
 #ifdef _DISP_8BIT
-    dispdrvReadInput();
+    if (bus_requested) {
+        dispdrvReadInput();
+        bus_requested = false;
+    }
 #endif
 }
 
@@ -195,10 +227,14 @@ uint8_t dispdrvGetBus(void)
 void dispdrvBusIRQ(void)
 {
 #ifdef _DISP_8BIT
-    bus_requested = 1;
+    if (dispDrvGetBusMode() == BUS_MODE_OUT) {
+        bus_requested = true;               // Postpone read bus until in input mode
+    } else {
+        dispdrvReadInput();                 // Read bus immediately
+    }
 #endif
 #if defined(_DISP_SPI) || defined(_DISP_I2C)
-    drv->bus = INPUT_Port->IDR & 0x00FF;   // Read 8-bit bus
+    drv->bus = INPUT_Port->IDR & 0x00FF;    // Read 8-bit bus
 #endif
 }
 
@@ -212,9 +248,16 @@ void dispdrvWaitOperation(void)
 
 void dispdrvSendData8(uint8_t data)
 {
+#ifdef _DISP_8BIT
+    dispdrvBusOut();
+#endif
     dispdrvSendByte(data);
 #ifdef _DISP_8BIT
-    dispdrvReadInput();
+    dispdrvBusIn();
+    if (bus_requested) {
+        dispdrvReadInput();
+        bus_requested = false;
+    }
 #endif
 }
 
