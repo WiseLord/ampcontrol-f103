@@ -124,9 +124,9 @@ void rcInit(void)
 
 void rcIRQ()
 {
-    static uint16_t timCntOld = 0;
-    uint16_t timCnt = LL_TIM_GetCounter(TIM3);
-    uint16_t delay = timCnt - timCntOld;
+    static uint32_t timCntOld = 0;
+    uint32_t timCnt = LL_TIM_GetCounter(TIM3);
+    uint16_t delay = (uint16_t)(timCnt - timCntOld);
     timCntOld = timCnt;
 
     bool rc = !READ(RC);
@@ -166,7 +166,7 @@ void rcSaveCode(uint16_t cmd, uint16_t value)
         return;
 
     rcCode[cmd] = value;
-    eeUpdate(EE_RC_STBY_SWITCH + cmd, value);
+    eeUpdate(EE_RC_STBY_SWITCH + cmd, (int16_t)value);
 }
 
 RcCmd rcGetCmd(RcData *rcData)

@@ -32,6 +32,6 @@ void spInit(void);
 
 void spGetADC(uint8_t *dataL, uint8_t *dataR);
 
-void spConvertADC();
+void spConvertADC(void);
 
 #endif // SPECTRUM_H

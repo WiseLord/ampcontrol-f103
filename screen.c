@@ -104,14 +104,14 @@ static bool screenCheckClear(void)
 
 void screenReadSettings(void)
 {
-    brStby = eeReadU(EE_BRIGHTNESS_STBY, 3);
+    brStby = (int8_t)eeReadI(EE_BRIGHTNESS_STBY, 3);
     if (brStby < LCD_BR_MIN) {
         brStby = LCD_BR_MIN;
     } else if (brStby > LCD_BR_MAX) {
         brStby = LCD_BR_MAX;
     }
 
-    brWork = eeReadU(EE_BRIGHTNESS_WORK, LCD_BR_MAX);
+    brWork = (int8_t)eeReadI(EE_BRIGHTNESS_WORK, LCD_BR_MAX);
     if (brWork < LCD_BR_MIN) {
         brWork = LCD_BR_MIN;
     } else if (brWork > LCD_BR_MAX) {
@@ -297,7 +297,7 @@ void screenShowAudioParam(bool clear)
         dp.icon = ICON_TUNER + aProc->par.input;
     } else {
         dp.label = txtLabels[LABEL_VOLUME + aTune];
-        dp.icon = ICON_VOLUME + aTune;
+        dp.icon = (uint8_t)(ICON_VOLUME + aTune);
     }
     dp.value = aProc->par.item[aTune].value;
     const AudioGrid *grid = aProc->par.item[aTune].grid;

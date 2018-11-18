@@ -11,7 +11,7 @@
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)
 
 // Array with ADC data, interleaved L-R-L-R...
-static volatile int16_t bufDMA[DMA_BUF_SIZE];
+static int16_t bufDMA[DMA_BUF_SIZE];
 
 // Array for FFT (real and imaginary parts)
 static int16_t fr[FFT_SIZE];
@@ -118,7 +118,7 @@ static void spInitADC(void)
     }
 }
 
-void spInit()
+void spInit(void)
 {
     spInitDMA();
     spInitADC();
@@ -152,7 +152,7 @@ void spGetADC(uint8_t *dataL, uint8_t *dataR)
     spGet((int16_t *)(bufDMA + 1), dataR);
 }
 
-void spConvertADC()
+void spConvertADC(void)
 {
     if (LL_ADC_IsEnabled(ADC1) == 1) {
         LL_ADC_REG_StartConversionSWStart(ADC1);

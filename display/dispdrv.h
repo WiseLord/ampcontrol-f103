@@ -77,7 +77,7 @@ typedef struct {
 
 void dispdrvInit(DispDriver **glcd);
 void dispdrvPwm(void);
-void dispdrvSetBrightness(uint8_t value);
+void dispdrvSetBrightness(int8_t value);
 uint8_t dispdrvGetBus(void);
 
 void dispdrvBusIRQ(void);

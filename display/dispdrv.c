@@ -9,7 +9,7 @@
 #ifdef _DISP_8BIT
 static volatile bool bus_requested = false;
 #endif
-static uint8_t brightness;
+static int8_t brightness;
 
 static DispDriver *drv;
 
@@ -95,8 +95,8 @@ static inline uint32_t dispDrvGetBusMode(void)
 #endif
 }
 
-static inline void dispdrvReadInput() __attribute__((always_inline));
-static inline void dispdrvReadInput()
+static inline void dispdrvReadInput(void) __attribute__((always_inline));
+static inline void dispdrvReadInput(void)
 {
 #ifdef _DISP_HI_BYTE
     drv->bus = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
@@ -214,7 +214,7 @@ void dispdrvPwm(void)
     }
 }
 
-void dispdrvSetBrightness(uint8_t value)
+void dispdrvSetBrightness(int8_t value)
 {
     brightness = value;
 }
