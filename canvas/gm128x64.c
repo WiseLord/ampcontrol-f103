@@ -16,8 +16,8 @@ static const CanvasParam canvasParam = {
     .bar.middle = 2,
 
     .menu.headFont = &fontterminus14b,
-    .menu.menuFont = &fontterminus12,
-    .menu.itemCnt = 3,
+    .menu.menuFont = &fontamp08,
+    .menu.itemCnt = 4,
 
     .tune.lblFont = &fontterminus24b,
     .tune.valFont = &fontterminus12,

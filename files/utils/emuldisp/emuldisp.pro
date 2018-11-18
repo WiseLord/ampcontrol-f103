@@ -30,7 +30,8 @@ SOURCES += \
     ../../../display/fonts/font-terminus-28b.c \
     ../../../display/fonts/font-terminus-32.c \
     ../../../display/fonts/font-terminus-32b.c \
-    ../../../display/fonts/font-terminus-dig-22.c \
+	../../../display/fonts/font-amp-08.c \
+	../../../display/fonts/font-terminus-dig-22.c \
     ../../../display/fonts/font-terminus-dig-30.c \
     ../../../display/fonts/font-terminus-dig-40.c \
     ../../../display/fonts/font-terminus-dig-42.c \
