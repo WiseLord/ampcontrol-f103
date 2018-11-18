@@ -2,23 +2,18 @@
 
 #define STR_BUFSIZE             20
 
-static char strbuf[STR_BUFSIZE + 1];    // String buffer
-
 static Glcd glcd;
-
-static uint8_t unRleData[1024];           // Storage for uncompressed image
-static tImage imgUnRle = {
-    .data = unRleData,
-    .width = 0,
-    .height = 0,
-    .size = 0,
-    .rle = 0
-};
+static char strbuf[STR_BUFSIZE + 1];    // String buffer
+static uint8_t unRleData[1024];         // Storage for uncompressed image data
 
 static tImage *glcdUnRleImg(const tImage *img)
 {
-    imgUnRle.width = img->width;
-    imgUnRle.height = img->height;
+    static tImage ret = {
+        .rle = 0
+    };
+
+    ret.width = img->width;
+    ret.height = img->height;
 
     if (img->rle) {
         // Uncompress image to storage
@@ -42,11 +37,14 @@ static tImage *glcdUnRleImg(const tImage *img)
                 return 0;
             }
         }
-        imgUnRle.size = (uint16_t)(outPtr - unRleData);
+        ret.data = unRleData;
+        ret.size = (uint16_t)(outPtr - unRleData);
     } else {
-        imgUnRle.size = img->size;
+        ret.data = img->data;
+        ret.size = img->size;
     }
-    return &imgUnRle;
+
+    return &ret;
 }
 
 void glcdInit(Glcd **value)
