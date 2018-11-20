@@ -11,6 +11,8 @@ extern "C" {
 #include "../audio/audio.h"
 
 typedef enum {
+    LANG_DEFAULT = 0,
+
     LANG_BY,
     LANG_RU,
 
@@ -56,7 +58,10 @@ typedef enum {
     LABEL_AUDIO_IC = LABEL_TUNER_DEEMPH_END,
     LABEL_AUDIO_IC_END = LABEL_AUDIO_IC + (AUDIO_IC_END - AUDIO_IC_NO),
 
-    LABEL_GAIN0 = LABEL_AUDIO_IC_END,
+    LABEL_LANG = LABEL_AUDIO_IC_END,
+    LABEL_LANGUAGE_END = LABEL_LANG + (LANG_END - LANG_DEFAULT),
+
+    LABEL_GAIN0 = LABEL_LANGUAGE_END,
     LABEL_GAIN1,
     LABEL_GAIN2,
     LABEL_GAIN3,
@@ -73,6 +78,8 @@ typedef enum {
 } Label;
 
 void labelsSetLang(Lang value);
+Lang labelsGetLang(void);
+
 const char **labelsGet(void);
 
 void labelsInit(void);

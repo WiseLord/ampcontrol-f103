@@ -1,15 +1,16 @@
 #include "labels.h"
 
 #include "../rc.h"
+#include "../eemul.h"
 
 #define GENERATE_MENU_RC_TEXT(CMD)    [LABEL_MENU + MENU_RC_ ## CMD] =  # CMD,
 
 static Lang lang = LANG_END;
 
-extern char *const labels_by[LABEL_END];
-extern char *const labels_ru[LABEL_END];
+extern const char *const labels_by[LABEL_END];
+extern const char *const labels_ru[LABEL_END];
 
-const char *const labels_default[LABEL_END] = {
+static const char *const labels_default[LABEL_END] = {
     [LABEL_SUNDAY]          = "SUNDAY",
     [LABEL_MONDAY]          = "MONDAY",
     [LABEL_TUESDAY]         = "TUESDAY",
@@ -63,11 +64,16 @@ const char *const labels_default[LABEL_END] = {
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
     [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
 
+    [LABEL_LANG + LANG_DEFAULT]         = "English",
+    [LABEL_LANG + LANG_BY]              = "Belarusian",
+    [LABEL_LANG + LANG_RU]              = "Russian",
+
     [LABEL_MENU + MENU_NULL]            = "Up menu",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
 
     [LABEL_MENU + MENU_SETUP]           = "Settings",
+    [LABEL_MENU + MENU_SETUP_LANG]      = "Language",
     [LABEL_MENU + MENU_SETUP_AUDIO]     = "Audio",
     [LABEL_MENU + MENU_SETUP_TUNER]     = "Tuner",
     [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Spectrum",
@@ -125,9 +131,9 @@ const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_RC_STBY_EXIT]    = "Exit standby",
 };
 
-const char *labels[LABEL_END];
+static const char *labels[LABEL_END];
 
-static void labelsFill(char *const *src)
+static void labelsFill(const char *const *src)
 {
     for (Label l = 0; l < LABEL_END; l++) {
         labels[l] = (src[l] ? src[l] : labels_default[l]);
@@ -140,6 +146,11 @@ void labelsSetLang(Lang value)
     // TODO: Save in settings
 }
 
+Lang labelsGetLang(void)
+{
+    return  lang;
+}
+
 const char **labelsGet()
 {
     switch (lang) {
@@ -150,6 +161,7 @@ const char **labelsGet()
         labelsFill(labels_ru);
         break;
     default:
+        labelsFill(labels_default);
         break;
     }
 
@@ -159,5 +171,5 @@ const char **labelsGet()
 void labelsInit(void)
 {
     // TODO: Read from settings
-    lang = LANG_BY;
+    lang = eeReadU(EE_LANGUAGE, LANG_DEFAULT);
 }

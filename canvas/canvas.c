@@ -355,6 +355,8 @@ void canvasShowMenu(void)
 
     glcdSetXY(2, 0);
     glcdWriteString(parentName);
+    // Fill free space after header
+    glcdDrawRect(canvas->glcd->x, canvas->glcd->y, canvas->width - canvas->glcd->x, fHh, canvas->color);
 
     glcdDrawRect(0, dividerPos, canvas->width, 1, canvas->glcd->font.color);
 

@@ -21,6 +21,7 @@ static const MenuItem menuItems[MENU_END] = {
 
     [MENU_SETUP]            = {MENU_NULL,               MENU_TYPE_PARENT},
 
+    [MENU_SETUP_LANG]       = {MENU_SETUP,              MENU_TYPE_ENUM},
     [MENU_SETUP_AUDIO]      = {MENU_SETUP,              MENU_TYPE_PARENT},
     [MENU_SETUP_TUNER]      = {MENU_SETUP,              MENU_TYPE_PARENT},
     [MENU_SETUP_SPECTRUM]   = {MENU_SETUP,              MENU_TYPE_PARENT},
@@ -79,6 +80,10 @@ static int16_t menuGetValue(MenuIdx index)
     TunerParam *tPar = tunerGetPar();
 
     switch (index) {
+    case MENU_SETUP_LANG:
+        ret = labelsGetLang();
+        break;
+
     case MENU_AUDIO_IC:
         ret = aproc->ic;
         break;
@@ -128,6 +133,11 @@ static void menuStoreCurrentValue(void)
     TunerParam *tPar = tunerGetPar();
 
     switch (menu.active) {
+    case MENU_SETUP_LANG:
+        labelsSetLang(menu.value);
+        eeUpdate(EE_LANGUAGE, labelsGetLang());
+        break;
+
     case MENU_AUDIO_IC:
         aproc->ic = menu.value;
         eeUpdate(EE_AUDIO_IC, aproc->ic);
@@ -196,6 +206,12 @@ static void menuValueChange(int8_t diff)
     menu.value += diff;
 
     switch (menu.active) {
+    case MENU_SETUP_LANG:
+        if (menu.value >= LANG_END)
+            menu.value = LANG_END - 1;
+        if (menu.value < LANG_DEFAULT)
+            menu.value = LANG_DEFAULT;
+        break;
     case MENU_AUDIO_IC:
         if (menu.value >= AUDIO_IC_END)
             menu.value = AUDIO_IC_END - 1;
@@ -204,9 +220,9 @@ static void menuValueChange(int8_t diff)
         break;
     case MENU_TUNER_IC:
         if (menu.value >= TUNER_IC_END)
-            menu.value = TUNER_IC_NO;
-        if (menu.value < TUNER_IC_NO)
             menu.value = TUNER_IC_END - 1;
+        if (menu.value < TUNER_IC_NO)
+            menu.value = TUNER_IC_NO;
         break;
     case MENU_TUNER_BAND:
         if (menu.value >= TUNER_BAND_END)
@@ -351,6 +367,9 @@ char *menuGetValueStr(MenuIdx index)
 
     // Enum menu types
     switch (index) {
+    case MENU_SETUP_LANG:
+        ret = labels[LABEL_LANG + value];
+        break;
     case MENU_AUDIO_IC:
         ret = labels[LABEL_AUDIO_IC + value];
         break;

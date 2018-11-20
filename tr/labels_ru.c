@@ -29,4 +29,7 @@ const char * const labels_ru[LABEL_END] = {
     [LABEL_GAIN5]           = "Вход 5",
     [LABEL_GAIN6]           = "Вход 6",
     [LABEL_GAIN7]           = "Вход 7",
+
+    [LABEL_MENU + MENU_SETUP]           = "Настройки",
+    [LABEL_MENU + MENU_SETUP_LANG]      = "Язык",
 };

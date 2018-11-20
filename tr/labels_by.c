@@ -29,4 +29,24 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_GAIN5]           = "Уваход 5",
     [LABEL_GAIN6]           = "Уваход 6",
     [LABEL_GAIN7]           = "Уваход 7",
+
+    [LABEL_BOOL_OFF]        = "ВЫКЛ",
+    [LABEL_BOOL_ON]         = "УКЛ",
+
+    [LABEL_TUNER_IC + TUNER_IC_NO]      = "Няма",
+
+    [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Няма",
+
+    [LABEL_MENU + MENU_NULL]            = "Назад",
+
+    [LABEL_MENU + MENU_AUDIO_IC]        = "Аудыёчып",
+
+    [LABEL_MENU + MENU_SETUP]           = "Налады",
+    [LABEL_MENU + MENU_SETUP_LANG]      = "Мова",
+    [LABEL_MENU + MENU_SETUP_AUDIO]     = "Аудыё",
+    [LABEL_MENU + MENU_SETUP_TUNER]     = "Цюнер",
+    [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Спектр",
+    [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Дысплэй",
+    [LABEL_MENU + MENU_SETUP_INPUT]     = "Увод",
+    [LABEL_MENU + MENU_SETUP_RC]        = "Пульт",
 };
