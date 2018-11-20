@@ -48,6 +48,35 @@ typedef struct {
 
 #define NEC_REPEAT_LIMIT            10
 
+// RC5/RC6 definitions
+#define RC6_1T                      444
+#define RC6_2T                      889
+#define RC6_3T                      1333
+#define RC6_4T                      1778
+#define RC6_6T                      2667
+
+#define RC5_STBT_MASK               0x2000
+#define RC5_FIBT_MASK               0x1000
+#define RC5_TOGB_MASK               0x0800
+#define RC5_ADDR_MASK               0x07C0
+#define RC5_COMM_MASK               0x003F
+
+#define RC6_ADDR_MASK               0xFFC0
+#define RC6_COMM_MASK               0x00FF
+
+#define RC6_DEV_MIN                 0.8
+#define RC6_DEV_MAX                 1.2
+#define RC6_MIN(delay)              ((uint16_t)((delay) * RC6_DEV_MIN))
+#define RC6_MAX(delay)              ((uint16_t)((delay) * RC6_DEV_MAX))
+#define RC6_NEAR(value, delay)      (value > RC6_MIN(delay) && value < RC6_MAX(delay))
+
+typedef enum {
+    STATE_RC5_MID0 = 0,
+    STATE_RC5_MID1,
+    STATE_RC5_START0,
+    STATE_RC5_START1,
+} RC5State;
+
 static uint16_t ovfCnt;
 
 static RcData rcData;
@@ -112,6 +141,167 @@ static void rcDecodeNecSam (bool rc, uint16_t delay)
     }
 }
 
+static void rcDecodeRC56 (bool rc, uint16_t delay)
+{
+    // RC5/RC6 protocol variables
+    static uint8_t rc5Cnt = 16;                     // RC5 bit counter
+    static uint16_t rc5Cmd = 0;                     // RC5 command
+    static RC5State rc5State = STATE_RC5_START1;    // RC5 decoding state
+    static int8_t rc6Cnt = 0;                       // RC6 bit counter
+    static uint16_t rc6Cmd = 0;                     // RC6 command
+    static RC5State rc6State = STATE_RC5_START1;    // RC6 decoding state
+
+    static uint8_t rc6TogBitOld = 0;
+    uint8_t rc6TogBit = 0;
+
+    if (rc) {
+        if (RC6_NEAR(delay, RC6_2T)) {
+            if (rc5State == STATE_RC5_START1) {
+                rc5State = STATE_RC5_MID1;
+                rc5Cnt--;
+                rc5Cmd <<= 1;
+                rc5Cmd |= 0x01;
+            } else if (rc5State == STATE_RC5_MID0) {
+                rc5State = STATE_RC5_START0;
+            }
+            if (rc6State == STATE_RC5_MID1) {
+                if (rc6Cnt == 21 || rc6Cnt == 16) {
+                    rc6State = STATE_RC5_START1;
+                } else {
+                    rc6State = STATE_RC5_MID0;
+                    if (--rc6Cnt < 16)
+                        rc6Cmd <<= 1;
+                }
+            } else if (rc6State == STATE_RC5_START0) {
+                if (rc6Cnt == 17) {
+                    rc6State = STATE_RC5_MID0;
+                    --rc6Cnt;
+                    rc6TogBit = 0;
+                }
+            }
+        } else if (RC6_NEAR(delay, RC6_4T)) {
+            if (rc5State == STATE_RC5_MID0) {
+                rc5State = STATE_RC5_MID1;
+                rc5Cnt--;
+                rc5Cmd <<= 1;
+                rc5Cmd |= 0x01;
+            }
+        } else if (RC6_NEAR(delay, RC6_1T)) {
+            rc5Cnt = 13;                            // Reset
+            rc5State = STATE_RC5_MID1;
+            if (rc6State == STATE_RC5_START0) {
+                rc6State = STATE_RC5_MID0;
+                if (--rc6Cnt < 16)
+                    rc6Cmd <<= 1;
+            } else if (rc6State == STATE_RC5_MID1) {
+                rc6State = STATE_RC5_START1;
+            }
+        } else if (RC6_NEAR(delay, RC6_3T)) {
+            rc5Cnt = 13;                            // Reset
+            rc5State = STATE_RC5_MID1;
+            if (rc6State == STATE_RC5_MID1) {
+                if (rc6Cnt == 17) {
+                    rc6State = STATE_RC5_MID0;
+                    --rc6Cnt;
+                    rc6TogBit = 0;
+                } else if (rc6Cnt == 21 || rc6Cnt == 16) {
+                    rc6State = STATE_RC5_MID0;
+                    if (--rc6Cnt < 16) {
+                        rc6Cmd <<= 1;
+                    }
+                }
+            }
+        } else {
+            rc5Cnt = 13;                            // Reset
+            rc5State = STATE_RC5_MID1;
+            rc6Cnt = 22;                            // Reset
+            rc6State = STATE_RC5_START1;
+        }
+
+    } else {
+        // Try to decode as RC6 sequence
+        if (RC6_NEAR(delay, RC6_2T)) {
+            if (rc6State == STATE_RC5_MID0) {
+                if (rc6Cnt == 16) {
+                    rc6State = STATE_RC5_START0;
+                } else {
+                    rc6State = STATE_RC5_MID1;
+                    if (--rc6Cnt < 16) {
+                        rc6Cmd <<= 1;
+                        rc6Cmd |= 0x01;
+                    }
+                }
+            } else if (rc6State == STATE_RC5_START1) {
+                if (rc6Cnt == 17) {
+                    rc6State = STATE_RC5_MID1;
+                    --rc6Cnt;
+                    rc6TogBit = 1;
+                }
+            }
+            if (rc5State == STATE_RC5_MID1) {
+                rc5State = STATE_RC5_START1;
+            } else if (rc5State == STATE_RC5_START0) {
+                rc5State = STATE_RC5_MID0;
+                rc5Cnt--;
+                rc5Cmd <<= 1;
+            }
+        } else if (RC6_NEAR(delay, RC6_4T)) {
+            if (rc5State == STATE_RC5_MID1) {
+                rc5State = STATE_RC5_MID0;
+                rc5Cnt--;
+                rc5Cmd <<= 1;
+            }
+        } else if (RC6_NEAR(delay, RC6_1T)) {
+            if (rc6State == STATE_RC5_START1) {
+                rc6State = STATE_RC5_MID1;
+                if (--rc6Cnt < 16) {
+                    rc6Cmd <<= 1;
+                    rc6Cmd |= 0x01;
+                }
+            } else if (rc6State == STATE_RC5_MID0) {
+                rc6State = STATE_RC5_START0;
+            }
+        } else if (RC6_NEAR(delay, RC6_3T)) {
+            if (rc6State == STATE_RC5_MID0) {
+                if (rc6Cnt == 17) {
+                    rc6State = STATE_RC5_MID1;
+                    --rc6Cnt;
+                    rc6TogBit = 1;
+                } else if (rc6Cnt == 16) {
+                    rc6State = STATE_RC5_MID1;
+                    rc6Cmd <<= 1;
+                    rc6Cmd |= 0x01;
+                }
+            }
+        } else if (RC6_NEAR(delay, RC6_6T)) {
+            rc6State = STATE_RC5_MID1;
+            rc6Cnt = 21;
+        } else {
+            rc6Cnt = 22;                            // Reset
+            rc6State = STATE_RC5_START1;
+        }
+
+    }
+
+    if (rc5Cnt == 0 || rc6Cnt == 0) {
+        if (rc5Cnt == 0) {
+            rc6TogBit = (rc5Cmd & RC5_TOGB_MASK) != 0;
+            rcData.type = RC_TYPE_RC5;
+            rcData.addr  = (rc5Cmd & RC5_ADDR_MASK) >> 6;
+            rcData.cmd = (rc5Cmd & RC5_COMM_MASK) | (rc5Cmd & RC5_FIBT_MASK ? 0x00 : 0x40);
+        } else {
+            rcData.type = RC_TYPE_RC6;
+            rcData.addr  = (rc6Cmd & RC6_ADDR_MASK) >> 8;
+            rcData.cmd = rc6Cmd & RC6_COMM_MASK;
+        }
+        rc6Cnt = 22;
+        rc5Cnt = 13;
+        rcData.ready = true;
+        rcData.repeat = (rc6TogBit == rc6TogBitOld);
+        rc6TogBitOld = rc6TogBit;
+    }
+}
+
 void rcInit(void)
 {
     for (RcCmd cmd = 0; cmd < RC_CMD_END; cmd++) {
@@ -132,6 +322,7 @@ void rcIRQ()
     bool rc = !READ(RC);
 
     rcDecodeNecSam(rc, delay);
+    rcDecodeRC56(rc, delay);
 }
 
 void rcOvfIRQ(void)

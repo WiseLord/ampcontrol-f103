@@ -17,6 +17,8 @@ typedef enum {
 
     RC_TYPE_NEC,
     RC_TYPE_SAM,
+    RC_TYPE_RC5,
+    RC_TYPE_RC6,
 
     RC_TYPE_END
 } RcType;
