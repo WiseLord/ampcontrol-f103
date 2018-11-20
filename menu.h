@@ -9,7 +9,7 @@ extern "C" {
 
 #include "cmd.h"
 
-#define MENU_MAX_LEN    16
+//#define MENU_MAX_LEN    16
 
 #define GENERATE_MENU_RC(CMD)    MENU_RC_ ## CMD,
 
@@ -46,6 +46,8 @@ typedef enum {
 
     MENU_END
 } MenuIdx;
+
+#define MENU_MAX_LEN    (MENU_END - MENU_INPUT_ENC_RES)
 
 typedef enum {
     MENU_TYPE_PARENT,

@@ -91,7 +91,38 @@ const char *const labels_default[LABEL_END] = {
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Encoder resolution",
 
-    FOREACH_CMD(GENERATE_MENU_RC_TEXT)
+//    FOREACH_CMD(GENERATE_MENU_RC_TEXT)
+
+    [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Switch standby",
+    [LABEL_MENU + MENU_RC_MUTE]         = "Mute",
+    [LABEL_MENU + MENU_RC_VOL_UP]       = "Volume up",
+    [LABEL_MENU + MENU_RC_VOL_DOWN]     = "Volume down",
+    [LABEL_MENU + MENU_RC_MENU]         = "Menu",
+    [LABEL_MENU + MENU_RC_CHAN_NEXT]    = "Next chan",
+    [LABEL_MENU + MENU_RC_CHAN_PREV]    = "Prev chan",
+    [LABEL_MENU + MENU_RC_IN_NEXT]      = "Next input",
+    [LABEL_MENU + MENU_RC_IN_PREV]      = "Prev input",
+    [LABEL_MENU + MENU_RC_IN_0]         = "Input 0",
+    [LABEL_MENU + MENU_RC_IN_1]         = "Input 1",
+    [LABEL_MENU + MENU_RC_IN_2]         = "Input 2",
+    [LABEL_MENU + MENU_RC_IN_3]         = "Input 3",
+    [LABEL_MENU + MENU_RC_IN_4]         = "Input 4",
+    [LABEL_MENU + MENU_RC_IN_5]         = "Input 5",
+    [LABEL_MENU + MENU_RC_IN_6]         = "Input 6",
+    [LABEL_MENU + MENU_RC_IN_7]         = "Input 7",
+    [LABEL_MENU + MENU_RC_BASS_UP]      = "Bass up",
+    [LABEL_MENU + MENU_RC_BASS_DOWN]    = "Bass down",
+    [LABEL_MENU + MENU_RC_MIDDLE_UP]    = "Middle up",
+    [LABEL_MENU + MENU_RC_MIDDLE_DOWN]  = "Middle down",
+    [LABEL_MENU + MENU_RC_TREBLE_UP]    = "Treble up",
+    [LABEL_MENU + MENU_RC_TREBLE_DOWN]  = "Treble down",
+    [LABEL_MENU + MENU_RC_LOUDNESS]     = "Loudness",
+    [LABEL_MENU + MENU_RC_SURROUND]     = "Surround",
+    [LABEL_MENU + MENU_RC_EFFECT_3D]    = "3D-effect",
+    [LABEL_MENU + MENU_RC_TONE_BYPASS]  = "Bypass tone",
+    [LABEL_MENU + MENU_RC_TIME]         = "Time",
+    [LABEL_MENU + MENU_RC_STBY_ENTER]   = "Enter standby",
+    [LABEL_MENU + MENU_RC_STBY_EXIT]    = "Exit standby",
 };
 
 const char *labels[LABEL_END];

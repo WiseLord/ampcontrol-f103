@@ -245,10 +245,10 @@ static void actionHandleRemote(void)
 
         // Emulate encoder
         switch (rcCmd) {
-        case RC_CMD_PARAM_UP:
+        case RC_CMD_VOL_UP:
             actionHandleEncoder(+1);
             break;
-        case RC_CMD_PARAM_DOWN:
+        case RC_CMD_VOL_DOWN:
             actionHandleEncoder(-1);
             break;
         default:
