@@ -38,78 +38,108 @@ static void actionNextAudioInput(AudioProc *aProc)
         scrPar.input = 0;
 }
 
-static void actionChangeCurrentInput(int8_t diff)
-{
-    screenSet(SCREEN_AUDIO_PARAM);
-    scrPar.tune = AUDIO_TUNE_GAIN;
-    actionSet(ACTION_AUDIO_PARAM_CHANGE, diff);
-}
-
-static void actionHandleButtons(void)
+static void actionGetButtons(void)
 {
     CmdBtn cmdBtn = getBtnCmd();
 
     if (cmdBtn & 0xFF00) {
-        cmdBtn >>= 8;
         action.type = ACTION_BTN_LONG;
+        action.value = cmdBtn >> 8;
     } else if (cmdBtn & 0x00FF) {
         action.type = ACTION_BTN_SHORT;
+        action.value = cmdBtn & 0xFF;
     }
 
-    action.value = cmdBtn;
 }
 
-static void actionRemapButtons(void)
+static void actionGetEncoder(void)
+{
+    int8_t encVal = getEncoder();
+
+    if (encVal) {
+        action.type = ACTION_ENCODER;
+        action.value = encVal;
+    }
+}
+
+static void actionGetRemote(void)
+{
+    RcData rcData = rcRead(true);
+
+    if (rcData.ready) {
+        RcCmd cmd = rcGetCmd(&rcData);
+        if (rcData.repeat) {
+            // Allow repeat only following commands
+            if (cmd != RC_CMD_VOL_UP &&
+                cmd != RC_CMD_VOL_DOWN) {
+                return;
+            }
+        }
+        action.type = ACTION_REMOTE;
+        action.value = (int16_t)cmd;
+    }
+}
+
+static void actionGetTimers(void)
+{
+    if (swTimGetDisplay() == 0) {
+        action.type = ACTION_DISP_EXPIRED;
+    } else if (swTimGetInitHw() == 0) {
+        action.type = ACTION_INIT_HW;
+    }
+}
+
+
+
+static void actionRemapBtnShort(void)
+{
+//    Screen screen = screenGet();
+
+    switch (action.value) {
+    case BTN_D0:
+        action.type = ACTION_STANDBY;
+        action.value = STBY_SWITCH;
+        break;
+    case BTN_D1:
+        action.type = ACTION_AUDIO_INPUT;
+        break;
+    case BTN_D2:
+        action.type = ACTION_RTC_MODE;
+        break;
+    case BTN_D3:
+        action.type = ACTION_PREV;
+        break;
+    case BTN_D4:
+        action.type = ACTION_NEXT;
+        break;
+    case BTN_D5:
+        action.type = ACTION_OK;
+        break;
+    default:
+        break;
+    }
+}
+
+static void actionRemapBtnLong(void)
 {
     Screen screen = screenGet();
 
-    switch (action.type) {
-    case ACTION_BTN_SHORT:
-        switch (action.value) {
-        case BTN_D0:
-            action.type = ACTION_STANDBY;
-            action.value = STBY_SWITCH;
-            break;
-        case BTN_D1:
-            action.type = ACTION_AUDIO_INPUT;
-            break;
-        case BTN_D2:
-            action.type = ACTION_RTC_MODE;
-            break;
-        case BTN_D3:
-            action.type = ACTION_PREV;
-            break;
-        case BTN_D4:
-            action.type = ACTION_NEXT;
-            break;
-        case BTN_D5:
-            action.type = ACTION_OK;
-            break;
-        default:
-            break;
-        }
+    switch (action.value) {
+    case BTN_D0:
+        action.type = ACTION_BR_WORK;
         break;
-    case ACTION_BTN_LONG:
-        switch (action.value) {
-        case BTN_D0:
-            action.type = ACTION_BR_WORK;
-            break;
-        case BTN_D1:
-            break;
-        case BTN_D2:
-            break;
-        case BTN_D3:
-            break;
-        case BTN_D4:
-            break;
-        case BTN_D5:
-            if (screen == SCREEN_STANDBY) {
-                action.type = ACTION_MENU_SELECT;
-                action.value = MENU_SETUP_AUDIO;
-            }
-            break;
-        default:
-            break;
+    case BTN_D1:
+        break;
+    case BTN_D2:
+        break;
+    case BTN_D3:
+        break;
+    case BTN_D4:
+        break;
+    case BTN_D5:
+        if (screen == SCREEN_STANDBY) {
+            action.type = ACTION_MENU_SELECT;
+            action.value = MENU_SETUP_LANG;
         }
         break;
     default:
@@ -117,7 +147,101 @@ static void actionRemapButtons(void)
     }
 }
 
-static void actionRemapActions(void)
+
+static void actionRemapRemote(void)
+{
+    switch (action.value) {
+    case RC_CMD_STBY_SWITCH:
+        action.type = ACTION_STANDBY;
+        action.value = STBY_SWITCH;
+        break;
+    case RC_CMD_MUTE:
+        break;
+    case RC_CMD_VOL_UP:
+        action.type = ACTION_ENCODER;
+        action.value = +1;
+        break;
+    case RC_CMD_VOL_DOWN:
+        action.type = ACTION_ENCODER;
+        action.value = -1;
+        break;
+    case RC_CMD_MENU:
+        break;
+    case RC_CMD_CHAN_NEXT:
+        break;
+    case RC_CMD_CHAN_PREV:
+        break;
+    case RC_CMD_IN_NEXT:
+        break;
+    case RC_CMD_IN_PREV:
+        break;
+    case RC_CMD_IN_0:
+    case RC_CMD_IN_1:
+    case RC_CMD_IN_2:
+    case RC_CMD_IN_3:
+    case RC_CMD_IN_4:
+    case RC_CMD_IN_5:
+    case RC_CMD_IN_6:
+    case RC_CMD_IN_7:
+        break;
+
+    case RC_CMD_STBY_ENTER:
+        action.type = ACTION_STANDBY;
+        action.value = STBY_ENTER;
+        break;
+    case RC_CMD_STBY_EXIT:
+        action.type = ACTION_STANDBY;
+        action.value = STBY_EXIT;
+        break;
+    default:
+        break;
+    }
+}
+
+static void actionRemapEncoder()
+{
+    Screen screen = screenGet();
+
+    if (SCREEN_STANDBY == screen)
+        return;
+
+    int16_t encCnt = action.value;
+
+    switch (screen) {
+    case SCREEN_TIME:
+        if (rtcGetMode() == RTC_NOEDIT) {
+            actionSet(ACTION_AUDIO_PARAM_CHANGE, encCnt);
+        } else {
+            actionSet(ACTION_RTC_CHANGE, encCnt);
+        }
+        break;
+    case SCREEN_BRIGHTNESS:
+        actionSet(ACTION_BR_WORK, encCnt);
+        break;
+    case SCREEN_MENU:
+        actionSet(ACTION_MENU_CHANGE, encCnt);
+        break;
+    default:
+        actionSet(ACTION_AUDIO_PARAM_CHANGE, encCnt);
+        break;
+    }
+
+    if (ACTION_AUDIO_PARAM_CHANGE == action.type) {
+        screenSet(SCREEN_AUDIO_PARAM);
+        switch (screen) {
+        case SCREEN_AUDIO_INPUT:
+            scrPar.tune = AUDIO_TUNE_GAIN;
+            break;
+        case SCREEN_SPECTRUM:
+            scrPar.tune = AUDIO_TUNE_VOLUME;
+        default:
+            break;
+        }
+    }
+}
+
+
+static void actionRemapCommon(void)
 {
     Screen screen = screenGet();
 
@@ -157,7 +281,7 @@ static void actionRemapActions(void)
         switch (screen) {
         case SCREEN_MENU:
             action.type = ACTION_MENU_SELECT;
-            action.value = menuGetFirstChild();
+            action.value = (int16_t)(menuGetFirstChild());
             break;
         default:
             break;
@@ -169,7 +293,7 @@ static void actionRemapActions(void)
 
     if (SCREEN_STANDBY == screen &&
         (ACTION_STANDBY != action.type &&
-         ACTION_RC_CMD != action.type &&
+         ACTION_REMOTE != action.type &&
          ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
@@ -181,107 +305,48 @@ static void actionRemapActions(void)
     }
 }
 
-static void actionHandleTimers(void)
-{
-    if (ACTION_NONE == action.type) {
-        if (swTimGetDisplay() == 0) {
-            action.type = ACTION_DISP_EXPIRED;
-        } else if (swTimGetInitHw() == 0) {
-            action.type = ACTION_INIT_HW;
-        }
-    }
-}
-
-static void actionHandleEncoder(int8_t diff)
-{
-    Screen screen = screenGet();
-
-    if (ACTION_NONE == action.type) {
-        int8_t encCnt = diff ? diff : getEncoder();
-
-        if (encCnt) {
-            switch (screen) {
-            case SCREEN_STANDBY:
-                break;
-            case SCREEN_TIME:
-                actionSet(ACTION_RTC_CHANGE, encCnt);
-                break;
-            case SCREEN_BRIGHTNESS:
-                actionSet(ACTION_BR_WORK, encCnt);
-                break;
-            case SCREEN_AUDIO_INPUT:
-                actionChangeCurrentInput(encCnt);
-                break;
-            case SCREEN_MENU:
-                actionSet(ACTION_MENU_CHANGE, encCnt);
-                break;
-            case SCREEN_SPECTRUM:
-                screenSet(SCREEN_AUDIO_PARAM);
-                scrPar.tune = AUDIO_TUNE_VOLUME;
-            default:
-                actionSet(ACTION_AUDIO_PARAM_CHANGE, encCnt);
-                break;
-            }
-        }
-    }
-}
-
-static void actionHandleRemote(void)
-{
-    Screen screen = screenGet();
-
-    RcData rcData = rcRead(true);
-
-    if (!rcData.ready)
-        return;
-
-    if (screen == SCREEN_MENU) {
-        if (!rcData.repeat) {
-            action.type = ACTION_MENU_CHANGE;
-            action.value = 0;
-        }
-    } else {
-        RcCmd rcCmd = rcGetCmd(&rcData);
-
-        // Emulate encoder
-        switch (rcCmd) {
-        case RC_CMD_VOL_UP:
-            actionHandleEncoder(+1);
-            break;
-        case RC_CMD_VOL_DOWN:
-            actionHandleEncoder(-1);
-            break;
-        default:
-            break;
-        }
-
-        if (!rcData.repeat) {
-            switch (rcCmd) {
-            case RC_CMD_STBY_SWITCH:
-                actionSet(ACTION_STANDBY, STBY_SWITCH);
-                break;
-            default:
-                break;
-            }
-        }
-    }
-}
 
 Action actionUserGet(void)
 {
     actionSet(ACTION_NONE, 0);
 
-    actionHandleButtons();
-    actionRemapButtons();
-    actionHandleRemote();
-    actionRemapActions();
+    actionGetButtons();
 
-    actionHandleEncoder(0);
+    if (ACTION_NONE == action.type) {
+        actionGetEncoder();
+    }
 
-    actionHandleTimers();
+    if (ACTION_NONE == action.type) {
+        actionGetRemote();
+    }
+
+    if (ACTION_NONE == action.type) {
+        actionGetTimers();
+    }
+
+    switch (action.type) {
+    case ACTION_BTN_SHORT:
+        actionRemapBtnShort();
+        break;
+    case ACTION_BTN_LONG:
+        actionRemapBtnLong();
+        break;
+    case ACTION_REMOTE:
+        actionRemapRemote();
+        break;
+    default:
+        break;
+    }
+
+    if (ACTION_ENCODER == action.type) {
+        actionRemapEncoder();
+    }
+
+    actionRemapCommon();
 
     return action;
 }
+
 
 void actionHandle(Action action, uint8_t visible)
 {
