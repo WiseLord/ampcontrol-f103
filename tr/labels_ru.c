@@ -1,6 +1,6 @@
 #include "labels.h"
 
-const char * const labels_ru[LABEL_END] = {
+const char *const labels_ru[LABEL_END] = {
     [LABEL_SUNDAY]          = "ВОСКРЕСЕНЬЕ",
     [LABEL_MONDAY]          = "ПОНЕДЕЛЬНИК",
     [LABEL_TUESDAY]         = "ВТОРНИК",
@@ -30,6 +30,18 @@ const char * const labels_ru[LABEL_END] = {
     [LABEL_GAIN6]           = "Вход 6",
     [LABEL_GAIN7]           = "Вход 7",
 
+
+    [LABEL_BOOL_OFF]        = "ВКЛ",
+    [LABEL_BOOL_ON]         = "ВЫКЛ",
+
+    [LABEL_MENU + MENU_NULL]            = "Назад",
+
     [LABEL_MENU + MENU_SETUP]           = "Настройки",
     [LABEL_MENU + MENU_SETUP_LANG]      = "Язык",
+    [LABEL_MENU + MENU_SETUP_AUDIO]     = "Аудио",
+    [LABEL_MENU + MENU_SETUP_TUNER]     = "Тюнер",
+    [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Спектр",
+    [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Дисплей",
+    [LABEL_MENU + MENU_SETUP_INPUT]     = "Ввод",
+    [LABEL_MENU + MENU_SETUP_RC]        = "Пульт",
 };

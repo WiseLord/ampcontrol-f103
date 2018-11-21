@@ -3,7 +3,7 @@
 static const CanvasParam canvasParam = {
     .time.hmsFont = &fontterminusdig80,
     .time.dmyFont = &fontterminusdig64,
-    .time.wdFont = &fontterminusmod32x2,
+    .time.wdFont = &fontterminusmod18x3,
     .time.hmsY = 10,
     .time.dmyY = 100,
     .time.wdY = 170,

@@ -65,8 +65,8 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
 
     [LABEL_LANG + LANG_DEFAULT]         = "English",
-    [LABEL_LANG + LANG_BY]              = "Belarusian",
-    [LABEL_LANG + LANG_RU]              = "Russian",
+    [LABEL_LANG + LANG_BY]              = "Беларуская",
+    [LABEL_LANG + LANG_RU]              = "Русский",
 
     [LABEL_MENU + MENU_NULL]            = "Up menu",
 
