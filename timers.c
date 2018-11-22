@@ -8,6 +8,7 @@ static volatile int16_t timDisplay = SW_TIM_OFF;
 static volatile int16_t timSpConvert = SW_TIM_OFF;
 static volatile int16_t timTunerPoll = SW_TIM_OFF;
 static volatile int16_t timInitHw = SW_TIM_OFF;
+static volatile int16_t timRcRepeat = SW_TIM_OFF;
 
 static void TIM2_Init(void)
 {
@@ -83,6 +84,8 @@ void swTimUpdate(void)
         timTunerPoll--;
     if (timInitHw > 0)
         timInitHw--;
+    if (timRcRepeat > 0)
+        timRcRepeat--;
 }
 
 void swTimSetDisplay(int16_t value)
@@ -123,4 +126,14 @@ void swTimSetInitHw(int16_t value)
 int16_t swTimGetInitHw(void)
 {
     return timInitHw;
+}
+
+void swTimSetRcRepeat(int16_t value)
+{
+    timRcRepeat = value;
+}
+
+int16_t swTimGetRcRepeat(void)
+{
+    return timRcRepeat;
 }

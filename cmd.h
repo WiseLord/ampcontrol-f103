@@ -13,6 +13,16 @@ extern "C" {
     CMD(MENU)               \
     CMD(CHAN_NEXT)          \
     CMD(CHAN_PREV)          \
+    CMD(DIG_0)              \
+    CMD(DIG_1)              \
+    CMD(DIG_2)              \
+    CMD(DIG_3)              \
+    CMD(DIG_4)              \
+    CMD(DIG_5)              \
+    CMD(DIG_6)              \
+    CMD(DIG_7)              \
+    CMD(DIG_8)              \
+    CMD(DIG_9)              \
     CMD(IN_NEXT)            \
     CMD(IN_PREV)            \
     CMD(IN_0)               \

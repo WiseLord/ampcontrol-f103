@@ -31,9 +31,10 @@ void rtcIRQ(void);
 void rtcGetTime(RTC_type *rtc);
 void rtcSetTime(int8_t mode, int8_t value);
 void rtcChangeTime(int8_t mode, int8_t diff);
+void rtcEditTime(int8_t mode, int8_t value);
 
 int8_t rtcGetMode(void);
 void rtcSetMode(int8_t mode);
-void rtcModeNext(void);
+void rtcChangeMode(int8_t diff);
 
 #endif // RTC_H

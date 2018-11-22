@@ -21,4 +21,7 @@ int16_t swTimGetTunerPoll(void);
 void swTimSetInitHw(int16_t value);
 int16_t swTimGetInitHw(void);
 
+void swTimSetRcRepeat(int16_t value);
+int16_t swTimGetRcRepeat(void);
+
 #endif // TIMERS_H

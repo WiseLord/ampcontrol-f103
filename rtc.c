@@ -171,6 +171,24 @@ void rtcChangeTime(int8_t mode, int8_t diff)
     rtcUpdate(&rtc, mode, value);
 }
 
+void rtcEditTime(int8_t mode, int8_t digit)
+{
+    RTC_type rtc;
+    secToRtc(rtcTime, &rtc);
+
+    int8_t value = *((int8_t *)&rtc + mode);
+    int8_t timeMax = *((const int8_t *)&rtcMax + mode);
+    if (mode == RTC_DATE)
+        timeMax = rtcDaysInMonth(&rtc);
+
+    value %= 10;
+    value *= 10;
+    if (value > timeMax)
+        value = 0;
+    value += digit;
+
+    rtcUpdate(&rtc, mode, value);
+}
 
 int8_t rtcGetMode(void)
 {
@@ -182,9 +200,14 @@ void rtcSetMode(int8_t mode)
     rtcMode = mode;
 }
 
-void rtcModeNext(void)
+void rtcChangeMode(int8_t diff)
 {
-    if (++rtcMode > RTC_NOEDIT) {
+    rtcMode += diff;
+
+    if (rtcMode < RTC_HOUR) {
+        rtcMode = RTC_NOEDIT;
+    }
+    if (rtcMode > RTC_NOEDIT) {
         rtcMode = RTC_HOUR;
     }
 }

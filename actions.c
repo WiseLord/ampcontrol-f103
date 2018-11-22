@@ -70,13 +70,24 @@ static void actionGetRemote(void)
         RcCmd cmd = rcGetCmd(&rcData);
         if (rcData.repeat) {
             // Allow repeat only following commands
-            if (cmd != RC_CMD_VOL_UP &&
-                cmd != RC_CMD_VOL_DOWN) {
+            if (cmd == RC_CMD_VOL_UP ||
+                cmd == RC_CMD_VOL_DOWN) {
+                if (swTimGetRcRepeat() > 0)
+                    return;
+            } else {
                 return;
             }
+        } else {
+            swTimSetRcRepeat(400);  // Allow repeat after this time
         }
-        action.type = ACTION_REMOTE;
-        action.value = (int16_t)cmd;
+
+        if (screenGet() == SCREEN_MENU) {
+            action.type = ACTION_MENU_CHANGE;
+            action.value = 0;
+        } else {
+            action.type = ACTION_REMOTE;
+            action.value = (int16_t)cmd;
+        }
     }
 }
 
@@ -88,7 +99,6 @@ static void actionGetTimers(void)
         action.type = ACTION_INIT_HW;
     }
 }
-
 
 
 static void actionRemapBtnShort(void)
@@ -147,7 +157,6 @@ static void actionRemapBtnLong(void)
     }
 }
 
-
 static void actionRemapRemote(void)
 {
     switch (action.value) {
@@ -171,6 +180,19 @@ static void actionRemapRemote(void)
         break;
     case RC_CMD_CHAN_PREV:
         break;
+    case RC_CMD_DIG_0:
+    case RC_CMD_DIG_1:
+    case RC_CMD_DIG_2:
+    case RC_CMD_DIG_3:
+    case RC_CMD_DIG_4:
+    case RC_CMD_DIG_5:
+    case RC_CMD_DIG_6:
+    case RC_CMD_DIG_7:
+    case RC_CMD_DIG_8:
+    case RC_CMD_DIG_9:
+        action.type = ACTION_DIGIT;
+        action.value -= RC_CMD_DIG_0;
+        break;
     case RC_CMD_IN_NEXT:
         break;
     case RC_CMD_IN_PREV:
@@ -185,6 +207,9 @@ static void actionRemapRemote(void)
     case RC_CMD_IN_7:
         break;
 
+    case RC_CMD_TIME:
+        action.type = ACTION_RTC_MODE;
+        break;
     case RC_CMD_STBY_ENTER:
         action.type = ACTION_STANDBY;
         action.value = STBY_ENTER;
@@ -383,11 +408,40 @@ void actionHandle(Action action, uint8_t visible)
         audioInit();
         audioSetPower(true);
         break;
+    case ACTION_DISP_EXPIRED:
+        rtcSetMode(RTC_NOEDIT);
+        if (SCREEN_STANDBY != screen) {
+            switch (screen) {
+            case SCREEN_MENU:
+                screen = SCREEN_STANDBY;
+                break;
+            default:
+                screen = screenGetDefault();
+                break;
+            }
+        }
+        dispTime = SW_TIM_OFF;
+        break;
+    case ACTION_DIGIT:
+        if (screen == SCREEN_TIME) {
+            dispTime = 5000;
+            rtcEditTime(rtcGetMode(), action.value);
+        }
+        break;
 
+    case ACTION_OK:
+        dispTime = 5000;
+        if (screen == SCREEN_AUDIO_PARAM) {
+            actionNextAudioParam(aProc);
+        } else {
+            screen = SCREEN_AUDIO_PARAM;
+            scrPar.tune = AUDIO_TUNE_VOLUME;
+        }
+        break;
     case ACTION_RTC_MODE:
         if (screen == SCREEN_TIME) {
             dispTime = 15000;
-            rtcModeNext();
+            rtcChangeMode(+1);
         } else {
             dispTime = 5000;
             rtcSetMode(RTC_NOEDIT);
@@ -418,15 +472,6 @@ void actionHandle(Action action, uint8_t visible)
             scrPar.input = aProc->par.input;
         }
         break;
-    case ACTION_OK:
-        dispTime = 5000;
-        if (screen == SCREEN_AUDIO_PARAM) {
-            actionNextAudioParam(aProc);
-        } else {
-            screen = SCREEN_AUDIO_PARAM;
-            scrPar.tune = AUDIO_TUNE_VOLUME;
-        }
-        break;
     case ACTION_AUDIO_PARAM_CHANGE:
         dispTime = 5000;
         audioChangeTune(scrPar.tune, action.value);
@@ -437,28 +482,12 @@ void actionHandle(Action action, uint8_t visible)
     case ACTION_TUNER_NEXT:
         tunerNextStation(TUNER_DIR_UP);
         break;
-
     case ACTION_BR_WORK:
+    case ACTION_BR_STBY:
         screen = SCREEN_BRIGHTNESS;
         dispTime = 5000;
         screenChangeBrighness(action.type, action.value);
         break;
-
-    case ACTION_DISP_EXPIRED:
-        rtcSetMode(RTC_NOEDIT);
-        if (SCREEN_STANDBY != screen) {
-            switch (screen) {
-            case SCREEN_MENU:
-                screen = SCREEN_STANDBY;
-                break;
-            default:
-                screen = screenGetDefault();
-                break;
-            }
-        }
-        dispTime = SW_TIM_OFF;
-        break;
-
     case ACTION_MENU_SELECT:
         menuSetActive(action.value);
         scrPar.parent = menuGet()->parent;
@@ -470,7 +499,6 @@ void actionHandle(Action action, uint8_t visible)
         scrPar.parent = menuGet()->parent;
         dispTime = 10000;
         break;
-
     default:
         break;
     }

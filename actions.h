@@ -23,6 +23,8 @@ typedef enum {
 
     ACTION_DISP_EXPIRED,
 
+    ACTION_DIGIT,
+
     ACTION_PREV,
     ACTION_NEXT,
     ACTION_OK,
