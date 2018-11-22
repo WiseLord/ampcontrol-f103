@@ -26,15 +26,9 @@ typedef struct {
 } RTC_type;
 
 void rtcInit(void);
-
-uint32_t rtcToSec(RTC_type *rtc);
-void secToRtc(uint32_t time, RTC_type *rtc);
+void rtcIRQ(void);
 
 void rtcGetTime(RTC_type *rtc);
-
-void rtcReadTime(void);
-void rtcWriteTime(uint32_t time);
-
 void rtcSetTime(int8_t mode, int8_t value);
 void rtcChangeTime(int8_t mode, int8_t diff);
 

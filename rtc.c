@@ -29,6 +29,83 @@ static int8_t rtcDaysInMonth(RTC_type *rtc)
     return ret;
 }
 
+static uint32_t rtcToSec(RTC_type *rtc)
+{
+    int8_t a;
+    int8_t y;
+    int8_t m;
+    int64_t tm;
+
+    a = ((rtc->month < 3) ? 1 : 0);
+    y = rtc->year + 1 - a;
+    m = rtc->month + (12 * a) - 3;
+
+    tm = rtc->date - 1;
+    tm += (153 * m + 2) / 5;
+    tm += (1461 * y + 3) / 4;
+    tm -= 306;
+
+    tm *= 60 * 60 * 24;
+
+    tm += (rtc->hour * 3600);
+    tm += (rtc->min * 60);
+    tm += (rtc->sec);
+
+    return (uint32_t)tm;
+}
+
+static void secToRtc(uint32_t time, RTC_type *rtc)
+{
+    int8_t a;
+    int8_t y;
+    int8_t m;
+    int64_t tm = time;
+
+    rtc->sec = tm % 60;
+    tm /= 60;
+    rtc->min = tm % 60;
+    tm /= 60;
+    rtc->hour = tm % 24;
+    tm /= 24;
+
+    tm += 306;
+
+    rtc->wday = (tm + 1) % 7;
+
+    y = (int8_t)((tm * 4) / 1461);
+    tm -= (1461 * y + 3) / 4;
+    m = (int8_t)((tm * 5 + 2) / 153);
+    tm -= (153 * m + 2) / 5;
+
+    a = ((m < 10) ? 1 : 0);
+
+    rtc->year = y - a;
+    rtc->month = m + (12 * a) - 9;
+    rtc->date = (int8_t)(tm + 1);
+}
+
+static void rtcUpdate(RTC_type *rtc, int8_t mode, int8_t value)
+{
+    int8_t *time = (int8_t *)rtc + mode;
+    int8_t timeMax = *((const int8_t *)&rtcMax + mode);
+    int8_t timeMin = *((const int8_t *)&rtcMin + mode);
+
+    if (mode == RTC_DATE)
+        timeMax = rtcDaysInMonth(rtc);
+
+    if (value > timeMax)
+        value = timeMin;
+    if (value < timeMin)
+        value = timeMax;
+
+    *time = value;
+
+    uint32_t newTime = rtcToSec(rtc);
+
+    rtcTime = newTime;
+    LL_RTC_TIME_SetCounter(RTC, newTime);
+}
+
 void rtcInit(void)
 {
     // Power interface clock enable
@@ -64,74 +141,15 @@ void rtcInit(void)
     NVIC_EnableIRQ (RTC_IRQn);
 }
 
-uint32_t rtcToSec(RTC_type *rtc)
-{
-    int8_t a;
-    int8_t y;
-    int8_t m;
-    int64_t tm;
-
-    a = ((rtc->month < 3) ? 1 : 0);
-    y = rtc->year + 1 - a;
-    m = rtc->month + (12 * a) - 3;
-
-    tm = rtc->date - 1;
-    tm += (153 * m + 2) / 5;
-    tm += (1461 * y + 3) / 4;
-    tm -= 306;
-
-    tm *= 60 * 60 * 24;
-
-    tm += (rtc->hour * 3600);
-    tm += (rtc->min * 60);
-    tm += (rtc->sec);
-
-    return (uint32_t)tm;
-}
-
-void secToRtc(uint32_t time, RTC_type *rtc)
-{
-    int8_t a;
-    int8_t y;
-    int8_t m;
-    int64_t tm = time;
-
-    rtc->sec = tm % 60;
-    tm /= 60;
-    rtc->min = tm % 60;
-    tm /= 60;
-    rtc->hour = tm % 24;
-    tm /= 24;
-
-    tm += 306;
-
-    rtc->wday = (tm + 1) % 7;
-
-    y = (int8_t)((tm * 4) / 1461);
-    tm -= (1461 * y + 3) / 4;
-    m = (int8_t)((tm * 5 + 2) / 153);
-    tm -= (153 * m + 2) / 5;
-
-    a = ((m < 10) ? 1 : 0);
-
-    rtc->year = y - a;
-    rtc->month = m + (12 * a) - 9;
-    rtc->date = (int8_t)(tm + 1);
-}
-
-void rtcGetTime(RTC_type *rtc)
-{
-    secToRtc(rtcTime, rtc);
-}
-
-void rtcReadTime(void)
+void rtcIRQ(void)
 {
     rtcTime = LL_RTC_TIME_Get(RTC) + 1;
 }
 
-void rtcWriteTime(uint32_t time)
+
+void rtcGetTime(RTC_type *rtc)
 {
-    LL_RTC_TIME_SetCounter(RTC, time);
+    secToRtc(rtcTime, rtc);
 }
 
 void rtcSetTime(int8_t mode, int8_t value)
@@ -139,24 +157,7 @@ void rtcSetTime(int8_t mode, int8_t value)
     RTC_type rtc;
     secToRtc(rtcTime, &rtc);
 
-    int8_t *time = (int8_t *)&rtc + mode;
-    int8_t timeMax = *((const int8_t *)&rtcMax + mode);
-    int8_t timeMin = *((const int8_t *)&rtcMin + mode);
-
-    if (mode == RTC_DATE)
-        timeMax = rtcDaysInMonth(&rtc);
-
-    if (value > timeMax)
-        return;
-    if (value < timeMin)
-        return;
-
-    *time = value;
-
-    uint32_t newTime = rtcToSec(&rtc);
-
-    rtcTime = newTime;
-    rtcWriteTime(newTime);
+    rtcUpdate(&rtc, mode, value);
 }
 
 void rtcChangeTime(int8_t mode, int8_t diff)
@@ -164,27 +165,14 @@ void rtcChangeTime(int8_t mode, int8_t diff)
     RTC_type rtc;
     secToRtc(rtcTime, &rtc);
 
-    int8_t *time = (int8_t *)&rtc + mode;
-    int8_t timeMax = *((const int8_t *)&rtcMax + mode);
-    int8_t timeMin = *((const int8_t *)&rtcMin + mode);
+    int8_t value = *((int8_t *)&rtc + mode);
+    value += diff;
 
-    if (mode == RTC_DATE)
-        timeMax = rtcDaysInMonth(&rtc);
-
-    *time += diff;
-
-    if (*time > timeMax)
-        *time = timeMin;
-    if (*time < timeMin)
-        *time = timeMax;
-
-    uint32_t newTime = rtcToSec(&rtc);
-
-    rtcTime = newTime;
-    rtcWriteTime(newTime);
+    rtcUpdate(&rtc, mode, value);
 }
 
-int8_t rtcGetMode()
+
+int8_t rtcGetMode(void)
 {
     return rtcMode;
 }
@@ -194,7 +182,7 @@ void rtcSetMode(int8_t mode)
     rtcMode = mode;
 }
 
-void rtcModeNext()
+void rtcModeNext(void)
 {
     if (++rtcMode > RTC_NOEDIT) {
         rtcMode = RTC_HOUR;

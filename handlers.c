@@ -65,7 +65,7 @@ void RTC_IRQHandler(void)
         LL_RTC_ClearFlag_SEC(RTC);
 
         // Callback
-        rtcReadTime();
+        rtcIRQ();
     }
 }
 
