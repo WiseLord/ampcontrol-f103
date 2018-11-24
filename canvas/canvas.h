@@ -25,6 +25,18 @@ typedef struct {
 } DispParam;
 
 typedef struct {
+    int16_t sc;                 // Count of bar lines
+    uint8_t sw;                 // Width of bar line
+    int16_t barY;               // Y pos of the bar
+    uint16_t barW;              // Width of the bar
+    uint8_t half;               // Height of upper/lower bar part
+    uint8_t middle;             // Height of middle bar part
+} CanvasBar;
+
+typedef struct {
+    int16_t width;
+    int16_t height;
+
     struct {
         const tFont *hmsFont;       // Font to draw hours/minutes/seconds
         const tFont *dmyFont;       // Font to draw day/month/year
@@ -34,24 +46,14 @@ typedef struct {
         uint8_t wdY;                // Y position of weekday
     } time;
     struct {
-        int16_t sc;                 // Count of bar lines
-        uint8_t sw;                 // Width of bar line
-        uint16_t barY;              // Y pos of the bar
-        uint16_t barW;              // Width of the bar
-        uint8_t half;               // Height of upper/lower bar part
-        uint8_t middle;             // Height of middle bar part
-    } bar;
-    struct {
         const tFont *headFont;      // Font to draw menu header
         const tFont *menuFont;      // Foft to draw menu item
         uint8_t itemCnt;            // Number of items can be shown
     } menu;
     struct {
-        const tFont *lblFont;       // Foft to draw tune label
         const tFont *valFont;       // Foft to draw tune label
-        uint16_t valY;              // Y position of the tune value
-        const tFont *iconSet;       // Tune icon set
-        uint16_t iconColor;         // Tune icon color
+        int16_t valY;               // Y position of the tune value
+        CanvasBar bar;
     } tune;
     struct {
         uint8_t step;               // Step in pixels between spectrum columns
@@ -59,31 +61,29 @@ typedef struct {
         uint8_t width;              // Width of visible part of the column
     } sp;
     struct {
-        const tFont *lblFont;       // Font of the tuner label
+        CanvasBar bar;
     } tuner;
-} CanvasParam;
+    const tFont *lblFont;           // Main label font
+    const tFont *iconSet;           // Main icon set
+    uint16_t iconColor;             // Main icon color
+} Layout;
 
 typedef struct {
     Glcd *glcd;
-
-    uint16_t width;
-    uint16_t height;
-
+    const Layout *lt;
     uint16_t color;
-
-    const CanvasParam *par;
 } Canvas;
 
 // Canvas variants
-void gc160x128Init(Canvas **driver);
-void gc176x132Init(Canvas **driver);
-void gc220x176Init(Canvas **driver);
-void gc320x240Init(Canvas **driver);
-void gc400x240Init(Canvas **driver);
-void gc480x320Init(Canvas **driver);
-void gm128x64Init(Canvas **driver);
+void lt160x128Init(Canvas *canvas);
+void lt176x132Init(Canvas *canvas);
+void lt220x176Init(Canvas *canvas);
+void lt320x240Init(Canvas *canvas);
+void lt400x240Init(Canvas *canvas);
+void lt480x320Init(Canvas *canvas);
+void lt128x64Init(Canvas *canvas);
 #ifdef EMUL_DISP
-void emulCanvasInit(Canvas **driver);
+void ltEmulInit(Canvas **driver);
 #endif
 
 void canvasInit(void);

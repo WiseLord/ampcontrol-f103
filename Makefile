@@ -81,13 +81,13 @@ C_DEFS += -D_DISP_$(DISPVAR)
 C_DEFS += -D_DISP_LO_BYTE
 
 C_SOURCES += canvas/canvas.c
-C_SOURCES += canvas/gm128x64.c
-C_SOURCES += canvas/gc160x128.c
-C_SOURCES += canvas/gc176x132.c
-C_SOURCES += canvas/gc220x176.c
-C_SOURCES += canvas/gc320x240.c
-C_SOURCES += canvas/gc400x240.c
-C_SOURCES += canvas/gc480x320.c
+C_SOURCES += canvas/lt128x64.c
+C_SOURCES += canvas/lt160x128.c
+C_SOURCES += canvas/lt176x132.c
+C_SOURCES += canvas/lt220x176.c
+C_SOURCES += canvas/lt320x240.c
+C_SOURCES += canvas/lt400x240.c
+C_SOURCES += canvas/lt480x320.c
 
 # Audio source files
 ifeq "$(findstring TDA7439, $(APROC_LIST))" "TDA7439"

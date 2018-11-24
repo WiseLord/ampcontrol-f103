@@ -52,13 +52,13 @@ SOURCES += \
 	../../../display/icons/icons-amp-64.c \
 	../../../display/glcd.c \
     ../../../canvas/canvas.c \
-    ../../../canvas/gc160x128.c \
-    ../../../canvas/gc176x132.c \
-    ../../../canvas/gc220x176.c \
-    ../../../canvas/gc320x240.c \
-    ../../../canvas/gc400x240.c \
-    ../../../canvas/gc480x320.c \
-    ../../../canvas/gm128x64.c \
+	../../../canvas/lt160x128.c \
+	../../../canvas/lt176x132.c \
+	../../../canvas/lt220x176.c \
+	../../../canvas/lt320x240.c \
+	../../../canvas/lt400x240.c \
+	../../../canvas/lt480x320.c \
+	../../../canvas/lt128x64.c \
     ../../../menu.c \
     ../../../tuner/tuner.c \
     ../../../audio/audio.c \

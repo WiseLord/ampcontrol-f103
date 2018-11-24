@@ -17,22 +17,22 @@ static ScreenParam scrPar;
 static Canvas *canvas;
 static Spectrum spectrum;
 
-void emulCanvasInit(Canvas **value)
+void ltEmulInit(Canvas **value)
 {
 #if EMUL_DISP_WIDTH == 160 && EMUL_DISP_HEIGHT == 128
-    gc160x128Init(value);
+    lt160x128Init(value);
 #elif EMUL_DISP_WIDTH == 176 && EMUL_DISP_HEIGHT == 132
-    gc176x132Init(value);
+    lt176x132Init(value);
 #elif EMUL_DISP_WIDTH == 220 && EMUL_DISP_HEIGHT == 176
-    gc220x176Init(value);
+    lt220x176Init(value);
 #elif EMUL_DISP_WIDTH == 320 && EMUL_DISP_HEIGHT == 240
-    gc320x240Init(value);
+    lt320x240Init(value);
 #elif EMUL_DISP_WIDTH == 400 && EMUL_DISP_HEIGHT == 240
-    gc400x240Init(value);
+    lt400x240Init(value);
 #elif EMUL_DISP_WIDTH == 480 && EMUL_DISP_HEIGHT == 320
-    gc480x320Init(value);
+    lt480x320Init(value);
 #elif EMUL_DISP_WIDTH == 128 && EMUL_DISP_HEIGHT == 64
-    gm128x64Init(value);
+    lt128x64Init(value);
 #else
 #error "No such canvas"
 #endif
