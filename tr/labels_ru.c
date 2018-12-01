@@ -31,8 +31,8 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_GAIN7]           = "Вход 7",
 
 
-    [LABEL_BOOL_OFF]        = "ВКЛ",
-    [LABEL_BOOL_ON]         = "ВЫКЛ",
+    [LABEL_BOOL_OFF]        = "ВЫКЛ",
+    [LABEL_BOOL_ON]         = "ВКЛ",
 
     [LABEL_MENU + MENU_NULL]            = "Назад",
 

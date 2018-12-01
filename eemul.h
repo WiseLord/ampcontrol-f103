@@ -55,6 +55,8 @@ typedef enum {
     EE_TUNER_DEEMPH,
     EE_TUNER_VOLUME,
 
+    EE_DISPLAY_ROTATE,
+
     EE_LANGUAGE = 128, // Skip half of items to fix RC offset
     FOREACH_CMD(GENERATE_EE_RC)
 

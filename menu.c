@@ -3,6 +3,7 @@
 
 #include "audio/audio.h"
 #include "display/glcd.h"
+#include "canvas/canvas.h"
 #include "tuner/tuner.h"
 #include "eemul.h"
 
@@ -44,6 +45,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SPECTRUM_SPEED]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM},
 
     [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER},
+    [MENU_DISPLAY_ROTATE]   = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL},
 
     [MENU_INPUT_ENC_RES]    = {MENU_SETUP_INPUT,        MENU_TYPE_NUMBER},
 
@@ -114,6 +116,10 @@ static int16_t menuGetValue(MenuIdx index)
     case MENU_TUNER_VOLUME:
         ret = tPar->volume;
         break;
+
+    case MENU_DISPLAY_ROTATE:
+        ret = eeReadI(EE_DISPLAY_ROTATE, 0) ? 1 : 0;
+        break;
     default:
         ret = 0;
         break;
@@ -176,6 +182,12 @@ static void menuStoreCurrentValue(void)
     case MENU_TUNER_VOLUME:
         tPar->volume = menu.value;
         eeUpdate(EE_TUNER_VOLUME, tPar->volume);
+        break;
+
+    case MENU_DISPLAY_ROTATE:
+        glcdRotate(menu.value ? LCD_ROTATE_180 : LCD_ROTATE_0);
+        canvasClear();
+        eeUpdate(EE_DISPLAY_ROTATE, menu.value);
         break;
     default:
         break;

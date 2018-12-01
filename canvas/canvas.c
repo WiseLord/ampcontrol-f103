@@ -1,5 +1,7 @@
 #include "canvas.h"
 
+#include "../eemul.h"
+
 static Canvas canvas;
 
 #define COLOR_CANVAS    LCD_COLOR_BLACK
@@ -33,8 +35,8 @@ void canvasInit(void)
 
     glcdInit(&canvas.glcd);
 
-    // TODO: Read rotate value from settings
-    glcdRotate(LCD_ROTATE_0);
+    bool rotate = eeReadI(EE_DISPLAY_ROTATE, false);
+    glcdRotate(rotate ? LCD_ROTATE_180 : LCD_ROTATE_0);
 
     canvas.color = LCD_COLOR_BLACK;
     menuGet()->dispSize = canvas.lt->menu.itemCnt;
