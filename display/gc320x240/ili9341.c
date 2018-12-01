@@ -14,6 +14,7 @@ static DispDriver drv = {
     .drawPixel = ili9341DrawPixel,
     .drawRectangle = ili9341DrawRectangle,
     .drawImage = ili9341DrawImage,
+    .rotate = ili9341Rotate,
 };
 
 static inline void ili9341SendCmd(uint8_t cmd) __attribute__((always_inline));
@@ -98,8 +99,8 @@ static void ili9341InitSeq(void)
     dispdrvSendData8(0x07);
 
     ili9341SendCmd(ILI9341_DISCTRL);
-    dispdrvSendData8(0x08);
-    dispdrvSendData8(0x82);
+    dispdrvSendData8(0x0A);
+    dispdrvSendData8(0xE2);
     dispdrvSendData8(0x27);
 
     // Retate
@@ -168,6 +169,23 @@ void ili9341Init(DispDriver **driver)
 {
     *driver = &drv;
     ili9341InitSeq();
+}
+
+void ili9341Rotate(uint8_t rotate)
+{
+    CLR(DISP_CS);
+
+    if (rotate & LCD_ROTATE_180) {
+        ili9341SendCmd(ILI9341_DISCTRL);
+        dispdrvSendData8(0x0A);
+        dispdrvSendData8(0x82);
+    } else {
+        ili9341SendCmd(ILI9341_DISCTRL);
+        dispdrvSendData8(0x0A);
+        dispdrvSendData8(0xE2);
+    }
+
+    SET(DISP_CS);
 }
 
 void ili9341Sleep(void)
