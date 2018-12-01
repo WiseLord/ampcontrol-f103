@@ -56,6 +56,13 @@ void glcdInit(Glcd **value)
     *value = &glcd;
 }
 
+void glcdRotate(uint8_t rotate)
+{
+    if (glcd.drv->rotate) {
+        glcd.drv->rotate(rotate);
+    }
+}
+
 char *glcdPrepareNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
 {
     uint8_t numdiv;

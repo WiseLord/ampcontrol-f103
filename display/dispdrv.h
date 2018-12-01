@@ -13,12 +13,16 @@ typedef struct {
     void (*drawRectangle)(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
     void (*drawImage)(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
     void (*updateFB)(void);
+    void (*rotate)(uint8_t rotate);
 
     uint16_t width;
     uint16_t height;
 
     uint8_t bus;
 } DispDriver;
+
+#define LCD_ROTATE_0                    0x00
+#define LCD_ROTATE_180                  0x02
 
 #define LCD_BR_MIN                      0
 #define LCD_BR_MAX                      32

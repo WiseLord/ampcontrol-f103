@@ -13,6 +13,7 @@ static DispDriver drv = {
     .drawPixel = ili9320DrawPixel,
     .drawRectangle = ili9320DrawRectangle,
     .drawImage = ili9320DrawImage,
+    .rotate = ili9320Rotate,
 };
 
 static inline void ili9320SelectReg(uint16_t reg) __attribute__((always_inline));
@@ -39,9 +40,9 @@ static inline void ili9320InitSeq(void)
     // Initial Sequence
     ili9320WriteReg(0x00E5, 0x8000);    // Set the Vcore voltage and this setting is must
     ili9320WriteReg(0x0000, 0x0001);    // Start internal OSC
-    ili9320WriteReg(0x0001, 0x0000);    // Set SS and SM bit
+    ili9320WriteReg(0x0001, 0x0100);    // Set SS and SM bit
     ili9320WriteReg(0x0002, 0x0700);    // Set 1 line inversion
-    ili9320WriteReg(0x0003, 0x1020);    // Set GRAM write direction and BGR = 1
+    ili9320WriteReg(0x0003, 0x1030);    // Set GRAM write direction and BGR = 1
     ili9320WriteReg(0x0004, 0x0000);    // Resize register
 
     ili9320WriteReg(0x0008, 0x0202);    // Set the back porch and front porch
@@ -104,17 +105,19 @@ static inline void ili9320InitSeq(void)
     SET(DISP_CS);
 }
 
+
+
 static inline void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w,
                                     uint16_t h) __attribute__((always_inline));
 static inline void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-    ili9320WriteReg(0x0050, ILI9320_WIDTH - y - h);
-    ili9320WriteReg(0x0051, ILI9320_WIDTH - y - 1);
+    ili9320WriteReg(0x0050, y);
+    ili9320WriteReg(0x0051, y + h - 1);
     ili9320WriteReg(0x0052, x);
     ili9320WriteReg(0x0053, x + w - 1);
 
     // Set cursor
-    ili9320WriteReg(0x0020, ILI9320_WIDTH - y - 1);
+    ili9320WriteReg(0x0020, y);
     ili9320WriteReg(0x0021, x);
 
     // Select RAM mode
@@ -125,6 +128,21 @@ void ili9320Init(DispDriver **driver)
 {
     *driver = &drv;
     ili9320InitSeq();
+}
+
+void ili9320Rotate(uint8_t rotate)
+{
+    CLR(DISP_CS);
+
+    if (rotate & LCD_ROTATE_180) {
+        ili9320WriteReg(0x0001, 0x0000);    // Set SS and SM bit
+        ili9320WriteReg(0x0060, 0xA700);    // Gate scan line
+    } else {
+        ili9320WriteReg(0x0001, 0x0100);    // Set SS and SM bit
+        ili9320WriteReg(0x0060, 0x2700);    // Gate scan line
+    }
+
+    SET(DISP_CS);
 }
 
 void ili9320Sleep(void)
