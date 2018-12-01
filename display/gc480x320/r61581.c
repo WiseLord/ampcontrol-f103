@@ -13,6 +13,7 @@ static DispDriver drv = {
     .drawPixel = r61581DrawPixel,
     .drawRectangle = r61581DrawRectangle,
     .drawImage = r61581DrawImage,
+    .rotate = r61581Rotate,
 };
 
 static inline void r61581SelectReg(uint8_t reg) __attribute__((always_inline));
@@ -48,7 +49,7 @@ static inline void r61581InitSeq(void)
     dispdrvSendData8(0x00); // DBI and Internal oscillator clock
 
     r61581SelectReg(0xC0);  // Panel driving setting
-    dispdrvSendData8(0x13); // REV, BGR, SS
+    dispdrvSendData8(0x16); // REV, BGR, SS
     dispdrvSendData8(0x3B); // NL=0x3B => 480 lines
     dispdrvSendData8(0x00); // SCN=0x00 => Scanning start position
     dispdrvSendData8(0x00); // Line inversion during retrace period and non-lit display area
@@ -140,6 +141,22 @@ void r61581Init(DispDriver **driver)
 {
     *driver = &drv;
     r61581InitSeq();
+}
+
+void r61581Rotate(uint8_t rotate)
+{
+    CLR(DISP_CS);
+
+    if (rotate & LCD_ROTATE_180) {
+        r61581SelectReg(0xC0);  // Panel driving setting
+        dispdrvSendData8(0x13); // REV, BGR, SS
+    } else {
+        r61581SelectReg(0xC0);  // Panel driving setting
+        dispdrvSendData8(0x16); // REV, BGR, SS
+    }
+
+    SET(DISP_CS);
+
 }
 
 void r61581Sleep(void)

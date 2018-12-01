@@ -32,7 +32,9 @@ void canvasInit(void)
 #endif
 
     glcdInit(&canvas.glcd);
-//    glcdRotate(LCD_ROTATE_180);
+
+    // TODO: Read rotate value from settings
+    glcdRotate(LCD_ROTATE_0);
 
     canvas.color = LCD_COLOR_BLACK;
     menuGet()->dispSize = canvas.lt->menu.itemCnt;
