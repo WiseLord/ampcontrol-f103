@@ -11,12 +11,6 @@ extern "C" {
 #include "rtc.h"
 
 typedef enum {
-    INPUT_TUNER = 0,
-
-    INPUT_END
-} Input;
-
-typedef enum {
     SCREEN_STANDBY,
 
     SCREEN_TIME,

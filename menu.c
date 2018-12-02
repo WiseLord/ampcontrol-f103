@@ -31,6 +31,14 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SETUP_RC]         = {MENU_SETUP,              MENU_TYPE_PARENT},
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
+    [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
+    [MENU_AUDIO_IN_1]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
+    [MENU_AUDIO_IN_2]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
+    [MENU_AUDIO_IN_3]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
+    [MENU_AUDIO_IN_4]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
+    [MENU_AUDIO_IN_5]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
+    [MENU_AUDIO_IN_6]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
+    [MENU_AUDIO_IN_7]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
 
     [MENU_TUNER_IC]         = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM},
     [MENU_TUNER_BAND]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM},
@@ -88,6 +96,16 @@ static int16_t menuGetValue(MenuIdx index)
 
     case MENU_AUDIO_IC:
         ret = aproc->ic;
+        break;
+    case MENU_AUDIO_IN_0:
+    case MENU_AUDIO_IN_1:
+    case MENU_AUDIO_IN_2:
+    case MENU_AUDIO_IN_3:
+    case MENU_AUDIO_IN_4:
+    case MENU_AUDIO_IN_5:
+    case MENU_AUDIO_IN_6:
+    case MENU_AUDIO_IN_7:
+        ret = eeReadI(EE_AUDIO_IN0 + (index - MENU_AUDIO_IN_0), IN_TUNER + (index - MENU_AUDIO_IN_0));
         break;
 
     case MENU_TUNER_IC:
@@ -147,6 +165,16 @@ static void menuStoreCurrentValue(void)
     case MENU_AUDIO_IC:
         aproc->ic = menu.value;
         eeUpdate(EE_AUDIO_IC, aproc->ic);
+        break;
+    case MENU_AUDIO_IN_0:
+    case MENU_AUDIO_IN_1:
+    case MENU_AUDIO_IN_2:
+    case MENU_AUDIO_IN_3:
+    case MENU_AUDIO_IN_4:
+    case MENU_AUDIO_IN_5:
+    case MENU_AUDIO_IN_6:
+    case MENU_AUDIO_IN_7:
+        eeUpdate(EE_AUDIO_IN0 + (menu.active - MENU_AUDIO_IN_0), menu.value);
         break;
 
     case MENU_TUNER_IC:
@@ -229,6 +257,19 @@ static void menuValueChange(int8_t diff)
             menu.value = AUDIO_IC_END - 1;
         if (menu.value < AUDIO_IC_NO)
             menu.value = AUDIO_IC_NO;
+        break;
+    case MENU_AUDIO_IN_0:
+    case MENU_AUDIO_IN_1:
+    case MENU_AUDIO_IN_2:
+    case MENU_AUDIO_IN_3:
+    case MENU_AUDIO_IN_4:
+    case MENU_AUDIO_IN_5:
+    case MENU_AUDIO_IN_6:
+    case MENU_AUDIO_IN_7:
+        if (menu.value >= IN_END)
+            menu.value = IN_END - 1;
+        if (menu.value < IN_TUNER)
+            menu.value = IN_TUNER;
         break;
     case MENU_TUNER_IC:
         if (menu.value >= TUNER_IC_END)
@@ -384,6 +425,16 @@ char *menuGetValueStr(MenuIdx index)
         break;
     case MENU_AUDIO_IC:
         ret = labels[LABEL_AUDIO_IC + value];
+        break;
+    case MENU_AUDIO_IN_0:
+    case MENU_AUDIO_IN_1:
+    case MENU_AUDIO_IN_2:
+    case MENU_AUDIO_IN_3:
+    case MENU_AUDIO_IN_4:
+    case MENU_AUDIO_IN_5:
+    case MENU_AUDIO_IN_6:
+    case MENU_AUDIO_IN_7:
+        ret = labels[LABEL_IN_TUNER + value];
         break;
     case MENU_TUNER_IC:
         ret = labels[LABEL_TUNER_IC + value];

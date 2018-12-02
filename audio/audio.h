@@ -17,6 +17,24 @@ typedef enum {
     AUDIO_IC_END
 } AudioIC;
 
+typedef enum {
+    IN_TUNER = 0,
+    IN_PC,
+    IN_TV,
+    IN_BLUETOOTH,
+    IN_DVD,
+    IN_USB,
+    IN_MICROPHONE,
+    IN_GUITAR,
+    IN_TURNTABLES,
+    IN_CASSETTE,
+    IN_PROJECTOR,
+    IN_SATELLITE,
+    IN_MIXER,
+
+    IN_END
+} InputType;
+
 typedef struct {
     void (*setTune)(AudioTune tune, int8_t value);
     void (*setInput)(uint8_t value);

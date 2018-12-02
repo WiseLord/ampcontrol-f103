@@ -21,19 +21,19 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_SUBWOOFER]       = "Сабвуфер",
     [LABEL_PREAMP]          = "Пасіленне",
 
-    [LABEL_GAIN0]           = "FM цюнэр",
-    [LABEL_GAIN1]           = "Камп'ютар",
-    [LABEL_GAIN2]           = "Тэлевізар",
-    [LABEL_GAIN3]           = "Bluetooth",
-    [LABEL_GAIN4]           = "DVD-плэер",
-    [LABEL_GAIN5]           = "Уваход 5",
-    [LABEL_GAIN6]           = "Уваход 6",
-    [LABEL_GAIN7]           = "Уваход 7",
-
     [LABEL_BOOL_OFF]        = "ВЫКЛ",
     [LABEL_BOOL_ON]         = "УКЛ",
 
     [LABEL_MENU + MENU_NULL]            = "Назад",
+
+    [LABEL_MENU + MENU_AUDIO_IN_0]      = "Уваход 0",
+    [LABEL_MENU + MENU_AUDIO_IN_1]      = "Уваход 1",
+    [LABEL_MENU + MENU_AUDIO_IN_2]      = "Уваход 2",
+    [LABEL_MENU + MENU_AUDIO_IN_3]      = "Уваход 3",
+    [LABEL_MENU + MENU_AUDIO_IN_4]      = "Уваход 4",
+    [LABEL_MENU + MENU_AUDIO_IN_5]      = "Уваход 5",
+    [LABEL_MENU + MENU_AUDIO_IN_6]      = "Уваход 6",
+    [LABEL_MENU + MENU_AUDIO_IN_7]      = "Уваход 7",
 
     [LABEL_MENU + MENU_SETUP]           = "Налады",
     [LABEL_MENU + MENU_SETUP_LANG]      = "Мова",

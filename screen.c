@@ -47,7 +47,8 @@ static bool screenCheckClear(void)
         case SCREEN_AUDIO_INPUT:
             if (scrPrev == SCREEN_AUDIO_PARAM) {
                 if (scrParPrev.tune == AUDIO_TUNE_GAIN) {
-                    if (aProc->par.input != INPUT_TUNER) {
+                    InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
+                    if (IN_TUNER != inType) {
                         clear = false;
                     }
                 }
@@ -104,14 +105,14 @@ static bool screenCheckClear(void)
 
 void screenReadSettings(void)
 {
-    brStby = (int8_t)eeReadI(EE_BRIGHTNESS_STBY, 3);
+    brStby = (int8_t)eeReadI(EE_DISPLAY_BR_STBY, 3);
     if (brStby < LCD_BR_MIN) {
         brStby = LCD_BR_MIN;
     } else if (brStby > LCD_BR_MAX) {
         brStby = LCD_BR_MAX;
     }
 
-    brWork = (int8_t)eeReadI(EE_BRIGHTNESS_WORK, LCD_BR_MAX);
+    brWork = (int8_t)eeReadI(EE_DISPLAY_BR_WORK, LCD_BR_MAX);
     if (brWork < LCD_BR_MIN) {
         brWork = LCD_BR_MIN;
     } else if (brWork > LCD_BR_MAX) {
@@ -121,8 +122,8 @@ void screenReadSettings(void)
 
 void screenSaveSettings(void)
 {
-    eeUpdate(EE_BRIGHTNESS_STBY, brStby);
-    eeUpdate(EE_BRIGHTNESS_WORK, brWork);
+    eeUpdate(EE_DISPLAY_BR_STBY, brStby);
+    eeUpdate(EE_DISPLAY_BR_WORK, brWork);
 }
 
 
@@ -161,7 +162,9 @@ Screen screenGetDefault(void)
 {
     AudioProc *aProc = audioGet();
 
-    if (INPUT_TUNER == aProc->par.input)
+    InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
+
+    if (IN_TUNER == inType)
         return SCREEN_TUNER;
 
     return screenDefault;
@@ -293,8 +296,9 @@ void screenShowAudioParam(bool clear)
 
     DispParam dp;
     if (aTune == AUDIO_TUNE_GAIN) {
-        dp.label = txtLabels[LABEL_GAIN0 + aProc->par.input];
-        dp.icon = ICON_TUNER + aProc->par.input;
+        InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
+        dp.label = txtLabels[LABEL_IN_TUNER + inType];
+        dp.icon = (uint8_t)(ICON_TUNER + inType);
     } else {
         dp.label = txtLabels[LABEL_VOLUME + aTune];
         dp.icon = (uint8_t)(ICON_VOLUME + aTune);
