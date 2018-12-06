@@ -12,7 +12,7 @@
 static uint8_t wrBuf[RDA5807_WRBUF_SIZE];
 static uint8_t rdBuf[RDA5807_RDBUF_SIZE];
 
-TunerParam *tPar;
+static TunerParam *tPar;
 
 static void rda580xWriteReg(uint8_t reg)
 {
@@ -22,7 +22,7 @@ static void rda580xWriteReg(uint8_t reg)
     i2cSend(I2C_AMP, reg);
     i2cSend(I2C_AMP, *wrAddr++);
     i2cSend(I2C_AMP, *wrAddr++);
-    i2cTransmit(I2C_AMP);
+    i2cTransmit(I2C_AMP, true);
 }
 
 static void rda580xSetBit(uint8_t idx, uint8_t bit, uint8_t cond)

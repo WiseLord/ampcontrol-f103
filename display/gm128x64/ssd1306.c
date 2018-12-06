@@ -97,7 +97,7 @@ void ssd1306Init(DispDriver **driver)
         i2cSend(I2C_LCD, initSeq[i]);
     }
 
-    i2cTransmit(I2C_LCD);
+    i2cTransmit(I2C_LCD, true);
 }
 
 void ssd1306UpdateFb()
@@ -113,14 +113,14 @@ void ssd1306UpdateFb()
         i2cSend(I2C_LCD, SSD1306_SETLOWCOLUMN);
         i2cSend(I2C_LCD, SSD1306_SETHIGHCOLUMN);
         i2cSend(I2C_LCD, SSD1306_PAGE_START + page);
-        i2cTransmit(I2C_LCD);
+        i2cTransmit(I2C_LCD, true);
 
         i2cBegin(I2C_LCD, ssd1306Addr);
         i2cSend(I2C_LCD, SSD1306_I2C_DATA_SEQ);
         for (i = 0; i < SSD1306_WIDTH; i++) {
             i2cSend(I2C_LCD, *fbP++);
         }
-        i2cTransmit(I2C_LCD);
+        i2cTransmit(I2C_LCD, true);
     }
 #else
     i2cBegin(I2C_LCD, ssd1306Addr);
@@ -129,7 +129,7 @@ void ssd1306UpdateFb()
     for (i = 0; i < sizeof(dispAreaSeq); i++)
         i2cSend(I2C_LCD, dispAreaSeq[i]);
 
-    i2cTransmit(I2C_LCD);
+    i2cTransmit(I2C_LCD, true);
 
     i2cBegin(I2C_LCD, ssd1306Addr);
     i2cSend(I2C_LCD, SSD1306_I2C_DATA_SEQ);
@@ -137,7 +137,7 @@ void ssd1306UpdateFb()
     for (i = 0; i < SSD1306_BUFFERSIZE; i++)
         i2cSend(I2C_LCD, *fbP++);
 
-    i2cTransmit(I2C_LCD);
+    i2cTransmit(I2C_LCD, true);
 #endif
 }
 
@@ -183,5 +183,5 @@ void ssd1306SetBrightness(uint8_t br)
     i2cSend(I2C_LCD, SSD1306_SETCONTRAST);
     i2cSend(I2C_LCD, rawBr);
 
-    i2cTransmit(I2C_LCD);
+    i2cTransmit(I2C_LCD, true);
 }
