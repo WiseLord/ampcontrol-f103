@@ -1,6 +1,7 @@
 #include "tda7439.h"
 
 #include "../i2c.h"
+#include "../pins.h"
 
 // I2C address
 #define TDA7439_I2C_ADDR            0x88

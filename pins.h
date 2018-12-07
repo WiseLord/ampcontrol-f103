@@ -46,6 +46,10 @@ void pinsInit(void);
     } while (0);
 
 
+// Periph macroses
+#define I2C_LCD         I2C1
+#define I2C_AMP         I2C2
+
 // Input pins (buttons and encoder)
 #define BTN_0_Pin               LL_GPIO_PIN_0
 #define BTN_1_Pin               LL_GPIO_PIN_1

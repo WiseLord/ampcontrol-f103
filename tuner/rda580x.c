@@ -2,6 +2,7 @@
 
 #include "rda580x_regs.h"
 #include "../i2c.h"
+#include "../pins.h"
 
 #define RDA5807M_I2C_SEQ_ADDR       0x20
 #define RDA5807M_I2C_RAND_ADDR      0x22
