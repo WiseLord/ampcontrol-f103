@@ -24,11 +24,11 @@
 // Number of inputs
 #define TDA7439_IN_CNT              4
 
-static const AudioGrid grid_n79_0_1  = {-79,  0, 1.00 * 8};   // -79..0dB with 1dB step
-static const AudioGrid grid_n14_14_2 = { -7,  7, 2.00 * 8};   // -14..14dB with 2dB step
-static const AudioGrid grid_n15_15_1 = {-15, 15, 1.00 * 8};   // -15..15dB with 1dB step
-static const AudioGrid grid_n47_0_1  = {-47,  0, 1.00 * 8};   // -47..0dB with 1dB step
-static const AudioGrid grid_0_30_2   = {  0, 15, 2.00 * 8};   // 0..30dB with 2dB step
+static const AudioGrid grid_n79_0_1  = {-79,  0, (uint8_t)(1.00 * 8)};   // -79..0dB with 1dB step
+static const AudioGrid grid_n14_14_2 = { -7,  7, (uint8_t)(2.00 * 8)};   // -14..14dB with 2dB step
+static const AudioGrid grid_n15_15_1 = {-15, 15, (uint8_t)(1.00 * 8)};   // -15..15dB with 1dB step
+static const AudioGrid grid_n47_0_1  = {-47,  0, (uint8_t)(1.00 * 8)};   // -47..0dB with 1dB step
+static const AudioGrid grid_0_30_2   = {  0, 15, (uint8_t)(2.00 * 8)};   // 0..30dB with 2dB step
 
 static AudioParam *aPar;
 

@@ -9,15 +9,6 @@
 #define STEP_MULT   8
 
 typedef enum {
-    AUDIO_IC_NO = 0,
-    AUDIO_IC_TDA7439,
-    AUDIO_IC_TDA7313,
-    AUDIO_IC_PT232X,
-
-    AUDIO_IC_END
-} AudioIC;
-
-typedef enum {
     IN_TUNER = 0,
     IN_PC,
     IN_TV,
@@ -40,6 +31,7 @@ typedef struct {
     void (*setInput)(uint8_t value);
 
     void (*setMute)(bool value);
+    void (*setLoudness)(bool value);
 
     void (*setPower)(bool value);
 } AudioApi;

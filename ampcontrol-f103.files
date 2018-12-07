@@ -4,6 +4,10 @@ actions.h
 audio/audio.c
 audio/audio.h
 audio/audiodefs.h
+audio/pt232x.c
+audio/pt232x.h
+audio/tda731x.c
+audio/tda731x.h
 audio/tda7439.c
 audio/tda7439.h
 build_all.sh

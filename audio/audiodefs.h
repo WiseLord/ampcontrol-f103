@@ -6,6 +6,15 @@
 #define MAX_INPUTS  8
 
 typedef enum {
+    AUDIO_IC_NO = 0,
+    AUDIO_IC_TDA7439,
+    AUDIO_IC_TDA7313,
+    AUDIO_IC_PT232X,
+
+    AUDIO_IC_END
+} AudioIC;
+
+typedef enum {
     AUDIO_FLAG_INIT     = 0x0000,
 
     AUDIO_FLAG_MUTE     = 0x0001,

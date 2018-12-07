@@ -93,6 +93,12 @@ C_SOURCES += canvas/lt480x320.c
 ifeq "$(findstring TDA7439, $(APROC_LIST))" "TDA7439"
   C_SOURCES += audio/tda7439.c
 endif
+ifeq "$(findstring TDA731X, $(APROC_LIST))" "TDA731X"
+  C_SOURCES += audio/tda731x.c
+endif
+ifeq "$(findstring PT232X, $(APROC_LIST))" "PT232X"
+  C_SOURCES += audio/pt232x.c
+endif
 C_SOURCES += audio/audio.c
 C_DEFS += $(addprefix -D_, $(APROC_LIST))
 

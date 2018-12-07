@@ -7,6 +7,12 @@
 #ifdef _TDA7439
 #include "tda7439.h"
 #endif
+#ifdef _TDA731X
+#include "tda731x.h"
+#endif
+#ifdef _PT232X
+#include "pt232x.h"
+#endif
 
 #define FLAG_ON     1
 #define FLAG_OFF    0
@@ -53,7 +59,6 @@ void audioInit(void)
 
     audioReadSettings();
 
-    // TODO: move to audio driver init function
     switch (aProc.ic) {
 #ifdef _TDA7439
     case AUDIO_IC_TDA7439:
@@ -63,6 +68,27 @@ void audioInit(void)
         aProc.api.setMute = tda7439SetMute;
 
         tda7439Init(&aProc.par);
+        break;
+#endif
+#ifdef _TDA731X
+    case AUDIO_IC_TDA7313:
+        aProc.api.setTune = tda731xSetTune;
+        aProc.api.setInput = tda731xSetInput;
+
+        aProc.api.setMute = tda731xSetMute;
+        aProc.api.setLoudness = tda731xSetLoudness;
+
+        tda731xInit(&aProc.par, aProc.ic);
+        break;
+#endif
+#ifdef _PT232X
+    case AUDIO_IC_PT232X:
+        aProc.api.setTune = pt232xSetTune;
+        aProc.api.setInput = pt232xSetInput;
+
+        aProc.api.setMute = pt232xSetMute;
+
+        pt232xInit(&aProc.par);
         break;
 #endif
     default:
