@@ -84,14 +84,15 @@ int main(void)
 
     eeInit();
 
-    spInit();
-
     pinsInit();
+    spInit();
+    screenInit();
 
+    pinsInitAmpI2c();
     i2cInit(I2C_AMP, 100000);
+
     audioInit();
     tunerInit();
-    screenInit();
     inputInit();
     rcInit();
     rtcInit();

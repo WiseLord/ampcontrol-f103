@@ -4,6 +4,7 @@
 #include <stm32f1xx_ll_spi.h>
 
 #include "display/glcd.h"
+#include "functions.h"
 
 #ifdef _SI470X
 #include "tuner/si470x.h"
@@ -108,7 +109,23 @@ static void pinsInitDisplay(void)
 #endif
 }
 
-static void pinsInitAmpI2c(void)
+void pinsHwReset(void)
+{
+    OUT_INIT(DISP_RST, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+    IN_P(SI470X_SCLK);
+    SET(SI470X_SCLK);
+    _delay_ms(1);
+    OUT_INIT(SI470X_SDIO, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+
+    CLR(SI470X_SDIO);
+    CLR(DISP_RST);
+    _delay_ms(5);
+    SET(DISP_RST);
+    IN_P(SI470X_SDIO);
+    _delay_ms(50);
+}
+
+void pinsInitAmpI2c(void)
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -133,12 +150,6 @@ void pinsInit(void)
     pinsInitButtons();
     pinsInitRc();
     pinsInitDisplay();
-
-#ifdef _SI470X
-    si470xReset();
-#endif
-
-    pinsInitAmpI2c();
 
     OUT_INIT(MUTE, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
     OUT_INIT(STBY, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);

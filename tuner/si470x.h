@@ -17,8 +17,6 @@
 #define SI470X_VOL_MIN              0
 #define SI470X_VOL_MAX              15
 
-void si470xReset(void);
-
 void si470xInit(void);
 
 void si470xSetFreq(uint16_t value);
