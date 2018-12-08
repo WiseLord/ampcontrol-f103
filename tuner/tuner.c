@@ -4,6 +4,13 @@
 
 #include "../eemul.h"
 
+#ifdef _RDA580X
+#include "rda580x.h"
+#endif
+#ifdef _SI470X
+#include "si470x.h"
+#endif
+
 static Tuner tuner;
 
 static void tunerReadSettings(void)
@@ -51,12 +58,26 @@ void tunerInit()
         tuner.api.getFreq = rda580xGetFreq;
 
         rda580xInit(&tuner.par);
-
         break;
 #endif
 #ifdef _SI470X
     case TUNER_IC_SI4703:
-        si470xInit();
+        tuner.api.setFreq = si470xSetFreq;
+        tuner.api.seek = si470xSeek;
+
+        tuner.api.setVolume = si470xSetVolume;
+
+        tuner.api.setMute = si470xSetMute;
+        tuner.api.setForcedMono = si470xSetForcedMono;
+        tuner.api.setRds = si470xSetRds;
+
+        tuner.api.setPower = si470xSetPower;
+
+        tuner.api.updateStatus = si470xUpdateStatus;
+
+        tuner.api.getFreq = si470xGetFreq;
+
+        si470xInit(&tuner.par);
         break;
 #endif
     default:

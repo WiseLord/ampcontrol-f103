@@ -175,8 +175,7 @@ void rda580xSetPower(bool value)
 void rda580xUpdateStatus()
 {
     i2cBegin(I2C_AMP, RDA5807M_I2C_SEQ_ADDR);
-//    i2cReceive(I2C_AMP, rdBuf, RDA5807_RDBUF_SIZE);
-    i2cReceive(I2C_AMP, rdBuf, 2);
+    i2cReceive(I2C_AMP, rdBuf, RDA5807_RDBUF_SIZE);
 }
 
 uint16_t rda580xGetFreq(void)

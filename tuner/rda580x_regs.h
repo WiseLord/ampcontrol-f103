@@ -10,7 +10,7 @@
 #define RDA5807_BASS                0x10 // Bass boost (1)
 #define RDA580X_RCLK_NON_CAL_MODE   0x08 // RCLK always on (0)
 #define RDA580X_RCLK_DIR_IN_MODE    0x04 // RCLK direct input mode (1)
-#define RDA580X_SEEKUP              0x02 // Seek up (0) / down (1)
+#define RDA580X_SEEKUP              0x02 // Seek up (1) / down (0)
 #define RDA580X_SEEK                0x01 // Stop seek (0) / start seek in SEEKUP direction (1)
 
 // 1 register (02L)
@@ -41,7 +41,7 @@
 #define RDA580X_BAND_JAPAN          0x04 // 76..91 MHz
 #define RDA580X_BAND_WORLDWIDE      0x08 // 76..108 MHz
 #define RDA580X_BAND_EASTEUROPE     0x0C // 65..76 MHz
-#define RDA580X_SPACE               0x03 // Stations grid selection
+#define RDA580X_SPACE               0x03 // Channel spacing
 #define RDA580X_SPACE_100           0x00 // 100kHz step
 #define RDA580X_SPACE_200           0x01 // 200kHz step
 #define RDA580X_SPACE_50            0x02 // 50kHz step
@@ -58,18 +58,18 @@
 #define RDA580X_GPIO3               0x30 // GPIO3 control
 #define RDA580X_GPIO3_HI_IMP        0x00 // GPIO3 high impedance
 #define RDA580X_GPIO3_ST_IND        0x10 // GPIO3 as stereo indicator
-#define RDA580X_GPIO3_LO            0x20 // GPIO3 Low level
-#define RDA580X_GPIO3_HI            0x30 // GPIO3 HIGH level
+#define RDA580X_GPIO3_LO            0x20 // GPIO3 low level
+#define RDA580X_GPIO3_HI            0x30 // GPIO3 high level
 #define RDA580X_GPIO2               0x0C // GPIO2 control
 #define RDA580X_GPIO2_HI_IMP        0x00 // GPIO2 high impedance
-#define RDA580X_GPIO2_ST_IND        0x04 // GPIO2 interrupt (INT)
-#define RDA580X_GPIO2_LO            0x08 // GPIO2 Low level
-#define RDA580X_GPIO2_HI            0x0C // GPIO2 HIGH level
+#define RDA580X_GPIO2_INT           0x04 // GPIO2 interrupt (INT)
+#define RDA580X_GPIO2_LO            0x08 // GPIO2 low level
+#define RDA580X_GPIO2_HI            0x0C // GPIO2 high level
 #define RDA580X_GPIO1               0x0C // GPIO1 control
 #define RDA580X_GPIO1_HI_IMP        0x00 // GPIO1 high impedance
-#define RDA580X_GPIO1_ST_IND        0x04 // GPIO1 reserved
-#define RDA580X_GPIO1_LO            0x08 // GPIO1 Low level
-#define RDA580X_GPIO1_HI            0x0C // GPIO1 HIGH level
+#define RDA580X_GPIO1_RSRVD         0x04 // GPIO1 reserved
+#define RDA580X_GPIO1_LO            0x08 // GPIO1 low level
+#define RDA580X_GPIO1_HI            0x0C // GPIO1 high level
 
 // 6 register (05H)
 #define RDA5807_INT_MODE            0x80 // 5ms interrupt for RDSIEN on RDS ready (0)
@@ -135,7 +135,7 @@
 #define RDA5807_RDSR                0x80 // RDS ready (1)
 #define RDA580X_STC                 0x40 // Seek/tune complete (1)
 #define RDA580X_SF                  0x20 // Seek failure (1)
-#define RDA5807_RDSS                0x10 // RDS decoder synchronized (1)
+#define RDA5807_RDSS                0x10 // RDS synchronized (1)
 #define RDA5807_BLK_E               0x08 // (When RDS enabled) block E has been found (1)
 #define RDA580X_ST                  0x04 // Stereo indicator (1)
 #define RDA580X_READCHAN_9_8        0x03 // READCHAN 9..8 bits
@@ -154,27 +154,23 @@
 #define RDA5807_BLERB               0x03 // 2 bits error level in block B(RDS) or E(RBDS)
 
 // 4 register (0CH)
-#define RDA5807_RDSA_HI             0xFF
-
+#define RDA5807_RDSA_HI             0xFF // RDS block A data high
 // 5 register (0CL)
-#define RDA5807_RDSA_LO             0xFF
+#define RDA5807_RDSA_LO             0xFF // RDS block A data low
 
 // 6 register (0DH)
-#define RDA5807_RDSB_HI             0xFF
-
+#define RDA5807_RDSB_HI             0xFF // RDS block B data high
 // 7 register (0DL)
-#define RDA5807_RDSB_LO             0xFF
+#define RDA5807_RDSB_LO             0xFF // RDS block B data low
 
 // 8 register (0EH)
-#define RDA5807_RDSC_HI             0xFF
-
+#define RDA5807_RDSC_HI             0xFF // RDS block C data high
 // 9 register (0EL)
-#define RDA5807_RDSC_LO             0xFF
+#define RDA5807_RDSC_LO             0xFF // RDS block C data low
 
 // 10 register (0FH)
-#define RDA5807_RDSD_HI             0xFF
-
+#define RDA5807_RDSD_HI             0xFF // RDS block D data high
 // 11 register (0FL)
-#define RDA5807_RDSD_LO             0xFF
+#define RDA5807_RDSD_LO             0xFF // RDS block D data low
 
 #endif // RDA580X_REGS_H

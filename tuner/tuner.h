@@ -6,13 +6,6 @@
 
 #include "tunerdefs.h"
 
-#ifdef _RDA580X
-#include "rda580x.h"
-#endif
-#ifdef _SI470X
-#include "si470x.h"
-#endif
-
 typedef enum {
     TUNER_IC_NO = 0,
     TUNER_IC_RDA5807,
