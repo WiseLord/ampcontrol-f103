@@ -79,16 +79,16 @@ void pinsInitAmpI2c(void);
                                  LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
 
 // TFT parallel (8-bit) wiring
-#define DISP_CS_Port            GPIOA
-#define DISP_CS_Pin             LL_GPIO_PIN_15
+#define DISP_CS_Port            GPIOB
+#define DISP_CS_Pin             LL_GPIO_PIN_7
 #define DISP_RD_Port            GPIOB
 #define DISP_RD_Pin             LL_GPIO_PIN_4
 #define DISP_WR_Port            GPIOB
 #define DISP_WR_Pin             LL_GPIO_PIN_5
 #define DISP_RS_Port            GPIOB
 #define DISP_RS_Pin             LL_GPIO_PIN_6
-#define DISP_RST_Port           GPIOB
-#define DISP_RST_Pin            LL_GPIO_PIN_7
+#define DISP_RST_Port           GPIOA
+#define DISP_RST_Pin            LL_GPIO_PIN_15
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
@@ -101,8 +101,8 @@ void pinsInitAmpI2c(void);
 
 // TFT I2C (SSD1306) wiring
 #define DISP_I2C_Port           GPIOB
-#define DISP_I2C_SCK_Pin        DISP_RS_Pin
-#define DISP_I2C_SDA_Pin        DISP_RST_Pin
+#define DISP_I2C_SCK_Pin        LL_GPIO_PIN_6
+#define DISP_I2C_SDA_Pin        LL_GPIO_PIN_7
 
 // KS0108 wiring
 #define KS0108_DATA_Port        INPUT_Port

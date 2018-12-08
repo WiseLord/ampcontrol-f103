@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:ampcontrol-f103-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
@@ -250,7 +251,7 @@ DB7
 Wire Wire Line
 	3400 5000 3150 5000
 Text Label 3150 5000 0    50   ~ 0
-CS
+RST
 Wire Wire Line
 	4700 3900 4950 3900
 Text Label 4950 3900 2    50   ~ 0
@@ -266,7 +267,7 @@ RS
 Wire Wire Line
 	4700 4200 4950 4200
 Text Label 4950 4200 2    50   ~ 0
-RST
+CS
 Wire Wire Line
 	4700 3100 4950 3100
 Text Label 4950 3100 2    50   ~ 0
