@@ -51,6 +51,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_TUNER_IC + TUNER_IC_NO]      = "No",
     [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
     [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
+    [LABEL_TUNER_IC + TUNER_IC_TEA5767] = "TEA5767",
 
     [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "US/Europe FM",
     [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Japan FM",

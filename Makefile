@@ -2,7 +2,7 @@ DISPLAY = ILI9341
 DISPVAR = 8BIT
 
 APROC_LIST = TDA7439 TDA731X PT232X
-TUNER_LIST = RDA580X SI470X
+TUNER_LIST = RDA580X SI470X TEA5767
 FEATURE_LIST =
 
 TARGET = ampcontrol_f103_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
@@ -108,6 +108,9 @@ ifeq "$(findstring RDA580X, $(TUNER_LIST))" "RDA580X"
 endif
 ifeq "$(findstring SI470X, $(TUNER_LIST))" "SI470X"
   C_SOURCES += tuner/si470x.c
+endif
+ifeq "$(findstring TEA5767, $(TUNER_LIST))" "TEA5767"
+  C_SOURCES += tuner/tea5767.c
 endif
 C_SOURCES += tuner/tuner.c
 C_DEFS += $(addprefix -D_, $(TUNER_LIST))

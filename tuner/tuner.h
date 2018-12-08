@@ -10,6 +10,7 @@ typedef enum {
     TUNER_IC_NO = 0,
     TUNER_IC_RDA5807,
     TUNER_IC_SI4703,
+    TUNER_IC_TEA5767,
 
     TUNER_IC_END
 } TunerIC;

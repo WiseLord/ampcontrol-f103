@@ -10,6 +10,9 @@
 #ifdef _SI470X
 #include "si470x.h"
 #endif
+#ifdef _TEA5767
+#include "tea5767.h"
+#endif
 
 static Tuner tuner;
 
@@ -78,6 +81,23 @@ void tunerInit()
         tuner.api.getFreq = si470xGetFreq;
 
         si470xInit(&tuner.par);
+        break;
+#endif
+#ifdef _TEA5767
+    case TUNER_IC_TEA5767:
+        tuner.api.setFreq = tea5767SetFreq;
+        tuner.api.seek = tea5767Seek;
+
+        tuner.api.setMute = tea5767SetMute;
+        tuner.api.setForcedMono = 0;
+
+        tuner.api.setPower = tea5767SetPower;
+
+        tuner.api.updateStatus = tea5767UpdateStatus;
+
+        tuner.api.getFreq = tea5767GetFreq;
+
+        tea5767Init(&tuner.par);
         break;
 #endif
     default:

@@ -115,7 +115,7 @@ static int16_t menuGetValue(MenuIdx index)
         ret = tPar->band;
         break;
     case MENU_TUNER_STEP:
-        ret = tPar->fStep;
+        ret = tPar->step;
         break;
     case MENU_TUNER_DEEMPH:
         ret = tPar->deemph;
@@ -186,8 +186,8 @@ static void menuStoreCurrentValue(void)
         eeUpdate(EE_TUNER_BAND, tPar->band);
         break;
     case MENU_TUNER_STEP:
-        tPar->fStep = menu.value;
-        eeUpdate(EE_TUNER_STEP, tPar->fStep);
+        tPar->step = menu.value;
+        eeUpdate(EE_TUNER_STEP, tPar->step);
         break;
     case MENU_TUNER_DEEMPH:
         tPar->deemph = menu.value;
