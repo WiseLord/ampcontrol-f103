@@ -24,26 +24,26 @@
 // Number of inputs
 #define TDA7439_IN_CNT              4
 
-static const AudioGrid grid_n79_0_1  = {-79,  0, (uint8_t)(1.00 * 8)};   // -79..0dB with 1dB step
-static const AudioGrid grid_n14_14_2 = { -7,  7, (uint8_t)(2.00 * 8)};   // -14..14dB with 2dB step
-static const AudioGrid grid_n15_15_1 = {-15, 15, (uint8_t)(1.00 * 8)};   // -15..15dB with 1dB step
-static const AudioGrid grid_n47_0_1  = {-47,  0, (uint8_t)(1.00 * 8)};   // -47..0dB with 1dB step
-static const AudioGrid grid_0_30_2   = {  0, 15, (uint8_t)(2.00 * 8)};   // 0..30dB with 2dB step
+static const AudioGrid gridVolume  = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step
+static const AudioGrid gridTone    = { -7,  7, (uint8_t)(2.00 * 8)}; // -14..14dB with 2dB step
+static const AudioGrid gridBalance = {-15, 15, (uint8_t)(1.00 * 8)}; // -15..15dB with 1dB step
+static const AudioGrid gridPreamp  = {-47,  0, (uint8_t)(1.00 * 8)}; // -47..0dB with 1dB step
+static const AudioGrid gridGain    = {  0, 15, (uint8_t)(2.00 * 8)}; // 0..30dB with 2dB step
 
 static AudioParam *aPar;
 
 void tda7439Init(AudioParam *param)
 {
     aPar = param;
-    param->inCnt = TDA7439_IN_CNT;
+    aPar->inCnt = TDA7439_IN_CNT;
 
-    param->item[AUDIO_TUNE_VOLUME].grid = &grid_n79_0_1;
-    param->item[AUDIO_TUNE_BASS].grid = &grid_n14_14_2;
-    param->item[AUDIO_TUNE_MIDDLE].grid = &grid_n14_14_2;
-    param->item[AUDIO_TUNE_TREBLE].grid = &grid_n14_14_2;
-    param->item[AUDIO_TUNE_PREAMP].grid = &grid_n47_0_1;
-    param->item[AUDIO_TUNE_BALANCE].grid = &grid_n15_15_1;
-    param->item[AUDIO_TUNE_GAIN].grid = &grid_0_30_2;
+    aPar->item[AUDIO_TUNE_VOLUME].grid  = &gridVolume;
+    aPar->item[AUDIO_TUNE_BASS].grid    = &gridTone;
+    aPar->item[AUDIO_TUNE_MIDDLE].grid  = &gridTone;
+    aPar->item[AUDIO_TUNE_TREBLE].grid  = &gridTone;
+    aPar->item[AUDIO_TUNE_PREAMP].grid  = &gridPreamp;
+    aPar->item[AUDIO_TUNE_BALANCE].grid = &gridBalance;
+    aPar->item[AUDIO_TUNE_GAIN].grid    = &gridGain;
 
     tda7439SetMute(true);
 }
@@ -69,29 +69,28 @@ void tda7439SetTune(AudioTune tune, int8_t value)
     case AUDIO_TUNE_BALANCE:
         i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7439_VOLUME_RIGHT | TDA7439_AUTO_INC);
-        i2cSend(I2C_AMP, -spRight);
-        i2cSend(I2C_AMP, -spLeft);
+        i2cSend(I2C_AMP, (uint8_t)(-spRight));
+        i2cSend(I2C_AMP, (uint8_t)(-spLeft));
         i2cTransmit(I2C_AMP, true);
         break;
     case AUDIO_TUNE_BASS:
     case AUDIO_TUNE_MIDDLE:
     case AUDIO_TUNE_TREBLE:
         i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
-        i2cSend(I2C_AMP, TDA7439_BASS + (tune - AUDIO_TUNE_BASS));
-        int8_t val = aPar->item[tune].value;
-        i2cSend(I2C_AMP, val > 0 ? 15 - val : 7 + val);
+        i2cSend(I2C_AMP, (uint8_t)(TDA7439_BASS + (tune - AUDIO_TUNE_BASS)));
+        i2cSend(I2C_AMP, (uint8_t)(value > 0 ? 15 - value : 7 + value));
         i2cTransmit(I2C_AMP, true);
         break;
     case AUDIO_TUNE_PREAMP:
         i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7439_PREAMP);
-        i2cSend(I2C_AMP, -aPar->item[tune].value);
+        i2cSend(I2C_AMP, (uint8_t)(-value));
         i2cTransmit(I2C_AMP, true);
         break;
     case AUDIO_TUNE_GAIN:
         i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7439_INPUT_GAIN);
-        i2cSend(I2C_AMP,  aPar->item[tune].value);
+        i2cSend(I2C_AMP, (uint8_t)value);
         i2cTransmit(I2C_AMP, true);
         break;
     default:
@@ -102,9 +101,8 @@ void tda7439SetTune(AudioTune tune, int8_t value)
 void tda7439SetInput(uint8_t value)
 {
     i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
-    i2cSend(I2C_AMP, TDA7439_INPUT_SELECT | TDA7439_AUTO_INC);
+    i2cSend(I2C_AMP, TDA7439_INPUT_SELECT);
     i2cSend(I2C_AMP, TDA7439_IN_CNT - 1 - aPar->input);
-    i2cSend(I2C_AMP, value);
     i2cTransmit(I2C_AMP, true);
 }
 

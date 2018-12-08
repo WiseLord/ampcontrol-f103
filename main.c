@@ -83,24 +83,27 @@ int main(void)
     SystemClock_Config();
 
     eeInit();
-
     pinsInit();
-    spInit();
-    screenInit();
 
+    screenInit();
     pinsInitAmpI2c();
     i2cInit(I2C_AMP, 100000);
 
-    audioInit();
-    tunerInit();
+    spInit();
+
     inputInit();
     rcInit();
     rtcInit();
     timersInit();
 
+    tunerInit();
+    audioInit();
+
+    Action action = {ACTION_STANDBY, STBY_ENTER};
+
     while (1) {
-        Action userAction = actionUserGet();
-        actionHandle(userAction, ACTION_VISIBLE);
+        actionHandle(action, ACTION_VISIBLE);
         screenShow();
+        action = actionUserGet();
     }
 }

@@ -273,7 +273,7 @@ void screenShowBrightness(bool clear)
     dp.value = screenGetBrightness(ACTION_BR_WORK);
     dp.min = LCD_BR_MIN;
     dp.max = LCD_BR_MAX;
-    dp.step = 1 * 8;
+    dp.mStep = 1 * 8;
     dp.icon = ICON_BRIGHTNESS;
 
     canvasShowTune(clear, &dp, &spectrum);
@@ -308,7 +308,7 @@ void screenShowAudioParam(bool clear)
 
     dp.min = grid ? grid->min : 0;
     dp.max = grid ? grid->max : 0;
-    dp.step = grid ? grid->step : 0;
+    dp.mStep = grid ? grid->mStep : 0;
 
     canvasShowTune(clear, &dp, &spectrum);
 }

@@ -42,9 +42,9 @@ typedef enum {
 } AudioTune;
 
 typedef struct {
-    int16_t min;     // Minimum in steps
-    int16_t max;     // Maximum in steps
-    uint8_t step;    // Step multiplied by STEP_MULT (to handle 1.25 and so on)
+    int8_t min;     // Minimum in steps
+    int8_t max;     // Maximum in steps
+    uint8_t mStep;   // Step multiplied by STEP_MULT (to handle 1.25 and so on)
 } AudioGrid;
 
 typedef struct {
