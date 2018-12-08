@@ -2,9 +2,9 @@
 
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_spi.h>
+#include <stm32f1xx_ll_utils.h>
 
 #include "display/glcd.h"
-#include "functions.h"
 
 #ifdef _SI470X
 #include "tuner/si470x.h"
@@ -112,17 +112,24 @@ static void pinsInitDisplay(void)
 void pinsHwReset(void)
 {
     OUT_INIT(DISP_RST, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
-    IN_P(SI470X_SCLK);
-    SET(SI470X_SCLK);
-    _delay_ms(1);
-    OUT_INIT(SI470X_SDIO, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
 
-    CLR(SI470X_SDIO);
-    CLR(DISP_RST);
-    _delay_ms(5);
-    SET(DISP_RST);
-    IN_P(SI470X_SDIO);
-    _delay_ms(50);
+    OUT_INIT(SI470X_SCLK, LL_GPIO_OUTPUT_OPENDRAIN, LL_GPIO_SPEED_FREQ_HIGH);
+    OUT_INIT(SI470X_SDIO, LL_GPIO_OUTPUT_OPENDRAIN, LL_GPIO_SPEED_FREQ_HIGH);
+
+    CLR(DISP_RST);      // Start display and Si470x reset
+
+    CLR(SI470X_SCLK);   // Put to zero in this sequence to avoid fake START
+
+    LL_mDelay(1);       // Select 2-wire interface:
+    CLR(SI470X_SDIO);   // SDIO = 0
+    IN_P(SI470X_SCLK);  // SCLK = 1
+
+    LL_mDelay(5);       // Reset
+
+    SET(DISP_RST);      // End of reset
+
+    LL_mDelay(1);
+    IN_F(SI470X_SDIO);  // SDIO = 1
 }
 
 void pinsInitAmpI2c(void)

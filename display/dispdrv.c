@@ -149,6 +149,7 @@ void dispdrvInit(DispDriver **driver)
 #endif
 
     pinsHwReset();
+    LL_mDelay(50);
 
 #if defined (_KS0108A) || defined(_KS0108B)
     ks0108Init(driver);
