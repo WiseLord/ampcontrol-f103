@@ -269,6 +269,8 @@ static void actionRemapEncoder()
 static void actionRemapCommon(void)
 {
     Screen screen = screenGet();
+    AudioProc *aProc = audioGet();
+    InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
 
     switch (action.type) {
     case ACTION_STANDBY:
@@ -278,27 +280,27 @@ static void actionRemapCommon(void)
         break;
     case ACTION_PREV:
         switch (screen) {
-        case SCREEN_TUNER:
-            action.type = ACTION_TUNER_PREV;
-            break;
         case SCREEN_MENU:
             action.type = ACTION_MENU_CHANGE;
             action.value = -1;
             break;
         default:
+            if (inType == IN_TUNER) {
+                action.type = ACTION_TUNER_PREV;
+            }
             break;
         }
         break;
     case ACTION_NEXT:
         switch (screen) {
-        case SCREEN_TUNER:
-            action.type = ACTION_TUNER_NEXT;
-            break;
         case SCREEN_MENU:
             action.type = ACTION_MENU_CHANGE;
             action.value = +1;
             break;
         default:
+            if (inType == IN_TUNER) {
+                action.type = ACTION_TUNER_NEXT;
+            }
             break;
         }
         break;
@@ -478,9 +480,11 @@ void actionHandle(Action action, uint8_t visible)
         audioChangeTune(scrPar.tune, action.value);
         break;
     case ACTION_TUNER_PREV:
+        screen = SCREEN_TUNER;
         tunerNextStation(TUNER_DIR_DOWN);
         break;
     case ACTION_TUNER_NEXT:
+        screen = SCREEN_TUNER;
         tunerNextStation(TUNER_DIR_UP);
         break;
     case ACTION_BR_WORK:
