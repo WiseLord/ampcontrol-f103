@@ -377,6 +377,7 @@ void actionHandle(Action action, uint8_t visible)
 {
     Screen screen = screenGet();
     AudioProc *aProc = audioGet();
+    Tuner *tuner = tunerGet();
     int16_t dispTime = 0;
 
     switch (action.type) {
@@ -402,8 +403,8 @@ void actionHandle(Action action, uint8_t visible)
         swTimSetInitHw(SW_TIM_OFF);
         tunerInit();
         tunerSetPower(true);
-        tunerSetFreq(tunerGet()->freq);
         tunerSetFlag(TUNER_FLAG_MUTE, false);
+        tunerSetFreq(tuner->par.freq);
 
         audioInit();
         audioSetPower(true);

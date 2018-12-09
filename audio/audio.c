@@ -101,11 +101,6 @@ AudioProc *audioGet(void)
     return &aProc;
 }
 
-AudioParam *audioGetPar(void)
-{
-    return &aProc.par;
-}
-
 void audioSetPower(bool value)
 {
     audioSetFlag(AUDIO_FLAG_MUTE, !value);

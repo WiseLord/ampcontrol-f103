@@ -24,15 +24,15 @@ static void tunerReadSettings(void)
     tuner.par.band = eeReadU(EE_TUNER_BAND, TUNER_BAND_FM_US_EUROPE);
     tuner.par.step = eeReadU(EE_TUNER_STEP, TUNER_STEP_100K);
     tuner.par.deemph = eeReadU(EE_TUNER_DEEMPH, TUNER_DEEMPH_50u);
-    tuner.par.volume = eeReadI(EE_TUNER_VOLUME, TUNER_VOLUME_MAX);
+    tuner.par.volume = eeReadI(EE_TUNER_VOLUME, TUNER_VOLUME_MAX) & 0xFF;
 
-    tuner.freq = eeReadU(EE_TUNER_FREQ, 9950);
+    tuner.par.freq = eeReadU(EE_TUNER_FREQ, 9950);
 }
 
 static void tunerSaveSettings(void)
 {
     eeUpdate(EE_TUNER_FLAGS, tuner.par.flags & (~TUNER_FLAG_MUTE));
-    eeUpdate(EE_TUNER_FREQ, tuner.freq);
+    eeUpdate(EE_TUNER_FREQ, (int16_t)tuner.status.freq);
 }
 
 void tunerInit()
@@ -40,6 +40,7 @@ void tunerInit()
     memset(&tuner, 0, sizeof(tuner));
 
     tunerReadSettings();
+    tuner.status.freq = tuner.par.freq;
 
     switch (tuner.ic) {
 #ifdef _RDA580X
@@ -58,9 +59,7 @@ void tunerInit()
 
         tuner.api.updateStatus = rda580xUpdateStatus;
 
-        tuner.api.getFreq = rda580xGetFreq;
-
-        rda580xInit(&tuner.par);
+        rda580xInit(&tuner.par, &tuner.status);
         break;
 #endif
 #ifdef _SI470X
@@ -78,9 +77,7 @@ void tunerInit()
 
         tuner.api.updateStatus = si470xUpdateStatus;
 
-        tuner.api.getFreq = si470xGetFreq;
-
-        si470xInit(&tuner.par);
+        si470xInit(&tuner.par, &tuner.status);
         break;
 #endif
 #ifdef _TEA5767
@@ -95,9 +92,7 @@ void tunerInit()
 
         tuner.api.updateStatus = tea5767UpdateStatus;
 
-        tuner.api.getFreq = tea5767GetFreq;
-
-        tea5767Init(&tuner.par);
+        tea5767Init(&tuner.par, &tuner.status);
         break;
 #endif
     default:
@@ -108,11 +103,6 @@ void tunerInit()
 Tuner *tunerGet(void)
 {
     return &tuner;
-}
-
-TunerParam *tunerGetPar(void)
-{
-    return &tuner.par;
 }
 
 void tunerSetPower(bool value)
@@ -137,7 +127,7 @@ void tunerSetFreq(uint16_t value)
         value = freqMax;
     }
 
-    tuner.freq = value;
+    tuner.par.freq = value;
 
     if (tuner.api.setFreq) {
         tuner.api.setFreq(value);
@@ -162,7 +152,7 @@ void tunerSetFlag(TunerFlag flag, bool value)
             tuner.api.setBassBoost(value);
         }
         break;
-    case TUNER_FLAG_MONO:
+    case TUNER_FLAG_FMONO:
         if (tuner.api.setForcedMono) {
             tuner.api.setForcedMono(value);
         }
@@ -189,9 +179,5 @@ void tunerUpdateStatus(void)
 {
     if (tuner.api.updateStatus) {
         tuner.api.updateStatus();
-
-        if (tuner.api.getFreq) {
-            tuner.freq = tuner.api.getFreq();
-        }
     }
 }

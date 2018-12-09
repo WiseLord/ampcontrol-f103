@@ -440,7 +440,7 @@ void canvasShowTuner(Tuner *tuner)
     const tFont *fmFont = canvas.lt->lblFont;
     const tFont *iconSet = canvas.lt->iconSet;
 
-    int16_t freq = (int16_t)tuner->freq;
+    int16_t freq = (int16_t)tuner->status.freq;
     int16_t freqMin = (int16_t)tuner->par.fMin;
     int16_t freqMax = (int16_t)tuner->par.fMax;
 

@@ -29,22 +29,17 @@ typedef struct {
     void (*setPower)(bool value);
 
     void (*updateStatus)(void);
-
-    uint16_t (*getFreq)(void);
-    uint8_t (*getRssi)(void);   // Signal level
 } TunerApi;
 
 typedef struct {
     TunerIC ic;
     TunerApi api;
     TunerParam par;
-
-    uint16_t freq;
+    TunerStatus status;
 } Tuner;
 
 void tunerInit(void);
 Tuner *tunerGet(void);
-TunerParam *tunerGetPar(void);
 
 void tunerSetPower(bool value);
 

@@ -14,6 +14,9 @@ static uint8_t wrBuf[RDA5807_WRBUF_SIZE];
 static uint8_t rdBuf[RDA5807_RDBUF_SIZE];
 
 static TunerParam *tPar;
+static TunerStatus *tStatus;
+
+static bool seeking = false;
 
 static void rda580xWriteReg(uint8_t reg)
 {
@@ -42,7 +45,7 @@ static void rda580xInitRegs(void)
     wrBuf[0] = RDA580X_DHIZ;
     if (tPar->flags & TUNER_FLAG_BASS)
         wrBuf[0] |= RDA5807_BASS;
-    if (tPar->flags & TUNER_FLAG_MONO)
+    if (tPar->flags & TUNER_FLAG_FMONO)
         wrBuf[0] |= RDA580X_MONO;
     wrBuf[1] = RDA580X_SKMODE | RDA580X_CLK_MODE_32768;
     if (tPar->flags & TUNER_FLAG_RDS)
@@ -107,9 +110,19 @@ static void rda580xInitRegs(void)
     rda580xWriteReg(0x07);
 }
 
-void rda580xInit(TunerParam *param)
+static uint16_t rda580xGetFreq(void)
+{
+    uint16_t chan = rdBuf[0] & RDA580X_READCHAN_9_8;
+    chan <<= 8;
+    chan |= rdBuf[1];
+
+    return chan * tPar->fStep + tPar->fMin;
+}
+
+void rda580xInit(TunerParam *param, TunerStatus *status)
 {
     tPar = param;
+    tStatus = status;
 
     rda580xInitRegs();
 }
@@ -117,6 +130,10 @@ void rda580xInit(TunerParam *param)
 void rda580xSetFreq(uint16_t value)
 {
     uint16_t chan = (value - tPar->fMin) / tPar->fStep;
+
+    // Exit seek mode
+    wrBuf[0] &= ~RDA580X_SEEK; // not seek
+    seeking = false;
 
     wrBuf[2] = (chan >> 2) & RDA580X_CHAN_9_2;
     wrBuf[3] &= ~RDA580X_CHAN_1_0;
@@ -129,6 +146,17 @@ void rda580xSetFreq(uint16_t value)
 
 void rda580xSeek(int8_t direction)
 {
+    // Enter seek mode
+    tStatus->flags &= ~(TUNER_FLAG_SEEKUP | TUNER_FLAG_SEEKDOWN);
+    wrBuf[0] |= RDA580X_SEEK;
+    seeking = true;
+
+    if (direction > 0) {
+        tStatus->flags |= TUNER_FLAG_SEEKUP;
+    } else {
+        tStatus->flags |= TUNER_FLAG_SEEKDOWN;
+    }
+
     wrBuf[0] |= RDA580X_SEEK;
     rda580xSetBit(0, RDA580X_SEEKUP, direction > 0);
     wrBuf[0] &= ~RDA580X_SEEK;
@@ -176,13 +204,28 @@ void rda580xUpdateStatus()
 {
     i2cBegin(I2C_AMP, RDA5807M_I2C_SEQ_ADDR);
     i2cReceive(I2C_AMP, rdBuf, RDA5807_RDBUF_SIZE);
-}
 
-uint16_t rda580xGetFreq(void)
-{
-    uint16_t chan = rdBuf[0] & RDA580X_READCHAN_9_8;
-    chan <<= 8;
-    chan |= rdBuf[1];
+    tStatus->freq = rda580xGetFreq();
+    tStatus->rssi = (rdBuf[2] & RDA580X_RSSI) >> 2;
 
-    return chan * tPar->fStep + tPar->fMin;
+    tStatus->flags = TUNER_FLAG_INIT;
+
+    if (rdBuf[0] & RDA580X_ST) {
+        tStatus->flags |= TUNER_FLAG_STEREO;
+    }
+    if (rdBuf[3] & RDA580X_FM_READY) {
+        tStatus->flags |= TUNER_FLAG_READY;
+        seeking = false;
+    }
+    if (rdBuf[0] & RDA580X_SF) {
+        tStatus->flags |= TUNER_FLAG_BANDLIM;
+    }
+
+    if (seeking == true) {
+        if (wrBuf[0] & RDA580X_SEEKUP) {
+            tStatus->flags |= TUNER_FLAG_SEEKUP;
+        } else {
+            tStatus->flags |= TUNER_FLAG_SEEKDOWN;
+        }
+    }
 }

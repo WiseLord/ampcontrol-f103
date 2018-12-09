@@ -9,15 +9,24 @@
 #define TUNER_VOLUME_MIN    0
 #define TUNER_VOLUME_MAX    15
 
-typedef enum {
+typedef  uint16_t TunerFlag;
+enum {
     TUNER_FLAG_INIT     = 0x0000,
 
-    TUNER_FLAG_MUTE     = 0x0001,
-    TUNER_FLAG_BASS     = 0x0002,
+    // Parameter flags
+    TUNER_FLAG_MUTE     = 0x0001, // Set mute
+    TUNER_FLAG_BASS     = 0x0002, // Set bass boost
+    TUNER_FLAG_FMONO    = 0x0004, // Set forced mono
+    TUNER_FLAG_RDS      = 0x0008, // Enable RDS
 
-    TUNER_FLAG_MONO     = 0x0010,
-    TUNER_FLAG_RDS      = 0x0020,
-} TunerFlag;
+    // Status flags
+    TUNER_FLAG_READY    = 0x0001, // Ready (seek/tune complete)
+    TUNER_FLAG_STEREO   = 0x0002, // Stereo reception
+    TUNER_FLAG_BANDLIM  = 0x0004, // Band limit reached
+
+    TUNER_FLAG_SEEKUP   = 0x0010, // Seek up in progress
+    TUNER_FLAG_SEEKDOWN = 0x0020, // Seek down in progress
+};
 
 typedef enum {
     TUNER_BAND_FM_US_EUROPE,    // 87..108 MHz
@@ -56,11 +65,18 @@ typedef struct {
     TunerBand band;
     TunerStep step;
     TunerDeemph deemph;
-    uint8_t volume;
 
+    uint16_t freq;
     uint16_t fMin;
     uint16_t fMax;
     uint8_t fStep;
+    uint8_t volume;
 } TunerParam;
+
+typedef struct {
+    TunerFlag flags;
+    uint16_t freq;
+    uint8_t rssi;
+} TunerStatus;
 
 #endif // TUNERDEFS_H

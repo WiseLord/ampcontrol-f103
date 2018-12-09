@@ -44,7 +44,6 @@ typedef struct {
 
 void audioInit(void);
 AudioProc *audioGet(void);
-AudioParam *audioGetPar(void);
 
 void audioSetPower(bool value);
 

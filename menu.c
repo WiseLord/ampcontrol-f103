@@ -87,7 +87,7 @@ static int16_t menuGetValue(MenuIdx index)
     int16_t ret = 0;
     AudioProc *aproc = audioGet();
     Tuner *tuner = tunerGet();
-    TunerParam *tPar = tunerGetPar();
+    TunerParam *tPar = &tuner->par;
 
     switch (index) {
     case MENU_SETUP_LANG:
@@ -122,7 +122,7 @@ static int16_t menuGetValue(MenuIdx index)
         break;
 
     case MENU_TUNER_FMONO:
-        ret = (tPar->flags & TUNER_FLAG_MONO) ? 1 : 0;
+        ret = (tPar->flags & TUNER_FLAG_FMONO) ? 1 : 0;
         break;
     case MENU_TUNER_RDS:
         ret = (tPar->flags & TUNER_FLAG_RDS) ? 1 : 0;
@@ -154,7 +154,7 @@ static void menuStoreCurrentValue(void)
 {
     AudioProc *aproc = audioGet();
     Tuner *tuner = tunerGet();
-    TunerParam *tPar = tunerGetPar();
+    TunerParam *tPar = &tuner->par;
 
     switch (menu.active) {
     case MENU_SETUP_LANG:
@@ -195,7 +195,7 @@ static void menuStoreCurrentValue(void)
         break;
 
     case MENU_TUNER_FMONO:
-        menu.value ? (tPar->flags |= TUNER_FLAG_MONO) : (tPar->flags &= ~TUNER_FLAG_MONO);
+        menu.value ? (tPar->flags |= TUNER_FLAG_FMONO) : (tPar->flags &= ~TUNER_FLAG_FMONO);
         eeUpdate(EE_TUNER_FLAGS, tPar->flags);
         break;
     case MENU_TUNER_RDS:

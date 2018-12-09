@@ -116,8 +116,10 @@ void i2cTransmit(I2C_TypeDef *I2Cx, bool stop)
 
     ctx->timeout = I2C_TIMEOUT_ADDR_MS;
     while (!LL_I2C_IsActiveFlag_ADDR(I2Cx)) {
-        if (i2cWait(ctx) == false)
+        if (i2cWait(ctx) == false) {
+            LL_I2C_GenerateStopCondition(I2Cx);
             return;
+        }
     }
 
     LL_I2C_ClearFlag_ADDR(I2Cx);
@@ -165,8 +167,10 @@ void i2cReceive(I2C_TypeDef *I2Cx, uint8_t *buf, uint8_t size)
 
     ctx->timeout = I2C_TIMEOUT_ADDR_MS;
     while (!LL_I2C_IsActiveFlag_ADDR(I2Cx)) {
-        if (i2cWait(ctx) == false)
+        if (i2cWait(ctx) == false) {
+            LL_I2C_GenerateStopCondition(I2Cx);
             return;
+        }
     }
 
     if (size == 1) {
