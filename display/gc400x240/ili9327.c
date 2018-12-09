@@ -13,7 +13,10 @@ static DispDriver drv = {
     .drawPixel = ili9327DrawPixel,
     .drawRectangle = ili9327DrawRectangle,
     .drawImage = ili9327DrawImage,
+    .rotate = ili9327Rotate,
 };
+
+static uint8_t shiftX = 0;
 
 static inline void ili9327SelectReg(uint8_t reg) __attribute__((always_inline));
 static inline void ili9327SelectReg(uint8_t reg)
@@ -118,6 +121,7 @@ static inline void ili9327SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t
     dispdrvSendData8((y + h - 1) >> 8);
     dispdrvSendData8((y + h - 1) & 0xFF);
 
+    x += shiftX;
     ili9327SelectReg(0x2B);
     dispdrvSendData8(x >> 8);
     dispdrvSendData8(x & 0xFF);
@@ -131,6 +135,23 @@ void ili9327Init(DispDriver **driver)
 {
     *driver = &drv;
     ili9327InitSeq();
+}
+
+void ili9327Rotate(uint8_t rotate)
+{
+    CLR(DISP_CS);
+
+    if (rotate & LCD_ROTATE_180) {
+        shiftX = 32;
+        ili9327SelectReg(0x36);
+        dispdrvSendData8(0x0B);
+    } else {
+        shiftX = 0;
+        ili9327SelectReg(0x36);
+        dispdrvSendData8(0x08);
+    }
+
+    SET(DISP_CS);
 }
 
 void ili9327Sleep(void)

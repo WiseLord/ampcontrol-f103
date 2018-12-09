@@ -5,6 +5,7 @@
 #include "../dispdrv.h"
 
 void ili9327Init(DispDriver **driver);
+void ili9327Rotate(uint8_t rotate);
 
 void ili9327Sleep(void);
 void ili9327Wakeup(void);

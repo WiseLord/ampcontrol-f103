@@ -133,6 +133,21 @@ void ili9481Init(DispDriver **driver)
     ili9481InitSeq();
 }
 
+void ili9481Rotate(uint8_t rotate)
+{
+    CLR(DISP_CS);
+
+    if (rotate & LCD_ROTATE_180) {
+        ili9481SelectReg(0x36);
+        dispdrvSendData8(0x0B);
+    } else {
+        ili9481SelectReg(0x36);
+        dispdrvSendData8(0x08);
+    }
+
+    SET(DISP_CS);
+}
+
 void ili9481Sleep(void)
 {
     CLR(DISP_CS);
