@@ -175,10 +175,13 @@ static void actionRemapRemote(void)
         action.value = -1;
         break;
     case RC_CMD_MENU:
+        action.type = ACTION_OK;
         break;
     case RC_CMD_CHAN_NEXT:
+        action.type = ACTION_NEXT;
         break;
     case RC_CMD_CHAN_PREV:
+        action.type = ACTION_PREV;
         break;
     case RC_CMD_DIG_0:
     case RC_CMD_DIG_1:
@@ -194,6 +197,7 @@ static void actionRemapRemote(void)
         action.value -= RC_CMD_DIG_0;
         break;
     case RC_CMD_IN_NEXT:
+        action.type = ACTION_AUDIO_INPUT;
         break;
     case RC_CMD_IN_PREV:
         break;
