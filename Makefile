@@ -1,11 +1,13 @@
+PROJECT = ampcontrol_f103
+
 DISPLAY = ILI9341
 DISPVAR = 8BIT
+
+TARGET = $(PROJECT)_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
 
 APROC_LIST = TDA7439 TDA731X PT232X
 TUNER_LIST = RDA580X SI470X TEA5767
 FEATURE_LIST =
-
-TARGET = ampcontrol_f103_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
 
 C_SOURCES = main.c
 
@@ -183,6 +185,9 @@ vpath %.s $(sort $(dir $(ASM_SOURCES)))
 ELF = $(BUILD_DIR)/$(TARGET).elf
 BIN = flash/$(TARGET).bin
 
+FW_BACKUP = backup/$(TARGET).bin
+EE_BACKUP = backup/$(PROJECT)_eeprom.bin
+
 all: $(BIN) size
 
 $(BIN): $(ELF)
@@ -214,6 +219,19 @@ flash: $(BIN)
 .PHONY: erase
 erase:
 	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_erase" -c shutdown
+
+.PHONY: backup
+backup:
+	@mkdir -p backup
+	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_read $(FW_BACKUP) $(EE_BACKUP)" -c shutdown
+
+.PHONY: ee_flash
+ee_flash: $(EE_BACKUP)
+	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_ee_flash $(EE_BACKUP)" -c shutdown
+
+.PHONY: ee_erase
+ee_erase:
+	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_ee_erase" -c shutdown
 
 # Other dependencies
 -include $(OBJECTS:.o=.d)
