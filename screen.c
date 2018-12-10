@@ -237,7 +237,7 @@ void screenShow(void)
         screenShowAudioParam(clear);
         break;
     case SCREEN_TUNER:
-        screenShowTuner();
+        screenShowTuner(clear);
         break;
     case SCREEN_MENU:
         screenShowMenu();
@@ -313,7 +313,7 @@ void screenShowAudioParam(bool clear)
     canvasShowTune(clear, &dp, &spectrum);
 }
 
-void screenShowTuner(void)
+void screenShowTuner(bool clear)
 {
     Tuner *tuner = tunerGet();
 
@@ -322,7 +322,7 @@ void screenShowTuner(void)
         swTimSetTunerPoll(100);
     }
 
-    canvasShowTuner(tuner);
+    canvasShowTuner(clear, tuner, &spectrum);
 }
 
 void screenShowMenu(void)

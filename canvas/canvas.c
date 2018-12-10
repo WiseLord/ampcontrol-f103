@@ -340,7 +340,7 @@ void canvasShowTime(bool clear, RTC_type *rtc)
 
     glcdSetXY(canvas.lt->width / 2, canvas.lt->time.wdY);
     glcdSetFontAlign(FONT_ALIGN_CENTER);
-    glcdWriteString((char *)wdayLabel);
+    glcdWriteStringConst(wdayLabel);
 }
 
 void canvasShowMenu(void)
@@ -382,7 +382,7 @@ void canvasShowTune(bool clear, DispParam *dp, Spectrum *sp)
         glcdSetFont(canvas.lt->lblFont);
         glcdSetFontColor(LCD_COLOR_WHITE);
         glcdSetXY(0, 0);
-        glcdWriteString((char *)dp->label);
+        glcdWriteStringConst(dp->label);
         // Icon
         glcdSetXY(canvas.lt->width - iconSet->chars[0].image->width, 0);
         glcdWriteIcon(dp->icon, iconSet, canvas.lt->iconColor, canvas.color);
@@ -395,8 +395,6 @@ void canvasShowTune(bool clear, DispParam *dp, Spectrum *sp)
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
         glcdSetFont(canvas.lt->tune.valFont);
         glcdWriteNum((dp->value * dp->mStep) / 8, 3, ' ', 10);
-        glcdDrawLine(0, canvas.lt->height / 2, canvas.lt->width - 1, canvas.lt->height / 2,
-                     LCD_COLOR_WHITE);
     }
     valueOld = dp->value;
 
@@ -435,31 +433,52 @@ void canvasShowSpectrum(bool clear, Spectrum *sp)
     sp->ready = false;
 }
 
-void canvasShowTuner(Tuner *tuner)
+void canvasShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
 {
-    const tFont *fmFont = canvas.lt->lblFont;
     const tFont *iconSet = canvas.lt->iconSet;
+    static uint16_t freqOld;
+
+    if (clear) {
+        // Icon
+        glcdSetXY(canvas.lt->width - iconSet->chars[0].image->width, 0);
+        glcdWriteIcon(ICON_TUNER, iconSet, canvas.lt->iconColor, canvas.color);
+    }
 
     int16_t freq = (int16_t)tuner->status.freq;
-    int16_t freqMin = (int16_t)tuner->par.fMin;
-    int16_t freqMax = (int16_t)tuner->par.fMax;
 
-    glcdSetFont(fmFont);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetXY(2, 0);
+    if (clear || freqOld != freq) {
+        int16_t freqMin = (int16_t)tuner->par.fMin;
+        int16_t freqMax = (int16_t)tuner->par.fMax;
 
-    glcdWriteString("FM ");
+        const tFont *fmFont = canvas.lt->lblFont;
 
-    canvasDrawBar(&canvas.lt->tuner.bar, freq, freqMin, freqMax);
+        glcdSetFont(fmFont);
+        glcdSetFontColor(LCD_COLOR_WHITE);
+        glcdSetXY(2, 0);
 
-    glcdWriteNum(freq / 100, 3, ' ', 10);
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteChar('.');
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteNum(freq % 100, 2, '0', 10);
+        glcdWriteString("FM ");
 
-    // Icon
-    glcdSetXY(canvas.lt->width - iconSet->chars[0].image->width, 0);
-    glcdWriteIcon(ICON_TUNER, iconSet, canvas.lt->iconColor, canvas.color);
+        canvasDrawBar(&canvas.lt->tuner.bar, freq, freqMin, freqMax);
 
+        glcdWriteNum(freq / 100, 3, ' ', 10);
+        glcdWriteChar(LETTER_SPACE_CHAR);
+        glcdWriteChar('.');
+        glcdWriteChar(LETTER_SPACE_CHAR);
+        glcdWriteNum(freq % 100, 2, '0', 10);
+    }
+
+    // Spectrum
+    if (!sp->ready) {
+        return;
+    }
+
+    const int16_t chan = SP_CHAN_LEFT;
+    const int16_t height = canvas.lt->height / 2;
+
+    int16_t y = canvas.lt->height / 2;
+
+    canvasDrawSpectrumChan(chan, sp, y, height);
+
+    sp->redraw = false;
+    sp->ready = false;
 }

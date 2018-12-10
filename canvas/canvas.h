@@ -92,8 +92,8 @@ void canvasClear(void);
 void canvasShowTime(bool clear, RTC_type *rtc);
 void canvasShowMenu(void);
 void canvasShowTune(bool clear, DispParam *dp, Spectrum *sp);
-void canvasShowSpectrum(bool clear, Spectrum *spData);
-void canvasShowTuner(Tuner *tuner);
+void canvasShowSpectrum(bool clear, Spectrum *sp);
+void canvasShowTuner(bool clear, Tuner *tuner, Spectrum *sp);
 
 #ifdef __cplusplus
 }

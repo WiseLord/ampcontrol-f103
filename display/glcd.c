@@ -1,6 +1,8 @@
 #include "glcd.h"
 
-#define STR_BUFSIZE             20
+#include <string.h>
+
+#define STR_BUFSIZE             64
 
 static Glcd glcd;
 static char strbuf[STR_BUFSIZE + 1];    // String buffer
@@ -265,8 +267,16 @@ static int32_t findSymbolCode(char **string)
 }
 
 uint16_t glcdWriteString(char *string)
+
 {
     return glcdWriteStringFramed(string, 0);
+}
+
+uint16_t glcdWriteStringConst(const char *string)
+{
+    strncpy(strbuf, string, STR_BUFSIZE);
+
+    return glcdWriteString(strbuf);
 }
 
 uint16_t glcdWriteStringFramed(char *string, uint8_t framed)

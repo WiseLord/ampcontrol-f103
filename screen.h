@@ -57,7 +57,7 @@ void screenShowSpectrum(bool clear);
 void screenShowBrightness(bool clear);
 void screenShowInput(bool clear);
 void screenShowAudioParam(bool clear);
-void screenShowTuner(void);
+void screenShowTuner(bool clear);
 void screenShowMenu(void);
 
 #ifdef __cplusplus
