@@ -77,6 +77,10 @@ void tda731xSetTune(AudioTune tune, int8_t value)
 
     switch (tune) {
     case AUDIO_TUNE_VOLUME:
+        i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
+        i2cSend(I2C_AMP, (uint8_t)(TDA731X_VOLUME | -value));
+        i2cTransmit(I2C_AMP, true);
+        break;
     case AUDIO_TUNE_BALANCE:
     case AUDIO_TUNE_FRONTREAR:
         i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
