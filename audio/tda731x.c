@@ -27,10 +27,9 @@ static AudioParam *aPar;
 static void tda731xSwitch(uint8_t input, int8_t gain, bool loudness)
 {
     i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
-    i2cSend(I2C_AMP, (uint8_t)(TDA731X_SW |
-                               input |
-                               (3 - gain) << 3 |
-                               loudness ? (1 << 2) : 0));
+    i2cSend(I2C_AMP, (uint8_t)(TDA731X_SW | input |
+                               ((3 - gain) << 3) |
+                               (loudness ? (1 << 2) : 0)));
     i2cTransmit(I2C_AMP, true);
 }
 
