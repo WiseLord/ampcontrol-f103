@@ -6,7 +6,6 @@
 #include "actions.h"
 #include "eemul.h"
 #include "fft.h"
-#include "menu.h"
 #include "spectrum.h"
 #include "timers.h"
 

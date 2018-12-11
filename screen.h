@@ -9,6 +9,7 @@ extern "C" {
 
 #include "audio/audio.h"
 #include "rtc.h"
+#include "menu.h"
 
 typedef enum {
     SCREEN_STANDBY,
@@ -30,7 +31,7 @@ typedef union {
     AudioTune tune;
     uint8_t input;
     RtcMode rtc;
-    uint8_t parent;
+    MenuIdx parent;
 } ScreenParam;
 
 void screenReadSettings(void);

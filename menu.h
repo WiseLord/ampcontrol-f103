@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "cmd.h"
 
@@ -85,6 +86,7 @@ Menu *menuGet(void);
 
 void menuSetActive(MenuIdx index);
 void menuChange(int8_t diff);
+bool menuIsTop(void);
 
 MenuIdx menuGetFirstChild(void);
 

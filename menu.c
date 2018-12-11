@@ -7,6 +7,8 @@
 #include "tuner/tuner.h"
 #include "eemul.h"
 
+#include <stm32f1xx_ll_utils.h>
+
 #define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC},
 
 static Menu menu;
@@ -306,6 +308,37 @@ static void menuValueChange(int8_t diff)
     }
 }
 
+static void menuSelect(MenuIdx index)
+{
+    menu.selected = 0;
+
+    menu.active = (index != MENU_NULL) ? index : menu.parent;
+    menu.parent = menuItems[index].parent;
+    menu.dispOft = 0;
+
+    uint8_t idx;
+
+    for (idx = 0; idx < MENU_MAX_LEN; idx++) {
+        menu.list[idx] = 0;
+    }
+
+    idx = 0;
+    // TODO: top menu on first selection instead of MENU_SETUP
+    if (menu.parent != MENU_NULL && menu.parent != MENU_SETUP) {
+        menu.list[idx++] = MENU_NULL;
+        menu.active = MENU_NULL;
+    }
+    for (MenuIdx item = 0; item < MENU_END; item++) {
+        if ((menuItems[item].parent == menu.parent) && item) {
+            menu.list[idx++] = item;
+            if (idx >= MENU_MAX_LEN)
+                break;
+        }
+    }
+
+    menu.listSize = idx;
+}
+
 Menu *menuGet(void)
 {
     return &menu;
@@ -324,34 +357,8 @@ void menuSetActive(MenuIdx index)
         return;
     }
 
-    menu.selected = 0;
-
-    menu.active = (index != MENU_NULL) ? index : menu.parent;
-    menu.parent = menuItems[index].parent;
-    menu.dispOft = 0;
-
-    uint8_t idx;
-
-    for (idx = 0; idx < MENU_MAX_LEN; idx++) {
-        menu.list[idx] = 0;
-    }
-
-    idx = 0;
-    if (menu.parent != MENU_NULL && menu.parent != MENU_SETUP) {
-        menu.list[idx++] = MENU_NULL;
-        menu.active = MENU_NULL;
-    }
-    for (MenuIdx item = 0; item < MENU_END; item++) {
-        if ((menuItems[item].parent == menu.parent) && item) {
-            menu.list[idx++] = item;
-            if (idx >= MENU_MAX_LEN)
-                break;
-        }
-    }
-
-    menu.listSize = idx;
+    menuSelect(index);
 }
-
 
 void menuChange(int8_t diff)
 {
@@ -365,6 +372,12 @@ void menuChange(int8_t diff)
     } else {
         menuMove(diff);
     }
+}
+
+bool menuIsTop(void)
+{
+    // TODO: top menu on first selection instead of MENU_SETUP
+    return (menu.parent == MENU_NULL || menu.parent == MENU_SETUP);
 }
 
 MenuIdx menuGetFirstChild(void)

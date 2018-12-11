@@ -27,8 +27,9 @@ typedef enum {
 
     ACTION_PREV,
     ACTION_NEXT,
-    ACTION_OK,
-//    ACTION_BACK,
+
+    ACTION_MENU,
+    ACTION_MENU_BACK,
 
     ACTION_RTC_MODE,
     ACTION_RTC_CHANGE,

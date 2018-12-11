@@ -103,7 +103,7 @@ static void actionGetTimers(void)
 
 static void actionRemapBtnShort(void)
 {
-//    Screen screen = screenGet();
+    Screen screen = screenGet();
 
     switch (action.value) {
     case BTN_D0:
@@ -114,7 +114,11 @@ static void actionRemapBtnShort(void)
         action.type = ACTION_AUDIO_INPUT;
         break;
     case BTN_D2:
-        action.type = ACTION_RTC_MODE;
+        if (screen == SCREEN_MENU) {
+            action.type = ACTION_MENU_BACK;
+        } else {
+            action.type = ACTION_RTC_MODE;
+        }
         break;
     case BTN_D3:
         action.type = ACTION_PREV;
@@ -123,7 +127,7 @@ static void actionRemapBtnShort(void)
         action.type = ACTION_NEXT;
         break;
     case BTN_D5:
-        action.type = ACTION_OK;
+        action.type = ACTION_MENU;
         break;
     default:
         break;
@@ -175,7 +179,7 @@ static void actionRemapRemote(void)
         action.value = -1;
         break;
     case RC_CMD_MENU:
-        action.type = ACTION_OK;
+        action.type = ACTION_MENU;
         break;
     case RC_CMD_CHAN_NEXT:
         action.type = ACTION_NEXT;
@@ -275,6 +279,7 @@ static void actionRemapCommon(void)
     Screen screen = screenGet();
     AudioProc *aProc = audioGet();
     InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
+    Menu *menu = menuGet();
 
     switch (action.type) {
     case ACTION_STANDBY:
@@ -308,7 +313,7 @@ static void actionRemapCommon(void)
             break;
         }
         break;
-    case ACTION_OK:
+    case ACTION_MENU:
         switch (screen) {
         case SCREEN_MENU:
             action.type = ACTION_MENU_SELECT;
@@ -316,6 +321,18 @@ static void actionRemapCommon(void)
             break;
         default:
             break;
+        }
+        break;
+    case ACTION_MENU_BACK:
+        if (menu->selected) {
+            menu->selected = false;
+        } else if (menuIsTop()) {
+            // TODO: Return to original screen called menu
+            action.type = ACTION_STANDBY;
+            action.value = STBY_ENTER;
+        } else {
+            action.type = ACTION_MENU_SELECT;
+            action.value = (int16_t)menu->parent;
         }
         break;
     default:
@@ -330,12 +347,13 @@ static void actionRemapCommon(void)
     }
 
     if (SCREEN_MENU == screen &&
-        (ACTION_MENU_CHANGE != action.type &&
+        (ACTION_STANDBY != action.type &&
+         ACTION_MENU_BACK != action.type &&
+         ACTION_MENU_CHANGE != action.type &&
          ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 }
-
 
 Action actionUserGet(void)
 {
@@ -436,7 +454,7 @@ void actionHandle(Action action, uint8_t visible)
         }
         break;
 
-    case ACTION_OK:
+    case ACTION_MENU:
         dispTime = 5000;
         if (screen == SCREEN_AUDIO_PARAM) {
             actionNextAudioParam(aProc);
@@ -506,6 +524,7 @@ void actionHandle(Action action, uint8_t visible)
     case ACTION_MENU_CHANGE:
         menuChange(action.value);
         scrPar.parent = menuGet()->parent;
+        screen = SCREEN_MENU;
         dispTime = 10000;
         break;
     default:
