@@ -7,6 +7,7 @@
 #include "tunerdefs.h"
 
 typedef struct {
+    void (*init)(TunerParam *param, TunerStatus *status);
     void (*setFreq)(uint16_t freq);
     void (*seek)(int8_t direction);
 

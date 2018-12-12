@@ -27,6 +27,8 @@ typedef enum {
 } InputType;
 
 typedef struct {
+    void (*init)(AudioParam *param);
+
     void (*setTune)(AudioTune tune, int8_t value);
     void (*setInput)(uint8_t value);
 

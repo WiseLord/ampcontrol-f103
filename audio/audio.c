@@ -21,6 +21,7 @@ static AudioProc aProc;
 
 void audioReadSettings(void)
 {
+    // Read stored parameters
     memset(&aProc, 0, sizeof(aProc));
 
     aProc.par.ic = eeReadU(EE_AUDIO_IC, AUDIO_IC_TDA7439);
@@ -36,6 +37,43 @@ void audioReadSettings(void)
     }
 
     aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
+
+    // API initialization
+    switch (aProc.par.ic) {
+#ifdef _TDA7439
+    case AUDIO_IC_TDA7439:
+        aProc.api.init = tda7439Init;
+
+        aProc.api.setTune = tda7439SetTune;
+        aProc.api.setInput = tda7439SetInput;
+
+        aProc.api.setMute = tda7439SetMute;
+        break;
+#endif
+#ifdef _TDA731X
+    case AUDIO_IC_TDA7313:
+        aProc.api.init = tda731xInit;
+
+        aProc.api.setTune = tda731xSetTune;
+        aProc.api.setInput = tda731xSetInput;
+
+        aProc.api.setMute = tda731xSetMute;
+        aProc.api.setLoudness = tda731xSetLoudness;
+        break;
+#endif
+#ifdef _PT232X
+    case AUDIO_IC_PT232X:
+        aProc.api.init = pt232xInit;
+
+        aProc.api.setTune = pt232xSetTune;
+        aProc.api.setInput = pt232xSetInput;
+
+        aProc.api.setMute = pt232xSetMute;
+        break;
+#endif
+    default:
+        break;
+    }
 }
 
 void audioSaveSettings(void)
@@ -57,40 +95,8 @@ void audioSaveSettings(void)
 
 void audioInit(void)
 {
-    switch (aProc.par.ic) {
-#ifdef _TDA7439
-    case AUDIO_IC_TDA7439:
-        aProc.api.setTune = tda7439SetTune;
-        aProc.api.setInput = tda7439SetInput;
-
-        aProc.api.setMute = tda7439SetMute;
-
-        tda7439Init(&aProc.par);
-        break;
-#endif
-#ifdef _TDA731X
-    case AUDIO_IC_TDA7313:
-        aProc.api.setTune = tda731xSetTune;
-        aProc.api.setInput = tda731xSetInput;
-
-        aProc.api.setMute = tda731xSetMute;
-        aProc.api.setLoudness = tda731xSetLoudness;
-
-        tda731xInit(&aProc.par);
-        break;
-#endif
-#ifdef _PT232X
-    case AUDIO_IC_PT232X:
-        aProc.api.setTune = pt232xSetTune;
-        aProc.api.setInput = pt232xSetInput;
-
-        aProc.api.setMute = pt232xSetMute;
-
-        pt232xInit(&aProc.par);
-        break;
-#endif
-    default:
-        break;
+    if (aProc.api.init) {
+        aProc.api.init(&aProc.par);
     }
 }
 

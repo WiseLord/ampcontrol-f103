@@ -18,6 +18,7 @@ static Tuner tuner;
 
 void tunerReadSettings(void)
 {
+    // Read stored parameters
     memset(&tuner, 0, sizeof(tuner));
 
     tuner.par.ic = eeReadU(EE_TUNER_IC, TUNER_IC_RDA5807);
@@ -30,19 +31,13 @@ void tunerReadSettings(void)
 
     tuner.par.freq = eeReadU(EE_TUNER_FREQ, 9950);
     tuner.status.freq = tuner.par.freq;
-}
 
-void tunerSaveSettings(void)
-{
-    eeUpdate(EE_TUNER_FLAGS, tuner.par.flags & (~TUNER_FLAG_MUTE));
-    eeUpdate(EE_TUNER_FREQ, (int16_t)tuner.status.freq);
-}
-
-void tunerInit(void)
-{
+    // API initialization
     switch (tuner.par.ic) {
 #ifdef _RDA580X
     case TUNER_IC_RDA5807:
+        tuner.api.init = rda580xInit;
+
         tuner.api.setFreq = rda580xSetFreq;
         tuner.api.seek = rda580xSeek;
 
@@ -56,12 +51,12 @@ void tunerInit(void)
         tuner.api.setPower = rda580xSetPower;
 
         tuner.api.updateStatus = rda580xUpdateStatus;
-
-        rda580xInit(&tuner.par, &tuner.status);
         break;
 #endif
 #ifdef _SI470X
     case TUNER_IC_SI4703:
+        tuner.api.init = si470xInit;
+
         tuner.api.setFreq = si470xSetFreq;
         tuner.api.seek = si470xSeek;
 
@@ -74,12 +69,12 @@ void tunerInit(void)
         tuner.api.setPower = si470xSetPower;
 
         tuner.api.updateStatus = si470xUpdateStatus;
-
-        si470xInit(&tuner.par, &tuner.status);
         break;
 #endif
 #ifdef _TEA5767
     case TUNER_IC_TEA5767:
+        tuner.api.init = tea5767Init;
+
         tuner.api.setFreq = tea5767SetFreq;
         tuner.api.seek = tea5767Seek;
 
@@ -89,12 +84,23 @@ void tunerInit(void)
         tuner.api.setPower = tea5767SetPower;
 
         tuner.api.updateStatus = tea5767UpdateStatus;
-
-        tea5767Init(&tuner.par, &tuner.status);
         break;
 #endif
     default:
         break;
+    }
+}
+
+void tunerSaveSettings(void)
+{
+    eeUpdate(EE_TUNER_FLAGS, tuner.par.flags & (~TUNER_FLAG_MUTE));
+    eeUpdate(EE_TUNER_FREQ, (int16_t)tuner.status.freq);
+}
+
+void tunerInit(void)
+{
+    if (tuner.api.init) {
+        tuner.api.init(&tuner.par, &tuner.status);
     }
 }
 
