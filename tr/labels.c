@@ -65,6 +65,10 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50us",
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75us",
 
+    [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stereo",
+    [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Mixed",
+    [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Waterfall",
+
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "No",
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",

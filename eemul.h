@@ -66,6 +66,8 @@ typedef enum {
     EE_DISPLAY_BR_WORK,
     EE_DISPLAY_ROTATE,
 
+    EE_SPECTRUM_MODE,
+
     EE_LANGUAGE = 0x80, // Skip half of items to fix RC offset
     FOREACH_CMD(GENERATE_EE_RC)
 

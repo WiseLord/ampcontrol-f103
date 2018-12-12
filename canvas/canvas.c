@@ -87,7 +87,6 @@ static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int1
     }
 }
 
-/*
 static uint16_t level2color(uint8_t value)
 {
     uint16_t color = 0;
@@ -108,7 +107,6 @@ static uint16_t level2color(uint8_t value)
 
     return color;
 }
-*/
 
 static void canvasDrawTm(RTC_type *rtc, uint8_t tm)
 {
@@ -278,6 +276,23 @@ static void canvasDrawSpectrumChan(int16_t chan, Spectrum *sp, int16_t y, int16_
     }
 }
 
+static void canvasDrawWaterfall(Spectrum *sp)
+{
+    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)canvas.lt->height);
+
+    for (uint16_t y = 0; y < canvas.lt->height; y++) {
+        if (y >= FFT_SIZE / 2) {
+            break;
+        }
+        uint16_t color = level2color(sp->chan[SP_CHAN_LEFT].show[y]);
+        glcdDrawPixel(sp->wtfX, canvas.lt->height - 1 - y, color);
+    }
+
+    if (++sp->wtfX >= canvas.lt->width) {
+        sp->wtfX = 0;
+    }
+}
+
 void canvasShowTime(bool clear, RTC_type *rtc)
 {
     (void)clear;
@@ -416,17 +431,31 @@ void canvasShowTune(bool clear, DispParam *dp, Spectrum *sp)
 
 void canvasShowSpectrum(bool clear, Spectrum *sp)
 {
-    (void)clear;
+    if (clear) {
+        sp->wtfX = 0;
+    }
 
     if (!sp->ready) {
         return;
     }
 
-    const int16_t height = canvas.lt->height / 2;
+    switch (sp->mode) {
+    case SP_MODE_STEREO: {
+        const int16_t height = canvas.lt->height / 2;
 
-    for (uint8_t chan = SP_CHAN_LEFT; chan < SP_CHAN_END; chan++) {
-        int16_t y = chan * height;
-        canvasDrawSpectrumChan(chan, sp, y, height);
+        for (uint8_t chan = SP_CHAN_LEFT; chan < SP_CHAN_END; chan++) {
+            int16_t y = chan * height;
+            canvasDrawSpectrumChan(chan, sp, y, height);
+        }
+    }
+    break;
+    case SP_MODE_MIXED:
+        break;
+    case SP_MODE_WATERFALL:
+        canvasDrawWaterfall(sp);
+        break;
+    default:
+        break;
     }
 
     sp->redraw = false;

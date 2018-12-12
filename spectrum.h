@@ -13,6 +13,14 @@ enum {
     SP_CHAN_END
 };
 
+typedef enum {
+    SP_MODE_STEREO,
+    SP_MODE_MIXED,
+    SP_MODE_WATERFALL,
+
+    SP_MODE_END
+} SpMode;
+
 typedef struct {
     uint8_t raw[FFT_SIZE / 2];
     uint8_t fall[FFT_SIZE / 2];
@@ -24,11 +32,14 @@ typedef struct {
 
 typedef struct {
     SpChan chan[SP_CHAN_END];
+    SpMode mode;
+    uint16_t wtfX;  // waterfall X position
     bool ready;
     bool redraw;
 } Spectrum;
 
 void spInit(void);
+Spectrum *spGet(void);
 
 void spGetADC(uint8_t *dataL, uint8_t *dataR);
 

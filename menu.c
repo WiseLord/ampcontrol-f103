@@ -5,6 +5,8 @@
 #include "display/glcd.h"
 #include "canvas/canvas.h"
 #include "tuner/tuner.h"
+#include "spectrum.h"
+
 #include "eemul.h"
 
 #include <stm32f1xx_ll_utils.h>
@@ -90,6 +92,7 @@ static int16_t menuGetValue(MenuIdx index)
     AudioProc *aproc = audioGet();
     Tuner *tuner = tunerGet();
     TunerParam *tPar = &tuner->par;
+    Spectrum *sp = spGet();
 
     switch (index) {
     case MENU_SETUP_LANG:
@@ -137,6 +140,10 @@ static int16_t menuGetValue(MenuIdx index)
         ret = tPar->volume;
         break;
 
+    case MENU_SPECTURM_MODE:
+        ret = (int16_t)(sp->mode);
+        break;
+
     case MENU_DISPLAY_ROTATE:
         ret = eeReadI(EE_DISPLAY_ROTATE, 0) ? 1 : 0;
         break;
@@ -146,7 +153,7 @@ static int16_t menuGetValue(MenuIdx index)
     }
 
     if (index >= MENU_RC_STBY_SWITCH && index < MENU_RC_STBY_SWITCH + RC_CMD_END) {
-        ret = rcGetCode(index - MENU_RC_STBY_SWITCH);
+        ret = (int16_t)rcGetCode(index - MENU_RC_STBY_SWITCH);
     }
 
     return ret;
@@ -157,6 +164,7 @@ static void menuStoreCurrentValue(void)
     AudioProc *aproc = audioGet();
     Tuner *tuner = tunerGet();
     TunerParam *tPar = &tuner->par;
+    Spectrum *sp = spGet();
 
     switch (menu.active) {
     case MENU_SETUP_LANG:
@@ -210,8 +218,13 @@ static void menuStoreCurrentValue(void)
         break;
 
     case MENU_TUNER_VOLUME:
-        tPar->volume = menu.value;
-        eeUpdate(EE_TUNER_VOLUME, tPar->volume);
+        tPar->volume = (int8_t)(menu.value);
+        eeUpdate(EE_TUNER_VOLUME, menu.value);
+        break;
+
+    case MENU_SPECTURM_MODE:
+        sp->mode = (SpMode)(menu.value);
+        eeUpdate(EE_SPECTRUM_MODE, menu.value);
         break;
 
     case MENU_DISPLAY_ROTATE:
@@ -222,7 +235,6 @@ static void menuStoreCurrentValue(void)
     default:
         break;
     }
-
 
     if (menu.active >= MENU_RC_STBY_SWITCH && menu.active < MENU_RC_STBY_SWITCH + RC_CMD_END) {
         rcSaveCode(menu.active - MENU_RC_STBY_SWITCH, (uint16_t)menu.value);
@@ -302,6 +314,12 @@ static void menuValueChange(int8_t diff)
             menu.value = TUNER_VOLUME_MAX;
         if (menu.value < TUNER_VOLUME_MIN)
             menu.value = TUNER_VOLUME_MIN;
+        break;
+    case MENU_SPECTURM_MODE:
+        if (menu.value >= SP_MODE_END)
+            menu.value = SP_MODE_END - 1;
+        if (menu.value < SP_MODE_STEREO)
+            menu.value = SP_MODE_STEREO;
         break;
     default:
         break;
@@ -460,6 +478,9 @@ char *menuGetValueStr(MenuIdx index)
         break;
     case MENU_TUNER_DEEMPH:
         ret = labels[LABEL_TUNER_DEEMPH + value];
+        break;
+    case MENU_SPECTURM_MODE:
+        ret = labels[LABEL_SPECTRUM_MODE + value];
         break;
     default:
         ret = "--";

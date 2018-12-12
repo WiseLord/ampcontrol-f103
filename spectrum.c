@@ -6,9 +6,12 @@
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_rcc.h>
 
+#include "eemul.h"
 #include "functions.h"
 
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)
+
+static Spectrum spectrum;
 
 // Array with ADC data, interleaved L-R-L-R...
 static int16_t bufDMA[DMA_BUF_SIZE];
@@ -118,13 +121,7 @@ static void spInitADC(void)
     }
 }
 
-void spInit(void)
-{
-    spInitDMA();
-    spInitADC();
-}
-
-static void spGet(int16_t *dma, uint8_t *data)
+static void spGetData(int16_t *dma, uint8_t *data)
 {
     int32_t dcOft = 0;
 
@@ -145,11 +142,28 @@ static void spGet(int16_t *dma, uint8_t *data)
     fft_radix4(fr, fi);
     fft_cplx2dB(fr, fi, data);
 }
+static void spReadSettings(void)
+{
+    spectrum.mode = (SpMode)(eeReadI(EE_SPECTRUM_MODE, (int16_t)SP_MODE_STEREO));
+}
+
+void spInit(void)
+{
+    spReadSettings();
+
+    spInitDMA();
+    spInitADC();
+}
+
+Spectrum *spGet(void)
+{
+    return &spectrum;
+}
 
 void spGetADC(uint8_t *dataL, uint8_t *dataR)
 {
-    spGet((int16_t *)(bufDMA + 0), dataL);
-    spGet((int16_t *)(bufDMA + 1), dataR);
+    spGetData((int16_t *)(bufDMA + 0), dataL);
+    spGetData((int16_t *)(bufDMA + 1), dataR);
 }
 
 void spConvertADC(void)

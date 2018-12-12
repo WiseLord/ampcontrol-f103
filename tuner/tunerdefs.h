@@ -80,7 +80,7 @@ typedef struct {
     uint16_t fMin;
     uint16_t fMax;
     uint8_t fStep;
-    uint8_t volume;
+    int8_t volume;
 } TunerParam;
 
 typedef struct {

@@ -13,8 +13,6 @@ static Screen screen = SCREEN_STANDBY;
 static Screen screenDefault = SCREEN_SPECTRUM;
 static ScreenParam scrPar;
 
-static Spectrum spectrum;
-
 // TODO: Read from backup memory
 static int8_t brightness[BR_END];
 
@@ -191,18 +189,19 @@ void screenChangeBrighness(BrMode mode, int8_t diff)
 
 void screenShow(void)
 {
+    Spectrum *spectrum = spGet();
     bool clear = screenCheckClear();
 
     // Get new spectrum data
     if (swTimGetSpConvert() <= 0) {
         swTimSetSpConvert(20);
-        spGetADC(spectrum.chan[SP_CHAN_LEFT].raw, spectrum.chan[SP_CHAN_RIGHT].raw);
-        spectrum.ready = true;
+        spGetADC(spectrum->chan[SP_CHAN_LEFT].raw, spectrum->chan[SP_CHAN_RIGHT].raw);
+        spectrum->ready = true;
     }
 
     if (clear) {
         canvasClear();
-        spectrum.redraw = true;
+        spectrum->redraw = true;
     }
 
     switch (screen) {
@@ -247,7 +246,7 @@ void screenShowTime(bool clear)
 
 void screenShowSpectrum(bool clear)
 {
-    canvasShowSpectrum(clear, &spectrum);
+    canvasShowSpectrum(clear, spGet());
 }
 
 void screenShowBrightness(bool clear)
@@ -262,7 +261,7 @@ void screenShowBrightness(bool clear)
     dp.mStep = 1 * 8;
     dp.icon = ICON_BRIGHTNESS;
 
-    canvasShowTune(clear, &dp, &spectrum);
+    canvasShowTune(clear, &dp, spGet());
 }
 
 void screenShowInput(bool clear)
@@ -296,7 +295,7 @@ void screenShowAudioParam(bool clear)
     dp.max = grid ? grid->max : 0;
     dp.mStep = grid ? grid->mStep : 0;
 
-    canvasShowTune(clear, &dp, &spectrum);
+    canvasShowTune(clear, &dp, spGet());
 }
 
 void screenShowTuner(bool clear)
@@ -308,7 +307,7 @@ void screenShowTuner(bool clear)
         swTimSetTunerPoll(100);
     }
 
-    canvasShowTuner(clear, tuner, &spectrum);
+    canvasShowTuner(clear, tuner, spGet());
 }
 
 void screenShowMenu(void)
