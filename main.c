@@ -97,8 +97,8 @@ int main(void)
     rtcInit();
     timersInit();
 
-    tunerInit();
-    audioInit();
+    audioReadSettings();
+    tunerReadSettings();
 
     Action action = {ACTION_STANDBY, STBY_ENTER};
 

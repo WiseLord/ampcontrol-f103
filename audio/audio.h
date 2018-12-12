@@ -37,10 +37,12 @@ typedef struct {
 } AudioApi;
 
 typedef struct {
-    AudioIC ic;
     AudioApi api;
     AudioParam par;
 } AudioProc;
+
+void audioReadSettings(void);
+void audioSaveSettings(void);
 
 void audioInit(void);
 AudioProc *audioGet(void);

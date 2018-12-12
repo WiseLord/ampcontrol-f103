@@ -52,16 +52,11 @@ static bool i2cWait(I2cContext *i2c)
 uint8_t i2cInit(I2C_TypeDef *I2Cx, uint32_t ClockSpeed)
 {
     I2cContext *i2c = getI2cCtx(I2Cx);
+
     if (i2c == NULL)
         return 1;
 
     LL_APB1_GRP1_EnableClock(i2c->pefBit);
-
-    LL_I2C_Disable(I2Cx);
-
-    LL_I2C_DisableOwnAddress2(I2Cx);
-    LL_I2C_DisableGeneralCall(I2Cx);
-    LL_I2C_EnableClockStretching(I2Cx);
 
     LL_I2C_InitTypeDef I2C_InitStruct;
     I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
@@ -71,10 +66,6 @@ uint8_t i2cInit(I2C_TypeDef *I2Cx, uint32_t ClockSpeed)
     I2C_InitStruct.TypeAcknowledge = LL_I2C_ACK;
     I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
     LL_I2C_Init(I2Cx, &I2C_InitStruct);
-
-    LL_I2C_SetOwnAddress2(I2Cx, 0);
-
-    LL_I2C_Enable(I2Cx);
 
     return 0;
 }

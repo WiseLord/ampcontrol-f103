@@ -409,6 +409,10 @@ void actionHandle(Action action, uint8_t visible)
         if (action.value == STBY_EXIT) {
             screen = SCREEN_TIME;
             dispTime = 800;
+
+            audioReadSettings();
+            tunerReadSettings();
+
             swTimSetInitHw(500);
         } else {
             dispTime = SW_TIM_OFF;
@@ -425,6 +429,7 @@ void actionHandle(Action action, uint8_t visible)
         break;
     case ACTION_INIT_HW:
         swTimSetInitHw(SW_TIM_OFF);
+
         tunerInit();
         tunerSetPower(true);
         tunerSetFlag(TUNER_FLAG_MUTE, false);
@@ -450,7 +455,7 @@ void actionHandle(Action action, uint8_t visible)
     case ACTION_DIGIT:
         if (screen == SCREEN_TIME) {
             dispTime = 5000;
-            rtcEditTime(rtcGetMode(), action.value);
+            rtcEditTime(rtcGetMode(), (int8_t)(action.value));
         }
         break;
 
@@ -475,7 +480,7 @@ void actionHandle(Action action, uint8_t visible)
         break;
     case ACTION_RTC_CHANGE:
         dispTime = 5000;
-        rtcChangeTime(rtcGetMode(), action.value);
+        rtcChangeTime(rtcGetMode(), (int8_t)(action.value));
         break;
     case ACTION_RTC_SET_HOUR:
     case ACTION_RTC_SET_MIN:
@@ -484,7 +489,7 @@ void actionHandle(Action action, uint8_t visible)
     case ACTION_RTC_SET_MONTH:
     case ACTION_RTC_SET_YEAR:
         dispTime = 5000;
-        rtcSetTime(action.type - ACTION_RTC_SET_HOUR, action.value);
+        rtcSetTime((int8_t)(action.type - ACTION_RTC_SET_HOUR), (int8_t)(action.value));
         break;
 
     case ACTION_AUDIO_INPUT:
@@ -499,7 +504,7 @@ void actionHandle(Action action, uint8_t visible)
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
         dispTime = 5000;
-        audioChangeTune(scrPar.tune, action.value);
+        audioChangeTune(scrPar.tune, (int8_t)(action.value));
         break;
     case ACTION_TUNER_PREV:
         screen = SCREEN_TUNER;
@@ -509,11 +514,11 @@ void actionHandle(Action action, uint8_t visible)
         screen = SCREEN_TUNER;
         tunerNextStation(TUNER_DIR_UP);
         break;
-    case ACTION_BR_WORK:
     case ACTION_BR_STBY:
+    case ACTION_BR_WORK:
         screen = SCREEN_BRIGHTNESS;
         dispTime = 5000;
-        screenChangeBrighness(action.type, action.value);
+        screenChangeBrighness((BrMode)(action.type - ACTION_BR_STBY), (int8_t)(action.value));
         break;
     case ACTION_MENU_SELECT:
         menuSetActive(action.value);

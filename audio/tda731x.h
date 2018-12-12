@@ -6,7 +6,7 @@
 
 #include "audiodefs.h"
 
-void tda731xInit(AudioParam *param, AudioIC ic);
+void tda731xInit(AudioParam *param);
 
 void tda731xSetTune(AudioTune tune, int8_t value);
 void tda731xSetInput(uint8_t value);

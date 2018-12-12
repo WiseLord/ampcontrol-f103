@@ -27,6 +27,13 @@ typedef enum {
     SCREEN_END
 } Screen;
 
+typedef enum {
+    BR_STBY,
+    BR_WORK,
+
+    BR_END
+} BrMode;
+
 typedef union {
     AudioTune tune;
     uint8_t input;
@@ -47,9 +54,9 @@ void screenSetParam(ScreenParam param);
 void screenSetDefault(Screen value);
 Screen screenGetDefault(void);
 
-int8_t screenGetBrightness(uint8_t mode);
-void screenSetBrightness(uint8_t mode, int8_t value);
-void screenChangeBrighness(uint8_t mode, int8_t diff);
+int8_t screenGetBrightness(BrMode mode);
+void screenSetBrightness(BrMode mode, int8_t value);
+void screenChangeBrighness(BrMode mode, int8_t diff);
 
 void screenShow(void);
 

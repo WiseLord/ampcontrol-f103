@@ -72,7 +72,7 @@ static void menuMove(int8_t diff)
             break;
         }
     }
-    newIdx = (newIdx + menu.listSize + diff) % menu.listSize;
+    newIdx = (int8_t)((newIdx + menu.listSize + diff) % menu.listSize);
 
     menu.active = menu.list[newIdx];
 
@@ -93,11 +93,11 @@ static int16_t menuGetValue(MenuIdx index)
 
     switch (index) {
     case MENU_SETUP_LANG:
-        ret = labelsGetLang();
+        ret = (int16_t)(labelsGetLang());
         break;
 
     case MENU_AUDIO_IC:
-        ret = aproc->ic;
+        ret = (int16_t)aproc->par.ic;
         break;
     case MENU_AUDIO_IN_0:
     case MENU_AUDIO_IN_1:
@@ -111,16 +111,16 @@ static int16_t menuGetValue(MenuIdx index)
         break;
 
     case MENU_TUNER_IC:
-        ret = tuner->ic;
+        ret = (int16_t)(tPar->ic);
         break;
     case MENU_TUNER_BAND:
-        ret = tPar->band;
+        ret = (int16_t)(tPar->band);
         break;
     case MENU_TUNER_STEP:
-        ret = tPar->step;
+        ret = (int16_t)(tPar->step);
         break;
     case MENU_TUNER_DEEMPH:
-        ret = tPar->deemph;
+        ret = (int16_t)(tPar->deemph);
         break;
 
     case MENU_TUNER_FMONO:
@@ -160,13 +160,13 @@ static void menuStoreCurrentValue(void)
 
     switch (menu.active) {
     case MENU_SETUP_LANG:
-        labelsSetLang(menu.value);
-        eeUpdate(EE_LANGUAGE, labelsGetLang());
+        labelsSetLang((Lang)(menu.value));
+        eeUpdate(EE_LANGUAGE, (int16_t)(labelsGetLang()));
         break;
 
     case MENU_AUDIO_IC:
-        aproc->ic = menu.value;
-        eeUpdate(EE_AUDIO_IC, aproc->ic);
+        aproc->par.ic = (AudioIC)(menu.value);
+        eeUpdate(EE_AUDIO_IC, menu.value);
         break;
     case MENU_AUDIO_IN_0:
     case MENU_AUDIO_IN_1:
@@ -180,20 +180,20 @@ static void menuStoreCurrentValue(void)
         break;
 
     case MENU_TUNER_IC:
-        tuner->ic = menu.value;
-        eeUpdate(EE_TUNER_IC, tuner->ic);
+        tPar->ic = (TunerIC)menu.value;
+        eeUpdate(EE_TUNER_IC, menu.value);
         break;
     case MENU_TUNER_BAND:
-        tPar->band = menu.value;
-        eeUpdate(EE_TUNER_BAND, tPar->band);
+        tPar->band = (TunerBand)menu.value;
+        eeUpdate(EE_TUNER_BAND, menu.value);
         break;
     case MENU_TUNER_STEP:
-        tPar->step = menu.value;
-        eeUpdate(EE_TUNER_STEP, tPar->step);
+        tPar->step = (TunerStep)menu.value;
+        eeUpdate(EE_TUNER_STEP, menu.value);
         break;
     case MENU_TUNER_DEEMPH:
-        tPar->deemph = menu.value;
-        eeUpdate(EE_TUNER_DEEMPH, tPar->deemph);
+        tPar->deemph = (TunerDeemph)menu.value;
+        eeUpdate(EE_TUNER_DEEMPH, menu.value);
         break;
 
     case MENU_TUNER_FMONO:

@@ -6,15 +6,6 @@
 
 #include "tunerdefs.h"
 
-typedef enum {
-    TUNER_IC_NO = 0,
-    TUNER_IC_RDA5807,
-    TUNER_IC_SI4703,
-    TUNER_IC_TEA5767,
-
-    TUNER_IC_END
-} TunerIC;
-
 typedef struct {
     void (*setFreq)(uint16_t freq);
     void (*seek)(int8_t direction);
@@ -32,11 +23,13 @@ typedef struct {
 } TunerApi;
 
 typedef struct {
-    TunerIC ic;
     TunerApi api;
     TunerParam par;
     TunerStatus status;
 } Tuner;
+
+void tunerReadSettings(void);
+void tunerSaveSettings(void);
 
 void tunerInit(void);
 Tuner *tunerGet(void);

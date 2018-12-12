@@ -9,7 +9,16 @@
 #define TUNER_VOLUME_MIN    0
 #define TUNER_VOLUME_MAX    15
 
-typedef  uint16_t TunerFlag;
+typedef enum {
+    TUNER_IC_NO = 0,
+    TUNER_IC_RDA5807,
+    TUNER_IC_SI4703,
+    TUNER_IC_TEA5767,
+
+    TUNER_IC_END
+} TunerIC;
+
+typedef uint16_t TunerFlag;
 enum {
     TUNER_FLAG_INIT     = 0x0000,
 
@@ -29,10 +38,10 @@ enum {
 };
 
 typedef enum {
-    TUNER_BAND_FM_US_EUROPE,    // 87..108 MHz
-    TUNER_BAND_FM_JAPAN,        // 76..97 MHz
-    TUNER_BAND_FM_WORLDWIDE,    // 79..108 MHz
-    TUNER_BAND_FM_EASTEUROPE,   // 65..76 MHz
+    TUNER_BAND_FM_US_EUROPE,  // 87..108 MHz
+    TUNER_BAND_FM_JAPAN,      // 76..97 MHz
+    TUNER_BAND_FM_WORLDWIDE,  // 79..108 MHz
+    TUNER_BAND_FM_EASTEUROPE, // 65..76 MHz
 
     TUNER_BAND_END,
 } TunerBand;
@@ -61,6 +70,7 @@ typedef enum {
 } TunerFreq;
 
 typedef struct {
+    TunerIC ic;
     TunerFlag flags;
     TunerBand band;
     TunerStep step;

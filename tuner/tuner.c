@@ -16,9 +16,11 @@
 
 static Tuner tuner;
 
-static void tunerReadSettings(void)
+void tunerReadSettings(void)
 {
-    tuner.ic = eeReadU(EE_TUNER_IC, TUNER_IC_RDA5807);
+    memset(&tuner, 0, sizeof(tuner));
+
+    tuner.par.ic = eeReadU(EE_TUNER_IC, TUNER_IC_RDA5807);
 
     tuner.par.flags = eeReadU(EE_TUNER_FLAGS, TUNER_FLAG_INIT);
     tuner.par.band = eeReadU(EE_TUNER_BAND, TUNER_BAND_FM_US_EUROPE);
@@ -27,22 +29,18 @@ static void tunerReadSettings(void)
     tuner.par.volume = eeReadI(EE_TUNER_VOLUME, TUNER_VOLUME_MAX) & 0xFF;
 
     tuner.par.freq = eeReadU(EE_TUNER_FREQ, 9950);
+    tuner.status.freq = tuner.par.freq;
 }
 
-static void tunerSaveSettings(void)
+void tunerSaveSettings(void)
 {
     eeUpdate(EE_TUNER_FLAGS, tuner.par.flags & (~TUNER_FLAG_MUTE));
     eeUpdate(EE_TUNER_FREQ, (int16_t)tuner.status.freq);
 }
 
-void tunerInit()
+void tunerInit(void)
 {
-    memset(&tuner, 0, sizeof(tuner));
-
-    tunerReadSettings();
-    tuner.status.freq = tuner.par.freq;
-
-    switch (tuner.ic) {
+    switch (tuner.par.ic) {
 #ifdef _RDA580X
     case TUNER_IC_RDA5807:
         tuner.api.setFreq = rda580xSetFreq;

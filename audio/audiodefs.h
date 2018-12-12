@@ -14,7 +14,8 @@ typedef enum {
     AUDIO_IC_END
 } AudioIC;
 
-typedef enum {
+typedef uint16_t AudioFlag;
+enum {
     AUDIO_FLAG_INIT     = 0x0000,
 
     AUDIO_FLAG_MUTE     = 0x0001,
@@ -23,7 +24,7 @@ typedef enum {
     AUDIO_FLAG_SURROUND = 0x0020,
     AUDIO_FLAG_EFFECT3D = 0x0040,
     AUDIO_FLAG_BYPASS   = 0x0080,
-} AudioFlag;
+};
 
 typedef enum {
     AUDIO_TUNE_VOLUME = 0,
@@ -53,6 +54,7 @@ typedef struct {
 } AudioTuneItem;
 
 typedef struct {
+    AudioIC ic;
     AudioFlag flags;
     AudioTuneItem item[AUDIO_TUNE_END];
 

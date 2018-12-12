@@ -16,8 +16,7 @@ static ScreenParam scrPar;
 static Spectrum spectrum;
 
 // TODO: Read from backup memory
-static int8_t brStby;
-static int8_t brWork;
+static int8_t brightness[BR_END];
 
 static bool screenCheckClear(void)
 {
@@ -69,9 +68,9 @@ static bool screenCheckClear(void)
 
         // Handle standby/work brightness
         if (screen == SCREEN_STANDBY) {
-            screenChangeBrighness(ACTION_BR_STBY, 0);
+            screenChangeBrighness(BR_STBY, 0);
         } else {
-            screenChangeBrighness(ACTION_BR_WORK, 0);
+            screenChangeBrighness(BR_WORK, 0);
         }
     } else {
         switch (screen) {
@@ -104,25 +103,19 @@ static bool screenCheckClear(void)
 
 void screenReadSettings(void)
 {
-    brStby = (int8_t)eeReadI(EE_DISPLAY_BR_STBY, 3);
-    if (brStby < LCD_BR_MIN) {
-        brStby = LCD_BR_MIN;
-    } else if (brStby > LCD_BR_MAX) {
-        brStby = LCD_BR_MAX;
-    }
-
-    brWork = (int8_t)eeReadI(EE_DISPLAY_BR_WORK, LCD_BR_MAX);
-    if (brWork < LCD_BR_MIN) {
-        brWork = LCD_BR_MIN;
-    } else if (brWork > LCD_BR_MAX) {
-        brWork = LCD_BR_MAX;
+    for (BrMode mode = BR_STBY; mode < BR_END; mode++) {
+        brightness[mode] = (int8_t)eeReadI(EE_DISPLAY_BR_STBY + mode, mode == BR_STBY ? 3 : LCD_BR_MAX);
+        if (brightness[mode] < LCD_BR_MIN) {
+            brightness[mode] = LCD_BR_MIN;
+        } else if (brightness[mode] > LCD_BR_MAX) {
+            brightness[mode] = LCD_BR_MAX;
+        }
     }
 }
 
 void screenSaveSettings(void)
 {
-    eeUpdate(EE_DISPLAY_BR_STBY, brStby);
-    eeUpdate(EE_DISPLAY_BR_WORK, brWork);
+    eeUpdate(EE_DISPLAY_BR_WORK, brightness[BR_WORK]);
 }
 
 
@@ -132,7 +125,7 @@ void screenInit(void)
     canvasInit();
     canvasClear();
     screenReadSettings();
-    dispdrvSetBrightness(brStby);
+    dispdrvSetBrightness(brightness[BR_STBY]);
 }
 
 void screenSet(Screen value)
@@ -170,25 +163,19 @@ Screen screenGetDefault(void)
 }
 
 
-int8_t screenGetBrightness(uint8_t mode)
+int8_t screenGetBrightness(BrMode mode)
 {
-    if (mode == ACTION_BR_WORK)
-        return brWork;
-    else
-        return brStby;
+    return brightness[mode];
 }
 
-void screenSetBrightness(uint8_t mode, int8_t value)
+void screenSetBrightness(BrMode mode, int8_t value)
 {
-    if (mode == ACTION_BR_WORK)
-        brWork = value;
-    else
-        brStby = value;
+    brightness[mode] = value;
 
     dispdrvSetBrightness(value);
 }
 
-void screenChangeBrighness(uint8_t mode, int8_t diff)
+void screenChangeBrighness(BrMode mode, int8_t diff)
 {
     int8_t br = screenGetBrightness(mode);
 
@@ -269,7 +256,7 @@ void screenShowBrightness(bool clear)
     const char **txtLabels = labelsGet();
 
     dp.label = txtLabels[LABEL_BRIGNTNESS];
-    dp.value = screenGetBrightness(ACTION_BR_WORK);
+    dp.value = screenGetBrightness(BR_WORK);
     dp.min = LCD_BR_MIN;
     dp.max = LCD_BR_MAX;
     dp.mStep = 1 * 8;

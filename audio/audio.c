@@ -19,29 +19,31 @@
 
 static AudioProc aProc;
 
-static void audioReadSettings(void)
+void audioReadSettings(void)
 {
-    aProc.ic = eeReadU(EE_AUDIO_IC, AUDIO_IC_TDA7439);
+    memset(&aProc, 0, sizeof(aProc));
+
+    aProc.par.ic = eeReadU(EE_AUDIO_IC, AUDIO_IC_TDA7439);
     aProc.par.flags = eeReadU(EE_AUDIO_FLAG, AUDIO_FLAG_INIT);
-    aProc.par.input = eeReadU(EE_AUDIO_INPUT, 0);
+    aProc.par.input = (uint8_t)eeReadU(EE_AUDIO_INPUT, 0);
 
     for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
-        aProc.par.item[par - EE_AUDIO_PARAM_VOLUME].value = eeReadI(par, 0);
+        aProc.par.item[par - EE_AUDIO_PARAM_VOLUME].value = (int8_t)eeReadI(par, 0);
     }
 
     for (EE_Param par = EE_AUDIO_GAIN0; par <= EE_AUDIO_GAIN7; par++) {
-        aProc.par.gain[par - EE_AUDIO_GAIN0] = eeReadI(par, 0);
+        aProc.par.gain[par - EE_AUDIO_GAIN0] = (int8_t)eeReadI(par, 0);
     }
 
     aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
 }
 
-static void audioSaveSettings(void)
+void audioSaveSettings(void)
 {
     aProc.par.flags &= ~AUDIO_FLAG_MUTE; // Do not save mute
 
-    eeUpdate(EE_AUDIO_IC, aProc.ic);
-    eeUpdate(EE_AUDIO_FLAG, aProc.par.flags);
+    eeUpdate(EE_AUDIO_IC, (int16_t)aProc.par.ic);
+    eeUpdate(EE_AUDIO_FLAG, (int16_t)aProc.par.flags);
     eeUpdate(EE_AUDIO_INPUT, aProc.par.input);
 
     for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
@@ -55,11 +57,7 @@ static void audioSaveSettings(void)
 
 void audioInit(void)
 {
-    memset(&aProc, 0, sizeof(aProc));
-
-    audioReadSettings();
-
-    switch (aProc.ic) {
+    switch (aProc.par.ic) {
 #ifdef _TDA7439
     case AUDIO_IC_TDA7439:
         aProc.api.setTune = tda7439SetTune;
@@ -78,7 +76,7 @@ void audioInit(void)
         aProc.api.setMute = tda731xSetMute;
         aProc.api.setLoudness = tda731xSetLoudness;
 
-        tda731xInit(&aProc.par, aProc.ic);
+        tda731xInit(&aProc.par);
         break;
 #endif
 #ifdef _PT232X

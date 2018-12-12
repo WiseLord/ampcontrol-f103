@@ -33,11 +33,11 @@ static void tda731xSwitch(uint8_t input, int8_t gain, bool loudness)
     i2cTransmit(I2C_AMP, true);
 }
 
-void tda731xInit(AudioParam *param, AudioIC ic)
+void tda731xInit(AudioParam *param)
 {
     aPar = param;
 
-    switch (ic) {
+    switch (aPar->ic) {
     default:
         aPar->inCnt = 3;
         break;
