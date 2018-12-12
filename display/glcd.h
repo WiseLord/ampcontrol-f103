@@ -84,6 +84,7 @@ void glcdDrawFrame(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t colo
 void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
 void glcdDrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color);
 
+void glcdShift(uint16_t value);
 void glcdUpdate(void);
 
 #ifdef __cplusplus

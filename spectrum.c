@@ -142,6 +142,7 @@ static void spGetData(int16_t *dma, uint8_t *data)
     fft_radix4(fr, fi);
     fft_cplx2dB(fr, fi, data);
 }
+
 static void spReadSettings(void)
 {
     spectrum.mode = (SpMode)(eeReadI(EE_SPECTRUM_MODE, (int16_t)SP_MODE_STEREO));

@@ -15,6 +15,7 @@ static DispDriver drv = {
     .drawRectangle = ili9341DrawRectangle,
     .drawImage = ili9341DrawImage,
     .rotate = ili9341Rotate,
+    .shift = ili9341Shift,
 };
 
 static inline void ili9341SendCmd(uint8_t cmd) __attribute__((always_inline));
@@ -184,6 +185,25 @@ void ili9341Rotate(uint8_t rotate)
         dispdrvSendData8(0x0A);
         dispdrvSendData8(0xE2);
     }
+
+    SET(DISP_CS);
+}
+
+void ili9341Shift(uint16_t value)
+{
+    CLR(DISP_CS);
+
+    ili9341SendCmd(ILI9341_VSCRDEF);
+    dispdrvSendData8(0);
+    dispdrvSendData8(0);
+    dispdrvSendData8((ILI9341_HEIGHT & 0xFF00) >> 8);
+    dispdrvSendData8(ILI9341_HEIGHT & 0x00FF);
+    dispdrvSendData8(0);
+    dispdrvSendData8(0);
+
+    ili9341SendCmd(ILI9341_VSCRSADD);
+    dispdrvSendData8((value & 0xFF00) >> 8);
+    dispdrvSendData8(value & 0x00FF);
 
     SET(DISP_CS);
 }

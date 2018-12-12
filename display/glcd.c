@@ -466,6 +466,13 @@ void glcdDrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color)
     }
 }
 
+void glcdShift(uint16_t value)
+{
+    if (glcd.drv->shift) {
+        glcd.drv->shift(value);
+    }
+}
+
 void glcdUpdate(void)
 {
     if (glcd.drv->updateFB) {

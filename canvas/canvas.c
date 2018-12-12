@@ -287,6 +287,7 @@ static void canvasDrawWaterfall(Spectrum *sp)
         uint16_t color = level2color(sp->chan[SP_CHAN_LEFT].show[y]);
         glcdDrawPixel(sp->wtfX, canvas.lt->height - 1 - y, color);
     }
+    glcdShift(sp->wtfX);
 
     if (++sp->wtfX >= canvas.lt->width) {
         sp->wtfX = 0;
@@ -431,9 +432,7 @@ void canvasShowTune(bool clear, DispParam *dp, Spectrum *sp)
 
 void canvasShowSpectrum(bool clear, Spectrum *sp)
 {
-    if (clear) {
-        sp->wtfX = 0;
-    }
+    (void)clear;
 
     if (!sp->ready) {
         return;
