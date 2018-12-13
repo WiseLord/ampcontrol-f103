@@ -14,6 +14,7 @@ static DispDriver drv = {
     .drawRectangle = r61581DrawRectangle,
     .drawImage = r61581DrawImage,
     .rotate = r61581Rotate,
+    .shift = r615811Shift,
 };
 
 static inline void r61581SelectReg(uint8_t reg) __attribute__((always_inline));
@@ -157,6 +158,25 @@ void r61581Rotate(uint8_t rotate)
 
     SET(DISP_CS);
 
+}
+
+void r615811Shift(uint16_t value)
+{
+    CLR(DISP_CS);
+
+    r61581SelectReg(0x33);
+    dispdrvSendData8(0);
+    dispdrvSendData8(0);
+    dispdrvSendData8((R61581_HEIGHT & 0xFF00) >> 8);
+    dispdrvSendData8(R61581_HEIGHT & 0x00FF);
+    dispdrvSendData8(0);
+    dispdrvSendData8(0);
+
+    r61581SelectReg(0x37);
+    dispdrvSendData8((value & 0xFF00) >> 8);
+    dispdrvSendData8(value & 0x00FF);
+
+    SET(DISP_CS);
 }
 
 void r61581Sleep(void)

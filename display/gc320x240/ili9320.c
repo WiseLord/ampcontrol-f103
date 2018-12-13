@@ -14,6 +14,7 @@ static DispDriver drv = {
     .drawRectangle = ili9320DrawRectangle,
     .drawImage = ili9320DrawImage,
     .rotate = ili9320Rotate,
+    .shift = ili9320Shift,
 };
 
 static inline void ili9320SelectReg(uint16_t reg) __attribute__((always_inline));
@@ -141,6 +142,15 @@ void ili9320Rotate(uint8_t rotate)
         ili9320WriteReg(0x0001, 0x0100);    // Set SS and SM bit
         ili9320WriteReg(0x0060, 0x2700);    // Gate scan line
     }
+
+    SET(DISP_CS);
+}
+
+void ili9320Shift(uint16_t value)
+{
+    CLR(DISP_CS);
+
+    ili9320WriteReg(0x006A, value);
 
     SET(DISP_CS);
 }

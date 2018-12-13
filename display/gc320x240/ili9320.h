@@ -6,6 +6,7 @@
 
 void ili9320Init(DispDriver **driver);
 void ili9320Rotate(uint8_t rotate);
+void ili9320Shift(uint16_t value);
 
 void ili9320Sleep(void);
 void ili9320Wakeup(void);

@@ -6,6 +6,7 @@
 
 void r61581Init(DispDriver **driver);
 void r61581Rotate(uint8_t rotate);
+void r615811Shift(uint16_t value);
 
 void r61581Sleep(void);
 void r61581Wakeup(void);
