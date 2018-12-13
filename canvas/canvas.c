@@ -263,11 +263,13 @@ static void canvasDrawSpectrumColumn(bool redraw, int16_t x, int16_t y, int16_t 
 
 }
 
-static void canvasDrawSpectrumChan(int16_t chan, Spectrum *sp, int16_t y, int16_t height)
+static void canvasDrawSpectrumChan(Spectrum *sp, int16_t chan)
 {
     const uint8_t step = canvas.lt->sp.step;
     const uint8_t oft = canvas.lt->sp.oft;
     const uint8_t width = canvas.lt->sp.width;
+    const int16_t height = canvas.lt->height / 2;
+    const int16_t y = chan * height;
 
     const int16_t num = (canvas.lt->width + width - 1) / step;    // Number of spectrum columns
 
@@ -282,6 +284,32 @@ static void canvasDrawSpectrumChan(int16_t chan, Spectrum *sp, int16_t y, int16_
         int16_t x = oft + col * step;
         canvasDrawSpectrumColumn(sp->redraw, x, y, width, height,
                                  *show++, *old_show++, *peak++, *old_peak++);
+    }
+}
+
+static void canvasDrawSpectrumMixed(Spectrum *sp)
+{
+    const uint8_t step = canvas.lt->sp.step;
+    const uint8_t oft = canvas.lt->sp.oft;
+    const uint8_t width = canvas.lt->sp.width;
+
+    const int16_t num = (canvas.lt->width + width - 1) / step;    // Number of spectrum columns
+    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)canvas.lt->height / 2);
+    canvasImproveSpectrum(&sp->chan[SP_CHAN_RIGHT], (uint16_t)canvas.lt->height / 2);
+
+    uint8_t *showL = sp->chan[SP_CHAN_LEFT].show;
+    uint8_t *old_showL = sp->chan[SP_CHAN_LEFT].old_show;
+
+    uint8_t *showR = sp->chan[SP_CHAN_RIGHT].show;
+    uint8_t *old_showR = sp->chan[SP_CHAN_RIGHT].old_show;
+
+    for (int16_t col = 0; col < num; col++) {
+        int16_t show = (*showL++) + (*showR++);
+        int16_t old_show = (*old_showL++) + (*old_showR++);
+
+        int16_t x = oft + col * step;
+        canvasDrawSpectrumColumn(sp->redraw, x, 0, width, canvas.lt->height,
+                                 show, old_show, 0, 0);
     }
 }
 
@@ -432,12 +460,7 @@ void canvasShowTune(bool clear, DispParam *dp, Spectrum *sp)
         return;
     }
 
-    const int16_t chan = SP_CHAN_LEFT;
-    const int16_t height = canvas.lt->height / 2;
-
-    int16_t y = canvas.lt->height / 2;
-
-    canvasDrawSpectrumChan(chan, sp, y, height);
+    canvasDrawSpectrumChan(sp, SP_CHAN_RIGHT);
 
     sp->redraw = false;
     sp->ready = false;
@@ -452,16 +475,12 @@ void canvasShowSpectrum(bool clear, Spectrum *sp)
     }
 
     switch (sp->mode) {
-    case SP_MODE_STEREO: {
-        const int16_t height = canvas.lt->height / 2;
-
-        for (uint8_t chan = SP_CHAN_LEFT; chan < SP_CHAN_END; chan++) {
-            int16_t y = chan * height;
-            canvasDrawSpectrumChan(chan, sp, y, height);
-        }
-    }
-    break;
+    case SP_MODE_STEREO:
+        canvasDrawSpectrumChan(sp, SP_CHAN_LEFT);
+        canvasDrawSpectrumChan(sp, SP_CHAN_RIGHT);
+        break;
     case SP_MODE_MIXED:
+        canvasDrawSpectrumMixed(sp);
         break;
     case SP_MODE_WATERFALL:
         canvasDrawWaterfall(sp);
@@ -513,12 +532,7 @@ void canvasShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         return;
     }
 
-    const int16_t chan = SP_CHAN_LEFT;
-    const int16_t height = canvas.lt->height / 2;
-
-    int16_t y = canvas.lt->height / 2;
-
-    canvasDrawSpectrumChan(chan, sp, y, height);
+    canvasDrawSpectrumChan(sp, SP_CHAN_RIGHT);
 
     sp->redraw = false;
     sp->ready = false;
