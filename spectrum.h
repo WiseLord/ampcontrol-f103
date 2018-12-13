@@ -33,7 +33,7 @@ typedef struct {
 typedef struct {
     SpChan chan[SP_CHAN_END];
     SpMode mode;
-    uint16_t wtfX;  // waterfall X position
+    int16_t wtfX;  // waterfall X position
     bool ready;
     bool redraw;
 } Spectrum;

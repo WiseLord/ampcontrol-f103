@@ -69,6 +69,7 @@ void glcdSetX(int16_t x);
 void glcdSetY(int16_t y);
 
 int16_t glcdFontSymbolPos(int32_t code);
+tImage *glcdGetUnrleImg(void);
 void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
 uint16_t glcdWriteIcon(uint16_t code, const tFont *iFont, uint16_t color, uint16_t bgColor);
 uint16_t glcdWriteChar(int32_t code);

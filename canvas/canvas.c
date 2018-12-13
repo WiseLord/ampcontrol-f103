@@ -87,22 +87,31 @@ static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int1
     }
 }
 
-static uint16_t level2color(uint8_t value)
+static uint16_t level2color(uint16_t value)
 {
-    uint16_t color = 0;
+    uint16_t color = 0xFFFF;
 
-    if (value >= 0 && value < 64) {
-        color = 0x001F;
-        color |= (value << 5);
-    } else if (value >= 64 && value < 128) {
+    if (value < 32) {           // Black => Blue
+        color = 0x0000;
+        color |= (value - 0);
+    } else if (value < 64) {    // Blue => Cyan
+        color = 0x003F;
+        color |= ((value - 32) << 6);
+    } else if (value < 96) {    // Cyan => Olive
         color = 0x07E0;
-        color |= (31 - ((value - 64) / 2));
-    } else if (value >= 128 && value < 192) {
+        color |= (95 - value);
+    } else if (value < 128) {   // Olive => Yellow
         color = 0x07E0;
-        color |= ((value / 2) << 11);
-    } else if (value >= 192 && value < 256) {
+        color |= ((value - 96) << 11);
+    } else if (value < 160) {   // Yellow => Red
         color = 0xF800;
-        color |= ((63 - value) << 5);
+        color |= ((159 - value) << 6);
+    } else if (value < 192) {   // Red => Purple
+        color = 0xF800;
+        color |= (value - 160);
+    } else if (value < 224) {   // Purple => White
+        color = 0xF83F;
+        color |= ((value - 160) << 6);
     }
 
     return color;
@@ -278,19 +287,23 @@ static void canvasDrawSpectrumChan(int16_t chan, Spectrum *sp, int16_t y, int16_
 
 static void canvasDrawWaterfall(Spectrum *sp)
 {
-    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)canvas.lt->height);
-
-    for (uint16_t y = 0; y < canvas.lt->height; y++) {
-        if (y >= FFT_SIZE / 2) {
-            break;
-        }
-        uint16_t color = level2color(sp->chan[SP_CHAN_LEFT].show[y]);
-        glcdDrawPixel(sp->wtfX, canvas.lt->height - 1 - y, color);
-    }
-    glcdShift(sp->wtfX);
-
     if (++sp->wtfX >= canvas.lt->width) {
         sp->wtfX = 0;
+    }
+    const uint8_t fftCols = 80;
+
+    glcdShift((uint16_t)(sp->wtfX + 1) % canvas.lt->width);
+
+    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)canvas.lt->height / 2);
+    canvasImproveSpectrum(&sp->chan[SP_CHAN_RIGHT], (uint16_t)canvas.lt->height / 2);
+
+    for (uint16_t y = 0; y < canvas.lt->height; y++) {
+        int16_t spIdx = y * fftCols / canvas.lt->height;
+
+        uint16_t level = sp->chan[SP_CHAN_LEFT].show[spIdx] + sp->chan[SP_CHAN_RIGHT].show[spIdx];
+
+        uint16_t color = level2color(level);
+        glcdDrawPixel(sp->wtfX, canvas.lt->height - 1 - y, color);
     }
 }
 
