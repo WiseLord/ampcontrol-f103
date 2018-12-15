@@ -135,7 +135,7 @@ static const uint16_t hammTable[N_HANN / 2] = {
 };
 
 static const uint16_t dbTable[N_DB] = {
-    1,     2,     3,     4,     4,     5,     6,     7,
+    1,     2,     3,     4,     5,     6,     7,     8,
     9,     10,    11,    12,    13,    14,    16,    17,
     18,    20,    21,    23,    24,    26,    27,    29,
     31,    33,    35,    36,    38,    40,    42,    45,
@@ -321,11 +321,36 @@ void fft_radix4(int16_t *fr, int16_t *fi)
 
 void fft_cplx2dB(int16_t *fr, int16_t *fi, uint8_t *out)
 {
-    int16_t i;
+    int16_t i, j;
+    uint16_t accum = 0;
 
-    for (i = 0; i < FFT_SIZE / 2; i++) {
+    for (i = 0, j = 0; i < FFT_SIZE / 2; i++) {
         uint16_t calc = (fr[i] * fr[i] + fi[i] * fi[i]) >> 16;
+        accum += fft_getDb(calc, 0, N_DB - 1);
 
-        out[i] = fft_getDb(calc, 0, N_DB - 1);
+        if (i < 40) {
+            out[j++] = (uint8_t)(accum / 1);
+            accum = 0;
+        } else if (i < 80) {
+            if ((i & 0x01) == 0x01) {
+                out[j++] = (uint8_t)(accum / 2);
+                accum = 0;
+            }
+        } else if (i < 160) {
+            if ((i & 0x03) == 0x03) {
+                out[j++] = (uint8_t)(accum / 4);
+                accum = 0;
+            }
+        } else if (i < 320) {
+            if ((i & 0x07) == 0x07) {
+                out[j++] = (uint8_t)(accum / 8);
+                accum = 0;
+            }
+        } else {
+            if ((i & 0x0F) == 0x0F) {
+                out[j++] = (uint8_t)(accum / 16);
+                accum = 0;
+            }
+        }
     }
 }

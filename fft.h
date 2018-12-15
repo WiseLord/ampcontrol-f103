@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define FFT_SIZE    256
-#define FFT_LOG2    8
+#define FFT_SIZE    1024
+#define FFT_LOG2    10
 
 #define N_WAVE      1024
 #define N_HANN      1024

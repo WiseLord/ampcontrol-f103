@@ -190,7 +190,7 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
 
 static void canvasImproveSpectrum(SpChan *chan, uint16_t height)
 {
-    for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
+    for (uint8_t i = 0; i < SPECTRUM_SIZE; i++) {
         chan->raw[i] = height * chan->raw[i] / N_DB;
 
         chan->old_show[i] = chan->show[i];

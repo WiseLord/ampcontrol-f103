@@ -21,13 +21,15 @@ typedef enum {
     SP_MODE_END
 } SpMode;
 
+#define SPECTRUM_SIZE   112
+
 typedef struct {
-    uint8_t raw[FFT_SIZE / 2];
-    uint8_t fall[FFT_SIZE / 2];
-    uint8_t show[FFT_SIZE / 2];
-    uint8_t peak[FFT_SIZE / 2];
-    uint8_t old_show[FFT_SIZE / 2];
-    uint8_t old_peak[FFT_SIZE / 2];
+    uint8_t raw[SPECTRUM_SIZE];
+    uint8_t fall[SPECTRUM_SIZE];
+    uint8_t show[SPECTRUM_SIZE];
+    uint8_t peak[SPECTRUM_SIZE];
+    uint8_t old_show[SPECTRUM_SIZE];
+    uint8_t old_peak[SPECTRUM_SIZE];
 } SpChan;
 
 typedef struct {

@@ -7,7 +7,7 @@
 static Glcd glcd;
 static char strbuf[STR_BUFSIZE + 1];    // String buffer
 
-static uint8_t unRleData[1024];         // Storage for uncompressed image data
+static uint8_t unRleData[4096];         // Storage for uncompressed image data
 static tImage unRleImg = {
     .rle = 0
 };
