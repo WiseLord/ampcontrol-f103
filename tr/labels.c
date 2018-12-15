@@ -161,19 +161,9 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_RC_STBY_EXIT]    = "Exit standby",
 };
 
-static const char *labels[LABEL_END];
-
-static void labelsFill(const char *const *src)
-{
-    for (Label l = 0; l < LABEL_END; l++) {
-        labels[l] = (src[l] ? src[l] : labels_default[l]);
-    }
-}
-
 void labelsSetLang(Lang value)
 {
     lang = value;
-    // TODO: Save in settings
 }
 
 Lang labelsGetLang(void)
@@ -181,25 +171,27 @@ Lang labelsGetLang(void)
     return  lang;
 }
 
-const char **labelsGet()
+const char *labelsGet(Label value)
 {
+    const char *ret = labels_default[value];
+
     switch (lang) {
     case LANG_BY:
-        labelsFill(labels_by);
+        if (labels_by[value])
+            ret = labels_by[value];
         break;
     case LANG_RU:
-        labelsFill(labels_ru);
+        if (labels_ru[value])
+            ret = labels_ru[value];
         break;
     default:
-        labelsFill(labels_default);
         break;
     }
 
-    return labels;
+    return ret;
 }
 
 void labelsInit(void)
 {
-    // TODO: Read from settings
     lang = eeReadU(EE_LANGUAGE, LANG_DEFAULT);
 }

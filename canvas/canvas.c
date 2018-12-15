@@ -147,7 +147,7 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
 
     int16_t width = canvas.lt->width;
     MenuIdx menuIdx = menu->list[idx];
-    char *name = menuGetName(menuIdx);
+    const char *name = menuGetName(menuIdx);
     uint8_t active = (menu->active == menu->list[idx]);
 
     const uint8_t ih = fIh + 4; // Menu item height
@@ -166,7 +166,7 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
     } else {
         glcdWriteString("< ");
     }
-    glcdWriteString(name);
+    glcdWriteStringConst(name);
 
     // Draw menu value
     int16_t x = canvas.glcd->x;
@@ -180,7 +180,7 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
         glcdSetFontColor(bgColor);
         glcdSetFontBgColor(color);
     }
-    uint16_t strLen = glcdWriteStringFramed(menuGetValueStr(menuIdx), 1);
+    uint16_t strLen = glcdWriteStringFramed((char *)menuGetValueStr(menuIdx), 1);
     glcdSetFontColor(color);
     glcdSetFontBgColor(bgColor);
 
@@ -392,8 +392,7 @@ void canvasShowTime(bool clear, RTC_type *rtc)
                      (int16_t)canvas.lt->time.wdFont->chars[0].image->height, canvas.color);
     wdayOld = wday;
 
-    const char **txtLabels = labelsGet();
-    const char *wdayLabel = txtLabels[LABEL_SUNDAY + wday];
+    const char *wdayLabel = labelsGet(LABEL_SUNDAY + wday);
 
     glcdSetXY(canvas.lt->width / 2, canvas.lt->time.wdY);
     glcdSetFontAlign(FONT_ALIGN_CENTER);
@@ -411,12 +410,12 @@ void canvasShowMenu(void)
     const int16_t dividerPos = (canvas.lt->height - (fIh + 4) * items + fHh) / 2;
 
     // Show header
-    char *parentName = menuGetName(menu->parent);
+    const char *parentName = menuGetName(menu->parent);
     glcdSetFont(canvas.lt->menu.headFont);
     glcdSetFontColor(LCD_COLOR_WHITE);
 
     glcdSetXY(2, 0);
-    glcdWriteString(parentName);
+    glcdWriteStringConst(parentName);
     // Fill free space after header
     glcdDrawRect(canvas.glcd->x, canvas.glcd->y, canvas.lt->width - canvas.glcd->x, fHh, canvas.color);
 

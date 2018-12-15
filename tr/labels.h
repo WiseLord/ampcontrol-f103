@@ -98,7 +98,7 @@ typedef enum {
 void labelsSetLang(Lang value);
 Lang labelsGetLang(void);
 
-const char **labelsGet(void);
+const char *labelsGet(Label value);
 
 void labelsInit(void);
 

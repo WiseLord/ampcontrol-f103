@@ -411,17 +411,14 @@ MenuIdx menuGetFirstChild(void)
     return menu.active;
 }
 
-char *menuGetName(MenuIdx index)
+const char *menuGetName(MenuIdx index)
 {
-    const char **txtLabels = labelsGet();
-
-    return (char *)txtLabels[LABEL_MENU + (index - MENU_NULL)];
+    return (char *)labelsGet(LABEL_MENU + (index - MENU_NULL));
 }
 
-char *menuGetValueStr(MenuIdx index)
+const char *menuGetValueStr(MenuIdx index)
 {
-    char **labels = (char **)labelsGet();
-    char *ret = ">";
+    const char *ret = ">";
 
     // Parent menu type
     if (menuItems[index].type == MENU_TYPE_PARENT) {
@@ -435,7 +432,7 @@ char *menuGetValueStr(MenuIdx index)
 
     // Bool menu type
     if (menuItems[index].type == MENU_TYPE_BOOL) {
-        ret = labels[LABEL_BOOL_OFF + value];
+        ret = labelsGet(LABEL_BOOL_OFF + value);
         return ret;
     }
 
@@ -452,10 +449,10 @@ char *menuGetValueStr(MenuIdx index)
     // Enum menu types
     switch (index) {
     case MENU_SETUP_LANG:
-        ret = labels[LABEL_LANG + value];
+        ret = labelsGet(LABEL_LANG + value);
         break;
     case MENU_AUDIO_IC:
-        ret = labels[LABEL_AUDIO_IC + value];
+        ret = labelsGet(LABEL_AUDIO_IC + value);
         break;
     case MENU_AUDIO_IN_0:
     case MENU_AUDIO_IN_1:
@@ -465,22 +462,22 @@ char *menuGetValueStr(MenuIdx index)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
-        ret = labels[LABEL_IN_TUNER + value];
+        ret = labelsGet(LABEL_IN_TUNER + value);
         break;
     case MENU_TUNER_IC:
-        ret = labels[LABEL_TUNER_IC + value];
+        ret = labelsGet(LABEL_TUNER_IC + value);
         break;
     case MENU_TUNER_BAND:
-        ret = labels[LABEL_TUNER_BAND + value];
+        ret = labelsGet(LABEL_TUNER_BAND + value);
         break;
     case MENU_TUNER_STEP:
-        ret = labels[LABEL_TUNER_STEP + value];
+        ret = labelsGet(LABEL_TUNER_STEP + value);
         break;
     case MENU_TUNER_DEEMPH:
-        ret = labels[LABEL_TUNER_DEEMPH + value];
+        ret = labelsGet(LABEL_TUNER_DEEMPH + value);
         break;
     case MENU_SPECTURM_MODE:
-        ret = labels[LABEL_SPECTRUM_MODE + value];
+        ret = labelsGet(LABEL_SPECTRUM_MODE + value);
         break;
     default:
         ret = "--";

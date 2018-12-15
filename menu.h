@@ -90,8 +90,8 @@ bool menuIsTop(void);
 
 MenuIdx menuGetFirstChild(void);
 
-char *menuGetName(MenuIdx index);
-char *menuGetValueStr(MenuIdx index);
+const char *menuGetName(MenuIdx index);
+const char *menuGetValueStr(MenuIdx index);
 
 #ifdef __cplusplus
 }

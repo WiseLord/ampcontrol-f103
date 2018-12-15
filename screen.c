@@ -254,9 +254,8 @@ void screenShowSpectrum(bool clear)
 void screenShowBrightness(bool clear)
 {
     DispParam dp;
-    const char **txtLabels = labelsGet();
 
-    dp.label = txtLabels[LABEL_BRIGNTNESS];
+    dp.label = labelsGet(LABEL_BRIGNTNESS);
     dp.value = screenGetBrightness(BR_WORK);
     dp.min = LCD_BR_MIN;
     dp.max = LCD_BR_MAX;
@@ -276,7 +275,6 @@ void screenShowAudioParam(bool clear)
 {
     AudioProc *aProc = audioGet();
     AudioTune aTune = scrPar.tune;
-    const char **txtLabels = labelsGet();
 
     if (aTune >= AUDIO_TUNE_END)
         aTune = AUDIO_TUNE_VOLUME;
@@ -284,10 +282,10 @@ void screenShowAudioParam(bool clear)
     DispParam dp;
     if (aTune == AUDIO_TUNE_GAIN) {
         InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
-        dp.label = txtLabels[LABEL_IN_TUNER + inType];
+        dp.label = labelsGet(LABEL_IN_TUNER + inType);
         dp.icon = (uint8_t)(ICON_TUNER + inType);
     } else {
-        dp.label = txtLabels[LABEL_VOLUME + aTune];
+        dp.label = labelsGet(LABEL_VOLUME + aTune);
         dp.icon = (uint8_t)(ICON_VOLUME + aTune);
     }
     dp.value = aProc->par.item[aTune].value;
