@@ -164,6 +164,11 @@ tImage *glcdGetUnrleImg(void)
     return &unRleImg;
 }
 
+char *glcdGetUnrleImgData(void)
+{
+    return (char*)unRleData;
+}
+
 void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     uint16_t w = img->width;

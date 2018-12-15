@@ -8,6 +8,7 @@
 
 #include "eemul.h"
 #include "functions.h"
+#include "display/glcd.h"
 
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)
 
@@ -17,8 +18,12 @@ static Spectrum spectrum;
 static int16_t bufDMA[DMA_BUF_SIZE];
 
 // Array for FFT (real and imaginary parts)
-static int16_t fr[FFT_SIZE];
-static int16_t fi[FFT_SIZE];
+typedef struct {
+    int16_t fr[FFT_SIZE];
+    int16_t fi[FFT_SIZE];
+} SpFFT;
+
+static SpFFT *sp;
 
 static void spInitDMA(void)
 {
@@ -117,7 +122,6 @@ static void spInitADC(void)
         LL_ADC_StartCalibration(ADC1);
         while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0) {
         }
-
     }
 }
 
@@ -126,21 +130,21 @@ static void spGetData(int16_t *dma, uint8_t *data)
     int32_t dcOft = 0;
 
     for (int16_t i = 0; i < FFT_SIZE; i++) {
-        fr[i] = dma[2 * i];
-        dcOft += fr[i];
+        sp->fr[i] = dma[2 * i];
+        dcOft += sp->fr[i];
     }
     dcOft /= FFT_SIZE;
 
     for (int16_t i = 0; i < FFT_SIZE; i++) {
-        fr[i] -= dcOft;
-        fi[i] = 0;
+        sp->fr[i] -= dcOft;
+        sp->fi[i] = 0;
     }
 
-    fft_hamm_window(fr);
-    fft_rev_bin(fr);
+    fft_hamm_window(sp->fr);
+    fft_rev_bin(sp->fr);
 
-    fft_radix4(fr, fi);
-    fft_cplx2dB(fr, fi, data);
+    fft_radix4(sp->fr, sp->fi);
+    fft_cplx2dB(sp->fr, sp->fi, data);
 }
 
 static void spReadSettings(void)
@@ -151,6 +155,8 @@ static void spReadSettings(void)
 void spInit(void)
 {
     spReadSettings();
+
+    sp = (SpFFT *)glcdGetUnrleImgData(); // Share working FFT buffer with glcd module
 
     spInitDMA();
     spInitADC();
