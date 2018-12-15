@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name ampcontrol-f103)(type KiCad)(uri ${KIPRJMOD}/../ampcontrol-f103.pretty)(options "")(descr ""))
+)
