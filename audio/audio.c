@@ -69,6 +69,9 @@ void audioReadSettings(void)
         aProc.api.setInput = pt232xSetInput;
 
         aProc.api.setMute = pt232xSetMute;
+        aProc.api.setSurround = pt232xSetSurround;
+        aProc.api.setEffect3d = pt232xSetEffect3D;
+        aProc.api.setBypass = pt232xSetBypass;
         break;
 #endif
     default:

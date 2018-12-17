@@ -34,6 +34,9 @@ typedef struct {
 
     void (*setMute)(bool value);
     void (*setLoudness)(bool value);
+    void (*setSurround)(bool value);
+    void (*setEffect3d)(bool value);
+    void (*setBypass)(bool value);
 
     void (*setPower)(bool value);
 } AudioApi;
