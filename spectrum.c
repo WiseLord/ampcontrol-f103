@@ -250,20 +250,20 @@ static void spCplx2dB(FftSample *sp, uint8_t *out)
         uint16_t calc = (sp[i].fr * sp[i].fr + sp[i].fi * sp[i].fi) >> 16;
         accum += spGetDb(calc, 0, N_DB - 1);
 
-        if (i < 40) {
+        if (i < 48) {
             out[j++] = (uint8_t)(accum / 1);
             accum = 0;
-        } else if (i < 80) {
+        } else if (i < 96) {
             if ((i & 0x01) == 0x01) {
                 out[j++] = (uint8_t)(accum / 2);
                 accum = 0;
             }
-        } else if (i < 160) {
+        } else if (i < 192) {
             if ((i & 0x03) == 0x03) {
                 out[j++] = (uint8_t)(accum / 4);
                 accum = 0;
             }
-        } else if (i < 320) {
+        } else if (i < 384) {
             if ((i & 0x07) == 0x07) {
                 out[j++] = (uint8_t)(accum / 8);
                 accum = 0;

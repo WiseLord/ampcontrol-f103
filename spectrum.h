@@ -21,7 +21,7 @@ typedef enum {
     SP_MODE_END
 } SpMode;
 
-#define SPECTRUM_SIZE   112
+#define SPECTRUM_SIZE   128
 #define N_HANN          1024
 #define N_DB            256
 

@@ -318,20 +318,18 @@ static void canvasDrawWaterfall(Spectrum *sp)
     if (++sp->wtfX >= canvas.lt->width) {
         sp->wtfX = 0;
     }
-    const uint8_t fftCols = 80;
+
+    const uint8_t wfH = canvas.lt->sp.wfH;
 
     glcdShift((uint16_t)(sp->wtfX + 1) % canvas.lt->width);
 
     canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)canvas.lt->height / 2);
     canvasImproveSpectrum(&sp->chan[SP_CHAN_RIGHT], (uint16_t)canvas.lt->height / 2);
 
-    for (uint16_t y = 0; y < canvas.lt->height; y++) {
-        int16_t spIdx = y * fftCols / canvas.lt->height;
-
-        uint16_t level = sp->chan[SP_CHAN_LEFT].show[spIdx] + sp->chan[SP_CHAN_RIGHT].show[spIdx];
-
+    for (uint16_t i = 0; i < (canvas.lt->height + wfH - 1) / wfH; i++) {
+        uint16_t level = sp->chan[SP_CHAN_LEFT].show[i] + sp->chan[SP_CHAN_RIGHT].show[i];
         uint16_t color = level2color(level);
-        glcdDrawPixel(sp->wtfX, canvas.lt->height - 1 - y, color);
+        glcdDrawRect(sp->wtfX, canvas.lt->height - 1 - (i * wfH), 1, wfH, color);
     }
 }
 

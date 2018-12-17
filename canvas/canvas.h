@@ -59,6 +59,7 @@ typedef struct {
         uint8_t step;               // Step in pixels between spectrum columns
         uint8_t oft;                // Offset of visible part of the column
         uint8_t width;              // Width of visible part of the column
+        uint8_t wfH;                // Width of waterfile line
     } sp;
     struct {
         CanvasBar bar;

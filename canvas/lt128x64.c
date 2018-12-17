@@ -28,6 +28,7 @@ static const Layout lt128x64 = {
     .sp.step = 2,
     .sp.oft = 1,
     .sp.width = 1,
+    .sp.wfH = 1,
 
     .tuner.bar.sc = 64,
     .tuner.bar.sw = 1,

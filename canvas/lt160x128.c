@@ -28,6 +28,7 @@ static const Layout lt160x128 = {
     .sp.step = 2,
     .sp.oft = 0,
     .sp.width = 1,
+    .sp.wfH = 1,
 
     .tuner.bar.sc = 80,
     .tuner.bar.sw = 1,
