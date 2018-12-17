@@ -10,12 +10,18 @@
 #define N_HANN      1024
 #define N_DB        256
 
+typedef struct
+{
+    int16_t fr;
+    int16_t fi;
+} FftSample;
+
 int16_t fft_sin(int16_t phi);
 int16_t fft_cos(int16_t phi);
 
-void fft_hamm_window(int16_t *fr);
-void fft_rev_bin(int16_t *fr);
-void fft_radix4(int16_t *fr, int16_t *fi);
-void fft_cplx2dB(int16_t *fr, int16_t *fi, uint8_t *out);
+void fft_hamm_window(FftSample *sp);
+void fft_rev_bin(FftSample *sp);
+void fft_radix4(FftSample *sp);
+void fft_cplx2dB(FftSample *sp, uint8_t *out);
 
 #endif // FFT_H

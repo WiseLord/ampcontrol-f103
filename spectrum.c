@@ -17,13 +17,7 @@ static Spectrum spectrum;
 // Array with ADC data, interleaved L-R-L-R...
 static int16_t bufDMA[DMA_BUF_SIZE];
 
-// Array for FFT (real and imaginary parts)
-typedef struct {
-    int16_t fr[FFT_SIZE];
-    int16_t fi[FFT_SIZE];
-} SpFFT;
-
-static SpFFT *sp;
+static FftSample *sp; // sp[FFT_SIZE] is shared with glcd unRleImgData
 
 static void spInitDMA(void)
 {
@@ -130,21 +124,21 @@ static void spGetData(int16_t *dma, uint8_t *data)
     int32_t dcOft = 0;
 
     for (int16_t i = 0; i < FFT_SIZE; i++) {
-        sp->fr[i] = dma[2 * i];
-        dcOft += sp->fr[i];
+        sp[i].fr = dma[2 * i];
+        dcOft += sp[i].fr;
     }
     dcOft /= FFT_SIZE;
 
     for (int16_t i = 0; i < FFT_SIZE; i++) {
-        sp->fr[i] -= dcOft;
-        sp->fi[i] = 0;
+        sp[i].fr -= dcOft;
+        sp[i].fi = 0;
     }
 
-    fft_hamm_window(sp->fr);
-    fft_rev_bin(sp->fr);
+    fft_hamm_window(sp);
+    fft_rev_bin(sp);
 
-    fft_radix4(sp->fr, sp->fi);
-    fft_cplx2dB(sp->fr, sp->fi, data);
+    fft_radix4(sp);
+    fft_cplx2dB(sp, data);
 }
 
 static void spReadSettings(void)
@@ -156,7 +150,7 @@ void spInit(void)
 {
     spReadSettings();
 
-    sp = (SpFFT *)glcdGetUnrleImgData(); // Share working FFT buffer with glcd module
+    sp = (FftSample *)glcdGetUnrleImgData(); // Share working FFT buffer with glcd module
 
     spInitDMA();
     spInitADC();

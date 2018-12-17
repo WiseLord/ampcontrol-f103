@@ -209,16 +209,16 @@ int16_t fft_cos(int16_t phi)
     return sinTbl((phi + N_WAVE / 4) % N_WAVE);
 }
 
-void fft_hamm_window(int16_t *fr)
+void fft_hamm_window(FftSample *sp)
 {
     for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
-        uint32_t ht = hammTable[i * (N_HANN / FFT_SIZE)];
-        fr[i] = (ht * fr[i]) >> 16;
-        fr[FFT_SIZE - 1 - i] = (ht * fr[FFT_SIZE - 1 - i]) >> 16;
+        uint16_t ht = hammTable[i * (N_HANN / FFT_SIZE)];
+        sp[i].fr = (ht * sp[i].fr) >> 16;
+        sp[FFT_SIZE - 1 - i].fr = (ht * sp[FFT_SIZE - 1 - i].fr) >> 16;
     }
 }
 
-void fft_rev_bin(int16_t *fr)
+void fft_rev_bin(FftSample *sp)
 {
     int16_t m, mr = 0;
     int16_t tr, l;
@@ -234,13 +234,13 @@ void fft_rev_bin(int16_t *fr)
         if (mr <= m) {
             continue;
         }
-        tr = fr[m];
-        fr[m] = fr[mr];
-        fr[mr] = tr;
+        tr = sp[m].fr;
+        sp[m].fr = sp[mr].fr;
+        sp[mr].fr = tr;
     }
 }
 
-void fft_radix4(int16_t *fr, int16_t *fi)
+void fft_radix4(FftSample *sp)
 {
     int16_t ldm = 0, rdx = 2;
 
@@ -251,15 +251,15 @@ void fft_radix4(int16_t *fr, int16_t *fi)
 
         int16_t xr, yr, ur, vr, xi, yi, ui, vi;
 
-        sum_dif(fr[i0], fr[i1], &xr, &ur);
-        sum_dif(fr[i2], fr[i3], &yr, &vi);
-        sum_dif(fi[i0], fi[i1], &xi, &ui);
-        sum_dif(fi[i3], fi[i2], &yi, &vr);
+        sum_dif(sp[i0].fr, sp[i1].fr, &xr, &ur);
+        sum_dif(sp[i2].fr, sp[i3].fr, &yr, &vi);
+        sum_dif(sp[i0].fi, sp[i1].fi, &xi, &ui);
+        sum_dif(sp[i3].fi, sp[i2].fi, &yi, &vr);
 
-        sum_dif(ui, vi, &fi[i1], &fi[i3]);
-        sum_dif(xi, yi, &fi[i0], &fi[i2]);
-        sum_dif(ur, vr, &fr[i1], &fr[i3]);
-        sum_dif(xr, yr, &fr[i0], &fr[i2]);
+        sum_dif(ui, vi, &sp[i1].fi, &sp[i3].fi);
+        sum_dif(xi, yi, &sp[i0].fi, &sp[i2].fi);
+        sum_dif(ur, vr, &sp[i1].fr, &sp[i3].fr);
+        sum_dif(xr, yr, &sp[i0].fr, &sp[i2].fr);
     }
 
     for (ldm = 2 * rdx; ldm <= FFT_LOG2; ldm += rdx) {
@@ -290,42 +290,42 @@ void fft_radix4(int16_t *fr, int16_t *fi)
                 int16_t xr, yr, ur, vr, xi, yi, ui, vi;
                 int16_t t;
 
-                mult_shf(cos2, sin2, fr[i1], fi[i1], &xr, &xi);
-                mult_shf(cos1, sin1, fr[i2], fi[i2], &yr, &vr);
-                mult_shf(cos3, sin3, fr[i3], fi[i3], &vi, &yi);
+                mult_shf(cos2, sin2, sp[i1].fr, sp[i1].fi, &xr, &xi);
+                mult_shf(cos1, sin1, sp[i2].fr, sp[i2].fi, &yr, &vr);
+                mult_shf(cos3, sin3, sp[i3].fr, sp[i3].fi, &vi, &yi);
 
                 t = yi - vr;
                 yi += vr;
                 vr = t;
 
-                ur = fr[i0] - xr;
-                xr += fr[i0];
+                ur = sp[i0].fr - xr;
+                xr += sp[i0].fr;
 
-                sum_dif(ur, vr, &fr[i1], &fr[i3]);
+                sum_dif(ur, vr, &sp[i1].fr, &sp[i3].fr);
 
                 t = yr - vi;
                 yr += vi;
                 vi = t;
 
-                ui = fi[i0] - xi;
-                xi += fi[i0];
+                ui = sp[i0].fi - xi;
+                xi += sp[i0].fi;
 
-                sum_dif(ui, vi, &fi[i1], &fi[i3]);
-                sum_dif(xr, yr, &fr[i0], &fr[i2]);
-                sum_dif(xi, yi, &fi[i0], &fi[i2]);
+                sum_dif(ui, vi, &sp[i1].fi, &sp[i3].fi);
+                sum_dif(xr, yr, &sp[i0].fr, &sp[i2].fr);
+                sum_dif(xi, yi, &sp[i0].fi, &sp[i2].fi);
             }
             phi += phi0;
         }
     }
 }
 
-void fft_cplx2dB(int16_t *fr, int16_t *fi, uint8_t *out)
+void fft_cplx2dB(FftSample *sp, uint8_t *out)
 {
     int16_t i, j;
     uint16_t accum = 0;
 
     for (i = 0, j = 0; i < FFT_SIZE / 2; i++) {
-        uint16_t calc = (fr[i] * fr[i] + fi[i] * fi[i]) >> 16;
+        uint16_t calc = (sp[i].fr * sp[i].fr + sp[i].fi * sp[i].fi) >> 16;
         accum += fft_getDb(calc, 0, N_DB - 1);
 
         if (i < 40) {
