@@ -501,7 +501,7 @@ void canvasShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         glcdWriteIcon(ICON_TUNER, iconSet, canvas.lt->iconColor, canvas.color);
     }
 
-    int16_t freq = (int16_t)tuner->status.freq;
+    uint16_t freq = tuner->status.freq;
 
     if (clear || freqOld != freq) {
         int16_t freqMin = (int16_t)tuner->par.fMin;
@@ -515,7 +515,7 @@ void canvasShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
 
         glcdWriteString("FM ");
 
-        canvasDrawBar(&canvas.lt->tuner.bar, freq, freqMin, freqMax);
+        canvasDrawBar(&canvas.lt->tuner.bar, (int16_t)freq, freqMin, freqMax);
 
         glcdWriteNum(freq / 100, 3, ' ', 10);
         glcdWriteChar(LETTER_SPACE_CHAR);
@@ -523,6 +523,7 @@ void canvasShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         glcdWriteChar(LETTER_SPACE_CHAR);
         glcdWriteNum(freq % 100, 2, '0', 10);
     }
+    freqOld = freq;
 
     // Spectrum
     if (!sp->ready) {
