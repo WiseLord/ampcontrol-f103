@@ -22,6 +22,8 @@ typedef enum {
 } SpMode;
 
 #define SPECTRUM_SIZE   112
+#define N_HANN          1024
+#define N_DB            256
 
 typedef struct {
     uint8_t raw[SPECTRUM_SIZE];
