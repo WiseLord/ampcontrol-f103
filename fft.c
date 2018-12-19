@@ -84,8 +84,8 @@ static inline void sum_dif(int16_t a, int16_t b,
 static inline void mult_shf(int16_t cos, int16_t sin, int16_t x, int16_t y,
                             int16_t *u, int16_t *v)
 {
-    *u = ((int32_t)x * cos - (int32_t)y * sin) >> 15;
-    *v = ((int32_t)y * cos + (int32_t)x * sin) >> 15;
+    *u = (x * cos - y * sin) >> 15;
+    *v = (y * cos + x * sin) >> 15;
 }
 
 void fft_rev_bin(FftSample *sp)
