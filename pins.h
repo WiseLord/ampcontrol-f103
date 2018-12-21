@@ -144,7 +144,7 @@ void pinsInitAmpI2c(void);
 #define SI470X_SDIO_Pin         AMP_I2C_SDA_Pin
 // TODO: Use the same RST as display uses
 #define SI470X_RST_Port         GPIOB
-#define SI470X_RST_Pin          LL_GPIO_PIN_14
+#define SI470X_RST_Pin          LL_GPIO_PIN_2
 
 
 #endif // PINS_H

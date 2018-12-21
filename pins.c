@@ -111,12 +111,12 @@ static void pinsInitDisplay(void)
 
 void pinsHwReset(void)
 {
-    OUT_INIT(DISP_RST, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+    OUT_INIT(SI470X_RST, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
 
     OUT_INIT(SI470X_SCLK, LL_GPIO_OUTPUT_OPENDRAIN, LL_GPIO_SPEED_FREQ_HIGH);
     OUT_INIT(SI470X_SDIO, LL_GPIO_OUTPUT_OPENDRAIN, LL_GPIO_SPEED_FREQ_HIGH);
 
-    CLR(DISP_RST);      // Start display and Si470x reset
+    CLR(SI470X_RST);    // Start display and Si470x reset
 
     CLR(SI470X_SCLK);   // Put to zero in this sequence to avoid fake START
 
@@ -126,7 +126,7 @@ void pinsHwReset(void)
 
     LL_mDelay(5);       // Reset
 
-    SET(DISP_RST);      // End of reset
+    SET(SI470X_RST);    // End of reset
 
     LL_mDelay(1);
     IN_F(SI470X_SDIO);  // SDIO = 1
