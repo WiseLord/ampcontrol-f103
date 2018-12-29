@@ -140,7 +140,7 @@ static inline void dispdrvSendWord(uint16_t data)
 void dispdrvInit(DispDriver **driver)
 {
 #ifdef _DISP_SPI
-    SET(DISP_DC);
+    SET(DISP_SPI_DC);
     dispdrvInitSPI();
 #else
     SET(DISP_RD);
