@@ -1,6 +1,7 @@
 #include "actions.h"
 
 #include <stddef.h>
+#include <string.h>
 
 #include "audio/audio.h"
 #include "eemul.h"
@@ -163,6 +164,13 @@ static void actionRemapBtnLong(void)
 
 static void actionRemapRemote(void)
 {
+    Screen screen = screenGet();
+
+    if (SCREEN_STANDBY == screen &&
+        action.value != RC_CMD_STBY_SWITCH &&
+        action.value != RC_CMD_STBY_EXIT)
+        return;
+
     switch (action.value) {
     case RC_CMD_STBY_SWITCH:
         action.type = ACTION_STANDBY;
@@ -473,6 +481,7 @@ void actionHandle(Action action, uint8_t visible)
         } else {
             dispTime = SW_TIM_OFF;
             screen = SCREEN_STANDBY;
+            memset(&scrPar, 0, sizeof (scrPar));
             rtcSetMode(RTC_NOEDIT);
             screenSaveSettings();
 
@@ -495,6 +504,7 @@ void actionHandle(Action action, uint8_t visible)
         audioSetPower(true);
         break;
     case ACTION_DISP_EXPIRED:
+        memset(&scrPar, 0, sizeof (scrPar));
         rtcSetMode(RTC_NOEDIT);
         if (SCREEN_STANDBY != screen) {
             switch (screen) {

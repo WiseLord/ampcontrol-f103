@@ -434,6 +434,7 @@ const char *menuGetName(MenuIdx index)
 const char *menuGetValueStr(MenuIdx index)
 {
     const char *ret = ">";
+    static const char *noVal = "--";
 
     // Parent menu type
     if (menuItems[index].type == MENU_TYPE_PARENT) {
@@ -457,7 +458,11 @@ const char *menuGetValueStr(MenuIdx index)
     }
 
     if (menuItems[index].type == MENU_TYPE_RC) {
-        ret = glcdPrepareNum((uint16_t)value, 4, '0', 16);
+        if ((uint16_t)value == EE_NOT_FOUND) {
+            ret = noVal;
+        } else {
+            ret = glcdPrepareNum((uint16_t)value, 4, '0', 16);
+        }
         return ret;
     }
 
@@ -495,7 +500,7 @@ const char *menuGetValueStr(MenuIdx index)
         ret = labelsGet(LABEL_SPECTRUM_MODE + value);
         break;
     default:
-        ret = "--";
+        ret = noVal;
         break;
     }
 
