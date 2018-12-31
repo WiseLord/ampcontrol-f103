@@ -101,7 +101,7 @@ int main(void)
     audioReadSettings();
     tunerReadSettings();
 
-    Action action = {ACTION_STANDBY, STBY_ENTER};
+    Action action = {ACTION_STANDBY, FLAG_ON};
 
     while (1) {
         actionHandle(action, ACTION_VISIBLE);

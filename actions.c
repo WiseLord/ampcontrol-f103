@@ -108,7 +108,7 @@ static void actionRemapBtnShort(void)
     switch (action.value) {
     case BTN_D0:
         action.type = ACTION_STANDBY;
-        action.value = STBY_SWITCH;
+        action.value = FLAG_SWITCH;
         break;
     case BTN_D1:
         action.type = ACTION_AUDIO_INPUT;
@@ -166,9 +166,11 @@ static void actionRemapRemote(void)
     switch (action.value) {
     case RC_CMD_STBY_SWITCH:
         action.type = ACTION_STANDBY;
-        action.value = STBY_SWITCH;
+        action.value = FLAG_SWITCH;
         break;
     case RC_CMD_MUTE:
+        action.type = ACTION_AUDIO_MUTE;
+        action.value = FLAG_SWITCH;
         break;
     case RC_CMD_VOL_UP:
         action.type = ACTION_ENCODER;
@@ -215,16 +217,70 @@ static void actionRemapRemote(void)
     case RC_CMD_IN_7:
         break;
 
+    case RC_CMD_BASS_UP:
+        screenSet(SCREEN_AUDIO_PARAM);
+        scrPar.tune = AUDIO_TUNE_BASS;
+        action.type = ACTION_ENCODER;
+        action.value = +1;
+        break;
+    case RC_CMD_BASS_DOWN:
+        screenSet(SCREEN_AUDIO_PARAM);
+        scrPar.tune = AUDIO_TUNE_BASS;
+        action.type = ACTION_ENCODER;
+        action.value = -1;
+        break;
+    case RC_CMD_MIDDLE_UP:
+        screenSet(SCREEN_AUDIO_PARAM);
+        scrPar.tune = AUDIO_TUNE_MIDDLE;
+        action.type = ACTION_ENCODER;
+        action.value = +1;
+        break;
+    case RC_CMD_MIDDLE_DOWN:
+        screenSet(SCREEN_AUDIO_PARAM);
+        scrPar.tune = AUDIO_TUNE_MIDDLE;
+        action.type = ACTION_ENCODER;
+        action.value = -1;
+        break;
+    case RC_CMD_TREBLE_UP:
+        screenSet(SCREEN_AUDIO_PARAM);
+        scrPar.tune = AUDIO_TUNE_TREBLE;
+        action.type = ACTION_ENCODER;
+        action.value = +1;
+        break;
+    case RC_CMD_TREBLE_DOWN:
+        screenSet(SCREEN_AUDIO_PARAM);
+        scrPar.tune = AUDIO_TUNE_TREBLE;
+        action.type = ACTION_ENCODER;
+        action.value = -1;
+        break;
+
+    case RC_CMD_LOUDNESS:
+        action.type = ACTION_AUDIO_LOUDNESS;
+        action.value = FLAG_SWITCH;
+        break;
+    case RC_CMD_SURROUND:
+        action.type = ACTION_AUDIO_SURROUND;
+        action.value = FLAG_SWITCH;
+        break;
+    case RC_CMD_EFFECT_3D:
+        action.type = ACTION_AUDIO_EFFECT3D;
+        action.value = FLAG_SWITCH;
+        break;
+    case RC_CMD_TONE_BYPASS:
+        action.type = ACTION_AUDIO_BYPASS;
+        action.value = FLAG_SWITCH;
+        break;
+
     case RC_CMD_TIME:
         action.type = ACTION_RTC_MODE;
         break;
     case RC_CMD_STBY_ENTER:
         action.type = ACTION_STANDBY;
-        action.value = STBY_ENTER;
+        action.value = FLAG_ON;
         break;
     case RC_CMD_STBY_EXIT:
         action.type = ACTION_STANDBY;
-        action.value = STBY_EXIT;
+        action.value = FLAG_OFF;
         break;
     default:
         break;
@@ -283,8 +339,8 @@ static void actionRemapCommon(void)
 
     switch (action.type) {
     case ACTION_STANDBY:
-        if (STBY_SWITCH == action.value) {
-            action.value = (SCREEN_STANDBY == screen ? STBY_EXIT : STBY_ENTER);
+        if (FLAG_SWITCH == action.value) {
+            action.value = (SCREEN_STANDBY == screen ? FLAG_OFF : FLAG_ON);
         }
         break;
     case ACTION_PREV:
@@ -329,7 +385,7 @@ static void actionRemapCommon(void)
         } else if (menuIsTop()) {
             // TODO: Return to original screen called menu
             action.type = ACTION_STANDBY;
-            action.value = STBY_ENTER;
+            action.value = FLAG_ON;
         } else {
             action.type = ACTION_MENU_SELECT;
             action.value = (int16_t)menu->parent;
@@ -406,7 +462,7 @@ void actionHandle(Action action, uint8_t visible)
 
     switch (action.type) {
     case ACTION_STANDBY:
-        if (action.value == STBY_EXIT) {
+        if (action.value == FLAG_OFF) {
             screen = SCREEN_TIME;
             dispTime = 800;
 

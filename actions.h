@@ -3,12 +3,15 @@
 
 #include <stdint.h>
 
-#define STBY_EXIT       0
-#define STBY_ENTER      1
-#define STBY_SWITCH     2
+#define FLAG_OFF        0
+#define FLAG_ON         1
+#define FLAG_SWITCH     2
 
 #define ACTION_HIDDEN   0
 #define ACTION_VISIBLE  1
+
+#define DIRECTION_UP    1
+#define DIRECTION_DOWN  -1
 
 typedef enum {
     ACTION_NONE,
@@ -43,12 +46,17 @@ typedef enum {
     ACTION_AUDIO_INPUT,
     ACTION_AUDIO_PARAM_CHANGE,
 
+    ACTION_AUDIO_MUTE,
+    ACTION_AUDIO_LOUDNESS,
+    ACTION_AUDIO_SURROUND,
+    ACTION_AUDIO_EFFECT3D,
+    ACTION_AUDIO_BYPASS,
+
     ACTION_TUNER_PREV,
     ACTION_TUNER_NEXT,
 
     ACTION_BR_STBY,
     ACTION_BR_WORK,
-
 
     ACTION_MENU_SELECT,
     ACTION_MENU_CHANGE,
