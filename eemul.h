@@ -12,6 +12,7 @@ extern "C" {
 #define EE_PAGE_SIZE    1024
 
 #define EE_EMPTY        (uint16_t)0xFFFF
+#define EE_NOT_FOUND    (uint16_t)0x8000
 
 #define GENERATE_EE_RC(CMD)  EE_RC_ ## CMD,
 
@@ -67,6 +68,7 @@ typedef enum {
     EE_DISPLAY_ROTATE,
 
     EE_SPECTRUM_MODE,
+    EE_ENC_RES,
 
     EE_LANGUAGE = 0x80, // Skip half of items to fix RC offset
     FOREACH_CMD(GENERATE_EE_RC)
@@ -77,7 +79,6 @@ typedef enum {
 void eeInit(void);
 
 void eeUpdate(EE_Param param, int16_t data);
-uint16_t eeRead(EE_Param param);
 
 uint16_t eeReadU(EE_Param param, uint16_t def);
 int16_t eeReadI(EE_Param param, int16_t def);

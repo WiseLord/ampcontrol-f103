@@ -129,6 +129,24 @@ static void eeSwapPage(void)
     eeFormatPage(currPage);
 }
 
+static uint16_t eeRead(EE_Param param)
+{
+    uint16_t eeAddr = (uint16_t)param;
+    uint16_t ret = EE_NOT_FOUND;
+
+    uint16_t cell = eeFindEmptyCell();
+    if (cell != EE_EMPTY) {
+        uint16_t last = eeFindLastCell(eeAddr, cell - 1);
+        if (last == EE_EMPTY) {
+            ret = EE_NOT_FOUND;
+        } else {
+            ret = *DATA(last);
+        }
+    }
+
+    return ret;
+}
+
 void eeInit()
 {
     LL_mDelay(1);
@@ -181,34 +199,16 @@ void eeUpdate(EE_Param param, int16_t data)
     }
 }
 
-uint16_t eeRead(EE_Param param)
-{
-    uint16_t eeAddr = (uint16_t)param;
-    uint16_t ret = EE_EMPTY;
-
-    uint16_t cell = eeFindEmptyCell();
-    if (cell != EE_EMPTY) {
-        uint16_t last = eeFindLastCell(eeAddr, cell - 1);
-        if (last == EE_EMPTY) {
-            ret = EE_EMPTY;
-        } else {
-            ret = *DATA(last);
-        }
-    }
-
-    return ret;
-}
-
 uint16_t eeReadU(EE_Param param, uint16_t def)
 {
     uint16_t eeData = eeRead(param);
 
-    return (eeData == EE_EMPTY ? def : (uint16_t)eeData);
+    return (eeData == EE_NOT_FOUND ? def : (uint16_t)eeData);
 }
 
 int16_t eeReadI(EE_Param param, int16_t def)
 {
     uint16_t eeData = eeRead(param);
 
-    return (eeData == EE_EMPTY ? def : (int16_t)eeData);
+    return (eeData == EE_NOT_FOUND ? def : (int16_t)eeData);
 }

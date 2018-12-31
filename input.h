@@ -24,9 +24,14 @@
 #define LONG_PRESS              600
 #define AUTOREPEAT              150
 
+#define ENC_RES_MIN             -64
+#define ENC_RES_MAX             64
+#define ENC_RES_DEFAULT         4
+
 typedef uint16_t CmdBtn;
 
 void inputInit(void);
+void inputSetEncRes(int8_t value);
 void inputPoll(void);
 
 int8_t getEncoder(void);

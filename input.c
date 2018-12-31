@@ -1,6 +1,7 @@
 #include "input.h"
 
 #include "display/dispdrv.h"
+#include "eemul.h"
 #include "pins.h"
 
 static volatile int8_t encRes = 0;
@@ -10,9 +11,14 @@ static CmdBtn cmdBuf = BTN_NO;
 
 void inputInit(void)
 {
-    encRes = -4; // TODO: Read from settings
+    encRes = (int8_t)eeReadI(EE_ENC_RES, ENC_RES_DEFAULT);
     encCnt = 0;
     cmdBuf = BTN_NO;
+}
+
+void inputSetEncRes(int8_t value)
+{
+    encRes = value;
 }
 
 void inputPoll(void)

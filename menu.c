@@ -5,9 +5,9 @@
 #include "display/glcd.h"
 #include "canvas/canvas.h"
 #include "tuner/tuner.h"
-#include "spectrum.h"
-
 #include "eemul.h"
+#include "input.h"
+#include "spectrum.h"
 
 #include <stm32f1xx_ll_utils.h>
 
@@ -54,7 +54,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_TUNER_VOLUME]     = {MENU_SETUP_TUNER,        MENU_TYPE_NUMBER},
 
     [MENU_SPECTURM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM},
-    [MENU_SPECTRUM_SPEED]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM},
+//    [MENU_SPECTRUM_SPEED]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM},
 
     [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER},
     [MENU_DISPLAY_ROTATE]   = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL},
@@ -147,6 +147,10 @@ static int16_t menuGetValue(MenuIdx index)
     case MENU_DISPLAY_ROTATE:
         ret = eeReadI(EE_DISPLAY_ROTATE, 0) ? 1 : 0;
         break;
+
+    case MENU_INPUT_ENC_RES:
+        ret = eeReadI(EE_ENC_RES, ENC_RES_DEFAULT);
+        break;
     default:
         ret = 0;
         break;
@@ -231,6 +235,11 @@ static void menuStoreCurrentValue(void)
         glcdRotate(menu.value ? LCD_ROTATE_180 : LCD_ROTATE_0);
         canvasClear();
         eeUpdate(EE_DISPLAY_ROTATE, menu.value);
+        break;
+
+    case MENU_INPUT_ENC_RES:
+        inputSetEncRes((int8_t)menu.value);
+        eeUpdate(EE_ENC_RES, menu.value);
         break;
     default:
         break;
@@ -320,6 +329,12 @@ static void menuValueChange(int8_t diff)
             menu.value = SP_MODE_END - 1;
         if (menu.value < SP_MODE_STEREO)
             menu.value = SP_MODE_STEREO;
+        break;
+    case MENU_INPUT_ENC_RES:
+        if (menu.value >= ENC_RES_MAX)
+            menu.value = ENC_RES_MAX;
+        if (menu.value <= ENC_RES_MIN)
+            menu.value = ENC_RES_MIN;
         break;
     default:
         break;

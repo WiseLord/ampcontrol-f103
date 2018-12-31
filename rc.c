@@ -305,7 +305,7 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
 void rcInit(void)
 {
     for (RcCmd cmd = 0; cmd < RC_CMD_END; cmd++) {
-        rcCode[cmd] = eeReadU(EE_RC_STBY_SWITCH + cmd, EE_EMPTY);
+        rcCode[cmd] = eeReadU(EE_RC_STBY_SWITCH + cmd, EE_NOT_FOUND);
     }
 
     NVIC_SetPriority(EXTI9_5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
@@ -346,7 +346,7 @@ RcData rcRead(bool clear)
 uint16_t rcGetCode(RcCmd cmd)
 {
     if (cmd >= RC_CMD_END)
-        return EE_EMPTY;
+        return EE_NOT_FOUND;
 
     return rcCode[cmd];
 }

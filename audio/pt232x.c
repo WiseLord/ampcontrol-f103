@@ -133,6 +133,7 @@ static void pt2322SetSpeakers(void)
 void pt232xInit(AudioParam *param)
 {
     aPar = param;
+    aPar->inCnt = PT2323_IN_CNT;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridTone;

@@ -96,7 +96,7 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_VOLUME]    = "Гучнасць",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Рэжым экрана",
-    [LABEL_MENU + MENU_SPECTRUM_SPEED]  = "Хуткасць",
+//    [LABEL_MENU + MENU_SPECTRUM_SPEED]  = "Хуткасць",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яркасць STBY",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Круціць",

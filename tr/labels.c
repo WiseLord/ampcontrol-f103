@@ -110,7 +110,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_VOLUME]    = "Volume",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Display mode",
-    [LABEL_MENU + MENU_SPECTRUM_SPEED]  = "Fall speed",
+//    [LABEL_MENU + MENU_SPECTRUM_SPEED]  = "Fall speed",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "STBY brightness",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Rotate",
