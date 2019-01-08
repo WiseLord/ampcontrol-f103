@@ -26,22 +26,15 @@ EmulDisp::EmulDisp(QWidget *parent) :
 
 void EmulDisp::drawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    QPen pen(RGB(color));
+    const QColor qcolor = RGB(color);
+    QPen pen(qcolor);
 
     painter->begin(this);
     painter->setPen(pen);
 #if EMUL_DISP_SCALE >=3
-    for (uint8_t i = 0; i < EMUL_DISP_SCALE - 1; i++) {
-        for (uint8_t j = 0; j < EMUL_DISP_SCALE - 1; j++) {
-            painter->drawPoint(EMUL_DISP_SCALE * x + i, EMUL_DISP_SCALE * y + j);
-        }
-    }
+    painter->fillRect(EMUL_DISP_SCALE * x, EMUL_DISP_SCALE * y, EMUL_DISP_SCALE - 1, EMUL_DISP_SCALE - 1, qcolor);
 #elif EMUL_DISP_SCALE == 2
-    for (uint8_t i = 0; i < EMUL_DISP_SCALE; i++) {
-        for (uint8_t j = 0; j < EMUL_DISP_SCALE; j++) {
-            painter->drawPoint(EMUL_DISP_SCALE * x + i, EMUL_DISP_SCALE * y + j);
-        }
-    }
+    painter->fillRect(EMUL_DISP_SCALE * x, EMUL_DISP_SCALE * y, EMUL_DISP_SCALE, EMUL_DISP_SCALE, qcolor);
 #else
     painter->drawPoint(x, y);
 #endif
@@ -69,7 +62,7 @@ void EmulDisp::paintEvent(QPaintEvent *pe)
 void EmulDisp::drawScreen()
 {
     painter->begin(this);
-    painter->fillRect(0, 0, this->width(), this->height(), Qt::darkGray);
+    painter->fillRect(0, 0, this->width(), this->height(), QColor(64, 64, 64));
     painter->end();
 
     glcdDrawRect(0, 0, static_cast<int16_t>((this->width() & 0xFFFF)), static_cast<int16_t>(this->height() & 0xFFFF), LCD_COLOR_BLACK);

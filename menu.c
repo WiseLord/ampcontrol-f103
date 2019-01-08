@@ -9,8 +9,6 @@
 #include "input.h"
 #include "spectrum.h"
 
-#include <stm32f1xx_ll_utils.h>
-
 #define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC},
 
 static Menu menu;
@@ -210,15 +208,15 @@ static void menuStoreCurrentValue(void)
 
     case MENU_TUNER_FMONO:
         menu.value ? (tPar->flags |= TUNER_FLAG_FMONO) : (tPar->flags &= ~TUNER_FLAG_FMONO);
-        eeUpdate(EE_TUNER_FLAGS, tPar->flags);
+        eeUpdate(EE_TUNER_FLAGS, (int16_t)tPar->flags);
         break;
     case MENU_TUNER_RDS:
         menu.value ? (tPar->flags |= TUNER_FLAG_RDS) : (tPar->flags &= ~TUNER_FLAG_RDS);
-        eeUpdate(EE_TUNER_FLAGS, tPar->flags);
+        eeUpdate(EE_TUNER_FLAGS, (int16_t)tPar->flags);
         break;
     case MENU_TUNER_BASS:
         menu.value ? (tPar->flags |= TUNER_FLAG_BASS) : (tPar->flags &= ~TUNER_FLAG_BASS);
-        eeUpdate(EE_TUNER_FLAGS, tPar->flags);
+        eeUpdate(EE_TUNER_FLAGS, (int16_t)tPar->flags);
         break;
 
     case MENU_TUNER_VOLUME:
@@ -246,7 +244,7 @@ static void menuStoreCurrentValue(void)
     }
 
     if (menu.active >= MENU_RC_STBY_SWITCH && menu.active < MENU_RC_STBY_SWITCH + RC_CMD_END) {
-        rcSaveCode(menu.active - MENU_RC_STBY_SWITCH, (uint16_t)menu.value);
+        rcSaveCode((uint16_t)(menu.active - MENU_RC_STBY_SWITCH), (uint16_t)menu.value);
     }
 
 }
@@ -262,7 +260,7 @@ static void menuValueChange(int8_t diff)
     if (menuItems[menu.active].type == MENU_TYPE_RC) {
         RcData rcData = rcRead(false);
 
-        menu.value = ((rcData.addr & 0xFF) << 8) | rcData.cmd;
+        menu.value = (int16_t)(((rcData.addr & 0xFF) << 8) | rcData.cmd);
         return;
     }
 
@@ -363,7 +361,7 @@ static void menuSelect(MenuIdx index)
     }
     for (MenuIdx item = 0; item < MENU_END; item++) {
         if ((menuItems[item].parent == menu.parent) && item) {
-            menu.list[idx++] = item;
+            menu.list[idx++] = (uint8_t)item;
             if (idx >= MENU_MAX_LEN)
                 break;
         }

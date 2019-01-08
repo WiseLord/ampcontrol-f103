@@ -17,7 +17,7 @@ static ScreenParam scrPar;
 static Canvas *canvas;
 static Spectrum spectrum;
 
-void ltEmulInit(Canvas **value)
+void ltEmulInit(Canvas *value)
 {
 #if EMUL_DISP_WIDTH == 160 && EMUL_DISP_HEIGHT == 128
     lt160x128Init(value);
@@ -36,7 +36,7 @@ void ltEmulInit(Canvas **value)
 #else
 #error "No such canvas"
 #endif
-    canvas = *value;
+    canvas = value;
 }
 
 void screenShow(void)
@@ -59,7 +59,7 @@ void screenShow(void)
         screenShowAudioParam(true);
         break;
     case SCREEN_TUNER:
-        screenShowTuner();
+        screenShowTuner(true);
         break;
     case SCREEN_MENU:
         screenShowMenu();
@@ -92,7 +92,7 @@ void screenShowTime(bool clear)
 
 void screenShowSpectrum(bool clear)
 {
-    for (uint8_t i = 0; i < FFT_SIZE / 2; i++) {
+    for (uint8_t i = 0; i < FFT_SIZE / 8; i++) {
         spectrum.chan[SP_CHAN_LEFT].show[i] = i / 2;
         spectrum.chan[SP_CHAN_RIGHT].show[i] = i / 2;
         spectrum.chan[SP_CHAN_LEFT].peak[i] = (uint8_t)N_DB - i;
@@ -105,13 +105,12 @@ void screenShowSpectrum(bool clear)
 void screenShowBrightness(bool clear)
 {
     DispParam dp;
-    const char **txtLabels = labelsGet();
 
-    dp.label = txtLabels[LABEL_BRIGNTNESS];
+    dp.label = labelsGet(LABEL_BRIGNTNESS);
     dp.value = 14;
     dp.min = LCD_BR_MIN;
     dp.max = LCD_BR_MAX;
-    dp.step = 1 * 8;
+    dp.mStep = 1 * 8;
     dp.icon = ICON_BRIGHTNESS;
 
     canvasShowTune(clear, &dp, &spectrum);
@@ -125,41 +124,42 @@ void screenShowInput(bool clear)
 
 void screenShowAudioParam(bool clear)
 {
+    AudioProc *aProc = audioGet();
     AudioTune aTune = AUDIO_TUNE_VOLUME;
+
     uint8_t input = 0;
     int8_t value = -24;
-
-    const char **txtLabels = labelsGet();
 
     if (aTune >= AUDIO_TUNE_END)
         aTune = AUDIO_TUNE_VOLUME;
 
     DispParam dp;
     if (aTune == AUDIO_TUNE_GAIN) {
-        dp.label = txtLabels[LABEL_GAIN0 + input];
+        InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
+        dp.label = labelsGet(LABEL_IN_TUNER + inType);
         dp.icon = ICON_TUNER + input;
     } else {
-        dp.label = txtLabels[LABEL_VOLUME + aTune];
+        dp.label = labelsGet(LABEL_VOLUME + aTune);
         dp.icon = (uint8_t)(ICON_VOLUME + aTune);
     }
     dp.value = value;
 
     dp.min = -79;
     dp.max = 0;
-    dp.step = 1 * 8;
+    dp.mStep = 1 * 8;
 
     canvasShowTune(clear, &dp, &spectrum);
 }
 
-void screenShowTuner(void)
+void screenShowTuner(bool clear)
 {
     Tuner *tuner = tunerGet();
 
-    tuner->freq = 10120;
+    tuner->par.freq = 10120;
     tuner->par.fMin = 8700;
     tuner->par.fMax = 10800;
 
-    canvasShowTuner(tuner);
+    canvasShowTuner(clear, tuner, &spectrum);
 }
 
 void screenShowMenu(void)
@@ -172,4 +172,14 @@ void screenShowMenu(void)
     menuSetActive(MENU_TUNER_STEP);
 
     canvasShowMenu();
+}
+
+Spectrum *spGet(void)
+{
+    return &spectrum;
+}
+
+void inputSetEncRes(int8_t value)
+{
+    (void)value;
 }

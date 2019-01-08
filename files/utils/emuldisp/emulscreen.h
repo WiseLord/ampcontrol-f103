@@ -3,10 +3,10 @@
 
 #include "../../../screen.h"
 
-#define EMUL_DISP_WIDTH     128
-#define EMUL_DISP_HEIGHT    64
-#define EMUL_DISP_SCALE     8
+#define EMUL_DISP_WIDTH     320
+#define EMUL_DISP_HEIGHT    240
+#define EMUL_DISP_SCALE     3
 
-#define EMUL_SCREEN         SCREEN_MENU
+#define EMUL_SCREEN         SCREEN_STANDBY
 
 #endif // EMULSCREEN_H

@@ -84,7 +84,7 @@ void lt400x240Init(Canvas *canvas);
 void lt480x320Init(Canvas *canvas);
 void lt128x64Init(Canvas *canvas);
 #ifdef EMUL_DISP
-void ltEmulInit(Canvas **driver);
+void ltEmulInit(Canvas *driver);
 #endif
 
 void canvasInit(void);
