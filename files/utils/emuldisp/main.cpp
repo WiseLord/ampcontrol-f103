@@ -10,9 +10,10 @@ static EmulDisp *disp;
 static DispDriver drv;
 static RcData rcData;
 
-extern "C" void eeUpdate(EE_Param param, int16_t data) { (void)param, (void)data; }
-extern "C" uint16_t eeReadU(EE_Param param, uint16_t def) { (void)param, (void)def; return 0; }
-extern "C" int16_t eeReadI(EE_Param param, int16_t def) { (void)param, (void)def; return 0; }
+extern "C" void eeUpdate(EE_Param param, int16_t data) { (void)param; (void)data; }
+extern "C" uint16_t eeReadU(EE_Param param, uint16_t def) { (void)param; return def; }
+extern "C" int16_t eeReadI(EE_Param param, int16_t def) { (void)param; return def; }
+extern "C" bool eeReadB(EE_Param param, bool def) { (void)param; return def; }
 
 extern "C" uint16_t rcGetCode(RcCmd cmd) { (void)cmd; return 0; }
 extern "C" void rcSaveCode(uint16_t cmd, uint16_t value) { (void)cmd, (void)value; }
