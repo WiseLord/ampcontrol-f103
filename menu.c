@@ -9,55 +9,56 @@
 #include "input.h"
 #include "spectrum.h"
 
-#define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC},
+#define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC, EE_RC_ ## CMD},
 
 static Menu menu;
 
 typedef struct {
     MenuIdx parent;
     MenuType type;
+    EE_Param cell;
 } MenuItem;
 
 static const MenuItem menuItems[MENU_END] = {
-//   menu index                parent menu              menu type
-    [MENU_NULL]             = {MENU_NULL,               MENU_TYPE_PARENT},
+//   menu index                parent menu              menu type           ee cell
+    [MENU_NULL]             = {MENU_NULL,               MENU_TYPE_PARENT,   EE_NULL},
 
-    [MENU_SETUP]            = {MENU_NULL,               MENU_TYPE_PARENT},
+    [MENU_SETUP]            = {MENU_NULL,               MENU_TYPE_PARENT,   EE_NULL},
 
-    [MENU_SETUP_LANG]       = {MENU_SETUP,              MENU_TYPE_ENUM},
-    [MENU_SETUP_AUDIO]      = {MENU_SETUP,              MENU_TYPE_PARENT},
-    [MENU_SETUP_TUNER]      = {MENU_SETUP,              MENU_TYPE_PARENT},
-    [MENU_SETUP_SPECTRUM]   = {MENU_SETUP,              MENU_TYPE_PARENT},
-    [MENU_SETUP_DISPLAY]    = {MENU_SETUP,              MENU_TYPE_PARENT},
-    [MENU_SETUP_INPUT]      = {MENU_SETUP,              MENU_TYPE_PARENT},
-    [MENU_SETUP_RC]         = {MENU_SETUP,              MENU_TYPE_PARENT},
+    [MENU_SETUP_LANG]       = {MENU_SETUP,              MENU_TYPE_ENUM,     EE_LANGUAGE},
+    [MENU_SETUP_AUDIO]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
+    [MENU_SETUP_TUNER]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
+    [MENU_SETUP_SPECTRUM]   = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
+    [MENU_SETUP_DISPLAY]    = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
+    [MENU_SETUP_INPUT]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
+    [MENU_SETUP_RC]         = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
 
-    [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
-    [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
-    [MENU_AUDIO_IN_1]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
-    [MENU_AUDIO_IN_2]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
-    [MENU_AUDIO_IN_3]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
-    [MENU_AUDIO_IN_4]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
-    [MENU_AUDIO_IN_5]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
-    [MENU_AUDIO_IN_6]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
-    [MENU_AUDIO_IN_7]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM},
+    [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IC},
+    [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN0},
+    [MENU_AUDIO_IN_1]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN1},
+    [MENU_AUDIO_IN_2]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN2},
+    [MENU_AUDIO_IN_3]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN3},
+    [MENU_AUDIO_IN_4]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN4},
+    [MENU_AUDIO_IN_5]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN5},
+    [MENU_AUDIO_IN_6]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN6},
+    [MENU_AUDIO_IN_7]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN7},
 
-    [MENU_TUNER_IC]         = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM},
-    [MENU_TUNER_BAND]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM},
-    [MENU_TUNER_STEP]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM},
-    [MENU_TUNER_DEEMPH]     = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM},
-    [MENU_TUNER_FMONO]      = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL},
-    [MENU_TUNER_RDS]        = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL},
-    [MENU_TUNER_BASS]       = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL},
-    [MENU_TUNER_VOLUME]     = {MENU_SETUP_TUNER,        MENU_TYPE_NUMBER},
+    [MENU_TUNER_IC]         = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     EE_TUNER_IC},
+    [MENU_TUNER_BAND]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     EE_TUNER_BAND},
+    [MENU_TUNER_STEP]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     EE_TUNER_STEP},
+    [MENU_TUNER_DEEMPH]     = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     EE_TUNER_DEEMPH},
+    [MENU_TUNER_FMONO]      = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     EE_TUNER_FMONO},
+    [MENU_TUNER_RDS]        = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     EE_TUNER_RDS},
+    [MENU_TUNER_BASS]       = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     EE_TUNER_BASS},
+    [MENU_TUNER_VOLUME]     = {MENU_SETUP_TUNER,        MENU_TYPE_NUMBER,   EE_TUNER_VOLUME},
 
-    [MENU_SPECTURM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM},
-//    [MENU_SPECTRUM_SPEED]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM},
+    [MENU_SPECTURM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM,     EE_SPECTRUM_MODE},
+//    [MENU_SPECTRUM_SPEED]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM,    EE_SPECTRUM_SPEED},
 
-    [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER},
-    [MENU_DISPLAY_ROTATE]   = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL},
+    [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   EE_DISPLAY_BR_STBY},
+    [MENU_DISPLAY_ROTATE]   = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL,     EE_DISPLAY_ROTATE},
 
-    [MENU_INPUT_ENC_RES]    = {MENU_SETUP_INPUT,        MENU_TYPE_NUMBER},
+    [MENU_INPUT_ENC_RES]    = {MENU_SETUP_INPUT,        MENU_TYPE_NUMBER,   EE_INPUT_ENC_RES},
 
     FOREACH_CMD(GENERATE_MENU_ITEM)
 };
@@ -108,7 +109,8 @@ static int16_t menuGetValue(MenuIdx index)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
-        ret = eeReadI(EE_AUDIO_IN0 + (index - MENU_AUDIO_IN_0), (int16_t)(IN_TUNER + (index - MENU_AUDIO_IN_0)));
+        ret = eeReadI(EE_AUDIO_IN0 + (index - MENU_AUDIO_IN_0),
+                      (int16_t)(IN_TUNER + (index - MENU_AUDIO_IN_0)));
         break;
 
     case MENU_TUNER_IC:
@@ -171,73 +173,50 @@ static void menuStoreCurrentValue(void)
     switch (menu.active) {
     case MENU_SETUP_LANG:
         labelsSetLang((Lang)(menu.value));
-        eeUpdate(EE_LANGUAGE, menu.value);
         break;
 
     case MENU_AUDIO_IC:
         aproc->par.ic = (AudioIC)(menu.value);
-        eeUpdate(EE_AUDIO_IC, menu.value);
-        break;
-    case MENU_AUDIO_IN_0:
-    case MENU_AUDIO_IN_1:
-    case MENU_AUDIO_IN_2:
-    case MENU_AUDIO_IN_3:
-    case MENU_AUDIO_IN_4:
-    case MENU_AUDIO_IN_5:
-    case MENU_AUDIO_IN_6:
-    case MENU_AUDIO_IN_7:
-        eeUpdate(EE_AUDIO_IN0 + (menu.active - MENU_AUDIO_IN_0), menu.value);
         break;
 
     case MENU_TUNER_IC:
         tPar->ic = (TunerIC)menu.value;
-        eeUpdate(EE_TUNER_IC, menu.value);
         break;
     case MENU_TUNER_BAND:
         tPar->band = (TunerBand)menu.value;
-        eeUpdate(EE_TUNER_BAND, menu.value);
         break;
     case MENU_TUNER_STEP:
         tPar->step = (TunerStep)menu.value;
-        eeUpdate(EE_TUNER_STEP, menu.value);
         break;
     case MENU_TUNER_DEEMPH:
         tPar->deemph = (TunerDeemph)menu.value;
-        eeUpdate(EE_TUNER_DEEMPH, menu.value);
         break;
 
     case MENU_TUNER_FMONO:
         tPar->forcedMono = (bool)menu.value;
-        eeUpdate(EE_TUNER_FMONO, menu.value);
         break;
     case MENU_TUNER_RDS:
         tPar->rds = (bool)menu.value;
-        eeUpdate(EE_TUNER_RDS, menu.value);
         break;
     case MENU_TUNER_BASS:
         tPar->bassBoost = (bool)menu.value;
-        eeUpdate(EE_TUNER_BASS, menu.value);
         break;
 
     case MENU_TUNER_VOLUME:
         tPar->volume = (int8_t)(menu.value);
-        eeUpdate(EE_TUNER_VOLUME, menu.value);
         break;
 
     case MENU_SPECTURM_MODE:
         sp->mode = (SpMode)(menu.value);
-        eeUpdate(EE_SPECTRUM_MODE, menu.value);
         break;
 
     case MENU_DISPLAY_ROTATE:
         glcdRotate(menu.value ? LCD_ROTATE_180 : LCD_ROTATE_0);
         canvasClear();
-        eeUpdate(EE_DISPLAY_ROTATE, menu.value);
         break;
 
     case MENU_INPUT_ENC_RES:
         inputSetEncRes((int8_t)menu.value);
-        eeUpdate(EE_INPUT_ENC_RES, menu.value);
         break;
     default:
         break;
@@ -247,6 +226,12 @@ static void menuStoreCurrentValue(void)
         rcSaveCode((uint16_t)(menu.active - MENU_RC_STBY_SWITCH), (uint16_t)menu.value);
     }
 
+    if (menu.active < MENU_END) {
+        EE_Param cell = menuItems[menu.active].cell;
+        if (EE_NULL != cell) {
+            eeUpdate(menuItems[menu.active].cell, menu.value);
+        }
+    }
 }
 
 static void menuValueChange(int8_t diff)
@@ -268,13 +253,13 @@ static void menuValueChange(int8_t diff)
 
     switch (menu.active) {
     case MENU_SETUP_LANG:
-        if (menu.value >= LANG_END)
+        if (menu.value > LANG_END - 1)
             menu.value = LANG_END - 1;
         if (menu.value < LANG_DEFAULT)
             menu.value = LANG_DEFAULT;
         break;
     case MENU_AUDIO_IC:
-        if (menu.value >= AUDIO_IC_END)
+        if (menu.value > AUDIO_IC_END - 1)
             menu.value = AUDIO_IC_END - 1;
         if (menu.value < AUDIO_IC_NO)
             menu.value = AUDIO_IC_NO;
@@ -287,31 +272,31 @@ static void menuValueChange(int8_t diff)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
-        if (menu.value >= IN_END)
+        if (menu.value > IN_END - 1)
             menu.value = IN_END - 1;
         if (menu.value < IN_TUNER)
             menu.value = IN_TUNER;
         break;
     case MENU_TUNER_IC:
-        if (menu.value >= TUNER_IC_END)
+        if (menu.value > TUNER_IC_END - 1)
             menu.value = TUNER_IC_END - 1;
         if (menu.value < TUNER_IC_NO)
             menu.value = TUNER_IC_NO;
         break;
     case MENU_TUNER_BAND:
-        if (menu.value >= TUNER_BAND_END)
+        if (menu.value > TUNER_BAND_END - 1)
             menu.value = TUNER_BAND_END - 1;
         if (menu.value < TUNER_BAND_FM_US_EUROPE)
             menu.value = TUNER_BAND_FM_US_EUROPE;
         break;
     case MENU_TUNER_STEP:
-        if (menu.value >= TUNER_STEP_END)
+        if (menu.value > TUNER_STEP_END - 1)
             menu.value = TUNER_STEP_END - 1;
         if (menu.value < TUNER_STEP_50K)
             menu.value = TUNER_STEP_50K;
         break;
     case MENU_TUNER_DEEMPH:
-        if (menu.value >= TUNER_DEEMPH_END)
+        if (menu.value > TUNER_DEEMPH_END - 1)
             menu.value = TUNER_DEEMPH_END - 1;
         if (menu.value < TUNER_DEEMPH_50u)
             menu.value = TUNER_DEEMPH_50u;
@@ -323,15 +308,15 @@ static void menuValueChange(int8_t diff)
             menu.value = TUNER_VOLUME_MIN;
         break;
     case MENU_SPECTURM_MODE:
-        if (menu.value >= SP_MODE_END)
+        if (menu.value > SP_MODE_END - 1)
             menu.value = SP_MODE_END - 1;
         if (menu.value < SP_MODE_STEREO)
             menu.value = SP_MODE_STEREO;
         break;
     case MENU_INPUT_ENC_RES:
-        if (menu.value >= ENC_RES_MAX)
+        if (menu.value > ENC_RES_MAX)
             menu.value = ENC_RES_MAX;
-        if (menu.value <= ENC_RES_MIN)
+        if (menu.value < ENC_RES_MIN)
             menu.value = ENC_RES_MIN;
         break;
     default:
@@ -354,8 +339,7 @@ static void menuSelect(MenuIdx index)
     }
 
     idx = 0;
-    // TODO: top menu on first selection instead of MENU_SETUP
-    if (menu.parent != MENU_NULL && menu.parent != MENU_SETUP) {
+    if (!menuIsTop()) {
         menu.list[idx++] = MENU_NULL;
         menu.active = MENU_NULL;
     }
@@ -426,7 +410,7 @@ MenuIdx menuGetFirstChild(void)
 
 const char *menuGetName(MenuIdx index)
 {
-    return (char *)labelsGet((Label)(LABEL_MENU + (index - MENU_NULL)));
+    return labelsGet((Label)(LABEL_MENU + (index - MENU_NULL)));
 }
 
 const char *menuGetValueStr(MenuIdx index)

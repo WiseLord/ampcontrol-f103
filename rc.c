@@ -357,7 +357,6 @@ void rcSaveCode(uint16_t cmd, uint16_t value)
         return;
 
     rcCode[cmd] = value;
-    eeUpdate(EE_RC_STBY_SWITCH + cmd, (int16_t)value);
 }
 
 RcCmd rcGetCmd(RcData *rcData)
