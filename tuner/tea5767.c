@@ -40,7 +40,7 @@ static void tea5767WriteI2C(uint8_t bytes)
 static void tea5767InitRegs(void)
 {
     wrBuf[2] = TEA5767_HLSI | TEA5767_SSL_HIGH;
-    if (tPar->flags & TUNER_FLAG_FMONO)
+    if (tPar->forcedMono)
         wrBuf[2] |= TEA5767_MS;
 
     wrBuf[3] = TEA5767_HCC | TEA5767_SNC | TEA5767_SMUTE | TEA5767_XTAL;
@@ -112,7 +112,7 @@ static void tea5767HandleHiLoFreq(uint16_t freq)
         tea5767FreqToRegs(freq);
 
         // Unmute output
-        if (!(tPar->flags & TUNER_FLAG_MUTE)) {
+        if (!(tPar->mute)) {
             wrBuf[0] &= ~TEA5767_MUTE;
         }
 

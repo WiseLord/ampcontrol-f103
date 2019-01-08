@@ -125,13 +125,13 @@ static int16_t menuGetValue(MenuIdx index)
         break;
 
     case MENU_TUNER_FMONO:
-        ret = (tPar->flags & TUNER_FLAG_FMONO) ? 1 : 0;
+        ret = tPar->forcedMono;
         break;
     case MENU_TUNER_RDS:
-        ret = (tPar->flags & TUNER_FLAG_RDS) ? 1 : 0;
+        ret = tPar->rds;
         break;
     case MENU_TUNER_BASS:
-        ret = (tPar->flags & TUNER_FLAG_BASS) ? 1 : 0;
+        ret = tPar->bassBoost;
         break;
 
     case MENU_TUNER_VOLUME:
@@ -143,11 +143,11 @@ static int16_t menuGetValue(MenuIdx index)
         break;
 
     case MENU_DISPLAY_ROTATE:
-        ret = eeReadI(EE_DISPLAY_ROTATE, 0) ? 1 : 0;
+        ret = eeReadB(EE_DISPLAY_ROTATE, false);
         break;
 
     case MENU_INPUT_ENC_RES:
-        ret = eeReadI(EE_ENC_RES, ENC_RES_DEFAULT);
+        ret = eeReadI(EE_INPUT_ENC_RES, ENC_RES_DEFAULT);
         break;
     default:
         ret = 0;
@@ -171,7 +171,7 @@ static void menuStoreCurrentValue(void)
     switch (menu.active) {
     case MENU_SETUP_LANG:
         labelsSetLang((Lang)(menu.value));
-        eeUpdate(EE_LANGUAGE, (int16_t)(labelsGetLang()));
+        eeUpdate(EE_LANGUAGE, menu.value);
         break;
 
     case MENU_AUDIO_IC:
@@ -207,16 +207,16 @@ static void menuStoreCurrentValue(void)
         break;
 
     case MENU_TUNER_FMONO:
-        menu.value ? (tPar->flags |= TUNER_FLAG_FMONO) : (tPar->flags &= ~TUNER_FLAG_FMONO);
-        eeUpdate(EE_TUNER_FLAGS, (int16_t)tPar->flags);
+        tPar->forcedMono = (bool)menu.value;
+        eeUpdate(EE_TUNER_FMONO, menu.value);
         break;
     case MENU_TUNER_RDS:
-        menu.value ? (tPar->flags |= TUNER_FLAG_RDS) : (tPar->flags &= ~TUNER_FLAG_RDS);
-        eeUpdate(EE_TUNER_FLAGS, (int16_t)tPar->flags);
+        tPar->rds = (bool)menu.value;
+        eeUpdate(EE_TUNER_RDS, menu.value);
         break;
     case MENU_TUNER_BASS:
-        menu.value ? (tPar->flags |= TUNER_FLAG_BASS) : (tPar->flags &= ~TUNER_FLAG_BASS);
-        eeUpdate(EE_TUNER_FLAGS, (int16_t)tPar->flags);
+        tPar->bassBoost =(bool) menu.value;
+        eeUpdate(EE_TUNER_BASS, menu.value);
         break;
 
     case MENU_TUNER_VOLUME:
@@ -237,7 +237,7 @@ static void menuStoreCurrentValue(void)
 
     case MENU_INPUT_ENC_RES:
         inputSetEncRes((int8_t)menu.value);
-        eeUpdate(EE_ENC_RES, menu.value);
+        eeUpdate(EE_INPUT_ENC_RES, menu.value);
         break;
     default:
         break;

@@ -23,11 +23,15 @@ void tunerReadSettings(void)
 
     tuner.par.ic = eeReadU(EE_TUNER_IC, TUNER_IC_RDA5807);
 
-    tuner.par.flags = eeReadU(EE_TUNER_FLAGS, TUNER_FLAG_INIT);
     tuner.par.band = eeReadU(EE_TUNER_BAND, TUNER_BAND_FM_US_EUROPE);
     tuner.par.step = eeReadU(EE_TUNER_STEP, TUNER_STEP_100K);
     tuner.par.deemph = eeReadU(EE_TUNER_DEEMPH, TUNER_DEEMPH_50u);
-    tuner.par.volume = eeReadI(EE_TUNER_VOLUME, TUNER_VOLUME_MAX) & 0xFF;
+
+    tuner.par.forcedMono = eeReadB(EE_TUNER_FMONO, false);
+    tuner.par.rds = eeReadB(EE_TUNER_RDS, true);
+    tuner.par.bassBoost = eeReadB(EE_TUNER_BASS, false);
+
+    tuner.par.volume = eeReadI(EE_TUNER_VOLUME, TUNER_VOLUME_MAX) & 0x0F;
 
     tuner.par.freq = eeReadU(EE_TUNER_FREQ, 9950);
     tuner.status.freq = tuner.par.freq;
@@ -93,7 +97,10 @@ void tunerReadSettings(void)
 
 void tunerSaveSettings(void)
 {
-    eeUpdate(EE_TUNER_FLAGS, tuner.par.flags & (~TUNER_FLAG_MUTE));
+    eeUpdate(EE_TUNER_FMONO, tuner.par.forcedMono);
+    eeUpdate(EE_TUNER_RDS, tuner.par.rds);
+    eeUpdate(EE_TUNER_BASS, tuner.par.bassBoost);
+
     eeUpdate(EE_TUNER_FREQ, (int16_t)tuner.status.freq);
 }
 
@@ -138,36 +145,39 @@ void tunerSetFreq(uint16_t value)
     }
 }
 
-void tunerSetFlag(TunerFlag flag, bool value)
+void tunerSetMute(bool value)
 {
-    if (value)
-        tuner.par.flags |= flag;
-    else
-        tuner.par.flags &= ~flag;
+    tuner.par.mute = value;
 
-    switch (flag) {
-    case TUNER_FLAG_MUTE:
-        if (tuner.api.setMute) {
-            tuner.api.setMute(value);
-        }
-        break;
-    case TUNER_FLAG_BASS:
-        if (tuner.api.setBassBoost) {
-            tuner.api.setBassBoost(value);
-        }
-        break;
-    case TUNER_FLAG_FMONO:
-        if (tuner.api.setForcedMono) {
-            tuner.api.setForcedMono(value);
-        }
-        break;
-    case TUNER_FLAG_RDS:
-        if (tuner.api.setRds) {
-            tuner.api.setRds(value);
-        }
-        break;
-    default:
-        break;
+    if (tuner.api.setMute) {
+        tuner.api.setMute(value);
+    }
+}
+
+void tunerSetBassBoost(bool value)
+{
+    tuner.par.bassBoost = value;
+
+    if (tuner.api.setBassBoost) {
+        tuner.api.setBassBoost(value);
+    }
+}
+
+void tunerSetForcedMono(bool value)
+{
+    tuner.par.forcedMono = value;
+
+    if (tuner.api.setForcedMono) {
+        tuner.api.setForcedMono(value);
+    }
+}
+
+void tunerSetRds(bool value)
+{
+    tuner.par.rds = value;
+
+    if (tuner.api.setRds) {
+        tuner.api.setRds(value);
     }
 }
 

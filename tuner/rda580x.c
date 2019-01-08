@@ -43,12 +43,12 @@ static void rda580xSetBit(uint8_t idx, uint8_t bit, uint8_t cond)
 static void rda580xInitRegs(void)
 {
     wrBuf[0] = RDA580X_DHIZ;
-    if (tPar->flags & TUNER_FLAG_BASS)
+    if (tPar->bassBoost)
         wrBuf[0] |= RDA5807_BASS;
-    if (tPar->flags & TUNER_FLAG_FMONO)
+    if (tPar->forcedMono)
         wrBuf[0] |= RDA580X_MONO;
     wrBuf[1] = RDA580X_SKMODE | RDA580X_CLK_MODE_32768;
-    if (tPar->flags & TUNER_FLAG_RDS)
+    if (tPar->rds)
         wrBuf[1] |= RDA5807_RDS_EN;
     rda580xWriteReg(0x02);
 

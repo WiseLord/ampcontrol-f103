@@ -488,7 +488,7 @@ void actionHandle(Action action, uint8_t visible)
             audioSetFlag(AUDIO_FLAG_MUTE, true);
             audioSetPower(false);
 
-            tunerSetFlag(TUNER_FLAG_MUTE, true);
+            tunerSetMute(true);
             tunerSetPower(false);
         }
         break;
@@ -497,7 +497,7 @@ void actionHandle(Action action, uint8_t visible)
 
         tunerInit();
         tunerSetPower(true);
-        tunerSetFlag(TUNER_FLAG_MUTE, false);
+        tunerSetMute(false);
         tunerSetFreq(tuner->par.freq);
 
         audioInit();

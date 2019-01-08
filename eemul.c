@@ -203,7 +203,7 @@ uint16_t eeReadU(EE_Param param, uint16_t def)
 {
     uint16_t eeData = eeRead(param);
 
-    return (eeData == EE_NOT_FOUND ? def : (uint16_t)eeData);
+    return (eeData == EE_NOT_FOUND ? def : eeData);
 }
 
 int16_t eeReadI(EE_Param param, int16_t def)
@@ -211,4 +211,11 @@ int16_t eeReadI(EE_Param param, int16_t def)
     uint16_t eeData = eeRead(param);
 
     return (eeData == EE_NOT_FOUND ? def : (int16_t)eeData);
+}
+
+bool eeReadB(EE_Param param, bool def)
+{
+    uint16_t eeData = eeRead(param);
+
+    return (eeData == EE_NOT_FOUND ? def : eeData ? true : false);
 }

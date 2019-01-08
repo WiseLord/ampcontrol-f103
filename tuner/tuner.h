@@ -38,7 +38,11 @@ Tuner *tunerGet(void);
 void tunerSetPower(bool value);
 
 void tunerSetFreq(uint16_t value);
-void tunerSetFlag(TunerFlag flag, bool value);
+
+void tunerSetMute(bool value);
+void tunerSetBassBoost(bool value);
+void tunerSetForcedMono(bool value);
+void tunerSetRds(bool value);
 
 void tunerNextStation(int8_t direction);
 
