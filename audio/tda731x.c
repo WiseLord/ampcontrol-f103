@@ -101,7 +101,7 @@ void tda731xSetTune(AudioTune tune, int8_t value)
         i2cTransmit(I2C_AMP, true);
         break;
     case AUDIO_TUNE_GAIN:
-        tda731xSwitch(aPar->input, value, aPar->flags & AUDIO_FLAG_LOUDNESS);
+        tda731xSwitch(aPar->input, value, aPar->loudness);
         break;
     default:
         break;
@@ -110,7 +110,7 @@ void tda731xSetTune(AudioTune tune, int8_t value)
 
 void tda731xSetInput(uint8_t value)
 {
-    tda731xSwitch(value, aPar->item[AUDIO_TUNE_GAIN].value, aPar->flags & AUDIO_FLAG_LOUDNESS);
+    tda731xSwitch(value, aPar->item[AUDIO_TUNE_GAIN].value, aPar->loudness);
 }
 
 void tda731xSetMute(bool value)

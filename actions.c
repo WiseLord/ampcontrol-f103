@@ -485,7 +485,7 @@ void actionHandle(Action action, uint8_t visible)
             rtcSetMode(RTC_NOEDIT);
             screenSaveSettings();
 
-            audioSetFlag(AUDIO_FLAG_MUTE, true);
+            audioSetMute(true);
             audioSetPower(false);
 
             tunerSetMute(true);

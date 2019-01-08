@@ -25,7 +25,11 @@ void audioReadSettings(void)
     memset(&aProc, 0, sizeof(aProc));
 
     aProc.par.ic = eeReadU(EE_AUDIO_IC, AUDIO_IC_TDA7439);
-    aProc.par.flags = eeReadU(EE_AUDIO_FLAG, AUDIO_FLAG_INIT);
+    aProc.par.loudness = eeReadB(EE_AUDIO_LOUDNESS, false);
+    aProc.par.surround = eeReadB(EE_AUDIO_SURROUND, false);
+    aProc.par.effect3d = eeReadB(EE_AUDIO_EFFECT3D, false);
+    aProc.par.bypass = eeReadB(EE_AUDIO_BYPASS, false);
+
     aProc.par.input = (uint8_t)eeReadU(EE_AUDIO_INPUT, 0);
 
     for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
@@ -81,11 +85,12 @@ void audioReadSettings(void)
 
 void audioSaveSettings(void)
 {
-    aProc.par.flags &= ~AUDIO_FLAG_MUTE; // Do not save mute
-
     eeUpdate(EE_AUDIO_IC, (int16_t)aProc.par.ic);
-    eeUpdate(EE_AUDIO_FLAG, (int16_t)aProc.par.flags);
     eeUpdate(EE_AUDIO_INPUT, aProc.par.input);
+    eeUpdate(EE_AUDIO_LOUDNESS, aProc.par.loudness);
+    eeUpdate(EE_AUDIO_SURROUND, aProc.par.surround);
+    eeUpdate(EE_AUDIO_EFFECT3D, aProc.par.effect3d);
+    eeUpdate(EE_AUDIO_BYPASS, aProc.par.bypass);
 
     for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
         eeUpdate(par, aProc.par.item[par - EE_AUDIO_PARAM_VOLUME].value);
@@ -110,17 +115,17 @@ AudioProc *audioGet(void)
 
 void audioSetPower(bool value)
 {
-    audioSetFlag(AUDIO_FLAG_MUTE, !value);
+    audioSetMute(!value);
 
     if (!value) {
         audioSaveSettings();
     } else {
         audioSetInput(aProc.par.input);
 
-        audioSetFlag(AUDIO_FLAG_LOUDNESS, aProc.par.flags & AUDIO_FLAG_LOUDNESS);
-        audioSetFlag(AUDIO_FLAG_SURROUND, aProc.par.flags & AUDIO_FLAG_SURROUND);
-        audioSetFlag(AUDIO_FLAG_EFFECT3D, aProc.par.flags & AUDIO_FLAG_EFFECT3D);
-        audioSetFlag(AUDIO_FLAG_BYPASS, aProc.par.flags & AUDIO_FLAG_BYPASS);
+        audioSetLoudness(aProc.par.loudness);
+        audioSetSurround(aProc.par.surround);
+        audioSetEffect3D(aProc.par.effect3d);
+        audioSetBypass(aProc.par.bypass);
 
         for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END; tune++) {
             audioSetTune(tune, aProc.par.item[tune].value);
@@ -187,20 +192,47 @@ void audioSetInput(uint8_t value)
     audioSetTune(AUDIO_TUNE_GAIN, aProc.par.gain[value]);
 }
 
-void audioSetFlag(AudioFlag flag, bool value)
+void audioSetMute(bool value)
 {
-    if (value)
-        aProc.par.flags |= flag;
-    else
-        aProc.par.flags &= ~flag;
+    aProc.par.mute = value;
 
-    switch (flag) {
-    case AUDIO_FLAG_MUTE:
-        if (aProc.api.setMute) {
-            aProc.api.setMute(value);
-        }
-        break;
-    default:
-        break;
+    if (aProc.api.setMute) {
+        aProc.api.setMute(value);
+    }
+}
+
+void audioSetLoudness(bool value)
+{
+    aProc.par.loudness = value;
+
+    if (aProc.api.setLoudness) {
+        aProc.api.setLoudness(value);
+    }
+}
+
+void audioSetSurround(bool value)
+{
+    aProc.par.surround = value;
+
+    if (aProc.api.setSurround) {
+        aProc.api.setSurround(value);
+    }
+}
+
+void audioSetEffect3D(bool value)
+{
+    aProc.par.effect3d = value;
+
+    if (aProc.api.setEffect3d) {
+        aProc.api.setEffect3d(value);
+    }
+}
+
+void audioSetBypass(bool value)
+{
+    aProc.par.bypass = value;
+
+    if (aProc.api.setBypass) {
+        aProc.api.setBypass(value);
     }
 }

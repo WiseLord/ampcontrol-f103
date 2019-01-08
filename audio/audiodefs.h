@@ -1,7 +1,8 @@
 #ifndef AUDIODEFS_H
 #define AUDIODEFS_H
 
-#include <inttypes.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 #define MAX_INPUTS  8
 
@@ -13,18 +14,6 @@ typedef enum {
 
     AUDIO_IC_END
 } AudioIC;
-
-typedef uint16_t AudioFlag;
-enum {
-    AUDIO_FLAG_INIT     = 0x0000,
-
-    AUDIO_FLAG_MUTE     = 0x0001,
-
-    AUDIO_FLAG_LOUDNESS = 0x0010,
-    AUDIO_FLAG_SURROUND = 0x0020,
-    AUDIO_FLAG_EFFECT3D = 0x0040,
-    AUDIO_FLAG_BYPASS   = 0x0080,
-};
 
 typedef enum {
     AUDIO_TUNE_VOLUME = 0,
@@ -55,8 +44,13 @@ typedef struct {
 
 typedef struct {
     AudioIC ic;
-    AudioFlag flags;
     AudioTuneItem item[AUDIO_TUNE_END];
+
+    bool mute;
+    bool loudness;
+    bool surround;
+    bool effect3d;
+    bool bypass;
 
     int8_t gain[MAX_INPUTS];
     uint8_t input;
