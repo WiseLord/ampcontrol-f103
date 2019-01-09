@@ -21,14 +21,14 @@ static void st7920SetPort(uint8_t data)
     ST7920_DATA_Port->BSRR = 0x00FF0000 | data;         // If port bits 7..0 are used
 }
 
-static inline void st7920SetDdrIn() __attribute__((always_inline));
-static void st7920SetDdrIn()
+static inline void st7920SetDdrIn(void) __attribute__((always_inline));
+static inline void st7920SetDdrIn(void)
 {
     ST7920_DATA_Port->CRL = 0x88888888;                 // SET CNF=10, MODE=00 - Input pullup
 }
 
-static inline void st7920SetDdrOut() __attribute__((always_inline));
-static void st7920SetDdrOut()
+static inline void st7920SetDdrOut(void) __attribute__((always_inline));
+static inline void st7920SetDdrOut(void)
 {
     ST7920_DATA_Port->CRL = 0x22222222;                 // Set CNF=00, MODE=10 - Output push-pull 2 MHz
 }

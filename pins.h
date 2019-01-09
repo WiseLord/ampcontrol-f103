@@ -81,14 +81,10 @@ void pinsInitAmpI2c(void);
 // TFT parallel (8-bit) wiring
 #define DISP_CS_Port            GPIOB
 #define DISP_CS_Pin             LL_GPIO_PIN_7
-#define DISP_RD_Port            GPIOB
-#define DISP_RD_Pin             LL_GPIO_PIN_4
 #define DISP_WR_Port            GPIOB
 #define DISP_WR_Pin             LL_GPIO_PIN_5
 #define DISP_RS_Port            GPIOB
 #define DISP_RS_Pin             LL_GPIO_PIN_6
-#define DISP_RST_Port           GPIOA
-#define DISP_RST_Pin            LL_GPIO_PIN_15
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
@@ -111,8 +107,8 @@ void pinsInitAmpI2c(void);
 #define KS0108_RW               DISP_WR
 #define KS0108_E                DISP_SPI_SCK
 #define KS0108_CS1              DISP_CS
-#define KS0108_CS2              DISP_RD
-#define KS0108_RST              DISP_RST
+#define KS0108_CS2_Port         GPIOB
+#define KS0108_CS2_Pin          LL_GPIO_PIN_4
 #define KS0108_BCKL             DISP_BCKL
 
 // ST7920 wiring
@@ -122,7 +118,6 @@ void pinsInitAmpI2c(void);
 #define ST7920_RW               DISP_WR
 #define ST7920_E                DISP_SPI_SCK
 #define ST7920_PSB              DISP_CS
-#define ST7920_RST              DISP_RST
 #define ST7920_BCKL             DISP_BCKL
 
 // Mute and Standby lines
@@ -143,8 +138,8 @@ void pinsInitAmpI2c(void);
 #define SI470X_SDIO_Port        AMP_I2C_Port
 #define SI470X_SDIO_Pin         AMP_I2C_SDA_Pin
 // TODO: Use the same RST as display uses
-#define SI470X_RST_Port         GPIOB
-#define SI470X_RST_Pin          LL_GPIO_PIN_2
+#define SI470X_RST_Port         GPIOA
+#define SI470X_RST_Pin          LL_GPIO_PIN_15
 
 
 #endif // PINS_H
