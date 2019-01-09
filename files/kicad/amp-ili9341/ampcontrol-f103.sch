@@ -65,145 +65,143 @@ Wire Wire Line
 $Comp
 L power:+3V3 #PWR02
 U 1 1 5C0435B6
-P 900 5400
-F 0 "#PWR02" H 900 5250 50  0001 C CNN
-F 1 "+3V3" H 915 5573 50  0000 C CNN
-F 2 "" H 900 5400 50  0001 C CNN
-F 3 "" H 900 5400 50  0001 C CNN
-	1    900  5400
+P 1250 5600
+F 0 "#PWR02" H 1250 5450 50  0001 C CNN
+F 1 "+3V3" H 1265 5773 50  0000 C CNN
+F 2 "" H 1250 5600 50  0001 C CNN
+F 3 "" H 1250 5600 50  0001 C CNN
+	1    1250 5600
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GNDD #PWR01
 U 1 1 5C0435EA
-P 700 5600
-F 0 "#PWR01" H 700 5350 50  0001 C CNN
-F 1 "GNDD" H 704 5445 50  0000 C CNN
-F 2 "" H 700 5600 50  0001 C CNN
-F 3 "" H 700 5600 50  0001 C CNN
-	1    700  5600
+P 1050 5800
+F 0 "#PWR01" H 1050 5550 50  0001 C CNN
+F 1 "GNDD" H 1054 5645 50  0000 C CNN
+F 2 "" H 1050 5800 50  0001 C CNN
+F 3 "" H 1050 5800 50  0001 C CNN
+	1    1050 5800
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1100 5500 700  5500
+	1450 5700 1050 5700
 Wire Wire Line
-	700  5500 700  5600
+	1050 5700 1050 5800
 Wire Wire Line
-	900  5600 900  5400
-NoConn ~ 1100 5700
+	1250 5800 1250 5600
+NoConn ~ 1450 5900
 Wire Wire Line
-	1100 5800 850  5800
-Text Label 850  5800 0    50   ~ 0
+	1450 6000 1200 6000
+Text Label 1200 6000 0    50   ~ 0
 RS
 Wire Wire Line
-	1100 5900 850  5900
+	1450 6100 1200 6100
 Wire Wire Line
-	850  6000 1100 6000
+	1250 5800 1450 5800
 Wire Wire Line
-	900  5600 1100 5600
+	1450 7100 1200 7100
 Wire Wire Line
-	1100 6900 850  6900
+	1450 7200 1200 7200
 Wire Wire Line
-	1100 7000 850  7000
+	1450 7300 1200 7300
 Wire Wire Line
-	1100 7100 850  7100
-Wire Wire Line
-	1100 7300 850  7300
-Text Label 850  5900 0    50   ~ 0
+	1450 7500 1200 7500
+Text Label 1200 6100 0    50   ~ 0
 WR
-Text Label 850  6000 0    50   ~ 0
+Text Label 1200 6200 0    50   ~ 0
 RD
-Text Label 850  6900 0    50   ~ 0
+Text Label 1200 7100 0    50   ~ 0
 CS
-Text Label 850  7000 0    50   ~ 0
+Text Label 1200 7200 0    50   ~ 0
 F_CS
-Text Label 850  7100 0    50   ~ 0
-RST
-Text Label 850  7300 0    50   ~ 0
+Text Label 1200 7300 0    50   ~ 0
+NRST
+Text Label 1200 7500 0    50   ~ 0
 BCKL
-NoConn ~ 1100 7400
+NoConn ~ 1450 7600
 $Comp
 L Connector_Generic:Conn_02x20_Top_Bottom J1
 U 1 1 5C047533
-P 1300 6400
-F 0 "J1" H 1350 7517 50  0000 C CNN
-F 1 "Conn_LCD" H 1350 7426 50  0000 C CNN
-F 2 "ampcontrol-f103:PinSocket_2x20_P2.54mm_Vertical_Top_Bottom" H 1300 6400 50  0001 C CNN
-F 3 "~" H 1300 6400 50  0001 C CNN
-	1    1300 6400
+P 1650 6600
+F 0 "J1" H 1700 7717 50  0000 C CNN
+F 1 "Conn_LCD" H 1700 7626 50  0000 C CNN
+F 2 "ampcontrol-f103:PinSocket_2x20_P2.54mm_Vertical_Top_Bottom" H 1650 6600 50  0001 C CNN
+F 3 "~" H 1650 6600 50  0001 C CNN
+	1    1650 6600
 	1    0    0    -1  
 $EndComp
-NoConn ~ 1600 7400
-NoConn ~ 1600 7300
-NoConn ~ 1600 6600
+NoConn ~ 1950 7600
+NoConn ~ 1950 7500
+NoConn ~ 1950 6800
 Wire Wire Line
-	1600 5500 1850 5500
+	1950 5700 2200 5700
 Wire Wire Line
-	1850 5600 1600 5600
+	2200 5800 1950 5800
 Wire Wire Line
-	1600 5700 1850 5700
+	1950 5900 2200 5900
 Wire Wire Line
-	1850 5800 1600 5800
+	2200 6000 1950 6000
 Wire Wire Line
-	1600 5900 1850 5900
+	1950 6100 2200 6100
 Wire Wire Line
-	1850 6000 1600 6000
+	2200 6200 1950 6200
 Wire Wire Line
-	1600 6100 1850 6100
+	1950 6300 2200 6300
 Wire Wire Line
-	1850 6200 1600 6200
+	2200 6400 1950 6400
 Wire Wire Line
-	1600 6300 1850 6300
+	1950 6500 2200 6500
 Wire Wire Line
-	1600 6400 1850 6400
+	1950 6600 2200 6600
 Wire Wire Line
-	1600 6500 1850 6500
+	1950 6700 2200 6700
 Wire Wire Line
-	1600 6700 1850 6700
+	1950 6900 2200 6900
 Wire Wire Line
-	1600 6800 1850 6800
+	1950 7000 2200 7000
 Wire Wire Line
-	1600 6900 1850 6900
+	1950 7100 2200 7100
 Wire Wire Line
-	1600 7000 1850 7000
+	1950 7200 2200 7200
 Wire Wire Line
-	1600 7100 1850 7100
+	1950 7300 2200 7300
 Wire Wire Line
-	1600 7200 1850 7200
-NoConn ~ 1100 7200
-Text Label 1850 5500 2    50   ~ 0
+	1950 7400 2200 7400
+NoConn ~ 1450 7400
+Text Label 2200 5700 2    50   ~ 0
 DB0
-Text Label 1850 5600 2    50   ~ 0
+Text Label 2200 5800 2    50   ~ 0
 DB1
-Text Label 1850 5700 2    50   ~ 0
+Text Label 2200 5900 2    50   ~ 0
 DB2
-Text Label 1850 5800 2    50   ~ 0
+Text Label 2200 6000 2    50   ~ 0
 DB3
-Text Label 1850 5900 2    50   ~ 0
+Text Label 2200 6100 2    50   ~ 0
 DB4
-Text Label 1850 6000 2    50   ~ 0
+Text Label 2200 6200 2    50   ~ 0
 DB5
-Text Label 1850 6100 2    50   ~ 0
+Text Label 2200 6300 2    50   ~ 0
 DB6
-Text Label 1850 6200 2    50   ~ 0
+Text Label 2200 6400 2    50   ~ 0
 DB7
-Text Label 1850 6300 2    50   ~ 0
+Text Label 2200 6500 2    50   ~ 0
 T_CLK
-Text Label 1850 6400 2    50   ~ 0
+Text Label 2200 6600 2    50   ~ 0
 T_CS
-Text Label 1850 6500 2    50   ~ 0
+Text Label 2200 6700 2    50   ~ 0
 T_DIN
-Text Label 1850 6700 2    50   ~ 0
+Text Label 2200 6900 2    50   ~ 0
 T_DO
-Text Label 1850 6800 2    50   ~ 0
+Text Label 2200 7000 2    50   ~ 0
 T_IRQ
-Text Label 1850 6900 2    50   ~ 0
+Text Label 2200 7100 2    50   ~ 0
 SD_DO
-Text Label 1850 7000 2    50   ~ 0
+Text Label 2200 7200 2    50   ~ 0
 SD_CLK
-Text Label 1850 7100 2    50   ~ 0
+Text Label 2200 7300 2    50   ~ 0
 SD_DIN
-Text Label 1850 7200 2    50   ~ 0
+Text Label 2200 7400 2    50   ~ 0
 SD_CS
 $Comp
 L MCU_ST_STM32F1:STM32F103CBTx U2
@@ -251,7 +249,7 @@ DB7
 Wire Wire Line
 	4100 4800 3700 4800
 Text Label 3700 4800 0    50   ~ 0
-RST
+HW_RST
 Wire Wire Line
 	5400 3700 5800 3700
 Text Label 5800 3700 2    50   ~ 0
@@ -270,24 +268,24 @@ Text Label 5800 4000 2    50   ~ 0
 CS
 Text Label 5800 2900 2    50   ~ 0
 BCKL
-NoConn ~ 1100 6100
-NoConn ~ 1100 6200
-NoConn ~ 1100 6300
-NoConn ~ 1100 6400
-NoConn ~ 1100 6500
-NoConn ~ 1100 6600
-NoConn ~ 1100 6700
-NoConn ~ 1100 6800
-NoConn ~ 850  7000
-NoConn ~ 1850 6300
-NoConn ~ 1850 6400
-NoConn ~ 1850 6500
-NoConn ~ 1850 6700
-NoConn ~ 1850 6800
-NoConn ~ 1850 6900
-NoConn ~ 1850 7000
-NoConn ~ 1850 7100
-NoConn ~ 1850 7200
+NoConn ~ 1200 6300
+NoConn ~ 1200 6400
+NoConn ~ 1200 6500
+NoConn ~ 1200 6600
+NoConn ~ 1200 6700
+NoConn ~ 1200 6800
+NoConn ~ 1200 6900
+NoConn ~ 1200 7000
+NoConn ~ 1200 7200
+NoConn ~ 2200 6500
+NoConn ~ 2200 6600
+NoConn ~ 2200 6700
+NoConn ~ 2200 6900
+NoConn ~ 2200 7000
+NoConn ~ 2200 7100
+NoConn ~ 2200 7200
+NoConn ~ 2200 7300
+NoConn ~ 2200 7400
 $Comp
 L Device:Crystal_Small Y2
 U 1 1 5C0E4C09
@@ -1046,4 +1044,69 @@ Wire Wire Line
 	1900 1050 1900 1100
 Wire Wire Line
 	1900 1400 1900 1500
+Wire Wire Line
+	5500 2200 5800 2200
+Connection ~ 5500 2200
+Text Label 5800 2200 2    50   ~ 0
+NRST
+$Comp
+L Device:R R20
+U 1 1 5C373CA2
+P 700 5850
+F 0 "R20" H 770 5896 50  0000 L CNN
+F 1 "22k" H 770 5805 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric" V 630 5850 50  0001 C CNN
+F 3 "~" H 700 5850 50  0001 C CNN
+	1    700  5850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	700  6200 700  6000
+Wire Wire Line
+	700  6200 1450 6200
+$Comp
+L power:+3V3 #PWR018
+U 1 1 5C38284E
+P 700 5600
+F 0 "#PWR018" H 700 5450 50  0001 C CNN
+F 1 "+3V3" H 715 5773 50  0000 C CNN
+F 2 "" H 700 5600 50  0001 C CNN
+F 3 "" H 700 5600 50  0001 C CNN
+	1    700  5600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	700  5600 700  5700
+Wire Wire Line
+	1200 6300 1450 6300
+Wire Wire Line
+	1200 6400 1450 6400
+Wire Wire Line
+	1450 6500 1200 6500
+Wire Wire Line
+	1200 6600 1450 6600
+Wire Wire Line
+	1200 6700 1450 6700
+Wire Wire Line
+	1200 6800 1450 6800
+Wire Wire Line
+	1200 6900 1450 6900
+Wire Wire Line
+	1200 7000 1450 7000
+Text Label 1200 6300 0    50   ~ 0
+DB8
+Text Label 1200 6400 0    50   ~ 0
+DB9
+Text Label 1200 6500 0    50   ~ 0
+DB10
+Text Label 1200 6600 0    50   ~ 0
+DB11
+Text Label 1200 6700 0    50   ~ 0
+DB12
+Text Label 1200 6800 0    50   ~ 0
+DB13
+Text Label 1200 6900 0    50   ~ 0
+DB14
+Text Label 1200 7000 0    50   ~ 0
+DB15
 $EndSCHEMATC
