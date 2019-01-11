@@ -403,12 +403,15 @@ void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color
     }
 }
 
-void glcdDrawFrame(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
+void glcdDrawFrame(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
-    glcdDrawLine(x0, y0, x0, y1, color);
-    glcdDrawLine(x0, y1, x1, y1, color);
-    glcdDrawLine(x1, y0, x1, y1, color);
-    glcdDrawLine(x0, y0, x1, y0, color);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
+
+    glcdDrawLine(x, y, x, y1, color);
+    glcdDrawLine(x, y1, x1, y1, color);
+    glcdDrawLine(x1, y, x1, y1, color);
+    glcdDrawLine(x, y, x1, y, color);
 }
 
 void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)

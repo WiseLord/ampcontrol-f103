@@ -39,7 +39,7 @@ static const Layout lt480x320 = {
 
     .iconSet = &iconsamp64,
     .iconColor = LCD_COLOR_WHITE,
-    .lblFont = &fontterminusmod32x3,
+    .lblFont = &fontterminusmod24x3,
 };
 
 void lt480x320Init(Canvas *canvas)
