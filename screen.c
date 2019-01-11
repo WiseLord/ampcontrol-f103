@@ -201,7 +201,6 @@ void screenShow(void)
 
     if (clear) {
         spectrum->wtfX = 0;
-        glcdShift(0);
         canvasClear();
         spectrum->redraw = true;
     }

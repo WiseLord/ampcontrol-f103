@@ -44,6 +44,7 @@ void canvasInit(void)
 
 void canvasClear(void)
 {
+    glcdShift(0);
     glcdDrawRect(0, 0, canvas.lt->width, canvas.lt->height, canvas.color);
 
     glcdSetFontColor(LCD_COLOR_WHITE);
