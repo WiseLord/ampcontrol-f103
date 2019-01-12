@@ -126,6 +126,8 @@ void pinsHwReset(void)
 
 void pinsInitAmpI2c(void)
 {
+    LL_GPIO_AF_EnableRemap_I2C1();
+
     LL_GPIO_InitTypeDef GPIO_InitStruct;
 
     GPIO_InitStruct.Pin = AMP_I2C_SCK_Pin | AMP_I2C_SDA_Pin;

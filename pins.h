@@ -49,8 +49,8 @@ void pinsInitAmpI2c(void);
 
 
 // Periph macroses
-#define I2C_LCD         I2C1
-#define I2C_AMP         I2C2
+#define I2C_AMP         I2C1
+#define I2C_LCD         I2C2
 
 // Input pins (buttons and encoder)
 #define BTN_0_Pin               LL_GPIO_PIN_0
@@ -96,8 +96,8 @@ void pinsInitAmpI2c(void);
 
 // TFT I2C (SSD1306) wiring
 #define DISP_I2C_Port           GPIOB
-#define DISP_I2C_SCK_Pin        LL_GPIO_PIN_6
-#define DISP_I2C_SDA_Pin        LL_GPIO_PIN_7
+#define DISP_I2C_SCK_Pin        LL_GPIO_PIN_10
+#define DISP_I2C_SDA_Pin        LL_GPIO_PIN_11
 
 // KS0108 wiring
 #define KS0108_DATA_Port        INPUT_Port
@@ -124,8 +124,8 @@ void pinsInitAmpI2c(void);
 
 // Main I2C bus
 #define AMP_I2C_Port            GPIOB
-#define AMP_I2C_SCK_Pin         LL_GPIO_PIN_10
-#define AMP_I2C_SDA_Pin         LL_GPIO_PIN_11
+#define AMP_I2C_SCK_Pin         LL_GPIO_PIN_8
+#define AMP_I2C_SDA_Pin         LL_GPIO_PIN_9
 
 
 // SI470X Reset pins
