@@ -493,9 +493,9 @@ Text Label 6900 5550 2    50   ~ 0
 SCL
 Text Label 6900 5650 2    50   ~ 0
 SDA
-Text Label 4800 5850 0    50   ~ 0
-SWCLK
 Text Label 4800 5950 0    50   ~ 0
+SWCLK
+Text Label 4800 5850 0    50   ~ 0
 SWDIO
 Wire Wire Line
 	6500 5750 6900 5750
@@ -1177,9 +1177,9 @@ Wire Wire Line
 Wire Wire Line
 	7600 4400 7600 4350
 Wire Wire Line
-	4800 5950 5200 5950
+	4800 5850 5200 5850
 Wire Wire Line
-	5200 5850 4800 5850
+	5200 5950 4800 5950
 Wire Wire Line
 	900  5550 1200 5550
 Text Label 1200 5550 2    50   ~ 0
@@ -1624,4 +1624,9 @@ Wire Wire Line
 	7600 3850 7600 3950
 Wire Wire Line
 	6500 3950 7600 3950
+Wire Wire Line
+	5700 6250 5700 6350
+Wire Wire Line
+	5700 6350 5800 6350
+Connection ~ 5800 6350
 $EndSCHEMATC
