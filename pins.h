@@ -104,18 +104,15 @@ void pinsInitAmpI2c(void);
 #define KS0108_DATA_Port        INPUT_Port
 #define KS0108_DATA_Pin         INPUT_Pin
 #define KS0108_DI               DISP_RS
-#define KS0108_RW               DISP_WR
 #define KS0108_E                DISP_SPI_SCK
 #define KS0108_CS1              DISP_CS
-#define KS0108_CS2_Port         GPIOB
-#define KS0108_CS2_Pin          LL_GPIO_PIN_4
+#define KS0108_CS2              DISP_WR
 #define KS0108_BCKL             DISP_BCKL
 
 // ST7920 wiring
 #define ST7920_DATA_Port        INPUT_Port
 #define ST7920_DATA_Pin         INPUT_Pin
 #define ST7920_RS               DISP_RS
-#define ST7920_RW               DISP_WR
 #define ST7920_E                DISP_SPI_SCK
 #define ST7920_PSB              DISP_CS
 #define ST7920_BCKL             DISP_BCKL

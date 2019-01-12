@@ -88,8 +88,6 @@ void st7920Init(DispDriver **driver)
 {
     *driver = &drv;
 
-    // Stay always in write mode
-    CLR(ST7920_RW);
     // Switch display to parallel mode
     SET(ST7920_PSB);
 

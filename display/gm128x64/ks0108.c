@@ -107,9 +107,6 @@ void ks0108Init(DispDriver **driver)
 {
     *driver = &drv;
 
-    // Stay always in write mode
-    CLR(KS0108_RW);
-
     // Init both controller
     KS0108_SET_CS();
     ks0108WriteCmd(KS0108_DISPLAY_START_LINE);
