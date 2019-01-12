@@ -32,7 +32,7 @@ void audioReadSettings(void)
 
     aProc.par.input = (uint8_t)eeReadU(EE_AUDIO_INPUT, 0);
 
-    for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
+    for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par <= EE_AUDIO_PARAM_PREAMP; par++) {
         aProc.par.item[par - EE_AUDIO_PARAM_VOLUME].value = (int8_t)eeReadI(par, 0);
     }
 
@@ -92,7 +92,7 @@ void audioSaveSettings(void)
     eeUpdate(EE_AUDIO_EFFECT3D, aProc.par.effect3d);
     eeUpdate(EE_AUDIO_BYPASS, aProc.par.bypass);
 
-    for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par < EE_AUDIO_GAIN0; par++) {
+    for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par <= EE_AUDIO_PARAM_PREAMP; par++) {
         eeUpdate(par, aProc.par.item[par - EE_AUDIO_PARAM_VOLUME].value);
     }
 
