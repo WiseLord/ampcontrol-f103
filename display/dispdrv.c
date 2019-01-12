@@ -13,7 +13,7 @@ static int8_t brightness;
 
 static DispDriver *drv;
 
-#define TX_BUSY()           (LL_SPI_IsActiveFlag_BSY(SPI1) || !LL_SPI_IsActiveFlag_TXE(SPI1))
+#define TX_BUSY()           (LL_SPI_IsActiveFlag_BSY(SPI2) || !LL_SPI_IsActiveFlag_TXE(SPI2))
 
 #define BUS_MODE_OUT        0x33333333  // CNF=0b00, MODE=0b11 => Output push-pull 50 MHz
 #define BUS_MODE_IN         0x88888888  // CNF=0b10, MODE=0b00 - Input pullup
@@ -21,12 +21,12 @@ static DispDriver *drv;
 #ifdef _DISP_SPI
 static void dispdrvInitSPI()
 {
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
+    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_SPI2);
 
     LL_SPI_InitTypeDef SPI_InitStruct;
     SPI_InitStruct.Mode = LL_SPI_MODE_MASTER;
     SPI_InitStruct.TransferDirection = LL_SPI_FULL_DUPLEX;
-    SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV4;
+    SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV2;
     SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_LOW;
     SPI_InitStruct.ClockPhase = LL_SPI_PHASE_1EDGE;
     SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
@@ -34,9 +34,9 @@ static void dispdrvInitSPI()
     SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
     SPI_InitStruct.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
     SPI_InitStruct.CRCPoly = 10;
-    LL_SPI_Init(SPI1, &SPI_InitStruct);
+    LL_SPI_Init(SPI2, &SPI_InitStruct);
 
-    LL_SPI_Enable(SPI1);
+    LL_SPI_Enable(SPI2);
 }
 #endif
 
@@ -44,8 +44,8 @@ static inline void dispdrvSendByte(uint8_t data) __attribute__((always_inline));
 static inline void dispdrvSendByte(uint8_t data)
 {
 #ifdef _DISP_SPI
-    while (!LL_SPI_IsActiveFlag_TXE(SPI1));
-    LL_SPI_TransmitData8(SPI1, data);
+    while (!LL_SPI_IsActiveFlag_TXE(SPI2));
+    LL_SPI_TransmitData8(SPI2, data);
 #else
 #if defined(_DISP_HI_BYTE) && !defined(_DISP_16BIT)
     DISP_DATA_HI_Port->BSRR = 0xFF000000 | (data << 8);

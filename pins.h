@@ -80,20 +80,19 @@ void pinsInitAmpI2c(void);
 
 // TFT parallel (8-bit) wiring
 #define DISP_CS_Port            GPIOB
-#define DISP_CS_Pin             LL_GPIO_PIN_7
+#define DISP_CS_Pin             LL_GPIO_PIN_12
 #define DISP_WR_Port            GPIOB
-#define DISP_WR_Pin             LL_GPIO_PIN_5
+#define DISP_WR_Pin             LL_GPIO_PIN_15
 #define DISP_RS_Port            GPIOB
-#define DISP_RS_Pin             LL_GPIO_PIN_6
+#define DISP_RS_Pin             LL_GPIO_PIN_14
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
 // TFT serial (SPI 3 lines) wiring
 #define DISP_SPI_SCK_Port       GPIOB
-#define DISP_SPI_SCK_Pin        LL_GPIO_PIN_3
+#define DISP_SPI_SCK_Pin        LL_GPIO_PIN_13
 #define DISP_SPI_DC             DISP_RS
 #define DISP_SPI_SDI            DISP_WR
-#define DISP_SPI_SDO            DISP_RD
 
 // TFT I2C (SSD1306) wiring
 #define DISP_I2C_Port           GPIOB
@@ -118,10 +117,10 @@ void pinsInitAmpI2c(void);
 #define ST7920_BCKL             DISP_BCKL
 
 // Mute and Standby lines
-#define MUTE_Port               GPIOB
-#define MUTE_Pin                LL_GPIO_PIN_8
-#define STBY_Port               GPIOB
-#define STBY_Pin                LL_GPIO_PIN_9
+#define MUTE_Port               GPIOA
+#define MUTE_Pin                LL_GPIO_PIN_13
+#define STBY_Port               GPIOA
+#define STBY_Pin                LL_GPIO_PIN_14
 
 // Main I2C bus
 #define AMP_I2C_Port            GPIOB
