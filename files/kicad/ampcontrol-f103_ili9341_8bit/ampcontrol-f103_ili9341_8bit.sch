@@ -939,17 +939,6 @@ F 3 "~" H 4900 1300 50  0001 C CNN
 	1    4900 1300
 	0    -1   -1   0   
 $EndComp
-$Comp
-L Connector_Generic:Conn_02x03_Odd_Even J8
-U 1 1 5C39890C
-P 5350 1300
-F 0 "J8" H 5400 1500 50  0000 C CNN
-F 1 "BOOT" H 5400 1100 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" H 5350 1300 50  0001 C CNN
-F 3 "~" H 5350 1300 50  0001 C CNN
-	1    5350 1300
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	5050 1300 5150 1300
 $Comp
@@ -2013,17 +2002,6 @@ F 3 "~" H 7350 1600 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	7350 1550 7350 1600
-$Comp
-L Connector_Generic:Conn_02x06_Counter_Clockwise J10
-U 1 1 5DA69684
-P 8500 4050
-F 0 "J10" H 8550 4350 50  0000 C CNN
-F 1 "Buttons" H 8550 3650 50  0000 C CNN
-F 2 "" H 8500 4050 50  0001 C CNN
-F 3 "~" H 8500 4050 50  0001 C CNN
-	1    8500 4050
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	8300 3850 8000 3850
 Text Label 8000 3850 0    50   ~ 0
@@ -2088,17 +2066,6 @@ Wire Wire Line
 Connection ~ 8900 3950
 Wire Wire Line
 	8900 3950 8900 4050
-$Comp
-L Connector_Generic:Conn_02x03_Counter_Clockwise J11
-U 1 1 5DC50FD0
-P 8500 5050
-F 0 "J11" H 8550 5250 50  0000 C CNN
-F 1 "Encoder" H 8550 4850 50  0000 C CNN
-F 2 "" H 8500 5050 50  0001 C CNN
-F 3 "~" H 8500 5050 50  0001 C CNN
-	1    8500 5050
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:GNDD #PWR040
 U 1 1 5DC513D5
@@ -2204,4 +2171,37 @@ $EndComp
 Wire Wire Line
 	4500 3550 4500 3600
 Connection ~ 4500 3600
+$Comp
+L Connector_Generic:Conn_02x06_Odd_Even J10
+U 1 1 5C3D33A1
+P 8500 4050
+F 0 "J10" H 8550 4350 50  0000 C CNN
+F 1 "Buttons" H 8550 3650 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x06_P2.54mm_Vertical" H 8500 4050 50  0001 C CNN
+F 3 "~" H 8500 4050 50  0001 C CNN
+	1    8500 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_02x03_Odd_Even J11
+U 1 1 5C3D396A
+P 8500 5050
+F 0 "J11" H 8550 5250 50  0000 C CNN
+F 1 "Encoder" H 8550 4850 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" H 8500 5050 50  0001 C CNN
+F 3 "~" H 8500 5050 50  0001 C CNN
+	1    8500 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_02x03_Odd_Even J8
+U 1 1 5C3D402F
+P 5350 1300
+F 0 "J8" H 5400 1500 50  0000 C CNN
+F 1 "BOOT" H 5400 1100 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" H 5350 1300 50  0001 C CNN
+F 3 "~" H 5350 1300 50  0001 C CNN
+	1    5350 1300
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
