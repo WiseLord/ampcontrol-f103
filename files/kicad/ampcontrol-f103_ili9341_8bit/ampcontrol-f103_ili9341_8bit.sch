@@ -2204,4 +2204,6 @@ F 3 "~" H 5350 1300 50  0001 C CNN
 	1    5350 1300
 	1    0    0    -1  
 $EndComp
+Text Label 4750 3600 0    50   ~ 0
+VBAT
 $EndSCHEMATC
