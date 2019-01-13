@@ -62,7 +62,7 @@ void pinsInitAmpI2c(void);
 #define ENC_A_Pin               LL_GPIO_PIN_6
 #define ENC_B_Pin               LL_GPIO_PIN_7
 
-#define INPUT_Port              GPIOA
+#define INPUT_Port              GPIOB
 #define INPUT_Pin               (BTN_0_Pin | BTN_1_Pin | BTN_2_Pin | BTN_3_Pin | \
                                  BTN_4_Pin | BTN_5_Pin | ENC_A_Pin | ENC_B_Pin)
 
@@ -74,7 +74,7 @@ void pinsInitAmpI2c(void);
 #define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
 
 // TFT LCD pins
-#define DISP_DATA_LO_Port       GPIOA
+#define DISP_DATA_LO_Port       GPIOB
 #define DISP_DATA_LO_Pin        (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
                                  LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
 

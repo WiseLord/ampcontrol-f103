@@ -173,8 +173,8 @@ static void spInitADC(void)
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC1);
 
     // Configure GPIO in analog mode to be used as ADC input
-    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_0, LL_GPIO_MODE_ANALOG);
-    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_1, LL_GPIO_MODE_ANALOG);
+    LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_0, LL_GPIO_MODE_ANALOG);
+    LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_1, LL_GPIO_MODE_ANALOG);
 
     if (LL_ADC_IsEnabled(ADC1) == 0) {
         // Set ADC conversion data alignment
@@ -198,14 +198,14 @@ static void spInitADC(void)
         LL_ADC_REG_SetSequencerLength(ADC1, LL_ADC_REG_SEQ_SCAN_ENABLE_2RANKS);
 
         // Set ADC group regular sequence: channel on the selected sequence rank
-        LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_8);
-        LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_2, LL_ADC_CHANNEL_9);
+        LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_0);
+        LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_2, LL_ADC_CHANNEL_1);
     }
 
     if (LL_ADC_IsEnabled(ADC1) == 0) {
         /* Set ADC channels sampling time */
-        LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_8, LL_ADC_SAMPLINGTIME_71CYCLES_5);
-        LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_9, LL_ADC_SAMPLINGTIME_71CYCLES_5);
+        LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_0, LL_ADC_SAMPLINGTIME_71CYCLES_5);
+        LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_1, LL_ADC_SAMPLINGTIME_71CYCLES_5);
     }
 
     if (LL_ADC_IsEnabled(ADC1) == 0) {
