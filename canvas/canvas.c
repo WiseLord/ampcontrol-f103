@@ -155,7 +155,7 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
     int16_t y_pos = canvas.lt->height - ih * (items - idx + menu->dispOft);
 
     // Draw selection frame
-    glcdDrawFrame(0, y_pos, width - 1, y_pos + ih - 1, active ? LCD_COLOR_WHITE : canvas.color);
+    glcdDrawFrame(0, y_pos, width, ih, active ? LCD_COLOR_WHITE : canvas.color);
 
     // Draw menu name
     glcdSetFont(fontItem);
