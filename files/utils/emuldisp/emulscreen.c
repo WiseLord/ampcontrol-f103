@@ -11,7 +11,7 @@
 
 #include <time.h>
 
-static Screen screen = EMUL_SCREEN;
+static Screen screen = SCREEN_STANDBY;
 
 static ScreenParam scrPar;
 static Canvas *canvas;
@@ -66,6 +66,15 @@ void screenShow(void)
         break;
     default:
         break;
+    }
+}
+
+void screenSet(Screen value)
+{
+    screen = value;
+
+    if (screen == SCREEN_AUDIO_PARAM) {
+        scrPar.tune = AUDIO_TUNE_VOLUME;
     }
 }
 
@@ -125,7 +134,7 @@ void screenShowInput(bool clear)
 void screenShowAudioParam(bool clear)
 {
     AudioProc *aProc = audioGet();
-    AudioTune aTune = AUDIO_TUNE_VOLUME;
+    AudioTune aTune = scrPar.tune;
 
     uint8_t input = 0;
     int8_t value = -24;

@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QPainter>
+#include <QMenu>
+#include <QContextMenuEvent>
 
 namespace Ui {
 class EmulDisp;
@@ -17,19 +19,28 @@ public:
     ~EmulDisp() {}
 
     void drawPixel(int16_t x, int16_t y, uint16_t color);
-
     void setSize(uint16_t w, uint16_t h);
 
-    void drawScreen(void);
+public slots:
+    void menuSelected(QAction *action);
 
 private:
     Ui::EmulDisp *ui;
-
     QPainter *painter;
+
+    QMenu *cMenu;
+    QAction *actScreenTime;
+    QAction *actScreenSpectrum;
+    QAction *actScreenBrightness;
+    QAction *actScreenInput;
+    QAction *actScreenAudio;
+    QAction *actScreenTuner;
+    QAction *actScreenMenu;
 
 protected:
     virtual void paintEvent(QPaintEvent *pe);
 
+    virtual void contextMenuEvent(QContextMenuEvent *pe);
 };
 
 #endif // EMULDISP_H
