@@ -166,7 +166,7 @@ tImage *glcdGetUnrleImg(void)
 
 char *glcdGetUnrleImgData(void)
 {
-    return (char*)unRleData;
+    return (char *)unRleData;
 }
 
 void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
@@ -403,18 +403,15 @@ void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color
     }
 }
 
-void glcdDrawFrame(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+void glcdDrawFrame(int16_t x, int16_t y, int16_t w, int16_t h, int16_t t, uint16_t color)
 {
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    glcdDrawLine(x, y, x, y1, color);
-    glcdDrawLine(x, y1, x1, y1, color);
-    glcdDrawLine(x1, y, x1, y1, color);
-    glcdDrawLine(x, y, x1, y, color);
+    glcdDrawRect(x, y, w - t, t, color);
+    glcdDrawRect(x, y + t, t, h - t, color);
+    glcdDrawRect(x + t, y + h - t, w - t, t, color);
+    glcdDrawRect(x + w - t, y, t, h - t, color);
 }
 
-void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
+void glcdDrawCircle(int16_t xc, int16_t yc, int16_t r, uint16_t color)
 {
     int16_t f = 1 - r;
     int16_t ddF_x = 1;
@@ -422,7 +419,7 @@ void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
     int16_t x = 0;
     int16_t y = r;
 
-    glcdDrawLine(x0 - r, y0, x0 + r, y0, color);
+    glcdDrawLine(xc - r, yc, xc + r, yc, color);
 
     while (x < y) {
         if (f >= 0) {
@@ -434,45 +431,50 @@ void glcdDrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
         ddF_x += 2;
         f += ddF_x;
 
-        glcdDrawLine(x0 - x, y0 + y, x0 + x, y0 + y, color);
-        glcdDrawLine(x0 - x, y0 - y, x0 + x, y0 - y, color);
-        glcdDrawLine(x0 - y, y0 + x, x0 + y, y0 + x, color);
-        glcdDrawLine(x0 - y, y0 - x, x0 + y, y0 - x, color);
+        glcdDrawLine(xc - x, yc + y, xc + x, yc + y, color);
+        glcdDrawLine(xc - x, yc - y, xc + x, yc - y, color);
+        glcdDrawLine(xc - y, yc + x, xc + y, yc + x, color);
+        glcdDrawLine(xc - y, yc - x, xc + y, yc - x, color);
     }
 }
 
-void glcdDrawRing(int16_t x0, int16_t y0, int16_t r, uint16_t color)
+void glcdDrawRing(int16_t xc, int16_t yc, int16_t r, int16_t t, uint16_t color)
 {
-    int16_t f = 1 - r;
-    int16_t ddF_x = 1;
-    int16_t ddF_y = -2 * r;
-    int16_t x = 0;
-    int16_t y = r;
+    int16_t xo = r;
+    int16_t xi = xo - t + 1;
+    int16_t y = 0;
+    int16_t erro = 1 - xo;
+    int16_t erri = 1 - xi;
 
-    glcd.drv->drawPixel(x0, y0 + r, color);
-    glcd.drv->drawPixel(x0, y0 - r, color);
-    glcd.drv->drawPixel(x0 + r, y0, color);
-    glcd.drv->drawPixel(x0 - r, y0, color);
+    while (xo >= y) {
+        glcdDrawLine(xc + xi, yc + y, xc + xo, yc + y, color);
+        glcdDrawLine(xc + y, yc + xi, xc + y, yc + xo, color);
+        glcdDrawLine(xc - xo, yc + y, xc - xi, yc + y, color);
+        glcdDrawLine(xc - y, yc + xi, xc - y, yc + xo, color);
+        glcdDrawLine(xc - xo, yc - y, xc - xi, yc - y, color);
+        glcdDrawLine(xc - y, yc - xo, xc - y, yc - xi, color);
+        glcdDrawLine(xc + xi, yc - y, xc + xo, yc - y, color);
+        glcdDrawLine(xc + y, yc - xo, xc + y, yc - xi, color);
 
-    while (x < y) {
-        if (f >= 0) {
-            y--;
-            ddF_y += 2;
-            f += ddF_y;
+        y++;
+
+        if (erro < 0) {
+            erro += 2 * y + 1;
+        } else {
+            xo--;
+            erro += 2 * (y - xo + 1);
         }
-        x++;
-        ddF_x += 2;
-        f += ddF_x;
 
-        glcd.drv->drawPixel(x0 + x, y0 + y, color);
-        glcd.drv->drawPixel(x0 - x, y0 + y, color);
-        glcd.drv->drawPixel(x0 + x, y0 - y, color);
-        glcd.drv->drawPixel(x0 - x, y0 - y, color);
-
-        glcd.drv->drawPixel(x0 + y, y0 + x, color);
-        glcd.drv->drawPixel(x0 - y, y0 + x, color);
-        glcd.drv->drawPixel(x0 + y, y0 - x, color);
-        glcd.drv->drawPixel(x0 - y, y0 - x, color);
+        if (y > xo - t + 1) {
+            xi = y;
+        } else {
+            if (erri < 0) {
+                erri += 2 * y + 1;
+            } else {
+                xi--;
+                erri += 2 * (y - xi + 1);
+            }
+        }
     }
 }
 
