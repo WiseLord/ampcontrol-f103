@@ -411,6 +411,54 @@ void glcdDrawFrame(int16_t x, int16_t y, int16_t w, int16_t h, int16_t t, uint16
     glcdDrawRect(x + w - t, y, t, h - t, color);
 }
 
+void glcdDrawRoundedFrame(int16_t x, int16_t y, int16_t w, int16_t h, int16_t t, int16_t r, uint16_t color)
+{
+    int16_t xc = x + r;
+    int16_t yc = y + r;
+
+    int16_t xo = r;
+    int16_t xi = xo - t + 1;
+    int16_t yo = 0;
+    int16_t erro = 1 - xo;
+    int16_t erri = 1 - xi;
+
+    while (xo >= yo) {
+        glcdDrawLine(xc + xi + w - 2 * r - 1, yc + yo + h - 2 * r - 1, xc + xo + w - 2 * r - 1, yc + yo + h - 2 * r - 1, color);
+        glcdDrawLine(xc + yo + w - 2 * r - 1, yc + xi + h - 2 * r - 1, xc + yo + w - 2 * r - 1, yc + xo + h - 2 * r - 1, color);
+        glcdDrawLine(xc - xo, yc + yo + h - 2 * r - 1, xc - xi, yc + yo + h - 2 * r - 1, color);
+        glcdDrawLine(xc - yo, yc + xi + h - 2 * r - 1, xc - yo, yc + xo + h - 2 * r - 1, color);
+        glcdDrawLine(xc - xo, yc - yo, xc - xi, yc - yo, color);
+        glcdDrawLine(xc - yo, yc - xo, xc - yo, yc - xi, color);
+        glcdDrawLine(xc + xi + w - 2 * r - 1, yc - yo, xc + xo + w - 2 * r - 1, yc - yo, color);
+        glcdDrawLine(xc + yo + w - 2 * r - 1, yc - xo, xc + yo + w - 2 * r - 1, yc - xi, color);
+
+        yo++;
+
+        if (erro < 0) {
+            erro += 2 * yo + 1;
+        } else {
+            xo--;
+            erro += 2 * (yo - xo + 1);
+        }
+
+        if (yo > xo - t + 1) {
+            xi = yo;
+        } else {
+            if (erri < 0) {
+                erri += 2 * yo + 1;
+            } else {
+                xi--;
+                erri += 2 * (yo - xi + 1);
+            }
+        }
+    }
+
+    glcdDrawRect(x + r + 1, y, w - 2 * r - 2, t,  color);
+    glcdDrawRect(x, y + r + 1, t, h - 2 * r - 2, color);
+    glcdDrawRect(x + r + 1, y + h - t, w - 2 * r - 2, t, color);
+    glcdDrawRect(x + w - t, y + r + 1, t, h - 2 * r - 2, color);
+}
+
 void glcdDrawCircle(int16_t xc, int16_t yc, int16_t r, uint16_t color)
 {
     int16_t f = 1 - r;
