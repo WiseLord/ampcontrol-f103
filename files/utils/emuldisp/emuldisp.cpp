@@ -6,7 +6,7 @@
 #include "../../../screen.h"
 
 #include "../../../display/glcd.h"
-#include "../../../canvas/canvas.h"
+#include "../../../canvas/layout.h"
 
 #include "emulscreen.h"
 #include <QDebug>
@@ -45,7 +45,7 @@ EmulDisp::EmulDisp(QWidget *parent) :
            );
 
     labelsInit();
-    canvasInit();
+    layoutInit();
 
     screenSet(SCREEN_STANDBY);
 }

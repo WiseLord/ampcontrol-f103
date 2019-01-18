@@ -1,6 +1,6 @@
 PROJECT = ampcontrol_f103
 
-DISPLAY = ILI9341
+DISPLAY = R61581
 DISPVAR = 8BIT
 
 TARGET = $(PROJECT)_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
@@ -83,6 +83,7 @@ C_DEFS += -D_DISP_$(DISPVAR)
 C_DEFS += -D_DISP_LO_BYTE
 
 C_SOURCES += canvas/canvas.c
+C_SOURCES += canvas/layout.c
 C_SOURCES += canvas/lt128x64.c
 C_SOURCES += canvas/lt160x128.c
 C_SOURCES += canvas/lt176x132.c

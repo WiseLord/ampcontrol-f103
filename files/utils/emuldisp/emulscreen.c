@@ -2,7 +2,7 @@
 
 #include "../../../screen.h"
 
-#include "../../../canvas/canvas.h"
+#include "../../../canvas/layout.h"
 #include "../../../display/glcd.h"
 #include "../../../tr/labels.h"
 #include "../../../eemul.h"
@@ -14,29 +14,31 @@
 static Screen screen = SCREEN_STANDBY;
 
 static ScreenParam scrPar;
-static Canvas *canvas;
 static Spectrum spectrum;
 
-void ltEmulInit(Canvas *value)
+const Layout *ltEmulGet(void)
 {
+    const Layout *lt;
+
 #if EMUL_DISP_WIDTH == 160 && EMUL_DISP_HEIGHT == 128
-    lt160x128Init(value);
+    lt = lt160x128Get();
 #elif EMUL_DISP_WIDTH == 176 && EMUL_DISP_HEIGHT == 132
-    lt176x132Init(value);
+    lt = lt176x132Get();
 #elif EMUL_DISP_WIDTH == 220 && EMUL_DISP_HEIGHT == 176
-    lt220x176Init(value);
+    lt = lt176x132Get();
 #elif EMUL_DISP_WIDTH == 320 && EMUL_DISP_HEIGHT == 240
-    lt320x240Init(value);
+    lt = lt320x240Get();
 #elif EMUL_DISP_WIDTH == 400 && EMUL_DISP_HEIGHT == 240
-    lt400x240Init(value);
+    lt = lt400x240Get();
 #elif EMUL_DISP_WIDTH == 480 && EMUL_DISP_HEIGHT == 320
-    lt480x320Init(value);
+    lt = lt480x320Get();
 #elif EMUL_DISP_WIDTH == 128 && EMUL_DISP_HEIGHT == 64
-    lt128x64Init(value);
+    lt = lt128x64Get();
 #else
-#error "No such canvas"
+#error "No such layout"
 #endif
-    canvas = value;
+
+    return lt;
 }
 
 void screenShow(void)
@@ -96,7 +98,7 @@ void screenShowTime(bool clear)
 
     rtc.etm = RTC_HOUR;
 
-    canvasShowTime(clear, &rtc);
+    layoutShowTime(clear, &rtc);
 }
 
 void screenShowSpectrum(bool clear)
@@ -108,7 +110,7 @@ void screenShowSpectrum(bool clear)
         spectrum.chan[SP_CHAN_RIGHT].peak[i] = (uint8_t)N_DB - i;
     }
 
-    canvasShowSpectrum(clear, &spectrum);
+    layoutShowSpectrum(clear, &spectrum);
 }
 
 void screenShowBrightness(bool clear)
@@ -122,7 +124,7 @@ void screenShowBrightness(bool clear)
     dp.mStep = 1 * 8;
     dp.icon = ICON_BRIGHTNESS;
 
-    canvasShowTune(clear, &dp, &spectrum);
+    layoutShowTune(clear, &dp, &spectrum);
 }
 
 void screenShowInput(bool clear)
@@ -157,7 +159,7 @@ void screenShowAudioParam(bool clear)
     dp.max = 0;
     dp.mStep = 1 * 8;
 
-    canvasShowTune(clear, &dp, &spectrum);
+    layoutShowTune(clear, &dp, &spectrum);
 }
 
 void screenShowTuner(bool clear)
@@ -168,7 +170,7 @@ void screenShowTuner(bool clear)
     tuner->par.fMin = 8700;
     tuner->par.fMax = 10800;
 
-    canvasShowTuner(clear, tuner, &spectrum);
+    layoutShowTuner(clear, tuner, &spectrum);
 }
 
 void screenShowMenu(void)
@@ -180,7 +182,7 @@ void screenShowMenu(void)
     menuChange(+1);
     menuSetActive(MENU_TUNER_STEP);
 
-    canvasShowMenu();
+    layoutShowMenu();
 }
 
 Spectrum *spGet(void)

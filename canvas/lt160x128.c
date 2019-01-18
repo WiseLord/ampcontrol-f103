@@ -1,4 +1,4 @@
-#include "canvas.h"
+#include "layout.h"
 
 static const Layout lt160x128 = {
     .width = 160,
@@ -42,7 +42,7 @@ static const Layout lt160x128 = {
     .lblFont = &fontterminus28,
 };
 
-void lt160x128Init(Canvas *canvas)
+const Layout *lt160x128Get(void)
 {
-    canvas->lt = &lt160x128;
+    return &lt160x128;
 }

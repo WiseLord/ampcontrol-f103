@@ -1,6 +1,6 @@
 #include "screen.h"
 
-#include "canvas/canvas.h"
+#include "canvas/layout.h"
 #include "display/glcd.h"
 #include "tr/labels.h"
 #include "actions.h"
@@ -120,7 +120,7 @@ void screenSaveSettings(void)
 void screenInit(void)
 {
     labelsInit();
-    canvasInit();
+    layoutInit();
     canvasClear();
     screenReadSettings();
     dispdrvSetBrightness(brightness[BR_STBY]);
@@ -242,12 +242,12 @@ void screenShowTime(bool clear)
 
     rtcGetTime(&rtc);
 
-    canvasShowTime(clear, &rtc);
+    layoutShowTime(clear, &rtc);
 }
 
 void screenShowSpectrum(bool clear)
 {
-    canvasShowSpectrum(clear, spGet());
+    layoutShowSpectrum(clear, spGet());
 }
 
 void screenShowBrightness(bool clear)
@@ -261,7 +261,7 @@ void screenShowBrightness(bool clear)
     dp.mStep = 1 * 8;
     dp.icon = ICON_BRIGHTNESS;
 
-    canvasShowTune(clear, &dp, spGet());
+    layoutShowTune(clear, &dp, spGet());
 }
 
 void screenShowInput(bool clear)
@@ -294,7 +294,7 @@ void screenShowAudioParam(bool clear)
     dp.max = grid ? grid->max : 0;
     dp.mStep = grid ? grid->mStep : 0;
 
-    canvasShowTune(clear, &dp, spGet());
+    layoutShowTune(clear, &dp, spGet());
 }
 
 void screenShowTuner(bool clear)
@@ -306,10 +306,10 @@ void screenShowTuner(bool clear)
         swTimSetTunerPoll(100);
     }
 
-    canvasShowTuner(clear, tuner, spGet());
+    layoutShowTuner(clear, tuner, spGet());
 }
 
 void screenShowMenu(void)
 {
-    canvasShowMenu();
+    layoutShowMenu();
 }

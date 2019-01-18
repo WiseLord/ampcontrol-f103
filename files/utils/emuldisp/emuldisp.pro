@@ -51,7 +51,8 @@ SOURCES += \
 	../../../display/icons/icons-amp-48.c \
 	../../../display/icons/icons-amp-64.c \
 	../../../display/glcd.c \
-    ../../../canvas/canvas.c \
+	../../../canvas/canvas.c \
+	../../../canvas/layout.c \
 	../../../canvas/lt160x128.c \
 	../../../canvas/lt176x132.c \
 	../../../canvas/lt220x176.c \
@@ -74,8 +75,9 @@ HEADERS += \
 	../../../display/icons/icons.h \
 	../../../display/glcd.h \r \
     ../../../display/dispdrv.h \
-    ../../../canvas/canvas.h \
-    ../../../menu.h \
+	../../../canvas/canvas.h \
+	../../../canvas/layout.h \
+	../../../menu.h \
     ../../../tuner/tuner.h \
     ../../../audio/audio.h \
     ../../../audio/audiodefs.h \

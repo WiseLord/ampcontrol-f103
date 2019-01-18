@@ -3,7 +3,7 @@
 
 #include "audio/audio.h"
 #include "display/glcd.h"
-#include "canvas/canvas.h"
+#include "canvas/layout.h"
 #include "tuner/tuner.h"
 #include "eemul.h"
 #include "input.h"
