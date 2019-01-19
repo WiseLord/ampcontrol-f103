@@ -1,6 +1,7 @@
 #include "lph9157.h"
 
 #include <stm32f1xx_ll_utils.h>
+#include <stm32f1xx_ll_spi.h>
 #include "../../pins.h"
 #include "../dispdrv.h"
 

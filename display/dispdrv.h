@@ -7,7 +7,6 @@ extern "C" {
 
 #include <stdint.h>
 #include "dispdefs.h"
-#include <stm32f1xx_ll_spi.h>
 
 #define DISPLAY_IRQ         dispdrvBusIRQ
 

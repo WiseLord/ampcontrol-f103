@@ -59,7 +59,6 @@ SOURCES += \
 	../../../canvas/lt320x240.c \
 	../../../canvas/lt400x240.c \
 	../../../canvas/lt480x320.c \
-	../../../canvas/lt128x64.c \
     ../../../menu.c \
     ../../../tuner/tuner.c \
     ../../../audio/audio.c \

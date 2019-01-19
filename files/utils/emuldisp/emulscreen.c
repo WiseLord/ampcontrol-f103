@@ -32,8 +32,6 @@ const Layout *ltEmulGet(void)
     lt = lt400x240Get();
 #elif EMUL_DISP_WIDTH == 480 && EMUL_DISP_HEIGHT == 320
     lt = lt480x320Get();
-#elif EMUL_DISP_WIDTH == 128 && EMUL_DISP_HEIGHT == 64
-    lt = lt128x64Get();
 #else
 #error "No such layout"
 #endif

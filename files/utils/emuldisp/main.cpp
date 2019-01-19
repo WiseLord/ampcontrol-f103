@@ -29,7 +29,6 @@ void dispdrvInit(DispDriver **driver)
     drv.width = EMUL_DISP_WIDTH;
     drv.height = EMUL_DISP_HEIGHT;
     drv.drawPixel = emulDrawPixel;
-    drv.drawImage = glcdDrawImage;
 
     *driver = &drv;
 }

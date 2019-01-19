@@ -12,7 +12,7 @@
 #include "spectrum.h"
 #include "timers.h"
 #include "tuner/tuner.h"
-#include <stm32f1xx_ll_utils.h>
+
 static Action action = {ACTION_NONE, 0};
 
 static ScreenParam scrPar;
