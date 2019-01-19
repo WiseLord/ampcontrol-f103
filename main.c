@@ -105,7 +105,7 @@ int main(void)
 
     while (1) {
         actionHandle(action, ACTION_VISIBLE);
-        screenShow();
+        screenShow(false);
         action = actionUserGet();
     }
 }

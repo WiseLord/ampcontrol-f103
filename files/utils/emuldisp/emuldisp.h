@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QMenu>
 #include <QContextMenuEvent>
+#include <QTimer>
 
 namespace Ui {
 class EmulDisp;
@@ -19,6 +20,7 @@ public:
     ~EmulDisp() {}
 
     void drawPixel(int16_t x, int16_t y, uint16_t color);
+    void drawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
     void setSize(uint16_t w, uint16_t h);
 
 public slots:
@@ -36,6 +38,8 @@ private:
     QAction *actScreenAudio;
     QAction *actScreenTuner;
     QAction *actScreenMenu;
+
+    QTimer *updateTimer;
 
 protected:
     virtual void paintEvent(QPaintEvent *pe);

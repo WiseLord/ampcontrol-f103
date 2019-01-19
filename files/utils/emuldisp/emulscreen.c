@@ -10,10 +10,8 @@
 #include "../../../spectrum.h"
 
 #include <time.h>
+#include <stdlib.h>
 
-static Screen screen = SCREEN_STANDBY;
-
-static ScreenParam scrPar;
 static Spectrum spectrum;
 
 const Layout *ltEmulGet(void)
@@ -39,148 +37,51 @@ const Layout *ltEmulGet(void)
     return lt;
 }
 
-void screenShow(void)
+uint16_t eeReadU(EE_Param param, uint16_t def)
 {
-    switch (screen) {
-    case SCREEN_STANDBY:
-    case SCREEN_TIME:
-        screenShowTime(true);
-        break;
-    case SCREEN_SPECTRUM:
-        screenShowSpectrum(true);
-        break;
-    case SCREEN_BRIGHTNESS:
-        screenShowBrightness(true);
-        break;
-    case SCREEN_AUDIO_INPUT:
-        screenShowInput(true);
-        break;
-    case SCREEN_AUDIO_PARAM:
-        screenShowAudioParam(true);
-        break;
-    case SCREEN_TUNER:
-        screenShowTuner(true);
-        break;
-    case SCREEN_MENU:
-        screenShowMenu();
-        break;
+    switch (param) {
     default:
-        break;
+        return def;
     }
 }
 
-void screenSet(Screen value)
+int16_t eeReadI(EE_Param param, int16_t def)
 {
-    screen = value;
-
-    if (screen == SCREEN_AUDIO_PARAM) {
-        scrPar.tune = AUDIO_TUNE_VOLUME;
+    switch (param) {
+    case EE_AUDIO_IN0:
+        return 1;
+    default:
+        return def;
     }
 }
 
-void screenShowTime(bool clear)
+bool eeReadB(EE_Param param, bool def)
+{
+    switch (param) {
+    default:
+        return def;
+    }
+}
+
+void inputSetEncRes(int8_t value)
+{
+    (void)value;
+}
+
+void rtcGetTime(RTC_type *rtc)
 {
     time_t t = time(NULL);
     struct tm *lt = localtime(&t);
 
-    RTC_type rtc;
-    rtc.hour = (int8_t)lt->tm_hour;
-    rtc.min = (int8_t)lt->tm_min;
-    rtc.sec = (int8_t)lt->tm_sec;
+    rtc->hour = (int8_t)lt->tm_hour;
+    rtc->min = (int8_t)lt->tm_min;
+    rtc->sec = (int8_t)lt->tm_sec;
 
-    rtc.date = (int8_t)lt->tm_mday;
-    rtc.month = (int8_t)lt->tm_mon;
-    rtc.year = (int8_t)lt->tm_year - 100;
+    rtc->date = (int8_t)lt->tm_mday;
+    rtc->month = (int8_t)lt->tm_mon;
+    rtc->year = (int8_t)lt->tm_year - 100;
 
-    rtc.wday = (int8_t)lt->tm_wday;
-
-    rtc.etm = RTC_HOUR;
-
-    layoutShowTime(clear, &rtc);
-}
-
-void screenShowSpectrum(bool clear)
-{
-    for (uint8_t i = 0; i < FFT_SIZE / 8; i++) {
-        spectrum.chan[SP_CHAN_LEFT].show[i] = i / 2;
-        spectrum.chan[SP_CHAN_RIGHT].show[i] = i / 2;
-        spectrum.chan[SP_CHAN_LEFT].peak[i] = (uint8_t)N_DB - i;
-        spectrum.chan[SP_CHAN_RIGHT].peak[i] = (uint8_t)N_DB - i;
-    }
-
-    layoutShowSpectrum(clear, &spectrum);
-}
-
-void screenShowBrightness(bool clear)
-{
-    DispParam dp;
-
-    dp.label = labelsGet(LABEL_BRIGNTNESS);
-    dp.value = 14;
-    dp.min = LCD_BR_MIN;
-    dp.max = LCD_BR_MAX;
-    dp.mStep = 1 * 8;
-    dp.icon = ICON_BRIGHTNESS;
-
-    layoutShowTune(clear, &dp, &spectrum);
-}
-
-void screenShowInput(bool clear)
-{
-    scrPar.tune = AUDIO_TUNE_GAIN;
-    screenShowAudioParam(clear);
-}
-
-void screenShowAudioParam(bool clear)
-{
-    AudioProc *aProc = audioGet();
-    AudioTune aTune = scrPar.tune;
-
-    uint8_t input = 0;
-    int8_t value = -24;
-
-    if (aTune >= AUDIO_TUNE_END)
-        aTune = AUDIO_TUNE_VOLUME;
-
-    DispParam dp;
-    if (aTune == AUDIO_TUNE_GAIN) {
-        InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
-        dp.label = labelsGet(LABEL_IN_TUNER + inType);
-        dp.icon = ICON_TUNER + input;
-    } else {
-        dp.label = labelsGet(LABEL_VOLUME + aTune);
-        dp.icon = (uint8_t)(ICON_VOLUME + aTune);
-    }
-    dp.value = value;
-
-    dp.min = -79;
-    dp.max = 0;
-    dp.mStep = 1 * 8;
-
-    layoutShowTune(clear, &dp, &spectrum);
-}
-
-void screenShowTuner(bool clear)
-{
-    Tuner *tuner = tunerGet();
-
-    tuner->par.freq = 10120;
-    tuner->par.fMin = 8700;
-    tuner->par.fMax = 10800;
-
-    layoutShowTuner(clear, tuner, &spectrum);
-}
-
-void screenShowMenu(void)
-{
-    // Menu
-    menuSetActive(MENU_TUNER_BASS);
-    menuChange(+1);
-    menuChange(+1);
-    menuChange(+1);
-    menuSetActive(MENU_TUNER_STEP);
-
-    layoutShowMenu();
+    rtc->wday = (int8_t)lt->tm_wday;
 }
 
 Spectrum *spGet(void)
@@ -188,7 +89,12 @@ Spectrum *spGet(void)
     return &spectrum;
 }
 
-void inputSetEncRes(int8_t value)
+void spGetADC(uint8_t *dataL, uint8_t *dataR)
 {
-    (void)value;
+    srand(time(NULL));
+
+    for (uint8_t i = 0; i < SPECTRUM_SIZE; i++) {
+        dataL[i] = rand() & 0xFF;
+        dataR[i] = rand() & 0xFF;
+    }
 }

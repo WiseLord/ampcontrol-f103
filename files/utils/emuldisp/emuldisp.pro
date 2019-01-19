@@ -65,6 +65,8 @@ SOURCES += \
     ../../../tr/labels_by.c \
     ../../../tr/labels_ru.c \
     ../../../tr/labels.c \
+    ../../../screen.c \
+	amp.cpp
 
 
 HEADERS += \
@@ -84,3 +86,7 @@ HEADERS += \
     ../../../tr/labels.h \
     ../../../rtc.h \
 	../../../rc.h \
+    amp.h
+
+FORMS += \
+    amp.ui

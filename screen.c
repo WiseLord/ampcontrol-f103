@@ -187,10 +187,13 @@ void screenChangeBrighness(BrMode mode, int8_t diff)
     screenSetBrightness(mode, br);
 }
 
-void screenShow(void)
+void screenShow(bool clear)
 {
     Spectrum *spectrum = spGet();
-    bool clear = screenCheckClear();
+
+    if (!clear) {
+        clear = screenCheckClear();
+    }
 
     // Get new spectrum data
     if (swTimGetSpConvert() <= 0) {

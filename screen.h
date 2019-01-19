@@ -58,7 +58,7 @@ int8_t screenGetBrightness(BrMode mode);
 void screenSetBrightness(BrMode mode, int8_t value);
 void screenChangeBrighness(BrMode mode, int8_t diff);
 
-void screenShow(void);
+void screenShow(bool clear);
 
 void screenShowTime(bool clear);
 void screenShowSpectrum(bool clear);
