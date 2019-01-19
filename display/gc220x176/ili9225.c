@@ -2,20 +2,17 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define ILI9225_WIDTH           176
-#define ILI9225_HEIGHT          220
-#define ILI9225_PIXELS          (ILI9225_WIDTH * ILI9225_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = ILI9225_HEIGHT,
-    .height = ILI9225_WIDTH,
+    .width = 220,
+    .height = 176,
     .drawPixel = ili9225DrawPixel,
     .drawRectangle = ili9225DrawRectangle,
     .drawImage = ili9225DrawImage,
 };
 
-static inline void ili9225SelectReg(uint16_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void ili9225SelectReg(uint16_t reg)
 {
     CLR(DISP_RS);
@@ -29,11 +26,27 @@ static void ili9225WriteReg(uint16_t reg, uint16_t data)
     dispdrvSendData16(data);
 }
 
+__attribute__((always_inline))
+static inline void ili9225SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = drv.height - y - 1;    // TODO: rework it
+
+    ili9225WriteReg(0x0037, (uint16_t)(y1 - h + 1));
+    ili9225WriteReg(0x0036, (uint16_t)y1);
+    ili9225WriteReg(0x0039, (uint16_t)x);
+    ili9225WriteReg(0x0038, (uint16_t)x1);
+
+    // Set cursor
+    ili9225WriteReg(0x0020, (uint16_t)y1);
+    ili9225WriteReg(0x0021, (uint16_t)x);
+
+    // Select RAM mode
+    ili9225SelectReg(0x0022);
+}
+
 static inline void ili9225InitSeq(void)
 {
-    // Wait for reset
-    LL_mDelay(50);
-
     CLR(DISP_CS);
 
     // Start Initial Sequence
@@ -90,23 +103,6 @@ static inline void ili9225InitSeq(void)
     SET(DISP_CS);
 }
 
-static inline void ili9225SetWindow(uint16_t x, uint16_t y, uint16_t w,
-                                    uint16_t h) __attribute__((always_inline));
-static inline void ili9225SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    ili9225WriteReg(0x0037, ILI9225_WIDTH - y - h);
-    ili9225WriteReg(0x0036, ILI9225_WIDTH - y - 1);
-    ili9225WriteReg(0x0039, x);
-    ili9225WriteReg(0x0038, x + w - 1);
-
-    // Set cursor
-    ili9225WriteReg(0x0020, ILI9225_WIDTH - y - 1);
-    ili9225WriteReg(0x0021, x);
-
-    // Select RAM mode
-    ili9225SelectReg(0x0022);
-}
-
 void ili9225Init(DispDriver **driver)
 {
     *driver = &drv;
@@ -145,7 +141,7 @@ void ili9225DrawPixel(int16_t x, int16_t y, uint16_t color)
     SET(DISP_CS);
 }
 
-void ili9225DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void ili9225DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
@@ -157,8 +153,8 @@ void ili9225DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
 
 void ili9225DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 

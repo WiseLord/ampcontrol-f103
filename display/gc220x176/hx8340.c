@@ -2,20 +2,17 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define HX8340_WIDTH           176
-#define HX8340_HEIGHT          220
-#define HX8340_PIXELS          (HX8340_WIDTH * HX8340_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = HX8340_HEIGHT,
-    .height = HX8340_WIDTH,
+    .width = 220,
+    .height = 176,
     .drawPixel = hx8340DrawPixel,
     .drawRectangle = hx8340DrawRectangle,
     .drawImage = hx8340DrawImage,
 };
 
-static inline void hx8340SelectReg(uint8_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void hx8340SelectReg(uint8_t reg)
 {
     CLR(DISP_RS);
@@ -23,17 +20,32 @@ static inline void hx8340SelectReg(uint8_t reg)
     SET(DISP_RS);
 }
 
-static void hx8340WriteReg(uint8_t reg, uint8_t dataR)
+__attribute__((always_inline))
+static inline void hx8340WriteReg(uint8_t reg, uint8_t value)
 {
     hx8340SelectReg(reg);
-    dispdrvSendData8(dataR);
+    dispdrvSendData8(value);
+}
+
+__attribute__((always_inline))
+static inline void hx8340SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    uint8_t x0 = (uint8_t)x;
+    uint8_t y0 = (uint8_t)y;
+    uint8_t x1 = (uint8_t)(x + w - 1);
+    uint8_t y1 = (uint8_t)(y + h - 1);
+
+    hx8340WriteReg(0x03, y0);
+    hx8340WriteReg(0x05, y1);
+
+    hx8340WriteReg(0x07, x0);
+    hx8340WriteReg(0x09, x1);
+
+    hx8340SelectReg(0x22);
 }
 
 static inline void hx8340InitSeq(void)
 {
-    // Wait for reset
-    LL_mDelay(50);
-
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -104,19 +116,6 @@ static inline void hx8340InitSeq(void)
     SET(DISP_CS);
 }
 
-static inline void hx8340SetWindow(uint16_t x, uint16_t y, uint16_t w,
-                                   uint16_t h) __attribute__((always_inline));
-static inline void hx8340SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    hx8340WriteReg(0x03, y);
-    hx8340WriteReg(0x05, y + h - 1);
-
-    hx8340WriteReg(0x07, x);
-    hx8340WriteReg(0x09, x + w - 1);
-
-    hx8340SelectReg(0x22);
-}
-
 void hx8340Init(DispDriver **driver)
 {
     *driver = &drv;
@@ -171,7 +170,7 @@ void hx8340DrawPixel(int16_t x, int16_t y, uint16_t color)
     SET(DISP_CS);
 }
 
-void hx8340DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void hx8340DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
@@ -183,8 +182,8 @@ void hx8340DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
 
 void hx8340DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 

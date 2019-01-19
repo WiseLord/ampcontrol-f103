@@ -53,9 +53,6 @@ static tImage *glcdUnRleImg(const tImage *img)
 void glcdInit(Glcd **value)
 {
     dispdrvInit(&glcd.drv);
-#if defined (_KS0108A) || defined(_KS0108B) || defined (_ST7920) || defined (_SSD1306)
-    glcd.drv->drawImage = glcdDrawImage;
-#endif
     *value = &glcd;
 }
 
@@ -66,12 +63,19 @@ void glcdRotate(uint8_t rotate)
     }
 }
 
-char *glcdPrepareNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
+void glcdShift(int16_t pos)
+{
+    if (glcd.drv->shift) {
+        glcd.drv->shift(pos);
+    }
+}
+
+char *glcdPrepareNum(int32_t number, int8_t width, char lead, uint8_t radix)
 {
     uint8_t numdiv;
     uint8_t sign = lead;
     int8_t i;
-    uint32_t num = (uint32_t)number;
+    int32_t num = number;
 
     if (number < 0 && radix == 10) {
         sign = '-';
@@ -98,7 +102,7 @@ char *glcdPrepareNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
     return strbuf;
 }
 
-uint16_t glcdWriteNum(int32_t number, uint8_t width, uint8_t lead, uint8_t radix)
+uint16_t glcdWriteNum(int32_t number, int8_t width, char lead, uint8_t radix)
 {
     char *str = glcdPrepareNum(number, width, lead, radix);
 
@@ -171,8 +175,15 @@ char *glcdGetUnrleImgData(void)
 
 void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    if (glcd.drv->drawImage) {
+        glcd.drv->drawImage(img, glcd.x, glcd.y, color, bgColor);
+        return;
+    }
+
+    // Draw slow by pixels if there is no driver-specific drawImage
+
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     for (uint16_t j = 0; j < (h + 7) / 8; j++) {
         for (uint16_t i = 0; i < w; i++) {
@@ -187,7 +198,7 @@ void glcdDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t b
     }
 }
 
-uint16_t glcdWriteIcon(uint16_t code, const tFont *iFont, uint16_t color, uint16_t bgColor)
+int16_t glcdWriteIcon(uint16_t code, const tFont *iFont, uint16_t color, uint16_t bgColor)
 {
     tImage *img;
 
@@ -202,16 +213,14 @@ uint16_t glcdWriteIcon(uint16_t code, const tFont *iFont, uint16_t color, uint16
 
     img = glcdUnRleImg(iFont->chars[iPos].image);
 
-    if (glcd.drv->drawImage) {
-        glcd.drv->drawImage(img, glcd.x, glcd.y, color, bgColor);
-    }
+    glcdDrawImage(img, glcd.x, glcd.y, color, bgColor);
 
     glcdSetX(glcd.x + img->width);
 
     return img->width;
 }
 
-uint16_t glcdWriteChar(int32_t code)
+int16_t glcdWriteChar(int32_t code)
 {
     tImage *img = 0;
 
@@ -222,9 +231,7 @@ uint16_t glcdWriteChar(int32_t code)
 
     img = glcdUnRleImg(glcd.font.tfont->chars[pos].image);
 
-    if (glcd.drv->drawImage) {
-        glcd.drv->drawImage(img, glcd.x, glcd.y, glcd.font.color, glcd.font.bgColor);
-    }
+    glcdDrawImage(img, glcd.x, glcd.y, glcd.font.color, glcd.font.bgColor);
 
     glcdSetX(glcd.x + img->width);
 
@@ -297,7 +304,7 @@ uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
     if (glcd.font.align != FONT_ALIGN_LEFT) {
         uint16_t strLength = 0;
         int16_t pos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
-        uint16_t sWidth = font->chars[pos].image->width;
+        int16_t sWidth = font->chars[pos].image->width;
 
         if (framed)
             strLength += sWidth;
@@ -523,19 +530,5 @@ void glcdDrawRing(int16_t xc, int16_t yc, int16_t r, int16_t t, uint16_t color)
                 erri += 2 * (y - xi + 1);
             }
         }
-    }
-}
-
-void glcdShift(uint16_t value)
-{
-    if (glcd.drv->shift) {
-        glcd.drv->shift(value);
-    }
-}
-
-void glcdUpdate(void)
-{
-    if (glcd.drv->updateFB) {
-        glcd.drv->updateFB();
     }
 }

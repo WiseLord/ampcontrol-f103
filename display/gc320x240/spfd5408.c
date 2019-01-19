@@ -2,20 +2,17 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define SPFD5408_WIDTH           240
-#define SPFD5408_HEIGHT          320
-#define SPFD5408_PIXELS          (SPFD5408_WIDTH * SPFD5408_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = SPFD5408_HEIGHT,
-    .height = SPFD5408_WIDTH,
+    .width = 320,
+    .height = 240,
     .drawPixel = spfd5408DrawPixel,
     .drawRectangle = spfd5408DrawRectangle,
     .drawImage = spfd5408DrawImage,
 };
 
-static inline void spfd5408SelectReg(uint16_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void spfd5408SelectReg(uint16_t reg)
 {
     CLR(DISP_RS);
@@ -23,10 +20,30 @@ static inline void spfd5408SelectReg(uint16_t reg)
     SET(DISP_RS);
 }
 
-static void spfd5408WriteReg(uint16_t reg, uint16_t data)
+__attribute__((always_inline))
+static inline void spfd5408WriteReg(uint16_t reg, uint16_t data)
 {
     spfd5408SelectReg(reg);
     dispdrvSendData16(data);
+}
+
+__attribute__((always_inline))
+static inline void spfd5408SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
+
+    spfd5408WriteReg(0x0050, (uint16_t)y);
+    spfd5408WriteReg(0x0051, (uint16_t)y1);
+    spfd5408WriteReg(0x0052, (uint16_t)x);
+    spfd5408WriteReg(0x0053, (uint16_t)x1);
+
+    // Set cursor
+    spfd5408WriteReg(0x0020, (uint16_t)y);
+    spfd5408WriteReg(0x0021, (uint16_t)x);
+
+    // Set RAM mode
+    spfd5408SelectReg(0x0022);
 }
 
 static inline void spfd5408InitSeq(void)
@@ -39,7 +56,7 @@ static inline void spfd5408InitSeq(void)
     spfd5408WriteReg(0x0000, 0x0000);
     spfd5408WriteReg(0x0001, 0x0100);
     spfd5408WriteReg(0x0002, 0x0700);
-    spfd5408WriteReg(0x0003, 0x1020);
+    spfd5408WriteReg(0x0003, 0x1030);
     spfd5408WriteReg(0x0004, 0x0000);
     spfd5408WriteReg(0x0008, 0x0207);
     spfd5408WriteReg(0x0009, 0x0000);
@@ -91,7 +108,7 @@ static inline void spfd5408InitSeq(void)
     spfd5408WriteReg(0x0053, 0x013F);   // Vertical GRAM End Address
 
     spfd5408WriteReg(0x0060, 0x2700);   // Gate scan line
-    spfd5408WriteReg(0x0061, 0x0001);   // NDV, VLE, REV
+    spfd5408WriteReg(0x0061, 0x0003);   // NDV, VLE, REV
     spfd5408WriteReg(0x006A, 0x0000);   // Set scrolling line
 
     // Partial Display Control
@@ -124,22 +141,6 @@ static inline void spfd5408InitSeq(void)
     SET(DISP_CS);
 }
 
-static inline void spfd5408SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
-static inline void spfd5408SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    spfd5408WriteReg(0x0050, SPFD5408_WIDTH - y - h);
-    spfd5408WriteReg(0x0051, SPFD5408_WIDTH - y - 1);
-    spfd5408WriteReg(0x0052, x);
-    spfd5408WriteReg(0x0053, x + w - 1);
-
-    // Set cursor
-    spfd5408WriteReg(0x0020, SPFD5408_WIDTH - y - 1);
-    spfd5408WriteReg(0x0021, x);
-
-    // Set RAM mode
-    spfd5408SelectReg(0x0022);
-}
-
 void spfd5408Init(DispDriver **driver)
 {
     *driver = &drv;
@@ -148,8 +149,6 @@ void spfd5408Init(DispDriver **driver)
 
 void spfd5408Sleep(void)
 {
-    CLR(DISP_CS);
-
     spfd5408WriteReg(0x0007, 0x0000);   // Display OFF
     // Power Off Sequence
     spfd5408WriteReg(0x0010, 0x0000);
@@ -209,7 +208,7 @@ void spfd5408DrawPixel(int16_t x, int16_t y, uint16_t color)
     SET(DISP_CS);
 }
 
-void spfd5408DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void spfd5408DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
@@ -221,8 +220,8 @@ void spfd5408DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
 
 void spfd5408DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 

@@ -39,10 +39,10 @@ ifeq "$(DISPLAY)" "ILI9163"
   C_SOURCES += display/gc160x128/ili9163.c
 else ifeq "$(DISPLAY)" "ST7735"
   C_SOURCES += display/gc160x128/st7735.c
-else ifeq "$(DISPLAY)" "LS020"
-  C_SOURCES += display/gc176x132/ls020.c
 else ifeq "$(DISPLAY)" "LPH9157"
   C_SOURCES += display/gc176x132/lph9157.c
+else ifeq "$(DISPLAY)" "LS020"
+  C_SOURCES += display/gc176x132/ls020.c
 else ifeq "$(DISPLAY)" "SSD1286A"
   C_SOURCES += display/gc176x132/ssd1286a.c
 else ifeq "$(DISPLAY)" "HX8340"
@@ -53,12 +53,12 @@ else ifeq "$(DISPLAY)" "ILI9320"
   C_SOURCES += display/gc320x240/ili9320.c
 else ifeq "$(DISPLAY)" "ILI9341"
   C_SOURCES += display/gc320x240/ili9341.c
+else ifeq "$(DISPLAY)" "MC2PA8201"
+  C_SOURCES += display/gc320x240/mc2pa8201.c
 else ifeq "$(DISPLAY)" "S6D0139"
   C_SOURCES += display/gc320x240/s6d0139.c
 else ifeq "$(DISPLAY)" "SPFD5408"
   C_SOURCES += display/gc320x240/spfd5408.c
-else ifeq "$(DISPLAY)" "MC2PA8201"
-  C_SOURCES += display/gc320x240/mc2pa8201.c
 else ifeq "$(DISPLAY)" "ILI9327"
   C_SOURCES += display/gc400x240/ili9327.c
 else ifeq "$(DISPLAY)" "ST7793"

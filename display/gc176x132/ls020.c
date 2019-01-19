@@ -2,23 +2,37 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define LS020_WIDTH           132
-#define LS020_HEIGHT          176
-#define LS020_PIXELS          (LS020_WIDTH * LS020_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = LS020_HEIGHT,
-    .height = LS020_WIDTH,
+    .width = 176,
+    .height = 132,
     .drawPixel = ls020DrawPixel,
     .drawRectangle = ls020DrawRectangle,
     .drawImage = ls020DrawImage,
 };
 
+__attribute__((always_inline))
+static void inline ls020SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
+
+    SET(DISP_RS);
+    CLR(DISP_CS);
+
+    dispdrvSendData16((uint16_t)(0x0800 + y));
+    dispdrvSendData16((uint16_t)(0x0900 + y1));
+
+    dispdrvSendData16((uint16_t)(0x0A00 + x));
+    dispdrvSendData16((uint16_t)(0x0B00 + x1));
+
+    DISP_WAIT_BUSY();
+    SET(DISP_CS);
+}
+
 static void ls020InitSeq(void)
 {
-    LL_mDelay(50);
-    SET(DISP_RS);
     CLR(DISP_CS);
 
     dispdrvSendData16(0xFDFD);
@@ -58,26 +72,9 @@ static void ls020InitSeq(void)
     LL_mDelay(50);
     dispdrvSendData16(0x8001);
     dispdrvSendData16(0xEF90);
-    dispdrvSendData16(0x0020);
+    dispdrvSendData16(0x0000); // Mirror? 0x0020
 
-    dispdrvWaitOperation();
-    SET(DISP_CS);
-}
-
-
-void ls020SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    SET(DISP_RS);
-    CLR(DISP_CS);
-
-    dispdrvSendData16(0x0800 + LS020_WIDTH - y - h);
-    dispdrvSendData16(0x0900 + LS020_WIDTH - y - 1);
-
-
-    dispdrvSendData16(0x0A00 + x);
-    dispdrvSendData16(0x0B00 + x + w - 1);
-
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -118,7 +115,7 @@ void ls020Sleep(void)
     dispdrvSendData16(0xEF00);
     dispdrvSendData16(0x7F01);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -135,11 +132,11 @@ void ls020DrawPixel(int16_t x, int16_t y, uint16_t color)
     CLR(DISP_CS);
     dispdrvSendData16(color);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
-void ls020DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void ls020DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     ls020SetWindow(x, y, w, h);
 
@@ -148,14 +145,14 @@ void ls020DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t
 
     dispdrvSendFill(w * h, color);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
 void ls020DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     ls020SetWindow(x, y, w, h);
 
@@ -164,6 +161,6 @@ void ls020DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t 
 
     dispdrvSendImage(img, color, bgColor);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }

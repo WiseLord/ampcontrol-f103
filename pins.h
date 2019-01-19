@@ -48,9 +48,8 @@ void pinsInitAmpI2c(void);
     } while (0);
 
 
-// Periph macroses
+// Periph macros
 #define I2C_AMP         I2C1
-#define I2C_LCD         I2C2
 
 // Input pins (buttons and encoder)
 #define BTN_0_Pin               LL_GPIO_PIN_0
@@ -94,28 +93,6 @@ void pinsInitAmpI2c(void);
 #define DISP_SPI_DC             DISP_RS
 #define DISP_SPI_SDI            DISP_WR
 
-// TFT I2C (SSD1306) wiring
-#define DISP_I2C_Port           GPIOB
-#define DISP_I2C_SCK_Pin        LL_GPIO_PIN_10
-#define DISP_I2C_SDA_Pin        LL_GPIO_PIN_11
-
-// KS0108 wiring
-#define KS0108_DATA_Port        INPUT_Port
-#define KS0108_DATA_Pin         INPUT_Pin
-#define KS0108_DI               DISP_RS
-#define KS0108_E                DISP_SPI_SCK
-#define KS0108_CS1              DISP_CS
-#define KS0108_CS2              DISP_WR
-#define KS0108_BCKL             DISP_BCKL
-
-// ST7920 wiring
-#define ST7920_DATA_Port        INPUT_Port
-#define ST7920_DATA_Pin         INPUT_Pin
-#define ST7920_RS               DISP_RS
-#define ST7920_E                DISP_SPI_SCK
-#define ST7920_PSB              DISP_CS
-#define ST7920_BCKL             DISP_BCKL
-
 // Mute and Standby lines
 #define MUTE_Port               GPIOA
 #define MUTE_Pin                LL_GPIO_PIN_13
@@ -126,7 +103,6 @@ void pinsInitAmpI2c(void);
 #define AMP_I2C_Port            GPIOB
 #define AMP_I2C_SCK_Pin         LL_GPIO_PIN_8
 #define AMP_I2C_SDA_Pin         LL_GPIO_PIN_9
-
 
 // SI470X Reset pins
 #define SI470X_SCLK_Port        AMP_I2C_Port

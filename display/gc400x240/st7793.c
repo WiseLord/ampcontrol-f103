@@ -2,20 +2,17 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define ST7793_WIDTH           240
-#define ST7793_HEIGHT          400
-#define ST7793_PIXELS          (ST7793_WIDTH * ST7793_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = ST7793_HEIGHT,
-    .height = ST7793_WIDTH,
+    .width = 400,
+    .height = 240,
     .drawPixel = st7793DrawPixel,
     .drawRectangle = st7793DrawRectangle,
     .drawImage = st7793DrawImage,
 };
 
-static inline void st7793SelectReg(uint16_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void st7793SelectReg(uint16_t reg)
 {
     CLR(DISP_RS);
@@ -23,17 +20,34 @@ static inline void st7793SelectReg(uint16_t reg)
     SET(DISP_RS);
 }
 
-static void st7793WriteReg(uint16_t reg, uint16_t data)
+__attribute__((always_inline))
+static inline void st7793WriteReg(uint16_t reg, uint16_t data)
 {
     st7793SelectReg(reg);
     dispdrvSendData16(data);
 }
 
+__attribute__((always_inline))
+static inline void st7793SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = drv.height - y - 1;   // TODO: rework it
+
+    st7793WriteReg(0x0210, (uint16_t)(y1 - h + 1));
+    st7793WriteReg(0x0211, (uint16_t)y1);
+    st7793WriteReg(0x0212, (uint16_t)x);
+    st7793WriteReg(0x0213, (uint16_t)x1);
+
+    // Set cursor
+    st7793WriteReg(0x00200, (uint16_t)y1);
+    st7793WriteReg(0x00201, (uint16_t)x);
+
+    // Select RAM mode
+    st7793SelectReg(0x0202);
+}
+
 static inline void st7793InitSeq(void)
 {
-    // Wait for reset
-    LL_mDelay(200);
-
     CLR(DISP_CS);
 
     //-------------Display Control Setting-------------------------------------//
@@ -95,23 +109,6 @@ static inline void st7793InitSeq(void)
     SET(DISP_CS);
 }
 
-static inline void st7793SetWindow(uint16_t x, uint16_t y, uint16_t w,
-                                   uint16_t h) __attribute__((always_inline));
-static inline void st7793SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    st7793WriteReg(0x0210, ST7793_WIDTH - y - h);
-    st7793WriteReg(0x0211, ST7793_WIDTH - y - 1);
-    st7793WriteReg(0x0212, x);
-    st7793WriteReg(0x0213, x + w - 1);
-
-    // Set cursor
-    st7793WriteReg(0x00200, ST7793_WIDTH - y - 1);
-    st7793WriteReg(0x00201, x);
-
-    // Select RAM mode
-    st7793SelectReg(0x0202);
-}
-
 void st7793Init(DispDriver **driver)
 {
     *driver = &drv;
@@ -153,7 +150,7 @@ void st7793DrawPixel(int16_t x, int16_t y, uint16_t color)
     SET(DISP_CS);
 }
 
-void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void st7793DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
@@ -165,8 +162,8 @@ void st7793DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
 
 void st7793DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 

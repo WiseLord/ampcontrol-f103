@@ -2,20 +2,17 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define S6D0139_WIDTH           240
-#define S6D0139_HEIGHT          320
-#define S6D0139_PIXELS          (S6D0139_WIDTH * S6D0139_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = S6D0139_HEIGHT,
-    .height = S6D0139_WIDTH,
+    .width = 320,
+    .height = 240,
     .drawPixel = s6d0139DrawPixel,
     .drawRectangle = s6d0139DrawRectangle,
     .drawImage = s6d0139DrawImage,
 };
 
-static inline void s6d0139SelectReg(uint16_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void s6d0139SelectReg(uint16_t reg)
 {
     CLR(DISP_RS);
@@ -23,17 +20,31 @@ static inline void s6d0139SelectReg(uint16_t reg)
     SET(DISP_RS);
 }
 
-static void s6d0139WriteReg(uint16_t reg, uint16_t data)
+__attribute__((always_inline))
+static inline void s6d0139WriteReg(uint16_t reg, uint16_t data)
 {
     s6d0139SelectReg(reg);
     dispdrvSendData16(data);
 }
 
+__attribute__((always_inline))
+static inline void s6d0139SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = drv.height - y - 1;   // TODO: rework it
+
+    s6d0139WriteReg(0x0046, (uint16_t)((y1 << 8) + (y1 - h + 1)));
+    s6d0139WriteReg(0x0048, (uint16_t)x);
+    s6d0139WriteReg(0x0047, (uint16_t)x1);
+
+    s6d0139WriteReg(0x0020, (uint16_t)y1);
+    s6d0139WriteReg(0x0021, (uint16_t)x);
+
+    s6d0139SelectReg(0x0022);
+}
+
 static inline void s6d0139InitSeq(void)
 {
-    // Wait for reset
-    LL_mDelay(50);
-
     CLR(DISP_CS);
 
     s6d0139WriteReg(0x0000, 0x0001);    // Start Oscillation
@@ -85,19 +96,6 @@ static inline void s6d0139InitSeq(void)
     s6d0139WriteReg(0x0007, 0x0017);    // Display control1
 
     SET(DISP_CS);
-}
-
-static inline void s6d0139SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) __attribute__((always_inline));
-static inline void s6d0139SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    s6d0139WriteReg(0x0046, ((S6D0139_WIDTH - y - 1) << 8) + (S6D0139_WIDTH - y - h));
-    s6d0139WriteReg(0x0048, x);
-    s6d0139WriteReg(0x0047, x + w - 1);
-
-    s6d0139WriteReg(0x0020, S6D0139_WIDTH - y - 1);
-    s6d0139WriteReg(0x0021, x);
-
-    s6d0139SelectReg(0x0022);
 }
 
 void s6d0139Init(DispDriver **driver)
@@ -159,7 +157,7 @@ void s6d0139DrawPixel(int16_t x, int16_t y, uint16_t color)
     SET(DISP_CS);
 }
 
-void s6d0139DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void s6d0139DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
@@ -171,8 +169,8 @@ void s6d0139DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
 
 void s6d0139DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 

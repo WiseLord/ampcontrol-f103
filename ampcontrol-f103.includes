@@ -5,3 +5,4 @@ drivers/STM32F1xx_HAL_Driver/Inc
 audio
 tuner
 canvas
+display/icons

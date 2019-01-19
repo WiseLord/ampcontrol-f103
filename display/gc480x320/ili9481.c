@@ -2,6 +2,7 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
+#include "../dispdrv.h"
 
 #define ILI9481_WIDTH           320
 #define ILI9481_HEIGHT          480
@@ -15,7 +16,7 @@ static DispDriver drv = {
     .drawImage = ili9481DrawImage,
 };
 
-static inline void ili9481SelectReg(uint8_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void ili9481SelectReg(uint8_t reg)
 {
     CLR(DISP_RS);
@@ -23,11 +24,29 @@ static inline void ili9481SelectReg(uint8_t reg)
     SET(DISP_RS);
 }
 
+__attribute__((always_inline))
+static inline void ili9481SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
+
+    ili9481SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
+
+    ili9481SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
+
+    ili9481SelectReg(0x2C);
+}
+
 static inline void ili9481InitSeq(void)
 {
-    // Wait for reset
-    LL_mDelay(50);
-
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -108,25 +127,6 @@ static inline void ili9481InitSeq(void)
     SET(DISP_CS);
 }
 
-static inline void ili9481SetWindow(uint16_t x, uint16_t y, uint16_t w,
-                                    uint16_t h) __attribute__((always_inline));
-static inline void ili9481SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    ili9481SelectReg(0x2A);
-    dispdrvSendData8(y >> 8);
-    dispdrvSendData8(y & 0xFF);
-    dispdrvSendData8((y + h - 1) >> 8);
-    dispdrvSendData8((y + h - 1) & 0xFF);
-
-    ili9481SelectReg(0x2B);
-    dispdrvSendData8(x >> 8);
-    dispdrvSendData8(x & 0xFF);
-    dispdrvSendData8((x + w - 1) >> 8);
-    dispdrvSendData8((x + w - 1) & 0xFF);
-
-    ili9481SelectReg(0x2C);
-}
-
 void ili9481Init(DispDriver **driver)
 {
     *driver = &drv;
@@ -180,7 +180,7 @@ void ili9481DrawPixel(int16_t x, int16_t y, uint16_t color)
     SET(DISP_CS);
 }
 
-void ili9481DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void ili9481DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
@@ -192,8 +192,8 @@ void ili9481DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
 
 void ili9481DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 

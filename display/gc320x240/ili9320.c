@@ -2,14 +2,11 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define ILI9320_WIDTH           240
-#define ILI9320_HEIGHT          320
-#define ILI9320_PIXELS          (ILI9320_WIDTH * ILI9320_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = ILI9320_HEIGHT,
-    .height = ILI9320_WIDTH,
+    .width = 320,
+    .height = 240,
     .drawPixel = ili9320DrawPixel,
     .drawRectangle = ili9320DrawRectangle,
     .drawImage = ili9320DrawImage,
@@ -17,7 +14,7 @@ static DispDriver drv = {
     .shift = ili9320Shift,
 };
 
-static inline void ili9320SelectReg(uint16_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void ili9320SelectReg(uint16_t reg)
 {
     CLR(DISP_RS);
@@ -25,17 +22,33 @@ static inline void ili9320SelectReg(uint16_t reg)
     SET(DISP_RS);
 }
 
-static void ili9320WriteReg(uint16_t reg, uint16_t data)
+__attribute__((always_inline))
+static inline void ili9320WriteReg(uint16_t reg, uint16_t value)
 {
     ili9320SelectReg(reg);
-    dispdrvSendData16(data);
+    dispdrvSendData16(value);
+}
+
+static inline void ili9320SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
+
+    ili9320WriteReg(0x0050, (uint16_t)y);
+    ili9320WriteReg(0x0051, (uint16_t)y1);
+    ili9320WriteReg(0x0052, (uint16_t)x);
+    ili9320WriteReg(0x0053, (uint16_t)x1);
+
+    // Set cursor
+    ili9320WriteReg(0x0020, (uint16_t)y);
+    ili9320WriteReg(0x0021, (uint16_t)x);
+
+    // Select RAM mode
+    ili9320SelectReg(0x0022);
 }
 
 static inline void ili9320InitSeq(void)
 {
-    // Wait for reset
-    LL_mDelay(50);
-
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -106,25 +119,6 @@ static inline void ili9320InitSeq(void)
     SET(DISP_CS);
 }
 
-
-
-static inline void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w,
-                                    uint16_t h) __attribute__((always_inline));
-static inline void ili9320SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    ili9320WriteReg(0x0050, y);
-    ili9320WriteReg(0x0051, y + h - 1);
-    ili9320WriteReg(0x0052, x);
-    ili9320WriteReg(0x0053, x + w - 1);
-
-    // Set cursor
-    ili9320WriteReg(0x0020, y);
-    ili9320WriteReg(0x0021, x);
-
-    // Select RAM mode
-    ili9320SelectReg(0x0022);
-}
-
 void ili9320Init(DispDriver **driver)
 {
     *driver = &drv;
@@ -146,12 +140,13 @@ void ili9320Rotate(uint8_t rotate)
     SET(DISP_CS);
 }
 
-void ili9320Shift(uint16_t value)
+void ili9320Shift(int16_t value)
 {
     CLR(DISP_CS);
 
-    ili9320WriteReg(0x006A, value);
+    ili9320WriteReg(0x006A, (uint16_t)value);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -168,6 +163,7 @@ void ili9320Sleep(void)
     LL_mDelay(200);
     ili9320WriteReg(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -191,6 +187,7 @@ void ili9320Wakeup(void)
 
     ili9320WriteReg(0x0007, 0x0173);    // 262K color and display ON
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -201,28 +198,31 @@ void ili9320DrawPixel(int16_t x, int16_t y, uint16_t color)
     ili9320SetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
-void ili9320DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void ili9320DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
     ili9320SetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
 void ili9320DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 
     ili9320SetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }

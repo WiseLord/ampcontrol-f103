@@ -2,14 +2,11 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define R61581_WIDTH            320
-#define R61581_HEIGHT           480
-#define R61581_PIXELS           (R61581_WIDTH * R61581_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = R61581_HEIGHT,
-    .height = R61581_WIDTH,
+    .width = 480,
+    .height = 320,
     .drawPixel = r61581DrawPixel,
     .drawRectangle = r61581DrawRectangle,
     .drawImage = r61581DrawImage,
@@ -17,19 +14,40 @@ static DispDriver drv = {
     .shift = r615811Shift,
 };
 
-static inline void r61581SelectReg(uint8_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void r61581SelectReg(uint8_t reg)
 {
+    DISP_WAIT_BUSY();
     CLR(DISP_RS);
     dispdrvSendData8(reg);
+    DISP_WAIT_BUSY();
     SET(DISP_RS);
 }
 
+__attribute__((always_inline))
+static inline void r61581SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
+
+    r61581SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
+
+    r61581SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
+
+    r61581SelectReg(0x2C);
+}
+
+__attribute__((always_inline))
 static inline void r61581InitSeq(void)
 {
-    // Wait for reset
-    LL_mDelay(50);
-
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -116,26 +134,8 @@ static inline void r61581InitSeq(void)
     r61581SelectReg(0x29);  // Set display on
     LL_mDelay(30);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-static inline void r61581SetWindow(uint16_t x, uint16_t y, uint16_t w,
-                                    uint16_t h) __attribute__((always_inline));
-static inline void r61581SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    r61581SelectReg(0x2A);
-    dispdrvSendData8(y >> 8);
-    dispdrvSendData8(y & 0xFF);
-    dispdrvSendData8((y + h - 1) >> 8);
-    dispdrvSendData8((y + h - 1) & 0xFF);
-
-    r61581SelectReg(0x2B);
-    dispdrvSendData8(x >> 8);
-    dispdrvSendData8(x & 0xFF);
-    dispdrvSendData8((x + w - 1) >> 8);
-    dispdrvSendData8((x + w - 1) & 0xFF);
-
-    r61581SelectReg(0x2C);
 }
 
 void r61581Init(DispDriver **driver)
@@ -156,26 +156,27 @@ void r61581Rotate(uint8_t rotate)
         dispdrvSendData8(0x16); // REV, BGR, SS
     }
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
-
 }
 
-void r615811Shift(uint16_t value)
+void r615811Shift(int16_t value)
 {
     CLR(DISP_CS);
 
     r61581SelectReg(0x33);
     dispdrvSendData8(0);
     dispdrvSendData8(0);
-    dispdrvSendData8((R61581_HEIGHT & 0xFF00) >> 8);
-    dispdrvSendData8(R61581_HEIGHT & 0x00FF);
+    dispdrvSendData8((drv.width >> 8) & 0xFF);
+    dispdrvSendData8(drv.width & 0xFF);
     dispdrvSendData8(0);
     dispdrvSendData8(0);
 
     r61581SelectReg(0x37);
-    dispdrvSendData8((value & 0xFF00) >> 8);
-    dispdrvSendData8(value & 0x00FF);
+    dispdrvSendData8((value >> 8) & 0xFF);
+    dispdrvSendData8(value & 0xFF);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -211,7 +212,7 @@ void r61581DrawPixel(int16_t x, int16_t y, uint16_t color)
     SET(DISP_CS);
 }
 
-void r61581DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void r61581DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
@@ -223,8 +224,8 @@ void r61581DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_
 
 void r61581DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 

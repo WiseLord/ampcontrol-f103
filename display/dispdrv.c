@@ -6,14 +6,29 @@
 #include <stm32f1xx_ll_utils.h>
 #include "../pins.h"
 
+#include "gc160x128/ili9163.h"
+#include "gc160x128/st7735.h"
+#include "gc176x132/ls020.h"
+#include "gc176x132/lph9157.h"
+#include "gc176x132/ssd1286a.h"
+#include "gc220x176/hx8340.h"
+#include "gc220x176/ili9225.h"
+#include "gc320x240/ili9320.h"
+#include "gc320x240/ili9341.h"
+#include "gc320x240/s6d0139.h"
+#include "gc320x240/spfd5408.h"
+#include "gc320x240/mc2pa8201.h"
+#include "gc400x240/ili9327.h"
+#include "gc400x240/st7793.h"
+#include "gc480x320/ili9481.h"
+#include "gc480x320/r61581.h"
+
 #ifdef _DISP_8BIT
 static volatile bool bus_requested = false;
 #endif
 static int8_t brightness;
 
 static DispDriver *drv;
-
-#define TX_BUSY()           (LL_SPI_IsActiveFlag_BSY(SPI2) || !LL_SPI_IsActiveFlag_TXE(SPI2))
 
 #define BUS_MODE_OUT        0x33333333  // CNF=0b00, MODE=0b11 => Output push-pull 50 MHz
 #define BUS_MODE_IN         0x88888888  // CNF=0b10, MODE=0b00 - Input pullup
@@ -40,7 +55,7 @@ static void dispdrvInitSPI()
 }
 #endif
 
-static inline void dispdrvSendByte(uint8_t data) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void dispdrvSendByte(uint8_t data)
 {
 #ifdef _DISP_SPI
@@ -60,7 +75,7 @@ static inline void dispdrvSendByte(uint8_t data)
 
 #ifdef _DISP_8BIT
 
-static inline void dispdrvBusIn(void) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void dispdrvBusIn(void)
 {
 #ifdef _DISP_HI_BYTE
@@ -73,7 +88,7 @@ static inline void dispdrvBusIn(void)
 #endif
 }
 
-static inline void dispdrvBusOut(void) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void dispdrvBusOut(void)
 {
 #ifdef _DISP_HI_BYTE
@@ -84,7 +99,7 @@ static inline void dispdrvBusOut(void)
 #endif
 }
 
-static inline uint32_t dispDrvGetBusMode(void) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline uint32_t dispDrvGetBusMode(void)
 {
 #ifdef _DISP_HI_BYTE
@@ -95,7 +110,7 @@ static inline uint32_t dispDrvGetBusMode(void)
 #endif
 }
 
-static inline void dispdrvReadInput(void) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void dispdrvReadInput(void)
 {
 #ifdef _DISP_HI_BYTE
@@ -108,7 +123,7 @@ static inline void dispdrvReadInput(void)
 
 #endif // _DISP_8BIT
 
-static inline void dispdrvSendWord(uint16_t data) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void dispdrvSendWord(uint16_t data)
 {
 #ifdef _DISP_16BIT
@@ -155,16 +170,10 @@ void dispdrvInit(DispDriver **driver)
     CLR(DISP_RST);
     LL_mDelay(50);
     SET(DISP_RST);
-    LL_mDelay(50);
 #endif
+    LL_mDelay(50);
 
-#if defined (_KS0108A) || defined(_KS0108B)
-    ks0108Init(driver);
-#elif defined (_ST7920)
-    st7920Init(driver);
-#elif defined (_SSD1306)
-    ssd1306Init(driver);
-#elif defined (_ILI9163)
+#if defined (_ILI9163)
     ili9163Init(driver);
 #elif defined (_ST7735)
     st7735Init(driver);
@@ -238,18 +247,10 @@ void dispdrvBusIRQ(void)
         dispdrvReadInput();                 // Read bus immediately
     }
 #endif
-#if defined(_DISP_SPI) || defined(_DISP_I2C)
+#if defined(_DISP_SPI)
     drv->bus = INPUT_Port->IDR & 0x00FF;    // Read 8-bit bus
 #endif
 }
-
-void dispdrvWaitOperation(void)
-{
-#ifdef _DISP_SPI
-    while (TX_BUSY());
-#endif
-}
-
 
 void dispdrvSendData8(uint8_t data)
 {
@@ -271,17 +272,17 @@ void dispdrvSendData16(uint16_t data)
     dispdrvSendWord(data);
 }
 
-void dispdrvSendFill(uint32_t size, uint16_t color)
+void dispdrvSendFill(int32_t size, uint16_t color)
 {
-    for (uint32_t i = 0; i < size; i++) {
+    for (int32_t i = 0; i < size; i++) {
         dispdrvSendWord(color);
     }
 }
 
 void dispdrvSendImage(tImage *img, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     for (uint16_t i = 0; i < w; i++) {
         for (uint16_t j = 0; j < (h + 7) / 8; j++) {

@@ -6,72 +6,15 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "fonts/fonts.h"
+#include "dispdefs.h"
+#include <stm32f1xx_ll_spi.h>
 
-typedef struct {
-    void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
-    void (*drawRectangle)(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
-    void (*drawImage)(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
-    void (*updateFB)(void);
-    void (*rotate)(uint8_t rotate);
-	void (*shift)(uint16_t value);
+#define DISPLAY_IRQ         dispdrvBusIRQ
 
-    uint16_t width;
-    uint16_t height;
-
-    uint8_t bus;
-} DispDriver;
-
-#define LCD_ROTATE_0                    0x00
-#define LCD_ROTATE_180                  0x02
-
-#define LCD_BR_MIN                      0
-#define LCD_BR_MAX                      32
-
-#if defined (_ILI9163)
-#include "gc160x128/ili9163.h"
-#elif defined (_ST7735)
-#include "gc160x128/st7735.h"
-#elif defined (_LS020)
-#include "gc176x132/ls020.h"
-#elif defined (_LPH9157)
-#include "gc176x132/lph9157.h"
-#elif defined (_SSD1286A)
-#include "gc176x132/ssd1286a.h"
-#elif defined (_HX8340)
-#include "gc220x176/hx8340.h"
-#elif defined (_ILI9225)
-#include "gc220x176/ili9225.h"
-#elif defined (_ILI9320)
-#include "gc320x240/ili9320.h"
-#elif defined (_ILI9341)
-#include "gc320x240/ili9341.h"
-#elif defined (_S6D0139)
-#include "gc320x240/s6d0139.h"
-#elif defined (_SPFD5408)
-#include "gc320x240/spfd5408.h"
-#elif defined (_MC2PA8201)
-#include "gc320x240/mc2pa8201.h"
-#elif defined (_ILI9327)
-#include "gc400x240/ili9327.h"
-#elif defined (_ST7793)
-#include "gc400x240/st7793.h"
-#elif defined (_ILI9481)
-#include "gc480x320/ili9481.h"
-#elif defined (_R61581)
-#include "gc480x320/r61581.h"
+#ifdef _DISP_SPI
+#define DISP_WAIT_BUSY()    while(LL_SPI_IsActiveFlag_BSY(SPI2) || !LL_SPI_IsActiveFlag_TXE(SPI2))
 #else
-#ifndef EMUL_DISP
-#error "Unsupported display driver"
-#endif
-#endif
-
-#if defined(_KS0108A) || defined(_KS0108B)
-#define DISPLAY_IRQ ks0108IRQ
-#elif defined(_ST7920)
-#define DISPLAY_IRQ st7920IRQ
-#else
-#define DISPLAY_IRQ dispdrvBusIRQ
+#define DISP_WAIT_BUSY();
 #endif
 
 void dispdrvInit(DispDriver **glcd);
@@ -81,10 +24,9 @@ uint8_t dispdrvGetBus(void);
 
 void dispdrvBusIRQ(void);
 
-void dispdrvWaitOperation(void);
 void dispdrvSendData8(uint8_t data);
 void dispdrvSendData16(uint16_t data);
-void dispdrvSendFill(uint32_t size, uint16_t color);
+void dispdrvSendFill(int32_t size, uint16_t color);
 void dispdrvSendImage(tImage *img, uint16_t color, uint16_t bgColor);
 
 #ifdef __cplusplus

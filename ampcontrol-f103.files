@@ -16,6 +16,7 @@ canvas/canvas.h
 canvas/layout.c
 canvas/layout.h
 cmd.h
+display/dispdefs.h
 display/dispdrv.c
 display/dispdrv.h
 display/fonts/fonts.h

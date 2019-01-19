@@ -20,20 +20,20 @@
 
 static uint16_t currPage;
 
-static inline void eeUnlock(void) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void eeUnlock(void)
 {
     WRITE_REG(FLASH->KEYR, FLASH_KEY1);
     WRITE_REG(FLASH->KEYR, FLASH_KEY2);
 }
 
-static inline void eeLock(void) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void eeLock(void)
 {
     SET_BIT(FLASH->CR, FLASH_CR_LOCK);
 }
 
-static inline void eeWaitBusy(void) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void eeWaitBusy(void)
 {
     // TODO: add some timeout

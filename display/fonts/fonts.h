@@ -1,6 +1,10 @@
 #ifndef FONTS_H
 #define FONTS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define LETTER_SPACE_CHAR   0x00E28088  // U+2008
@@ -8,8 +12,8 @@
 
 typedef struct {
     const uint8_t *data;
-    uint16_t width;
-    uint16_t height;
+    int16_t width;
+    int16_t height;
     uint16_t size;
     uint8_t rle;
 } tImage;
@@ -74,5 +78,9 @@ extern const tFont fontterminusdig64;
 extern const tFont fontterminusdig80;
 extern const tFont fontterminusdig96;
 extern const tFont fontterminusdig120;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // FONTS_H

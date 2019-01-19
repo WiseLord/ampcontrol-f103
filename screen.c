@@ -231,8 +231,6 @@ void screenShow(void)
     default:
         break;
     }
-
-    glcdUpdate();
 }
 
 void screenShowTime(bool clear)

@@ -2,66 +2,62 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define LPH9157_WIDTH           132
-#define LPH9157_HEIGHT          176
-#define LPH9157_PIXELS          (LPH9157_WIDTH * LPH9157_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = LPH9157_HEIGHT,
-    .height = LPH9157_WIDTH,
+    .width = 176,
+    .height = 132,
     .drawPixel = lph9157DrawPixel,
     .drawRectangle = lph9157DrawRectangle,
     .drawImage = lph9157DrawImage,
 };
 
-static inline void lph9157SendCmd(uint8_t cmd) __attribute__((always_inline));
-static inline void lph9157SendCmd(uint8_t cmd)
+__attribute__((always_inline))
+static inline void lph9157SelectReg(uint8_t cmd)
 {
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     CLR(DISP_RS);
-
     dispdrvSendData8(cmd);
-
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_RS);
+}
+
+void lph9157SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
+
+    lph9157SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
+
+    lph9157SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
+
+    lph9157SelectReg(0x2C);
 }
 
 static void lph9157InitSeq(void)
 {
-    LL_mDelay(50);
-
     CLR(DISP_CS);
 
-    lph9157SendCmd(0x01);
-    lph9157SendCmd(0x11);
+    lph9157SelectReg(0x01);
+    lph9157SelectReg(0x11);
     LL_mDelay(20);
-    lph9157SendCmd(0x3a);
+    lph9157SelectReg(0x3a);
     dispdrvSendData8(0x05);
     LL_mDelay(20);
-    lph9157SendCmd(0x36);
+    lph9157SelectReg(0x36);
     dispdrvSendData8(0x40);
-    lph9157SendCmd(0x29);
+    lph9157SelectReg(0x29);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void lph9157SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    lph9157SendCmd(0x2A);
-    dispdrvSendData8(y >> 8);
-    dispdrvSendData8(y & 0xFF);
-    dispdrvSendData8((y + h - 1) >> 8);
-    dispdrvSendData8((y + h - 1) & 0xFF);
-
-    lph9157SendCmd(0x2B);
-    dispdrvSendData8(x >> 8);
-    dispdrvSendData8(x & 0xFF);
-    dispdrvSendData8((x + w - 1) >> 8);
-    dispdrvSendData8((x + w - 1) & 0xFF);
-
-    lph9157SendCmd(0x2C);
 }
 
 void lph9157Init(DispDriver **driver)
@@ -74,10 +70,10 @@ void lph9157Sleep(void)
 {
     CLR(DISP_CS);
 
-    lph9157SendCmd(0x10);
-    lph9157SendCmd(0x28);
+    lph9157SelectReg(0x10);
+    lph9157SelectReg(0x28);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -85,10 +81,10 @@ void lph9157Wakeup(void)
 {
     CLR(DISP_CS);
 
-    lph9157SendCmd(0x11);
-    lph9157SendCmd(0x29);
+    lph9157SelectReg(0x11);
+    lph9157SelectReg(0x29);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -99,31 +95,31 @@ void lph9157DrawPixel(int16_t x, int16_t y, uint16_t color)
     lph9157SetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
-void lph9157DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void lph9157DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
     lph9157SetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
 void lph9157DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 
     lph9157SetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
-    dispdrvWaitOperation();
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }

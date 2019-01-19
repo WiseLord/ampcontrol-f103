@@ -2,20 +2,17 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define MC2PA8201_WIDTH           240
-#define MC2PA8201_HEIGHT          320
-#define MC2PA8201_PIXELS          (MC2PA8201_WIDTH * MC2PA8201_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = MC2PA8201_HEIGHT,
-    .height = MC2PA8201_WIDTH,
+    .width = 320,
+    .height = 240,
     .drawPixel = mc2pa8201DrawPixel,
     .drawRectangle = mc2pa8201DrawRectangle,
     .drawImage = mc2pa8201DrawImage,
 };
 
-static inline void mc2pa8201SelectReg(uint8_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void mc2pa8201SelectReg(uint8_t reg)
 {
     CLR(DISP_RS);
@@ -23,11 +20,29 @@ static inline void mc2pa8201SelectReg(uint8_t reg)
     SET(DISP_RS);
 }
 
+__attribute__((always_inline))
+static inline void mc2pa8201SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
+
+    mc2pa8201SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
+
+    mc2pa8201SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
+
+    mc2pa8201SelectReg(0x2C);
+}
+
 static inline void mc2pa8201InitSeq(void)
 {
-    // Wait for reset
-    LL_mDelay(50);
-
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -53,47 +68,28 @@ static inline void mc2pa8201InitSeq(void)
     mc2pa8201SelectReg(0x2d);
 
     for (uint8_t r1 = 0; r1 < 32; r1++)
-        dispdrvSendData8(r1 << 3);
-    for (uint8_t rs2 = 0; rs2 < 32; rs2++)
-        dispdrvSendData8(rs2);
+        dispdrvSendData8((uint8_t)(r1 << 3));
+    for (uint8_t r2 = 0; r2 < 32; r2++)
+        dispdrvSendData8((r2));
     for (uint8_t g1 = 0; g1 < 64; g1++)
-        dispdrvSendData8(g1 << 2);
+        dispdrvSendData8((uint8_t)(g1 << 2));
     for (uint8_t b1 = 0; b1 < 32; b1++)
-        dispdrvSendData8(b1 << 3);
+        dispdrvSendData8((uint8_t)(b1 << 3));
     for (uint8_t b2 = 0; b2 < 32; b2++)
         dispdrvSendData8(0);
-    /*
-    mc2pa8201SelectReg(0x51);
-    dispdrvSendData8(0xff);
 
-    mc2pa8201SelectReg(0x53);
-    dispdrvSendData8(0x24);
-    */
+//    mc2pa8201SelectReg(0x51);
+//    dispdrvSendData8(0xff);
+
+//    mc2pa8201SelectReg(0x53);
+//    dispdrvSendData8(0x24);
+
     mc2pa8201SelectReg(0x36);
     dispdrvSendData8(0x80);
 
     mc2pa8201SelectReg(0x29);
 
     SET(DISP_CS);
-}
-
-static inline void mc2pa8201SetWindow(uint16_t x, uint16_t y, uint16_t w,
-                                      uint16_t h) __attribute__((always_inline));
-static inline void mc2pa8201SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    mc2pa8201SelectReg(0x2A);
-    dispdrvSendData8(y >> 8);
-    dispdrvSendData8(y & 0xFF);
-    dispdrvSendData8((y + h - 1) >> 8);
-    dispdrvSendData8((y + h - 1) & 0xFF);
-
-    mc2pa8201SelectReg(0x2B);
-    dispdrvSendData8(x >> 8);
-    dispdrvSendData8(x & 0xFF);
-    dispdrvSendData8((x + w - 1) >> 8);
-    dispdrvSendData8((x + w - 1) & 0xFF);
-
-    mc2pa8201SelectReg(0x2C);
 }
 
 void mc2pa8201Init(DispDriver **driver)
@@ -134,7 +130,7 @@ void mc2pa8201DrawPixel(int16_t x, int16_t y, uint16_t color)
     SET(DISP_CS);
 }
 
-void mc2pa8201DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void mc2pa8201DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
@@ -146,8 +142,8 @@ void mc2pa8201DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint
 
 void mc2pa8201DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 

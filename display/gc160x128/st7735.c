@@ -2,32 +2,49 @@
 
 #include <stm32f1xx_ll_utils.h>
 #include "../../pins.h"
-
-#define ST7735_WIDTH           128
-#define ST7735_HEIGHT          160
-#define ST7735_PIXELS          (ST7735_WIDTH * ST7735_HEIGHT)
+#include "../dispdrv.h"
 
 static DispDriver drv = {
-    .width = ST7735_HEIGHT,
-    .height = ST7735_WIDTH,
+    .width = 160,
+    .height = 128,
     .drawPixel = st7735DrawPixel,
     .drawRectangle = st7735DrawRectangle,
     .drawImage = st7735DrawImage,
 };
 
-static inline void st7735SelectReg(uint8_t reg) __attribute__((always_inline));
+__attribute__((always_inline))
 static inline void st7735SelectReg(uint8_t reg)
 {
+    DISP_WAIT_BUSY();
     CLR(DISP_RS);
     dispdrvSendData8(reg);
+    DISP_WAIT_BUSY();
     SET(DISP_RS);
+}
+
+__attribute__((always_inline))
+static inline void st7735SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
+
+    st7735SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
+
+    st7735SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
+
+    st7735SelectReg(0x2C);
 }
 
 static inline void st7735InitSeq(void)
 {
-    // Wait for reset
-    LL_mDelay(50);
-
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -115,26 +132,8 @@ static inline void st7735InitSeq(void)
 
     st7735SelectReg(0x29); // Display On
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-static inline void st7735SetWindow(uint16_t x, uint16_t y, uint16_t w,
-                                   uint16_t h) __attribute__((always_inline));
-static inline void st7735SetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-    st7735SelectReg(0x2A);
-    dispdrvSendData8(y >> 8);
-    dispdrvSendData8(y & 0xFF);
-    dispdrvSendData8((y + h - 1) >> 8);
-    dispdrvSendData8((y + h - 1) & 0xFF);
-
-    st7735SelectReg(0x2B);
-    dispdrvSendData8(x >> 8);
-    dispdrvSendData8(x & 0xFF);
-    dispdrvSendData8((x + w - 1) >> 8);
-    dispdrvSendData8((x + w - 1) & 0xFF);
-
-    st7735SelectReg(0x2C);
 }
 
 void st7735Init(DispDriver **driver)
@@ -151,6 +150,7 @@ void st7735Sleep(void)
     LL_mDelay(100);
     st7735SelectReg(0x10);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -162,6 +162,7 @@ void st7735Wakeup(void)
     LL_mDelay(100);
     st7735SelectReg(0x29);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -172,28 +173,31 @@ void st7735DrawPixel(int16_t x, int16_t y, uint16_t color)
     st7735SetWindow(x, y, 1, 1);
     dispdrvSendData16(color);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
-void st7735DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void st7735DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     CLR(DISP_CS);
 
     st7735SetWindow(x, y, w, h);
     dispdrvSendFill(w * h, color);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
 void st7735DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
-    uint16_t w = img->width;
-    uint16_t h = img->height;
+    int16_t w = img->width;
+    int16_t h = img->height;
 
     CLR(DISP_CS);
 
     st7735SetWindow(x, y, w, h);
     dispdrvSendImage(img, color, bgColor);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
