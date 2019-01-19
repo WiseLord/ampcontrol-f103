@@ -28,13 +28,7 @@ typedef struct {
 #define LCD_BR_MIN                      0
 #define LCD_BR_MAX                      32
 
-#if defined (_KS0108A) || defined(_KS0108B)
-#include "gm128x64/ks0108.h"
-#elif defined (_ST7920)
-#include "gm128x64/st7920.h"
-#elif defined (_SSD1306)
-#include "gm128x64/ssd1306.h"
-#elif defined (_ILI9163)
+#if defined (_ILI9163)
 #include "gc160x128/ili9163.h"
 #elif defined (_ST7735)
 #include "gc160x128/st7735.h"

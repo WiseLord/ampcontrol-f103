@@ -58,21 +58,12 @@ display/icons/icons-amp-32.c
 display/icons/icons-amp-48.c
 display/icons/icons-amp-64.c
 
-canvas/lt128x64.c
 canvas/lt160x128.c
 canvas/lt176x132.c
 canvas/lt220x176.c
 canvas/lt320x240.c
 canvas/lt400x240.c
 canvas/lt480x320.c
-
-display/gm128x64/ks0108.c
-display/gm128x64/ks0108.h
-display/gm128x64/ssd1306.c
-display/gm128x64/ssd1306.h
-display/gm128x64/ssd1306_regs.h
-display/gm128x64/st7920.c
-display/gm128x64/st7920.h
 
 display/gc160x128/ili9163.c
 display/gc160x128/ili9163.h

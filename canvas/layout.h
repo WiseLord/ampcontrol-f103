@@ -57,7 +57,6 @@ const Layout *lt220x176Get(void);
 const Layout *lt320x240Get(void);
 const Layout *lt400x240Get(void);
 const Layout *lt480x320Get(void);
-const Layout *lt128x64Get(void);
 #ifdef EMUL_DISP
 const Layout *ltEmulGet(void);
 #endif

@@ -299,9 +299,7 @@ static void canvasDrawWaterfall(Spectrum *sp)
 
 void layoutInit()
 {
-#if defined (_KS0108A) || defined(_KS0108B) || defined (_ST7920) || defined (_SSD1306)
-    lt = lt128x64Get();
-#elif defined (_ILI9163) || defined (_ST7735)
+#if defined (_ILI9163) || defined (_ST7735)
     lt = lt160x128Get();
 #elif defined (_LS020) || defined (_LPH9157) || defined (_SSD1286A)
     lt = lt176x132Get();

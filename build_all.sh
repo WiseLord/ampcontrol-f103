@@ -17,12 +17,6 @@ compile_display()
 
 make clean
 
-# Monochrome 128x64 displays
-compile_display "KS0108A"   "8BIT"
-compile_display "KS0108B"   "8BIT"
-compile_display "ST7920"    "8BIT"
-compile_display "SSD1306"   "I2C"
-
 # 160x128 color displays
 compile_display "ILI9163"   "8BIT"
 compile_display "ST7735"    "8BIT"
