@@ -23,7 +23,7 @@ const Layout *ltEmulGet(void)
 #elif EMUL_DISP_WIDTH == 176 && EMUL_DISP_HEIGHT == 132
     lt = lt176x132Get();
 #elif EMUL_DISP_WIDTH == 220 && EMUL_DISP_HEIGHT == 176
-    lt = lt176x132Get();
+    lt = lt220x176Get();
 #elif EMUL_DISP_WIDTH == 320 && EMUL_DISP_HEIGHT == 240
     lt = lt320x240Get();
 #elif EMUL_DISP_WIDTH == 400 && EMUL_DISP_HEIGHT == 240
@@ -50,6 +50,8 @@ int16_t eeReadI(EE_Param param, int16_t def)
     switch (param) {
     case EE_AUDIO_IN0:
         return 1;
+    case EE_AUDIO_PARAM_VOLUME:
+        return -30;
     default:
         return def;
     }

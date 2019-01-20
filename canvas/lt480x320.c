@@ -13,7 +13,7 @@ static const Layout lt480x320 = {
 
     .tune.bar.sc = 76,
     .tune.bar.sw = 3,
-    .tune.bar.barY = 96,
+    .tune.bar.barY = 80,
     .tune.bar.barW = 380,
     .tune.bar.half = 15,
     .tune.bar.middle = 2,
@@ -23,19 +23,20 @@ static const Layout lt480x320 = {
     .menu.itemCnt = 10,
 
     .tune.valFont = &fontterminusmod24x3,
-    .tune.valY = 76,
+    .tune.valY = 70,
 
     .sp.step = 5,
     .sp.oft = 1,
     .sp.width = 3,
     .sp.wfH = 3,
 
-    .tuner.bar.sc = 76,
+    .tuner.bar.sc = 96,
     .tuner.bar.sw = 3,
-    .tuner.bar.barY = 96,
-    .tuner.bar.barW = 380,
+    .tuner.bar.barY = 80,
+    .tuner.bar.barW = 480,
     .tuner.bar.half = 15,
     .tuner.bar.middle = 2,
+    .tuner.iconSpace = 4,
 
     .iconSet = &iconsamp64,
     .lblFont = &fontterminusmod24x3,

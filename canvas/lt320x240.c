@@ -13,10 +13,10 @@ static const Layout lt320x240 = {
 
     .tune.bar.sc = 60,
     .tune.bar.sw = 2,
-    .tune.bar.barY = 72,
+    .tune.bar.barY = 60,
     .tune.bar.barW = 240,
-    .tune.bar.half = 11,
-    .tune.bar.middle = 3,
+    .tune.bar.half = 10,
+    .tune.bar.middle = 2,
 
     .menu.headFont = &fontterminus28b,
     .menu.menuFont = &fontterminus22b,
@@ -30,12 +30,13 @@ static const Layout lt320x240 = {
     .sp.width = 2,
     .sp.wfH = 2,
 
-    .tuner.bar.sc = 60,
+    .tuner.bar.sc = 80,
     .tuner.bar.sw = 2,
-    .tuner.bar.barY = 72,
-    .tuner.bar.barW = 240,
-    .tuner.bar.half = 11,
-    .tuner.bar.middle = 3,
+    .tuner.bar.barY = 60,
+    .tuner.bar.barW = 320,
+    .tuner.bar.half = 10,
+    .tuner.bar.middle = 2,
+    .tuner.iconSpace = 3,
 
     .iconSet = &iconsamp48,
     .lblFont = &fontterminusmod18x3,

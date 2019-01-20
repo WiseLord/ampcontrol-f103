@@ -44,6 +44,7 @@ typedef struct {
     } sp;
     struct {
         CanvasBar bar;
+        uint8_t iconSpace;          // Space between icons
     } tuner;
     const tFont *lblFont;           // Main label font
     const tFont *iconSet;           // Main icon set

@@ -16,9 +16,9 @@ static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int1
     const uint8_t barMiddle = bar->middle;
     const uint16_t width = bar->barW;
 
-    if (min + max) { // Non-symmectic scale => rescale to 0..sl
+    if (min + max) { // Non-symmectic scale => rescale to 0..sc
         value = sc * (value - min) / (max - min);
-    } else { // Symmetric scale => rescale to -sl/2..sl/2
+    } else { // Symmetric scale => rescale to -sc/2..sc/2
         value = (sc / 2) * value / (max ? max : 1);
     }
 
@@ -435,7 +435,7 @@ void layoutShowTune(bool clear, DispParam *dp, Spectrum *sp)
     }
     if (clear || valueOld != dp->value) {
         // Bar
-        canvasDrawBar(&lt->tuner.bar, dp->value, dp->min, dp->max);
+        canvasDrawBar(&lt->tune.bar, dp->value, dp->min, dp->max);
         // Value
         glcdSetXY(lt->width, lt->tune.valY);
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
@@ -486,6 +486,11 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
 {
     const tFont *iconSet = lt->iconSet;
 
+    const tImage *icon = NULL;;
+    const uint8_t iconSpace = lt->tuner.iconSpace;
+
+    // Frequency
+
     uint16_t freq = tuner->status.freq;
     static uint16_t freqOld = 0;
 
@@ -498,7 +503,7 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         glcdSetFont(fmFont);
         glcdSetFontColor(LCD_COLOR_WHITE);
         glcdSetXY(0, 0);
-        glcdWriteStringFramed("FM ", true);
+        glcdWriteString("FM ");
 
         canvasDrawBar(&lt->tuner.bar, (int16_t)freq, freqMin, freqMax);
 
@@ -511,33 +516,38 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         freqOld = freq;
     }
 
+    // Stereo / forced mono indicator
+
+    bool forcedMono = tuner->par.forcedMono;
+    bool stereo = ((tuner->status.flags & TUNER_FLAG_STEREO) == TUNER_FLAG_STEREO);
+    static bool stereoOld = false;
+    static bool forcedMonoOld = false;
+    if (clear || (stereoOld != stereo) || (forcedMonoOld != forcedMono)) {
+        icon = glcdFindIcon(forcedMono ? ICON_FMONO : ICON_STEREO, iconSet);
+        if (icon) {
+            glcdSetXY(lt->width - icon->width, 0);
+            glcdDrawImage(icon, (stereo || forcedMono) ?
+                          canvas->pal->active : canvas->pal->inactive, canvas->pal->bg);
+        }
+        stereoOld = stereo;
+        forcedMonoOld = forcedMono;
+    }
+
+    // RDS enabled indicator
+
     bool rds = tuner->par.rds;
     static bool rdsOld = false;
-
-    if (clear || rdsOld != rds) {
-        const tImage *rdsIcon = glcdFindIcon(ICON_RDS, iconSet);
-        if (rdsIcon) {
-            glcdSetXY(lt->width - rdsIcon->width, 28);
-            glcdDrawImage(rdsIcon, rds ? canvas->pal->active : canvas->pal->inactive, canvas->pal->bg);
+    if (clear || (rdsOld != rds)) {
+        icon = glcdFindIcon(ICON_RDS, iconSet);
+        if (icon) {
+            glcdSetXY(lt->width - icon->width, canvas->glcd->y + icon->height + iconSpace);
+            glcdDrawImage(icon, rds ? canvas->pal->active : canvas->pal->inactive, canvas->pal->bg);
         }
-
         rdsOld = rds;
     }
 
-    bool stereo = ((tuner->status.flags & TUNER_FLAG_STEREO) == TUNER_FLAG_STEREO);
-    bool stereoOld = false;
-
-    if (clear || stereoOld != stereo) {
-        const tImage *rdsIcon = glcdFindIcon(ICON_STEREO, iconSet);
-        if (rdsIcon) {
-            glcdSetXY(lt->width - rdsIcon->width, 0);
-            glcdDrawImage(rdsIcon, rds ? canvas->pal->active : canvas->pal->inactive, canvas->pal->bg);
-        }
-
-        stereoOld = stereo;
-    }
-
     // Spectrum
+
     if (!sp->ready) {
         return;
     }

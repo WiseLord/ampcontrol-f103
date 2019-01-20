@@ -6,24 +6,24 @@ static const Layout lt176x132 = {
 
     .time.hmsFont = &fontterminusdig42,
     .time.dmyFont = &fontterminusdig30,
-    .time.wdFont = &fontterminus28,
-    .time.hmsY = 8,
-    .time.dmyY = 58,
+    .time.wdFont = &fontterminus32,
+    .time.hmsY = 6,
+    .time.dmyY = 56,
     .time.wdY = 96,
 
     .tune.bar.sc = 88,
     .tune.bar.sw = 1,
     .tune.bar.barY = 36,
     .tune.bar.barW = 176,
-    .tune.bar.half = 6,
+    .tune.bar.half = 5,
     .tune.bar.middle = 2,
 
     .menu.headFont = &fontterminus16b,
     .menu.menuFont = &fontterminus12,
     .menu.itemCnt = 7,
 
-    .tune.valFont = &fontterminusdig40,
-    .tune.valY = 80,
+    .tune.valFont = &fontterminus32,
+    .tune.valY = 28,
 
     .sp.step = 2,
     .sp.oft = 0,
@@ -34,11 +34,12 @@ static const Layout lt176x132 = {
     .tuner.bar.sw = 1,
     .tuner.bar.barY = 36,
     .tuner.bar.barW = 176,
-    .tuner.bar.half = 6,
+    .tuner.bar.half = 5,
     .tuner.bar.middle = 2,
+    .tuner.iconSpace = 2,
 
     .iconSet = &iconsamp24,
-    .lblFont = &fontterminus24b,
+    .lblFont = &fontterminus32,
 };
 
 const Layout *lt176x132Get(void)

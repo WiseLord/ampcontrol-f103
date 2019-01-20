@@ -49,7 +49,7 @@ EmulDisp::EmulDisp(QWidget *parent) :
 
     tunerReadSettings();
     audioReadSettings();
-    screenSet(SCREEN_TUNER);
+    screenSet(EMUL_SCREEN_INIT);
 
     updateTimer = new QTimer(this);
     connect(updateTimer, SIGNAL(timeout()), SLOT(update()));

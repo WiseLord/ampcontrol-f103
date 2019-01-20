@@ -36,6 +36,10 @@ void tunerReadSettings(void)
     tuner.par.freq = eeReadU(EE_TUNER_FREQ, 9950);
     tuner.status.freq = tuner.par.freq;
 
+    tuner.par.fMin = 8700;
+    tuner.par.fMax = 10800;
+    tuner.par.fStep = 10;
+
     // API initialization
     switch (tuner.par.ic) {
 #ifdef _RDA580X
