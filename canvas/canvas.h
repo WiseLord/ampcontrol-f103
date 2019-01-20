@@ -29,8 +29,17 @@ typedef struct {
 } CanvasBar;
 
 typedef struct {
+    uint16_t fg;
+    uint16_t bg;
+    uint16_t spCol;
+    uint16_t spPeak;
+    uint16_t inactive;
+    uint16_t active;
+} CanvasPalette;
+
+typedef struct {
     Glcd *glcd;
-    uint16_t color;
+    const CanvasPalette *pal;
 } Canvas;
 
 void canvasInit(Canvas **value);

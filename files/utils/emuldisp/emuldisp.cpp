@@ -1,12 +1,12 @@
 #include "emuldisp.h"
 
+#include "../../../canvas/layout.h"
 #include "../../../display/dispdrv.h"
-#include "../../../tr/labels.h"
+#include "../../../display/glcd.h"
 #include "../../../menu.h"
 #include "../../../screen.h"
-
-#include "../../../display/glcd.h"
-#include "../../../canvas/layout.h"
+#include "../../../tr/labels.h"
+#include "../../../tuner/tuner.h"
 
 #include "emulscreen.h"
 #include <QDebug>
@@ -47,7 +47,9 @@ EmulDisp::EmulDisp(QWidget *parent) :
     labelsInit();
     layoutInit();
 
-    screenSet(SCREEN_STANDBY);
+    tunerReadSettings();
+    audioReadSettings();
+    screenSet(SCREEN_TUNER);
 
     updateTimer = new QTimer(this);
     connect(updateTimer, SIGNAL(timeout()), SLOT(update()));

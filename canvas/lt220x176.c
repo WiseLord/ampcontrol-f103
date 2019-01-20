@@ -38,7 +38,6 @@ static const Layout lt220x176 = {
     .tuner.bar.middle = 2,
 
     .iconSet = &iconsamp32,
-    .iconColor = LCD_COLOR_WHITE,
     .lblFont = &fontterminus32,
 };
 

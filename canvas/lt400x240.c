@@ -38,7 +38,6 @@ static const Layout lt400x240 = {
     .tuner.bar.middle = 2,
 
     .iconSet = &iconsamp48,
-    .iconColor = LCD_COLOR_WHITE,
     .lblFont = &fontterminusmod24x2,
 };
 

@@ -47,7 +47,6 @@ typedef struct {
     } tuner;
     const tFont *lblFont;           // Main label font
     const tFont *iconSet;           // Main icon set
-    uint16_t iconColor;             // Main icon color
 } Layout;
 
 // Canvas variants

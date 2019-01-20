@@ -11,6 +11,9 @@ typedef enum {
     // Various icons
     ICON_BRIGHTNESS,
     ICON_TEMPERATURE,
+    ICON_RDS,
+    ICON_STEREO,
+    ICON_FMONO,
 
     // Audio tune icons
     ICON_VOLUME = 0x20,

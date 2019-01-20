@@ -4,10 +4,6 @@
 #include "../menu.h"
 #include "../tr/labels.h"
 
-#define COLOR_CANVAS            LCD_COLOR_BLACK
-#define COLOR_SPECTRUM_COLUMN   LCD_COLOR_ELECTRIC_BLUE
-#define COLOR_SPECTRUM_PEAK     LCD_COLOR_WITCH_HAZE
-
 static const Layout *lt;
 static Canvas *canvas;
 
@@ -31,14 +27,14 @@ static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int1
 
         if (min + max) { // Non-symmetric scale
             if (i >= value) {
-                color = canvas->color;
+                color = canvas->pal->bg;
             }
         } else { // Symmetric scale
             if ((value > 0 && i >= value + (sc / 2)) ||
                 (value >= 0 && i < (sc / 2 - 1)) ||
                 (value < 0 && i < value + (sc / 2)) ||
                 (value <= 0 && i > (sc / 2))) {
-                color = canvas->color;
+                color = canvas->pal->bg;
             }
         }
 
@@ -115,7 +111,7 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
     int16_t y_pos = lt->height - ih * (items - idx + menu->dispOft);
 
     // Draw selection frame
-    glcdDrawFrame(0, y_pos, width, ih, 1, active ? LCD_COLOR_WHITE : canvas->color);
+    glcdDrawFrame(0, y_pos, width, ih, 1, active ? LCD_COLOR_WHITE : canvas->pal->bg);
 
     // Draw menu name
     glcdSetFont(fontItem);
@@ -146,7 +142,7 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdSetFontBgColor(bgColor);
 
     // Fill space between name and value
-    glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->color);
+    glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->pal->bg);
 }
 
 static void canvasImproveSpectrum(SpChan *chan, uint16_t height)
@@ -183,6 +179,7 @@ static void canvasImproveSpectrum(SpChan *chan, uint16_t height)
 static void canvasDrawSpectrumColumn(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h,
                                      int16_t s, int16_t os, int16_t p, int16_t op)
 {
+    const CanvasPalette *pal = canvas->pal;
     if (s == 0) {
         s = 1;
     }
@@ -200,26 +197,26 @@ static void canvasDrawSpectrumColumn(bool redraw, int16_t x, int16_t y, int16_t 
     }
 
     if (redraw) {
-        glcdDrawRect(x, y + h - s, w, s, COLOR_SPECTRUM_COLUMN);
+        glcdDrawRect(x, y + h - s, w, s, pal->spCol);
 
         if (p > s) {
-            glcdDrawRect(x, y + h - p, w, 1, COLOR_SPECTRUM_PEAK);
+            glcdDrawRect(x, y + h - p, w, 1, pal->spPeak);
         }
         return;
     }
 
     if (s > os) {
-        glcdDrawRect(x, y + h - s, w, s - os, COLOR_SPECTRUM_COLUMN);
+        glcdDrawRect(x, y + h - s, w, s - os, pal->spCol);
 
     } else if (s < os) {
-        glcdDrawRect(x, y + h - os, w, os - s, LCD_COLOR_NERO);
+        glcdDrawRect(x, y + h - os, w, os - s, canvas->pal->bg);
     }
 
     if (p > s) {
-        glcdDrawRect(x, y + h - p, w, 1, COLOR_SPECTRUM_PEAK);
+        glcdDrawRect(x, y + h - p, w, 1, pal->spPeak);
     }
     if (op > p && op > s) {
-        glcdDrawRect(x, y + h - op, w, 1, LCD_COLOR_NERO);
+        glcdDrawRect(x, y + h - op, w, 1, canvas->pal->bg);
     }
 
 }
@@ -381,7 +378,7 @@ void layoutShowTime(bool clear, RTC_type *rtc)
     int8_t wday = rtc->wday;
     if (wday != wdayOld)    // Clear the area with weekday label
         glcdDrawRect(0, lt->time.wdY, lt->width,
-                     (int16_t)lt->time.wdFont->chars[0].image->height, canvas->color);
+                     (int16_t)lt->time.wdFont->chars[0].image->height, canvas->pal->bg);
     wdayOld = wday;
 
     const char *wdayLabel = labelsGet(LABEL_SUNDAY + wday);
@@ -409,7 +406,7 @@ void layoutShowMenu(void)
     glcdSetXY(2, 0);
     glcdWriteStringConst(parentName);
     // Fill free space after header
-    glcdDrawRect(canvas->glcd->x, canvas->glcd->y, lt->width - canvas->glcd->x, fHh, canvas->color);
+    glcdDrawRect(canvas->glcd->x, canvas->glcd->y, lt->width - canvas->glcd->x, fHh, canvas->pal->bg);
 
     glcdDrawRect(0, dividerPos, lt->width, 1, canvas->glcd->font.color);
 
@@ -433,7 +430,8 @@ void layoutShowTune(bool clear, DispParam *dp, Spectrum *sp)
         glcdWriteStringConst(dp->label);
         // Icon
         glcdSetXY(lt->width - iconSet->chars[0].image->width, 0);
-        glcdWriteIcon(dp->icon, iconSet, lt->iconColor, canvas->color);
+        const tImage *icon = glcdFindIcon(dp->icon, iconSet);
+        glcdDrawImage(icon, canvas->pal->fg, canvas->pal->bg);
     }
     if (clear || valueOld != dp->value) {
         // Bar
@@ -487,15 +485,9 @@ void layoutShowSpectrum(bool clear, Spectrum *sp)
 void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
 {
     const tFont *iconSet = lt->iconSet;
-    static uint16_t freqOld;
-
-    if (clear) {
-        // Icon
-        glcdSetXY(lt->width - iconSet->chars[0].image->width, 0);
-        glcdWriteIcon(ICON_TUNER, iconSet, lt->iconColor, canvas->color);
-    }
 
     uint16_t freq = tuner->status.freq;
+    static uint16_t freqOld = 0;
 
     if (clear || freqOld != freq) {
         int16_t freqMin = (int16_t)tuner->par.fMin;
@@ -505,9 +497,8 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
 
         glcdSetFont(fmFont);
         glcdSetFontColor(LCD_COLOR_WHITE);
-        glcdSetXY(2, 0);
-
-        glcdWriteString("FM ");
+        glcdSetXY(0, 0);
+        glcdWriteStringFramed("FM ", true);
 
         canvasDrawBar(&lt->tuner.bar, (int16_t)freq, freqMin, freqMax);
 
@@ -516,8 +507,35 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         glcdWriteChar('.');
         glcdWriteChar(LETTER_SPACE_CHAR);
         glcdWriteNum(freq % 100, 2, '0', 10);
+
+        freqOld = freq;
     }
-    freqOld = freq;
+
+    bool rds = tuner->par.rds;
+    static bool rdsOld = false;
+
+    if (clear || rdsOld != rds) {
+        const tImage *rdsIcon = glcdFindIcon(ICON_RDS, iconSet);
+        if (rdsIcon) {
+            glcdSetXY(lt->width - rdsIcon->width, 28);
+            glcdDrawImage(rdsIcon, rds ? canvas->pal->active : canvas->pal->inactive, canvas->pal->bg);
+        }
+
+        rdsOld = rds;
+    }
+
+    bool stereo = ((tuner->status.flags & TUNER_FLAG_STEREO) == TUNER_FLAG_STEREO);
+    bool stereoOld = false;
+
+    if (clear || stereoOld != stereo) {
+        const tImage *rdsIcon = glcdFindIcon(ICON_STEREO, iconSet);
+        if (rdsIcon) {
+            glcdSetXY(lt->width - rdsIcon->width, 0);
+            glcdDrawImage(rdsIcon, rds ? canvas->pal->active : canvas->pal->inactive, canvas->pal->bg);
+        }
+
+        stereoOld = stereo;
+    }
 
     // Spectrum
     if (!sp->ready) {
