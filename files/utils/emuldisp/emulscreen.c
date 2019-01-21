@@ -10,7 +10,6 @@
 #include "../../../rc.h"
 #include "../../../spectrum.h"
 
-
 static Spectrum spectrum;
 static RcData rcData;
 static DispDriver drv;
@@ -85,11 +84,6 @@ void eeUpdate(EE_Param param, int16_t data)
     (void)data;
 }
 
-void inputSetEncRes(int8_t value)
-{
-    (void)value;
-}
-
 uint16_t rcGetCode(RcCmd cmd)
 {
     (void)cmd;
@@ -107,30 +101,20 @@ RcData rcRead(bool clear)
     return rcData;
 }
 
+RcCmd rcGetCmd(RcData *rcData)
+{
+    (void) rcData;
+    return RC_CMD_END;
+}
+
 void dispdrvSetBrightness(int8_t value)
 {
     (void) value;
 }
 
-void rtcGetTime(RTC_type *rtc)
+uint8_t dispdrvGetBus(void)
 {
-    time_t t = time(NULL);
-    struct tm *lt = localtime(&t);
-
-    rtc->hour = (int8_t)lt->tm_hour;
-    rtc->min = (int8_t)lt->tm_min;
-    rtc->sec = (int8_t)lt->tm_sec;
-
-    rtc->date = (int8_t)lt->tm_mday;
-    rtc->month = (int8_t)lt->tm_mon;
-    rtc->year = (int8_t)lt->tm_year - 100;
-
-    rtc->wday = (int8_t)lt->tm_wday;
-}
-
-int8_t rtcGetMode(void)
-{
-    return RTC_HOUR;
+    return 0;
 }
 
 Spectrum *spGet(void)

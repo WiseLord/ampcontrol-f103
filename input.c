@@ -2,7 +2,6 @@
 
 #include "display/dispdrv.h"
 #include "eemul.h"
-#include "pins.h"
 
 static volatile int8_t encRes = 0;
 static volatile int8_t encCnt = 0;

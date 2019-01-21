@@ -2,16 +2,18 @@
 
 #include <time.h>
 
+#ifndef EMUL_DISP
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_pwr.h>
 #include <stm32f1xx_ll_rcc.h>
 #include <stm32f1xx_ll_rtc.h>
+#endif
 
 static uint32_t rtcTime;
 static int8_t rtcMode = RTC_NOEDIT;
 
-const static RTC_type rtcMin = { 0,  0, 0,  1,  1,  1, 0, RTC_NOEDIT};
-const static RTC_type rtcMax = {23, 59, 0, 31, 12, 99, 0, RTC_NOEDIT};
+static const RTC_type rtcMin = { 0,  0, 0,  1,  1,  1, 0, RTC_NOEDIT};
+static const RTC_type rtcMax = {23, 59, 0, 31, 12, 99, 0, RTC_NOEDIT};
 
 static int8_t rtcDaysInMonth(RTC_type *rtc)
 {
@@ -103,9 +105,12 @@ static void rtcUpdate(RTC_type *rtc, int8_t mode, int8_t value)
     uint32_t newTime = rtcToSec(rtc);
 
     rtcTime = newTime;
+#ifndef EMUL_DISP
     LL_RTC_TIME_SetCounter(RTC, newTime);
+#endif
 }
 
+#ifndef EMUL_DISP
 void rtcInit(void)
 {
     // Power interface clock enable
@@ -145,11 +150,26 @@ void rtcIRQ(void)
 {
     rtcTime = LL_RTC_TIME_Get(RTC) + 1;
 }
-
+#endif
 
 void rtcGetTime(RTC_type *rtc)
 {
+#ifdef EMUL_DISP
+    time_t t = time(NULL);
+    struct tm *lt = localtime(&t);
+
+    rtc->hour = (int8_t)lt->tm_hour;
+    rtc->min = (int8_t)lt->tm_min;
+    rtc->sec = (int8_t)lt->tm_sec;
+
+    rtc->date = (int8_t)lt->tm_mday;
+    rtc->month = (int8_t)lt->tm_mon;
+    rtc->year = (int8_t)lt->tm_year - 100;
+
+    rtc->wday = (int8_t)lt->tm_wday;
+#else
     secToRtc(rtcTime, rtc);
+#endif
 }
 
 void rtcSetTime(int8_t mode, int8_t value)
