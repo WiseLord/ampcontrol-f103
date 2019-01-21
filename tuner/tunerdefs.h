@@ -1,6 +1,10 @@
 #ifndef TUNERDEFS_H
 #define TUNERDEFS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -86,5 +90,9 @@ typedef struct {
     uint16_t freq;
     uint8_t rssi;
 } TunerStatus;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // TUNERDEFS_H

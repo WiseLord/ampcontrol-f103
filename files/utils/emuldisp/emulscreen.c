@@ -9,6 +9,7 @@
 #include "../../../menu.h"
 #include "../../../rc.h"
 #include "../../../spectrum.h"
+#include "../../../swtimers.h"
 
 static Spectrum spectrum;
 static RcData rcData;

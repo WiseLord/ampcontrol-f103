@@ -1,6 +1,10 @@
 #ifndef SPECTRUM_H
 #define SPECTRUM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -48,5 +52,9 @@ Spectrum *spGet(void);
 void spGetADC(uint8_t *dataL, uint8_t *dataR);
 
 void spConvertADC(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SPECTRUM_H

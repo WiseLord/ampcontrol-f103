@@ -1,6 +1,10 @@
 #ifndef RTC_H
 #define RTC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 typedef enum {
@@ -36,5 +40,9 @@ void rtcEditTime(int8_t mode, int8_t value);
 int8_t rtcGetMode(void);
 void rtcSetMode(int8_t mode);
 void rtcChangeMode(int8_t diff);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // RTC_H

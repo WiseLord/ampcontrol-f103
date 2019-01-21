@@ -1,6 +1,10 @@
 #ifndef ACTIONS_H
 #define ACTIONS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define FLAG_OFF        0
@@ -71,5 +75,9 @@ typedef struct {
 
 Action actionUserGet(void);
 void actionHandle(Action action, uint8_t visible);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // ACTIONS_H

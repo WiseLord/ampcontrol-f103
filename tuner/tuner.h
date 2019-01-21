@@ -1,6 +1,10 @@
 #ifndef TUNER_H
 #define TUNER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -47,5 +51,9 @@ void tunerSetRds(bool value);
 void tunerNextStation(int8_t direction);
 
 void tunerUpdateStatus(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // TUNER_H

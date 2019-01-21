@@ -1,6 +1,10 @@
 #ifndef SWTIMERS_H
 #define SWTIMERS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define SW_TIM_OFF       -1
@@ -21,5 +25,9 @@ int16_t swTimGetInitHw(void);
 
 void swTimSetRcRepeat(int16_t value);
 int16_t swTimGetRcRepeat(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SWTIMERS_H

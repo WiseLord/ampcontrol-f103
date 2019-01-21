@@ -26,6 +26,9 @@ public:
 public slots:
     void menuSelected(QAction *action);
 
+private slots:
+    void systick();
+
 private:
     Ui::EmulDisp *ui;
     QPainter *painter;
@@ -40,6 +43,7 @@ private:
     QAction *actScreenMenu;
 
     QTimer *updateTimer;
+    QTimer *mSecTimer;
 
 protected:
     virtual void paintEvent(QPaintEvent *pe);

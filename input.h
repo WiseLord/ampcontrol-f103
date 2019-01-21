@@ -1,6 +1,10 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define BTN_NO                  0x00
@@ -36,5 +40,9 @@ void inputPoll(void);
 
 int8_t getEncoder(void);
 CmdBtn getBtnCmd(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // INPUT_H

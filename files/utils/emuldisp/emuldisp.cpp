@@ -5,6 +5,7 @@
 #include "../../../display/glcd.h"
 #include "../../../menu.h"
 #include "../../../screen.h"
+#include "../../../swtimers.h"
 #include "../../../tr/labels.h"
 #include "../../../tuner/tuner.h"
 
@@ -53,7 +54,11 @@ EmulDisp::EmulDisp(QWidget *parent) :
 
     updateTimer = new QTimer(this);
     connect(updateTimer, SIGNAL(timeout()), SLOT(update()));
-    updateTimer->start(1000);
+    updateTimer->start(250);
+
+    mSecTimer = new QTimer(this);
+    connect(mSecTimer, SIGNAL(timeout()), SLOT(systick()));
+    mSecTimer->start(1);
 }
 
 void EmulDisp::drawPixel(int16_t x, int16_t y, uint16_t color)
@@ -137,4 +142,9 @@ void EmulDisp::menuSelected(QAction *action)
     }
 
     update();
+}
+
+void EmulDisp::systick()
+{
+    swTimUpdate();
 }
