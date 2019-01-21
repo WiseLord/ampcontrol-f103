@@ -1,18 +1,32 @@
 #include "emulscreen.h"
 
-#include "../../../screen.h"
+#include <stdlib.h>
+#include <time.h>
 
 #include "../../../canvas/layout.h"
-#include "../../../display/glcd.h"
-#include "../../../tr/labels.h"
+#include "../../../display/dispdefs.h"
 #include "../../../eemul.h"
 #include "../../../menu.h"
+#include "../../../rc.h"
 #include "../../../spectrum.h"
 
-#include <time.h>
-#include <stdlib.h>
 
 static Spectrum spectrum;
+static RcData rcData;
+static DispDriver drv;
+
+void emulDrawPixel(int16_t x, int16_t y, uint16_t color);
+void emulDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+
+void dispdrvInit(DispDriver **driver)
+{
+    drv.width = EMUL_DISP_WIDTH;
+    drv.height = EMUL_DISP_HEIGHT;
+    drv.drawPixel = emulDrawPixel;
+    drv.drawRectangle = emulDrawRectangle;
+
+    *driver = &drv;
+}
 
 const Layout *ltEmulGet(void)
 {
@@ -65,9 +79,37 @@ bool eeReadB(EE_Param param, bool def)
     }
 }
 
+void eeUpdate(EE_Param param, int16_t data)
+{
+    (void)param;
+    (void)data;
+}
+
 void inputSetEncRes(int8_t value)
 {
     (void)value;
+}
+
+uint16_t rcGetCode(RcCmd cmd)
+{
+    (void)cmd;
+    return 0;
+}
+
+void rcSaveCode(uint16_t cmd, uint16_t value)
+{
+    (void)cmd, (void)value;
+}
+
+RcData rcRead(bool clear)
+{
+    (void)clear;
+    return rcData;
+}
+
+void dispdrvSetBrightness(int8_t value)
+{
+    (void) value;
 }
 
 void rtcGetTime(RTC_type *rtc)
@@ -86,6 +128,11 @@ void rtcGetTime(RTC_type *rtc)
     rtc->wday = (int8_t)lt->tm_wday;
 }
 
+int8_t rtcGetMode(void)
+{
+    return RTC_HOUR;
+}
+
 Spectrum *spGet(void)
 {
     return &spectrum;
@@ -93,10 +140,29 @@ Spectrum *spGet(void)
 
 void spGetADC(uint8_t *dataL, uint8_t *dataR)
 {
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
 
     for (uint8_t i = 0; i < SPECTRUM_SIZE; i++) {
         dataL[i] = rand() & 0xFF;
         dataR[i] = rand() & 0xFF;
     }
+}
+
+
+void swTimSetTunerPoll(int16_t value)
+{
+    (void) value;
+}
+int16_t swTimGetTunerPoll(void)
+{
+    return 0;
+}
+
+void swTimSetSpConvert(int16_t value)
+{
+    (void) value;
+}
+int16_t swTimGetSpConvert(void)
+{
+    return 0;
 }

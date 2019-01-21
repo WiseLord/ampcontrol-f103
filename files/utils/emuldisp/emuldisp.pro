@@ -86,7 +86,11 @@ HEADERS += \
     ../../../tr/labels.h \
     ../../../rtc.h \
 	../../../rc.h \
-    amp.h
+    amp.h \
+    ../../../screen.h \
+    ../../../spectrum.h \
+    ../../../eemul.h \
+    ../../../display/dispdefs.h
 
 FORMS += \
     amp.ui
