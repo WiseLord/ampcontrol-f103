@@ -66,7 +66,8 @@ SOURCES += \
     ../../../tr/labels_ru.c \
     ../../../tr/labels.c \
     ../../../screen.c \
-	amp.cpp
+	amp.cpp \
+    ../../../swtimers.c
 
 
 HEADERS += \
@@ -90,7 +91,8 @@ HEADERS += \
     ../../../screen.h \
     ../../../spectrum.h \
     ../../../eemul.h \
-    ../../../display/dispdefs.h
+    ../../../display/dispdefs.h \
+    ../../../swtimers.h
 
 FORMS += \
     amp.ui

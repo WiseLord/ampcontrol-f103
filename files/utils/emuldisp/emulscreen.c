@@ -147,22 +147,3 @@ void spGetADC(uint8_t *dataL, uint8_t *dataR)
         dataR[i] = rand() & 0xFF;
     }
 }
-
-
-void swTimSetTunerPoll(int16_t value)
-{
-    (void) value;
-}
-int16_t swTimGetTunerPoll(void)
-{
-    return 0;
-}
-
-void swTimSetSpConvert(int16_t value)
-{
-    (void) value;
-}
-int16_t swTimGetSpConvert(void)
-{
-    return 0;
-}
