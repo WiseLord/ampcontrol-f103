@@ -20,6 +20,11 @@ void inputSetEncRes(int8_t value)
     encRes = value;
 }
 
+int8_t inputGetEncRes(void)
+{
+    return encRes;
+}
+
 void inputPoll(void)
 {
     // Antibounce counter

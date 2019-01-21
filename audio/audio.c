@@ -40,6 +40,10 @@ void audioReadSettings(void)
         aProc.par.gain[par - EE_AUDIO_GAIN0] = (int8_t)eeReadI(par, 0);
     }
 
+    for (EE_Param par = EE_AUDIO_IN0; par <= EE_AUDIO_IN7; par++) {
+        aProc.par.inType[par - EE_AUDIO_IN0] = (InputType)eeReadU(par, 0);
+    }
+
     aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
 
     // API initialization

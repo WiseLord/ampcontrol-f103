@@ -8,24 +8,6 @@
 
 #define STEP_MULT   8
 
-typedef enum {
-    IN_TUNER = 0,
-    IN_PC,
-    IN_TV,
-    IN_BLUETOOTH,
-    IN_DVD,
-    IN_USB,
-    IN_MICROPHONE,
-    IN_GUITAR,
-    IN_TURNTABLES,
-    IN_CASSETTE,
-    IN_PROJECTOR,
-    IN_SATELLITE,
-    IN_MIXER,
-
-    IN_END
-} InputType;
-
 typedef struct {
     void (*init)(AudioParam *param);
 

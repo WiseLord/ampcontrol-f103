@@ -56,10 +56,17 @@ void glcdInit(Glcd **value)
     *value = &glcd;
 }
 
+bool glcdGetRotate(void)
+{
+    return glcd.rotate;
+}
+
 void glcdRotate(uint8_t rotate)
 {
+    glcd.rotate = rotate;
+
     if (glcd.drv->rotate) {
-        glcd.drv->rotate(rotate);
+        glcd.drv->rotate(rotate ? LCD_ROTATE_180 : LCD_ROTATE_0);
     }
 }
 

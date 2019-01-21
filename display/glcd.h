@@ -17,6 +17,7 @@ typedef struct {
     Font font;
     int16_t x;
     int16_t y;
+    bool rotate;
 } Glcd;
 
 typedef void (*SendDataCallback)(uint16_t data);
@@ -54,6 +55,8 @@ typedef void (*SendDataCallback)(uint16_t data);
 #define LCD_COLOR_WHITE                 RGB_TO_565(0xFFFFFF)
 
 void glcdInit(Glcd **value);
+
+bool glcdGetRotate(void);
 void glcdRotate(uint8_t rotate);
 void glcdShift(int16_t pos);
 

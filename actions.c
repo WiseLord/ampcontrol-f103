@@ -142,6 +142,7 @@ static void actionRemapBtnLong(void)
     switch (action.value) {
     case BTN_D0:
         action.type = ACTION_BR_WORK;
+        action.value = 0;
         break;
     case BTN_D1:
         break;
@@ -342,7 +343,7 @@ static void actionRemapCommon(void)
 {
     Screen screen = screenGet();
     AudioProc *aProc = audioGet();
-    InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
+    InputType inType = aProc->par.inType[aProc->par.input];
     Menu *menu = menuGet();
 
     switch (action.type) {

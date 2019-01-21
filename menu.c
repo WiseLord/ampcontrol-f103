@@ -7,6 +7,7 @@
 #include "tuner/tuner.h"
 #include "eemul.h"
 #include "input.h"
+#include "screen.h"
 #include "spectrum.h"
 
 #define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC, EE_RC_ ## CMD},
@@ -88,7 +89,7 @@ static void menuMove(int8_t diff)
 static int16_t menuGetValue(MenuIdx index)
 {
     int16_t ret = 0;
-    AudioProc *aproc = audioGet();
+    AudioProc *aProc = audioGet();
     Tuner *tuner = tunerGet();
     TunerParam *tPar = &tuner->par;
     Spectrum *sp = spGet();
@@ -99,7 +100,7 @@ static int16_t menuGetValue(MenuIdx index)
         break;
 
     case MENU_AUDIO_IC:
-        ret = (int16_t)aproc->par.ic;
+        ret = (int16_t)aProc->par.ic;
         break;
     case MENU_AUDIO_IN_0:
     case MENU_AUDIO_IN_1:
@@ -109,8 +110,7 @@ static int16_t menuGetValue(MenuIdx index)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
-        ret = eeReadI(EE_AUDIO_IN0 + (index - MENU_AUDIO_IN_0),
-                      (int16_t)(IN_TUNER + (index - MENU_AUDIO_IN_0)));
+        ret = aProc->par.inType[index - MENU_AUDIO_IN_0];
         break;
 
     case MENU_TUNER_IC:
@@ -144,12 +144,16 @@ static int16_t menuGetValue(MenuIdx index)
         ret = (int16_t)(sp->mode);
         break;
 
+    case MENU_DISPLAY_BR_STBY:
+        ret = screenGetBrightness(BR_STBY);
+        break;
+
     case MENU_DISPLAY_ROTATE:
-        ret = eeReadB(EE_DISPLAY_ROTATE, false);
+        ret = glcdGetRotate();
         break;
 
     case MENU_INPUT_ENC_RES:
-        ret = eeReadI(EE_INPUT_ENC_RES, ENC_RES_DEFAULT);
+        ret = inputGetEncRes();
         break;
     default:
         ret = 0;
@@ -165,7 +169,7 @@ static int16_t menuGetValue(MenuIdx index)
 
 static void menuStoreCurrentValue(void)
 {
-    AudioProc *aproc = audioGet();
+    AudioProc *aProc = audioGet();
     Tuner *tuner = tunerGet();
     TunerParam *tPar = &tuner->par;
     Spectrum *sp = spGet();
@@ -176,7 +180,17 @@ static void menuStoreCurrentValue(void)
         break;
 
     case MENU_AUDIO_IC:
-        aproc->par.ic = (AudioIC)(menu.value);
+        aProc->par.ic = (AudioIC)(menu.value);
+        break;
+    case MENU_AUDIO_IN_0:
+    case MENU_AUDIO_IN_1:
+    case MENU_AUDIO_IN_2:
+    case MENU_AUDIO_IN_3:
+    case MENU_AUDIO_IN_4:
+    case MENU_AUDIO_IN_5:
+    case MENU_AUDIO_IN_6:
+    case MENU_AUDIO_IN_7:
+        aProc->par.inType[menu.active - MENU_AUDIO_IN_0] = (InputType)menu.value;
         break;
 
     case MENU_TUNER_IC:
@@ -210,8 +224,12 @@ static void menuStoreCurrentValue(void)
         sp->mode = (SpMode)(menu.value);
         break;
 
+    case MENU_DISPLAY_BR_STBY:
+        screenSetBrightness(BR_STBY, (int8_t)menu.value);
+        break;
+
     case MENU_DISPLAY_ROTATE:
-        glcdRotate(menu.value ? LCD_ROTATE_180 : LCD_ROTATE_0);
+        glcdRotate((bool)menu.value);
         canvasClear();
         break;
 
@@ -313,6 +331,12 @@ static void menuValueChange(int8_t diff)
         if (menu.value < SP_MODE_STEREO)
             menu.value = SP_MODE_STEREO;
         break;
+    case MENU_DISPLAY_BR_STBY:
+        if (menu.value > LCD_BR_MAX)
+            menu.value = LCD_BR_MAX;
+        if (menu.value < LCD_BR_MIN)
+            menu.value = LCD_BR_MIN;
+        break;
     case MENU_INPUT_ENC_RES:
         if (menu.value > ENC_RES_MAX)
             menu.value = ENC_RES_MAX;
@@ -321,6 +345,10 @@ static void menuValueChange(int8_t diff)
         break;
     default:
         break;
+    }
+
+    if (menu.active == MENU_DISPLAY_BR_STBY) {
+        dispdrvSetBrightness((int8_t)menu.value);
     }
 }
 
@@ -364,10 +392,17 @@ void menuSetActive(MenuIdx index)
     if (menu.active == index) {
         menu.selected = !menu.selected;
 
-        if (menu.selected)
+        if (menu.selected) {
             menu.value = menuGetValue(menu.active);
-        else
+            if (index == MENU_DISPLAY_BR_STBY) {
+                dispdrvSetBrightness(screenGetBrightness(BR_STBY));
+            }
+        } else {
             menuStoreCurrentValue();
+            if (index == MENU_DISPLAY_BR_STBY) {
+                dispdrvSetBrightness(screenGetBrightness(BR_WORK));
+            }
+        }
 
         return;
     }

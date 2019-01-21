@@ -291,9 +291,6 @@ static void canvasDrawWaterfall(Spectrum *sp)
     }
 }
 
-
-
-
 void layoutInit()
 {
 #if defined (_ILI9163) || defined (_ST7735)
@@ -318,8 +315,8 @@ void layoutInit()
 
     canvasInit(&canvas);
 
-    bool rotate = eeReadI(EE_DISPLAY_ROTATE, false);
-    glcdRotate(rotate ? LCD_ROTATE_180 : LCD_ROTATE_0);
+    bool rotate = eeReadB(EE_DISPLAY_ROTATE, false);
+    glcdRotate(rotate);
 
     menuGet()->dispSize = lt->menu.itemCnt;
 }

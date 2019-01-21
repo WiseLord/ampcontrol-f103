@@ -219,7 +219,7 @@ void dispdrvPwm(void)
     static uint8_t br;
 
     if (++br >= LCD_BR_MAX)
-        br = LCD_BR_MIN;
+        br = 0;
 
     if (br == brightness) {
         CLR(DISP_BCKL);

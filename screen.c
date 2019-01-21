@@ -43,7 +43,7 @@ static bool screenCheckClear(void)
         case SCREEN_AUDIO_INPUT:
             if (scrPrev == SCREEN_AUDIO_PARAM) {
                 if (scrParPrev.tune == AUDIO_TUNE_GAIN) {
-                    InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
+                    InputType inType = aProc->par.inType[aProc->par.input];
                     if (IN_TUNER != inType) {
                         clear = false;
                     }
@@ -152,7 +152,7 @@ Screen screenGetDefault(void)
 {
     AudioProc *aProc = audioGet();
 
-    InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
+    InputType inType = aProc->par.inType[aProc->par.input];;
 
     if (IN_TUNER == inType)
         return SCREEN_TUNER;
@@ -281,7 +281,7 @@ void screenShowAudioParam(bool clear)
 
     DispParam dp;
     if (aTune == AUDIO_TUNE_GAIN) {
-        InputType inType = (uint8_t)eeReadI(EE_AUDIO_IN0 + aProc->par.input, IN_TUNER + aProc->par.input);
+        InputType inType = aProc->par.inType[aProc->par.input];;
         dp.label = labelsGet(LABEL_IN_TUNER + inType);
         dp.icon = (uint8_t)(ICON_TUNER + inType);
     } else {

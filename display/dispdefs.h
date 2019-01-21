@@ -11,7 +11,7 @@ extern "C" {
 #define LCD_ROTATE_0        0x00
 #define LCD_ROTATE_180      0x02
 
-#define LCD_BR_MIN          0
+#define LCD_BR_MIN          1
 #define LCD_BR_MAX          32
 
 typedef struct {

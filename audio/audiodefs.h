@@ -31,6 +31,25 @@ typedef enum {
     AUDIO_TUNE_END
 } AudioTune;
 
+typedef uint8_t InputType;
+enum {
+    IN_TUNER = 0,
+    IN_PC,
+    IN_TV,
+    IN_BLUETOOTH,
+    IN_DVD,
+    IN_USB,
+    IN_MICROPHONE,
+    IN_GUITAR,
+    IN_TURNTABLES,
+    IN_CASSETTE,
+    IN_PROJECTOR,
+    IN_SATELLITE,
+    IN_MIXER,
+
+    IN_END
+};
+
 typedef struct {
     int8_t min;     // Minimum in steps
     int8_t max;     // Maximum in steps
@@ -46,15 +65,16 @@ typedef struct {
     AudioIC ic;
     AudioTuneItem item[AUDIO_TUNE_END];
 
+    InputType inType[MAX_INPUTS];
+    int8_t gain[MAX_INPUTS];
+    uint8_t input;
+    uint8_t inCnt;
+
     bool mute;
     bool loudness;
     bool surround;
     bool effect3d;
     bool bypass;
-
-    int8_t gain[MAX_INPUTS];
-    uint8_t input;
-    uint8_t inCnt;
 } AudioParam;
 
 #endif // AUDIODEFS_H

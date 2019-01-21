@@ -35,7 +35,10 @@ extern "C" {
 typedef uint16_t CmdBtn;
 
 void inputInit(void);
+
 void inputSetEncRes(int8_t value);
+int8_t inputGetEncRes(void);
+
 void inputPoll(void);
 
 int8_t getEncoder(void);
