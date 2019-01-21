@@ -176,6 +176,8 @@ screen.c
 screen.h
 spectrum.c
 spectrum.h
+swtimers.c
+swtimers.h
 system/startup_stm32f103xb.s
 system/stm32f103c8tx_flash.ld
 system/stm32f10x-openocd.cfg

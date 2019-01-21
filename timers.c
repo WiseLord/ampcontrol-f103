@@ -4,12 +4,6 @@
 #include <stm32f1xx_ll_cortex.h>
 #include <stm32f1xx_ll_tim.h>
 
-static volatile int16_t timDisplay = SW_TIM_OFF;
-static volatile int16_t timSpConvert = SW_TIM_OFF;
-static volatile int16_t timTunerPoll = SW_TIM_OFF;
-static volatile int16_t timInitHw = SW_TIM_OFF;
-static volatile int16_t timRcRepeat = SW_TIM_OFF;
-
 static void TIM2_Init(void)
 {
     LL_TIM_InitTypeDef TIM_InitStruct;
@@ -60,8 +54,6 @@ static void TIM3_Init(void)
 
 void timersInit(void)
 {
-    LL_SYSTICK_EnableIT();
-
     TIM2_Init(); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
 
     TIM3_Init(); // 1MHz timer for remote control handling
@@ -71,69 +63,4 @@ void timersInit(void)
 
     LL_TIM_EnableCounter(TIM3);
     LL_TIM_EnableIT_UPDATE(TIM3);
-}
-
-
-void swTimUpdate(void)
-{
-    if (timDisplay > 0)
-        timDisplay--;
-    if (timSpConvert > 0)
-        timSpConvert--;
-    if (timTunerPoll > 0)
-        timTunerPoll--;
-    if (timInitHw > 0)
-        timInitHw--;
-    if (timRcRepeat > 0)
-        timRcRepeat--;
-}
-
-void swTimSetDisplay(int16_t value)
-{
-    timDisplay = value;
-}
-
-int16_t swTimGetDisplay(void)
-{
-    return timDisplay;
-}
-
-void swTimSetSpConvert(int16_t value)
-{
-    timSpConvert = value;
-}
-
-int16_t swTimGetSpConvert(void)
-{
-    return timSpConvert;
-}
-
-void swTimSetTunerPoll(int16_t value)
-{
-    timTunerPoll = value;
-}
-
-int16_t swTimGetTunerPoll(void)
-{
-    return timTunerPoll;
-}
-
-void swTimSetInitHw(int16_t value)
-{
-    timInitHw = value;
-}
-
-int16_t swTimGetInitHw(void)
-{
-    return timInitHw;
-}
-
-void swTimSetRcRepeat(int16_t value)
-{
-    timRcRepeat = value;
-}
-
-int16_t swTimGetRcRepeat(void)
-{
-    return timRcRepeat;
 }

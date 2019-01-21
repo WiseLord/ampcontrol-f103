@@ -7,7 +7,7 @@
 #include "eemul.h"
 #include "fft.h"
 #include "spectrum.h"
-#include "timers.h"
+#include "swtimers.h"
 
 static Screen screen = SCREEN_STANDBY;
 static Screen screenDefault = SCREEN_SPECTRUM;

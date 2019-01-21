@@ -95,6 +95,8 @@ int main(void)
     inputInit();
     rcInit();
     rtcInit();
+
+    LL_SYSTICK_EnableIT();
     timersInit();
 
     audioReadSettings();

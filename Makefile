@@ -23,6 +23,7 @@ C_SOURCES += rc.c
 C_SOURCES += rtc.c
 C_SOURCES += screen.c
 C_SOURCES += spectrum.c
+C_SOURCES += swtimers.c
 C_SOURCES += timers.c
 C_SOURCES += tr/labels.c
 C_SOURCES += tr/labels_by.c

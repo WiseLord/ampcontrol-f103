@@ -10,7 +10,7 @@
 #include "rtc.h"
 #include "screen.h"
 #include "spectrum.h"
-#include "timers.h"
+#include "swtimers.h"
 #include "tuner/tuner.h"
 
 static Action action = {ACTION_NONE, 0};

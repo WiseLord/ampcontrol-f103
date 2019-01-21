@@ -10,7 +10,7 @@
 #include "rc.h"
 #include "rtc.h"
 #include "spectrum.h"
-#include "timers.h"
+#include "swtimers.h"
 
 void NMI_Handler(void)
 {
