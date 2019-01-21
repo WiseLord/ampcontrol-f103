@@ -14,7 +14,6 @@ C_SOURCES = main.c
 C_SOURCES += actions.c
 C_SOURCES += eemul.c
 C_SOURCES += fft.c
-C_SOURCES += functions.c
 C_SOURCES += handlers.c
 C_SOURCES += i2c.c
 C_SOURCES += input.c

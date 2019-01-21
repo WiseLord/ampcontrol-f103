@@ -6,7 +6,6 @@
 
 #include "actions.h"
 #include "eemul.h"
-#include "functions.h"
 #include "i2c.h"
 #include "input.h"
 #include "menu.h"

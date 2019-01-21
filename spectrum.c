@@ -7,7 +7,6 @@
 #include <stm32f1xx_ll_rcc.h>
 
 #include "eemul.h"
-#include "functions.h"
 #include "display/glcd.h"
 
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)
