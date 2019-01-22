@@ -3,6 +3,7 @@
 #include "../../../canvas/layout.h"
 #include "../../../display/dispdrv.h"
 #include "../../../display/glcd.h"
+#include "../../../input.h"
 #include "../../../menu.h"
 #include "../../../screen.h"
 #include "../../../swtimers.h"
@@ -20,6 +21,9 @@
 EmulDisp::EmulDisp(QWidget *parent) :
     QWidget(parent)
 {
+    action = {ACTION_STANDBY, FLAG_ON};
+    brightness = LCD_BR_MAX;
+
     painter = new QPainter;
 
     cMenu = new QMenu(this);
@@ -47,6 +51,7 @@ EmulDisp::EmulDisp(QWidget *parent) :
 
     labelsInit();
     layoutInit();
+    screenReadSettings();
 
     tunerReadSettings();
     audioReadSettings();
@@ -63,7 +68,8 @@ EmulDisp::EmulDisp(QWidget *parent) :
 
 void EmulDisp::drawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    const QColor qcolor = RGB(color);
+    QColor qcolor = RGB(color);
+    qcolor = qcolor.lighter(100 * (brightness + 3) / (LCD_BR_MAX + 3));
 
     painter->begin(this);
     painter->fillRect(EMUL_DISP_SCALE * (x + EMUL_DISP_BORDER),
@@ -96,14 +102,9 @@ void EmulDisp::paintEvent(QPaintEvent *pe)
 {
     (void)pe;
 
-    if (screenGet() == SCREEN_MENU) {
-        menuSetActive(MENU_TUNER_BASS);
-        menuChange(+1);
-        menuChange(+1);
-        menuChange(+1);
-        menuSetActive(MENU_TUNER_STEP);
-    }
+    actionHandle(action, ACTION_VISIBLE);
     screenShow(true);
+    action = actionUserGet();
 
     // Draw frame
     painter->begin(this);
@@ -146,5 +147,12 @@ void EmulDisp::menuSelected(QAction *action)
 
 void EmulDisp::systick()
 {
+    inputPoll();
     swTimUpdate();
+}
+
+void EmulDisp::setBrightness(const int8_t &value)
+{
+    brightness = value;
+    qDebug() << "Set brightness to" << value;
 }

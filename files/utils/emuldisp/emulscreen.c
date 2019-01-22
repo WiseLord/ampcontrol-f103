@@ -108,16 +108,6 @@ RcCmd rcGetCmd(RcData *rcData)
     return RC_CMD_END;
 }
 
-void dispdrvSetBrightness(int8_t value)
-{
-    (void) value;
-}
-
-uint8_t dispdrvGetBus(void)
-{
-    return 0;
-}
-
 Spectrum *spGet(void)
 {
     return &spectrum;
