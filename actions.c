@@ -29,7 +29,7 @@ static void actionNextAudioParam(AudioProc *aProc)
         scrPar.tune++;
         if (scrPar.tune >= AUDIO_TUNE_END)
             scrPar.tune = AUDIO_TUNE_VOLUME;
-    } while (aProc->par.item[scrPar.tune].grid == NULL);
+    } while (aProc->par.item[scrPar.tune].grid == NULL && scrPar.tune != AUDIO_TUNE_VOLUME);
 }
 
 static void actionNextAudioInput(AudioProc *aProc)
