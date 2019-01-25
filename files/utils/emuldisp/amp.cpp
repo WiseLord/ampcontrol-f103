@@ -85,12 +85,33 @@ Amp::Amp(QWidget *parent) :
                        (EMUL_DISP_HEIGHT + 2 * EMUL_DISP_BORDER) * EMUL_DISP_SCALE);
     setFixedSize(sizeHint());
 
+    dialValue = dial->value();
+    dialMax = dial->maximum();
+
+    dialTimer = new QTimer(this);
+    dialTimer->setSingleShot(true);
+    connect(dialTimer, SIGNAL(timeout()), SLOT(dialTimerElapsed()));
+
     disp->init();
 }
 
 EmulDisp *Amp::getEmulDisp()
 {
     return emulDisp;
+}
+
+void Amp::dialChanged(int value)
+{
+    int diff = (value + dialMax - dialValue) % dialMax;
+    if (diff > dialMax / 2) {
+        this->bus |= ENC_B;
+    } else if (diff < dialMax / 2) {
+        this->bus |= ENC_A;
+    }
+    dialValue = value;
+    dialTimer->start(100);
+
+    this->statusBar()->showMessage(QString("ENC value: %1").arg(value), 1000);
 }
 
 void Amp::on_btn0_pressed()
@@ -163,4 +184,19 @@ void Amp::on_btn5_released()
 {
     this->bus &= ~BTN_D5;
     this->statusBar()->showMessage("BTN_D5 released", 1000);
+}
+
+void Amp::on_dial_valueChanged(int value)
+{
+    dialChanged(value);
+}
+
+void Amp::on_dial_sliderMoved(int position)
+{
+    dialChanged(position);
+}
+
+void Amp::dialTimerElapsed()
+{
+    this->bus &= ~(ENC_A | ENC_B);
 }

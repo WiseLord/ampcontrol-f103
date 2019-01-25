@@ -22,6 +22,8 @@ int16_t eeReadI(EE_Param param, int16_t def)
         return 1;
     case EE_AUDIO_PARAM_VOLUME:
         return -30;
+    case EE_INPUT_ENC_RES:
+        return 0;
     default:
         return def;
     }

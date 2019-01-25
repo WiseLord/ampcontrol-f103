@@ -15,6 +15,14 @@ public:
 
     uint8_t bus;
 
+private:
+    int dialValue;
+    int dialMax;
+
+    void dialChanged(int value);
+
+    QTimer *dialTimer;
+
 private slots:
     void on_btn0_pressed();
     void on_btn0_released();
@@ -28,6 +36,10 @@ private slots:
     void on_btn4_released();
     void on_btn5_pressed();
     void on_btn5_released();
+    void on_dial_valueChanged(int value);
+    void on_dial_sliderMoved(int position);
+
+    void dialTimerElapsed();
 };
 
 #endif // AMP_H
