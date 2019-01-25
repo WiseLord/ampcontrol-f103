@@ -24,7 +24,7 @@ extern "C" {
 #define ENC_AB                  (ENC_A | ENC_B)
 
 // Handling long press actions
-#define SHORT_PRESS             100
+#define SHORT_PRESS             60
 #define LONG_PRESS              600
 #define AUTOREPEAT              150
 

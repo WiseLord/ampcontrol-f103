@@ -1,16 +1,12 @@
 #include "emuldisp.h"
 
 #include "../../../canvas/layout.h"
-#include "../../../display/dispdrv.h"
-#include "../../../display/glcd.h"
+#include "../../../display/dispdefs.h"
 #include "../../../input.h"
-#include "../../../menu.h"
 #include "../../../screen.h"
 #include "../../../swtimers.h"
 #include "../../../tr/labels.h"
-#include "../../../tuner/tuner.h"
 
-#include "emulscreen.h"
 #include <QDebug>
 
 #define RGB(x) QColor(QRgb( ((x & 0xF800) << 8) | ((x & 0xE000) << 3) | \
@@ -24,45 +20,22 @@ EmulDisp::EmulDisp(QWidget *parent) :
     action = {ACTION_STANDBY, FLAG_ON};
     brightness = LCD_BR_MAX;
 
-    painter = new QPainter;
-
-    cMenu = new QMenu(this);
-
-    actScreenTime = new QAction("Show time", this);
-    actScreenSpectrum = new QAction("Show spectrum", this);
-    actScreenBrightness = new QAction("Show brightness", this);
-    actScreenInput = new QAction("Show input", this);
-    actScreenAudio = new QAction("Show audio", this);
-    actScreenTuner = new QAction("Show tuner", this);
-    actScreenMenu = new QAction("Show menu", this);
-
-    cMenu->addAction(actScreenTime);
-    cMenu->addAction(actScreenSpectrum);
-    cMenu->addAction(actScreenBrightness);
-    cMenu->addAction(actScreenInput);
-    cMenu->addAction(actScreenAudio);
-    cMenu->addAction(actScreenTuner);
-    cMenu->addAction(actScreenMenu);
-
-    connect(cMenu,
-            SIGNAL(triggered(QAction *)),
-            SLOT(menuSelected(QAction *))
-           );
-
-    labelsInit();
-    layoutInit();
-    screenReadSettings();
-
-    tunerReadSettings();
-    audioReadSettings();
-    screenSet(EMUL_SCREEN_INIT);
-
     updateTimer = new QTimer(this);
-    connect(updateTimer, SIGNAL(timeout()), SLOT(update()));
-    updateTimer->start(250);
+    connect(updateTimer, SIGNAL(timeout()), SLOT(drawscreen()));
 
     mSecTimer = new QTimer(this);
     connect(mSecTimer, SIGNAL(timeout()), SLOT(systick()));
+}
+
+void EmulDisp::init()
+{
+    screenInit();
+    inputInit();
+
+    audioReadSettings();
+    tunerReadSettings();
+
+    updateTimer->start(40);
     mSecTimer->start(1);
 }
 
@@ -71,26 +44,64 @@ void EmulDisp::drawPixel(int16_t x, int16_t y, uint16_t color)
     QColor qcolor = RGB(color);
     qcolor = qcolor.lighter(100 * (brightness + 3) / (LCD_BR_MAX + 3));
 
-    painter->begin(this);
-    painter->fillRect(EMUL_DISP_SCALE * (x + EMUL_DISP_BORDER),
-                      EMUL_DISP_SCALE * (y + EMUL_DISP_BORDER),
-                      EMUL_DISP_SCALE,
-                      EMUL_DISP_SCALE,
-                      qcolor);
-    painter->end();
+    QPainter painter(&image);
+    QRect rect(EMUL_DISP_SCALE * (x + EMUL_DISP_BORDER),
+               EMUL_DISP_SCALE * (y + EMUL_DISP_BORDER),
+               EMUL_DISP_SCALE,
+               EMUL_DISP_SCALE);
+
+    painter.fillRect(rect, qcolor);
+    update(rect);
 }
 
 void EmulDisp::drawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
-    const QColor qcolor = RGB(color);
+    QColor qcolor = RGB(color);
+    qcolor = qcolor.lighter(100 * (brightness + 3) / (LCD_BR_MAX + 3));
 
-    painter->begin(this);
-    painter->fillRect(EMUL_DISP_SCALE * (x + EMUL_DISP_BORDER),
-                      EMUL_DISP_SCALE * (y + EMUL_DISP_BORDER),
-                      w * EMUL_DISP_SCALE,
-                      h * EMUL_DISP_SCALE,
-                      qcolor);
-    painter->end();
+    QPainter painter(&image);
+    QRect rect(EMUL_DISP_SCALE * (x + EMUL_DISP_BORDER),
+               EMUL_DISP_SCALE * (y + EMUL_DISP_BORDER),
+               w * EMUL_DISP_SCALE,
+               h * EMUL_DISP_SCALE);
+
+    painter.fillRect(rect, qcolor);
+    update(rect);
+}
+
+void EmulDisp::drawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
+{
+    QColor qcolor = RGB(color);
+    qcolor = qcolor.lighter(100 * (brightness + 3) / (LCD_BR_MAX + 3));
+
+    QColor qBgcolor = RGB(bgColor);
+    qBgcolor = qBgcolor.lighter(100 * (brightness + 3) / (LCD_BR_MAX + 3));
+
+    QRect rect(EMUL_DISP_SCALE * (x + EMUL_DISP_BORDER),
+               EMUL_DISP_SCALE * (y + EMUL_DISP_BORDER),
+               img->width * EMUL_DISP_SCALE,
+               img->height * EMUL_DISP_SCALE);
+
+    QPainter painter(&image);
+
+    int16_t w = img->width;
+    int16_t h = img->height;
+    for (uint16_t j = 0; j < (h + 7) / 8; j++) {
+        for (uint16_t i = 0; i < w; i++) {
+            uint8_t data = img->data[w * j + i];
+            for (uint8_t bit = 0; bit < 8; bit++) {
+                if (8 * j + bit < h) {
+                    QRect pixRect(EMUL_DISP_SCALE * (x + i + EMUL_DISP_BORDER),
+                                  EMUL_DISP_SCALE * (y + (8 * j + bit) + EMUL_DISP_BORDER),
+                                  EMUL_DISP_SCALE,
+                                  EMUL_DISP_SCALE);
+                    painter.fillRect(pixRect, data & (1 << bit) ? qcolor : qBgcolor);
+                }
+            }
+        }
+    }
+
+    update(rect);
 }
 
 void EmulDisp::setSize(uint16_t w, uint16_t h)
@@ -100,49 +111,15 @@ void EmulDisp::setSize(uint16_t w, uint16_t h)
 
 void EmulDisp::paintEvent(QPaintEvent *pe)
 {
-    (void)pe;
-
-    actionHandle(action, ACTION_VISIBLE);
-    screenShow(true);
-    action = actionUserGet();
-
-    // Draw frame
-    painter->begin(this);
-    painter->setPen(QPen(Qt::black, EMUL_DISP_SCALE * EMUL_DISP_BORDER * 2));
-    painter->drawRect(0, 0, this->width(), this->height());
-    painter->end();
+    QPainter painter(this);
+    QRect dirtyRect = pe->rect();
+    painter.drawImage(dirtyRect, image, dirtyRect);
 }
 
-void EmulDisp::contextMenuEvent(QContextMenuEvent *pe)
+void EmulDisp::resizeEvent(QResizeEvent *event)
 {
-    cMenu->exec(pe->globalPos());
-}
-
-void EmulDisp::menuSelected(QAction *action)
-{
-    ScreenParam scrPar;
-
-    if (action == actScreenTime) {
-        screenSet(SCREEN_TIME);
-    } else if (action == actScreenSpectrum) {
-        screenSet(SCREEN_SPECTRUM);
-    } else if (action == actScreenBrightness) {
-        screenSet(SCREEN_BRIGHTNESS);
-    } else if (action == actScreenInput) {
-        screenSet(SCREEN_AUDIO_INPUT);
-    } else if (action == actScreenAudio) {
-        scrPar.tune = AUDIO_TUNE_VOLUME;
-        screenSetParam(scrPar);
-        screenSet(SCREEN_AUDIO_PARAM);
-    } else if (action == actScreenTuner) {
-        screenSet(SCREEN_TUNER);
-    } else if (action == actScreenMenu) {
-        screenSet(SCREEN_MENU);
-    } else {
-        screenSet(SCREEN_STANDBY);
-    }
-
-    update();
+    resizeImage(&image, QSize(width(), height()));
+    QWidget::resizeEvent(event);
 }
 
 void EmulDisp::systick()
@@ -151,8 +128,26 @@ void EmulDisp::systick()
     swTimUpdate();
 }
 
+void EmulDisp::drawscreen()
+{
+    actionHandle(action, ACTION_VISIBLE);
+    screenShow(false);
+    action = actionUserGet();
+}
+
+void EmulDisp::resizeImage(QImage *image, const QSize &newSize)
+{
+    if (image->size() == newSize)
+        return;
+
+    QImage newImage(newSize, QImage::Format_RGB32);
+    newImage.fill(Qt::black);
+    QPainter painter(&newImage);
+    painter.drawImage(QPoint(0, 0), *image);
+    *image = newImage;
+}
+
 void EmulDisp::setBrightness(const int8_t &value)
 {
     brightness = value;
-    qDebug() << "Set brightness to" << value;
 }

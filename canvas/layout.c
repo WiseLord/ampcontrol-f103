@@ -169,7 +169,7 @@ static void canvasImproveSpectrum(SpChan *chan, uint16_t height)
         if (chan->peak[i] <= chan->raw[i]) {
             chan->peak[i] = chan->raw[i] + 1;
         } else {
-            if (chan->peak[i]) {
+            if (chan->peak[i] && chan->peak[i] > chan->show[i] + 1) {
                 chan->peak[i]--;
             }
         }

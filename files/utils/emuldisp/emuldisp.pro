@@ -12,7 +12,6 @@ DEFINES += EMUL_DISP
 SOURCES += \
     amp.cpp \
     emuldisp.cpp \
-    emulscreen.c \
     main.cpp \
     ../../../display/fonts/font-terminus-12.c \
     ../../../display/fonts/font-terminus-14.c \
@@ -70,13 +69,13 @@ SOURCES += \
     ../../../swtimers.c \
     ../../../actions.c \
     ../../../input.c \
-    ../../../rtc.c
+    ../../../rtc.c \
+    emuldisp_stub.c
 
 
 HEADERS += \
     amp.h \
     emuldisp.h \
-    emulscreen.h \
     ../../../display/fonts/fonts.h \
     ../../../display/icons/icons.h \
     ../../../display/glcd.h \r \
