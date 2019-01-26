@@ -48,6 +48,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_TUNER_BAND]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     EE_TUNER_BAND},
     [MENU_TUNER_STEP]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     EE_TUNER_STEP},
     [MENU_TUNER_DEEMPH]     = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     EE_TUNER_DEEMPH},
+    [MENU_TUNER_MODE]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     EE_TUNER_MODE},
     [MENU_TUNER_FMONO]      = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     EE_TUNER_FMONO},
     [MENU_TUNER_RDS]        = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     EE_TUNER_RDS},
     [MENU_TUNER_BASS]       = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     EE_TUNER_BASS},
@@ -124,6 +125,9 @@ static int16_t menuGetValue(MenuIdx index)
         break;
     case MENU_TUNER_DEEMPH:
         ret = (int16_t)(tPar->deemph);
+        break;
+    case MENU_TUNER_MODE:
+        ret = (int16_t)(tPar->mode);
         break;
 
     case MENU_TUNER_FMONO:
@@ -204,6 +208,9 @@ static void menuStoreCurrentValue(void)
         break;
     case MENU_TUNER_DEEMPH:
         tPar->deemph = (TunerDeemph)menu.value;
+        break;
+    case MENU_TUNER_MODE:
+        tPar->mode = (TunerMode)menu.value;
         break;
 
     case MENU_TUNER_FMONO:
@@ -318,6 +325,12 @@ static void menuValueChange(int8_t diff)
             menu.value = TUNER_DEEMPH_END - 1;
         if (menu.value < TUNER_DEEMPH_50u)
             menu.value = TUNER_DEEMPH_50u;
+        break;
+    case MENU_TUNER_MODE:
+        if (menu.value > TUNER_MODE_END - 1)
+            menu.value = TUNER_MODE_END - 1;
+        if (menu.value < TUNER_MODE_GRID)
+            menu.value = TUNER_MODE_GRID;
         break;
     case MENU_TUNER_VOLUME:
         if (menu.value > TUNER_VOLUME_MAX)
@@ -512,6 +525,9 @@ const char *menuGetValueStr(MenuIdx index)
         break;
     case MENU_TUNER_DEEMPH:
         ret = labelsGet((Label)(LABEL_TUNER_DEEMPH + value));
+        break;
+    case MENU_TUNER_MODE:
+        ret = labelsGet((Label)(LABEL_TUNER_MODE + value));
         break;
     case MENU_SPECTURM_MODE:
         ret = labelsGet((Label)(LABEL_SPECTRUM_MODE + value));

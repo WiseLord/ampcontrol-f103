@@ -60,18 +60,19 @@ typedef enum {
 } TunerDeemph;
 
 typedef enum {
-    TUNER_FREQ_CURR,
-    TUNER_FREQ_MIN,
-    TUNER_FREQ_MAX,
+    TUNER_MODE_GRID,
+    TUNER_MODE_STATIONS,
+    TUNER_MODE_SCAN,
 
-    TUNER_FREQ_END,
-} TunerFreq;
+    TUNER_MODE_END,
+} TunerMode;
 
 typedef struct {
     TunerIC ic;
     TunerBand band;
     TunerStep step;
     TunerDeemph deemph;
+    TunerMode mode;
 
     bool mute;
     bool bassBoost;

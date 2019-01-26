@@ -26,6 +26,7 @@ void tunerReadSettings(void)
     tuner.par.band = (TunerBand)(eeRead(EE_TUNER_BAND));
     tuner.par.step = (TunerStep)(eeRead(EE_TUNER_STEP));
     tuner.par.deemph = (TunerDeemph)(eeRead(EE_TUNER_DEEMPH));
+    tuner.par.mode = (TunerMode)(eeRead(EE_TUNER_MODE));
 
     tuner.par.forcedMono = eeRead(EE_TUNER_FMONO);
     tuner.par.rds = eeRead(EE_TUNER_RDS);

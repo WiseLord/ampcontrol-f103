@@ -65,6 +65,10 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50us",
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75us",
 
+    [LABEL_TUNER_MODE + TUNER_MODE_GRID]        = "Grid",
+    [LABEL_TUNER_MODE + TUNER_MODE_STATIONS]    = "Stations",
+    [LABEL_TUNER_MODE + TUNER_MODE_SCAN]        = "Scan",
+
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stereo",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Mixed",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Waterfall",
@@ -82,15 +86,6 @@ static const char *const labels_default[LABEL_END] = {
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
 
-    [LABEL_MENU + MENU_AUDIO_IN_0]      = "Input 0",
-    [LABEL_MENU + MENU_AUDIO_IN_1]      = "Input 1",
-    [LABEL_MENU + MENU_AUDIO_IN_2]      = "Input 2",
-    [LABEL_MENU + MENU_AUDIO_IN_3]      = "Input 3",
-    [LABEL_MENU + MENU_AUDIO_IN_4]      = "Input 4",
-    [LABEL_MENU + MENU_AUDIO_IN_5]      = "Input 5",
-    [LABEL_MENU + MENU_AUDIO_IN_6]      = "Input 6",
-    [LABEL_MENU + MENU_AUDIO_IN_7]      = "Input 7",
-
     [LABEL_MENU + MENU_SETUP]           = "Settings",
     [LABEL_MENU + MENU_SETUP_LANG]      = "Language",
     [LABEL_MENU + MENU_SETUP_AUDIO]     = "Audio",
@@ -100,10 +95,20 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_INPUT]     = "Input",
     [LABEL_MENU + MENU_SETUP_RC]        = "Remote",
 
+    [LABEL_MENU + MENU_AUDIO_IN_0]      = "Input 0",
+    [LABEL_MENU + MENU_AUDIO_IN_1]      = "Input 1",
+    [LABEL_MENU + MENU_AUDIO_IN_2]      = "Input 2",
+    [LABEL_MENU + MENU_AUDIO_IN_3]      = "Input 3",
+    [LABEL_MENU + MENU_AUDIO_IN_4]      = "Input 4",
+    [LABEL_MENU + MENU_AUDIO_IN_5]      = "Input 5",
+    [LABEL_MENU + MENU_AUDIO_IN_6]      = "Input 6",
+    [LABEL_MENU + MENU_AUDIO_IN_7]      = "Input 7",
+
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner IC",
     [LABEL_MENU + MENU_TUNER_BAND]      = "Band",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Scan step",
     [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Deemphasys",
+    [LABEL_MENU + MENU_TUNER_MODE]      = "Control mode",
     [LABEL_MENU + MENU_TUNER_FMONO]     = "Force mono",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Enable RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass boost",

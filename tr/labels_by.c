@@ -24,7 +24,7 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_IN_TUNER]        = "Цюнер",
     [LABEL_IN_PC]           = "Кампутар",
     [LABEL_IN_TV]           = "Тэлевізар",
-    [LABEL_IN_BLUETOOTH]    = "Bluetooth",
+//    [LABEL_IN_BLUETOOTH]    = "Bluetooth",
 //    [LABEL_IN_DVD]          = "DVD",
 //    [LABEL_IN_USB]          = "USB",
     [LABEL_IN_MICROPHONE]   = "Мікрафон",
@@ -54,6 +54,10 @@ const char * const labels_by[LABEL_END] = {
 
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50мкс",
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75мкс",
+
+    [LABEL_TUNER_MODE + TUNER_MODE_GRID]        = "Сетка",
+    [LABEL_TUNER_MODE + TUNER_MODE_STATIONS]    = "Станцыі",
+    [LABEL_TUNER_MODE + TUNER_MODE_SCAN]        = "Пошук",
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Няма",
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
@@ -89,7 +93,8 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_IC]        = "Чып цюнера",
     [LABEL_MENU + MENU_TUNER_BAND]      = "Дыяпазон",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Крок",
-    [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Deemphasys",
+    [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Прадскажэнне",
+    [LABEL_MENU + MENU_TUNER_MODE]      = "Рэжым наладжвання",
     [LABEL_MENU + MENU_TUNER_FMONO]     = "Мона прымусова",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Уключыць RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Узмацніць НЧ",
@@ -102,5 +107,4 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Круціць",
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Вырашэнне энкодера",
-
 };

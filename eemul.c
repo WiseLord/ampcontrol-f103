@@ -76,6 +76,7 @@ static const EE_Map eeMap[] = {
     {EE_TUNER_BAND,             TUNER_BAND_FM_US_EUROPE},
     {EE_TUNER_STEP,             TUNER_STEP_100K},
     {EE_TUNER_DEEMPH,           TUNER_DEEMPH_50u},
+    {EE_TUNER_MODE,             TUNER_MODE_GRID},
     {EE_TUNER_FMONO,            false},
     {EE_TUNER_RDS,              true},
     {EE_TUNER_BASS,             false},
