@@ -1,7 +1,9 @@
 #include "ssd1286a.h"
 
-#include <stm32f1xx_ll_utils.h>
+#include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_spi.h>
+#include <stm32f1xx_ll_utils.h>
+
 #include "../../pins.h"
 #include "../dispdrv.h"
 

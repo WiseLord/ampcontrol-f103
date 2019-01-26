@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "../eemul.h"
+#include "../eemap.h"
 #include "../pins.h"
 
 #ifdef _TDA7439

@@ -7,9 +7,6 @@ extern "C" {
 
 #include <stdbool.h>
 
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_exti.h>
-
 void pinsHwReset(void);
 void pinsInit(void);
 void pinsInitAmpI2c(void);

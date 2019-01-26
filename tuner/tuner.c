@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "../eemul.h"
+#include "../eemap.h"
 
 #ifdef _RDA580X
 #include "rda580x.h"

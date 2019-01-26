@@ -1,11 +1,13 @@
 #include "pins.h"
 
 #include <stm32f1xx_ll_bus.h>
+#include <stm32f1xx_ll_exti.h>
+#include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "display/glcd.h"
-#include "eemul.h"
+#include "eemap.h"
 
 #ifdef _SI470X
 #include "tuner/si470x.h"

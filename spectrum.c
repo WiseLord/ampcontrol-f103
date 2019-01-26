@@ -6,7 +6,7 @@
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_rcc.h>
 
-#include "eemul.h"
+#include "eemap.h"
 #include "display/glcd.h"
 
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)

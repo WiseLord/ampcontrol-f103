@@ -4,7 +4,7 @@
 #include "display/glcd.h"
 #include "tr/labels.h"
 #include "actions.h"
-#include "eemul.h"
+#include "eemap.h"
 #include "fft.h"
 #include "spectrum.h"
 #include "swtimers.h"

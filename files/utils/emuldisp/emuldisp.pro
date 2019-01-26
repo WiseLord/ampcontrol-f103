@@ -70,7 +70,8 @@ SOURCES += \
     ../../../actions.c \
     ../../../input.c \
     ../../../rtc.c \
-    emuldisp_stub.c
+    emuldisp_stub.c \
+    ../../../eemap.c
 
 
 HEADERS += \
@@ -96,7 +97,8 @@ HEADERS += \
     ../../../swtimers.h \
     ../../../actions.h \
     ../../../input.h \
-    ../../../rtc.h
+    ../../../rtc.h \
+    ../../../eemap.h
 
 FORMS += \
     amp.ui

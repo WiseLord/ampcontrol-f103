@@ -1,6 +1,8 @@
 #include "hx8340.h"
 
+#include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
+
 #include "../../pins.h"
 #include "../dispdrv.h"
 

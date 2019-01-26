@@ -1,7 +1,7 @@
 #include "labels.h"
 
 #include "../rc.h"
-#include "../eemul.h"
+#include "../eemap.h"
 
 #define GENERATE_MENU_RC_TEXT(CMD)    [LABEL_MENU + MENU_RC_ ## CMD] =  # CMD,
 

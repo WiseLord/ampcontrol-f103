@@ -1,7 +1,7 @@
 #include "input.h"
 
 #include "display/dispdrv.h"
-#include "eemul.h"
+#include "eemap.h"
 
 static volatile int8_t encRes = 0;
 static volatile int8_t encCnt = 0;

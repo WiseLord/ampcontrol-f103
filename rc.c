@@ -2,9 +2,10 @@
 #include "pins.h"
 
 #include <stm32f1xx_ll_bus.h>
+#include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_tim.h>
 
-#include "eemul.h"
+#include "eemap.h"
 
 static uint16_t rcCode[RC_CMD_END]; // Array with rc commands
 

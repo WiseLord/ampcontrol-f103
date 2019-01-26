@@ -1,6 +1,6 @@
 #include "layout.h"
 
-#include "../eemul.h"
+#include "../eemap.h"
 #include "../menu.h"
 #include "../tr/labels.h"
 

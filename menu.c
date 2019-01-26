@@ -5,7 +5,7 @@
 #include "display/glcd.h"
 #include "canvas/layout.h"
 #include "tuner/tuner.h"
-#include "eemul.h"
+#include "eemap.h"
 #include "input.h"
 #include "pins.h"
 #include "screen.h"

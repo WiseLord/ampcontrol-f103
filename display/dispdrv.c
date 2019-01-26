@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stm32f1xx_ll_bus.h>
+#include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 #include "../pins.h"

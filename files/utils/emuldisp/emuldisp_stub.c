@@ -1,46 +1,23 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../../../eemul.h"
+#include "../../../eemap.h"
 #include "../../../spectrum.h"
 
 static Spectrum spectrum;
 static RcData rcData;
 
-uint16_t eeReadU(EE_Param param, uint16_t def)
+void eeUpdateRaw(uint16_t addr, uint16_t data)
 {
-    switch (param) {
-    default:
-        return def;
-    }
-}
-
-int16_t eeReadI(EE_Param param, int16_t def)
-{
-    switch (param) {
-    case EE_AUDIO_IN0:
-        return 1;
-    case EE_AUDIO_PARAM_VOLUME:
-        return -30;
-    case EE_INPUT_ENC_RES:
-        return 0;
-    default:
-        return def;
-    }
-}
-
-bool eeReadB(EE_Param param, bool def)
-{
-    switch (param) {
-    default:
-        return def;
-    }
-}
-
-void eeUpdate(EE_Param param, int16_t data)
-{
-    (void)param;
+    (void)addr;
     (void)data;
+}
+
+uint16_t eeReadRaw(uint16_t addr)
+{
+    (void)addr;
+
+    return EE_NOT_FOUND;
 }
 
 uint16_t rcGetCode(RcCmd cmd)
@@ -64,6 +41,26 @@ RcCmd rcGetCmd(RcData *rcData)
 {
     (void) rcData;
     return RC_CMD_END;
+}
+
+void pinsSetMuteStby(bool value)
+{
+    (void)value;
+}
+
+void pinsSetMute(bool value)
+{
+    (void)value;
+}
+
+void pinsSetStby(bool value)
+{
+    (void)value;
+}
+
+bool pinsGetMuteStby(void)
+{
+    return true;
 }
 
 Spectrum *spGet(void)

@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "audio/audio.h"
-#include "eemul.h"
+#include "eemap.h"
 #include "input.h"
 #include "menu.h"
 #include "pins.h"
