@@ -24,24 +24,24 @@ void audioReadSettings(void)
     // Read stored parameters
     memset(&aProc, 0, sizeof(aProc));
 
-    aProc.par.ic = eeReadU(EE_AUDIO_IC, AUDIO_IC_TDA7439);
-    aProc.par.loudness = eeReadB(EE_AUDIO_LOUDNESS, false);
-    aProc.par.surround = eeReadB(EE_AUDIO_SURROUND, false);
-    aProc.par.effect3d = eeReadB(EE_AUDIO_EFFECT3D, false);
-    aProc.par.bypass = eeReadB(EE_AUDIO_BYPASS, false);
+    aProc.par.ic = (AudioIC)(eeRead(EE_AUDIO_IC));
+    aProc.par.loudness = eeRead(EE_AUDIO_LOUDNESS);
+    aProc.par.surround = eeRead(EE_AUDIO_SURROUND);
+    aProc.par.effect3d = eeRead(EE_AUDIO_EFFECT3D);
+    aProc.par.bypass = eeRead(EE_AUDIO_BYPASS);
 
-    aProc.par.input = (uint8_t)eeReadU(EE_AUDIO_INPUT, 0);
+    aProc.par.input = (uint8_t)eeRead(EE_AUDIO_INPUT);
 
     for (EE_Param par = EE_AUDIO_PARAM_VOLUME; par <= EE_AUDIO_PARAM_PREAMP; par++) {
-        aProc.par.item[par - EE_AUDIO_PARAM_VOLUME].value = (int8_t)eeReadI(par, 0);
+        aProc.par.item[par - EE_AUDIO_PARAM_VOLUME].value = (int8_t)eeRead(par);
     }
 
     for (EE_Param par = EE_AUDIO_GAIN0; par <= EE_AUDIO_GAIN7; par++) {
-        aProc.par.gain[par - EE_AUDIO_GAIN0] = (int8_t)eeReadI(par, 0);
+        aProc.par.gain[par - EE_AUDIO_GAIN0] = (int8_t)eeRead(par);
     }
 
     for (EE_Param par = EE_AUDIO_IN0; par <= EE_AUDIO_IN7; par++) {
-        aProc.par.inType[par - EE_AUDIO_IN0] = (InputType)eeReadU(par, 0);
+        aProc.par.inType[par - EE_AUDIO_IN0] = (InputType)eeRead(par);
     }
 
     aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];

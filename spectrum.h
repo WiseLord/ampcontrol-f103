@@ -18,7 +18,7 @@ enum {
 };
 
 typedef enum {
-    SP_MODE_STEREO,
+    SP_MODE_STEREO = 0,
     SP_MODE_MIXED,
     SP_MODE_WATERFALL,
 

@@ -102,7 +102,7 @@ static bool screenCheckClear(void)
 void screenReadSettings(void)
 {
     for (BrMode mode = BR_STBY; mode < BR_END; mode++) {
-        brightness[mode] = (int8_t)eeReadI(EE_DISPLAY_BR_STBY + mode, mode == BR_STBY ? 3 : LCD_BR_MAX);
+        brightness[mode] = (int8_t)eeRead(EE_DISPLAY_BR_STBY + mode);
         if (brightness[mode] < LCD_BR_MIN) {
             brightness[mode] = LCD_BR_MIN;
         } else if (brightness[mode] > LCD_BR_MAX) {

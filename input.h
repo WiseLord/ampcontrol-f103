@@ -30,7 +30,6 @@ extern "C" {
 
 #define ENC_RES_MIN             -64
 #define ENC_RES_MAX             64
-#define ENC_RES_DEFAULT         4
 
 typedef uint16_t CmdBtn;
 

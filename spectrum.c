@@ -302,7 +302,7 @@ static void spGetData(int16_t *dma, uint8_t *data)
 
 static void spReadSettings(void)
 {
-    spectrum.mode = (SpMode)(eeReadI(EE_SPECTRUM_MODE, (int16_t)SP_MODE_STEREO));
+    spectrum.mode = (SpMode)(eeRead(EE_SPECTRUM_MODE));
 }
 
 void spInit(void)

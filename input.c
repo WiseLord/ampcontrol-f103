@@ -10,7 +10,7 @@ static CmdBtn cmdBuf = BTN_NO;
 
 void inputInit(void)
 {
-    encRes = (int8_t)eeReadI(EE_INPUT_ENC_RES, ENC_RES_DEFAULT);
+    encRes = (int8_t)eeRead(EE_INPUT_ENC_RES);
     encCnt = 0;
     cmdBuf = BTN_NO;
 }

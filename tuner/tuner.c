@@ -21,19 +21,19 @@ void tunerReadSettings(void)
     // Read stored parameters
     memset(&tuner, 0, sizeof(tuner));
 
-    tuner.par.ic = eeReadU(EE_TUNER_IC, TUNER_IC_RDA5807);
+    tuner.par.ic = (TunerIC)(eeRead(EE_TUNER_IC));
 
-    tuner.par.band = eeReadU(EE_TUNER_BAND, TUNER_BAND_FM_US_EUROPE);
-    tuner.par.step = eeReadU(EE_TUNER_STEP, TUNER_STEP_100K);
-    tuner.par.deemph = eeReadU(EE_TUNER_DEEMPH, TUNER_DEEMPH_50u);
+    tuner.par.band = (TunerBand)(eeRead(EE_TUNER_BAND));
+    tuner.par.step = (TunerStep)(eeRead(EE_TUNER_STEP));
+    tuner.par.deemph = (TunerDeemph)(eeRead(EE_TUNER_DEEMPH));
 
-    tuner.par.forcedMono = eeReadB(EE_TUNER_FMONO, false);
-    tuner.par.rds = eeReadB(EE_TUNER_RDS, true);
-    tuner.par.bassBoost = eeReadB(EE_TUNER_BASS, false);
+    tuner.par.forcedMono = eeRead(EE_TUNER_FMONO);
+    tuner.par.rds = eeRead(EE_TUNER_RDS);
+    tuner.par.bassBoost = eeRead(EE_TUNER_BASS);
 
-    tuner.par.volume = eeReadI(EE_TUNER_VOLUME, TUNER_VOLUME_MAX) & 0x0F;
+    tuner.par.volume = eeRead(EE_TUNER_VOLUME) & 0x0F;
 
-    tuner.par.freq = eeReadU(EE_TUNER_FREQ, 9950);
+    tuner.par.freq = (uint16_t)eeRead(EE_TUNER_FREQ);
     tuner.status.freq = tuner.par.freq;
 
     tuner.par.fMin = 8700;

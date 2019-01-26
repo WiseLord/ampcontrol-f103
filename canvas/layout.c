@@ -315,7 +315,7 @@ void layoutInit()
 
     canvasInit(&canvas);
 
-    bool rotate = eeReadB(EE_DISPLAY_ROTATE, false);
+    bool rotate = eeRead(EE_DISPLAY_ROTATE);
     glcdRotate(rotate);
 
     menuGet()->dispSize = lt->menu.itemCnt;

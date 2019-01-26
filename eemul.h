@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "rc.h"
 
-#define EE_PAGE_STEP    4
+#define EE_PAGE_STEP    2
 #define EE_PAGE_SIZE    1024
 
 #define EE_EMPTY        (uint16_t)0xFFFF
@@ -17,8 +17,8 @@ extern "C" {
 #define GENERATE_EE_RC(CMD)  EE_RC_ ## CMD,
 
 enum {
-    EE_PAGE_0 = 120,
-    EE_PAGE_1 = 124,
+    EE_PAGE_0 = 124,
+    EE_PAGE_1 = 126,
     EE_PAGE_END
 };
 
@@ -77,19 +77,15 @@ typedef enum {
     EE_SPECTRUM_MODE,
     EE_INPUT_ENC_RES,
 
-    EE_LANGUAGE = 0x80, // Skip half of items to fix RC offset
-    FOREACH_CMD(GENERATE_EE_RC)
+    EE_LANGUAGE = 0x80,
 
-    EE_PARAM_END
+    FOREACH_CMD(GENERATE_EE_RC)
 } EE_Param;
 
 void eeInit(void);
 
 void eeUpdate(EE_Param param, int16_t data);
-
-uint16_t eeReadU(EE_Param param, uint16_t def);
-int16_t eeReadI(EE_Param param, int16_t def);
-bool eeReadB(EE_Param param, bool def);
+int16_t eeRead(EE_Param param);
 
 #ifdef __cplusplus
 }

@@ -193,5 +193,5 @@ const char *labelsGet(Label value)
 
 void labelsInit(void)
 {
-    lang = eeReadU(EE_LANGUAGE, LANG_DEFAULT);
+    lang = (Lang)(eeRead(EE_LANGUAGE));
 }
