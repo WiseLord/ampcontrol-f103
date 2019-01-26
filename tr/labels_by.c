@@ -65,10 +65,6 @@ const char * const labels_by[LABEL_END] = {
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
 //    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
 
-//    [LABEL_LANG + LANG_DEFAULT]         = "English",
-//    [LABEL_LANG + LANG_BY]              = "Беларуская",
-//    [LABEL_LANG + LANG_RU]              = "Русский",
-
     [LABEL_MENU + MENU_NULL]            = "Назад",
 
     [LABEL_MENU + MENU_SETUP]           = "Налады",
@@ -102,7 +98,6 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_VOLUME]    = "Гучнасць",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Рэжым экрана",
-//    [LABEL_MENU + MENU_SPECTRUM_SPEED]  = "Хуткасць",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яркасць STBY",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Круціць",

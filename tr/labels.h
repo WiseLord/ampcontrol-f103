@@ -16,6 +16,7 @@ typedef enum {
 
     LANG_BY,
     LANG_RU,
+    LANG_TR,
 
     LANG_END
 } Lang;
@@ -97,6 +98,10 @@ typedef enum {
 
     LABEL_END = LABEL_MENU_END,
 } Label;
+
+extern const char *const labels_by[LABEL_END];
+extern const char *const labels_ru[LABEL_END];
+extern const char *const labels_tr[LABEL_END];
 
 void labelsSetLang(Lang value);
 Lang labelsGetLang(void);

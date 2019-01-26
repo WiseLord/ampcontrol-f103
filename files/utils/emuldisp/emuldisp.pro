@@ -71,7 +71,8 @@ SOURCES += \
     ../../../input.c \
     ../../../rtc.c \
     emuldisp_stub.c \
-    ../../../eemap.c
+    ../../../eemap.c \
+    ../../../tr/labels_tr.c
 
 
 HEADERS += \

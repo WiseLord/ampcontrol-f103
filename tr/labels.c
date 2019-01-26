@@ -7,9 +7,6 @@
 
 static Lang lang = LANG_END;
 
-extern const char *const labels_by[LABEL_END];
-extern const char *const labels_ru[LABEL_END];
-
 static const char *const labels_default[LABEL_END] = {
     [LABEL_SUNDAY]          = "SUNDAY",
     [LABEL_MONDAY]          = "MONDAY",
@@ -82,6 +79,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_LANG + LANG_DEFAULT]         = "English",
     [LABEL_LANG + LANG_BY]              = "Беларуская",
     [LABEL_LANG + LANG_RU]              = "Русский",
+    [LABEL_LANG + LANG_TR]              = "Türkçe",
 
     [LABEL_MENU + MENU_NULL]            = "Up menu",
 
@@ -116,7 +114,6 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_VOLUME]    = "Volume",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Display mode",
-//    [LABEL_MENU + MENU_SPECTRUM_SPEED]  = "Fall speed",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "STBY brightness",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Rotate",
@@ -189,6 +186,10 @@ const char *labelsGet(Label value)
     case LANG_RU:
         if (labels_ru[value])
             ret = labels_ru[value];
+        break;
+    case LANG_TR:
+        if (labels_tr[value])
+            ret = labels_tr[value];
         break;
     default:
         break;
