@@ -77,6 +77,7 @@ typedef enum {
 
     EE_SPECTRUM_MODE,
     EE_INPUT_ENC_RES,
+    EE_SETUP_MUTESTBY,
 
     EE_LANGUAGE = 0x80,
 

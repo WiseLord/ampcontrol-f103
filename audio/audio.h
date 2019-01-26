@@ -1,6 +1,10 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -45,5 +49,9 @@ void audioSetLoudness(bool value);
 void audioSetSurround(bool value);
 void audioSetEffect3D(bool value);
 void audioSetBypass(bool value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // AUDIO_H

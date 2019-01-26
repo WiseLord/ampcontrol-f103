@@ -1,6 +1,10 @@
 #ifndef RDA580X_REGS_H
 #define RDA580X_REGS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Write mode
 
 // 0 register (02H)
@@ -172,5 +176,9 @@
 #define RDA5807_RDSD_HI             0xFF // RDS block D data high
 // 11 register (0FL)
 #define RDA5807_RDSD_LO             0xFF // RDS block D data low
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // RDA580X_REGS_H

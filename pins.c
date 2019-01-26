@@ -5,6 +5,7 @@
 #include <stm32f1xx_ll_utils.h>
 
 #include "display/glcd.h"
+#include "eemul.h"
 
 #ifdef _SI470X
 #include "tuner/si470x.h"
@@ -54,6 +55,17 @@ static void pinsInitDisplay(void)
 #endif
 }
 
+static void pinsInitMuteStby(bool value)
+{
+    if (value) {
+        // JTAG-DP Disabled and SW-DP Disabled
+        LL_GPIO_AF_DisableRemap_SWJ();
+    } else {
+        // JTAG-DP Disabled and SW-DP Enabled
+        LL_GPIO_AF_Remap_SWJ_NOJTAG();
+    }
+}
+
 void pinsHwReset(void)
 {
     OUT_INIT(SI470X_RST, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
@@ -93,9 +105,6 @@ void pinsInitAmpI2c(void)
 
 void pinsInit(void)
 {
-    // NOJTAG: JTAG-DP Disabled and SW-DP Enabled
-    LL_GPIO_AF_Remap_SWJ_NOJTAG();
-
     // Enable clock for all GPIO peripherials
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
@@ -105,6 +114,37 @@ void pinsInit(void)
     pinsInitRc();
     pinsInitDisplay();
 
+    bool muteStby = eeRead(EE_SETUP_MUTESTBY);
+    pinsInitMuteStby(muteStby);
+
     OUT_INIT(MUTE, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
     OUT_INIT(STBY, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+}
+
+void pinsSetMuteStby(bool value)
+{
+    pinsInitMuteStby(value);
+}
+
+bool pinsGetMuteStby()
+{
+    return (READ_BIT(AFIO->MAPR, AFIO_MAPR_SWJ_CFG_DISABLE) == (AFIO_MAPR_SWJ_CFG_DISABLE));
+}
+
+void pinsSetMute(bool value)
+{
+    if (value) {
+        SET(MUTE);
+    } else {
+        CLR(MUTE);
+    }
+}
+
+void pinsSetStby(bool value)
+{
+    if (value) {
+        SET(STBY);
+    } else {
+        CLR(STBY);
+    }
 }

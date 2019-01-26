@@ -1,12 +1,24 @@
 #ifndef PINS_H
 #define PINS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <stdbool.h>
+
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_exti.h>
 
 void pinsHwReset(void);
 void pinsInit(void);
 void pinsInitAmpI2c(void);
+
+void pinsSetMuteStby(bool value);
+bool pinsGetMuteStby(void);
+
+void pinsSetMute(bool value);
+void pinsSetStby(bool value);
 
 #define CONCAT(x,y)             x ## y
 
@@ -113,5 +125,8 @@ void pinsInitAmpI2c(void);
 #define SI470X_RST_Port         GPIOA
 #define SI470X_RST_Pin          LL_GPIO_PIN_15
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // PINS_H

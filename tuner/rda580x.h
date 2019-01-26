@@ -1,6 +1,10 @@
 #ifndef RDA5807X_H
 #define RDA5807X_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -23,5 +27,9 @@ void rda580xSetRds(bool value);
 void rda580xSetPower(bool value);
 
 void rda580xUpdateStatus(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // RDA5807X_H

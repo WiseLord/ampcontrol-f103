@@ -1,6 +1,10 @@
 #ifndef TEA5767_H
 #define TEA5767_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -16,5 +20,9 @@ void tea5767SetMute(bool value);
 void tea5767SetPower(bool value);
 
 void tea5767UpdateStatus(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // TEA5767_H

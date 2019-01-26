@@ -39,6 +39,7 @@ static const EE_Map eeMap[] = {
 
     {EE_AUDIO_IC,               AUDIO_IC_TDA7439},
     {EE_AUDIO_INPUT,            0},
+    {EE_SETUP_MUTESTBY,         false},
     {EE_AUDIO_LOUDNESS,         false},
     {EE_AUDIO_SURROUND,         false},
     {EE_AUDIO_EFFECT3D,         false},

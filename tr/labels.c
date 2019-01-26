@@ -20,6 +20,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_SATURDAY]        = "SATURDAY",
 
     [LABEL_BRIGNTNESS]      = "Brightness",
+    [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Mute & Stby pins",
 
     [LABEL_VOLUME]          = "Volume",
     [LABEL_BASS]            = "Bass",
@@ -84,8 +85,6 @@ static const char *const labels_default[LABEL_END] = {
 
     [LABEL_MENU + MENU_NULL]            = "Up menu",
 
-    [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
-
     [LABEL_MENU + MENU_SETUP]           = "Settings",
     [LABEL_MENU + MENU_SETUP_LANG]      = "Language",
     [LABEL_MENU + MENU_SETUP_AUDIO]     = "Audio",
@@ -94,6 +93,8 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Display",
     [LABEL_MENU + MENU_SETUP_INPUT]     = "Input",
     [LABEL_MENU + MENU_SETUP_RC]        = "Remote",
+
+    [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
 
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Input 0",
     [LABEL_MENU + MENU_AUDIO_IN_1]      = "Input 1",

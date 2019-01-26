@@ -1,6 +1,10 @@
 #ifndef SI470X_H
 #define SI470X_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -22,5 +26,9 @@ void si470xSetRds(bool value);
 void si470xSetPower(bool value);
 
 void si470xUpdateStatus(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SI470X_H

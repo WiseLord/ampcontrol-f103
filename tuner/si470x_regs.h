@@ -1,6 +1,10 @@
 #ifndef SI470X_REGS_H
 #define SI470X_REGS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Write mode
 
 // 0 byte (02H)
@@ -129,5 +133,9 @@
 #define SI740X_RDSD_HI              0xFF // RDS block D data high
 // 11 byte (0FL)
 #define SI740X_RDSD_LO              0xFF // RDS block D data low
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SI470X_REGS_H

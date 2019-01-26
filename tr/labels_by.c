@@ -10,6 +10,7 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_SATURDAY]        = "СУБОТА",
 
     [LABEL_BRIGNTNESS]      = "Яркасць",
+    [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Вывады Mute і Stby",
 
     [LABEL_VOLUME]          = "Гучнасць",
     [LABEL_BASS]            = "Тэмбр НЧ",
@@ -70,8 +71,6 @@ const char * const labels_by[LABEL_END] = {
 
     [LABEL_MENU + MENU_NULL]            = "Назад",
 
-    [LABEL_MENU + MENU_AUDIO_IC]        = "Аўдыёпрацэсар",
-
     [LABEL_MENU + MENU_SETUP]           = "Налады",
     [LABEL_MENU + MENU_SETUP_LANG]      = "Мова",
     [LABEL_MENU + MENU_SETUP_AUDIO]     = "Аудыё",
@@ -80,6 +79,8 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Дысплэй",
     [LABEL_MENU + MENU_SETUP_INPUT]     = "Увод",
     [LABEL_MENU + MENU_SETUP_RC]        = "Пульт",
+
+    [LABEL_MENU + MENU_AUDIO_IC]        = "Аўдыёпрацэсар",
 
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Уваход 0",
     [LABEL_MENU + MENU_AUDIO_IN_1]      = "Уваход 1",

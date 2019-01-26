@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../eemul.h"
+#include "../pins.h"
 
 #ifdef _TDA7439
 #include "tda7439.h"
@@ -199,6 +200,8 @@ void audioSetInput(uint8_t value)
 void audioSetMute(bool value)
 {
     aProc.par.mute = value;
+
+    pinsSetMute(!value);
 
     if (aProc.api.setMute) {
         aProc.api.setMute(value);

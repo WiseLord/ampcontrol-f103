@@ -1,6 +1,10 @@
 #ifndef AUDIODEFS_H
 #define AUDIODEFS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -76,5 +80,9 @@ typedef struct {
     bool effect3d;
     bool bypass;
 } AudioParam;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // AUDIODEFS_H

@@ -7,6 +7,7 @@
 #include "eemul.h"
 #include "input.h"
 #include "menu.h"
+#include "pins.h"
 #include "rtc.h"
 #include "screen.h"
 #include "spectrum.h"
@@ -400,6 +401,11 @@ static void actionRemapCommon(void)
             action.value = (int16_t)menu->parent;
         }
         break;
+    case ACTION_AUDIO_MUTE:
+        if (FLAG_SWITCH == action.value) {
+            action.value = !aProc->par.mute;
+        }
+        break;
     default:
         break;
     }
@@ -478,6 +484,7 @@ void actionHandle(Action action, uint8_t visible)
             audioReadSettings();
             tunerReadSettings();
 
+            pinsSetStby(true);      // ON via relay
             swTimSetInitHw(500);
         } else {
             dispTime = SW_TIM_OFF;
@@ -491,6 +498,8 @@ void actionHandle(Action action, uint8_t visible)
 
             tunerSetMute(true);
             tunerSetPower(false);
+
+            pinsSetStby(false);     // OFF via relay
         }
         break;
     case ACTION_INIT_HW:
@@ -573,6 +582,11 @@ void actionHandle(Action action, uint8_t visible)
         dispTime = 5000;
         audioChangeTune(scrPar.tune, (int8_t)(action.value));
         break;
+
+    case ACTION_AUDIO_MUTE:
+        audioSetMute(action.value);
+        break;
+
     case ACTION_TUNER_PREV:
         screen = SCREEN_TUNER;
         tunerNextStation(TUNER_DIR_DOWN);

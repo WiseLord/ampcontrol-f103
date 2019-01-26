@@ -7,6 +7,7 @@
 #include "tuner/tuner.h"
 #include "eemul.h"
 #include "input.h"
+#include "pins.h"
 #include "screen.h"
 #include "spectrum.h"
 
@@ -27,6 +28,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SETUP]            = {MENU_NULL,               MENU_TYPE_PARENT,   EE_NULL},
 
     [MENU_SETUP_LANG]       = {MENU_SETUP,              MENU_TYPE_ENUM,     EE_LANGUAGE},
+    [MENU_SETUP_MUTESTBY]   = {MENU_SETUP,              MENU_TYPE_BOOL,     EE_SETUP_MUTESTBY},
     [MENU_SETUP_AUDIO]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_TUNER]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_SPECTRUM]   = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
@@ -98,6 +100,9 @@ static int16_t menuGetValue(MenuIdx index)
     switch (index) {
     case MENU_SETUP_LANG:
         ret = (int16_t)(labelsGetLang());
+        break;
+    case MENU_SETUP_MUTESTBY:
+        ret = pinsGetMuteStby();
         break;
 
     case MENU_AUDIO_IC:
@@ -181,6 +186,9 @@ static void menuStoreCurrentValue(void)
     switch (menu.active) {
     case MENU_SETUP_LANG:
         labelsSetLang((Lang)(menu.value));
+        break;
+    case MENU_SETUP_MUTESTBY:
+        pinsSetMuteStby(menu.value);
         break;
 
     case MENU_AUDIO_IC:
@@ -501,6 +509,7 @@ const char *menuGetValueStr(MenuIdx index)
     case MENU_SETUP_LANG:
         ret = labelsGet((Label)(LABEL_LANG + value));
         break;
+
     case MENU_AUDIO_IC:
         ret = labelsGet((Label)(LABEL_AUDIO_IC + value));
         break;

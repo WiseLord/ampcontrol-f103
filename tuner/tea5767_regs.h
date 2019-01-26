@@ -1,6 +1,10 @@
 #ifndef TEA5767_REGS_H
 #define TEA5767_REGS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Write mode
 
 // 0 register
@@ -58,5 +62,9 @@
 
 // 4 register
 #define TEA5767_RESERVED_MASK   0xFF // Not used
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // TEA5767_REGS_H

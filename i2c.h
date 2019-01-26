@@ -1,6 +1,10 @@
 #ifndef I2C_H
 #define I2C_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stm32f103xb.h>
@@ -20,5 +24,9 @@ void i2cBegin(I2C_TypeDef *I2Cx, uint8_t addr);
 void i2cSend(I2C_TypeDef *I2Cx, uint8_t data);
 void i2cTransmit(I2C_TypeDef *I2Cx, bool stop);
 void i2cReceive(I2C_TypeDef *I2Cx, uint8_t *buf, uint8_t size);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // I2C_H
