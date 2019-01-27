@@ -3,10 +3,10 @@
 #include "display/dispdrv.h"
 #include "eemap.h"
 
-static volatile int8_t encRes = 0;
 static volatile int8_t encCnt = 0;
+static volatile CmdBtn cmdBuf = BTN_NO;
 
-static CmdBtn cmdBuf = BTN_NO;
+static int8_t encRes = 0;
 
 void inputInit(void)
 {
@@ -31,8 +31,8 @@ void inputPoll(void)
     static int16_t btnCnt = 0;
 
     // Previous state
-    static volatile uint8_t btnPrev = BTN_NO;
-    static volatile uint8_t encPrev = ENC_NO;
+    static uint8_t btnPrev = BTN_NO;
+    static uint8_t encPrev = ENC_NO;
 
     // Current state
     uint8_t btnNow = dispdrvGetBus();
@@ -43,14 +43,14 @@ void inputPoll(void)
         btnNow &= ~ENC_AB;
 
         if ((encPrev == ENC_NO && encNow == ENC_A) ||
-                (encPrev == ENC_A && encNow == ENC_AB) ||
-                (encPrev == ENC_AB && encNow == ENC_B) ||
-                (encPrev == ENC_B && encNow == ENC_NO))
+            (encPrev == ENC_A && encNow == ENC_AB) ||
+            (encPrev == ENC_AB && encNow == ENC_B) ||
+            (encPrev == ENC_B && encNow == ENC_NO))
             encCnt++;
         if ((encPrev == ENC_NO && encNow == ENC_B) ||
-                (encPrev == ENC_B && encNow == ENC_AB) ||
-                (encPrev == ENC_AB && encNow == ENC_A) ||
-                (encPrev == ENC_A && encNow == ENC_NO))
+            (encPrev == ENC_B && encNow == ENC_AB) ||
+            (encPrev == ENC_AB && encNow == ENC_A) ||
+            (encPrev == ENC_A && encNow == ENC_NO))
             encCnt--;
         encPrev = encNow;
     }
@@ -60,36 +60,13 @@ void inputPoll(void)
         if (btnNow == btnPrev) {
             btnCnt++;
             if (btnCnt == LONG_PRESS) {
-                cmdBuf = btnPrev << 8;
-            } else if (!encRes) {
-                if (btnCnt == LONG_PRESS + AUTOREPEAT) {
-                    switch (btnPrev) {
-                    case ENC_A:
-                        encCnt++;
-                        break;
-                    case ENC_B:
-                        encCnt--;
-                        break;
-                    }
-                    btnCnt = LONG_PRESS + 1;
-                }
+                cmdBuf = (btnPrev << 8) & 0xFF00;
+                btnCnt -= AUTOREPEAT;
             }
-        } else {
-            btnPrev = btnNow;
         }
     } else {
-        if ((btnCnt > SHORT_PRESS) && (btnCnt < LONG_PRESS)) {
+        if ((btnCnt > SHORT_PRESS) && (btnCnt < LONG_PRESS - AUTOREPEAT)) {
             cmdBuf = btnPrev;
-            if (!encRes) {
-                switch (btnPrev) {
-                case ENC_A:
-                    encCnt++;
-                    break;
-                case ENC_B:
-                    encCnt--;
-                    break;
-                }
-            }
         }
         btnCnt = 0;
     }

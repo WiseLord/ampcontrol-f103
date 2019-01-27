@@ -104,9 +104,9 @@ void Amp::dialChanged(int value)
 {
     int diff = (value + dialMax - dialValue) % dialMax;
     if (diff > dialMax / 2) {
-        this->bus |= ENC_B;
-    } else if (diff < dialMax / 2) {
         this->bus |= ENC_A;
+    } else if (diff < dialMax / 2) {
+        this->bus |= ENC_B;
     }
     dialValue = value;
     dialTimer->start(100);

@@ -54,6 +54,7 @@ void PendSV_Handler(void)
 
 void SysTick_Handler(void)
 {
+    dispdrvBusIRQ();
     inputPoll();
     swTimUpdate();
 }
@@ -76,7 +77,6 @@ void TIM2_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM2);
 
         // Callbacks
-        DISPLAY_IRQ();
         dispdrvPwm();
         spConvertADC();
     }

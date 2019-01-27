@@ -131,6 +131,14 @@ static void actionRemapBtnShort(void)
     case BTN_D5:
         action.type = ACTION_MENU;
         break;
+    case ENC_A:
+        action.type = ACTION_ENCODER;
+        action.value = -1;
+        break;
+    case ENC_B:
+        action.type = ACTION_ENCODER;
+        action.value = +1;
+        break;
     default:
         break;
     }
@@ -150,14 +158,24 @@ static void actionRemapBtnLong(void)
     case BTN_D2:
         break;
     case BTN_D3:
+        action.type = ACTION_PREV;
         break;
     case BTN_D4:
+        action.type = ACTION_NEXT;
         break;
     case BTN_D5:
         if (screen == SCREEN_STANDBY) {
             action.type = ACTION_MENU_SELECT;
             action.value = MENU_SETUP_LANG;
         }
+        break;
+    case ENC_A:
+        action.type = ACTION_ENCODER;
+        action.value = -1;
+        break;
+    case ENC_B:
+        action.type = ACTION_ENCODER;
+        action.value = +1;
         break;
     default:
         break;

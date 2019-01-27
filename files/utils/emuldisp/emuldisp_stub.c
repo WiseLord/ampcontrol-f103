@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "../../../audio/audiodefs.h"
+#include "../../../tuner/tunerdefs.h"
 #include "../../../eemap.h"
 #include "../../../spectrum.h"
 
@@ -15,9 +17,16 @@ void eeUpdateRaw(uint16_t addr, uint16_t data)
 
 uint16_t eeReadRaw(uint16_t addr)
 {
-    (void)addr;
-
-    return EE_NOT_FOUND;
+    switch (addr) {
+    case EE_INPUT_ENC_RES:
+        return 0;
+    case EE_AUDIO_IC:
+        return AUDIO_IC_TEST;
+    case EE_TUNER_IC:
+        return TUNER_IC_TEST;
+    default:
+        return EE_NOT_FOUND;
+    }
 }
 
 uint16_t rcGetCode(RcCmd cmd)

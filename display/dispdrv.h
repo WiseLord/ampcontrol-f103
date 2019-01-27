@@ -8,8 +8,6 @@ extern "C" {
 #include <stdint.h>
 #include "dispdefs.h"
 
-#define DISPLAY_IRQ         dispdrvBusIRQ
-
 #ifdef _DISP_SPI
 #define DISP_WAIT_BUSY()    while(LL_SPI_IsActiveFlag_BSY(SPI2) || !LL_SPI_IsActiveFlag_TXE(SPI2))
 #else
