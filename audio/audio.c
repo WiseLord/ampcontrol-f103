@@ -20,6 +20,29 @@
 
 static AudioProc aProc;
 
+static const AudioGrid gridTestVolume       = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step
+static const AudioGrid gridTestTone         = { -7,  7, (uint8_t)(2.00 * 8)}; // -14..14dB with 2dB step
+static const AudioGrid gridTestBalance      = { -7,  7, (uint8_t)(1.00 * 8)}; // -7..7dB with 1dB step
+static const AudioGrid gridTestCenterSub    = {-15,  0, (uint8_t)(1.00 * 8)}; // -15..0dB with 1dB step
+static const AudioGrid gridTestPreamp       = {-47,  0, (uint8_t)(1.00 * 8)}; // -47..0dB with 1dB step
+static const AudioGrid gridTestGain         = {  0, 15, (uint8_t)(2.00 * 8)}; // 0..30dB with 2dB step
+
+static void audioTestInit(AudioParam *aPar)
+{
+    aPar->inCnt = 4;
+
+    aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridTestVolume;
+    aPar->item[AUDIO_TUNE_BASS].grid      = &gridTestTone;
+    aPar->item[AUDIO_TUNE_MIDDLE].grid    = &gridTestTone;
+    aPar->item[AUDIO_TUNE_TREBLE].grid    = &gridTestTone;
+    aPar->item[AUDIO_TUNE_FRONTREAR].grid = &gridTestBalance;
+    aPar->item[AUDIO_TUNE_BALANCE].grid   = &gridTestBalance;
+    aPar->item[AUDIO_TUNE_CENTER].grid    = &gridTestCenterSub;
+    aPar->item[AUDIO_TUNE_SUBWOOFER].grid = &gridTestCenterSub;
+    aPar->item[AUDIO_TUNE_PREAMP].grid    = &gridTestPreamp;
+    aPar->item[AUDIO_TUNE_GAIN].grid      = &gridTestGain;
+}
+
 void audioReadSettings(void)
 {
     // Read stored parameters
@@ -83,6 +106,9 @@ void audioReadSettings(void)
         aProc.api.setBypass = pt232xSetBypass;
         break;
 #endif
+    case AUDIO_IC_TEST:
+        aProc.api.init = audioTestInit;
+        break;
     default:
         break;
     }

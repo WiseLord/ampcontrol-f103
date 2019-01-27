@@ -16,6 +16,33 @@
 
 static Tuner tuner;
 
+static void tunerTestUpdateStatus(void)
+{
+    tuner.status.freq = tuner.par.freq;
+    tuner.status.rssi = 10;
+
+    switch (tuner.par.step) {
+    case TUNER_STEP_50K:
+        tuner.par.fStep = 5;
+        break;
+    case TUNER_STEP_200K:
+        tuner.par.fStep = 20;
+        break;
+    default:
+        tuner.par.fStep = 10;
+        break;
+    }
+}
+
+static void tunerTestSeek(int8_t direction)
+{
+    if (direction > 0) {
+        tunerSetFreq(tuner.status.freq + tuner.par.fStep);
+    } else {
+        tunerSetFreq(tuner.status.freq - tuner.par.fStep);
+    }
+}
+
 void tunerReadSettings(void)
 {
     // Read stored parameters
@@ -88,13 +115,17 @@ void tunerReadSettings(void)
         tuner.api.seek = tea5767Seek;
 
         tuner.api.setMute = tea5767SetMute;
-        tuner.api.setForcedMono = 0;
 
         tuner.api.setPower = tea5767SetPower;
 
         tuner.api.updateStatus = tea5767UpdateStatus;
         break;
 #endif
+    case TUNER_IC_TEST:
+        tuner.api.seek = tunerTestSeek;
+
+        tuner.api.updateStatus = tunerTestUpdateStatus;
+        break;
     default:
         break;
     }

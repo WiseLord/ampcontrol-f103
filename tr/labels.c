@@ -50,6 +50,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
     [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
     [LABEL_TUNER_IC + TUNER_IC_TEA5767] = "TEA5767",
+    [LABEL_TUNER_IC + TUNER_IC_TEST]    = "TEST",
 
     [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "US/Europe FM",
     [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Japan FM",
@@ -75,6 +76,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
     [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
+    [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "TEST",
 
     [LABEL_LANG + LANG_DEFAULT]         = "English",
     [LABEL_LANG + LANG_BY]              = "Беларуская",

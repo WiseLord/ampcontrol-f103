@@ -16,6 +16,8 @@ typedef enum {
     AUDIO_IC_TDA7313,
     AUDIO_IC_PT232X,
 
+    AUDIO_IC_TEST,
+
     AUDIO_IC_END
 } AudioIC;
 
