@@ -86,10 +86,6 @@ int main(void)
 
     screenInit();
 
-    pinsHwReset();
-    i2cInit(I2C_AMP, 100000);
-    pinsInitAmpI2c();
-
     spInit();
 
     inputInit();

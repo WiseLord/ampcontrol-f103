@@ -48,7 +48,6 @@ static bool i2cWait(I2cContext *i2c)
     return true;
 }
 
-
 uint8_t i2cInit(I2C_TypeDef *I2Cx, uint32_t ClockSpeed)
 {
     I2cContext *i2c = getI2cCtx(I2Cx);

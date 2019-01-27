@@ -2,12 +2,14 @@
 
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_exti.h>
+#include <stm32f1xx_ll_i2c.h>
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "display/glcd.h"
 #include "eemap.h"
+#include "i2c.h"
 
 #ifdef _SI470X
 #include "tuner/si470x.h"
@@ -68,7 +70,7 @@ static void pinsInitMuteStby(bool value)
     }
 }
 
-void pinsHwReset(void)
+static void pinsHwResetI2C(void)
 {
     OUT_INIT(SI470X_RST, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
 
@@ -91,8 +93,16 @@ void pinsHwReset(void)
     IN_F(SI470X_SDIO);  // SDIO = 1
 }
 
+void pinsDeInitAmpI2c(void)
+{
+    LL_I2C_DeInit(I2C_AMP);
+}
+
 void pinsInitAmpI2c(void)
 {
+    pinsHwResetI2C();
+    i2cInit(I2C_AMP, 100000);
+
     LL_GPIO_AF_EnableRemap_I2C1();
 
     LL_GPIO_InitTypeDef GPIO_InitStruct;

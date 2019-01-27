@@ -59,7 +59,7 @@ static bool screenCheckClear(void)
 
         // Enable/disable tuner polling
         if (screen == SCREEN_TUNER) {
-            swTimSetTunerPoll(0);
+            swTimSetTunerPoll(100);
         } else {
             swTimSetTunerPoll(SW_TIM_OFF);
         }

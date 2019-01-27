@@ -517,11 +517,15 @@ void actionHandle(Action action, uint8_t visible)
             tunerSetMute(true);
             tunerSetPower(false);
 
+            pinsDeInitAmpI2c();
+
             pinsSetStby(false);     // OFF via relay
         }
         break;
     case ACTION_INIT_HW:
         swTimSetInitHw(SW_TIM_OFF);
+
+        pinsInitAmpI2c();
 
         tunerInit();
         tunerSetPower(true);

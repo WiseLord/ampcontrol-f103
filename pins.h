@@ -7,8 +7,9 @@ extern "C" {
 
 #include <stdbool.h>
 
-void pinsHwReset(void);
 void pinsInit(void);
+
+void pinsDeInitAmpI2c(void);
 void pinsInitAmpI2c(void);
 
 void pinsSetMuteStby(bool value);
