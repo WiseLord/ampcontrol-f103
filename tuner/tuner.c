@@ -217,6 +217,15 @@ void tunerSetRds(bool value)
     }
 }
 
+void tunerSetVolume(int8_t value)
+{
+    tuner.par.volume = value;
+
+    if (tuner.api.setVolume) {
+        tuner.api.setVolume(value);
+    }
+}
+
 void tunerNextStation(int8_t direction)
 {
     // Temporarly

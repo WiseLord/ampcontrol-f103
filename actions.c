@@ -529,6 +529,7 @@ void actionHandle(Action action, uint8_t visible)
 
         tunerInit();
         tunerSetPower(true);
+        tunerSetVolume(tuner->par.volume);
         tunerSetMute(false);
         tunerSetFreq(tuner->par.freq);
 

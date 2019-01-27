@@ -48,6 +48,8 @@ void tunerSetBassBoost(bool value);
 void tunerSetForcedMono(bool value);
 void tunerSetRds(bool value);
 
+void tunerSetVolume(int8_t value);
+
 void tunerNextStation(int8_t direction);
 
 void tunerUpdateStatus(void);
