@@ -40,10 +40,6 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_BOOL_ON]         = "УКЛ",
 
     [LABEL_TUNER_IC + TUNER_IC_NO]      = "Няма",
-//    [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
-//    [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
-//    [LABEL_TUNER_IC + TUNER_IC_TEA5767] = "TEA5767",
-//    [LABEL_TUNER_IC + TUNER_IC_TEST]    = "TEST",
 
 //    [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "US/Europe FM",
 //    [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Japan FM",
@@ -65,11 +61,7 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Змешаны",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Вадаспад",
 
-    [LABEL_AUDIO_IC + AUDIO_IC_NO]        = "Няма",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
-//    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "TEST",
+    [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Няма",
 
     [LABEL_MENU + MENU_NULL]            = "Назад",
 

@@ -192,6 +192,7 @@ tr/labels_by.c
 tr/labels_ru.c
 tr/labels_template.c
 tr/labels_tr.c
+tr/labels_ua.c
 tuner/rda580x.c
 tuner/rda580x.h
 tuner/rda580x_regs.h

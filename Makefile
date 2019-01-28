@@ -30,6 +30,7 @@ C_SOURCES += tr/labels.c
 C_SOURCES += tr/labels_by.c
 C_SOURCES += tr/labels_ru.c
 C_SOURCES += tr/labels_tr.c
+C_SOURCES += tr/labels_ua.c
 
 C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
 

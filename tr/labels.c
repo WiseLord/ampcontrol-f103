@@ -82,6 +82,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_LANG + LANG_BY]              = "Беларуская",
     [LABEL_LANG + LANG_RU]              = "Русский",
     [LABEL_LANG + LANG_TR]              = "Türkçe",
+    [LABEL_LANG + LANG_UA]              = "Українська",
 
     [LABEL_MENU + MENU_NULL]            = "Up menu",
 
@@ -192,6 +193,10 @@ const char *labelsGet(Label value)
     case LANG_TR:
         if (labels_tr[value])
             ret = labels_tr[value];
+        break;
+    case LANG_UA:
+        if (labels_ua[value])
+            ret = labels_ua[value];
         break;
     default:
         break;
