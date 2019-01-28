@@ -39,7 +39,7 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_BOOL_OFF]        = "ВЫКЛ",
     [LABEL_BOOL_ON]         = "ВКЛ",
 
-    [LABEL_TUNER_IC + TUNER_IC_NO]      = "Нет",
+    [LABEL_TUNER_IC + TUNER_IC_NO]        = "Нет",
 //    [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
 //    [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
 //    [LABEL_TUNER_IC + TUNER_IC_TEA5767] = "TEA5767",
@@ -60,6 +60,10 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_TUNER_MODE + TUNER_MODE_GRID]        = "Сетка",
     [LABEL_TUNER_MODE + TUNER_MODE_STATIONS]    = "Станции",
     [LABEL_TUNER_MODE + TUNER_MODE_SCAN]        = "Поиск",
+
+    [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Стерео",
+    [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Смешанно",
+    [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Водопад",
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Нет",
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",

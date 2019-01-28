@@ -72,6 +72,14 @@ bool pinsGetMuteStby(void)
     return true;
 }
 
+void pinsDeInitAmpI2c(void)
+{
+}
+
+void pinsInitAmpI2c(void)
+{
+}
+
 Spectrum *spGet(void)
 {
     return &spectrum;

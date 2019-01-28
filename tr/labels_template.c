@@ -39,7 +39,7 @@ const char *const labels_template[LABEL_END] = {
     [LABEL_BOOL_OFF]        = "",
     [LABEL_BOOL_ON]         = "",
 
-    [LABEL_TUNER_IC + TUNER_IC_NO]      = "",
+    [LABEL_TUNER_IC + TUNER_IC_NO]        = "",
 //    [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
 //    [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
 //    [LABEL_TUNER_IC + TUNER_IC_TEA5767] = "TEA5767",
@@ -60,6 +60,10 @@ const char *const labels_template[LABEL_END] = {
     [LABEL_TUNER_MODE + TUNER_MODE_GRID]        = "",
     [LABEL_TUNER_MODE + TUNER_MODE_STATIONS]    = "",
     [LABEL_TUNER_MODE + TUNER_MODE_SCAN]        = "",
+
+    [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "",
+    [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "",
+    [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "",
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "",
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",

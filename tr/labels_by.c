@@ -1,6 +1,6 @@
 #include "labels.h"
 
-const char * const labels_by[LABEL_END] = {
+const char *const labels_by[LABEL_END] = {
     [LABEL_SUNDAY]          = "НЯДЗЕЛЯ",
     [LABEL_MONDAY]          = "ПАНЯДЗЕЛАК",
     [LABEL_TUESDAY]         = "АЎТОРАК",
@@ -61,7 +61,11 @@ const char * const labels_by[LABEL_END] = {
     [LABEL_TUNER_MODE + TUNER_MODE_STATIONS]    = "Станцыі",
     [LABEL_TUNER_MODE + TUNER_MODE_SCAN]        = "Пошук",
 
-    [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Няма",
+    [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Стэрэа",
+    [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Змешаны",
+    [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Вадаспад",
+
+    [LABEL_AUDIO_IC + AUDIO_IC_NO]        = "Няма",
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
 //    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
