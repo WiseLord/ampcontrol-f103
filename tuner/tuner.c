@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../eemap.h"
+#include "stations.h"
 
 #ifdef _RDA580X
 #include "rda580x.h"
@@ -255,6 +256,7 @@ void tunerMove(int8_t direction)
         tunerStep(direction);
         break;
     case TUNER_MODE_STATIONS:
+        stationSeek(direction);
         break;
     case TUNER_MODE_SCAN:
         tunerSeek(direction);

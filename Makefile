@@ -109,6 +109,7 @@ endif
 ifeq "$(findstring TEA5767, $(TUNER_LIST))" "TEA5767"
   C_SOURCES += tuner/tea5767.c
 endif
+C_SOURCES += tuner/stations.c
 C_SOURCES += tuner/tuner.c
 C_DEFS += $(addprefix -D_, $(TUNER_LIST))
 

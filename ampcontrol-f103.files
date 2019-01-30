@@ -199,6 +199,8 @@ tuner/rda580x_regs.h
 tuner/si470x.c
 tuner/si470x.h
 tuner/si470x_regs.h
+tuner/stations.c
+tuner/stations.h
 tuner/tea5767.h
 tuner/tea5767.c
 tuner/tea5767_regs.h

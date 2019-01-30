@@ -73,7 +73,8 @@ SOURCES += \
     emuldisp_stub.c \
     ../../../eemap.c \
     ../../../tr/labels_tr.c \
-    ../../../tr/labels_ua.c
+    ../../../tr/labels_ua.c \
+    ../../../tuner/stations.c
 
 
 HEADERS += \
@@ -100,7 +101,8 @@ HEADERS += \
     ../../../actions.h \
     ../../../input.h \
     ../../../rtc.h \
-    ../../../eemap.h
+    ../../../eemap.h \
+    ../../../tuner/stations.h
 
 FORMS += \
     amp.ui
