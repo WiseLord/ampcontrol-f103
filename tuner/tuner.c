@@ -34,15 +34,6 @@ static void tunerTestUpdateStatus(void)
     }
 }
 
-static void tunerTestSeek(int8_t direction)
-{
-    if (direction > 0) {
-        tunerSetFreq(tuner.status.freq + tuner.par.fStep);
-    } else {
-        tunerSetFreq(tuner.status.freq - tuner.par.fStep);
-    }
-}
-
 void tunerReadSettings(void)
 {
     // Read stored parameters
@@ -122,7 +113,7 @@ void tunerReadSettings(void)
         break;
 #endif
     case TUNER_IC_TEST:
-        tuner.api.seek = tunerTestSeek;
+        tuner.api.seek = tunerStep;
 
         tuner.api.updateStatus = tunerTestUpdateStatus;
         break;
@@ -165,8 +156,8 @@ void tunerSetPower(bool value)
 
 void tunerSetFreq(uint16_t value)
 {
-    uint16_t freqMin = tuner.par.fMin;
-    uint16_t freqMax = tuner.par.fMax;
+    const uint16_t freqMin = tuner.par.fMin;
+    const uint16_t freqMax = tuner.par.fMax;
 
     if (value < freqMin) {
         value = freqMin;
@@ -175,6 +166,7 @@ void tunerSetFreq(uint16_t value)
     }
 
     tuner.par.freq = value;
+    tuner.status.freq = tuner.par.freq;
 
     if (tuner.api.setFreq) {
         tuner.api.setFreq(value);
@@ -226,11 +218,49 @@ void tunerSetVolume(int8_t value)
     }
 }
 
-void tunerNextStation(int8_t direction)
+void tunerSeek(int8_t direction)
 {
-    // Temporarly
     if (tuner.api.seek) {
         tuner.api.seek(direction);
+    }
+}
+
+void tunerStep(int8_t direction)
+{
+    uint16_t freq = tuner.status.freq;
+    const uint16_t fMin = tuner.par.fMin;
+    const uint16_t fMax = tuner.par.fMax;
+
+    if (direction > 0) {
+        if (freq == fMax) {
+            freq = fMin;
+        } else {
+            freq += tuner.par.fStep;
+        }
+    } else {
+        if (freq == fMin) {
+            freq = fMax;
+        } else {
+            freq -= tuner.par.fStep;
+        }
+    }
+
+    tunerSetFreq(freq);
+}
+
+void tunerMove(int8_t direction)
+{
+    switch (tuner.par.mode) {
+    case TUNER_MODE_GRID:
+        tunerStep(direction);
+        break;
+    case TUNER_MODE_STATIONS:
+        break;
+    case TUNER_MODE_SCAN:
+        tunerSeek(direction);
+        break;
+    default:
+        break;
     }
 }
 

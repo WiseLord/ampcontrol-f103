@@ -50,7 +50,9 @@ void tunerSetRds(bool value);
 
 void tunerSetVolume(int8_t value);
 
-void tunerNextStation(int8_t direction);
+void tunerSeek(int8_t direction);
+void tunerStep(int8_t direction);
+void tunerMove(int8_t direction);
 
 void tunerUpdateStatus(void);
 

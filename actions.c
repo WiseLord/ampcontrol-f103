@@ -612,11 +612,11 @@ void actionHandle(Action action, uint8_t visible)
 
     case ACTION_TUNER_PREV:
         screen = SCREEN_TUNER;
-        tunerNextStation(TUNER_DIR_DOWN);
+        tunerMove(TUNER_DIR_DOWN);
         break;
     case ACTION_TUNER_NEXT:
         screen = SCREEN_TUNER;
-        tunerNextStation(TUNER_DIR_UP);
+        tunerMove(TUNER_DIR_UP);
         break;
     case ACTION_BR_STBY:
     case ACTION_BR_WORK:
