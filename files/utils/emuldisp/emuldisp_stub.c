@@ -9,26 +9,6 @@
 static Spectrum spectrum;
 static RcData rcData;
 
-void eeUpdateRaw(uint16_t addr, uint16_t data)
-{
-    (void)addr;
-    (void)data;
-}
-
-uint16_t eeReadRaw(uint16_t addr)
-{
-    switch (addr) {
-    case EE_INPUT_ENC_RES:
-        return 0;
-    case EE_AUDIO_IC:
-        return AUDIO_IC_TEST;
-    case EE_TUNER_IC:
-        return TUNER_IC_TEST;
-    default:
-        return EE_NOT_FOUND;
-    }
-}
-
 uint16_t rcGetCode(RcCmd cmd)
 {
     (void)cmd;

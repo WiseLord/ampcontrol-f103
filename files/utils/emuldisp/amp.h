@@ -2,7 +2,13 @@
 #define AMP_H
 
 #include "ui_amp.h"
+
 #include <QMainWindow>
+#include <QSettings>
+
+#define ORGANIZATION_NAME           "WiseLord"
+#define ORGANIZATION_DOMAIN         "github.io"
+#define APPLICATION_NAME            "EmulDisp"
 
 class Amp : public QMainWindow, private Ui::Amp
 {
@@ -13,6 +19,9 @@ public:
 
     EmulDisp *getEmulDisp();
 
+    void eeUpdateRaw(uint16_t addr, uint16_t data);
+    uint16_t eeReadRaw(uint16_t addr);
+
     uint8_t bus;
 
 private:
@@ -22,6 +31,7 @@ private:
     void dialChanged(int value);
 
     QTimer *dialTimer;
+    QSettings *settings;
 
 private slots:
     void on_btn0_pressed();

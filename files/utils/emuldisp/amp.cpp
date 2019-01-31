@@ -6,11 +6,22 @@
 
 #include "../../../canvas/layout.h"
 #include "../../../display/dispdefs.h"
+#include "../../../eemap.h"
 #include "../../../input.h"
 
 static EmulDisp *disp;
 static Amp *amp;
 static DispDriver drv;
+
+extern "C" void eeUpdateRaw(uint16_t addr, uint16_t data)
+{
+    amp->eeUpdateRaw(addr, data);
+}
+
+extern "C" uint16_t eeReadRaw(uint16_t addr)
+{
+    return amp->eeReadRaw(addr);
+}
 
 extern "C" void emulDrawPixel(int16_t x, int16_t y, uint16_t color)
 {
@@ -76,6 +87,8 @@ Amp::Amp(QWidget *parent) :
 {
     setupUi(this);
 
+    settings = new QSettings(ORGANIZATION_NAME, APPLICATION_NAME);
+
     amp = this;
     disp = getEmulDisp();
 
@@ -98,6 +111,20 @@ Amp::Amp(QWidget *parent) :
 EmulDisp *Amp::getEmulDisp()
 {
     return emulDisp;
+}
+
+void Amp::eeUpdateRaw(uint16_t addr, uint16_t data)
+{
+    settings->setValue(QString::number((uint)addr, 16).rightJustified(4, '0'), data);
+}
+
+uint16_t Amp::eeReadRaw(uint16_t addr)
+{
+    if (settings->contains(QString::number(addr, 16).rightJustified(4, '0'))) {
+        return (uint16_t)(settings->value(QString::number(addr, 16).rightJustified(4, '0')).toUInt());
+    }
+
+    return EE_NOT_FOUND;
 }
 
 void Amp::dialChanged(int value)
