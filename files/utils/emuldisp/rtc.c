@@ -1,11 +1,6 @@
-#include "rtc.h"
+#include "../../../rtc.h"
 
 #include <time.h>
-
-#include <stm32f1xx_ll_bus.h>
-#include <stm32f1xx_ll_pwr.h>
-#include <stm32f1xx_ll_rcc.h>
-#include <stm32f1xx_ll_rtc.h>
 
 static uint32_t rtcTime;
 static int8_t rtcMode = RTC_NOEDIT;
@@ -103,53 +98,22 @@ static void rtcUpdate(RTC_type *rtc, int8_t mode, int8_t value)
     uint32_t newTime = rtcToSec(rtc);
 
     rtcTime = newTime;
-
-    LL_RTC_TIME_SetCounter(RTC, newTime);
-}
-
-void rtcInit(void)
-{
-    // Power interface clock enable
-    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-
-    // Backup interface clock enable
-    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_BKP);
-
-    // Enable access to the backup domain
-    LL_PWR_EnableBkUpAccess();
-
-    // Check if RTC has been enabled or not
-    if (LL_RCC_IsEnabledRTC() == 0) {
-
-        // Backup domain reset
-        LL_RCC_ForceBackupDomainReset();
-        LL_RCC_ReleaseBackupDomainReset();
-
-        LL_RCC_LSE_Enable();
-
-        while (LL_RCC_LSE_IsReady() != 1);
-
-        if (LL_RCC_GetRTCClockSource() != LL_RCC_RTC_CLKSOURCE_LSE) {
-            LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
-        }
-
-        LL_RCC_EnableRTC();
-
-    }
-
-    LL_RTC_EnableIT_SEC(RTC);
-
-    NVIC_EnableIRQ (RTC_IRQn);
-}
-
-void rtcIRQ(void)
-{
-    rtcTime = LL_RTC_TIME_Get(RTC) + 1;
 }
 
 void rtcGetTime(RTC_type *rtc)
 {
-    secToRtc(rtcTime, rtc);
+    time_t t = time(NULL);
+    struct tm *lt = localtime(&t);
+
+    rtc->hour = (int8_t)lt->tm_hour;
+    rtc->min = (int8_t)lt->tm_min;
+    rtc->sec = (int8_t)lt->tm_sec;
+
+    rtc->date = (int8_t)lt->tm_mday;
+    rtc->month = (int8_t)lt->tm_mon;
+    rtc->year = (int8_t)lt->tm_year - 100;
+
+    rtc->wday = (int8_t)lt->tm_wday;
 }
 
 void rtcSetTime(int8_t mode, int8_t value)

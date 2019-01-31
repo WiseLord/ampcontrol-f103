@@ -2,6 +2,7 @@ TARGET = emuldisp
 
 QT += core gui
 QT += widgets
+
 TEMPLATE = app
 CONFIG += c++11
 
@@ -12,7 +13,19 @@ DEFINES += EMUL_DISP
 SOURCES += \
     amp.cpp \
     emuldisp.cpp \
+    emuldisp_stub.c \
     main.cpp \
+    rtc.c \
+    ../../../audio/audio.c \
+    ../../../canvas/canvas.c \
+    ../../../canvas/layout.c \
+    ../../../canvas/lt160x128.c \
+    ../../../canvas/lt176x132.c \
+    ../../../canvas/lt220x176.c \
+    ../../../canvas/lt320x240.c \
+    ../../../canvas/lt400x240.c \
+    ../../../canvas/lt480x320.c \
+    ../../../display/fonts/font-amp-08.c \
     ../../../display/fonts/font-terminus-12.c \
     ../../../display/fonts/font-terminus-14.c \
     ../../../display/fonts/font-terminus-14b.c \
@@ -30,7 +43,6 @@ SOURCES += \
     ../../../display/fonts/font-terminus-28b.c \
     ../../../display/fonts/font-terminus-32.c \
     ../../../display/fonts/font-terminus-32b.c \
-    ../../../display/fonts/font-amp-08.c \
     ../../../display/fonts/font-terminus-dig-22.c \
     ../../../display/fonts/font-terminus-dig-30.c \
     ../../../display/fonts/font-terminus-dig-40.c \
@@ -51,58 +63,48 @@ SOURCES += \
     ../../../display/icons/icons-amp-48.c \
     ../../../display/icons/icons-amp-64.c \
     ../../../display/glcd.c \
-    ../../../canvas/canvas.c \
-    ../../../canvas/layout.c \
-    ../../../canvas/lt160x128.c \
-    ../../../canvas/lt176x132.c \
-    ../../../canvas/lt220x176.c \
-    ../../../canvas/lt320x240.c \
-    ../../../canvas/lt400x240.c \
-    ../../../canvas/lt480x320.c \
-    ../../../menu.c \
-    ../../../tuner/tuner.c \
-    ../../../audio/audio.c \
+    ../../../tr/labels.c \
     ../../../tr/labels_by.c \
     ../../../tr/labels_ru.c \
-    ../../../tr/labels.c \
-    ../../../screen.c \
-    ../../../swtimers.c \
-    ../../../actions.c \
-    ../../../input.c \
-    ../../../rtc.c \
-    emuldisp_stub.c \
-    ../../../eemap.c \
     ../../../tr/labels_tr.c \
     ../../../tr/labels_ua.c \
-    ../../../tuner/stations.c
+    ../../../tuner/stations.c \
+    ../../../tuner/tuner.c \
+    ../../../actions.c \
+    ../../../eemap.c \
+    ../../../input.c \
+    ../../../menu.c \
+    ../../../screen.c \
+    ../../../swtimers.c \
 
 
 HEADERS += \
     amp.h \
     emuldisp.h \
-    ../../../display/fonts/fonts.h \
-    ../../../display/icons/icons.h \
-    ../../../display/glcd.h \r \
-    ../../../display/dispdrv.h \
-    ../../../canvas/canvas.h \
-    ../../../canvas/layout.h \
-    ../../../menu.h \
-    ../../../tuner/tuner.h \
     ../../../audio/audio.h \
     ../../../audio/audiodefs.h \
-    ../../../tuner/tunerdefs.h \
+    ../../../canvas/canvas.h \
+    ../../../canvas/layout.h \
+    ../../../display/fonts/fonts.h \
+    ../../../display/icons/icons.h \
+    ../../../display/dispdefs.h \
+    ../../../display/dispdrv.h \
+    ../../../display/glcd.h \
     ../../../tr/labels.h \
+    ../../../tuner/stations.h \
+    ../../../tuner/tuner.h \
+    ../../../tuner/tunerdefs.h \
+    ../../../actions.h \
+    ../../../eemap.h \
+    ../../../eemul.h \
+    ../../../input.h \
+    ../../../menu.h \
     ../../../rc.h \
+    ../../../rtc.h \
     ../../../screen.h \
     ../../../spectrum.h \
-    ../../../eemul.h \
-    ../../../display/dispdefs.h \
     ../../../swtimers.h \
-    ../../../actions.h \
-    ../../../input.h \
-    ../../../rtc.h \
-    ../../../eemap.h \
-    ../../../tuner/stations.h
+
 
 FORMS += \
     amp.ui
