@@ -5,21 +5,31 @@
 #include <stm32f1xx.h>
 #include <stm32f1xx_ll_utils.h>
 
-#define EE_DATA_OFT     1 // Cell 0 is used for the header
+#define REC_SIZE            4
+#define RECS_ON_PAGE        (EE_PAGE_SIZE / REC_SIZE)
 
-#define EE_CAPACITY     (EE_PAGE_SIZE / sizeof(uint32_t) * EE_PAGE_STEP)
+#define EE_PAGE_STEP        (EE_PAGE_1 - EE_PAGE_0)
 
-#define HEAD_ERASED     (uint32_t)0xFFFF
-#define HEAD_VALID      (uint32_t)0x0000
+#define EE_CELLS_NUM        (RECS_ON_PAGE * (EE_PAGE_STEP))
 
-#define OFT(x)          (FLASH_BASE + EE_PAGE_SIZE * currPage + 4 * x)
-#define ADDR(x)         (uint16_t *)(OFT(x))
-#define DATA(x)         (uint16_t *)(OFT(x) + 2)
-
-#define OFT_CP(x)       (FLASH_BASE + EE_PAGE_SIZE * (currPage + EE_PAGE_STEP >= EE_PAGE_END ? EE_PAGE_0 : currPage + EE_PAGE_STEP) + 4 * x)
-#define ADDR_CP(x)      (uint16_t *)(OFT_CP(x))
+#define PAGE_ADDR(page)     (FLASH_BASE + EE_PAGE_SIZE * (page))
 
 static uint16_t currPage;
+#define copyPage            ((currPage == EE_PAGE_0) ? EE_PAGE_1 : EE_PAGE_0)
+
+#define OFT(x)              (PAGE_ADDR(currPage) + REC_SIZE * x)
+#define ADDR(x)             (uint16_t *)(OFT(x))
+#define DATA(x)             (uint16_t *)(OFT(x) + 2)
+
+#define OFT_CP(x)           (PAGE_ADDR(copyPage) + REC_SIZE * x)
+#define ADDR_CP(x)          ((uint16_t *)(OFT_CP(x)))
+#define DATA_CP(x)          ((uint16_t *)(OFT_CP(x) + 2))
+
+#define EE_DATA_OFT         1 // Cell 0 is used for the header
+
+#define HEAD_ERASED         ((uint32_t)0xFFFF)
+#define HEAD_VALID          ((uint32_t)0x0000)
+
 
 __attribute__((always_inline))
 static inline void eeUnlock(void)
@@ -44,7 +54,7 @@ static inline void eeWaitBusy(void)
 static uint16_t eeFindEmptyCell(void)
 {
     uint16_t left = EE_DATA_OFT;
-    uint16_t right = EE_CAPACITY;
+    uint16_t right = EE_CELLS_NUM;
 
     while (left != right) {
         uint16_t mid = (left + right) / 2;
@@ -56,7 +66,7 @@ static uint16_t eeFindEmptyCell(void)
         }
     }
 
-    if (left < EE_CAPACITY) {
+    if (left < EE_CELLS_NUM) {
         return left;
     }
 
@@ -84,7 +94,7 @@ static void eeCopyPage(uint16_t addr, uint16_t data)
 
     for (uint16_t i = 0; i < eeMapGetSize(); i++) {
         uint16_t param = eeMap[i].par;
-        uint16_t last = eeFindLastCell(param, EE_CAPACITY - 1);
+        uint16_t last = eeFindLastCell(param, EE_CELLS_NUM - 1);
         if (last != EE_NOT_FOUND) {
             uint16_t eeAddr = *ADDR(last);
             uint16_t eeData = *DATA(last);
@@ -119,27 +129,12 @@ static void eeFormatPage(uint16_t page)
     eeLock();
 }
 
-static void eeErasePage(uint16_t page)
-{
-    eeUnlock();
-    eeWaitBusy();
-    SET_BIT(FLASH->CR, FLASH_CR_PER);
-    for (uint8_t i = 0; i < EE_PAGE_STEP; i++) {
-        WRITE_REG(FLASH->AR, FLASH_BASE + EE_PAGE_SIZE * page + i);
-        SET_BIT(FLASH->CR, FLASH_CR_STRT);
-        eeWaitBusy();
-    }
-    CLEAR_BIT(FLASH->CR, FLASH_CR_PER);
-    eeLock();
-}
-
 static void eeSwapPage(void)
 {
-    eeErasePage(currPage);
-    currPage += EE_PAGE_STEP;
-    if (currPage >= EE_PAGE_END) {
-        currPage = EE_PAGE_0;
-    }
+    eeErasePages(currPage, EE_PAGE_STEP);
+
+    currPage = copyPage;
+
     eeFormatPage(currPage);
 }
 
@@ -153,14 +148,47 @@ void eeInit()
     currPage = EE_PAGE_0;
 
     if ((head0 != HEAD_VALID && head0 != HEAD_VALID) || (head0 == head1)) {
-        eeErasePage(EE_PAGE_0);
-        eeErasePage(EE_PAGE_1);
-        eeFormatPage(EE_PAGE_0);
+        eeErasePages(EE_PAGE_0, EE_PAGE_STEP * 2);
     } else if (HEAD_VALID == head0) {
         currPage = EE_PAGE_0;
     } else if (HEAD_VALID == head1) {
         currPage = EE_PAGE_1;
     }
+}
+
+uint32_t eeGetPageAddr(uint16_t page)
+{
+    return PAGE_ADDR(page);
+}
+
+void eeErasePages(uint16_t page, uint16_t count)
+{
+    eeUnlock();
+    eeWaitBusy();
+    SET_BIT(FLASH->CR, FLASH_CR_PER);
+    for (uint8_t i = 0; i < count; i++) {
+        WRITE_REG(FLASH->AR, FLASH_BASE + EE_PAGE_SIZE * page + i);
+        SET_BIT(FLASH->CR, FLASH_CR_STRT);
+        eeWaitBusy();
+    }
+    CLEAR_BIT(FLASH->CR, FLASH_CR_PER);
+    eeLock();
+}
+
+void eeWritePage(uint16_t page, void *addr, uint16_t bytes)
+{
+    uint16_t *data = (uint16_t*)addr;
+    uint16_t *cell = (uint16_t*)PAGE_ADDR(page);
+
+    eeUnlock();
+    eeWaitBusy();
+    SET_BIT(FLASH->CR, FLASH_CR_PG);
+    for (uint16_t i = 0; i <= (bytes / 2); i++) {
+        cell[i] = data[i];
+        eeWaitBusy();
+    }
+    CLEAR_BIT(FLASH->CR, FLASH_CR_PG);
+    eeLock();
 }
 
 uint16_t eeReadRaw(uint16_t addr)
@@ -200,7 +228,7 @@ void eeUpdateRaw(uint16_t addr, uint16_t data)
             eeLock();
         }
     } else {
-        uint16_t last = eeFindLastCell(addr, EE_CAPACITY - 1);
+        uint16_t last = eeFindLastCell(addr, EE_CELLS_NUM - 1);
         if (last == EE_NOT_FOUND || *DATA(last) != data) {
             eeCopyPage(addr, data);
             eeSwapPage();

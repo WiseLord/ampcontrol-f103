@@ -11,6 +11,12 @@ static const Layout lt480x320 = {
     .time.dmyY = 124,
     .time.wdY = 224,
 
+    .menu.headFont = &fontterminus32b,
+    .menu.menuFont = &fontterminus24b,
+    .menu.itemCnt = 10,
+
+    .tune.valFont = &fontterminusmod24x3,
+    .tune.valY = 70,
     .tune.bar.sc = 76,
     .tune.bar.sw = 3,
     .tune.bar.barY = 80,
@@ -18,22 +24,16 @@ static const Layout lt480x320 = {
     .tune.bar.half = 15,
     .tune.bar.middle = 2,
 
-    .menu.headFont = &fontterminus32b,
-    .menu.menuFont = &fontterminus24b,
-    .menu.itemCnt = 10,
-
-    .tune.valFont = &fontterminusmod24x3,
-    .tune.valY = 70,
-
     .sp.step = 5,
     .sp.oft = 1,
     .sp.width = 3,
     .sp.wfH = 3,
 
-    .tuner.bar.sc = 96,
+    .tuner.stFont = &fontterminusmod24x3,
+    .tuner.bar.sc = 82,
     .tuner.bar.sw = 3,
     .tuner.bar.barY = 80,
-    .tuner.bar.barW = 480,
+    .tuner.bar.barW = 410,
     .tuner.bar.half = 15,
     .tuner.bar.middle = 2,
     .tuner.iconSpace = 4,

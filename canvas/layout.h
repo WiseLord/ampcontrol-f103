@@ -12,6 +12,7 @@ extern "C" {
 
 #include "../rtc.h"
 #include "../spectrum.h"
+#include "../tuner/stations.h"
 #include "../tuner/tuner.h"
 
 typedef struct {
@@ -43,6 +44,7 @@ typedef struct {
         uint8_t wfH;                // Width of waterfile line
     } sp;
     struct {
+        const tFont *stFont;       // Foft to draw station number
         CanvasBar bar;
         uint8_t iconSpace;          // Space between icons
     } tuner;

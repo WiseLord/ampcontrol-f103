@@ -485,7 +485,7 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
 
     const tImage *icon = NULL;;
     const uint8_t iconSpace = lt->tuner.iconSpace;
-
+    const CanvasBar *bar = &lt->tuner.bar;
     // Frequency
 
     uint16_t freq = tuner->status.freq;
@@ -502,7 +502,7 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         glcdSetXY(0, 0);
         glcdWriteString("FM ");
 
-        canvasDrawBar(&lt->tuner.bar, (int16_t)freq, freqMin, freqMax);
+        canvasDrawBar(bar, (int16_t)freq, freqMin, freqMax);
 
         glcdWriteNum(freq / 100, 3, ' ', 10);
         glcdWriteChar(LETTER_SPACE_CHAR);
@@ -510,8 +510,25 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         glcdWriteChar(LETTER_SPACE_CHAR);
         glcdWriteNum(freq % 100, 2, '0', 10);
 
-        freqOld = freq;
+        glcdSetFont(lt->tuner.stFont);
+        glcdSetXY(lt->width, lt->tune.valY);
+        glcdSetFontAlign(FONT_ALIGN_RIGHT);
+
+        int8_t stNum = stationGetNum(freq);
+        if (stNum >= 0) {
+            glcdWriteNum(stNum, 2, ' ', 10);
+        } else {
+            glcdWriteString("--");
+        }
+
+        glcdSetFont(&fontterminus32b);
+        glcdSetXY(0, bar->barY + bar->half * 2 + bar->middle);
+        uint16_t nameLen = glcdWriteString(stationGetName(stNum));
+        glcdDrawRect(canvas->glcd->x, canvas->glcd->y,
+                     lt->tuner.bar.barW - nameLen, fontterminus32b.chars[0].image->height,
+                     canvas->pal->bg);
     }
+    freqOld = freq;
 
     // Stereo / forced mono indicator
 

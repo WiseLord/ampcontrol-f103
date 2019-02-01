@@ -11,6 +11,12 @@ static const Layout lt160x128 = {
     .time.dmyY = 54,
     .time.wdY = 96,
 
+    .menu.headFont = &fontterminus14b,
+    .menu.menuFont = &fontterminus12,
+    .menu.itemCnt = 7,
+
+    .tune.valFont = &fontterminus28b,
+    .tune.valY = 28,
     .tune.bar.sc = 60,
     .tune.bar.sw = 1,
     .tune.bar.barY = 30,
@@ -18,18 +24,12 @@ static const Layout lt160x128 = {
     .tune.bar.half = 5,
     .tune.bar.middle = 2,
 
-    .menu.headFont = &fontterminus14b,
-    .menu.menuFont = &fontterminus12,
-    .menu.itemCnt = 7,
-
-    .tune.valFont = &fontterminus28b,
-    .tune.valY = 28,
-
     .sp.step = 2,
     .sp.oft = 0,
     .sp.width = 1,
     .sp.wfH = 1,
 
+    .tuner.stFont = &fontterminus28b,
     .tuner.bar.sc = 80,
     .tuner.bar.sw = 1,
     .tuner.bar.barY = 30,

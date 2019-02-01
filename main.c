@@ -15,6 +15,7 @@
 #include "screen.h"
 #include "spectrum.h"
 #include "timers.h"
+#include "tuner/stations.h"
 #include "tuner/tuner.h"
 
 #ifndef NVIC_PRIORITYGROUP_0
@@ -95,6 +96,7 @@ int main(void)
     LL_SYSTICK_EnableIT();
     timersInit();
 
+    stationsInit();
     audioReadSettings();
     tunerReadSettings();
 

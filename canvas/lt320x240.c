@@ -11,6 +11,12 @@ static const Layout lt320x240 = {
     .time.dmyY = 100,
     .time.wdY = 170,
 
+    .menu.headFont = &fontterminus28b,
+    .menu.menuFont = &fontterminus22b,
+    .menu.itemCnt = 8,
+
+    .tune.valFont = &fontterminusmod18x3,
+    .tune.valY = 56,
     .tune.bar.sc = 60,
     .tune.bar.sw = 2,
     .tune.bar.barY = 60,
@@ -18,18 +24,12 @@ static const Layout lt320x240 = {
     .tune.bar.half = 10,
     .tune.bar.middle = 2,
 
-    .menu.headFont = &fontterminus28b,
-    .menu.menuFont = &fontterminus22b,
-    .menu.itemCnt = 8,
-
-    .tune.valFont = &fontterminusmod18x3,
-    .tune.valY = 56,
-
     .sp.step = 3,
     .sp.oft = 0,
     .sp.width = 2,
     .sp.wfH = 2,
 
+    .tuner.stFont = &fontterminusmod18x3,
     .tuner.bar.sc = 80,
     .tuner.bar.sw = 2,
     .tuner.bar.barY = 60,
