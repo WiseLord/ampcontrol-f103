@@ -73,6 +73,36 @@ static void actionNavigateMenu(RcCmd cmd)
     }
 }
 
+static void actionNavigateCommon(RcCmd cmd)
+{
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
+
+    switch (cmd) {
+    case RC_CMD_NAV_OK:
+        break;
+    case RC_CMD_NAV_BACK:
+        actionSet(ACTION_DISP_EXPIRED, 0);
+        break;
+    case RC_CMD_NAV_RIGHT:
+        if (inType == IN_TUNER) {
+            action.type = ACTION_TUNER_NEXT;
+        }
+        break;
+    case RC_CMD_NAV_LEFT:
+        if (inType == IN_TUNER) {
+            action.type = ACTION_TUNER_PREV;
+        }
+        break;
+    case RC_CMD_NAV_UP:
+        actionSet(ACTION_ENCODER, +1);
+        break;
+    case RC_CMD_NAV_DOWN:
+        actionSet(ACTION_ENCODER, -1);
+        break;
+    }
+}
+
 static void actionNextAudioParam(AudioProc *aProc)
 {
     do {
@@ -352,6 +382,20 @@ static void actionRemapRemote(void)
     }
 }
 
+static void actionRemapNavigate()
+{
+    Screen screen = screenGet();
+
+    switch (screen) {
+    case SCREEN_MENU:
+        actionNavigateMenu((RcCmd)action.value);
+        break;
+    default:
+        actionNavigateCommon((RcCmd)action.value);
+        break;
+    }
+}
+
 static void actionRemapEncoder()
 {
     Screen screen = screenGet();
@@ -399,7 +443,6 @@ static void actionRemapCommon(void)
 {
     Screen screen = screenGet();
     AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
 
     switch (action.type) {
     case ACTION_STANDBY:
@@ -410,44 +453,27 @@ static void actionRemapCommon(void)
     case ACTION_PREV:
         switch (screen) {
         case SCREEN_MENU:
-            actionNavigateMenu(RC_CMD_NAV_UP);
+            actionSet(ACTION_NAVIGATE, RC_CMD_NAV_UP);
             break;
         default:
-            if (inType == IN_TUNER) {
-                action.type = ACTION_TUNER_PREV;
-            }
+            actionSet(ACTION_NAVIGATE, RC_CMD_NAV_LEFT);
             break;
         }
         break;
     case ACTION_NEXT:
         switch (screen) {
         case SCREEN_MENU:
-            actionNavigateMenu(RC_CMD_NAV_DOWN);
+            actionSet(ACTION_NAVIGATE, RC_CMD_NAV_DOWN);
             break;
         default:
-            if (inType == IN_TUNER) {
-                action.type = ACTION_TUNER_NEXT;
-            }
+            actionSet(ACTION_NAVIGATE, RC_CMD_NAV_RIGHT);
             break;
         }
         break;
     case ACTION_AUDIO_MENU:
         if (screen == SCREEN_MENU) {
-            actionNavigateMenu(RC_CMD_NAV_OK);
+            actionSet(ACTION_NAVIGATE, RC_CMD_NAV_OK);
         }
-        break;
-    case ACTION_NAVIGATE:
-        switch (screen) {
-        case SCREEN_MENU:
-            actionNavigateMenu((RcCmd)action.value);
-            break;
-        default:
-            if (action.value == RC_CMD_NAV_BACK) {
-                actionSet(ACTION_DISP_EXPIRED, 0);
-            }
-            break;
-        }
-
         break;
     case ACTION_AUDIO_MUTE:
         if (FLAG_SWITCH == action.value) {
@@ -469,7 +495,8 @@ static void actionRemapCommon(void)
         (ACTION_STANDBY != action.type &&
          ACTION_NAVIGATE != action.type &&
          ACTION_MENU_CHANGE != action.type &&
-         ACTION_MENU_SELECT != action.type)) {
+         ACTION_MENU_SELECT != action.type &&
+         ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 }
@@ -506,11 +533,15 @@ void actionUserGet(void)
         break;
     }
 
+    actionRemapCommon();
+
+    if (ACTION_NAVIGATE == action.type) {
+        actionRemapNavigate();
+    }
+
     if (ACTION_ENCODER == action.type) {
         actionRemapEncoder();
     }
-
-    actionRemapCommon();
 }
 
 
@@ -581,6 +612,7 @@ void actionHandle(bool visible)
         }
         actionSetScreen(SCREEN_AUDIO_PARAM, 5000);
         break;
+
     case ACTION_RTC_MODE:
         if (screen == SCREEN_TIME) {
             rtcChangeMode(+1);
