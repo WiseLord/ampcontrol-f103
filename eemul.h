@@ -20,11 +20,15 @@ enum {
 
 void eeInit(void);
 
-uint32_t eeGetPageAddr(uint16_t page);
+void *eeGetPageAddr(uint16_t page);
 void eeErasePages(uint16_t page, uint16_t count);
 void eeWritePage(uint16_t page, void *addr, uint16_t bytes);
 
 void eeUpdateRaw(uint16_t addr, uint16_t data);
 uint16_t eeReadRaw(uint16_t addr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // EEEMUL_H

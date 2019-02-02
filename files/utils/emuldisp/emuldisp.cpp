@@ -17,7 +17,6 @@
 EmulDisp::EmulDisp(QWidget *parent) :
     QWidget(parent)
 {
-    action = {ACTION_STANDBY, FLAG_ON};
     brightness = LCD_BR_MAX;
 
     updateTimer = new QTimer(this);
@@ -34,6 +33,8 @@ void EmulDisp::init()
 
     audioReadSettings();
     tunerReadSettings();
+
+    stationsInit();
 
     updateTimer->start(40);
     mSecTimer->start(1);
@@ -130,9 +131,9 @@ void EmulDisp::systick()
 
 void EmulDisp::drawscreen()
 {
-    actionHandle(action, ACTION_VISIBLE);
+    actionHandle(ACTION_VISIBLE);
     screenShow(false);
-    action = actionUserGet();
+    actionUserGet();
 }
 
 void EmulDisp::resizeImage(QImage *image, const QSize &newSize)

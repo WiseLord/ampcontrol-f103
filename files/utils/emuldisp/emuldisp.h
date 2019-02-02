@@ -47,7 +47,6 @@ private:
     QTimer *updateTimer;
     QTimer *mSecTimer;
 
-    Action action;
     int8_t brightness;
 
     void resizeImage(QImage *image, const QSize &newSize);

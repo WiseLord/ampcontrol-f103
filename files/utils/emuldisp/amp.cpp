@@ -136,9 +136,10 @@ void Amp::dialChanged(int value)
         this->bus |= ENC_B;
     }
     dialValue = value;
+    dialTimer->stop();
     dialTimer->start(100);
 
-    this->statusBar()->showMessage(QString("ENC value: %1").arg(value), 1000);
+    this->statusBar()->showMessage(QString("ENC value: %1").arg(this->bus & (ENC_A | ENC_B)), 200);
 }
 
 void Amp::on_btn0_pressed()
