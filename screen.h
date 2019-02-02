@@ -25,6 +25,8 @@ enum {
 
     SCREEN_MENU,
 
+    SCREEN_TEXTEDIT,
+
     SCREEN_END
 };
 
@@ -68,6 +70,7 @@ void screenShowInput(bool clear);
 void screenShowAudioParam(bool clear);
 void screenShowTuner(bool clear);
 void screenShowMenu(void);
+void screenShowTextEdit(void);
 
 #ifdef __cplusplus
 }

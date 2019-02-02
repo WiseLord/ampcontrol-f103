@@ -20,6 +20,14 @@ extern "C" {
 #define DIRECTION_UP    1
 #define DIRECTION_DOWN  -1
 
+typedef uint8_t TEStage;
+enum {
+    TE_CALL_DIALOG = 0,
+    TE_FINISH_EDIT,
+
+    TE_END,
+};
+
 typedef uint8_t ActionType;
 enum {
     ACTION_NONE = 0,
@@ -63,6 +71,7 @@ enum {
 
     ACTION_TUNER_PREV,
     ACTION_TUNER_NEXT,
+    ACTION_TUNER_EDIT_NAME,
 
     ACTION_BR_STBY,
     ACTION_BR_WORK,

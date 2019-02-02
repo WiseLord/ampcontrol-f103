@@ -121,7 +121,7 @@ void screenInit(void)
 {
     labelsInit();
     layoutInit();
-    canvasClear();
+    canvasClear(CLEAR_ALL);
     screenReadSettings();
     dispdrvSetBrightness(brightness[BR_STBY]);
 }
@@ -191,8 +191,13 @@ void screenShow(bool clear)
 {
     Spectrum *spectrum = spGet();
 
+    ClearRegion clearReg = CLEAR_ALL;
+
     if (!clear) {
         clear = screenCheckClear();
+        if (screen == SCREEN_TEXTEDIT) {
+            clearReg = CLEAR_CENTER;
+        }
     }
 
     // Get new spectrum data
@@ -204,7 +209,7 @@ void screenShow(bool clear)
 
     if (clear) {
         spectrum->wtfX = 0;
-        canvasClear();
+        canvasClear(clearReg);
         spectrum->redraw = true;
     }
 
@@ -230,6 +235,9 @@ void screenShow(bool clear)
         break;
     case SCREEN_MENU:
         screenShowMenu();
+        break;
+    case SCREEN_TEXTEDIT:
+        screenShowTextEdit();
         break;
     default:
         break;
@@ -313,4 +321,9 @@ void screenShowTuner(bool clear)
 void screenShowMenu(void)
 {
     layoutShowMenu();
+}
+
+void screenShowTextEdit(void)
+{
+
 }

@@ -21,8 +21,8 @@ typedef struct {
     void (*rotate)(uint8_t rotate);
     void (*shift)(int16_t value);
 
-    uint16_t width;
-    uint16_t height;
+	int16_t width;
+	int16_t height;
 
     uint8_t bus;
 } DispDriver;

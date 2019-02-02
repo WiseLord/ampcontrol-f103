@@ -14,6 +14,17 @@
 #include "swtimers.h"
 #include "tuner/tuner.h"
 
+static void actionGetButtons(void);
+static void actionGetEncoder(void);
+static void actionGetRemote(void);
+static void actionGetTimers(void);
+static void actionRemapBtnShort(void);
+static void actionRemapBtnLong(void);
+static void actionRemapRemote(void);
+static void actionRemapCommon(void);
+static void actionRemapNavigate(void);
+static void actionRemapEncoder(void);
+
 static Action action = {ACTION_STANDBY, false, FLAG_ON, SCREEN_STANDBY, {0}, 0};
 
 static void actionSet(ActionType type, int16_t value)
@@ -212,6 +223,7 @@ static void actionRemapBtnLong(void)
         actionSet(ACTION_BR_WORK, 0);
         break;
     case BTN_D1:
+        actionSet(ACTION_TUNER_EDIT_NAME, TE_CALL_DIALOG);
         break;
     case BTN_D2:
         action.type = ACTION_RTC_MODE;
@@ -382,7 +394,7 @@ static void actionRemapRemote(void)
     }
 }
 
-static void actionRemapNavigate()
+static void actionRemapNavigate(void)
 {
     Screen screen = screenGet();
 
@@ -396,7 +408,7 @@ static void actionRemapNavigate()
     }
 }
 
-static void actionRemapEncoder()
+static void actionRemapEncoder(void)
 {
     Screen screen = screenGet();
 
@@ -663,6 +675,11 @@ void actionHandle(bool visible)
         tunerMove(TUNER_DIR_UP);
         actionSetScreen(SCREEN_TUNER, 5000);
         break;
+
+    case ACTION_TUNER_EDIT_NAME:
+        actionSetScreen(SCREEN_TEXTEDIT, 5000);
+        break;
+
     case ACTION_BR_STBY:
     case ACTION_BR_WORK:
         screenChangeBrighness((BrMode)(action.type - ACTION_BR_STBY), (int8_t)(action.value));
