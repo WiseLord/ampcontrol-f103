@@ -98,7 +98,7 @@ static void rda580xInitRegs(void)
     wrBuf[5] |= RDA580X_GPIO3_ST_IND;
     rda580xWriteReg(0x04);
 
-    wrBuf[6] = 0x08; // TODO: handle seek threshold
+    wrBuf[6] = 0x08; // TODO: Handle seek threshold
     wrBuf[7] = RDA580X_LNA_PORT_SEL_LNAP;
     wrBuf[7] |= tPar->volume;
     rda580xWriteReg(0x05);
@@ -106,7 +106,7 @@ static void rda580xInitRegs(void)
     // Nothing do with register 06 for now
 
     wrBuf[10] = RDA5807_TH_SOFRBLEND_DEF | RDA5807_65M_50M_MODE;
-    wrBuf[11] = RDA5807_SEEK_TH_OLD_DEF | RDA5807_SOFTBLEND_EN; // TODO: handle softblend
+    wrBuf[11] = RDA5807_SEEK_TH_OLD_DEF | RDA5807_SOFTBLEND_EN; // TODO: Handle softblend
     rda580xWriteReg(0x07);
 }
 

@@ -61,7 +61,9 @@ void inputPoll(void)
             btnCnt++;
             if (btnCnt == LONG_PRESS) {
                 cmdBuf = (btnPrev << 8) & 0xFF00;
-                btnCnt -= AUTOREPEAT;
+                if (btnNow & (BTN_D3 | BTN_D4 | ENC_A | ENC_B)) {
+                    btnCnt -= AUTOREPEAT;
+                }
             }
         }
     } else {

@@ -447,7 +447,7 @@ void menuChange(int8_t diff)
 
 bool menuIsTop(void)
 {
-    // TODO: top menu on first selection instead of MENU_SETUP
+    // TODO: Top menu on first selection instead of MENU_SETUP
     return (menu.parent == MENU_NULL || menu.parent == MENU_SETUP);
 }
 

@@ -66,10 +66,6 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Водоспад",
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Немає",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
-//    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "TEST",
 
     [LABEL_MENU + MENU_NULL]            = "Назад",
 

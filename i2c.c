@@ -41,7 +41,7 @@ static bool i2cWait(I2cContext *i2c)
 {
     if (LL_SYSTICK_IsActiveCounterFlag()) {
         if (i2c->timeout-- == 0) {
-            // TODO: handle error
+            // TODO: Handle errors
             return false;
         }
     }

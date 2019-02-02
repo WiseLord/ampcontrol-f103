@@ -11,7 +11,8 @@ extern "C" {
 #include "rtc.h"
 #include "menu.h"
 
-typedef enum {
+typedef uint8_t Screen;
+enum {
     SCREEN_STANDBY,
 
     SCREEN_TIME,
@@ -25,7 +26,7 @@ typedef enum {
     SCREEN_MENU,
 
     SCREEN_END
-} Screen;
+};
 
 typedef enum {
     BR_STBY,

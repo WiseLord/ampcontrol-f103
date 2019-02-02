@@ -124,7 +124,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Encoder resolution",
 
 //    FOREACH_CMD(GENERATE_MENU_RC_TEXT)
-
+    // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Switch standby",
     [LABEL_MENU + MENU_RC_MUTE]         = "Mute",
     [LABEL_MENU + MENU_RC_VOL_UP]       = "Volume up",
@@ -132,7 +132,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_RC_MENU]         = "Menu",
     [LABEL_MENU + MENU_RC_CHAN_NEXT]    = "Next chan",
     [LABEL_MENU + MENU_RC_CHAN_PREV]    = "Prev chan",
-    [LABEL_MENU + MENU_RC_DIG_0]        = "Digit 0",
+    [LABEL_MENU + MENU_RC_DIG_0]        = "Digit 0",        // TODO: Simplify
     [LABEL_MENU + MENU_RC_DIG_1]        = "Digit 1",
     [LABEL_MENU + MENU_RC_DIG_2]        = "Digit 2",
     [LABEL_MENU + MENU_RC_DIG_3]        = "Digit 3",
@@ -143,8 +143,13 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_RC_DIG_8]        = "Digit 8",
     [LABEL_MENU + MENU_RC_DIG_9]        = "Digit 9",
     [LABEL_MENU + MENU_RC_IN_NEXT]      = "Next input",
-    [LABEL_MENU + MENU_RC_IN_PREV]      = "Prev input",
-    [LABEL_MENU + MENU_RC_IN_0]         = "Input 0",
+    [LABEL_MENU + MENU_RC_NAV_OK]       = "OK",
+    [LABEL_MENU + MENU_RC_NAV_BACK]     = "Back",
+    [LABEL_MENU + MENU_RC_NAV_RIGHT]    = "Right",
+    [LABEL_MENU + MENU_RC_NAV_UP]       = "Up",
+    [LABEL_MENU + MENU_RC_NAV_LEFT]     = "Left",
+    [LABEL_MENU + MENU_RC_NAV_DOWN]     = "Down",
+    [LABEL_MENU + MENU_RC_IN_0]         = "Input 0",        // TODO: Simplify
     [LABEL_MENU + MENU_RC_IN_1]         = "Input 1",
     [LABEL_MENU + MENU_RC_IN_2]         = "Input 2",
     [LABEL_MENU + MENU_RC_IN_3]         = "Input 3",

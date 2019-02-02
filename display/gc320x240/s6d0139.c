@@ -33,7 +33,7 @@ __attribute__((always_inline))
 static inline void s6d0139SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
     int16_t x1 = x + w - 1;
-    int16_t y1 = drv.height - y - 1;   // TODO: rework it
+    int16_t y1 = drv.height - y - 1;   // TODO: Rework it
 
     s6d0139WriteReg(0x0046, (uint16_t)((y1 << 8) + (y1 - h + 1)));
     s6d0139WriteReg(0x0048, (uint16_t)x);

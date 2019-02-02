@@ -47,7 +47,6 @@ static inline void eeLock(void)
 __attribute__((always_inline))
 static inline void eeWaitBusy(void)
 {
-    // TODO: add some timeout
     while (READ_BIT(FLASH->SR, FLASH_SR_BSY));
 }
 

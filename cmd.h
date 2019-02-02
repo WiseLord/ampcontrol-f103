@@ -24,7 +24,12 @@ extern "C" {
     CMD(DIG_8)              \
     CMD(DIG_9)              \
     CMD(IN_NEXT)            \
-    CMD(IN_PREV)            \
+    CMD(NAV_OK)             \
+    CMD(NAV_BACK)           \
+    CMD(NAV_RIGHT)          \
+    CMD(NAV_UP)             \
+    CMD(NAV_LEFT)           \
+    CMD(NAV_DOWN)           \
     CMD(IN_0)               \
     CMD(IN_1)               \
     CMD(IN_2)               \

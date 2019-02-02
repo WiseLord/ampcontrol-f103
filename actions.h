@@ -6,19 +6,23 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
+
+#include "screen.h"
 
 #define FLAG_OFF        0
 #define FLAG_ON         1
 #define FLAG_SWITCH     2
 
-#define ACTION_HIDDEN   0
-#define ACTION_VISIBLE  1
+#define ACTION_HIDDEN   false
+#define ACTION_VISIBLE  true
 
 #define DIRECTION_UP    1
 #define DIRECTION_DOWN  -1
 
-typedef enum {
-    ACTION_NONE,
+typedef uint8_t ActionType;
+enum {
+    ACTION_NONE = 0,
 
     ACTION_BTN_SHORT,
     ACTION_BTN_LONG,
@@ -35,8 +39,9 @@ typedef enum {
     ACTION_PREV,
     ACTION_NEXT,
 
-    ACTION_MENU,
-    ACTION_MENU_BACK,
+    ACTION_AUDIO_MENU,
+
+    ACTION_NAVIGATE,
 
     ACTION_RTC_MODE,
     ACTION_RTC_CHANGE,
@@ -66,15 +71,20 @@ typedef enum {
     ACTION_MENU_CHANGE,
 
     ACTION_TYPE_END
-} ActionType;
+};
 
 typedef struct {
     ActionType type;
+    bool visible;
     int16_t value;
+
+    Screen screen;
+    ScreenParam param;
+    int16_t timeout;
 } Action;
 
-Action actionUserGet(void);
-void actionHandle(Action action, uint8_t visible);
+void actionUserGet(void);
+void actionHandle(bool visible);
 
 #ifdef __cplusplus
 }

@@ -61,7 +61,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Karışık",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Şelale",
 
-    [LABEL_MENU + AUDIO_IC_NO]            = "Ses İşlemci Modeli",
+    [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Ses İşlemci Modeli",
 
     [LABEL_MENU + MENU_NULL]            = "Bir Önceki Menü",
 
@@ -120,7 +120,6 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_RC_DIG_8]        = "Buton 8",
     [LABEL_MENU + MENU_RC_DIG_9]        = "Buton 9",
     [LABEL_MENU + MENU_RC_IN_NEXT]      = "Sonraki Giriş",
-    [LABEL_MENU + MENU_RC_IN_PREV]      = "Önceki Giriş",
     [LABEL_MENU + MENU_RC_IN_0]         = "Giriş 0",
     [LABEL_MENU + MENU_RC_IN_1]         = "Giriş 1",
     [LABEL_MENU + MENU_RC_IN_2]         = "Giriş 2",

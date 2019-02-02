@@ -33,7 +33,7 @@ __attribute__((always_inline))
 static inline void st7793SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
     int16_t x1 = x + w - 1;
-    int16_t y1 = drv.height - y - 1;   // TODO: rework it
+    int16_t y1 = drv.height - y - 1;   // TODO: Rework it
 
     st7793WriteReg(0x0210, (uint16_t)(y1 - h + 1));
     st7793WriteReg(0x0211, (uint16_t)y1);

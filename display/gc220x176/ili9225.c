@@ -32,7 +32,7 @@ __attribute__((always_inline))
 static inline void ili9225SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
     int16_t x1 = x + w - 1;
-    int16_t y1 = drv.height - y - 1;    // TODO: rework it
+    int16_t y1 = drv.height - y - 1;    // TODO: Rework it
 
     ili9225WriteReg(0x0037, (uint16_t)(y1 - h + 1));
     ili9225WriteReg(0x0036, (uint16_t)y1);

@@ -14,7 +14,8 @@ extern "C" {
 
 #define GENERATE_MENU_RC(CMD)    MENU_RC_ ## CMD,
 
-typedef enum {
+typedef uint8_t MenuIdx;
+enum {
     MENU_NULL = 0,
 
     MENU_SETUP,
@@ -48,7 +49,6 @@ typedef enum {
     MENU_TUNER_VOLUME,
 
     MENU_SPECTURM_MODE,
-//    MENU_SPECTRUM_SPEED,
 
     MENU_DISPLAY_BR_STBY,
     MENU_DISPLAY_ROTATE,
@@ -58,7 +58,7 @@ typedef enum {
     FOREACH_CMD(GENERATE_MENU_RC)
 
     MENU_END
-} MenuIdx;
+};
 
 #define MENU_MAX_LEN    (MENU_END - MENU_INPUT_ENC_RES)
 

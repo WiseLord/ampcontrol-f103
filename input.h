@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 
 #define BTN_NO                  0x00
+#define ENC_NO                  BTN_NO
 
 #define BTN_D0                  0x01
 #define BTN_D1                  0x02
@@ -15,12 +16,9 @@ extern "C" {
 #define BTN_D3                  0x08
 #define BTN_D4                  0x10
 #define BTN_D5                  0x20
-#define BTN_D6                  0x40
-#define BTN_D7                  0x80
 
-#define ENC_NO                  BTN_NO
-#define ENC_A                   BTN_D6
-#define ENC_B                   BTN_D7
+#define ENC_A                   0x40
+#define ENC_B                   0x80
 #define ENC_AB                  (ENC_A | ENC_B)
 
 // Handling long press actions

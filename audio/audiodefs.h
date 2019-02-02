@@ -21,7 +21,8 @@ typedef enum {
     AUDIO_IC_END
 } AudioIC;
 
-typedef enum {
+typedef uint8_t AudioTune;
+enum {
     AUDIO_TUNE_VOLUME = 0,
     AUDIO_TUNE_BASS,
     AUDIO_TUNE_MIDDLE,
@@ -35,7 +36,7 @@ typedef enum {
     AUDIO_TUNE_GAIN,
 
     AUDIO_TUNE_END
-} AudioTune;
+};
 
 typedef uint8_t InputType;
 enum {

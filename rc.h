@@ -31,11 +31,12 @@ typedef struct {
     bool ready;
 } RcData;
 
-typedef enum {
+typedef uint16_t RcCmd;
+enum {
     FOREACH_CMD(GENERATE_RC_CMD)
 
     RC_CMD_END
-} RcCmd;
+};
 
 void rcInit(void);
 void rcIRQ(void);

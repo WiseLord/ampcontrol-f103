@@ -7,7 +7,8 @@ extern "C" {
 
 #include <stdint.h>
 
-typedef enum {
+typedef uint8_t RtcMode;
+enum {
     RTC_HOUR,
     RTC_MIN,
     RTC_SEC,
@@ -16,7 +17,7 @@ typedef enum {
     RTC_YEAR,
 
     RTC_NOEDIT,
-} RtcMode;
+};
 
 typedef struct {
     int8_t hour;
