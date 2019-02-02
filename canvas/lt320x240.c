@@ -30,10 +30,10 @@ static const Layout lt320x240 = {
     .sp.wfH = 2,
 
     .tuner.stFont = &fontterminusmod18x3,
-    .tuner.bar.sc = 80,
+    .tuner.bar.sc = 66,
     .tuner.bar.sw = 2,
     .tuner.bar.barY = 60,
-    .tuner.bar.barW = 320,
+    .tuner.bar.barW = 264,
     .tuner.bar.half = 10,
     .tuner.bar.middle = 2,
     .tuner.iconSpace = 3,

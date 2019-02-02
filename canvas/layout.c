@@ -521,11 +521,11 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
             glcdWriteString("--");
         }
 
-        glcdSetFont(&fontterminus32b);
+        glcdSetFont(lt->menu.headFont); // TODO: separate font for this
         glcdSetXY(0, bar->barY + bar->half * 2 + bar->middle);
         uint16_t nameLen = glcdWriteString(stationGetName(stNum));
         glcdDrawRect(canvas->glcd->x, canvas->glcd->y,
-                     lt->tuner.bar.barW - nameLen, fontterminus32b.chars[0].image->height,
+                     lt->tuner.bar.barW - nameLen, lt->menu.headFont->chars[0].image->height,
                      canvas->pal->bg);
     }
     freqOld = freq;

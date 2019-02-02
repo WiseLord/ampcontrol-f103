@@ -17,10 +17,10 @@ static const Layout lt160x128 = {
 
     .tune.valFont = &fontterminus28b,
     .tune.valY = 28,
-    .tune.bar.sc = 60,
+    .tune.bar.sc = 58,
     .tune.bar.sw = 1,
     .tune.bar.barY = 30,
-    .tune.bar.barW = 120,
+    .tune.bar.barW = 116,
     .tune.bar.half = 5,
     .tune.bar.middle = 2,
 
@@ -30,10 +30,10 @@ static const Layout lt160x128 = {
     .sp.wfH = 1,
 
     .tuner.stFont = &fontterminus28b,
-    .tuner.bar.sc = 80,
+    .tuner.bar.sc = 64,
     .tuner.bar.sw = 1,
     .tuner.bar.barY = 30,
-    .tuner.bar.barW = 160,
+    .tuner.bar.barW = 128,
     .tuner.bar.half = 5,
     .tuner.bar.middle = 2,
     .tuner.iconSpace = 1,
