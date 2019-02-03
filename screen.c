@@ -121,7 +121,7 @@ void screenInit(void)
 {
     labelsInit();
     layoutInit();
-    canvasClear(CLEAR_ALL);
+    canvasClear();
     screenReadSettings();
     dispdrvSetBrightness(brightness[BR_STBY]);
 }
@@ -191,14 +191,15 @@ void screenShow(bool clear)
 {
     Spectrum *spectrum = spGet();
 
-    ClearRegion clearReg = CLEAR_ALL;
+    GlcdRect rect = layoutGet()->rect;
 
     if (!clear) {
         clear = screenCheckClear();
         if (screen == SCREEN_TEXTEDIT) {
-            clearReg = CLEAR_CENTER;
+            rect = layoutGet()->textEdit.rect;
         }
     }
+    glcdSetRect(rect);
 
     // Get new spectrum data
     if (swTimGetSpConvert() <= 0) {
@@ -209,7 +210,7 @@ void screenShow(bool clear)
 
     if (clear) {
         spectrum->wtfX = 0;
-        canvasClear(clearReg);
+        canvasClear();
         spectrum->redraw = true;
     }
 
@@ -325,5 +326,5 @@ void screenShowMenu(void)
 
 void screenShowTextEdit(void)
 {
-
+    layoutShowTextEdit("test");
 }

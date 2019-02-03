@@ -13,11 +13,20 @@ extern "C" {
 #include "dispdrv.h"
 
 typedef struct {
+    int16_t x;
+    int16_t y;
+    int16_t w;
+    int16_t h;
+} GlcdRect;
+
+typedef struct {
     DispDriver *drv;
+    GlcdRect rect;
     Font font;
     int16_t x;
     int16_t y;
     bool rotate;
+    bool strFramed;
 } Glcd;
 
 typedef void (*SendDataCallback)(uint16_t data);
@@ -60,6 +69,9 @@ bool glcdGetRotate(void);
 void glcdRotate(uint8_t rotate);
 void glcdShift(int16_t pos);
 
+void glcdSetRect(GlcdRect rect);
+GlcdRect glcdGetRect(void);
+
 char * glcdPrepareNum(int32_t number, int8_t width, char lead, uint8_t radix);
 uint16_t glcdWriteNum(int32_t number, int8_t width, char lead, uint8_t radix);
 
@@ -80,8 +92,10 @@ void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor);
 
 const tImage *glcdFindIcon(int32_t code, const tFont *iFont);
 int16_t glcdWriteChar(int32_t code);
-uint16_t glcdWriteString(char *string);
+void glcdSetStringFramed(bool framed);
 uint16_t glcdWriteStringConst(const char *string);
+uint16_t glcdWriteStringConstFramed(const char *string, bool framed);
+uint16_t glcdWriteString(char *string);
 uint16_t glcdWriteStringFramed(char *string, uint8_t framed);
 
 void glcdDrawPixel(int16_t x, int16_t y, uint16_t color);

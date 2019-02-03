@@ -245,7 +245,7 @@ static void menuStoreCurrentValue(void)
 
     case MENU_DISPLAY_ROTATE:
         glcdRotate((bool)menu.value);
-        canvasClear(CLEAR_ALL);
+        canvasClear();
         break;
 
     case MENU_INPUT_ENC_RES:

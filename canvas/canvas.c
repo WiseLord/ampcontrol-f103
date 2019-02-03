@@ -19,27 +19,20 @@ void canvasInit(Canvas **value)
     *value = &canvas;
 }
 
-void canvasClear(ClearRegion clReg)
+void canvasClear(void)
 {
     glcdShift(0);
 
-    int16_t x = 0;
-    int16_t y = 0;
-    int16_t w = canvas.glcd->drv->width;
-    int16_t h = canvas.glcd->drv->height;
+    GlcdRect rect = glcdGetRect();
 
-    switch (clReg) {
-    case CLEAR_CENTER:
-        x = w / 8;
-        y = h / 6;
-        w = x * 6;
-        h = y * 4;
-        glcdDrawFrame(x - 2, y - 2, w + 4, h + 4, 2, LCD_COLOR_WHITE);
-        break;
-    default:
-        break;
+    glcdDrawRect(0, 0, rect.w, rect.h, canvas.pal->bg);
+
+    const int16_t ft = 2;
+
+    if (rect.x >= 2 * ft && rect.y >= 2 * ft) {
+        glcdDrawFrame(-ft, -ft, rect.w + 2 * ft, rect.h + 2 * ft, ft, canvas.pal->bg);
+        glcdDrawFrame(-2 * ft, -2 * ft, rect.w + 4 * ft, rect.h + 4 * ft, ft, canvas.pal->fg);
     }
-    glcdDrawRect(x, y, w, h, canvas.pal->bg);
 
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetFontBgColor(canvas.pal->bg);

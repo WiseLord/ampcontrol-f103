@@ -16,8 +16,7 @@ extern "C" {
 #include "../tuner/tuner.h"
 
 typedef struct {
-    int16_t width;
-    int16_t height;
+    GlcdRect rect;
 
     struct {
         const tFont *hmsFont;       // Font to draw hours/minutes/seconds
@@ -48,6 +47,9 @@ typedef struct {
         CanvasBar bar;
         uint8_t iconSpace;          // Space between icons
     } tuner;
+    struct {
+        GlcdRect rect;
+    } textEdit;
     const tFont *lblFont;           // Main label font
     const tFont *iconSet;           // Main icon set
 } Layout;
@@ -64,12 +66,15 @@ const Layout *ltEmulGet(void);
 #endif
 
 void layoutInit(void);
+const Layout *layoutGet(void);
 
 void layoutShowTime(bool clear, RTC_type *rtc);
 void layoutShowMenu(void);
 void layoutShowTune(bool clear, DispParam *dp, Spectrum *sp);
 void layoutShowSpectrum(bool clear, Spectrum *sp);
 void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp);
+
+void layoutShowTextEdit(char *str);
 
 #ifdef __cplusplus
 }

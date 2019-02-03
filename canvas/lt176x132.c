@@ -1,8 +1,10 @@
 #include "layout.h"
 
 static const Layout lt176x132 = {
-    .width = 176,
-    .height = 132,
+    .rect.x = 0,
+    .rect.y = 0,
+    .rect.w = 176,
+    .rect.h = 132,
 
     .time.hmsFont = &fontterminusdig42,
     .time.dmyFont = &fontterminusdig30,
@@ -37,6 +39,11 @@ static const Layout lt176x132 = {
     .tuner.bar.half = 5,
     .tuner.bar.middle = 2,
     .tuner.iconSpace = 2,
+
+    .textEdit.rect.x = 28,
+    .textEdit.rect.y = 26,
+    .textEdit.rect.w = 120,
+    .textEdit.rect.h = 80,
 
     .iconSet = &iconsamp24,
     .lblFont = &fontterminus32,

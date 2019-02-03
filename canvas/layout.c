@@ -102,13 +102,13 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
     Menu *menu = menuGet();
     uint8_t items = menu->dispSize;
 
-    int16_t width = lt->width;
+    int16_t width = lt->rect.w;
     MenuIdx menuIdx = menu->list[idx];
     const char *name = menuGetName(menuIdx);
     uint8_t active = (menu->active == menu->list[idx]);
 
     const uint8_t ih = fIh + 4; // Menu item height
-    int16_t y_pos = lt->height - ih * (items - idx + menu->dispOft);
+    int16_t y_pos = lt->rect.h - ih * (items - idx + menu->dispOft);
 
     // Draw selection frame
     glcdDrawFrame(0, y_pos, width, ih, 1, active ? LCD_COLOR_WHITE : canvas->pal->bg);
@@ -137,7 +137,10 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
         glcdSetFontColor(bgColor);
         glcdSetFontBgColor(color);
     }
-    uint16_t strLen = glcdWriteStringFramed((char *)menuGetValueStr(menuIdx), 1);
+    glcdSetStringFramed(true);
+    uint16_t strLen = glcdWriteStringConst(menuGetValueStr(menuIdx));
+    glcdSetStringFramed(false);
+
     glcdSetFontColor(color);
     glcdSetFontBgColor(bgColor);
 
@@ -226,12 +229,12 @@ static void canvasDrawSpectrumChan(Spectrum *sp, int16_t chan)
     const uint8_t step = lt->sp.step;
     const uint8_t oft = lt->sp.oft;
     const uint8_t width = lt->sp.width;
-    const int16_t height = lt->height / 2;
+    const int16_t height = lt->rect.h / 2;
     const int16_t y = chan * height;
 
-    const int16_t num = (lt->width + width - 1) / step;    // Number of spectrum columns
+    const int16_t num = (lt->rect.w + width - 1) / step;    // Number of spectrum columns
 
-    canvasImproveSpectrum(&sp->chan[chan], (uint16_t)lt->height / 2);
+    canvasImproveSpectrum(&sp->chan[chan], (uint16_t)lt->rect.h / 2);
 
     uint8_t *show = sp->chan[chan].show;
     uint8_t *peak = sp->chan[chan].peak;
@@ -251,9 +254,9 @@ static void canvasDrawSpectrumMixed(Spectrum *sp)
     const uint8_t oft = lt->sp.oft;
     const uint8_t width = lt->sp.width;
 
-    const int16_t num = (lt->width + width - 1) / step;    // Number of spectrum columns
-    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)lt->height / 2);
-    canvasImproveSpectrum(&sp->chan[SP_CHAN_RIGHT], (uint16_t)lt->height / 2);
+    const int16_t num = (lt->rect.w + width - 1) / step;    // Number of spectrum columns
+    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)lt->rect.h / 2);
+    canvasImproveSpectrum(&sp->chan[SP_CHAN_RIGHT], (uint16_t)lt->rect.h / 2);
 
     uint8_t *showL = sp->chan[SP_CHAN_LEFT].show;
     uint8_t *old_showL = sp->chan[SP_CHAN_LEFT].old_show;
@@ -266,28 +269,28 @@ static void canvasDrawSpectrumMixed(Spectrum *sp)
         int16_t old_show = (*old_showL++) + (*old_showR++);
 
         int16_t x = oft + col * step;
-        canvasDrawSpectrumColumn(sp->redraw, x, 0, width, lt->height,
+        canvasDrawSpectrumColumn(sp->redraw, x, 0, width, lt->rect.h,
                                  show, old_show, 0, 0);
     }
 }
 
 static void canvasDrawWaterfall(Spectrum *sp)
 {
-    if (++sp->wtfX >= lt->width) {
+    if (++sp->wtfX >= lt->rect.w) {
         sp->wtfX = 0;
     }
 
     const uint8_t wfH = lt->sp.wfH;
 
-    glcdShift((uint16_t)(sp->wtfX + 1) % lt->width);
+    glcdShift((uint16_t)(sp->wtfX + 1) % lt->rect.w);
 
-    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)lt->height / 2);
-    canvasImproveSpectrum(&sp->chan[SP_CHAN_RIGHT], (uint16_t)lt->height / 2);
+    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)lt->rect.h / 2);
+    canvasImproveSpectrum(&sp->chan[SP_CHAN_RIGHT], (uint16_t)lt->rect.h / 2);
 
-    for (uint16_t i = 0; i < (lt->height + wfH - 1) / wfH; i++) {
+    for (uint16_t i = 0; i < (lt->rect.h + wfH - 1) / wfH; i++) {
         uint16_t level = sp->chan[SP_CHAN_LEFT].show[i] + sp->chan[SP_CHAN_RIGHT].show[i];
         uint16_t color = level2color(level);
-        glcdDrawRect(sp->wtfX, lt->height - 1 - (i * wfH), 1, wfH, color);
+        glcdDrawRect(sp->wtfX, lt->rect.h - 1 - (i * wfH), 1, wfH, color);
     }
 }
 
@@ -318,7 +321,14 @@ void layoutInit()
     bool rotate = eeRead(EE_DISPLAY_ROTATE);
     glcdRotate(rotate);
 
+    canvas->glcd->rect = lt->rect;
+
     menuGet()->dispSize = lt->menu.itemCnt;
+}
+
+const Layout *layoutGet(void)
+{
+    return lt;
 }
 
 void layoutShowTime(bool clear, RTC_type *rtc)
@@ -336,7 +346,7 @@ void layoutShowTime(bool clear, RTC_type *rtc)
     timeLen = 6 * (lt->time.hmsFont->chars[zeroPos].image->width);    // 6 digits HHMMSS
     timeLen += 15 *
                (lt->time.hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
-    glcdSetXY((lt->width - timeLen) / 2, lt->time.hmsY);
+    glcdSetXY((lt->rect.w - timeLen) / 2, lt->time.hmsY);
 
     canvasDrawTm(rtc, RTC_HOUR);
     glcdWriteChar(LETTER_SPACE_CHAR);
@@ -355,7 +365,7 @@ void layoutShowTime(bool clear, RTC_type *rtc)
     timeLen = 8 * (lt->time.dmyFont->chars[zeroPos].image->width);    // 8 digits HHMMSS
     timeLen += 17 *
                (lt->time.dmyFont->chars[ltspPos].image->width);  // 15 letter spaces + 2 '.'
-    glcdSetXY((lt->width - timeLen) / 2, lt->time.dmyY);
+    glcdSetXY((lt->rect.w - timeLen) / 2, lt->time.dmyY);
 
     canvasDrawTm(rtc, RTC_DATE);
     glcdWriteChar(LETTER_SPACE_CHAR);
@@ -374,13 +384,13 @@ void layoutShowTime(bool clear, RTC_type *rtc)
     static int8_t wdayOld = 0;
     int8_t wday = rtc->wday;
     if (wday != wdayOld)    // Clear the area with weekday label
-        glcdDrawRect(0, lt->time.wdY, lt->width,
+        glcdDrawRect(0, lt->time.wdY, lt->rect.w,
                      (int16_t)lt->time.wdFont->chars[0].image->height, canvas->pal->bg);
     wdayOld = wday;
 
     const char *wdayLabel = labelsGet(LABEL_SUNDAY + wday);
 
-    glcdSetXY(lt->width / 2, lt->time.wdY);
+    glcdSetXY(lt->rect.w / 2, lt->time.wdY);
     glcdSetFontAlign(FONT_ALIGN_CENTER);
     glcdWriteStringConst(wdayLabel);
 }
@@ -393,7 +403,7 @@ void layoutShowMenu(void)
     const int16_t fIh = (int16_t)lt->menu.menuFont->chars[0].image->height;
     const uint8_t items = menu->dispSize;
 
-    const int16_t dividerPos = (lt->height - (fIh + 4) * items + fHh) / 2;
+    const int16_t dividerPos = (lt->rect.h - (fIh + 4) * items + fHh) / 2;
 
     // Show header
     const char *parentName = menuGetName(menu->parent);
@@ -403,9 +413,9 @@ void layoutShowMenu(void)
     glcdSetXY(2, 0);
     glcdWriteStringConst(parentName);
     // Fill free space after header
-    glcdDrawRect(canvas->glcd->x, canvas->glcd->y, lt->width - canvas->glcd->x, fHh, canvas->pal->bg);
+    glcdDrawRect(canvas->glcd->x, canvas->glcd->y, lt->rect.w - canvas->glcd->x, fHh, canvas->pal->bg);
 
-    glcdDrawRect(0, dividerPos, lt->width, 1, canvas->glcd->font.color);
+    glcdDrawRect(0, dividerPos, lt->rect.w, 1, canvas->glcd->font.color);
 
     for (uint8_t idx = 0; idx < menu->listSize; idx++) {
         if (idx >= menu->dispOft && idx < items + menu->dispOft) {
@@ -426,7 +436,7 @@ void layoutShowTune(bool clear, DispParam *dp, Spectrum *sp)
         glcdSetXY(0, 0);
         glcdWriteStringConst(dp->label);
         // Icon
-        glcdSetXY(lt->width - iconSet->chars[0].image->width, 0);
+        glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
         const tImage *icon = glcdFindIcon(dp->icon, iconSet);
         glcdDrawImage(icon, canvas->pal->fg, canvas->pal->bg);
     }
@@ -434,7 +444,7 @@ void layoutShowTune(bool clear, DispParam *dp, Spectrum *sp)
         // Bar
         canvasDrawBar(&lt->tune.bar, dp->value, dp->min, dp->max);
         // Value
-        glcdSetXY(lt->width, lt->tune.valY);
+        glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
         glcdWriteNum((dp->value * dp->mStep) / 8, 3, ' ', 10);
@@ -511,7 +521,7 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         glcdWriteNum(freq % 100, 2, '0', 10);
 
         glcdSetFont(lt->tuner.stFont);
-        glcdSetXY(lt->width, lt->tune.valY);
+        glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
 
         int8_t stNum = stationGetNum(freq);
@@ -539,7 +549,7 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
     if (clear || (stereoOld != stereo) || (forcedMonoOld != forcedMono)) {
         icon = glcdFindIcon(forcedMono ? ICON_FMONO : ICON_STEREO, iconSet);
         if (icon) {
-            glcdSetXY(lt->width - icon->width, 0);
+            glcdSetXY(lt->rect.w - icon->width, 0);
             glcdDrawImage(icon, (stereo || forcedMono) ?
                           canvas->pal->active : canvas->pal->inactive, canvas->pal->bg);
         }
@@ -554,7 +564,7 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
     if (clear || (rdsOld != rds)) {
         icon = glcdFindIcon(ICON_RDS, iconSet);
         if (icon) {
-            glcdSetXY(lt->width - icon->width, canvas->glcd->y + icon->height + iconSpace);
+            glcdSetXY(lt->rect.w - icon->width, canvas->glcd->y + icon->height + iconSpace);
             glcdDrawImage(icon, rds ? canvas->pal->active : canvas->pal->inactive, canvas->pal->bg);
         }
         rdsOld = rds;
@@ -570,4 +580,11 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
 
     sp->redraw = false;
     sp->ready = false;
+}
+
+void layoutShowTextEdit(char *str)
+{
+    glcdSetFont(&fontterminus32b);
+    glcdSetXY(0, 0);
+    glcdWriteString(str);
 }

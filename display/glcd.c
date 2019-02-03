@@ -77,6 +77,16 @@ void glcdShift(int16_t pos)
     }
 }
 
+void glcdSetRect(GlcdRect rect)
+{
+    glcd.rect = rect;
+}
+
+GlcdRect glcdGetRect(void)
+{
+    return glcd.rect;
+}
+
 char *glcdPrepareNum(int32_t number, int8_t width, char lead, uint8_t radix)
 {
     uint8_t numdiv;
@@ -188,8 +198,8 @@ void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor)
 
     tImage *imgUnRle = glcdUnRleImg(img);
 
-    int16_t x = glcd.x;
-    int16_t y = glcd.y;
+    int16_t x = glcd.rect.x + glcd.x;
+    int16_t y = glcd.rect.y + glcd.y;
 
     if (glcd.drv->drawImage) {
         // Draw fast by display driver function
@@ -291,10 +301,9 @@ static int32_t findSymbolCode(char **string)
     return BLOCK_CHAR;
 }
 
-uint16_t glcdWriteString(char *string)
-
+void glcdSetStringFramed(bool framed)
 {
-    return glcdWriteStringFramed(string, 0);
+    glcd.strFramed = framed;
 }
 
 uint16_t glcdWriteStringConst(const char *string)
@@ -304,7 +313,7 @@ uint16_t glcdWriteStringConst(const char *string)
     return glcdWriteString(strbuf);
 }
 
-uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
+uint16_t glcdWriteString(char *string)
 {
     int32_t code = 0;
     char *str = string;
@@ -317,7 +326,7 @@ uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
         int16_t pos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
         int16_t sWidth = font->chars[pos].image->width;
 
-        if (framed)
+        if (glcd.strFramed)
             strLength += sWidth;
         while (*str) {
             code = findSymbolCode(&str);
@@ -327,7 +336,7 @@ uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
                 strLength += sWidth;
             }
         }
-        if (framed)
+        if (glcd.strFramed)
             strLength += sWidth;
 
         if (glcd.font.align == FONT_ALIGN_CENTER) {
@@ -342,7 +351,7 @@ uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
 
     str = string;
 
-    if (framed)
+    if (glcd.strFramed)
         ret += glcdWriteChar(LETTER_SPACE_CHAR);
     while (*str) {
         code = findSymbolCode(&str);
@@ -351,7 +360,7 @@ uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
         if (*str)
             ret += glcdWriteChar(LETTER_SPACE_CHAR);
     }
-    if (framed)
+    if (glcd.strFramed)
         ret += glcdWriteChar(LETTER_SPACE_CHAR);
 
     return ret;
@@ -359,6 +368,9 @@ uint16_t glcdWriteStringFramed(char *string, uint8_t framed)
 
 void glcdDrawPixel(int16_t x, int16_t y, uint16_t color)
 {
+    x += glcd.rect.x;
+    y += glcd.rect.y;
+
     if (glcd.drv->drawPixel) {
         glcd.drv->drawPixel(x, y, color);
     }
@@ -368,6 +380,9 @@ void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     if (w < 0 || h < 0)
         return;
+
+    x += glcd.rect.x;
+    y += glcd.rect.y;
 
     if (glcd.drv->drawRectangle) {
         glcd.drv->drawRectangle(x, y, w, h, color);
@@ -406,7 +421,7 @@ void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color
         err = dX - dY;
 
         while (x0 != x1 || y0 != y1) {
-            glcd.drv->drawPixel(x0, y0, color);
+            glcdDrawPixel(x0, y0, color);
             err2 = err * 2;
             if (err2 > -dY / 2) {
                 err -= dY;
@@ -417,7 +432,7 @@ void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color
                 y0 += sY;
             }
         }
-        glcd.drv->drawPixel(x1, y1, color);
+        glcdDrawPixel(x1, y1, color);
     }
 }
 

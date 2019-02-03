@@ -10,14 +10,6 @@ extern "C" {
 
 #include "../display/glcd.h"
 
-typedef uint8_t ClearRegion;
-enum {
-    CLEAR_ALL,
-    CLEAR_CENTER,
-
-    CLEAR_END
-};
-
 typedef struct {
     const char *label;
     int16_t value;
@@ -51,7 +43,7 @@ typedef struct {
 } Canvas;
 
 void canvasInit(Canvas **value);
-void canvasClear(ClearRegion clReg);
+void canvasClear(void);
 
 #ifdef __cplusplus
 }
