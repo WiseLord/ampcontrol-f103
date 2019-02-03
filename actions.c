@@ -28,7 +28,7 @@ static void actionRemapCommon(void);
 static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
-static Action action = {ACTION_STANDBY, false, FLAG_ON, SCREEN_STANDBY, {0}, 0};
+static Action action = {ACTION_STANDBY, false, FLAG_ON, SCREEN_STANDBY, {0}, 0, ACTION_STANDBY};
 
 static void actionSet(ActionType type, int16_t value)
 {
@@ -121,10 +121,18 @@ static void actionNavigateCommon(RcCmd cmd)
         }
         break;
     case RC_CMD_NAV_UP:
-        actionSet(ACTION_ENCODER, +1);
+        if (screen == SCREEN_TEXTEDIT) {
+            actionSet(ACTION_ENCODER, -1);
+        } else {
+            actionSet(ACTION_ENCODER, +1);
+        }
         break;
     case RC_CMD_NAV_DOWN:
-        actionSet(ACTION_ENCODER, -1);
+        if (screen == SCREEN_TEXTEDIT) {
+            actionSet(ACTION_ENCODER, +1);
+        } else {
+            actionSet(ACTION_ENCODER, -1);
+        }
         break;
     }
 }
@@ -174,7 +182,7 @@ static void actionGetRemote(void)
         if (rcData.repeat) {
             // Allow repeat only following commands
             if (cmd == RC_CMD_VOL_UP ||
-                cmd == RC_CMD_VOL_DOWN) {
+                    cmd == RC_CMD_VOL_DOWN) {
                 if (swTimGetRcRepeat() > 0)
                     return;
             } else {
@@ -232,16 +240,20 @@ static void actionRemapBtnShort(void)
 static void actionRemapBtnLong(void)
 {
     Screen screen = screenGet();
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
 
     switch (action.value) {
     case BTN_D0:
         actionSet(ACTION_BR_WORK, 0);
         break;
     case BTN_D1:
-        actionSet(ACTION_TUNER_EDIT_NAME, FLAG_ON);
+        action.type = ACTION_RTC_MODE;
         break;
     case BTN_D2:
-        action.type = ACTION_RTC_MODE;
+        if (inType == IN_TUNER) {
+            action.type = ACTION_TUNER_EDIT_NAME;
+        }
         break;
     case BTN_D3:
         action.type = ACTION_PREV;
@@ -278,14 +290,14 @@ static void actionRemapRemote(void)
     }
 
     if (SCREEN_STANDBY == screen &&
-        action.value == RC_CMD_MENU) {
+            action.value == RC_CMD_MENU) {
         actionSet(ACTION_MENU_SELECT, MENU_SETUP_LANG);
         return;
     }
 
     if (SCREEN_STANDBY == screen &&
-        action.value != RC_CMD_STBY_SWITCH &&
-        action.value != RC_CMD_STBY_EXIT)
+            action.value != RC_CMD_STBY_SWITCH &&
+            action.value != RC_CMD_STBY_EXIT)
         return;
 
     switch (action.value) {
@@ -518,18 +530,18 @@ static void actionRemapCommon(void)
     }
 
     if (SCREEN_STANDBY == screen &&
-        (ACTION_STANDBY != action.type &&
-         ACTION_REMOTE != action.type &&
-         ACTION_MENU_SELECT != action.type)) {
+            (ACTION_STANDBY != action.type &&
+             ACTION_REMOTE != action.type &&
+             ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 
     if (SCREEN_MENU == screen &&
-        (ACTION_STANDBY != action.type &&
-         ACTION_NAVIGATE != action.type &&
-         ACTION_MENU_CHANGE != action.type &&
-         ACTION_MENU_SELECT != action.type &&
-         ACTION_ENCODER != action.type)) {
+            (ACTION_STANDBY != action.type &&
+             ACTION_NAVIGATE != action.type &&
+             ACTION_MENU_CHANGE != action.type &&
+             ACTION_MENU_SELECT != action.type &&
+             ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 }
@@ -584,6 +596,9 @@ void actionHandle(bool visible)
     AudioProc *aProc = audioGet();
     Tuner *tuner = tunerGet();
     int8_t stNum = stationGetNum(tuner->status.freq);
+
+    const Layout *lt = layoutGet();
+    Canvas *canvas = canvasGet();
 
     action.visible = visible;
     action.timeout = 0;
@@ -699,13 +714,9 @@ void actionHandle(bool visible)
         break;
 
     case ACTION_TUNER_EDIT_NAME:
-        switch (action.value) {
-        case FLAG_ON:
-            if (stNum != STATION_NOT_FOUND) {
-                glcdSetFont(layoutGet()->textEdit.editFont);
-                texteditSet(stationGetName(stNum));
-            }
-            break;
+        if (stNum != STATION_NOT_FOUND) {
+            glcdSetFont(lt->textEdit.editFont);
+            texteditSet(stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);
         }
         action.prevScreen = SCREEN_TUNER;
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
@@ -724,7 +735,7 @@ void actionHandle(bool visible)
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
         break;
     case ACTION_TEXTEDIT_APPLY:
-        texteditApply();
+        stationStore(tuner->status.freq, canvas->te.str);
         actionSetScreen(action.prevScreen, 2000);
         break;
     case ACTION_TEXTEDIT_CANCEL:

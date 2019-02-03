@@ -3,6 +3,7 @@
 #include "../eemap.h"
 #include "../menu.h"
 #include "../tr/labels.h"
+#include <string.h>
 
 static const Layout *lt;
 static Canvas *canvas;
@@ -31,9 +32,9 @@ static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int1
             }
         } else { // Symmetric scale
             if ((value > 0 && i >= value + (sc / 2)) ||
-                (value >= 0 && i < (sc / 2 - 1)) ||
-                (value < 0 && i < value + (sc / 2)) ||
-                (value <= 0 && i > (sc / 2))) {
+                    (value >= 0 && i < (sc / 2 - 1)) ||
+                    (value < 0 && i < value + (sc / 2)) ||
+                    (value <= 0 && i > (sc / 2))) {
                 color = canvas->pal->bg;
             }
         }
@@ -531,11 +532,11 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
             glcdWriteString("--");
         }
 
-        glcdSetFont(lt->menu.headFont); // TODO: separate font for this
+        glcdSetFont(lt->tuner.nameFont);
         glcdSetXY(0, bar->barY + bar->half * 2 + bar->middle);
         uint16_t nameLen = glcdWriteString(stationGetName(stNum));
         glcdDrawRect(canvas->glcd->x, canvas->glcd->y,
-                     lt->tuner.bar.barW - nameLen, lt->menu.headFont->chars[0].image->height,
+                     lt->tuner.bar.barW - nameLen, lt->tuner.nameFont->chars[0].image->height,
                      canvas->pal->bg);
     }
     freqOld = freq;
@@ -585,51 +586,75 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
 void layoutShowTextEdit(bool clear)
 {
     TextEdit *te = &canvas->te;
+    Glcd *glcd = canvas->glcd;
+    const CanvasPalette *pal = canvas->pal;
+
     const tFont *editFont = lt->textEdit.editFont;
     const int16_t feh = editFont->chars[0].image->height;
     const int16_t few = editFont->chars[0].image->width;
+    const GlcdRect *rect = &lt->textEdit.rect;
+
+    const int16_t yPos = (rect->h - feh) / 2;
+    const int16_t xRoll = rect->w - few * 3 / 2;
 
     glcdSetFont(editFont);
 
     if (clear) {
         glcdSetXY(0, 0);
-        glcdWriteString(te->str);
-        glcdSetXY(0, 40);
-        glcdWriteNum(te->uLen, 2, ' ', 10);
+        glcdSetFontBgColor(pal->inactive);
+        glcdSetStringFramed(true);
+        glcdWriteString("FM station name:");
+        glcdSetStringFramed(false);
+        // The rest of space after edit line
+        glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->inactive);
     }
 
-    glcdSetXY(0, 80);
+//    int16_t bytesRemaining = te->maxLen - (int16_t)(strlen(te->str));
 
+//    glcdSetXY(0, feh);
+//    glcdWriteNum(te->uLen, 2, ' ', 10);
+//    glcdSetXY(0, feh * 3);
+//    glcdWriteNum(bytesRemaining, 2, ' ', 10);
+
+    glcdSetXY(0, yPos);
+
+    // String itself
     for (uint16_t i = 0; i < te->uLen; i++) {
         glcdWriteUChar(te->uStr[i]);
         glcdWriteUChar(LETTER_SPACE_CHAR);
     }
 
-    glcdSetFontColor(LCD_COLOR_BLACK);
-    glcdSetFontBgColor(LCD_COLOR_WHITE);
-    glcdWriteUChar(' ');
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetFontBgColor(LCD_COLOR_BLACK);
+    glcdSetFontBgColor(pal->fg);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    glcdSetFontBgColor(pal->bg);
 
+    // The rest of space after edit line
+    glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->bg);
+
+    // Gray vertical offset before the roller
+    glcdDrawRect(xRoll - few / 4, 0, few / 4, rect->h, pal->inactive);
+    // The roller
     for (int8_t i = -2; i <= 2; i++) {
-        glcdSetXY(lt->textEdit.rect.w - 3 * few, 80 + i * feh);
+        glcdSetXY(xRoll, yPos + i * feh);
         int16_t sPos = te->sPos + i;
         UChar uCode = ' ';
         if (sPos >= 0 && sPos <= te->lastPos) {
             uCode = editFont->chars[te->sPos + i].code;
         }
 
+        glcdSetFontBgColor(pal->inactive);
         if (i == 0) {
-            glcdSetFontColor(LCD_COLOR_BLACK);
-            glcdSetFontBgColor(LCD_COLOR_WHITE);
+            glcdSetFontColor(pal->fg);
+        } else {
+            glcdSetFontColor(pal->gray);
         }
         glcdWriteUChar(LETTER_SPACE_CHAR);
         glcdWriteUChar(uCode);
         glcdWriteUChar(LETTER_SPACE_CHAR);
-        if (i == 0) {
-            glcdSetFontColor(LCD_COLOR_WHITE);
-            glcdSetFontBgColor(LCD_COLOR_BLACK);
-        }
-        glcdWriteUChar(' ');
+
+        glcdSetFontColor(pal->fg);
+        glcdSetFontBgColor(pal->bg);
+        glcdDrawRect(canvas->glcd->x, canvas->glcd->y, lt->textEdit.rect.w - canvas->glcd->x, feh,
+                     pal->inactive);
     }
 }

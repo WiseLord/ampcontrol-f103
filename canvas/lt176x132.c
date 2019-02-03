@@ -32,6 +32,7 @@ static const Layout lt176x132 = {
     .sp.wfH = 1,
 
     .tuner.stFont = &fontterminus32,
+    .tuner.nameFont = &fontterminus16,
     .tuner.bar.sc = 72,
     .tuner.bar.sw = 1,
     .tuner.bar.barY = 36,
@@ -40,11 +41,11 @@ static const Layout lt176x132 = {
     .tuner.bar.middle = 2,
     .tuner.iconSpace = 2,
 
-    .textEdit.rect.x = 28,
+    .textEdit.rect.x = 8,
     .textEdit.rect.y = 26,
-    .textEdit.rect.w = 120,
+    .textEdit.rect.w = 160,
     .textEdit.rect.h = 80,
-    .textEdit.editFont = &fontterminus16b,
+    .textEdit.editFont = &fontterminus16,
 
     .iconSet = &iconsamp24,
     .lblFont = &fontterminus32,

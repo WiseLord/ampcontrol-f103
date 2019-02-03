@@ -43,13 +43,14 @@ typedef struct {
         uint8_t wfH;                // Width of waterfile line
     } sp;
     struct {
-        const tFont *stFont;       // Foft to draw station number
+        const tFont *stFont;        // Foft to draw station number
+        const tFont *nameFont;      // Foft to draw station name
         CanvasBar bar;
         uint8_t iconSpace;          // Space between icons
     } tuner;
     struct {
         GlcdRect rect;
-        const tFont *editFont;           // Main label font
+        const tFont *editFont;      // Editor font
     } textEdit;
     const tFont *lblFont;           // Main label font
     const tFont *iconSet;           // Main icon set

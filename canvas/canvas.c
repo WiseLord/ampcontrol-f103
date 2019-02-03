@@ -4,6 +4,7 @@
 static const CanvasPalette canvasPalette = {
     .fg = LCD_COLOR_WHITE,
     .bg = LCD_COLOR_BLACK,
+    .gray = LCD_COLOR_GRAY,
     .spCol = LCD_COLOR_ELECTRIC_BLUE,
     .spPeak = LCD_COLOR_WITCH_HAZE,
     .inactive = LCD_COLOR_NERO,
@@ -20,6 +21,11 @@ void canvasInit(Canvas **value)
     *value = &canvas;
 }
 
+Canvas *canvasGet(void)
+{
+    return &canvas;
+}
+
 void canvasClear(void)
 {
     glcdShift(0);
@@ -28,7 +34,7 @@ void canvasClear(void)
 
     glcdDrawRect(0, 0, rect.w, rect.h, canvas.pal->bg);
 
-    const int16_t ft = 2;
+    const int16_t ft = canvas.glcd->drv->height / 100;
 
     if (rect.x >= 2 * ft && rect.y >= 2 * ft) {
         glcdDrawFrame(-ft, -ft, rect.w + 2 * ft, rect.h + 2 * ft, ft, canvas.pal->bg);
@@ -39,11 +45,11 @@ void canvasClear(void)
     glcdSetFontBgColor(canvas.pal->bg);
 }
 
-void texteditSet(char *text)
+void texteditSet(char *text, uint8_t maxLen, uint8_t maxSymbols)
 {
     TextEdit *te = &canvas.te;
 
-    strncpy(te->str, text, TE_STR_LEN);
+    strncpy(te->str, text, maxLen);
     te->uLen = glcdStrToUStr(te->str, te->uStr);
 
     // Set active char to edit
@@ -53,6 +59,8 @@ void texteditSet(char *text)
     }
     te->sPos = glcdFontSymbolPos(uChar);
     te->lastPos = glcdFontSymbolPos(LETTER_SPACE_CHAR) - 1;
+    te->maxLen = maxLen;
+    te->maxSymbols = maxSymbols;
 }
 
 void texteditChange(int8_t value)
@@ -72,8 +80,18 @@ void texteditAddChar(void)
 {
     TextEdit *te = &canvas.te;
 
+    if (te->uLen >= te->maxSymbols) {
+        return;
+    }
+
     te->uStr[te->uLen] = glcdFontSymbolCode(te->sPos);
     te->uLen++;
+    te->uStr[te->uLen] = 0;
+
+    glcdUStrToStr(te->uStr, te->str);
+    if ((int16_t)strlen(te->str) >= te->maxLen) {
+        texteditDelChar();
+    }
 }
 
 void texteditDelChar(void)
@@ -83,9 +101,7 @@ void texteditDelChar(void)
     if (te->uLen > 0) {
         te->uLen--;
     }
-}
+    te->uStr[te->uLen] = 0;
 
-void texteditApply(void)
-{
-
+    glcdUStrToStr(te->uStr, te->str);
 }

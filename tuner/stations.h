@@ -10,9 +10,12 @@ extern "C" {
 
 #include <stdint.h>
 
+#define STATION_NAME_MAX_LEN    30
+#define STATION_NAME_MAX_SYM    18
+
 typedef struct {
     uint16_t freq;
-    char name[30];
+    char name[STATION_NAME_MAX_LEN];
 } Station;
 
 void stationsInit(void);
@@ -23,7 +26,7 @@ int8_t stationGetNum(uint16_t freq);
 char *stationGetName(int8_t num);
 
 void stationZap(int8_t num);
-void stationStore(uint16_t freq);
+void stationStore(uint16_t freq, char *name);
 
 #ifdef __cplusplus
 }

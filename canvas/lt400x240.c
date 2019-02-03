@@ -32,6 +32,7 @@ static const Layout lt400x240 = {
     .sp.wfH = 2,
 
     .tuner.stFont = &fontterminusmod18x3,
+    .tuner.nameFont = &fontterminus28b,
     .tuner.bar.sc = 86,
     .tuner.bar.sw = 2,
     .tuner.bar.barY = 60,
@@ -40,10 +41,10 @@ static const Layout lt400x240 = {
     .tuner.bar.middle = 2,
     .tuner.iconSpace = 3,
 
-    .textEdit.rect.x = 80,
-    .textEdit.rect.y = 40,
-    .textEdit.rect.w = 240,
-    .textEdit.rect.h = 160,
+    .textEdit.rect.x = 50,
+    .textEdit.rect.y = 50,
+    .textEdit.rect.w = 300,
+    .textEdit.rect.h = 140,
     .textEdit.editFont = &fontterminus28b,
 
     .iconSet = &iconsamp48,

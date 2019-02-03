@@ -312,7 +312,26 @@ uint16_t glcdStrToUStr(const char *str, UChar *ustr)
 
 void glcdUStrToStr(const UChar *ustr, char *str)
 {
-
+    while (*ustr) {
+        uint32_t uCode = (uint32_t)(*ustr);
+        if ((uCode & 0x00000080) == 0x00000000) { // One-byte symbol
+            *str++ = (char)((uCode & 0x000000FF) >> 0);
+        } else if ((uCode & 0x0000E0C0) == 0x0000C080) { // Two-byte symbol
+            *str++ = (char)((uCode & 0x0000FF00) >> 8);
+            *str++ = (char)((uCode & 0x000000FF) >> 0);
+        } else if ((uCode & 0x00F0C0C0) == 0x00E08080) { // Three-byte symbol
+            *str++ = (char)((uCode & 0x00FF0000) >> 16);
+            *str++ = (char)((uCode & 0x0000FF00) >> 8);
+            *str++ = (char)((uCode & 0x000000FF) >> 0);
+        } else if ((uCode & 0xF8C0C0C0) == 0xF0808080) { // Four-byte symbol
+            *str++ = (char)((uCode & 0xFF000000) >> 24);
+            *str++ = (char)((uCode & 0x00FF0000) >> 16);
+            *str++ = (char)((uCode & 0x0000FF00) >> 8);
+            *str++ = (char)((uCode & 0x000000FF) >> 0);
+        }
+        ustr++;
+    }
+    *str = 0;
 }
 
 int16_t glcdWriteUChar(UChar code)

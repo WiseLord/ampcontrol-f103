@@ -37,11 +37,14 @@ typedef struct {
     uint16_t uLen;              // Length of uStr
     int16_t sPos;               // Current symbol position
     int16_t lastPos;            // Last char position
+    uint8_t maxLen;             // Maximum string length allowed
+    uint8_t maxSymbols;         // Maximum symbols count allowed
 } TextEdit;
 
 typedef struct {
     uint16_t fg;
     uint16_t bg;
+    uint16_t gray;
     uint16_t spCol;
     uint16_t spPeak;
     uint16_t inactive;
@@ -55,13 +58,14 @@ typedef struct {
 } Canvas;
 
 void canvasInit(Canvas **value);
+Canvas *canvasGet(void);
+
 void canvasClear(void);
 
-void texteditSet(char *text);
+void texteditSet(char *text, uint8_t maxLen, uint8_t maxSymbols);
 void texteditChange(int8_t value);
 void texteditAddChar(void);
 void texteditDelChar(void);
-void texteditApply(void);
 
 #ifdef __cplusplus
 }
