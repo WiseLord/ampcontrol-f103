@@ -84,13 +84,13 @@ static void canvasDrawTm(RTC_type *rtc, uint8_t tm)
         glcdSetFontColor(LCD_COLOR_BLACK);
         glcdSetFontBgColor(LCD_COLOR_WHITE);
     }
-    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
     if (tm == RTC_YEAR) {
         glcdWriteString("20");
-        glcdWriteChar(LETTER_SPACE_CHAR);
+        glcdWriteUChar(LETTER_SPACE_CHAR);
     }
     glcdWriteNum(time, 2, '0', 10);
-    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetFontBgColor(LCD_COLOR_BLACK);
 }
@@ -349,13 +349,13 @@ void layoutShowTime(bool clear, RTC_type *rtc)
     glcdSetXY((lt->rect.w - timeLen) / 2, lt->time.hmsY);
 
     canvasDrawTm(rtc, RTC_HOUR);
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteChar(':');
-    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(':');
+    glcdWriteUChar(LETTER_SPACE_CHAR);
     canvasDrawTm(rtc, RTC_MIN);
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteChar(':');
-    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(':');
+    glcdWriteUChar(LETTER_SPACE_CHAR);
     canvasDrawTm(rtc, RTC_SEC);
 
     // DD:MM:YYYY
@@ -368,13 +368,13 @@ void layoutShowTime(bool clear, RTC_type *rtc)
     glcdSetXY((lt->rect.w - timeLen) / 2, lt->time.dmyY);
 
     canvasDrawTm(rtc, RTC_DATE);
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteChar('.');
-    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar('.');
+    glcdWriteUChar(LETTER_SPACE_CHAR);
     canvasDrawTm(rtc, RTC_MONTH);
-    glcdWriteChar(LETTER_SPACE_CHAR);
-    glcdWriteChar('.');
-    glcdWriteChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar('.');
+    glcdWriteUChar(LETTER_SPACE_CHAR);
     canvasDrawTm(rtc, RTC_YEAR);
 
     // Weekday
@@ -395,7 +395,7 @@ void layoutShowTime(bool clear, RTC_type *rtc)
     glcdWriteStringConst(wdayLabel);
 }
 
-void layoutShowMenu(void)
+void layoutShowMenu(bool clear)
 {
     Menu *menu = menuGet();
 
@@ -515,9 +515,9 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
         canvasDrawBar(bar, (int16_t)freq, freqMin, freqMax);
 
         glcdWriteNum(freq / 100, 3, ' ', 10);
-        glcdWriteChar(LETTER_SPACE_CHAR);
-        glcdWriteChar('.');
-        glcdWriteChar(LETTER_SPACE_CHAR);
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+        glcdWriteUChar('.');
+        glcdWriteUChar(LETTER_SPACE_CHAR);
         glcdWriteNum(freq % 100, 2, '0', 10);
 
         glcdSetFont(lt->tuner.stFont);
@@ -582,9 +582,54 @@ void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
     sp->ready = false;
 }
 
-void layoutShowTextEdit(char *str)
+void layoutShowTextEdit(bool clear)
 {
-    glcdSetFont(&fontterminus32b);
-    glcdSetXY(0, 0);
-    glcdWriteString(str);
+    TextEdit *te = &canvas->te;
+    const tFont *editFont = lt->textEdit.editFont;
+    const int16_t feh = editFont->chars[0].image->height;
+    const int16_t few = editFont->chars[0].image->width;
+
+    glcdSetFont(editFont);
+
+    if (clear) {
+        glcdSetXY(0, 0);
+        glcdWriteString(te->str);
+        glcdSetXY(0, 40);
+        glcdWriteNum(te->uLen, 2, ' ', 10);
+    }
+
+    glcdSetXY(0, 80);
+
+    for (uint16_t i = 0; i < te->uLen; i++) {
+        glcdWriteUChar(te->uStr[i]);
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+    }
+
+    glcdSetFontColor(LCD_COLOR_BLACK);
+    glcdSetFontBgColor(LCD_COLOR_WHITE);
+    glcdWriteUChar(' ');
+    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetFontBgColor(LCD_COLOR_BLACK);
+
+    for (int8_t i = -2; i <= 2; i++) {
+        glcdSetXY(lt->textEdit.rect.w - 3 * few, 80 + i * feh);
+        int16_t sPos = te->sPos + i;
+        UChar uCode = ' ';
+        if (sPos >= 0 && sPos <= te->lastPos) {
+            uCode = editFont->chars[te->sPos + i].code;
+        }
+
+        if (i == 0) {
+            glcdSetFontColor(LCD_COLOR_BLACK);
+            glcdSetFontBgColor(LCD_COLOR_WHITE);
+        }
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+        glcdWriteUChar(uCode);
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+        if (i == 0) {
+            glcdSetFontColor(LCD_COLOR_WHITE);
+            glcdSetFontBgColor(LCD_COLOR_BLACK);
+        }
+        glcdWriteUChar(' ');
+    }
 }

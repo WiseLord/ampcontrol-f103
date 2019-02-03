@@ -49,6 +49,7 @@ typedef struct {
     } tuner;
     struct {
         GlcdRect rect;
+        const tFont *editFont;           // Main label font
     } textEdit;
     const tFont *lblFont;           // Main label font
     const tFont *iconSet;           // Main icon set
@@ -69,12 +70,12 @@ void layoutInit(void);
 const Layout *layoutGet(void);
 
 void layoutShowTime(bool clear, RTC_type *rtc);
-void layoutShowMenu(void);
+void layoutShowMenu(bool clear);
 void layoutShowTune(bool clear, DispParam *dp, Spectrum *sp);
 void layoutShowSpectrum(bool clear, Spectrum *sp);
 void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp);
 
-void layoutShowTextEdit(char *str);
+void layoutShowTextEdit(bool clear);
 
 #ifdef __cplusplus
 }

@@ -10,6 +10,9 @@ extern "C" {
 
 #include "../display/glcd.h"
 
+#define TE_STR_LEN      64
+#define TE_USTR_LEN     32
+
 typedef struct {
     const char *label;
     int16_t value;
@@ -29,6 +32,14 @@ typedef struct {
 } CanvasBar;
 
 typedef struct {
+    char str[TE_STR_LEN];       // String to edit
+    UChar uStr[TE_USTR_LEN];    // String being edited
+    uint16_t uLen;              // Length of uStr
+    int16_t sPos;               // Current symbol position
+    int16_t lastPos;            // Last char position
+} TextEdit;
+
+typedef struct {
     uint16_t fg;
     uint16_t bg;
     uint16_t spCol;
@@ -40,10 +51,17 @@ typedef struct {
 typedef struct {
     Glcd *glcd;
     const CanvasPalette *pal;
+    TextEdit te;
 } Canvas;
 
 void canvasInit(Canvas **value);
 void canvasClear(void);
+
+void texteditSet(char *text);
+void texteditChange(int8_t value);
+void texteditAddChar(void);
+void texteditDelChar(void);
+void texteditApply(void);
 
 #ifdef __cplusplus
 }

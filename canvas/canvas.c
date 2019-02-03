@@ -1,4 +1,5 @@
 #include "canvas.h"
+#include <string.h>
 
 static const CanvasPalette canvasPalette = {
     .fg = LCD_COLOR_WHITE,
@@ -36,4 +37,55 @@ void canvasClear(void)
 
     glcdSetFontColor(LCD_COLOR_WHITE);
     glcdSetFontBgColor(canvas.pal->bg);
+}
+
+void texteditSet(char *text)
+{
+    TextEdit *te = &canvas.te;
+
+    strncpy(te->str, text, TE_STR_LEN);
+    te->uLen = glcdStrToUStr(te->str, te->uStr);
+
+    // Set active char to edit
+    UChar uChar = ' ';
+    if (te->uLen) {
+        uChar = te->uStr[te->uLen - 1];
+    }
+    te->sPos = glcdFontSymbolPos(uChar);
+    te->lastPos = glcdFontSymbolPos(LETTER_SPACE_CHAR) - 1;
+}
+
+void texteditChange(int8_t value)
+{
+    TextEdit *te = &canvas.te;
+
+    te->sPos += value;
+
+    if (te->sPos < 0)
+        te->sPos = 0;
+    if (te->sPos > te->lastPos) {
+        te->sPos = te->lastPos;
+    }
+}
+
+void texteditAddChar(void)
+{
+    TextEdit *te = &canvas.te;
+
+    te->uStr[te->uLen] = glcdFontSymbolCode(te->sPos);
+    te->uLen++;
+}
+
+void texteditDelChar(void)
+{
+    TextEdit *te = &canvas.te;
+
+    if (te->uLen > 0) {
+        te->uLen--;
+    }
+}
+
+void texteditApply(void)
+{
+
 }

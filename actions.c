@@ -4,6 +4,8 @@
 #include <string.h>
 
 #include "audio/audio.h"
+#include "canvas/canvas.h"
+#include "canvas/layout.h"
 #include "eemap.h"
 #include "input.h"
 #include "menu.h"
@@ -12,6 +14,7 @@
 #include "screen.h"
 #include "spectrum.h"
 #include "swtimers.h"
+#include "tuner/stations.h"
 #include "tuner/tuner.h"
 
 static void actionGetButtons(void);
@@ -88,20 +91,32 @@ static void actionNavigateCommon(RcCmd cmd)
 {
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
+    Screen screen = screenGet();
 
     switch (cmd) {
     case RC_CMD_NAV_OK:
+        if (screen == SCREEN_TEXTEDIT) {
+            action.type = ACTION_TEXTEDIT_APPLY;
+        }
         break;
     case RC_CMD_NAV_BACK:
-        actionSet(ACTION_DISP_EXPIRED, 0);
+        if (screen == SCREEN_TEXTEDIT) {
+            action.type = ACTION_TEXTEDIT_CANCEL;
+        } else {
+            actionSet(ACTION_DISP_EXPIRED, 0);
+        }
         break;
     case RC_CMD_NAV_RIGHT:
-        if (inType == IN_TUNER) {
+        if (screen == SCREEN_TEXTEDIT) {
+            action.type = ACTION_TEXTEDIT_ADD_CHAR;
+        } else if (inType == IN_TUNER) {
             action.type = ACTION_TUNER_NEXT;
         }
         break;
     case RC_CMD_NAV_LEFT:
-        if (inType == IN_TUNER) {
+        if (screen == SCREEN_TEXTEDIT) {
+            action.type = ACTION_TEXTEDIT_DEL_CHAR;
+        } else if (inType == IN_TUNER) {
             action.type = ACTION_TUNER_PREV;
         }
         break;
@@ -223,7 +238,7 @@ static void actionRemapBtnLong(void)
         actionSet(ACTION_BR_WORK, 0);
         break;
     case BTN_D1:
-        actionSet(ACTION_TUNER_EDIT_NAME, TE_CALL_DIALOG);
+        actionSet(ACTION_TUNER_EDIT_NAME, FLAG_ON);
         break;
     case BTN_D2:
         action.type = ACTION_RTC_MODE;
@@ -431,6 +446,9 @@ static void actionRemapEncoder(void)
     case SCREEN_MENU:
         actionSet(ACTION_MENU_CHANGE, encCnt);
         break;
+    case SCREEN_TEXTEDIT:
+        actionSet(ACTION_TEXTEDIT_CHANGE, encCnt);
+        break;
     default:
         actionSet(ACTION_AUDIO_PARAM_CHANGE, encCnt);
         break;
@@ -483,8 +501,11 @@ static void actionRemapCommon(void)
         }
         break;
     case ACTION_AUDIO_MENU:
-        if (screen == SCREEN_MENU) {
+        switch (screen) {
+        case SCREEN_MENU:
+        case SCREEN_TEXTEDIT:
             actionSet(ACTION_NAVIGATE, RC_CMD_NAV_OK);
+            break;
         }
         break;
     case ACTION_AUDIO_MUTE:
@@ -562,6 +583,7 @@ void actionHandle(bool visible)
     Screen screen = screenGet();
     AudioProc *aProc = audioGet();
     Tuner *tuner = tunerGet();
+    int8_t stNum = stationGetNum(tuner->status.freq);
 
     action.visible = visible;
     action.timeout = 0;
@@ -677,7 +699,36 @@ void actionHandle(bool visible)
         break;
 
     case ACTION_TUNER_EDIT_NAME:
-        actionSetScreen(SCREEN_TEXTEDIT, 5000);
+        switch (action.value) {
+        case FLAG_ON:
+            if (stNum != STATION_NOT_FOUND) {
+                glcdSetFont(layoutGet()->textEdit.editFont);
+                texteditSet(stationGetName(stNum));
+            }
+            break;
+        }
+        action.prevScreen = SCREEN_TUNER;
+        actionSetScreen(SCREEN_TEXTEDIT, 10000);
+        break;
+
+    case ACTION_TEXTEDIT_CHANGE:
+        texteditChange((int8_t)action.value);
+        actionSetScreen(SCREEN_TEXTEDIT, 10000);
+        break;
+    case ACTION_TEXTEDIT_ADD_CHAR:
+        texteditAddChar();
+        actionSetScreen(SCREEN_TEXTEDIT, 10000);
+        break;
+    case ACTION_TEXTEDIT_DEL_CHAR:
+        texteditDelChar();
+        actionSetScreen(SCREEN_TEXTEDIT, 10000);
+        break;
+    case ACTION_TEXTEDIT_APPLY:
+        texteditApply();
+        actionSetScreen(action.prevScreen, 2000);
+        break;
+    case ACTION_TEXTEDIT_CANCEL:
+        actionSetScreen(action.prevScreen, 2000);
         break;
 
     case ACTION_BR_STBY:

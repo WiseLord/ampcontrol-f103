@@ -50,6 +50,48 @@ static tImage *glcdUnRleImg(const tImage *img)
     return ret;
 }
 
+static UChar findSymbolCode(const char **string)
+{
+    UChar code = 0;
+    uint8_t sym;
+    uint8_t curr = 0;
+
+    const char *str = *string;
+
+    while (*str) {
+        sym = *str++;
+
+        if ((sym & 0xC0) == 0x80) {         // Not first byte
+            code <<= 8;
+            code |= sym;
+            if (curr) {
+                curr--;
+            }
+        } else {
+            code = sym;
+            if ((sym & 0x80) == 0x00) {         // one-byte symbol
+                curr = 0;
+            } else if ((sym & 0xE0) == 0xC0) {  // two-byte symbol
+                curr = 1;
+            } else if ((sym & 0xF0) == 0xE0) {  // three-byte symbol
+                curr = 2;
+            } else if ((sym & 0xF8) == 0xF0) {  // four-byte symbol
+                curr = 3;
+            } else {
+                curr = 0;
+            }
+        }
+        if (curr)
+            continue;
+
+        *string = str;
+        return code;
+    }
+
+    *string = 0;
+    return BLOCK_CHAR;
+}
+
 void glcdInit(Glcd **value)
 {
     dispdrvInit(&glcd.drv);
@@ -161,7 +203,7 @@ void glcdSetY(int16_t y)
     glcd.y = y;
 }
 
-int16_t glcdFontSymbolPos(int32_t code)
+int16_t glcdFontSymbolPos(UChar code)
 {
     int16_t sPos = -1;
 
@@ -176,6 +218,17 @@ int16_t glcdFontSymbolPos(int32_t code)
     }
 
     return sPos;
+}
+
+UChar glcdFontSymbolCode(int16_t pos)
+{
+    const tFont *font = glcd.font.tfont;
+
+    if (pos >= 0 && pos < font->length) {
+        return font->chars[pos].code;
+    }
+
+    return BLOCK_CHAR;
 }
 
 tImage *glcdGetUnrleImg(void)
@@ -243,7 +296,26 @@ const tImage *glcdFindIcon(int32_t code, const tFont *iFont)
     return  ret;
 }
 
-int16_t glcdWriteChar(int32_t code)
+uint16_t glcdStrToUStr(const char *str, UChar *ustr)
+{
+    uint16_t len = 0;
+
+    while (*str) {
+        *ustr++ = findSymbolCode(&str);
+        len++;
+    }
+
+    *ustr = 0;
+
+    return len;
+}
+
+void glcdUStrToStr(const UChar *ustr, char *str)
+{
+
+}
+
+int16_t glcdWriteUChar(UChar code)
 {
     const tImage *img = NULL;
 
@@ -257,48 +329,6 @@ int16_t glcdWriteChar(int32_t code)
     glcdDrawImage(img, glcd.font.color, glcd.font.bgColor);
 
     return img->width;
-}
-
-static int32_t findSymbolCode(char **string)
-{
-    int32_t code = 0;
-    uint8_t sym;
-    uint8_t curr = 0;
-
-    char *str = *string;
-
-    while (*str) {
-        sym = *str++;
-
-        if ((sym & 0xC0) == 0x80) {         // Not first byte
-            code <<= 8;
-            code |= sym;
-            if (curr) {
-                curr--;
-            }
-        } else {
-            code = sym;
-            if ((sym & 0x80) == 0x00) {         // one-byte symbol
-                curr = 0;
-            } else if ((sym & 0xE0) == 0xC0) {  // two-byte symbol
-                curr = 1;
-            } else if ((sym & 0xF0) == 0xE0) {  // three-byte symbol
-                curr = 2;
-            } else if ((sym & 0xF8) == 0xF0) {  // four-byte symbol
-                curr = 3;
-            } else {
-                curr = 0;
-            }
-        }
-        if (curr)
-            continue;
-
-        *string = str;
-        return code;
-    }
-
-    *string = 0;
-    return BLOCK_CHAR;
 }
 
 void glcdSetStringFramed(bool framed)
@@ -315,8 +345,8 @@ uint16_t glcdWriteStringConst(const char *string)
 
 uint16_t glcdWriteString(char *string)
 {
-    int32_t code = 0;
-    char *str = string;
+    UChar code = 0;
+    const char *str = string;
     uint16_t ret = 0;
 
     const tFont *font = glcd.font.tfont;
@@ -352,16 +382,16 @@ uint16_t glcdWriteString(char *string)
     str = string;
 
     if (glcd.strFramed)
-        ret += glcdWriteChar(LETTER_SPACE_CHAR);
+        ret += glcdWriteUChar(LETTER_SPACE_CHAR);
     while (*str) {
         code = findSymbolCode(&str);
 
-        ret += glcdWriteChar(code);
+        ret += glcdWriteUChar(code);
         if (*str)
-            ret += glcdWriteChar(LETTER_SPACE_CHAR);
+            ret += glcdWriteUChar(LETTER_SPACE_CHAR);
     }
     if (glcd.strFramed)
-        ret += glcdWriteChar(LETTER_SPACE_CHAR);
+        ret += glcdWriteUChar(LETTER_SPACE_CHAR);
 
     return ret;
 }

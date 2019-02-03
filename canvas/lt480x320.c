@@ -44,6 +44,7 @@ static const Layout lt480x320 = {
     .textEdit.rect.y = 60,
     .textEdit.rect.w = 360,
     .textEdit.rect.h = 200,
+    .textEdit.editFont = &fontterminus32b,
 
     .iconSet = &iconsamp64,
     .lblFont = &fontterminusmod24x3,

@@ -69,8 +69,8 @@ void screenShowBrightness(bool clear);
 void screenShowInput(bool clear);
 void screenShowAudioParam(bool clear);
 void screenShowTuner(bool clear);
-void screenShowMenu(void);
-void screenShowTextEdit(void);
+void screenShowMenu(bool clear);
+void screenShowTextEdit(bool clear);
 
 #ifdef __cplusplus
 }

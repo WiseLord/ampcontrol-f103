@@ -44,6 +44,7 @@ static const Layout lt220x176 = {
     .textEdit.rect.y = 28,
     .textEdit.rect.w = 160,
     .textEdit.rect.h = 120,
+    .textEdit.editFont = &fontterminus20b,
 
     .iconSet = &iconsamp32,
     .lblFont = &fontterminus32,

@@ -44,6 +44,7 @@ static const Layout lt400x240 = {
     .textEdit.rect.y = 40,
     .textEdit.rect.w = 240,
     .textEdit.rect.h = 160,
+    .textEdit.editFont = &fontterminus28b,
 
     .iconSet = &iconsamp48,
     .lblFont = &fontterminusmod18x3,

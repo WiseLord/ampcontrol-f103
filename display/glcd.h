@@ -29,7 +29,7 @@ typedef struct {
     bool strFramed;
 } Glcd;
 
-typedef void (*SendDataCallback)(uint16_t data);
+typedef int32_t UChar;
 
 //Colors
 #define RGB_TO_565(x)                   (((x >> 8) & 0xF800) | ((x >> 5) & 0x7E0) | ((x >> 3) & 0x1F))
@@ -84,19 +84,22 @@ void glcdSetXY(int16_t x, int16_t y);
 void glcdSetX(int16_t x);
 void glcdSetY(int16_t y);
 
-int16_t glcdFontSymbolPos(int32_t code);
+int16_t glcdFontSymbolPos(UChar code);
+UChar glcdFontSymbolCode(int16_t pos);
+
 tImage *glcdGetUnrleImg(void);
 char *glcdGetUnrleImgData(void);
 
 void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor);
-
 const tImage *glcdFindIcon(int32_t code, const tFont *iFont);
-int16_t glcdWriteChar(int32_t code);
+
+uint16_t glcdStrToUStr(const char *str, UChar *ustr);
+void glcdUStrToStr(const UChar *ustr, char *str);
+int16_t glcdWriteUChar(UChar code);
+
 void glcdSetStringFramed(bool framed);
 uint16_t glcdWriteStringConst(const char *string);
-uint16_t glcdWriteStringConstFramed(const char *string, bool framed);
 uint16_t glcdWriteString(char *string);
-uint16_t glcdWriteStringFramed(char *string, uint8_t framed);
 
 void glcdDrawPixel(int16_t x, int16_t y, uint16_t color);
 void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);

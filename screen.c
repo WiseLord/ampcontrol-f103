@@ -235,10 +235,10 @@ void screenShow(bool clear)
         screenShowTuner(clear);
         break;
     case SCREEN_MENU:
-        screenShowMenu();
+        screenShowMenu(clear);
         break;
     case SCREEN_TEXTEDIT:
-        screenShowTextEdit();
+        screenShowTextEdit(clear);
         break;
     default:
         break;
@@ -319,12 +319,12 @@ void screenShowTuner(bool clear)
     layoutShowTuner(clear, tuner, spGet());
 }
 
-void screenShowMenu(void)
+void screenShowMenu(bool clear)
 {
-    layoutShowMenu();
+    layoutShowMenu(clear);
 }
 
-void screenShowTextEdit(void)
+void screenShowTextEdit(bool clear)
 {
-    layoutShowTextEdit("test");
+    layoutShowTextEdit(clear);
 }

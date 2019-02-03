@@ -20,14 +20,6 @@ extern "C" {
 #define DIRECTION_UP    1
 #define DIRECTION_DOWN  -1
 
-typedef uint8_t TEStage;
-enum {
-    TE_CALL_DIALOG = 0,
-    TE_FINISH_EDIT,
-
-    TE_END,
-};
-
 typedef uint8_t ActionType;
 enum {
     ACTION_NONE = 0,
@@ -73,6 +65,12 @@ enum {
     ACTION_TUNER_NEXT,
     ACTION_TUNER_EDIT_NAME,
 
+    ACTION_TEXTEDIT_CHANGE,
+    ACTION_TEXTEDIT_ADD_CHAR,
+    ACTION_TEXTEDIT_DEL_CHAR,
+    ACTION_TEXTEDIT_APPLY,
+    ACTION_TEXTEDIT_CANCEL,
+
     ACTION_BR_STBY,
     ACTION_BR_WORK,
 
@@ -90,6 +88,8 @@ typedef struct {
     Screen screen;
     ScreenParam param;
     int16_t timeout;
+
+    Screen prevScreen;
 } Action;
 
 void actionUserGet(void);
