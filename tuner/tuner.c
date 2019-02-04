@@ -256,7 +256,11 @@ void tunerMove(int8_t direction)
         tunerStep(direction);
         break;
     case TUNER_MODE_STATIONS:
-        stationSeek(direction);
+        if (stationGetCount() > 0) {
+            stationSeek(direction);
+        } else {
+            tunerStep(direction);
+        }
         break;
     case TUNER_MODE_SCAN:
         tunerSeek(direction);

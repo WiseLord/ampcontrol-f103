@@ -148,6 +148,7 @@ void eeInit()
 
     if ((head0 != HEAD_VALID && head0 != HEAD_VALID) || (head0 == head1)) {
         eeErasePages(EE_PAGE_0, EE_PAGE_STEP * 2);
+        eeFormatPage(EE_PAGE_0);
     } else if (HEAD_VALID == head0) {
         currPage = EE_PAGE_0;
     } else if (HEAD_VALID == head1) {
@@ -182,7 +183,7 @@ void eeWritePage(uint16_t page, void *addr, uint16_t bytes)
     eeUnlock();
     eeWaitBusy();
     SET_BIT(FLASH->CR, FLASH_CR_PG);
-    for (uint16_t i = 0; i <= (bytes / 2); i++) {
+    for (uint16_t i = 0; i < ((bytes + 1) / 2); i++) {
         cell[i] = data[i];
         eeWaitBusy();
     }

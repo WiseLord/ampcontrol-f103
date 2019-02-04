@@ -7,7 +7,7 @@
 static Glcd glcd;
 static char strbuf[STR_BUFSIZE + 1];    // String buffer
 
-static uint8_t unRleData[4096];         // Storage for uncompressed image data
+static uint8_t unRleData[4096];         // Shared storage for uncompressed image data
 static tImage unRleImg = {
     .rle = 0
 };
@@ -238,9 +238,9 @@ tImage *glcdGetUnrleImg(void)
     return &unRleImg;
 }
 
-char *glcdGetUnrleImgData(void)
+void *glcdGetUnrleImgData(void)
 {
-    return (char *)unRleData;
+    return unRleData;
 }
 
 void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor)

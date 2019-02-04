@@ -22,11 +22,14 @@ void stationsInit(void);
 
 void stationSeek(int8_t direction);
 
+int8_t stationGetCount(void);
+
 int8_t stationGetNum(uint16_t freq);
 char *stationGetName(int8_t num);
 
 void stationZap(int8_t num);
 void stationStore(uint16_t freq, char *name);
+void stationRemove(uint16_t freq);
 
 #ifdef __cplusplus
 }

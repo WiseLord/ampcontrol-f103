@@ -87,52 +87,57 @@ static void actionNavigateMenu(RcCmd cmd)
     }
 }
 
+static void actionNavigateTextEdit(RcCmd cmd)
+{
+    switch (cmd) {
+    case RC_CMD_NAV_OK:
+        action.type = ACTION_TEXTEDIT_ADD_CHAR;
+        break;
+    case RC_CMD_NAV_BACK:
+        action.type = ACTION_TEXTEDIT_CANCEL;
+        break;
+    case RC_CMD_NAV_RIGHT:
+        action.type = ACTION_TEXTEDIT_ADD_CHAR;
+        break;
+    case RC_CMD_NAV_LEFT:
+        action.type = ACTION_TEXTEDIT_DEL_CHAR;
+        break;
+    case RC_CMD_NAV_UP:
+        actionSet(ACTION_ENCODER, -1);
+        break;
+    case RC_CMD_NAV_DOWN:
+        actionSet(ACTION_ENCODER, +1);
+        break;
+    }
+}
+
 static void actionNavigateCommon(RcCmd cmd)
 {
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
-    Screen screen = screenGet();
 
     switch (cmd) {
     case RC_CMD_NAV_OK:
-        if (screen == SCREEN_TEXTEDIT) {
-            action.type = ACTION_TEXTEDIT_APPLY;
-        }
+        action.type = ACTION_OPEN_MENU;
         break;
     case RC_CMD_NAV_BACK:
-        if (screen == SCREEN_TEXTEDIT) {
-            action.type = ACTION_TEXTEDIT_CANCEL;
-        } else {
-            actionSet(ACTION_DISP_EXPIRED, 0);
-        }
+        actionSet(ACTION_DISP_EXPIRED, 0);
         break;
     case RC_CMD_NAV_RIGHT:
-        if (screen == SCREEN_TEXTEDIT) {
-            action.type = ACTION_TEXTEDIT_ADD_CHAR;
-        } else if (inType == IN_TUNER) {
+        if (inType == IN_TUNER) {
             action.type = ACTION_TUNER_NEXT;
         }
         break;
     case RC_CMD_NAV_LEFT:
-        if (screen == SCREEN_TEXTEDIT) {
-            action.type = ACTION_TEXTEDIT_DEL_CHAR;
-        } else if (inType == IN_TUNER) {
+        if (inType == IN_TUNER) {
             action.type = ACTION_TUNER_PREV;
         }
         break;
     case RC_CMD_NAV_UP:
-        if (screen == SCREEN_TEXTEDIT) {
-            actionSet(ACTION_ENCODER, -1);
-        } else {
-            actionSet(ACTION_ENCODER, +1);
-        }
+        actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_NAV_DOWN:
-        if (screen == SCREEN_TEXTEDIT) {
-            actionSet(ACTION_ENCODER, +1);
-        } else {
-            actionSet(ACTION_ENCODER, -1);
-        }
+        actionSet(ACTION_ENCODER, -1);
         break;
     }
 }
@@ -182,7 +187,7 @@ static void actionGetRemote(void)
         if (rcData.repeat) {
             // Allow repeat only following commands
             if (cmd == RC_CMD_VOL_UP ||
-                    cmd == RC_CMD_VOL_DOWN) {
+                cmd == RC_CMD_VOL_DOWN) {
                 if (swTimGetRcRepeat() > 0)
                     return;
             } else {
@@ -224,7 +229,7 @@ static void actionRemapBtnShort(void)
         action.type = ACTION_NEXT;
         break;
     case BTN_D5:
-        action.type = ACTION_AUDIO_MENU;
+        actionSet(ACTION_NAVIGATE, RC_CMD_NAV_OK);
         break;
     case ENC_A:
         actionSet(ACTION_ENCODER, -1);
@@ -251,8 +256,15 @@ static void actionRemapBtnLong(void)
         action.type = ACTION_RTC_MODE;
         break;
     case BTN_D2:
-        if (inType == IN_TUNER) {
-            action.type = ACTION_TUNER_EDIT_NAME;
+        switch (screen) {
+        case SCREEN_TEXTEDIT:
+            action.type = ACTION_TUNER_DEL_STATION;
+            break;
+        default:
+            if (inType == IN_TUNER) {
+                action.type = ACTION_TUNER_EDIT_NAME;
+            }
+            break;
         }
         break;
     case BTN_D3:
@@ -262,8 +274,13 @@ static void actionRemapBtnLong(void)
         action.type = ACTION_NEXT;
         break;
     case BTN_D5:
-        if (screen == SCREEN_STANDBY) {
+        switch (screen) {
+        case SCREEN_TEXTEDIT:
+            action.type = ACTION_OPEN_MENU;
+            break;
+        case SCREEN_STANDBY:
             actionSet(ACTION_MENU_SELECT, MENU_SETUP_LANG);
+            break;
         }
         break;
     case ENC_A:
@@ -290,14 +307,14 @@ static void actionRemapRemote(void)
     }
 
     if (SCREEN_STANDBY == screen &&
-            action.value == RC_CMD_MENU) {
+        action.value == RC_CMD_MENU) {
         actionSet(ACTION_MENU_SELECT, MENU_SETUP_LANG);
         return;
     }
 
     if (SCREEN_STANDBY == screen &&
-            action.value != RC_CMD_STBY_SWITCH &&
-            action.value != RC_CMD_STBY_EXIT)
+        action.value != RC_CMD_STBY_SWITCH &&
+        action.value != RC_CMD_STBY_EXIT)
         return;
 
     switch (action.value) {
@@ -316,7 +333,7 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_MENU:
-        action.type = ACTION_AUDIO_MENU;
+        action.type = ACTION_OPEN_MENU;
         break;
 
     case RC_CMD_CHAN_NEXT:
@@ -429,6 +446,9 @@ static void actionRemapNavigate(void)
     case SCREEN_MENU:
         actionNavigateMenu((RcCmd)action.value);
         break;
+    case SCREEN_TEXTEDIT:
+        actionNavigateTextEdit((RcCmd)action.value);
+        break;
     default:
         actionNavigateCommon((RcCmd)action.value);
         break;
@@ -512,10 +532,12 @@ static void actionRemapCommon(void)
             break;
         }
         break;
-    case ACTION_AUDIO_MENU:
+    case ACTION_OPEN_MENU:
         switch (screen) {
-        case SCREEN_MENU:
         case SCREEN_TEXTEDIT:
+            action.type = ACTION_TEXTEDIT_APPLY;
+            break;
+        case SCREEN_MENU:
             actionSet(ACTION_NAVIGATE, RC_CMD_NAV_OK);
             break;
         }
@@ -530,18 +552,18 @@ static void actionRemapCommon(void)
     }
 
     if (SCREEN_STANDBY == screen &&
-            (ACTION_STANDBY != action.type &&
-             ACTION_REMOTE != action.type &&
-             ACTION_MENU_SELECT != action.type)) {
+        (ACTION_STANDBY != action.type &&
+         ACTION_REMOTE != action.type &&
+         ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 
     if (SCREEN_MENU == screen &&
-            (ACTION_STANDBY != action.type &&
-             ACTION_NAVIGATE != action.type &&
-             ACTION_MENU_CHANGE != action.type &&
-             ACTION_MENU_SELECT != action.type &&
-             ACTION_ENCODER != action.type)) {
+        (ACTION_STANDBY != action.type &&
+         ACTION_NAVIGATE != action.type &&
+         ACTION_MENU_CHANGE != action.type &&
+         ACTION_MENU_SELECT != action.type &&
+         ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 }
@@ -653,7 +675,7 @@ void actionHandle(bool visible)
         }
         break;
 
-    case ACTION_AUDIO_MENU:
+    case ACTION_OPEN_MENU:
         if (screen == SCREEN_AUDIO_PARAM) {
             actionNextAudioParam(aProc);
         } else {
@@ -712,12 +734,15 @@ void actionHandle(bool visible)
         tunerMove(TUNER_DIR_UP);
         actionSetScreen(SCREEN_TUNER, 5000);
         break;
-
     case ACTION_TUNER_EDIT_NAME:
         glcdSetFont(lt->textEdit.editFont);
         texteditSet(stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);
         action.prevScreen = SCREEN_TUNER;
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
+        break;
+    case ACTION_TUNER_DEL_STATION:
+        stationRemove(tuner->status.freq);
+        actionSetScreen(action.prevScreen, 2000);
         break;
 
     case ACTION_TEXTEDIT_CHANGE:

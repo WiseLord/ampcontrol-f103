@@ -12,7 +12,7 @@
 static const EE_Map eeMap[] = {
     {EE_NULL,                   0},
 
-    {EE_AUDIO_IC,               AUDIO_IC_TDA7439},
+    {EE_AUDIO_IC,               AUDIO_IC_TEST},
     {EE_AUDIO_INPUT,            0},
     {EE_SETUP_MUTESTBY,         false},
     {EE_AUDIO_LOUDNESS,         false},
@@ -48,7 +48,7 @@ static const EE_Map eeMap[] = {
     {EE_AUDIO_PARAM_SUBWOOFER,  0},
     {EE_AUDIO_PARAM_PREAMP,     0},
 
-    {EE_TUNER_IC,               TUNER_IC_RDA5807},
+    {EE_TUNER_IC,               TUNER_IC_TEST},
     {EE_TUNER_BAND,             TUNER_BAND_FM_US_EUROPE},
     {EE_TUNER_STEP,             TUNER_STEP_100K},
     {EE_TUNER_DEEMPH,           TUNER_DEEMPH_50u},
