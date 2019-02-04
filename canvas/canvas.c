@@ -53,7 +53,7 @@ void texteditSet(char *text, uint8_t maxLen, uint8_t maxSymbols)
     te->uLen = glcdStrToUStr(te->str, te->uStr);
 
     // Set active char to edit
-    UChar uChar = ' ';
+    UChar uChar = 'R';
     if (te->uLen) {
         uChar = te->uStr[te->uLen - 1];
     }

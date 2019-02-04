@@ -714,10 +714,8 @@ void actionHandle(bool visible)
         break;
 
     case ACTION_TUNER_EDIT_NAME:
-        if (stNum != STATION_NOT_FOUND) {
-            glcdSetFont(lt->textEdit.editFont);
-            texteditSet(stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);
-        }
+        glcdSetFont(lt->textEdit.editFont);
+        texteditSet(stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);
         action.prevScreen = SCREEN_TUNER;
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
         break;

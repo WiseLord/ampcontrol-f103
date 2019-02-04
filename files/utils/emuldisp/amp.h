@@ -16,6 +16,7 @@ class Amp : public QMainWindow, private Ui::Amp
 
 public:
     explicit Amp(QWidget *parent = nullptr);
+    void initDisp(void);
 
     EmulDisp *getEmulDisp();
 

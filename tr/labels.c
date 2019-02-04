@@ -46,6 +46,8 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_BOOL_OFF]        = "OFF",
     [LABEL_BOOL_ON]         = "ON",
 
+    [LABEL_TUNER_FM_STATION_NAME]   = "FM station name",
+
     [LABEL_TUNER_IC + TUNER_IC_NO]      = "No",
     [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
     [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",

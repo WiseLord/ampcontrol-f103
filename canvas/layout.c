@@ -603,18 +603,11 @@ void layoutShowTextEdit(bool clear)
         glcdSetXY(0, 0);
         glcdSetFontBgColor(pal->inactive);
         glcdSetStringFramed(true);
-        glcdWriteString("FM station name:");
+        glcdWriteStringConst(labelsGet(LABEL_TUNER_FM_STATION_NAME));
         glcdSetStringFramed(false);
         // The rest of space after edit line
         glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->inactive);
     }
-
-//    int16_t bytesRemaining = te->maxLen - (int16_t)(strlen(te->str));
-
-//    glcdSetXY(0, feh);
-//    glcdWriteNum(te->uLen, 2, ' ', 10);
-//    glcdSetXY(0, feh * 3);
-//    glcdWriteNum(bytesRemaining, 2, ' ', 10);
 
     glcdSetXY(0, yPos);
 
@@ -654,7 +647,6 @@ void layoutShowTextEdit(bool clear)
 
         glcdSetFontColor(pal->fg);
         glcdSetFontBgColor(pal->bg);
-        glcdDrawRect(canvas->glcd->x, canvas->glcd->y, lt->textEdit.rect.w - canvas->glcd->x, feh,
-                     pal->inactive);
+        glcdDrawRect(glcd->x, glcd->y, lt->textEdit.rect.w - glcd->x, feh, pal->inactive);
     }
 }

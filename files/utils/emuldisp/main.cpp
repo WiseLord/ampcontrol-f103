@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     Amp amp;
 
     amp.show();
+    amp.initDisp();
 
     return a.exec();
 }

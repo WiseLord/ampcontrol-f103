@@ -104,7 +104,10 @@ Amp::Amp(QWidget *parent) :
     dialTimer = new QTimer(this);
     dialTimer->setSingleShot(true);
     connect(dialTimer, SIGNAL(timeout()), SLOT(dialTimerElapsed()));
+}
 
+void Amp::initDisp()
+{
     disp->init();
 }
 

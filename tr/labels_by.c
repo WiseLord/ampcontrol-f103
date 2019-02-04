@@ -39,6 +39,8 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_BOOL_OFF]        = "ВЫКЛ",
     [LABEL_BOOL_ON]         = "УКЛ",
 
+    [LABEL_TUNER_FM_STATION_NAME]   = "Назва FM станцыі",
+
     [LABEL_TUNER_IC + TUNER_IC_NO]      = "Няма",
 
 //    [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "US/Europe FM",
