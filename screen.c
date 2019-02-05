@@ -59,9 +59,9 @@ static bool screenCheckClear(void)
 
         // Enable/disable tuner polling
         if (screen == SCREEN_TUNER) {
-            swTimSetTunerPoll(100);
+            swTimSet(SW_TIM_TUNER_POLL, 100);
         } else {
-            swTimSetTunerPoll(SW_TIM_OFF);
+            swTimSet(SW_TIM_TUNER_POLL, SW_TIM_OFF);
         }
 
         // Handle standby/work brightness
@@ -202,8 +202,8 @@ void screenShow(bool clear)
     glcdSetRect(rect);
 
     // Get new spectrum data
-    if (swTimGetSpConvert() <= 0) {
-        swTimSetSpConvert(20);
+    if (swTimGet(SW_TIM_SP_CONVERT) <= 0) {
+        swTimSet(SW_TIM_SP_CONVERT, 20);
         spGetADC(spectrum->chan[SP_CHAN_LEFT].raw, spectrum->chan[SP_CHAN_RIGHT].raw);
         spectrum->ready = true;
     }
@@ -294,9 +294,9 @@ void screenShowTuner(bool clear)
 {
     Tuner *tuner = tunerGet();
 
-    if (swTimGetTunerPoll() == 0) {
+    if (swTimGet(SW_TIM_TUNER_POLL) == 0) {
         tunerUpdateStatus();
-        swTimSetTunerPoll(100);
+        swTimSet(SW_TIM_TUNER_POLL, 100);
     }
 
     layoutShowTuner(clear, tuner, spGet());

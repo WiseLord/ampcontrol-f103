@@ -9,22 +9,21 @@ extern "C" {
 
 #define SW_TIM_OFF       -1
 
+typedef uint8_t SwTimer;
+enum {
+    SW_TIM_DISPLAY,
+    SW_TIM_SP_CONVERT,
+    SW_TIM_TUNER_POLL,
+    SW_TIM_INIT_HW,
+    SW_TIM_RC_REPEAT,
+
+    SW_TIM_END,
+};
+
 void swTimUpdate(void);
 
-void swTimSetDisplay(int16_t value);
-int16_t swTimGetDisplay(void);
-
-void swTimSetSpConvert(int16_t value);
-int16_t swTimGetSpConvert(void);
-
-void swTimSetTunerPoll(int16_t value);
-int16_t swTimGetTunerPoll(void);
-
-void swTimSetInitHw(int16_t value);
-int16_t swTimGetInitHw(void);
-
-void swTimSetRcRepeat(int16_t value);
-int16_t swTimGetRcRepeat(void);
+void swTimSet(SwTimer timer, int32_t value);
+int32_t swTimGet(SwTimer timer);
 
 #ifdef __cplusplus
 }

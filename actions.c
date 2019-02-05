@@ -181,13 +181,13 @@ static void actionGetRemote(void)
             // Allow repeat only following commands
             if (cmd == RC_CMD_VOL_UP ||
                 cmd == RC_CMD_VOL_DOWN) {
-                if (swTimGetRcRepeat() > 0)
+                if (swTimGet(SW_TIM_RC_REPEAT) > 0)
                     return;
             } else {
                 return;
             }
         } else {
-            swTimSetRcRepeat(400);  // Allow repeat after this time
+            swTimSet(SW_TIM_RC_REPEAT, 400);  // Allow repeat after this time
         }
 
         actionSet(ACTION_REMOTE, (int16_t)cmd);
@@ -196,9 +196,9 @@ static void actionGetRemote(void)
 
 static void actionGetTimers(void)
 {
-    if (swTimGetDisplay() == 0) {
+    if (swTimGet(SW_TIM_DISPLAY) == 0) {
         actionSet(ACTION_DISP_EXPIRED, 0);
-    } else if (swTimGetInitHw() == 0) {
+    } else if (swTimGet(SW_TIM_INIT_HW) == 0) {
         actionSet(ACTION_INIT_HW, 0);
     }
 }
@@ -591,7 +591,7 @@ void actionHandle(bool visible)
             tunerReadSettings();
 
             pinsSetStby(true);      // ON via relay
-            swTimSetInitHw(500);
+            swTimSet(SW_TIM_INIT_HW, 500);
 
             actionSetScreen(SCREEN_TIME, 800);
         } else {
@@ -611,9 +611,10 @@ void actionHandle(bool visible)
         }
         break;
     case ACTION_INIT_HW:
-        swTimSetInitHw(SW_TIM_OFF);
+        swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
 
         pinsInitAmpI2c();
+
 
         tunerInit();
         tunerSetPower(true);
@@ -745,7 +746,7 @@ void actionHandle(bool visible)
         screenSet(action.screen);
         screenSetParam(action.param);
         if (action.timeout) {
-            swTimSetDisplay(action.timeout);
+            swTimSet(SW_TIM_DISPLAY, action.timeout);
         }
     }
 }
