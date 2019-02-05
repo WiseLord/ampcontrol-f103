@@ -91,7 +91,7 @@ tImage *glcdGetUnrleImg(void);
 void *glcdGetUnrleImgData(void);
 
 void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor);
-const tImage *glcdFindIcon(int32_t code, const tFont *iFont);
+const tImage *glcdFindIcon(Icon code, const tFont *iFont);
 
 uint16_t glcdStrToUStr(const char *str, UChar *ustr);
 void glcdUStrToStr(const UChar *ustr, char *str);

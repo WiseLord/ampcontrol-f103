@@ -63,14 +63,6 @@ void screenChangeBrighness(BrMode mode, int8_t diff);
 
 void screenShow(bool clear);
 
-void screenShowTime(bool clear);
-void screenShowSpectrum(bool clear);
-void screenShowInput(bool clear);
-void screenShowAudioParam(bool clear);
-void screenShowTuner(bool clear);
-void screenShowMenu(bool clear);
-void screenShowTextEdit(bool clear);
-
 #ifdef __cplusplus
 }
 #endif

@@ -276,14 +276,14 @@ void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor)
     glcdSetX(glcd.x + img->width);
 }
 
-const tImage *glcdFindIcon(int32_t code, const tFont *iFont)
+const tImage *glcdFindIcon(Icon code, const tFont *iFont)
 {
     const tImage *ret = NULL;
 
     // Find icon pos
     int32_t iPos = -1;
     for (int16_t i = 0; i < iFont->length; i++) {
-        if (iFont->chars[i].code == code) {
+        if (iFont->chars[i].code == (int32_t)code) {
             iPos = i;
             break;
         }

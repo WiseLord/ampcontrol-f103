@@ -217,97 +217,31 @@ void screenShow(bool clear)
     switch (screen) {
     case SCREEN_STANDBY:
     case SCREEN_TIME:
-        screenShowTime(clear);
+        layoutShowTime(clear);
         break;
     case SCREEN_SPECTRUM:
-        screenShowSpectrum(clear);
+        layoutShowSpectrum(clear);
         break;
     case SCREEN_AUDIO_INPUT:
-        screenShowInput(clear);
+        layoutShowTune(clear, AUDIO_TUNE_GAIN);
         break;
     case SCREEN_AUDIO_PARAM:
-        screenShowAudioParam(clear);
+        layoutShowTune(clear, scrPar.tune);
         break;
     case SCREEN_TUNER:
-        screenShowTuner(clear);
+        if (swTimGet(SW_TIM_TUNER_POLL) == 0) {
+            tunerUpdateStatus();
+            swTimSet(SW_TIM_TUNER_POLL, 100);
+        }
+        layoutShowTuner(clear);
         break;
     case SCREEN_MENU:
-        screenShowMenu(clear);
+        layoutShowMenu(clear);
         break;
     case SCREEN_TEXTEDIT:
-        screenShowTextEdit(clear);
+        layoutShowTextEdit(clear);
         break;
     default:
         break;
     }
-}
-
-void screenShowTime(bool clear)
-{
-    RTC_type rtc;
-    rtc.etm = rtcGetMode();
-
-    rtcGetTime(&rtc);
-
-    layoutShowTime(clear, &rtc);
-}
-
-void screenShowSpectrum(bool clear)
-{
-    layoutShowSpectrum(clear, spGet());
-}
-
-void screenShowInput(bool clear)
-{
-    scrPar.tune = AUDIO_TUNE_GAIN;
-    screenShowAudioParam(clear);
-}
-
-void screenShowAudioParam(bool clear)
-{
-    AudioProc *aProc = audioGet();
-    AudioTune aTune = scrPar.tune;
-
-    if (aTune >= AUDIO_TUNE_END)
-        aTune = AUDIO_TUNE_VOLUME;
-
-    DispParam dp;
-    if (aTune == AUDIO_TUNE_GAIN) {
-        InputType inType = aProc->par.inType[aProc->par.input];;
-        dp.label = labelsGet(LABEL_IN_TUNER + inType);
-        dp.icon = (uint8_t)(ICON_TUNER + inType);
-    } else {
-        dp.label = labelsGet(LABEL_VOLUME + aTune);
-        dp.icon = (uint8_t)(ICON_VOLUME + aTune);
-    }
-    dp.value = aProc->par.item[aTune].value;
-    const AudioGrid *grid = aProc->par.item[aTune].grid;
-
-    dp.min = grid ? grid->min : 0;
-    dp.max = grid ? grid->max : 0;
-    dp.mStep = grid ? grid->mStep : 0;
-
-    layoutShowTune(clear, &dp, spGet());
-}
-
-void screenShowTuner(bool clear)
-{
-    Tuner *tuner = tunerGet();
-
-    if (swTimGet(SW_TIM_TUNER_POLL) == 0) {
-        tunerUpdateStatus();
-        swTimSet(SW_TIM_TUNER_POLL, 100);
-    }
-
-    layoutShowTuner(clear, tuner, spGet());
-}
-
-void screenShowMenu(bool clear)
-{
-    layoutShowMenu(clear);
-}
-
-void screenShowTextEdit(bool clear)
-{
-    layoutShowTextEdit(clear);
 }

@@ -32,9 +32,9 @@ static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int1
             }
         } else { // Symmetric scale
             if ((value > 0 && i >= value + (sc / 2)) ||
-                    (value >= 0 && i < (sc / 2 - 1)) ||
-                    (value < 0 && i < value + (sc / 2)) ||
-                    (value <= 0 && i > (sc / 2))) {
+                (value >= 0 && i < (sc / 2 - 1)) ||
+                (value < 0 && i < value + (sc / 2)) ||
+                (value <= 0 && i > (sc / 2))) {
                 color = canvas->pal->bg;
             }
         }
@@ -332,9 +332,16 @@ const Layout *layoutGet(void)
     return lt;
 }
 
-void layoutShowTime(bool clear, RTC_type *rtc)
+void layoutShowTime(bool clear)
 {
     (void)clear;
+
+    RTC_type rtcStruct; // TODO: Use one struct in rtc driver
+    rtcStruct.etm = rtcGetMode();
+
+    RTC_type *rtc = &rtcStruct;
+
+    rtcGetTime(rtc);
 
     int16_t zeroPos;
     int16_t ltspPos;
@@ -345,8 +352,7 @@ void layoutShowTime(bool clear, RTC_type *rtc)
     zeroPos = glcdFontSymbolPos('0');
     ltspPos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
     timeLen = 6 * (lt->time.hmsFont->chars[zeroPos].image->width);    // 6 digits HHMMSS
-    timeLen += 15 *
-               (lt->time.hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
+    timeLen += 15 * (lt->time.hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
     glcdSetXY((lt->rect.w - timeLen) / 2, lt->time.hmsY);
 
     canvasDrawTm(rtc, RTC_HOUR);
@@ -425,32 +431,53 @@ void layoutShowMenu(bool clear)
     }
 }
 
-void layoutShowTune(bool clear, DispParam *dp, Spectrum *sp)
+void layoutShowTune(bool clear, AudioTune aTune)
 {
     const tFont *iconSet = lt->iconSet;
     static int16_t valueOld;
+
+    Spectrum *sp = spGet();
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
+
+    const char *label = labelsGet(LABEL_IN_TUNER + inType);
+    Icon icon = (ICON_TUNER + inType);
+
+    if (aTune < AUDIO_TUNE_GAIN) {
+        label = labelsGet(LABEL_VOLUME + aTune);
+        icon = ICON_VOLUME + aTune;
+    }
+
+    const int16_t value = aProc->par.item[aTune].value;
+
+    const AudioGrid *grid = aProc->par.item[aTune].grid;
+    const int8_t min = grid ? grid->min : 0;
+    const int8_t max = grid ? grid->max : 0;
+    const uint8_t mStep = grid ? grid->mStep : 0;
+
 
     if (clear) {
         // Label
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(LCD_COLOR_WHITE);
         glcdSetXY(0, 0);
-        glcdWriteStringConst(dp->label);
+        glcdWriteStringConst(label);
         // Icon
         glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
-        const tImage *icon = glcdFindIcon(dp->icon, iconSet);
-        glcdDrawImage(icon, canvas->pal->fg, canvas->pal->bg);
+        const tImage *img = glcdFindIcon(icon, iconSet);
+        glcdDrawImage(img, canvas->pal->fg, canvas->pal->bg);
     }
-    if (clear || valueOld != dp->value) {
+
+    if (clear || valueOld != value) {
         // Bar
-        canvasDrawBar(&lt->tune.bar, dp->value, dp->min, dp->max);
+        canvasDrawBar(&lt->tune.bar, value, min, max);
         // Value
         glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
-        glcdWriteNum((dp->value * dp->mStep) / 8, 3, ' ', 10);
+        glcdWriteNum((value * mStep) / 8, 3, ' ', 10);
     }
-    valueOld = dp->value;
+    valueOld = value;
 
     // Spectrum
     if (!sp->ready) {
@@ -463,9 +490,11 @@ void layoutShowTune(bool clear, DispParam *dp, Spectrum *sp)
     sp->ready = false;
 }
 
-void layoutShowSpectrum(bool clear, Spectrum *sp)
+void layoutShowSpectrum(bool clear)
 {
     (void)clear;
+
+    Spectrum *sp = spGet();
 
     if (!sp->ready) {
         return;
@@ -490,8 +519,11 @@ void layoutShowSpectrum(bool clear, Spectrum *sp)
     sp->ready = false;
 }
 
-void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp)
+void layoutShowTuner(bool clear)
 {
+    Tuner *tuner = tunerGet();
+    Spectrum *sp = spGet();
+
     const tFont *iconSet = lt->iconSet;
 
     const tImage *icon = NULL;;

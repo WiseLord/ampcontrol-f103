@@ -14,15 +14,6 @@ extern "C" {
 #define TE_USTR_LEN     32
 
 typedef struct {
-    const char *label;
-    int16_t value;
-    int16_t min;
-    int16_t max;
-    uint8_t mStep;
-    uint8_t icon;
-} DispParam;
-
-typedef struct {
     int16_t sc;                 // Count of bar lines
     uint8_t sw;                 // Width of bar line
     int16_t barY;               // Y pos of the bar

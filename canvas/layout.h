@@ -12,6 +12,7 @@ extern "C" {
 
 #include "../rtc.h"
 #include "../spectrum.h"
+#include "../audio/audiodefs.h"
 #include "../tuner/stations.h"
 #include "../tuner/tuner.h"
 
@@ -70,11 +71,11 @@ const Layout *ltEmulGet(void);
 void layoutInit(void);
 const Layout *layoutGet(void);
 
-void layoutShowTime(bool clear, RTC_type *rtc);
+void layoutShowTime(bool clear);
 void layoutShowMenu(bool clear);
-void layoutShowTune(bool clear, DispParam *dp, Spectrum *sp);
-void layoutShowSpectrum(bool clear, Spectrum *sp);
-void layoutShowTuner(bool clear, Tuner *tuner, Spectrum *sp);
+void layoutShowTune(bool clear, AudioTune tune);
+void layoutShowSpectrum(bool clear);
+void layoutShowTuner(bool clear);
 
 void layoutShowTextEdit(bool clear);
 
