@@ -16,7 +16,6 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_FRIDAY]          = "FRIDAY",
     [LABEL_SATURDAY]        = "SATURDAY",
 
-    [LABEL_BRIGNTNESS]      = "Brightness",
     [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Mute & Stby pins",
 
     [LABEL_VOLUME]          = "Volume",
@@ -121,6 +120,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Display mode",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "STBY brightness",
+    [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Brrightness",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Rotate",
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Encoder resolution",

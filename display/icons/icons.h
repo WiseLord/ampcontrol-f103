@@ -9,8 +9,6 @@ typedef enum {
     ICON_EMPTY = 0x00,
 
     // Various icons
-    ICON_BRIGHTNESS,
-    ICON_TEMPERATURE,
     ICON_RDS,
     ICON_STEREO,
     ICON_FMONO,

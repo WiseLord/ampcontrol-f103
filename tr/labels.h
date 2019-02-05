@@ -31,8 +31,6 @@ typedef enum {
     LABEL_FRIDAY,
     LABEL_SATURDAY,
 
-    LABEL_BRIGNTNESS,
-
     LABEL_VOLUME,
     LABEL_BASS,
     LABEL_MIDDLE,

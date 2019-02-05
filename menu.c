@@ -57,9 +57,9 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_TUNER_VOLUME]     = {MENU_SETUP_TUNER,        MENU_TYPE_NUMBER,   EE_TUNER_VOLUME},
 
     [MENU_SPECTURM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM,     EE_SPECTRUM_MODE},
-//    [MENU_SPECTRUM_SPEED]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM,    EE_SPECTRUM_SPEED},
 
     [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   EE_DISPLAY_BR_STBY},
+    [MENU_DISPLAY_BR_WORK]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   EE_DISPLAY_BR_STBY},
     [MENU_DISPLAY_ROTATE]   = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL,     EE_DISPLAY_ROTATE},
 
     [MENU_INPUT_ENC_RES]    = {MENU_SETUP_INPUT,        MENU_TYPE_NUMBER,   EE_INPUT_ENC_RES},
@@ -154,7 +154,8 @@ static int16_t menuGetValue(MenuIdx index)
         break;
 
     case MENU_DISPLAY_BR_STBY:
-        ret = screenGetBrightness(BR_STBY);
+    case MENU_DISPLAY_BR_WORK:
+        ret = screenGetBrightness(BR_STBY + index - MENU_DISPLAY_BR_STBY);
         break;
 
     case MENU_DISPLAY_ROTATE:
@@ -240,7 +241,8 @@ static void menuStoreCurrentValue(void)
         break;
 
     case MENU_DISPLAY_BR_STBY:
-        screenSetBrightness(BR_STBY, (int8_t)menu.value);
+    case MENU_DISPLAY_BR_WORK:
+        screenSetBrightness(BR_STBY + menu.active - MENU_DISPLAY_BR_STBY, (int8_t)menu.value);
         break;
 
     case MENU_DISPLAY_ROTATE:
@@ -353,6 +355,7 @@ static void menuValueChange(int8_t diff)
             menu.value = SP_MODE_STEREO;
         break;
     case MENU_DISPLAY_BR_STBY:
+    case MENU_DISPLAY_BR_WORK:
         if (menu.value > LCD_BR_MAX)
             menu.value = LCD_BR_MAX;
         if (menu.value < LCD_BR_MIN)
@@ -368,7 +371,7 @@ static void menuValueChange(int8_t diff)
         break;
     }
 
-    if (menu.active == MENU_DISPLAY_BR_STBY) {
+    if (menu.active == MENU_DISPLAY_BR_STBY || menu.active == MENU_DISPLAY_BR_WORK) {
         dispdrvSetBrightness((int8_t)menu.value);
     }
 }
@@ -415,12 +418,12 @@ void menuSetActive(MenuIdx index)
 
         if (menu.selected) {
             menu.value = menuGetValue(menu.active);
-            if (index == MENU_DISPLAY_BR_STBY) {
+            if (index == MENU_DISPLAY_BR_STBY || index == MENU_DISPLAY_BR_WORK) {
                 dispdrvSetBrightness(screenGetBrightness(BR_STBY));
             }
         } else {
             menuStoreCurrentValue();
-            if (index == MENU_DISPLAY_BR_STBY) {
+            if (index == MENU_DISPLAY_BR_STBY || index == MENU_DISPLAY_BR_WORK) {
                 dispdrvSetBrightness(screenGetBrightness(BR_WORK));
             }
         }

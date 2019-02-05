@@ -9,7 +9,6 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_FRIDAY]          = "ПЯТНІЦА",
     [LABEL_SATURDAY]        = "СУБОТА",
 
-    [LABEL_BRIGNTNESS]      = "Яркасць",
     [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Вывады Mute і Stby",
 
     [LABEL_VOLUME]          = "Гучнасць",
@@ -100,6 +99,7 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Рэжым экрана",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яркасць STBY",
+    [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Яркасць",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Круціць",
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Вырашэнне энкодера",

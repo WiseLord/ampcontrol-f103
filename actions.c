@@ -243,7 +243,6 @@ static void actionRemapBtnLong(void)
 
     switch (action.value) {
     case BTN_D0:
-        actionSet(ACTION_BR_WORK, 0);
         break;
     case BTN_D1:
         action.type = ACTION_RTC_MODE;
@@ -453,9 +452,6 @@ static void actionRemapEncoder(void)
         } else {
             actionSet(ACTION_RTC_CHANGE, encCnt);
         }
-        break;
-    case SCREEN_BRIGHTNESS:
-        actionSet(ACTION_BR_WORK, encCnt);
         break;
     case SCREEN_MENU:
         actionSet(ACTION_MENU_CHANGE, encCnt);
@@ -731,11 +727,6 @@ void actionHandle(bool visible)
         actionSetScreen(action.prevScreen, 2000);
         break;
 
-    case ACTION_BR_STBY:
-    case ACTION_BR_WORK:
-        screenChangeBrighness((BrMode)(action.type - ACTION_BR_STBY), (int8_t)(action.value));
-        actionSetScreen(SCREEN_BRIGHTNESS, 5000);
-        break;
     case ACTION_MENU_SELECT:
         menuSetActive((MenuIdx)action.value);
         action.param.parent = menuGet()->parent;

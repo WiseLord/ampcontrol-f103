@@ -9,7 +9,6 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_FRIDAY]          = "П'ЯТНИЦЯ",
     [LABEL_SATURDAY]        = "СУБОТА",
 
-    [LABEL_BRIGNTNESS]      = "Яскравість",
     [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Вивiд Mute і Stby",
 
     [LABEL_VOLUME]          = "Гучність",
@@ -102,6 +101,7 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Режим екрана",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яскравість STBY",
+    [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Яскравість",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Розгорнути",
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Крок енкодера",

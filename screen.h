@@ -17,7 +17,7 @@ enum {
 
     SCREEN_TIME,
     SCREEN_SPECTRUM,
-    SCREEN_BRIGHTNESS,
+
     SCREEN_AUDIO_INPUT,
     SCREEN_AUDIO_PARAM,
 
@@ -65,7 +65,6 @@ void screenShow(bool clear);
 
 void screenShowTime(bool clear);
 void screenShowSpectrum(bool clear);
-void screenShowBrightness(bool clear);
 void screenShowInput(bool clear);
 void screenShowAudioParam(bool clear);
 void screenShowTuner(bool clear);

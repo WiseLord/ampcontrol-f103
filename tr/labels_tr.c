@@ -9,7 +9,6 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_FRIDAY]          = "CUMA",
     [LABEL_SATURDAY]        = "CUMARTESİ",
 
-    [LABEL_BRIGNTNESS]      = "Parlaklık",
     [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Mute & Bekl.. pini",
 
     [LABEL_VOLUME]          = "Volum",
@@ -98,6 +97,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Ekran modu",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Bekleme Parlaklığı",
+    [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Parlaklık",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Döndürme",
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Enkoder Çözünürlüğü",

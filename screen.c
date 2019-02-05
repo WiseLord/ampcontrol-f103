@@ -222,9 +222,6 @@ void screenShow(bool clear)
     case SCREEN_SPECTRUM:
         screenShowSpectrum(clear);
         break;
-    case SCREEN_BRIGHTNESS:
-        screenShowBrightness(clear);
-        break;
     case SCREEN_AUDIO_INPUT:
         screenShowInput(clear);
         break;
@@ -258,20 +255,6 @@ void screenShowTime(bool clear)
 void screenShowSpectrum(bool clear)
 {
     layoutShowSpectrum(clear, spGet());
-}
-
-void screenShowBrightness(bool clear)
-{
-    DispParam dp;
-
-    dp.label = labelsGet(LABEL_BRIGNTNESS);
-    dp.value = screenGetBrightness(BR_WORK);
-    dp.min = LCD_BR_MIN;
-    dp.max = LCD_BR_MAX;
-    dp.mStep = 1 * 8;
-    dp.icon = ICON_BRIGHTNESS;
-
-    layoutShowTune(clear, &dp, spGet());
 }
 
 void screenShowInput(bool clear)
