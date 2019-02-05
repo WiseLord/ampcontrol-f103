@@ -79,10 +79,10 @@ static void actionNavigateMenu(RcCmd cmd)
         }
         break;
     case RC_CMD_NAV_UP:
-        actionSet(ACTION_MENU_CHANGE, menu->selected ? +1 : -1);
+        actionSet(ACTION_MENU_CHANGE, -1);
         break;
     case RC_CMD_NAV_DOWN:
-        actionSet(ACTION_MENU_CHANGE, menu->selected ? -1 : +1);
+        actionSet(ACTION_MENU_CHANGE, +1);
         break;
     }
 }
@@ -113,9 +113,6 @@ static void actionNavigateTextEdit(RcCmd cmd)
 
 static void actionNavigateCommon(RcCmd cmd)
 {
-    AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
-
     switch (cmd) {
     case RC_CMD_NAV_OK:
         action.type = ACTION_OPEN_MENU;
@@ -124,14 +121,10 @@ static void actionNavigateCommon(RcCmd cmd)
         actionSet(ACTION_DISP_EXPIRED, 0);
         break;
     case RC_CMD_NAV_RIGHT:
-        if (inType == IN_TUNER) {
-            action.type = ACTION_TUNER_NEXT;
-        }
+        actionSet(ACTION_SEEK, +1);
         break;
     case RC_CMD_NAV_LEFT:
-        if (inType == IN_TUNER) {
-            action.type = ACTION_TUNER_PREV;
-        }
+        actionSet(ACTION_SEEK, -1);
         break;
     case RC_CMD_NAV_UP:
         actionSet(ACTION_ENCODER, +1);
@@ -217,16 +210,16 @@ static void actionRemapBtnShort(void)
         actionSet(ACTION_STANDBY, FLAG_SWITCH);
         break;
     case BTN_D1:
-        actionSet(ACTION_AUDIO_INPUT, -1);
+        actionSet(ACTION_AUDIO_INPUT, FLAG_NEXT);
         break;
     case BTN_D2:
         actionSet(ACTION_NAVIGATE, RC_CMD_NAV_BACK);
         break;
     case BTN_D3:
-        action.type = ACTION_PREV;
+        actionSet(ACTION_NAVIGATE, RC_CMD_NAV_LEFT);
         break;
     case BTN_D4:
-        action.type = ACTION_NEXT;
+        actionSet(ACTION_NAVIGATE, RC_CMD_NAV_RIGHT);
         break;
     case BTN_D5:
         actionSet(ACTION_NAVIGATE, RC_CMD_NAV_OK);
@@ -268,10 +261,10 @@ static void actionRemapBtnLong(void)
         }
         break;
     case BTN_D3:
-        action.type = ACTION_PREV;
+        actionSet(ACTION_NAVIGATE, RC_CMD_NAV_LEFT);
         break;
     case BTN_D4:
-        action.type = ACTION_NEXT;
+        actionSet(ACTION_NAVIGATE, RC_CMD_NAV_RIGHT);
         break;
     case BTN_D5:
         switch (screen) {
@@ -337,10 +330,10 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_CHAN_NEXT:
-        action.type = ACTION_NEXT;
+        actionSet(ACTION_SEEK, +1);
         break;
     case RC_CMD_CHAN_PREV:
-        action.type = ACTION_PREV;
+        actionSet(ACTION_SEEK, -1);
         break;
 
     case RC_CMD_DIG_0:
@@ -357,7 +350,7 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_IN_NEXT:
-        actionSet(ACTION_AUDIO_INPUT, -1);
+        actionSet(ACTION_AUDIO_INPUT, FLAG_NEXT);
         break;
 
     case RC_CMD_NAV_OK:
@@ -367,17 +360,6 @@ static void actionRemapRemote(void)
     case RC_CMD_NAV_LEFT:
     case RC_CMD_NAV_DOWN:
         actionSet(ACTION_NAVIGATE, action.value);
-        break;
-
-    case RC_CMD_IN_0:
-    case RC_CMD_IN_1:
-    case RC_CMD_IN_2:
-    case RC_CMD_IN_3:
-    case RC_CMD_IN_4:
-    case RC_CMD_IN_5:
-    case RC_CMD_IN_6:
-    case RC_CMD_IN_7:
-        actionSet(ACTION_AUDIO_INPUT, action.value - RC_CMD_IN_0);
         break;
 
     case RC_CMD_BASS_UP:
@@ -512,26 +494,6 @@ static void actionRemapCommon(void)
             action.value = (SCREEN_STANDBY == screen ? FLAG_OFF : FLAG_ON);
         }
         break;
-    case ACTION_PREV:
-        switch (screen) {
-        case SCREEN_MENU:
-            actionSet(ACTION_NAVIGATE, RC_CMD_NAV_UP);
-            break;
-        default:
-            actionSet(ACTION_NAVIGATE, RC_CMD_NAV_LEFT);
-            break;
-        }
-        break;
-    case ACTION_NEXT:
-        switch (screen) {
-        case SCREEN_MENU:
-            actionSet(ACTION_NAVIGATE, RC_CMD_NAV_DOWN);
-            break;
-        default:
-            actionSet(ACTION_NAVIGATE, RC_CMD_NAV_RIGHT);
-            break;
-        }
-        break;
     case ACTION_OPEN_MENU:
         switch (screen) {
         case SCREEN_TEXTEDIT:
@@ -616,6 +578,7 @@ void actionHandle(bool visible)
 {
     Screen screen = screenGet();
     AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
     Tuner *tuner = tunerGet();
     int8_t stNum = stationGetNum(tuner->status.freq);
 
@@ -675,6 +638,17 @@ void actionHandle(bool visible)
         }
         break;
 
+    case ACTION_SEEK:
+        if (inType == IN_TUNER) {
+            if (action.value > 0) {
+                tunerMove(TUNER_DIR_UP);
+            } else {
+                tunerMove(TUNER_DIR_DOWN);
+            }
+            actionSetScreen(SCREEN_TUNER, 5000);
+        }
+        break;
+
     case ACTION_OPEN_MENU:
         if (screen == SCREEN_AUDIO_PARAM) {
             actionNextAudioParam(aProc);
@@ -726,14 +700,6 @@ void actionHandle(bool visible)
         // TODO: handle screen
         break;
 
-    case ACTION_TUNER_PREV:
-        tunerMove(TUNER_DIR_DOWN);
-        actionSetScreen(SCREEN_TUNER, 5000);
-        break;
-    case ACTION_TUNER_NEXT:
-        tunerMove(TUNER_DIR_UP);
-        actionSetScreen(SCREEN_TUNER, 5000);
-        break;
     case ACTION_TUNER_EDIT_NAME:
         glcdSetFont(lt->textEdit.editFont);
         texteditSet(stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);

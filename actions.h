@@ -14,6 +14,9 @@ extern "C" {
 #define FLAG_ON         1
 #define FLAG_SWITCH     2
 
+#define FLAG_NEXT       -1
+#define FLAG_PREV       -2
+
 #define ACTION_HIDDEN   false
 #define ACTION_VISIBLE  true
 
@@ -36,8 +39,7 @@ enum {
 
     ACTION_DIGIT,
 
-    ACTION_PREV,
-    ACTION_NEXT,
+    ACTION_SEEK,
 
     ACTION_OPEN_MENU,
     ACTION_NAVIGATE,
@@ -60,8 +62,6 @@ enum {
     ACTION_AUDIO_EFFECT3D,
     ACTION_AUDIO_BYPASS,
 
-    ACTION_TUNER_PREV,
-    ACTION_TUNER_NEXT,
     ACTION_TUNER_EDIT_NAME,
     ACTION_TUNER_DEL_STATION,
 

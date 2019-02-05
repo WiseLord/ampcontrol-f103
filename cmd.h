@@ -30,14 +30,6 @@ extern "C" {
     CMD(NAV_UP)             \
     CMD(NAV_LEFT)           \
     CMD(NAV_DOWN)           \
-    CMD(IN_0)               \
-    CMD(IN_1)               \
-    CMD(IN_2)               \
-    CMD(IN_3)               \
-    CMD(IN_4)               \
-    CMD(IN_5)               \
-    CMD(IN_6)               \
-    CMD(IN_7)               \
     CMD(BASS_UP)            \
     CMD(BASS_DOWN)          \
     CMD(MIDDLE_UP)          \
