@@ -31,7 +31,6 @@ private:
 
     void dialChanged(int value);
 
-    QTimer *dialTimer;
     QSettings *settings;
 
 private slots:
@@ -49,8 +48,6 @@ private slots:
     void on_btn5_released();
     void on_dial_valueChanged(int value);
     void on_dial_sliderMoved(int position);
-
-    void dialTimerElapsed();
 };
 
 #endif // AMP_H

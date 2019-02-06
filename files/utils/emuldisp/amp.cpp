@@ -100,10 +100,6 @@ Amp::Amp(QWidget *parent) :
 
     dialValue = dial->value();
     dialMax = dial->maximum();
-
-    dialTimer = new QTimer(this);
-    dialTimer->setSingleShot(true);
-    connect(dialTimer, SIGNAL(timeout()), SLOT(dialTimerElapsed()));
 }
 
 void Amp::initDisp()
@@ -133,16 +129,18 @@ uint16_t Amp::eeReadRaw(uint16_t addr)
 void Amp::dialChanged(int value)
 {
     int diff = (value + dialMax - dialValue) % dialMax;
-    if (diff > dialMax / 2) {
-        this->bus |= ENC_A;
-    } else if (diff < dialMax / 2) {
-        this->bus |= ENC_B;
-    }
-    dialValue = value;
-    dialTimer->stop();
-    dialTimer->start(100);
 
-    this->statusBar()->showMessage(QString("ENC value: %1").arg(this->bus & (ENC_A | ENC_B)), 200);
+    if (diff > dialMax / 2) {
+        diff = -1;
+    } else if (diff < dialMax / 2) {
+        diff = 1;
+    }
+
+    actionQueue(ACTION_ENCODER, diff);
+
+    dialValue = value;
+
+    this->statusBar()->showMessage(QString("ENC value: %1").arg(diff), 200);
 }
 
 void Amp::on_btn0_pressed()
@@ -225,9 +223,4 @@ void Amp::on_dial_valueChanged(int value)
 void Amp::on_dial_sliderMoved(int position)
 {
     dialChanged(position);
-}
-
-void Amp::dialTimerElapsed()
-{
-    this->bus &= ~(ENC_A | ENC_B);
 }

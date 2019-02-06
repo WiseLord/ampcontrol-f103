@@ -29,6 +29,7 @@ static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
 static Action action = {ACTION_STANDBY, false, FLAG_ON, SCREEN_STANDBY, {0}, 0, ACTION_STANDBY};
+static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, {0}, 0, ACTION_NONE};
 
 static void actionSet(ActionType type, int16_t value)
 {
@@ -180,7 +181,7 @@ static void actionGetRemote(void)
         if (rcData.repeat) {
             // Allow repeat only following commands
             if (cmd == RC_CMD_VOL_UP ||
-                cmd == RC_CMD_VOL_DOWN) {
+                    cmd == RC_CMD_VOL_DOWN) {
                 if (swTimGet(SW_TIM_RC_REPEAT) > 0)
                     return;
             } else {
@@ -299,14 +300,14 @@ static void actionRemapRemote(void)
     }
 
     if (SCREEN_STANDBY == screen &&
-        action.value == RC_CMD_MENU) {
+            action.value == RC_CMD_MENU) {
         actionSet(ACTION_MENU_SELECT, MENU_SETUP_LANG);
         return;
     }
 
     if (SCREEN_STANDBY == screen &&
-        action.value != RC_CMD_STBY_SWITCH &&
-        action.value != RC_CMD_STBY_EXIT)
+            action.value != RC_CMD_STBY_SWITCH &&
+            action.value != RC_CMD_STBY_EXIT)
         return;
 
     switch (action.value) {
@@ -510,27 +511,46 @@ static void actionRemapCommon(void)
     }
 
     if (SCREEN_STANDBY == screen &&
-        (ACTION_STANDBY != action.type &&
-         ACTION_REMOTE != action.type &&
-         ACTION_MENU_SELECT != action.type)) {
+            (ACTION_STANDBY != action.type &&
+             ACTION_REMOTE != action.type &&
+             ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 
     if (SCREEN_MENU == screen &&
-        (ACTION_STANDBY != action.type &&
-         ACTION_NAVIGATE != action.type &&
-         ACTION_MENU_CHANGE != action.type &&
-         ACTION_MENU_SELECT != action.type &&
-         ACTION_ENCODER != action.type)) {
+            (ACTION_STANDBY != action.type &&
+             ACTION_NAVIGATE != action.type &&
+             ACTION_MENU_CHANGE != action.type &&
+             ACTION_MENU_SELECT != action.type &&
+             ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
+}
+
+static void actionDequeue(void)
+{
+    action.type = qaction.type;
+    action.value = qaction.value;
+
+    qaction.type = ACTION_NONE;
+    qaction.value = 0;
+}
+
+void actionQueue(ActionType type, int16_t value)
+{
+    qaction.type = type;
+    qaction.value = value;
 }
 
 void actionUserGet(void)
 {
     actionSet(ACTION_NONE, 0);
 
-    actionGetButtons();
+    actionDequeue();
+
+    if (ACTION_NONE == action.type) {
+        actionGetButtons();
+    }
 
     if (ACTION_NONE == action.type) {
         actionGetEncoder();

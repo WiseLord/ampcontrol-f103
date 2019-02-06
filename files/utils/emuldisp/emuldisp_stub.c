@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include "../../../audio/audiodefs.h"
 #include "../../../tuner/stations.h"
@@ -41,6 +42,16 @@ void *eeGetPageAddr(uint16_t page)
     (void)page;
 
     return st;
+}
+
+void eeErasePages(uint16_t page, uint16_t count)
+{
+    memset(st, 0, sizeof(st));
+}
+
+void eeWritePage(uint16_t page, void *addr, uint16_t bytes)
+{
+    memcpy(st, addr, bytes);
 }
 
 uint16_t rcGetCode(RcCmd cmd)
