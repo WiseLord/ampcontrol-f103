@@ -246,7 +246,7 @@ static void actionRemapBtnLong(void)
     case BTN_D0:
         break;
     case BTN_D1:
-        action.type = ACTION_RTC_MODE;
+        actionSet(ACTION_RTC_MODE, 0);
         break;
     case BTN_D2:
         switch (screen) {
@@ -423,6 +423,13 @@ static void actionRemapNavigate(void)
         break;
     case SCREEN_TEXTEDIT:
         actionNavigateTextEdit((RcCmd)action.value);
+        break;
+    case SCREEN_TIME:
+        if (action.value == RC_CMD_NAV_LEFT) {
+            actionSet(ACTION_RTC_MODE, -1);
+        } else if (action.value == RC_CMD_NAV_RIGHT) {
+            actionSet(ACTION_RTC_MODE, +1);
+        }
         break;
     default:
         actionNavigateCommon((RcCmd)action.value);
@@ -670,7 +677,7 @@ void actionHandle(bool visible)
 
     case ACTION_RTC_MODE:
         if (screen == SCREEN_TIME) {
-            rtcChangeMode(+1);
+            rtcChangeMode((int8_t)action.value);
             actionSetScreen(SCREEN_TIME, 15000);
         } else {
             rtcSetMode(RTC_NOEDIT);
