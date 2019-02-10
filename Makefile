@@ -1,6 +1,6 @@
 PROJECT = ampcontrol_f103
 
-DISPLAY = R61581
+DISPLAY = ILI9341
 DISPVAR = 8BIT
 
 TARGET = $(PROJECT)_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)

@@ -38,6 +38,8 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_BOOL_OFF]        = "ВИМКН",
     [LABEL_BOOL_ON]         = "ВКЛ",
 
+    [LABEL_TUNER_FM_STATION_NAME]   = "Ім'я FM станції",
+
     [LABEL_TUNER_IC + TUNER_IC_NO] = "Немає",
 //    [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
 //    [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
@@ -65,6 +67,16 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Водоспад",
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Немає",
+//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
+//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
+//    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
+    [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "ТЕСТ",
+
+    //    [LABEL_LANG + LANG_DEFAULT]         = "English",
+    //    [LABEL_LANG + LANG_BY]              = "Беларуская",
+    //    [LABEL_LANG + LANG_RU]              = "Русский",
+    //    [LABEL_LANG + LANG_TR]              = "Türkçe",
+    //    [LABEL_LANG + LANG_UA]              = "Українська",
 
     [LABEL_MENU + MENU_NULL]            = "Назад",
 
@@ -105,4 +117,41 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Розгорнути",
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Крок енкодера",
+
+    // NOTE: Keep in sync with cmd.h define list
+//    [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Switch standby",
+//    [LABEL_MENU + MENU_RC_MUTE]         = "Mute",
+//    [LABEL_MENU + MENU_RC_VOL_UP]       = "Volume up",
+//    [LABEL_MENU + MENU_RC_VOL_DOWN]     = "Volume down",
+//    [LABEL_MENU + MENU_RC_MENU]         = "Menu",
+//    [LABEL_MENU + MENU_RC_CHAN_NEXT]    = "Next chan",
+//    [LABEL_MENU + MENU_RC_CHAN_PREV]    = "Prev chan",
+//    [LABEL_MENU + MENU_RC_DIG_0]        = "Digit 0",        // TODO: Simplify
+//    [LABEL_MENU + MENU_RC_DIG_1]        = "Digit 1",
+//    [LABEL_MENU + MENU_RC_DIG_2]        = "Digit 2",
+//    [LABEL_MENU + MENU_RC_DIG_3]        = "Digit 3",
+//    [LABEL_MENU + MENU_RC_DIG_4]        = "Digit 4",
+//    [LABEL_MENU + MENU_RC_DIG_5]        = "Digit 5",
+//    [LABEL_MENU + MENU_RC_DIG_6]        = "Digit 6",
+//    [LABEL_MENU + MENU_RC_DIG_7]        = "Digit 7",
+//    [LABEL_MENU + MENU_RC_DIG_8]        = "Digit 8",
+//    [LABEL_MENU + MENU_RC_DIG_9]        = "Digit 9",
+//    [LABEL_MENU + MENU_RC_IN_NEXT]      = "Next input",
+//    [LABEL_MENU + MENU_RC_NAV_OK]       = "OK",
+//    [LABEL_MENU + MENU_RC_NAV_BACK]     = "Back",
+//    [LABEL_MENU + MENU_RC_NAV_RIGHT]    = "Right",
+//    [LABEL_MENU + MENU_RC_NAV_UP]       = "Up",
+//    [LABEL_MENU + MENU_RC_NAV_LEFT]     = "Left",
+//    [LABEL_MENU + MENU_RC_NAV_DOWN]     = "Down",
+//    [LABEL_MENU + MENU_RC_BASS_UP]      = "Bass up",
+//    [LABEL_MENU + MENU_RC_BASS_DOWN]    = "Bass down",
+//    [LABEL_MENU + MENU_RC_MIDDLE_UP]    = "Middle up",
+//    [LABEL_MENU + MENU_RC_MIDDLE_DOWN]  = "Middle down",
+//    [LABEL_MENU + MENU_RC_TREBLE_UP]    = "Treble up",
+//    [LABEL_MENU + MENU_RC_TREBLE_DOWN]  = "Treble down",
+//    [LABEL_MENU + MENU_RC_LOUDNESS]     = "Loudness",
+//    [LABEL_MENU + MENU_RC_SURROUND]     = "Surround",
+//    [LABEL_MENU + MENU_RC_EFFECT_3D]    = "3D-effect",
+//    [LABEL_MENU + MENU_RC_TONE_BYPASS]  = "Bypass tone",
+//    [LABEL_MENU + MENU_RC_TIME]         = "Time",
 };

@@ -120,12 +120,11 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Display mode",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "STBY brightness",
-    [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Brrightness",
+    [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Brightness",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Rotate",
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Encoder resolution",
 
-//    FOREACH_CMD(GENERATE_MENU_RC_TEXT)
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Switch standby",
     [LABEL_MENU + MENU_RC_MUTE]         = "Mute",
@@ -162,8 +161,6 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_RC_EFFECT_3D]    = "3D-effect",
     [LABEL_MENU + MENU_RC_TONE_BYPASS]  = "Bypass tone",
     [LABEL_MENU + MENU_RC_TIME]         = "Time",
-    [LABEL_MENU + MENU_RC_STBY_ENTER]   = "Enter standby",
-    [LABEL_MENU + MENU_RC_STBY_EXIT]    = "Exit standby",
 };
 
 void labelsSetLang(Lang value)

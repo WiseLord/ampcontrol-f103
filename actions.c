@@ -181,7 +181,7 @@ static void actionGetRemote(void)
         if (rcData.repeat) {
             // Allow repeat only following commands
             if (cmd == RC_CMD_VOL_UP ||
-                    cmd == RC_CMD_VOL_DOWN) {
+                cmd == RC_CMD_VOL_DOWN) {
                 if (swTimGet(SW_TIM_RC_REPEAT) > 0)
                     return;
             } else {
@@ -300,14 +300,13 @@ static void actionRemapRemote(void)
     }
 
     if (SCREEN_STANDBY == screen &&
-            action.value == RC_CMD_MENU) {
+        action.value == RC_CMD_MENU) {
         actionSet(ACTION_MENU_SELECT, MENU_SETUP_LANG);
         return;
     }
 
     if (SCREEN_STANDBY == screen &&
-            action.value != RC_CMD_STBY_SWITCH &&
-            action.value != RC_CMD_STBY_EXIT)
+        action.value != RC_CMD_STBY_SWITCH)
         return;
 
     switch (action.value) {
@@ -409,12 +408,6 @@ static void actionRemapRemote(void)
     case RC_CMD_TIME:
         action.type = ACTION_RTC_MODE;
         break;
-    case RC_CMD_STBY_ENTER:
-        actionSet(ACTION_STANDBY, FLAG_ON);
-        break;
-    case RC_CMD_STBY_EXIT:
-        actionSet(ACTION_STANDBY, FLAG_OFF);
-        break;
     default:
         break;
     }
@@ -511,18 +504,18 @@ static void actionRemapCommon(void)
     }
 
     if (SCREEN_STANDBY == screen &&
-            (ACTION_STANDBY != action.type &&
-             ACTION_REMOTE != action.type &&
-             ACTION_MENU_SELECT != action.type)) {
+        (ACTION_STANDBY != action.type &&
+         ACTION_REMOTE != action.type &&
+         ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 
     if (SCREEN_MENU == screen &&
-            (ACTION_STANDBY != action.type &&
-             ACTION_NAVIGATE != action.type &&
-             ACTION_MENU_CHANGE != action.type &&
-             ACTION_MENU_SELECT != action.type &&
-             ACTION_ENCODER != action.type)) {
+        (ACTION_STANDBY != action.type &&
+         ACTION_NAVIGATE != action.type &&
+         ACTION_MENU_CHANGE != action.type &&
+         ACTION_MENU_SELECT != action.type &&
+         ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 }

@@ -9,16 +9,16 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_FRIDAY]          = "CUMA",
     [LABEL_SATURDAY]        = "CUMARTESİ",
 
-    [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Mute & Bekl.. pini",
+    [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Mute/Bekletme Pini",
 
     [LABEL_VOLUME]          = "Volum",
     [LABEL_BASS]            = "Bass",
-    [LABEL_MIDDLE]          = "Middle",
+    [LABEL_MIDDLE]          = "Orta Ses",
     [LABEL_TREBLE]          = "Tiz",
-    [LABEL_FRONTREAR]       = "Ön & Arka",
-    [LABEL_BALANCE]         = "Denge",
+    [LABEL_FRONTREAR]       = "Ön/Arka Denge",
+    [LABEL_BALANCE]         = "Sağ/Sol Denge",
     [LABEL_CENTER]          = "Merkez",
-    [LABEL_SUBWOOFER]       = "Subwoofer",
+//    [LABEL_SUBWOOFER]       = "Subwoofer",
     [LABEL_PREAMP]          = "Kazanç",
 
     [LABEL_IN_TUNER]        = "Radio",
@@ -38,10 +38,16 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_BOOL_OFF]        = "Kapalı",
     [LABEL_BOOL_ON]         = "Açık",
 
+    [LABEL_TUNER_FM_STATION_NAME]   = "FM Radyo İsimleri:",
+
     [LABEL_TUNER_IC + TUNER_IC_NO]      = "Yok",
+//    [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
+//    [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
+//    [LABEL_TUNER_IC + TUNER_IC_TEA5767] = "TEA5767",
+//    [LABEL_TUNER_IC + TUNER_IC_TEST]    = "TEST",
 
     [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "ABD/Avrupa FM",
-    [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Japan FM",
+//    [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Japan FM",
     [LABEL_TUNER_BAND + TUNER_BAND_FM_WORLDWIDE]    = "Dünya Çapında FM",
     [LABEL_TUNER_BAND + TUNER_BAND_FM_EASTEUROPE]   = "Doğu Avrupa FM",
 
@@ -60,7 +66,17 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Karışık",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Şelale",
 
-    [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Ses İşlemci Modeli",
+    [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Yok",
+//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
+//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
+//    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
+//    [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "TEST",
+
+//    [LABEL_LANG + LANG_DEFAULT]         = "English",
+//    [LABEL_LANG + LANG_BY]              = "Беларуская",
+//    [LABEL_LANG + LANG_RU]              = "Русский",
+//    [LABEL_LANG + LANG_TR]              = "Türkçe",
+//    [LABEL_LANG + LANG_UA]              = "Українська",
 
     [LABEL_MENU + MENU_NULL]            = "Bir Önceki Menü",
 
@@ -75,14 +91,14 @@ const char *const labels_tr[LABEL_END] = {
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
 
-    [LABEL_MENU + MENU_AUDIO_IN_0]      = "Giriş 0",
-    [LABEL_MENU + MENU_AUDIO_IN_1]      = "Giriş 1",
-    [LABEL_MENU + MENU_AUDIO_IN_2]      = "Giriş 2",
-    [LABEL_MENU + MENU_AUDIO_IN_3]      = "Giriş 3",
-    [LABEL_MENU + MENU_AUDIO_IN_4]      = "Giriş 4",
-    [LABEL_MENU + MENU_AUDIO_IN_5]      = "Giriş 5",
-    [LABEL_MENU + MENU_AUDIO_IN_6]      = "Giriş 6",
-    [LABEL_MENU + MENU_AUDIO_IN_7]      = "Giriş 7",
+    [LABEL_MENU + MENU_AUDIO_IN_0]      = "Ses Giriş 0",
+    [LABEL_MENU + MENU_AUDIO_IN_1]      = "Ses Giriş 1",
+    [LABEL_MENU + MENU_AUDIO_IN_2]      = "Ses Giriş 2",
+    [LABEL_MENU + MENU_AUDIO_IN_3]      = "Ses Giriş 3",
+    [LABEL_MENU + MENU_AUDIO_IN_4]      = "Ses Giriş 4",
+    [LABEL_MENU + MENU_AUDIO_IN_5]      = "Ses Giriş 5",
+    [LABEL_MENU + MENU_AUDIO_IN_6]      = "Ses Giriş 6",
+    [LABEL_MENU + MENU_AUDIO_IN_7]      = "Ses Giriş 7",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner İşlemci Modeli",
     [LABEL_MENU + MENU_TUNER_BAND]      = "Bant Modeli",
@@ -94,7 +110,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass Kuvetlendirme",
     [LABEL_MENU + MENU_TUNER_VOLUME]    = "Tuner Ses Ayarı",
 
-    [LABEL_MENU + MENU_SPECTURM_MODE]   = "Ekran modu",
+    [LABEL_MENU + MENU_SPECTURM_MODE]   = "Spectrum Tipi",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Bekleme Parlaklığı",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Parlaklık",
@@ -102,6 +118,7 @@ const char *const labels_tr[LABEL_END] = {
 
     [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Enkoder Çözünürlüğü",
 
+    // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Bekleme Butonu",
     [LABEL_MENU + MENU_RC_MUTE]         = "Mute",
     [LABEL_MENU + MENU_RC_VOL_UP]       = "Volum Artı",
@@ -120,6 +137,12 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_RC_DIG_8]        = "Buton 8",
     [LABEL_MENU + MENU_RC_DIG_9]        = "Buton 9",
     [LABEL_MENU + MENU_RC_IN_NEXT]      = "Sonraki Giriş",
+    [LABEL_MENU + MENU_RC_NAV_OK]       = "Tamam",
+    [LABEL_MENU + MENU_RC_NAV_BACK]     = "Geri",
+    [LABEL_MENU + MENU_RC_NAV_RIGHT]    = "Sağ",
+    [LABEL_MENU + MENU_RC_NAV_UP]       = "Yukarı",
+    [LABEL_MENU + MENU_RC_NAV_LEFT]     = "Sol",
+    [LABEL_MENU + MENU_RC_NAV_DOWN]     = "Aşağı",
     [LABEL_MENU + MENU_RC_BASS_UP]      = "Bass Artı",
     [LABEL_MENU + MENU_RC_BASS_DOWN]    = "Bass Eksi",
     [LABEL_MENU + MENU_RC_MIDDLE_UP]    = "Orta Ses Artı",
@@ -131,6 +154,4 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_RC_EFFECT_3D]    = "3D-Efekt",
     [LABEL_MENU + MENU_RC_TONE_BYPASS]  = "Ton Baypas",
     [LABEL_MENU + MENU_RC_TIME]         = "Zaman",
-    [LABEL_MENU + MENU_RC_STBY_ENTER]   = "Bekleme Modu Enter",
-    [LABEL_MENU + MENU_RC_STBY_EXIT]    = "Bekleme Modu Çıkış",
 };
