@@ -12,7 +12,8 @@ extern "C" {
 
 #define GENERATE_RC_CMD(RC)    RC_CMD_ ## RC,
 
-typedef enum {
+typedef uint8_t RcType;
+enum {
     RC_TYPE_NONE = 0,
 
     RC_TYPE_NEC,
@@ -21,13 +22,12 @@ typedef enum {
     RC_TYPE_RC6,
 
     RC_TYPE_END
-} RcType;
+};
 
 typedef struct {
     RcType type;
     uint16_t addr;
     uint8_t cmd;
-    bool repeat;
     bool ready;
 } RcData;
 

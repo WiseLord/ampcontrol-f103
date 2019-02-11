@@ -16,6 +16,7 @@ enum {
     SW_TIM_TUNER_POLL,
     SW_TIM_INIT_HW,
     SW_TIM_RC_REPEAT,
+    SW_TIM_RC_NOACION,
 
     SW_TIM_END,
 };

@@ -172,26 +172,66 @@ static void actionGetEncoder(void)
     }
 }
 
+static bool isRemoteCmdRepeatable(RcCmd cmd)
+{
+    Screen screen = screenGet();
+
+    switch (cmd) {
+    case RC_CMD_VOL_UP:
+    case RC_CMD_VOL_DOWN:
+        return true;
+    case RC_CMD_NAV_UP:
+    case RC_CMD_NAV_DOWN:
+        switch (screen) {
+        case SCREEN_AUDIO_PARAM:
+        case SCREEN_AUDIO_INPUT:
+            return true;
+        }
+    case RC_CMD_NAV_LEFT:
+    case RC_CMD_NAV_RIGHT:
+        switch (screen) {
+        case SCREEN_TUNER:
+            return true;
+        }
+        break;
+    }
+
+    return false;
+}
+
 static void actionGetRemote(void)
 {
     RcData rcData = rcRead(true);
+    static RcCmd cmdPrev = RC_CMD_END;
 
     if (rcData.ready) {
-        RcCmd cmd = rcGetCmd(&rcData);
-        if (rcData.repeat) {
-            // Allow repeat only following commands
-            if (cmd == RC_CMD_VOL_UP ||
-                cmd == RC_CMD_VOL_DOWN) {
-                if (swTimGet(SW_TIM_RC_REPEAT) > 0)
-                    return;
-            } else {
-                return;
-            }
-        } else {
-            swTimSet(SW_TIM_RC_REPEAT, 400);  // Allow repeat after this time
-        }
+        swTimSet(SW_TIM_RC_NOACION, 200);
 
-        actionSet(ACTION_REMOTE, (int16_t)cmd);
+        RcCmd cmd = rcGetCmd(&rcData);
+        int32_t repTime = swTimGet(SW_TIM_RC_REPEAT);
+
+        if (cmd != cmdPrev) {
+            actionSet(ACTION_REMOTE, (int16_t)cmd);
+            swTimSet(SW_TIM_RC_REPEAT, 1000);
+            cmdPrev = cmd;
+        } else {
+            if (isRemoteCmdRepeatable(cmd)) {
+                if (repTime < 500) {
+                    actionSet(ACTION_REMOTE, (int16_t)cmd);
+                }
+            } else {
+                if (repTime == 0) {
+                    actionSet(ACTION_REMOTE, (int16_t)cmd);
+                    swTimSet(SW_TIM_RC_REPEAT, 1000);
+                }
+            }
+        }
+    } else {
+        if (swTimGet(SW_TIM_RC_NOACION) == 0) {
+            swTimSet(SW_TIM_RC_NOACION, SW_TIM_OFF);
+            swTimSet(SW_TIM_RC_REPEAT, 0);
+            cmdPrev = RC_CMD_END;
+        }
     }
 }
 

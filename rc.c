@@ -9,12 +9,13 @@
 
 static uint16_t rcCode[RC_CMD_END]; // Array with rc commands
 
-typedef enum {
+typedef  uint8_t NecState;
+enum {
     STATE_NEC_IDLE = 0,
     STATE_NEC_INIT,
     STATE_NEC_REPEAT,
     STATE_NEC_RECEIVE,
-} NecState;
+};
 
 typedef struct {
     union {
@@ -71,12 +72,13 @@ typedef struct {
 #define RC6_MAX(delay)              ((uint16_t)((delay) * RC6_DEV_MAX))
 #define RC6_NEAR(value, delay)      (value > RC6_MIN(delay) && value < RC6_MAX(delay))
 
-typedef enum {
+typedef uint8_t RC5State;
+enum {
     STATE_RC5_MID0 = 0,
     STATE_RC5_MID1,
     STATE_RC5_START0,
     STATE_RC5_START1,
-} RC5State;
+};
 
 static uint16_t ovfCnt;
 
@@ -95,7 +97,6 @@ static void rcDecodeNecSam (bool rc, uint16_t delay)
             } else if (NEC_NEAR(delay, NEC_REPEAT) && ovfCnt < NEC_REPEAT_LIMIT) {
                 ovfCnt = 0;
                 // Ready repeated data
-                rcData.repeat = true;
                 rcData.ready = true;
             }
         } else if (seq.state == STATE_NEC_RECEIVE) {
@@ -115,7 +116,6 @@ static void rcDecodeNecSam (bool rc, uint16_t delay)
                     ovfCnt = 0;
                     // Ready new data
                     rcData.type = seq.type;
-                    rcData.repeat = false;
                     if ((uint8_t)(~seq.haddr) == seq.laddr) {
                         rcData.addr = seq.laddr;
                     } else {
@@ -152,9 +152,6 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
     static uint16_t rc6Cmd = 0;                     // RC6 command
     static RC5State rc6State = STATE_RC5_START1;    // RC6 decoding state
 
-    static uint8_t rc6TogBitOld = 0;
-    uint8_t rc6TogBit = 0;
-
     if (rc) {
         if (RC6_NEAR(delay, RC6_2T)) {
             if (rc5State == STATE_RC5_START1) {
@@ -177,7 +174,6 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
                 if (rc6Cnt == 17) {
                     rc6State = STATE_RC5_MID0;
                     --rc6Cnt;
-                    rc6TogBit = 0;
                 }
             }
         } else if (RC6_NEAR(delay, RC6_4T)) {
@@ -204,7 +200,6 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
                 if (rc6Cnt == 17) {
                     rc6State = STATE_RC5_MID0;
                     --rc6Cnt;
-                    rc6TogBit = 0;
                 } else if (rc6Cnt == 21 || rc6Cnt == 16) {
                     rc6State = STATE_RC5_MID0;
                     if (--rc6Cnt < 16) {
@@ -236,7 +231,6 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
                 if (rc6Cnt == 17) {
                     rc6State = STATE_RC5_MID1;
                     --rc6Cnt;
-                    rc6TogBit = 1;
                 }
             }
             if (rc5State == STATE_RC5_MID1) {
@@ -267,7 +261,6 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
                 if (rc6Cnt == 17) {
                     rc6State = STATE_RC5_MID1;
                     --rc6Cnt;
-                    rc6TogBit = 1;
                 } else if (rc6Cnt == 16) {
                     rc6State = STATE_RC5_MID1;
                     rc6Cmd <<= 1;
@@ -286,7 +279,6 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
 
     if (rc5Cnt == 0 || rc6Cnt == 0) {
         if (rc5Cnt == 0) {
-            rc6TogBit = (rc5Cmd & RC5_TOGB_MASK) != 0;
             rcData.type = RC_TYPE_RC5;
             rcData.addr  = (rc5Cmd & RC5_ADDR_MASK) >> 6;
             rcData.cmd = (rc5Cmd & RC5_COMM_MASK) | (rc5Cmd & RC5_FIBT_MASK ? 0x00 : 0x40);
@@ -298,8 +290,6 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
         rc6Cnt = 22;
         rc5Cnt = 13;
         rcData.ready = true;
-        rcData.repeat = (rc6TogBit == rc6TogBitOld);
-        rc6TogBitOld = rc6TogBit;
     }
 }
 
