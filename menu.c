@@ -419,7 +419,7 @@ void menuSetActive(MenuIdx index)
         if (menu.selected) {
             menu.value = menuGetValue(menu.active);
             if (index == MENU_DISPLAY_BR_STBY || index == MENU_DISPLAY_BR_WORK) {
-                dispdrvSetBrightness(screenGetBrightness(BR_STBY));
+                dispdrvSetBrightness(screenGetBrightness(BR_STBY + index - MENU_DISPLAY_BR_STBY));
             }
         } else {
             menuStoreCurrentValue();

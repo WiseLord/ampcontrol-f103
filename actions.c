@@ -65,11 +65,9 @@ static void actionNavigateMenu(RcCmd cmd)
 
     switch (cmd) {
     case RC_CMD_NAV_OK:
-    case RC_CMD_NAV_RIGHT:
         actionSet(ACTION_MENU_SELECT, (int16_t)(menuGetFirstChild()));
         break;
     case RC_CMD_NAV_BACK:
-    case RC_CMD_NAV_LEFT:
         if (menu->selected) {
             menu->selected = false;
         } else if (menuIsTop()) {
@@ -79,9 +77,11 @@ static void actionNavigateMenu(RcCmd cmd)
             actionSet(ACTION_MENU_SELECT, (int16_t)menu->parent);
         }
         break;
+    case RC_CMD_NAV_LEFT:
     case RC_CMD_NAV_UP:
         actionSet(ACTION_MENU_CHANGE, -1);
         break;
+    case RC_CMD_NAV_RIGHT:
     case RC_CMD_NAV_DOWN:
         actionSet(ACTION_MENU_CHANGE, +1);
         break;
