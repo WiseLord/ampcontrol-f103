@@ -17,13 +17,16 @@ static DispDriver drv = {
     .drawPixel = ili9481DrawPixel,
     .drawRectangle = ili9481DrawRectangle,
     .drawImage = ili9481DrawImage,
+    .rotate = ili9481Rotate,
 };
 
 __attribute__((always_inline))
 static inline void ili9481SelectReg(uint8_t reg)
 {
+    DISP_WAIT_BUSY();
     CLR(DISP_RS);
     dispdrvSendData8(reg);
+    DISP_WAIT_BUSY();
     SET(DISP_RS);
 }
 
@@ -127,6 +130,7 @@ static inline void ili9481InitSeq(void)
     ili9481SelectReg(0x29);
     LL_mDelay(120);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -148,6 +152,7 @@ void ili9481Rotate(uint8_t rotate)
         dispdrvSendData8(0x08);
     }
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
@@ -170,6 +175,7 @@ void ili9481Wakeup(void)
     LL_mDelay(100);
     ili9481SelectReg(0x29);
 
+    DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 

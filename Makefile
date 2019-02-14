@@ -68,6 +68,8 @@ else ifeq "$(DISPLAY)" "ST7793"
   C_SOURCES += display/gc400x240/st7793.c
 else ifeq "$(DISPLAY)" "ILI9481"
   C_SOURCES += display/gc480x320/ili9481.c
+else ifeq "$(DISPLAY)" "ILI9486"
+  C_SOURCES += display/gc480x320/ili9486.c
 else ifeq "$(DISPLAY)" "R61581"
   C_SOURCES += display/gc480x320/r61581.c
 endif

@@ -307,7 +307,7 @@ void layoutInit()
     lt = lt320x240Get();
 #elif defined (_ILI9327) || defined (_ST7793)
     lt = lt400x240Get();
-#elif defined (_ILI9481) || defined (_R61581)
+#elif defined (_ILI9481) || defined (_ILI9486) || defined (_R61581)
     lt = lt480x320Get();
 #else
 #ifdef EMUL_DISP

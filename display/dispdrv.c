@@ -22,6 +22,7 @@
 #include "gc400x240/ili9327.h"
 #include "gc400x240/st7793.h"
 #include "gc480x320/ili9481.h"
+#include "gc480x320/ili9486.h"
 #include "gc480x320/r61581.h"
 
 #ifdef _DISP_8BIT
@@ -204,6 +205,8 @@ void dispdrvInit(DispDriver **driver)
     st7793Init(driver);
 #elif defined (_ILI9481)
     ili9481Init(driver);
+#elif defined (_ILI9486)
+    ili9486Init(driver);
 #elif defined (_R61581)
     r61581Init(driver);
 #else
