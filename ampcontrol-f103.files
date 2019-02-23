@@ -115,6 +115,10 @@ drivers/CMSIS/Include/cmsis_gcc.h
 drivers/CMSIS/Include/core_cm3.h
 drivers/CMSIS/Include/core_cmFunc.h
 drivers/CMSIS/Include/core_cmInstr.h
+drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
+drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h
+drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h
+drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h
 drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_adc.h
 drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_bus.h
 drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_cortex.h
@@ -137,6 +141,8 @@ drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usart.h
 drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h
 drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_utils.h
 drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_wwdg.h
+drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c
+drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_adc.c
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_crc.c
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dac.c
@@ -154,6 +160,13 @@ drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_tim.c
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c
+drivers/STM32_USB_Device_Library/Core/Inc/usbd_core.h
+drivers/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+drivers/STM32_USB_Device_Library/Core/Inc/usbd_def.h
+drivers/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
+drivers/STM32_USB_Device_Library/Core/Src/usbd_core.c
+drivers/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
+drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
 eemap.c
 eemap.h
 eemul.c
@@ -208,3 +221,13 @@ tuner/tea5767_regs.h
 tuner/tuner.c
 tuner/tuner.h
 tuner/tunerdefs.h
+usb/hidkeys.h
+usb/stm32f1xx_hal_conf.h
+usb/usbd_amp.c
+usb/usbd_amp.h
+usb/usbd_conf.c
+usb/usbd_conf.h
+usb/usbd_desc.c
+usb/usbd_desc.h
+usb/usbhid.c
+usb/usbhid.h

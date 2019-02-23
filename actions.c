@@ -16,6 +16,7 @@
 #include "swtimers.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
+#include "usb/usbhid.h"
 
 static void actionGetButtons(void);
 static void actionGetEncoder(void);
@@ -703,6 +704,12 @@ void actionHandle(bool visible)
                 tunerMove(TUNER_DIR_DOWN);
             }
             actionSetScreen(SCREEN_TUNER, 5000);
+        } else if (inType == IN_PC) {
+            if (action.value > 0) {
+                usbHidSendKey(HIDKEY_MEDIA_NEXTSONG);
+            } else {
+                usbHidSendKey(HIDKEY_MEDIA_PREVIOUSSONG);
+            }
         }
         break;
 

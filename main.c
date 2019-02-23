@@ -17,6 +17,7 @@
 #include "timers.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
+#include "usb/usbhid.h"
 
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0    ((uint32_t)0x00000007)
@@ -84,6 +85,8 @@ int main(void)
 
     eeInit();
     pinsInit();
+
+    usbHidInit();
 
     screenInit();
 

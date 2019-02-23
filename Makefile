@@ -115,7 +115,19 @@ C_SOURCES += tuner/stations.c
 C_SOURCES += tuner/tuner.c
 C_DEFS += $(addprefix -D_, $(TUNER_LIST))
 
+# USB source files
 C_SOURCES += \
+  usb/usbd_amp.c \
+  usb/usbd_conf.c \
+  usb/usbd_desc.c \
+  usb/usbhid.c
+
+C_INCLUDES += \
+  -Iusb
+
+C_SOURCES += \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
@@ -125,18 +137,24 @@ C_SOURCES += \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rtc.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_spi.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_tim.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c \
+  drivers/STM32_USB_Device_Library/Core/Src/usbd_core.c \
+  drivers/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
+  drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
   system/system_stm32f1xx.c
 
-C_INCLUDES = \
+C_INCLUDES += \
   -Idrivers/STM32F1xx_HAL_Driver/Inc \
+  -Idrivers/STM32_USB_Device_Library/Core/Inc \
   -Idrivers/CMSIS/Device/ST/STM32F1xx/Include \
-  -Idrivers/CMSIS/Include
+  -Idrivers/CMSIS/Include \
+  -Isystem
 
-AS_DEFS =
+AS_DEFS +=
 
-ASM_SOURCES = \
-system/startup_stm32f103xb.s
+ASM_SOURCES += \
+  system/startup_stm32f103xb.s
 
 # Build directory
 BUILD_DIR = build

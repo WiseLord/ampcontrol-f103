@@ -1,6 +1,6 @@
 #include "handlers.h"
 
-#include "stm32f1xx_ll_exti.h"
+#include <stm32f1xx_ll_exti.h>
 #include <stm32f1xx_ll_rtc.h>
 #include <stm32f1xx_ll_tim.h>
 
@@ -11,6 +11,7 @@
 #include "rtc.h"
 #include "spectrum.h"
 #include "swtimers.h"
+#include "usb/usbd_conf.h"
 
 void NMI_Handler(void)
 {
@@ -101,4 +102,9 @@ void EXTI9_5_IRQHandler()
         // Callback
         rcIRQ();
     }
+}
+
+void USB_LP_CAN1_RX0_IRQHandler(void)
+{
+    USBD_IRQ();
 }
