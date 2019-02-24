@@ -53,6 +53,9 @@ display/fonts/font-terminus-mod-24x2.c
 display/fonts/font-terminus-mod-24x3.c
 display/fonts/font-terminus-mod-32x2.c
 display/fonts/font-terminus-mod-32x3.c
+display/gc176x132/l2f50126.c
+display/gc176x132/l2f50126.h
+display/gc176x132/l2f50126_regs.h
 display/icons/icons.h
 display/icons/icons-amp-24.c
 display/icons/icons-amp-32.c

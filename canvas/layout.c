@@ -299,7 +299,7 @@ void layoutInit()
 {
 #if defined (_ILI9163) || defined (_ST7735)
     lt = lt160x128Get();
-#elif defined (_LS020) || defined (_LPH9157) || defined (_SSD1286A)
+#elif defined (_L2F50126) || defined (_LS020) || defined (_LPH9157) || defined (_SSD1286A)
     lt = lt176x132Get();
 #elif defined (_HX8340) || defined (_ILI9225)
     lt = lt220x176Get();

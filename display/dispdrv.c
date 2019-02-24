@@ -9,6 +9,7 @@
 
 #include "gc160x128/ili9163.h"
 #include "gc160x128/st7735.h"
+#include "gc176x132/l2f50126.h"
 #include "gc176x132/ls020.h"
 #include "gc176x132/lph9157.h"
 #include "gc176x132/ssd1286a.h"
@@ -179,6 +180,8 @@ void dispdrvInit(DispDriver **driver)
     ili9163Init(driver);
 #elif defined (_ST7735)
     st7735Init(driver);
+#elif defined (_L2F50126)
+    l2f50126Init(driver);
 #elif defined (_LS020)
     ls020Init(driver);
 #elif defined (_LPH9157)

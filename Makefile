@@ -1,7 +1,7 @@
 PROJECT = ampcontrol_f103
 
 DISPLAY = ILI9341
-DISPVAR = 8BIT
+DISPVAR = SPI
 
 TARGET = $(PROJECT)_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
 
@@ -42,6 +42,8 @@ ifeq "$(DISPLAY)" "ILI9163"
   C_SOURCES += display/gc160x128/ili9163.c
 else ifeq "$(DISPLAY)" "ST7735"
   C_SOURCES += display/gc160x128/st7735.c
+else ifeq "$(DISPLAY)" "L2F50126"
+  C_SOURCES += display/gc176x132/l2f50126.c
 else ifeq "$(DISPLAY)" "LPH9157"
   C_SOURCES += display/gc176x132/lph9157.c
 else ifeq "$(DISPLAY)" "LS020"
