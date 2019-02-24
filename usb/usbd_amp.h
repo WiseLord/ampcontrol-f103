@@ -11,6 +11,8 @@ extern "C" {
 #define AMP_EPIN_SIZE                 0x04
 
 #define USB_AMP_CONFIG_DESC_SIZ       34
+
+#define USB_AMP_DESC_OFT              18
 #define USB_AMP_DESC_SIZ              9
 
 #define AMP_DESCRIPTOR_TYPE           0x21

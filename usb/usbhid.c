@@ -30,13 +30,13 @@ static uint8_t usbHidReportDescFS[USBD_AMP_REPORT_DESC_SIZE] __ALIGN_END = {
     0x15, 0x00,                 //      Logical Minimum (0)
     0x25, 0x01,                 //      Logical Maximum (1)
     0x81, 0x02,                 //      Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0x95, 0x06,                 //      Report Count (6)
+    0x95, KBD_KEYS,             //      Report Count (KBD_KEYS)
     0x75, 0x08,                 //      Report Size (8)
     0x15, 0x00,                 //      Logical Minimum (0)
-    0x25, 0xff,                 //      Logical Maximum (127)
+    0x25, 0xff,                 //      Logical Maximum (255)
     0x05, 0x07,                 //      Usage Page (Kbrd/Keypad)
-    0x19, 0x00,                 //      Usage Minimum (0x00)
-    0x29, 0xff,                 //      Usage Maximum (0xff)
+    0x19, 0x00,                 //      Usage Minimum (0)
+    0x29, 0xff,                 //      Usage Maximum (255)
     0x81, 0x00,                 //      Input (Data,Array,Abs,No Wrap,Linear,Preferred State,No Null Position)
     0xC0,                       //  End Collection
 };
@@ -82,12 +82,10 @@ void usbHidInit(void)
 {
     keyboardHID.id = REPORT_ID_KEYBOARD;
     keyboardHID.modifiers = 0;
-    keyboardHID.key[0] = 0;
-    keyboardHID.key[1] = 0;
-    keyboardHID.key[2] = 0;
-    keyboardHID.key[3] = 0;
-    keyboardHID.key[4] = 0;
-    keyboardHID.key[5] = 0;
+
+    for (uint8_t i = 0; i < KBD_KEYS; i++) {
+        keyboardHID.key[i] = 0;
+    }
 
     USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
     USBD_RegisterClass(&hUsbDeviceFS, &USBD_AMP);

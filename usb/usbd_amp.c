@@ -43,24 +43,24 @@ static uint8_t USBD_AMP_CfgDesc[USB_AMP_CONFIG_DESC_SIZ] __ALIGN_END = {
     USB_DESC_TYPE_INTERFACE,        // bDescriptorType: Interface descriptor type
     0x00,                           // bInterfaceNumber: Number of Interface
     0x00,                           // bAlternateSetting: Alternate setting
-    0x02,                           // bNumEndpoints
-    0x03,                           // bInterfaceClass: AMP
+    0x01,                           // bNumEndpoints
+    0x03,                           // bInterfaceClass: HID
     0x00,                           // bInterfaceSubClass : 1=BOOT, 0=no boot
-    0x01,                           // nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse
-    0,                              // iInterface: Index of string descriptor
-    // 18
+    0x00,                           // nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse
+    0x00,                           // iInterface: Index of string descriptor
+    // 18 = USB_AMP_DESC_OFT
     0x09,                           // bLength: AMP Descriptor size
     AMP_DESCRIPTOR_TYPE,            // bDescriptorType: AMP
-    0x11,                           // bAMP_HID: AMP Class Spec release number
+    0x11,                           // bAMP_HID: HID Class Spec release number (1.11)
     0x01,
     0x00,                           // bCountryCode: Hardware target country
-    0x01,                           // bNumDescriptors: Number of AMP class descriptors to follow
-    0x22,                           // bDescriptorType
+    0x01,                           // bNumDescriptors: Number of HID class descriptors to follow
+    AMP_REPORT_DESC,                // bDescriptorType: Report
     USBD_AMP_REPORT_DESC_SIZE,      // wItemLength: Total length of Report descriptor
     0x00,
     // 27
     0x07,                           // bLength: Endpoint Descriptor size
-    USB_DESC_TYPE_ENDPOINT,         // bDescriptorType:
+    USB_DESC_TYPE_ENDPOINT,         // bDescriptorType: Endpoint
     AMP_EPIN_ADDR,                  // bEndpointAddress: Endpoint Address (IN)
     0x03,                           // bmAttributes: Interrupt endpoint
     AMP_EPIN_SIZE,                  // wMaxPacketSize: 4 Byte max
@@ -68,19 +68,6 @@ static uint8_t USBD_AMP_CfgDesc[USB_AMP_CONFIG_DESC_SIZ] __ALIGN_END = {
     0x0A,                           // bInterval: Polling Interval (10 ms)
     // 34
 } ;
-
-// USB AMP device Configuration Descriptor
-static uint8_t USBD_AMP_Desc[USB_AMP_DESC_SIZ] __ALIGN_END = {
-    0x09,                           // bLength: AMP Descriptor size
-    AMP_DESCRIPTOR_TYPE,            // bDescriptorType: AMP
-    0x11,                           // bAMPUSTOM_HID: AMP Class Spec release number
-    0x01,
-    0x00,                           // bCountryCode: Hardware target country
-    0x01,                           // bNumDescriptors: Number of AMP class descriptors to follow
-    0x22,                           // bDescriptorType
-    USBD_AMP_REPORT_DESC_SIZE,      // wItemLength: Total length of Report descriptor
-    0x00,
-};
 
 // USB Standard Device Descriptor
 static uint8_t USBD_AMP_DeviceQualifierDesc[USB_LEN_DEV_QUALIFIER_DESC] __ALIGN_END = {
@@ -189,7 +176,7 @@ static uint8_t USBD_AMP_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *re
                 len = MIN(USBD_AMP_REPORT_DESC_SIZE, req->wLength);
                 pbuf =  ((USBD_AMP_ItfTypeDef *)pdev->pUserData)->pReport;
             } else if ( req->wValue >> 8 == AMP_DESCRIPTOR_TYPE) {
-                pbuf = USBD_AMP_Desc;
+                pbuf = USBD_AMP_CfgDesc + USB_AMP_DESC_OFT;
                 len = MIN(USB_AMP_DESC_SIZ, req->wLength);
             }
 

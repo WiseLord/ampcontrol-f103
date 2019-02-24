@@ -8,10 +8,12 @@ extern "C" {
 #include <stdint.h>
 #include "hidkeys.h"
 
+#define KBD_KEYS     2
+
 typedef struct {
     uint8_t id;
     uint8_t modifiers;
-    uint8_t key[6];
+    uint8_t key[KBD_KEYS];
 } HidKeyboard;
 
 void usbHidInit(void);
