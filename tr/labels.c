@@ -161,6 +161,11 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_RC_EFFECT_3D]    = "3D-effect",
     [LABEL_MENU + MENU_RC_TONE_BYPASS]  = "Bypass tone",
     [LABEL_MENU + MENU_RC_TIME]         = "Time",
+    [LABEL_MENU + MENU_RC_STOP]         = "Stop",
+    [LABEL_MENU + MENU_RC_PLAY]         = "Play",
+    [LABEL_MENU + MENU_RC_PAUSE]        = "Pause",
+    [LABEL_MENU + MENU_RC_REW]          = "Rewind",
+    [LABEL_MENU + MENU_RC_FWD]          = "Flash forward",
 };
 
 void labelsSetLang(Lang value)

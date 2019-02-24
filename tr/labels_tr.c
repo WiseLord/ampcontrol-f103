@@ -154,4 +154,9 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_RC_EFFECT_3D]    = "3D-Efekt",
     [LABEL_MENU + MENU_RC_TONE_BYPASS]  = "Ton Baypas",
     [LABEL_MENU + MENU_RC_TIME]         = "Zaman",
+//    [LABEL_MENU + MENU_RC_STOP]         = "Stop",
+//    [LABEL_MENU + MENU_RC_PLAY]         = "Play",
+//    [LABEL_MENU + MENU_RC_PAUSE]        = "Pause",
+//    [LABEL_MENU + MENU_RC_REW]          = "Rewind",
+//    [LABEL_MENU + MENU_RC_FWD]          = "Flash forward",
 };

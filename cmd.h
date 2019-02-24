@@ -41,6 +41,11 @@ extern "C" {
     CMD(EFFECT_3D)          \
     CMD(TONE_BYPASS)        \
     CMD(TIME)               \
+    CMD(STOP)               \
+    CMD(PLAY)               \
+    CMD(PAUSE)              \
+    CMD(REW)                \
+    CMD(FWD)                \
 
 #ifdef __cplusplus
 }

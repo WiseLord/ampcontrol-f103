@@ -123,16 +123,16 @@ static void actionNavigateCommon(RcCmd cmd)
         actionSet(ACTION_DISP_EXPIRED, 0);
         break;
     case RC_CMD_NAV_RIGHT:
-        actionSet(ACTION_SEEK, +1);
+        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_FORWARD);
         break;
     case RC_CMD_NAV_LEFT:
-        actionSet(ACTION_SEEK, -1);
+        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_BACK);
         break;
     case RC_CMD_NAV_UP:
-        actionSet(ACTION_ENCODER, +1);
+        actionSet(ACTION_CHAN, +1);
         break;
     case RC_CMD_NAV_DOWN:
-        actionSet(ACTION_ENCODER, -1);
+        actionSet(ACTION_CHAN, -1);
         break;
     }
 }
@@ -370,10 +370,10 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_CHAN_NEXT:
-        actionSet(ACTION_SEEK, +1);
+        actionSet(ACTION_CHAN, +1);
         break;
     case RC_CMD_CHAN_PREV:
-        actionSet(ACTION_SEEK, -1);
+        actionSet(ACTION_CHAN, -1);
         break;
 
     case RC_CMD_DIG_0:
@@ -448,6 +448,22 @@ static void actionRemapRemote(void)
 
     case RC_CMD_TIME:
         action.type = ACTION_RTC_MODE;
+        break;
+
+    case RC_CMD_STOP:
+        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_STOPCD);
+        break;
+    case RC_CMD_PLAY:
+        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_PLAYPAUSE);
+        break;
+    case RC_CMD_PAUSE:
+        actionSet(ACTION_MEDIA, HIDKEY_PAUSE);
+        break;
+    case RC_CMD_REW:
+        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_BACK);
+        break;
+    case RC_CMD_FWD:
+        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_FORWARD);
         break;
     default:
         break;
@@ -696,20 +712,28 @@ void actionHandle(bool visible)
         }
         break;
 
-    case ACTION_SEEK:
-        if (inType == IN_TUNER) {
+    case ACTION_MEDIA:
+        switch (inType) {
+        case IN_PC:
+            usbHidSendKey((HidKey)action.value);
+            break;
+        }
+        break;
+    case ACTION_CHAN:
+        switch (inType) {
+        case IN_TUNER:
             if (action.value > 0) {
                 tunerMove(TUNER_DIR_UP);
-            } else {
+            } else if (action.value < 0) {
                 tunerMove(TUNER_DIR_DOWN);
-            }
-            actionSetScreen(SCREEN_TUNER, 5000);
-        } else if (inType == IN_PC) {
+            } break;
+        case IN_PC:
             if (action.value > 0) {
                 usbHidSendKey(HIDKEY_MEDIA_NEXTSONG);
-            } else {
+            } else if (action.value < 0) {
                 usbHidSendKey(HIDKEY_MEDIA_PREVIOUSSONG);
             }
+            break;
         }
         break;
 

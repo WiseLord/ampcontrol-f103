@@ -154,4 +154,9 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_RC_EFFECT_3D]    = "3D эфект",
     [LABEL_MENU + MENU_RC_TONE_BYPASS]  = "Вымкнуць тон",
     [LABEL_MENU + MENU_RC_TIME]         = "Час",
+    [LABEL_MENU + MENU_RC_STOP]         = "Спыніць",
+    [LABEL_MENU + MENU_RC_PLAY]         = "Прайграць",
+    [LABEL_MENU + MENU_RC_PAUSE]        = "Пауза",
+    [LABEL_MENU + MENU_RC_REW]          = "Крок назад",
+    [LABEL_MENU + MENU_RC_FWD]          = "Крок наперад",
 };
