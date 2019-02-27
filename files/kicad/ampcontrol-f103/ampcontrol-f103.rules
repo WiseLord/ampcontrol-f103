@@ -11,12 +11,12 @@
     (via_costs 50)
     (plane_via_costs 5)
     (start_ripup_costs 100)
-    (start_pass_no 285)
+    (start_pass_no 14202)
     (layer_rule F.Cu
       (active on)
       (preferred_direction horizontal)
       (preferred_direction_trace_costs 1.0)
-      (against_preferred_direction_trace_costs 2.8)
+      (against_preferred_direction_trace_costs 2.6)
     )
     (layer_rule B.Cu
       (active on)
@@ -40,11 +40,26 @@
     )
     (attach off)
   )
+  (padstack "Via[0-1]_4800:3200_um"
+    (shape
+      (circle F.Cu 4800.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 4800.0 0.0 0.0)
+    )
+    (attach off)
+  )
   (via 
     "Via[0-1]_800:400_um" "Via[0-1]_800:400_um" default
   )
   (via 
+    "Via[0-1]_4800:3200_um" "Via[0-1]_4800:3200_um" default
+  )
+  (via 
     "Via[0-1]_800:400_um-kicad_default" "Via[0-1]_800:400_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_4800:3200_um-kicad_default" "Via[0-1]_4800:3200_um" "kicad_default"
   )
   (via_rule
     default "Via[0-1]_800:400_um"
