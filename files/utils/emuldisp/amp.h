@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QSet>
 
 #define ORGANIZATION_NAME           "WiseLord"
 #define ORGANIZATION_DOMAIN         "github.io"
@@ -48,6 +49,9 @@ private slots:
     void on_btn5_released();
     void on_dial_valueChanged(int value);
     void on_dial_sliderMoved(int position);
-};
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent*);};
 
 #endif // AMP_H

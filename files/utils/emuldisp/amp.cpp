@@ -224,3 +224,69 @@ void Amp::on_dial_sliderMoved(int position)
 {
     dialChanged(position);
 }
+
+void Amp::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_1:
+        this->btn0->setDown(true);
+        on_btn0_pressed();
+        break;
+    case Qt::Key_2:
+        this->btn1->setDown(true);
+        on_btn1_pressed();
+        break;
+    case Qt::Key_3:
+        this->btn2->setDown(true);
+        on_btn2_pressed();
+        break;
+    case Qt::Key_4:
+        this->btn3->setDown(true);
+        on_btn3_pressed();
+        break;
+    case Qt::Key_5:
+        this->btn4->setDown(true);
+        on_btn4_pressed();
+        break;
+    case Qt::Key_6:
+        this->btn5->setDown(true);
+        on_btn5_pressed();
+        break;
+    default:
+        break;
+    }
+    QWidget::keyPressEvent(event);
+}
+
+void Amp::keyReleaseEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_1:
+        this->btn0->setDown(false);
+        on_btn0_released();
+        break;
+    case Qt::Key_2:
+        this->btn1->setDown(false);
+        on_btn1_released();
+        break;
+    case Qt::Key_3:
+        this->btn2->setDown(false);
+        on_btn2_released();
+        break;
+    case Qt::Key_4:
+        this->btn3->setDown(false);
+        on_btn3_released();
+        break;
+    case Qt::Key_5:
+        this->btn4->setDown(false);
+        on_btn4_released();
+        break;
+    case Qt::Key_6:
+        this->btn5->setDown(false);
+        on_btn5_released();
+        break;
+    default:
+        break;
+    }
+    QWidget::keyPressEvent(event);
+}

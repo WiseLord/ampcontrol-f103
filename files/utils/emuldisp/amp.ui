@@ -43,9 +43,6 @@
         <property name="text">
          <string>Stby</string>
         </property>
-        <property name="shortcut">
-         <string>1</string>
-        </property>
        </widget>
       </item>
       <item>
@@ -67,9 +64,6 @@
         </property>
         <property name="text">
          <string>In</string>
-        </property>
-        <property name="shortcut">
-         <string>2</string>
         </property>
        </widget>
       </item>
@@ -93,9 +87,6 @@
         <property name="text">
          <string>Back</string>
         </property>
-        <property name="shortcut">
-         <string>3</string>
-        </property>
        </widget>
       </item>
       <item>
@@ -117,9 +108,6 @@
         </property>
         <property name="text">
          <string>&lt;&lt;</string>
-        </property>
-        <property name="shortcut">
-         <string>4</string>
         </property>
        </widget>
       </item>
@@ -143,9 +131,6 @@
         <property name="text">
          <string>&gt;&gt;</string>
         </property>
-        <property name="shortcut">
-         <string>5</string>
-        </property>
        </widget>
       </item>
       <item>
@@ -167,9 +152,6 @@
         </property>
         <property name="text">
          <string>...</string>
-        </property>
-        <property name="shortcut">
-         <string>6</string>
         </property>
        </widget>
       </item>
