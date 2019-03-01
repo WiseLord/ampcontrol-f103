@@ -7,6 +7,7 @@
 #include "../../../tuner/tunerdefs.h"
 #include "../../../eemap.h"
 #include "../../../spectrum.h"
+#include "../../../usb/usbhid.h"
 
 static Spectrum spectrum;
 static RcData rcData;
@@ -46,11 +47,16 @@ void *eeGetPageAddr(uint16_t page)
 
 void eeErasePages(uint16_t page, uint16_t count)
 {
+    (void)count;
+    (void)page;
+
     memset(st, 0, sizeof(st));
 }
 
 void eeWritePage(uint16_t page, void *addr, uint16_t bytes)
 {
+    (void)page;
+
     memcpy(st, addr, bytes);
 }
 
@@ -116,4 +122,9 @@ void spGetADC(uint8_t *dataL, uint8_t *dataR)
         dataL[i] = rand() & 0xFF;
         dataR[i] = rand() & 0xFF;
     }
+}
+
+void usbHidSendKey(HidKey key)
+{
+    (void)key;
 }

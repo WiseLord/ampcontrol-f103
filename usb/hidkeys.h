@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 typedef uint8_t HidKey;
 enum {
     // key codes

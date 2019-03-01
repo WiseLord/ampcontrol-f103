@@ -188,6 +188,7 @@ static bool isRemoteCmdRepeatable(RcCmd cmd)
         case SCREEN_AUDIO_INPUT:
             return true;
         }
+        break;
     case RC_CMD_NAV_LEFT:
     case RC_CMD_NAV_RIGHT:
         switch (screen) {

@@ -104,6 +104,8 @@ HEADERS += \
     ../../../screen.h \
     ../../../spectrum.h \
     ../../../swtimers.h \
+    ../../../usb/usbhid.h \
+    ../../../usb/hidkeys.h
 
 
 FORMS += \
