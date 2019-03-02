@@ -12,6 +12,7 @@ static DispDriver drv = {
     .drawPixel = st7793DrawPixel,
     .drawRectangle = st7793DrawRectangle,
     .drawImage = st7793DrawImage,
+    .rotate = st7793Rotate,
 };
 
 __attribute__((always_inline))
@@ -33,15 +34,15 @@ __attribute__((always_inline))
 static inline void st7793SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
     int16_t x1 = x + w - 1;
-    int16_t y1 = drv.height - y - 1;   // TODO: Rework it
+    int16_t y1 = y + h - 1;
 
-    st7793WriteReg(0x0210, (uint16_t)(y1 - h + 1));
+    st7793WriteReg(0x0210, (uint16_t)y);
     st7793WriteReg(0x0211, (uint16_t)y1);
     st7793WriteReg(0x0212, (uint16_t)x);
     st7793WriteReg(0x0213, (uint16_t)x1);
 
     // Set cursor
-    st7793WriteReg(0x00200, (uint16_t)y1);
+    st7793WriteReg(0x00200, (uint16_t)y);
     st7793WriteReg(0x00201, (uint16_t)x);
 
     // Select RAM mode
@@ -55,10 +56,10 @@ static inline void st7793InitSeq(void)
     //-------------Display Control Setting-------------------------------------//
 
     st7793WriteReg(0x0001, 0x0100);
-    st7793WriteReg(0x0003, 0x1020);
+    st7793WriteReg(0x0003, 0x1030);
     st7793WriteReg(0x0008, 0x0808);
     st7793WriteReg(0x0090, 0x8000);
-    st7793WriteReg(0x0400, 0x6200);
+    st7793WriteReg(0x0400, 0xE200);
     st7793WriteReg(0x0401, 0x0001);
 
     //-------------End Display Control setting---------------------------------//
@@ -115,6 +116,21 @@ void st7793Init(DispDriver **driver)
 {
     *driver = &drv;
     st7793InitSeq();
+}
+
+void st7793Rotate(uint8_t rotate)
+{
+    CLR(DISP_CS);
+
+    if (rotate) {
+        st7793WriteReg(0x0001, 0x0000);
+        st7793WriteReg(0x0400, 0x6200);
+    } else {
+        st7793WriteReg(0x0001, 0x0100);
+        st7793WriteReg(0x0400, 0xE200);
+    }
+
+    SET(DISP_CS);
 }
 
 void st7793Sleep(void)
