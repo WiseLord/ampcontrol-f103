@@ -12,6 +12,7 @@ static DispDriver drv = {
     .drawPixel = s6d0139DrawPixel,
     .drawRectangle = s6d0139DrawRectangle,
     .drawImage = s6d0139DrawImage,
+    .rotate = s6d0139Rotate,
 };
 
 __attribute__((always_inline))
@@ -33,13 +34,13 @@ __attribute__((always_inline))
 static inline void s6d0139SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
     int16_t x1 = x + w - 1;
-    int16_t y1 = drv.height - y - 1;   // TODO: Rework it
+    int16_t y1 = y + h - 1;
 
-    s6d0139WriteReg(0x0046, (uint16_t)((y1 << 8) + (y1 - h + 1)));
+    s6d0139WriteReg(0x0046, (uint16_t)(y | (y1 << 8)));
     s6d0139WriteReg(0x0048, (uint16_t)x);
     s6d0139WriteReg(0x0047, (uint16_t)x1);
 
-    s6d0139WriteReg(0x0020, (uint16_t)y1);
+    s6d0139WriteReg(0x0020, (uint16_t)y);
     s6d0139WriteReg(0x0021, (uint16_t)x);
 
     s6d0139SelectReg(0x0022);
@@ -63,9 +64,9 @@ static inline void s6d0139InitSeq(void)
     s6d0139WriteReg(0x0013, 0x0070);    // Power control4 setting
     LL_mDelay(40);
 
-    s6d0139WriteReg(0x0001, 0x0127);    // Driver output setting (240x320 mode, GS=0, SS=1)
+    s6d0139WriteReg(0x0001, 0x0327);    // Driver output setting (240x320 mode, GS=1, SS=1)
     s6d0139WriteReg(0x0002, 0x0700);    // LCD driving waveform setting
-    s6d0139WriteReg(0x0003, 0x1020);    // Entry mode setting (TRI=0, DFM=0, BGR=1, ID1:ID0 =11)
+    s6d0139WriteReg(0x0003, 0x1030);    // Entry mode setting (TRI=0, DFM=0, BGR=1, ID1:ID0 =11)
     s6d0139WriteReg(0x0007, 0x0000);    // Display control1
     s6d0139WriteReg(0x0008, 0x0202);    // Display control2
     s6d0139WriteReg(0x000B, 0x0200);    // Frame cycle setting
@@ -104,6 +105,19 @@ void s6d0139Init(DispDriver **driver)
 {
     *driver = &drv;
     s6d0139InitSeq();
+}
+
+void s6d0139Rotate(uint8_t rotate)
+{
+    CLR(DISP_CS);
+
+    if (rotate & LCD_ROTATE_180) {
+        s6d0139WriteReg(0x0001, 0x0027);
+    } else {
+        s6d0139WriteReg(0x0001, 0x0327);
+    }
+
+    SET(DISP_CS);
 }
 
 void s6d0139Sleep(void)

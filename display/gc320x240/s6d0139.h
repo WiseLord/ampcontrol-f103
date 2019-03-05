@@ -9,6 +9,7 @@ extern "C" {
 #include "../dispdefs.h"
 
 void s6d0139Init(DispDriver **driver);
+void s6d0139Rotate(uint8_t rotate);
 
 void s6d0139Sleep(void);
 void s6d0139Wakeup(void);
