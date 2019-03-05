@@ -1,7 +1,7 @@
 (export (version D)
   (design
-    (source /home/STM32/Projects/ampcontrol-f103/files/kicad/ampcontrol-f103/ampcontrol-f103.sch)
-    (date "Ср 27 фев 2019 22:14:44")
+    (source /home/STM32/Projects/ampcontrol-f103/kicad/ampcontrol-f103/ampcontrol-f103.sch)
+    (date "Вт 05 мар 2019 16:25:27")
     (tool "Eeschema 5.0.1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block

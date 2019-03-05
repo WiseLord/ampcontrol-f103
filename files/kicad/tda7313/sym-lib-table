@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name ampcontrol-f103)(type Legacy)(uri ${KIPRJMOD}/../ampcontrol-f103.lib)(options "")(descr ""))
-)
