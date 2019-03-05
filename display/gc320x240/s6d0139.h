@@ -22,8 +22,4 @@ void s6d0139DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
 }
 #endif
 
-#ifdef __cplusplus
-}
-#endif
-
 #endif // S6D0139_H

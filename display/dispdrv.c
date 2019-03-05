@@ -17,6 +17,7 @@
 #include "gc220x176/ili9225.h"
 #include "gc320x240/ili9320.h"
 #include "gc320x240/ili9341.h"
+#include "gc320x240/s6d0129.h"
 #include "gc320x240/s6d0139.h"
 #include "gc320x240/spfd5408.h"
 #include "gc320x240/mc2pa8201.h"
@@ -196,6 +197,8 @@ void dispdrvInit(DispDriver **driver)
     ili9320Init(driver);
 #elif defined (_ILI9341)
     ili9341Init(driver);
+#elif defined (_S6D0129)
+    s6d0129Init(driver);
 #elif defined (_S6D0139)
     s6d0139Init(driver);
 #elif defined (_SPFD5408)

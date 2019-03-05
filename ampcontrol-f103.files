@@ -93,6 +93,8 @@ display/gc320x240/ili9341.h
 display/gc320x240/ili9341_regs.h
 display/gc320x240/mc2pa8201.c
 display/gc320x240/mc2pa8201.h
+display/gc320x240/s6d0129.c
+display/gc320x240/s6d0129.h
 display/gc320x240/s6d0139.c
 display/gc320x240/s6d0139.h
 display/gc320x240/spfd5408.c
