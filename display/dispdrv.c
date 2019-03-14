@@ -15,6 +15,7 @@
 #include "gc176x132/ssd1286a.h"
 #include "gc220x176/hx8340.h"
 #include "gc220x176/ili9225.h"
+#include "gc320x240/hx8347.h"
 #include "gc320x240/ili9320.h"
 #include "gc320x240/ili9341.h"
 #include "gc320x240/s6d0129.h"
@@ -193,6 +194,8 @@ void dispdrvInit(DispDriver **driver)
     hx8340Init(driver);
 #elif defined (_ILI9225)
     ili9225Init(driver);
+#elif defined (_HX8347)
+    hx8347Init(driver);
 #elif defined (_ILI9320)
     ili9320Init(driver);
 #elif defined (_ILI9341)

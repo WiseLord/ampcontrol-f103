@@ -32,6 +32,7 @@ compile_display "HX8340"    "8BIT"
 compile_display "ILI9225"   "8BIT SPI"
 
 # 320x240 color displays
+compile_display "HX8347"    "8BIT"
 compile_display "ILI9320"   "8BIT"
 compile_display "ILI9341"   "8BIT SPI"
 compile_display "MC2PA8201" "8BIT"

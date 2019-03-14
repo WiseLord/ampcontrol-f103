@@ -86,6 +86,8 @@ display/gc220x176/hx8340.h
 display/gc220x176/ili9225.c
 display/gc220x176/ili9225.h
 
+display/gc320x240/hx8347.c
+display/gc320x240/hx8347.h
 display/gc320x240/ili9320.c
 display/gc320x240/ili9320.h
 display/gc320x240/ili9341.c
