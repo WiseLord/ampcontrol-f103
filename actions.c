@@ -66,9 +66,11 @@ static void actionNavigateMenu(RcCmd cmd)
 
     switch (cmd) {
     case RC_CMD_NAV_OK:
+    case RC_CMD_NAV_RIGHT:
         actionSet(ACTION_MENU_SELECT, (int16_t)(menuGetFirstChild()));
         break;
     case RC_CMD_NAV_BACK:
+    case RC_CMD_NAV_LEFT:
         if (menu->selected) {
             menu->selected = false;
         } else if (menuIsTop()) {
@@ -78,12 +80,12 @@ static void actionNavigateMenu(RcCmd cmd)
             actionSet(ACTION_MENU_SELECT, (int16_t)menu->parent);
         }
         break;
-    case RC_CMD_NAV_LEFT:
     case RC_CMD_NAV_UP:
+    case RC_CMD_CHAN_PREV:
         actionSet(ACTION_MENU_CHANGE, -1);
         break;
-    case RC_CMD_NAV_RIGHT:
     case RC_CMD_NAV_DOWN:
+    case RC_CMD_CHAN_NEXT:
         actionSet(ACTION_MENU_CHANGE, +1);
         break;
     }
@@ -93,7 +95,7 @@ static void actionNavigateTextEdit(RcCmd cmd)
 {
     switch (cmd) {
     case RC_CMD_NAV_OK:
-        action.type = ACTION_TEXTEDIT_ADD_CHAR;
+        action.type = ACTION_TEXTEDIT_APPLY;
         break;
     case RC_CMD_NAV_BACK:
         action.type = ACTION_TEXTEDIT_CANCEL;
@@ -129,9 +131,11 @@ static void actionNavigateCommon(RcCmd cmd)
         actionSet(ACTION_MEDIA, HIDKEY_MEDIA_BACK);
         break;
     case RC_CMD_NAV_UP:
+    case RC_CMD_CHAN_NEXT:
         actionSet(ACTION_CHAN, +1);
         break;
     case RC_CMD_NAV_DOWN:
+    case RC_CMD_CHAN_PREV:
         actionSet(ACTION_CHAN, -1);
         break;
     }
@@ -259,10 +263,10 @@ static void actionRemapBtnShort(void)
         actionSet(ACTION_NAVIGATE, RC_CMD_NAV_BACK);
         break;
     case BTN_D3:
-        actionSet(ACTION_NAVIGATE, RC_CMD_NAV_LEFT);
+        actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_PREV);
         break;
     case BTN_D4:
-        actionSet(ACTION_NAVIGATE, RC_CMD_NAV_RIGHT);
+        actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_NEXT);
         break;
     case BTN_D5:
         actionSet(ACTION_NAVIGATE, RC_CMD_NAV_OK);
@@ -303,10 +307,10 @@ static void actionRemapBtnLong(void)
         }
         break;
     case BTN_D3:
-        actionSet(ACTION_NAVIGATE, RC_CMD_NAV_LEFT);
+        actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_PREV);
         break;
     case BTN_D4:
-        actionSet(ACTION_NAVIGATE, RC_CMD_NAV_RIGHT);
+        actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_NEXT);
         break;
     case BTN_D5:
         switch (screen) {
@@ -727,7 +731,9 @@ void actionHandle(bool visible)
                 tunerMove(TUNER_DIR_UP);
             } else if (action.value < 0) {
                 tunerMove(TUNER_DIR_DOWN);
-            } break;
+            }
+            actionSetScreen(SCREEN_TUNER, 5000);
+            break;
         case IN_PC:
             if (action.value > 0) {
                 usbHidSendKey(HIDKEY_MEDIA_NEXTSONG);
