@@ -487,9 +487,9 @@ static void actionRemapNavigate(void)
         actionNavigateTextEdit((RcCmd)action.value);
         break;
     case SCREEN_TIME:
-        if (action.value == RC_CMD_NAV_LEFT) {
+        if (action.value == RC_CMD_NAV_LEFT || action.value == RC_CMD_CHAN_PREV) {
             actionSet(ACTION_RTC_MODE, -1);
-        } else if (action.value == RC_CMD_NAV_RIGHT) {
+        } else if (action.value == RC_CMD_NAV_RIGHT || action.value == RC_CMD_CHAN_NEXT) {
             actionSet(ACTION_RTC_MODE, +1);
         }
         break;
