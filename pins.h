@@ -127,4 +127,7 @@ void pinsSetStby(bool value);
 }
 #endif
 
+// USART used for debugging
+#define USART_DBG               USART1
+
 #endif // PINS_H

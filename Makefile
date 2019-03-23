@@ -26,6 +26,7 @@ C_SOURCES += screen.c
 C_SOURCES += spectrum.c
 C_SOURCES += swtimers.c
 C_SOURCES += timers.c
+C_SOURCES += usart.c
 C_SOURCES += tr/labels.c
 C_SOURCES += tr/labels_by.c
 C_SOURCES += tr/labels_ru.c
@@ -145,6 +146,7 @@ C_SOURCES += \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rtc.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_spi.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_tim.c \
+  drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c \
   drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c \
   drivers/STM32_USB_Device_Library/Core/Src/usbd_core.c \
