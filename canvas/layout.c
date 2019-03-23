@@ -301,7 +301,7 @@ void layoutInit()
     lt = lt160x128Get();
 #elif defined (_L2F50126) || defined (_LS020) || defined (_LPH9157) || defined (_SSD1286A)
     lt = lt176x132Get();
-#elif defined (_HX8340) || defined (_ILI9225)
+#elif defined (_HX8340) || defined (_ILI9225) || defined (_LGDP4524)
     lt = lt220x176Get();
 #elif defined (_HX8347) || defined (_ILI9320) || defined (_ILI9341) || defined (_S6D0129) || defined (_S6D0139) || defined (_SPFD5408) || defined (_MC2PA8201)
     lt = lt320x240Get();

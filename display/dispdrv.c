@@ -15,6 +15,7 @@
 #include "gc176x132/ssd1286a.h"
 #include "gc220x176/hx8340.h"
 #include "gc220x176/ili9225.h"
+#include "gc220x176/lgdp4524.h"
 #include "gc320x240/hx8347.h"
 #include "gc320x240/ili9320.h"
 #include "gc320x240/ili9341.h"
@@ -78,7 +79,7 @@ static inline void dispdrvSendByte(uint8_t data)
 #endif
 }
 
-#ifdef _DISP_8BIT
+#if defined(_DISP_8BIT) || defined(_DISP_16BIT)
 
 __attribute__((always_inline))
 static inline void dispdrvBusIn(void)
@@ -194,6 +195,8 @@ void dispdrvInit(DispDriver **driver)
     hx8340Init(driver);
 #elif defined (_ILI9225)
     ili9225Init(driver);
+#elif defined (_LGDP4524)
+    lgdp4524Init(driver);
 #elif defined (_HX8347)
     hx8347Init(driver);
 #elif defined (_ILI9320)

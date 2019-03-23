@@ -30,6 +30,7 @@ compile_display "SSD1286A"  "SPI"
 # 220x176 color displays
 compile_display "HX8340"    "8BIT"
 compile_display "ILI9225"   "8BIT SPI"
+compile_display "LGDP4524"  "8BIT"
 
 # 320x240 color displays
 compile_display "HX8347"    "8BIT"

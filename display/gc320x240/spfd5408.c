@@ -109,7 +109,7 @@ static inline void spfd5408InitSeq(void)
     spfd5408WriteReg(0x0052, 0x0000);   // Vertical GRAM Start Address
     spfd5408WriteReg(0x0053, 0x013F);   // Vertical GRAM End Address
 
-    spfd5408WriteReg(0x0060, 0x2700);   // Gate scan line
+    spfd5408WriteReg(0x0060, 0xA700);   // Gate scan line
     spfd5408WriteReg(0x0061, 0x0003);   // NDV, VLE, REV
     spfd5408WriteReg(0x006A, 0x0000);   // Set scrolling line
 
