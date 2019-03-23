@@ -348,7 +348,9 @@ uint16_t dispdrvReadData16(void)
 {
     uint16_t ret = 0;
 
+#ifdef _DISP_8BIT
     dispdrvBusIn();
+#endif
 
 #if defined(_DISP_16BIT)
     CLR(DISP_RD);
@@ -362,7 +364,9 @@ uint16_t dispdrvReadData16(void)
     ret |= dispdrvReadByte();
 #endif
 
+#ifdef _DISP_8BIT
     dispdrvBusOut();
+#endif
 
     return ret;
 }
