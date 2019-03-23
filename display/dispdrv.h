@@ -14,7 +14,9 @@ extern "C" {
 #define DISP_WAIT_BUSY();
 #endif
 
+void dispdrvReset(void);
 void dispdrvInit(DispDriver **glcd);
+
 void dispdrvPwm(void);
 void dispdrvSetBrightness(int8_t value);
 uint8_t dispdrvGetBus(void);
@@ -25,6 +27,11 @@ void dispdrvSendData8(uint8_t data);
 void dispdrvSendData16(uint16_t data);
 void dispdrvSendFill(int32_t size, uint16_t color);
 void dispdrvSendImage(tImage *img, uint16_t color, uint16_t bgColor);
+
+#ifdef _DISP_READ_ENABLED
+uint16_t dispdrvReadData16(void);
+void dispdrvReadReg(uint16_t reg, uint16_t *args, uint8_t nArgs);
+#endif
 
 #ifdef __cplusplus
 }
