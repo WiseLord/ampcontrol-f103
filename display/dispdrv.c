@@ -22,6 +22,7 @@
 #include "gc320x240/s6d0129.h"
 #include "gc320x240/s6d0139.h"
 #include "gc320x240/spfd5408.h"
+#include "gc320x240/ssd2119.h"
 #include "gc320x240/mc2pa8201.h"
 #include "gc400x240/ili9327.h"
 #include "gc400x240/st7793.h"
@@ -139,7 +140,7 @@ static inline void dispdrvSendWord(uint16_t data)
     CLR(DISP_WR);
     SET(DISP_WR);
 #else
-#ifdef _DISP_8BIT
+#ifndef _DISP_SPI
     dispdrvBusOut();
 #endif
     uint8_t dataH = data >> 8;
@@ -214,6 +215,8 @@ void dispdrvInit(DispDriver **driver)
     s6d0139Init(driver);
 #elif defined (_SPFD5408)
     spfd5408Init(driver);
+#elif defined (_SSD2119)
+    ssd2119Init(driver);
 #elif defined (_MC2PA8201)
     mc2pa8201Init(driver);
 #elif defined (_ILI9327)
@@ -348,7 +351,7 @@ uint16_t dispdrvReadData16(void)
 {
     uint16_t ret = 0;
 
-#ifdef _DISP_8BIT
+#ifndef _DISP_SPI
     dispdrvBusIn();
 #endif
 
@@ -364,7 +367,7 @@ uint16_t dispdrvReadData16(void)
     ret |= dispdrvReadByte();
 #endif
 
-#ifdef _DISP_8BIT
+#ifndef _DISP_SPI
     dispdrvBusOut();
 #endif
 
@@ -373,8 +376,6 @@ uint16_t dispdrvReadData16(void)
 
 void dispdrvReadReg(uint16_t reg, uint16_t *args, uint8_t nArgs)
 {
-    dispdrvReset();
-
     CLR(DISP_CS);
 
     CLR(DISP_RS);
