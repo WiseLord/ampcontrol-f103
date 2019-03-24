@@ -101,9 +101,11 @@ static void actionNavigateTextEdit(RcCmd cmd)
         action.type = ACTION_TEXTEDIT_CANCEL;
         break;
     case RC_CMD_NAV_RIGHT:
+    case RC_CMD_CHAN_NEXT:
         action.type = ACTION_TEXTEDIT_ADD_CHAR;
         break;
     case RC_CMD_NAV_LEFT:
+    case RC_CMD_CHAN_PREV:
         action.type = ACTION_TEXTEDIT_DEL_CHAR;
         break;
     case RC_CMD_NAV_UP:
