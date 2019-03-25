@@ -24,7 +24,7 @@ static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int1
     }
 
     for (uint16_t i = 0; i < sc; i++) {
-        uint16_t color = LCD_COLOR_WHITE;
+        uint16_t color = canvas->pal->fg;
 
         if (min + max) { // Non-symmetric scale
             if (i >= value) {
@@ -40,7 +40,7 @@ static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int1
         }
 
         glcdDrawRect(i * (width / sc), barPos, sw, barHalf, color);
-        glcdDrawRect(i * (width / sc), barPos + barHalf, sw, barMiddle, LCD_COLOR_WHITE);
+        glcdDrawRect(i * (width / sc), barPos + barHalf, sw, barMiddle, canvas->pal->fg);
         glcdDrawRect(i * (width / sc), barPos + barHalf + barMiddle, sw, barHalf, color);
     }
 }
@@ -79,11 +79,11 @@ static void canvasDrawTm(RTC_type *rtc, uint8_t tm)
 {
     int8_t time = *((int8_t *)rtc + tm);
 
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetFontBgColor(LCD_COLOR_BLACK);
+    glcdSetFontColor(canvas->pal->fg);
+    glcdSetFontBgColor(canvas->pal->bg);
     if (rtc->etm == tm) {
-        glcdSetFontColor(LCD_COLOR_BLACK);
-        glcdSetFontBgColor(LCD_COLOR_WHITE);
+        glcdSetFontColor(canvas->pal->bg);
+        glcdSetFontBgColor(canvas->pal->fg);
     }
     glcdWriteUChar(LETTER_SPACE_CHAR);
     if (tm == RTC_YEAR) {
@@ -92,8 +92,8 @@ static void canvasDrawTm(RTC_type *rtc, uint8_t tm)
     }
     glcdWriteNum(time, 2, '0', 10);
     glcdWriteUChar(LETTER_SPACE_CHAR);
-    glcdSetFontColor(LCD_COLOR_WHITE);
-    glcdSetFontBgColor(LCD_COLOR_BLACK);
+    glcdSetFontColor(canvas->pal->fg);
+    glcdSetFontBgColor(canvas->pal->bg);
 }
 
 static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
@@ -112,11 +112,11 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
     int16_t y_pos = lt->rect.h - ih * (items - idx + menu->dispOft);
 
     // Draw selection frame
-    glcdDrawFrame(0, y_pos, width, ih, 1, active ? LCD_COLOR_WHITE : canvas->pal->bg);
+    glcdDrawFrame(0, y_pos, width, ih, 1, active ? canvas->pal->fg : canvas->pal->bg);
 
     // Draw menu name
     glcdSetFont(fontItem);
-    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetFontColor(canvas->pal->fg);
 
     glcdSetXY(4, y_pos + 2);
     if (menu->list[idx] != MENU_NULL) {
@@ -386,7 +386,7 @@ void layoutShowTime(bool clear)
 
     // Weekday
     glcdSetFont(lt->time.wdFont);
-    glcdSetFontColor(LCD_COLOR_AQUA);
+    glcdSetFontColor(canvas->pal->fg);
 
     static int8_t wdayOld = 0;
     int8_t wday = rtc->wday;
@@ -415,7 +415,7 @@ void layoutShowMenu(bool clear)
     // Show header
     const char *parentName = menuGetName(menu->parent);
     glcdSetFont(lt->menu.headFont);
-    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetFontColor(canvas->pal->fg);
 
     glcdSetXY(2, 0);
     glcdWriteStringConst(parentName);
@@ -459,7 +459,7 @@ void layoutShowTune(bool clear, AudioTune aTune)
     if (clear) {
         // Label
         glcdSetFont(lt->lblFont);
-        glcdSetFontColor(LCD_COLOR_WHITE);
+        glcdSetFontColor(canvas->pal->fg);
         glcdSetXY(0, 0);
         glcdWriteStringConst(label);
         // Icon
@@ -541,7 +541,7 @@ void layoutShowTuner(bool clear)
         const tFont *fmFont = lt->lblFont;
 
         glcdSetFont(fmFont);
-        glcdSetFontColor(LCD_COLOR_WHITE);
+        glcdSetFontColor(canvas->pal->fg);
         glcdSetXY(0, 0);
         glcdWriteString("FM ");
 

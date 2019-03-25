@@ -41,7 +41,7 @@ void canvasClear(void)
         glcdDrawFrame(-2 * ft, -2 * ft, rect.w + 4 * ft, rect.h + 4 * ft, ft, canvas.pal->fg);
     }
 
-    glcdSetFontColor(LCD_COLOR_WHITE);
+    glcdSetFontColor(canvas.pal->fg);
     glcdSetFontBgColor(canvas.pal->bg);
 }
 
