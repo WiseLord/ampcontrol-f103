@@ -6,17 +6,14 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-#define ILI9486_WIDTH           320
-#define ILI9486_HEIGHT          480
-#define ILI9486_PIXELS          (ILI9486_WIDTH * ILI9486_HEIGHT)
-
 static DispDriver drv = {
-    .width = ILI9486_HEIGHT,
-    .height = ILI9486_WIDTH,
+    .width = 480,
+    .height = 320,
     .drawPixel = ili9486DrawPixel,
     .drawRectangle = ili9486DrawRectangle,
     .drawImage = ili9486DrawImage,
     .rotate = ili9486Rotate,
+    .shift = ili9486Shift,
 };
 
 __attribute__((always_inline))
@@ -107,11 +104,6 @@ static inline void ili9486InitSeq(void)
     dispdrvSendData8(0x00);
     dispdrvSendData8(0x53);
 
-    ili9486SelectReg(0xB6);     // Display Function Control
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x42);     // 0x22 = Rotate display 180 deg.
-    dispdrvSendData8(0x3B);
-
     ili9486SelectReg(0xE0);     // PGAMCTRL (Positive Gamma Control)
     dispdrvSendData8(0x0F);
     dispdrvSendData8(0x1F);
@@ -147,16 +139,15 @@ static inline void ili9486InitSeq(void)
     dispdrvSendData8(0x00);
 
     ili9486SelectReg(0x20);     // Display Inversion OFF
-    dispdrvSendData8(0x00);
 
     ili9486SelectReg(0x36);     // Memory Access Control
-    dispdrvSendData8(0x48);
+    dispdrvSendData8(0x18);
 
     ili9486SelectReg(0x3A);     // Interface Pixel Format
     dispdrvSendData8(0x55);
 
     ili9486SelectReg(0xB4);     // Display Inversion Control
-    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x20);
 
     ili9486SelectReg(0x2A);     // Column Addess Set
     dispdrvSendData8(0x00);
@@ -174,6 +165,7 @@ static inline void ili9486InitSeq(void)
 
     LL_mDelay(120);
     ili9486SelectReg(0x29);     // Display ON
+    LL_mDelay(120);
     ili9486SelectReg(0x13);     // Normal Display Mode ON
     ili9486SelectReg(0x2C);     // Memory Write
 
@@ -193,16 +185,35 @@ void ili9486Rotate(uint8_t rotate)
 
     if (rotate & LCD_ROTATE_180) {
         ili9486SelectReg(0x36);
-        dispdrvSendData8(0x42);
+        dispdrvSendData8(0xD8);
     } else {
         ili9486SelectReg(0x36);
-        dispdrvSendData8(0x22);
+        dispdrvSendData8(0x18);
     }
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
+void ili9486Shift(int16_t value)
+{
+    CLR(DISP_CS);
+
+    ili9486SelectReg(0x33);
+    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x01);
+    dispdrvSendData8(0xE0);
+    dispdrvSendData8(0x00);
+    dispdrvSendData8(0x00);
+
+    ili9486SelectReg(0x37);
+    dispdrvSendData8((value >> 8) & 0xFF);
+    dispdrvSendData8(value & 0xFF);
+
+    DISP_WAIT_BUSY();
+    SET(DISP_CS);
+}
 void ili9486Sleep(void)
 {
     CLR(DISP_CS);

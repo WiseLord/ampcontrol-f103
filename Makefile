@@ -41,6 +41,8 @@ C_SOURCES += $(wildcard display/icons/icon*.c)
 
 ifeq "$(DISPLAY)" "ILI9163"
   C_SOURCES += display/gc160x128/ili9163.c
+else ifeq "$(DISPLAY)" "S6D0144"
+  C_SOURCES += display/gc160x128/s6d0144.c
 else ifeq "$(DISPLAY)" "ST7735"
   C_SOURCES += display/gc160x128/st7735.c
 else ifeq "$(DISPLAY)" "L2F50126"
@@ -57,8 +59,12 @@ else ifeq "$(DISPLAY)" "ILI9225"
   C_SOURCES += display/gc220x176/ili9225.c
 else ifeq "$(DISPLAY)" "LGDP4524"
   C_SOURCES += display/gc220x176/lgdp4524.c
-else ifeq "$(DISPLAY)" "HX8347"
-  C_SOURCES += display/gc320x240/hx8347.c
+else ifeq "$(DISPLAY)" "S6D0164"
+  C_SOURCES += display/gc220x176/s6d0164.c
+else ifeq "$(DISPLAY)" "HX8347A"
+  C_SOURCES += display/gc320x240/hx8347a.c
+else ifeq "$(DISPLAY)" "HX8347D"
+  C_SOURCES += display/gc320x240/hx8347d.c
 else ifeq "$(DISPLAY)" "ILI9320"
   C_SOURCES += display/gc320x240/ili9320.c
 else ifeq "$(DISPLAY)" "ILI9341"
@@ -75,6 +81,8 @@ else ifeq "$(DISPLAY)" "SSD2119"
   C_SOURCES += display/gc320x240/ssd2119.c
 else ifeq "$(DISPLAY)" "ILI9327"
   C_SOURCES += display/gc400x240/ili9327.c
+else ifeq "$(DISPLAY)" "S6D04D1"
+  C_SOURCES += display/gc400x240/s6d04d1.c
 else ifeq "$(DISPLAY)" "ST7793"
   C_SOURCES += display/gc400x240/st7793.c
 else ifeq "$(DISPLAY)" "ILI9481"

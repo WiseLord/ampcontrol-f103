@@ -18,6 +18,7 @@ compile_display()
 make clean
 
 # 160x128 color displays
+compile_display "S6D0144"   "8BIT"
 compile_display "ILI9163"   "8BIT"
 compile_display "ST7735"    "8BIT"
 
@@ -31,9 +32,11 @@ compile_display "SSD1286A"  "SPI"
 compile_display "HX8340"    "8BIT"
 compile_display "ILI9225"   "8BIT SPI"
 compile_display "LGDP4524"  "8BIT"
+compile_display "S6D0164"   "8BIT"
 
 # 320x240 color displays
-compile_display "HX8347"    "8BIT"
+compile_display "HX8347A"   "8BIT"
+compile_display "HX8347D"   "8BIT"
 compile_display "ILI9320"   "8BIT"
 compile_display "ILI9341"   "8BIT SPI"
 compile_display "MC2PA8201" "8BIT"
@@ -44,6 +47,7 @@ compile_display "SSD2119"   "8BIT"
 
 # 400x240 color displays
 compile_display "ILI9327"   "8BIT"
+compile_display "S6D04D1"   "8BIT"
 compile_display "ST7793"    "8BIT"
 
 # 480x320 color displays

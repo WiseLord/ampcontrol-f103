@@ -8,6 +8,7 @@
 #include "../pins.h"
 
 #include "gc160x128/ili9163.h"
+#include "gc160x128/s6d0144.h"
 #include "gc160x128/st7735.h"
 #include "gc176x132/l2f50126.h"
 #include "gc176x132/ls020.h"
@@ -16,7 +17,9 @@
 #include "gc220x176/hx8340.h"
 #include "gc220x176/ili9225.h"
 #include "gc220x176/lgdp4524.h"
-#include "gc320x240/hx8347.h"
+#include "gc220x176/s6d0164.h"
+#include "gc320x240/hx8347a.h"
+#include "gc320x240/hx8347d.h"
 #include "gc320x240/ili9320.h"
 #include "gc320x240/ili9341.h"
 #include "gc320x240/s6d0129.h"
@@ -25,6 +28,7 @@
 #include "gc320x240/ssd2119.h"
 #include "gc320x240/mc2pa8201.h"
 #include "gc400x240/ili9327.h"
+#include "gc400x240/s6d04d1.h"
 #include "gc400x240/st7793.h"
 #include "gc480x320/ili9481.h"
 #include "gc480x320/ili9486.h"
@@ -187,6 +191,8 @@ void dispdrvInit(DispDriver **driver)
 
 #if defined (_ILI9163)
     ili9163Init(driver);
+#elif defined (_S6D0144)
+    s6d0144Init(driver);
 #elif defined (_ST7735)
     st7735Init(driver);
 #elif defined (_L2F50126)
@@ -203,8 +209,12 @@ void dispdrvInit(DispDriver **driver)
     ili9225Init(driver);
 #elif defined (_LGDP4524)
     lgdp4524Init(driver);
-#elif defined (_HX8347)
-    hx8347Init(driver);
+#elif defined (_S6D0164)
+    s6d0164Init(driver);
+#elif defined (_HX8347A)
+    hx8347aInit(driver);
+#elif defined (_HX8347D)
+    hx8347dInit(driver);
 #elif defined (_ILI9320)
     ili9320Init(driver);
 #elif defined (_ILI9341)
@@ -221,6 +231,8 @@ void dispdrvInit(DispDriver **driver)
     mc2pa8201Init(driver);
 #elif defined (_ILI9327)
     ili9327Init(driver);
+#elif defined (_S6D04D1)
+    s6d04d1Init(driver);
 #elif defined (_ST7793)
     st7793Init(driver);
 #elif defined (_ILI9481)

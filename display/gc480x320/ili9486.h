@@ -10,6 +10,7 @@ extern "C" {
 
 void ili9486Init(DispDriver **driver);
 void ili9486Rotate(uint8_t rotate);
+void ili9486Shift(int16_t value);
 
 void ili9486Sleep(void);
 void ili9486Wakeup(void);

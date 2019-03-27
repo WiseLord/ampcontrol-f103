@@ -32,15 +32,15 @@ __attribute__((always_inline))
 static inline void ili9225SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
     int16_t x1 = x + w - 1;
-    int16_t y1 = drv.height - y - 1;    // TODO: Rework it
+    int16_t y1 = y + h - 1;
 
-    ili9225WriteReg(0x0037, (uint16_t)(y1 - h + 1));
     ili9225WriteReg(0x0036, (uint16_t)y1);
-    ili9225WriteReg(0x0039, (uint16_t)x);
+    ili9225WriteReg(0x0037, (uint16_t)y);
     ili9225WriteReg(0x0038, (uint16_t)x1);
+    ili9225WriteReg(0x0039, (uint16_t)x);
 
     // Set cursor
-    ili9225WriteReg(0x0020, (uint16_t)y1);
+    ili9225WriteReg(0x0020, (uint16_t)y);
     ili9225WriteReg(0x0021, (uint16_t)x);
 
     // Select RAM mode
@@ -52,11 +52,12 @@ static inline void ili9225InitSeq(void)
     CLR(DISP_CS);
 
     // Start Initial Sequence
-    ili9225WriteReg(0x0001, 0x011C);    // set SS and NL bit
+    ili9225WriteReg(0x0001, 0x001C);    // set SS and NL bit
     ili9225WriteReg(0x0002, 0x0100);    // set 1 line inversion
-    ili9225WriteReg(0x0003, 0x1020);    // set GRAM write direction and BGR=1.
+    ili9225WriteReg(0x0003, 0x1030);    // set GRAM write direction and BGR=1.
     ili9225WriteReg(0x0008, 0x0808);    // set BP and FP
-    ili9225WriteReg(0x000C, 0x0000);    // RGB interface setting   R0Ch=0x0110 for RGB 18Bit and R0Ch=0111for RGB16Bit
+    ili9225WriteReg(0x000C,
+                    0x0000);    // RGB interface setting   R0Ch=0x0110 for RGB 18Bit and R0Ch=0111for RGB16Bit
     ili9225WriteReg(0x000F, 0x0801);    // Set frame rate
 
     // Power On sequence
@@ -100,7 +101,7 @@ static inline void ili9225InitSeq(void)
 
     LL_mDelay(50); // Delay 50ms
 
-    ili9225WriteReg(0x0007, 0x1017);  // 65K color and display ON
+    ili9225WriteReg(0x0007, 0x1017);  // 65K color and display ON*/
 
     SET(DISP_CS);
 }
