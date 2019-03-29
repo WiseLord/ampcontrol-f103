@@ -14,8 +14,10 @@ static DispDriver drv = {
     .shift = ssd2119Shift,
 };
 
-static inline void ssd2119InitSeq(void)
+void ssd2119Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0028, 0x0006);    // VCOM OTP
@@ -65,12 +67,6 @@ static inline void ssd2119InitSeq(void)
     dispdrvWriteReg16(0x0007, 0x0033);    // 65K color and display ON*/
 
     SET(DISP_CS);
-}
-
-void ssd2119Init(DispDriver **driver)
-{
-    *driver = &drv;
-    ssd2119InitSeq();
 }
 
 void ssd2119Rotate(uint8_t rotate)

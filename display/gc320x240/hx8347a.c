@@ -12,8 +12,10 @@ static DispDriver drv = {
     .setWindow = hx8347aSetWindow,
 };
 
-static inline void hx8347aInitSeq(void)
+void hx8347aInit(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Gamma for CMO 2.8
@@ -109,12 +111,6 @@ static inline void hx8347aInitSeq(void)
     dispdrvWriteReg8(0x57, 0x00); // Test_Mode Disable
 
     SET(DISP_CS);
-}
-
-void hx8347aInit(DispDriver **driver)
-{
-    *driver = &drv;
-    hx8347aInitSeq();
 }
 
 void hx8347aSleep(void)

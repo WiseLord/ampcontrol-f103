@@ -1,7 +1,6 @@
 #include "s6d04d1.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -14,8 +13,10 @@ static DispDriver drv = {
     .rotate = s6d04d1Rotate,
 };
 
-static inline void s6d04d1InitSeq(void)
+void s6d04d1Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0xf4);
@@ -211,12 +212,6 @@ static inline void s6d04d1InitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void s6d04d1Init(DispDriver **driver)
-{
-    *driver = &drv;
-    s6d04d1InitSeq();
 }
 
 void s6d04d1Rotate(uint8_t rotate)

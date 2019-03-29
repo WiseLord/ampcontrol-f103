@@ -13,9 +13,9 @@ static DispDriver drv = {
     .rotate = st7793Rotate,
 };
 
-static inline void st7793InitSeq(void)
+void st7793Init(DispDriver **driver)
 {
-    CLR(DISP_CS);
+    *driver = &drv;
 
     //-------------Display Control Setting-------------------------------------//
 
@@ -74,12 +74,6 @@ static inline void st7793InitSeq(void)
     dispdrvWriteReg16(0x0201, 0x0000);
 
     SET(DISP_CS);
-}
-
-void st7793Init(DispDriver **driver)
-{
-    *driver = &drv;
-    st7793InitSeq();
 }
 
 void st7793Rotate(uint8_t rotate)

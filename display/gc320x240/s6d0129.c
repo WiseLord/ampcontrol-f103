@@ -13,8 +13,10 @@ static DispDriver drv = {
     .rotate = s6d0129Rotate,
 };
 
-static inline void s6d0129InitSeq(void)
+void s6d0129Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x00e5, 0x8000);
@@ -72,12 +74,6 @@ static inline void s6d0129InitSeq(void)
     LL_mDelay(5);
 
     SET(DISP_CS);
-}
-
-void s6d0129Init(DispDriver **driver)
-{
-    *driver = &drv;
-    s6d0129InitSeq();
 }
 
 void s6d0129Rotate(uint8_t rotate)

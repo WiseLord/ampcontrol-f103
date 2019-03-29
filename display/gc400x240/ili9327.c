@@ -1,7 +1,6 @@
 #include "ili9327.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -16,8 +15,10 @@ static DispDriver drv = {
 
 static uint8_t shiftX = 0;
 
-static inline void ili9327InitSeq(void)
+void ili9327Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -97,12 +98,6 @@ static inline void ili9327InitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void ili9327Init(DispDriver **driver)
-{
-    *driver = &drv;
-    ili9327InitSeq();
 }
 
 void ili9327Rotate(uint8_t rotate)

@@ -1,8 +1,8 @@
 #include "ili9486.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
+
 #include "../../pins.h"
 #include "../dispdrv.h"
 
@@ -14,10 +14,9 @@ static DispDriver drv = {
     .shift = ili9486Shift,
 };
 
-static inline void ili9486InitSeq(void)
+void ili9486Init(DispDriver **driver)
 {
-    // Wait for reset
-    LL_mDelay(100);
+    *driver = &drv;
 
     CLR(DISP_CS);
 
@@ -137,12 +136,6 @@ static inline void ili9486InitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void ili9486Init(DispDriver **driver)
-{
-    *driver = &drv;
-    ili9486InitSeq();
 }
 
 void ili9486Rotate(uint8_t rotate)

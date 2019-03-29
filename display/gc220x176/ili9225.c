@@ -12,8 +12,10 @@ static DispDriver drv = {
     .setWindow = ili9225SetWindow,
 };
 
-static inline void ili9225InitSeq(void)
+void ili9225Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Start Initial Sequence
@@ -68,12 +70,6 @@ static inline void ili9225InitSeq(void)
     dispdrvWriteReg16(0x0007, 0x1017);  // 65K color and display ON*/
 
     SET(DISP_CS);
-}
-
-void ili9225Init(DispDriver **driver)
-{
-    *driver = &drv;
-    ili9225InitSeq();
 }
 
 void ili9225Sleep(void)

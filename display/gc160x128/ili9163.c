@@ -1,7 +1,6 @@
 #include "ili9163.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -13,8 +12,10 @@ static DispDriver drv = {
     .setWindow = ili9163SetWindow,
 };
 
-static inline void ili9163InitSeq(void)
+void ili9163Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -105,12 +106,6 @@ static inline void ili9163InitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void ili9163Init(DispDriver **driver)
-{
-    *driver = &drv;
-    ili9163InitSeq();
 }
 
 void ili9163Sleep(void)

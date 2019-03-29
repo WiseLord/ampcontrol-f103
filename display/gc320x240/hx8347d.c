@@ -12,8 +12,10 @@ static DispDriver drv = {
     .setWindow = hx8347dSetWindow,
 };
 
-static inline void hx8347dInitSeq(void)
+void hx8347dInit(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -99,12 +101,6 @@ static inline void hx8347dInitSeq(void)
     dispdrvWriteReg8(0x09, 0x3F); //Row End
 
     SET(DISP_CS);
-}
-
-void hx8347dInit(DispDriver **driver)
-{
-    *driver = &drv;
-    hx8347dInitSeq();
 }
 
 void hx8347dSleep(void)

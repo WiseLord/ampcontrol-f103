@@ -1,7 +1,6 @@
 #include "ls020.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -13,8 +12,10 @@ static DispDriver drv = {
     .setWindow = ls020SetWindow,
 };
 
-static void ls020InitSeq(void)
+void ls020Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     dispdrvSendData16(0xFDFD);
@@ -60,12 +61,6 @@ static void ls020InitSeq(void)
     SET(DISP_CS);
 }
 
-void ls020Init(DispDriver **driver)
-{
-    *driver = &drv;
-    ls020InitSeq();
-}
-
 void ls020Sleep(void)
 {
     SET(DISP_RS);
@@ -103,7 +98,9 @@ void ls020Sleep(void)
 
 void ls020Wakeup(void)
 {
-    ls020InitSeq();
+    DispDriver *driver;
+
+    ls020Init(&driver);
 }
 
 void ls020SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)

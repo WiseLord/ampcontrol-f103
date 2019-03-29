@@ -1,7 +1,6 @@
 #include "lph9157.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -13,8 +12,10 @@ static DispDriver drv = {
     .setWindow = lph9157SetWindow,
 };
 
-static void lph9157InitSeq(void)
+void lph9157Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x01);
@@ -29,12 +30,6 @@ static void lph9157InitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void lph9157Init(DispDriver **driver)
-{
-    *driver = &drv;
-    lph9157InitSeq();
 }
 
 void lph9157Sleep(void)

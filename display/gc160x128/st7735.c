@@ -1,7 +1,6 @@
 #include "st7735.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -13,8 +12,10 @@ static DispDriver drv = {
     .setWindow = st7735SetWindow,
 };
 
-static inline void st7735InitSeq(void)
+void st7735Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -104,12 +105,6 @@ static inline void st7735InitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void st7735Init(DispDriver **driver)
-{
-    *driver = &drv;
-    st7735InitSeq();
 }
 
 void st7735Sleep(void)

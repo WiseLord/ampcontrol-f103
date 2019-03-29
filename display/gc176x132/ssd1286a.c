@@ -1,7 +1,6 @@
 #include "ssd1286a.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -13,8 +12,10 @@ static DispDriver drv = {
     .setWindow = ssd1286aSetWindow,
 };
 
-static void ssd1286aInitSeq(void)
+void ssd1286aInit(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x00);
@@ -55,12 +56,6 @@ static void ssd1286aInitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void ssd1286aInit(DispDriver **driver)
-{
-    *driver = &drv;
-    ssd1286aInitSeq();
 }
 
 void ssd1286aSleep(void)

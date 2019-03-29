@@ -1,7 +1,6 @@
 #include "r61581.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -15,9 +14,10 @@ static DispDriver drv = {
     .shift = r615811Shift,
 };
 
-__attribute__((always_inline))
-static inline void r61581InitSeq(void)
+void r61581Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -106,12 +106,6 @@ static inline void r61581InitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void r61581Init(DispDriver **driver)
-{
-    *driver = &drv;
-    r61581InitSeq();
 }
 
 void r61581Rotate(uint8_t rotate)

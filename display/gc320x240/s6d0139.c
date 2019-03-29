@@ -13,8 +13,10 @@ static DispDriver drv = {
     .rotate = s6d0139Rotate,
 };
 
-static inline void s6d0139InitSeq(void)
+void s6d0139Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0000, 0x0001);    // Start Oscillation
@@ -66,12 +68,6 @@ static inline void s6d0139InitSeq(void)
     dispdrvWriteReg16(0x0007, 0x0017);    // Display control1
 
     SET(DISP_CS);
-}
-
-void s6d0139Init(DispDriver **driver)
-{
-    *driver = &drv;
-    s6d0139InitSeq();
 }
 
 void s6d0139Rotate(uint8_t rotate)

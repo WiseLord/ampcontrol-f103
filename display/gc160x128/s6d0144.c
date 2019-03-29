@@ -12,8 +12,10 @@ static DispDriver drv = {
     .setWindow = s6d0144SetWindow,
 };
 
-static inline void s6d0144InitSeq(void)
+void s6d0144Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     LL_mDelay(1);
@@ -59,12 +61,6 @@ static inline void s6d0144InitSeq(void)
     LL_mDelay(20);
 
     SET(DISP_CS);
-}
-
-void s6d0144Init(DispDriver **driver)
-{
-    *driver = &drv;
-    s6d0144InitSeq();
 }
 
 void s6d0144Sleep(void)

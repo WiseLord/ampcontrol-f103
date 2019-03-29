@@ -2,7 +2,6 @@
 #include "ili9341_regs.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -16,8 +15,10 @@ static DispDriver drv = {
     .shift = ili9341Shift,
 };
 
-static void ili9341InitSeq(void)
+void ili9341Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     dispdrvSelectReg8(ILI9341_SWRESET);
@@ -131,12 +132,6 @@ static void ili9341InitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void ili9341Init(DispDriver **driver)
-{
-    *driver = &drv;
-    ili9341InitSeq();
 }
 
 void ili9341Rotate(uint8_t rotate)

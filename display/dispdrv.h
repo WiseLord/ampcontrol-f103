@@ -9,6 +9,7 @@ extern "C" {
 #include "dispdefs.h"
 
 #ifdef _DISP_SPI
+#include <stm32f1xx_ll_spi.h>
 #define DISP_WAIT_BUSY()    while(LL_SPI_IsActiveFlag_BSY(SPI2) || !LL_SPI_IsActiveFlag_TXE(SPI2))
 #else
 #define DISP_WAIT_BUSY();

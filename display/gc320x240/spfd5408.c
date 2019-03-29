@@ -12,12 +12,12 @@ static DispDriver drv = {
     .setWindow = spfd5408SetWindow,
 };
 
-static inline void spfd5408InitSeq(void)
+void spfd5408Init(DispDriver **driver)
 {
-    // Wait for reset
-    LL_mDelay(50);
+    *driver = &drv;
 
     CLR(DISP_CS);
+
     // Initial Sequence
     dispdrvWriteReg16(0x0000, 0x0000);
     dispdrvWriteReg16(0x0001, 0x0100);
@@ -63,7 +63,6 @@ static inline void spfd5408InitSeq(void)
     dispdrvWriteReg16(0x003E, 0x0303);
     dispdrvWriteReg16(0x003F, 0x0505);
 
-
     // Set GRAM area
     dispdrvWriteReg16(0x0020, 0x0000);   // GRAM horisontal address
     dispdrvWriteReg16(0x0021, 0x0000);   // GRAM vertical address
@@ -103,14 +102,7 @@ static inline void spfd5408InitSeq(void)
     dispdrvWriteReg16(0x0007, 0x0173);   // 262K color and display ON
     LL_mDelay(150);
 
-
     SET(DISP_CS);
-}
-
-void spfd5408Init(DispDriver **driver)
-{
-    *driver = &drv;
-    spfd5408InitSeq();
 }
 
 void spfd5408Sleep(void)

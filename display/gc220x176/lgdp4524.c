@@ -12,8 +12,10 @@ static DispDriver drv = {
     .setWindow = lgdp4524SetWindow,
 };
 
-static inline void lgdp4524InitSeq(void)
+void lgdp4524Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0007, 0x0000);
@@ -86,12 +88,6 @@ static inline void lgdp4524InitSeq(void)
     dispdrvWriteReg16(0x0007, 0x0037);  // 65K color and display ON*/
 
     SET(DISP_CS);
-}
-
-void lgdp4524Init(DispDriver **driver)
-{
-    *driver = &drv;
-    lgdp4524InitSeq();
 }
 
 void lgdp4524Sleep(void)

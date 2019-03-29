@@ -14,8 +14,10 @@ static DispDriver drv = {
     .shift = ili9320Shift,
 };
 
-static inline void ili9320InitSeq(void)
+void ili9320Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -84,12 +86,6 @@ static inline void ili9320InitSeq(void)
     dispdrvWriteReg16(0x0007, 0x0173);    // 262K color and display ON
 
     SET(DISP_CS);
-}
-
-void ili9320Init(DispDriver **driver)
-{
-    *driver = &drv;
-    ili9320InitSeq();
 }
 
 void ili9320Rotate(uint8_t rotate)

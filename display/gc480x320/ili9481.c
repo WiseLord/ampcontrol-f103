@@ -1,25 +1,22 @@
 #include "ili9481.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-#define ILI9481_WIDTH           320
-#define ILI9481_HEIGHT          480
-#define ILI9481_PIXELS          (ILI9481_WIDTH * ILI9481_HEIGHT)
-
 static DispDriver drv = {
-    .width = ILI9481_HEIGHT,
-    .height = ILI9481_WIDTH,
+    .width = 480,
+    .height = 320,
     .setWindow = ili9481SetWindow,
     .rotate = ili9481Rotate,
 };
 
-static inline void ili9481InitSeq(void)
+void ili9481Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -99,12 +96,6 @@ static inline void ili9481InitSeq(void)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void ili9481Init(DispDriver **driver)
-{
-    *driver = &drv;
-    ili9481InitSeq();
 }
 
 void ili9481Rotate(uint8_t rotate)

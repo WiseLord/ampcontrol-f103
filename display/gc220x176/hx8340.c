@@ -12,8 +12,10 @@ static DispDriver drv = {
     .setWindow = hx8340SetWindow,
 };
 
-static inline void hx8340InitSeq(void)
+void hx8340Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -82,12 +84,6 @@ static inline void hx8340InitSeq(void)
     dispdrvWriteReg8(0x16, 0x48);
 
     SET(DISP_CS);
-}
-
-void hx8340Init(DispDriver **driver)
-{
-    *driver = &drv;
-    hx8340InitSeq();
 }
 
 void hx8340Sleep(void)

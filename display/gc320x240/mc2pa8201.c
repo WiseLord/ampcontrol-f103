@@ -1,7 +1,6 @@
 #include "mc2pa8201.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -13,8 +12,10 @@ static DispDriver drv = {
     .setWindow = mc2pa8201SetWindow,
 };
 
-static inline void mc2pa8201InitSeq(void)
+void mc2pa8201Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -62,12 +63,6 @@ static inline void mc2pa8201InitSeq(void)
     dispdrvSelectReg8(0x29);
 
     SET(DISP_CS);
-}
-
-void mc2pa8201Init(DispDriver **driver)
-{
-    *driver = &drv;
-    mc2pa8201InitSeq();
 }
 
 void mc2pa8201Sleep(void)

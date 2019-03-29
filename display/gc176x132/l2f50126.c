@@ -2,7 +2,6 @@
 #include "l2f50126_regs.h"
 
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
@@ -62,8 +61,10 @@ static void inline l2f50126PulseCS(void)
 }
 */
 
-static void l2f50126InitSeq()
+void l2f50126Init(DispDriver **driver)
 {
+    *driver = &drv;
+
     CLR(DISP_CS);
 
     l2f50126SelectReg(L2F50126_DATCTL);
@@ -121,12 +122,6 @@ static void l2f50126InitSeq()
     l2f50126SelectReg(L2F50126_DISON);
 
     SET(DISP_CS);
-}
-
-void l2f50126Init(DispDriver **driver)
-{
-    *driver = &drv;
-    l2f50126InitSeq();
 }
 
 void l2f50126Sleep(void)
