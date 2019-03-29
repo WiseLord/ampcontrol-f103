@@ -13,14 +13,6 @@ static DispDriver drv = {
     .setWindow = mc2pa8201SetWindow,
 };
 
-__attribute__((always_inline))
-static inline void mc2pa8201SelectReg(uint8_t reg)
-{
-    CLR(DISP_RS);
-    dispdrvSendData8(reg);
-    SET(DISP_RS);
-}
-
 static inline void mc2pa8201InitSeq(void)
 {
     CLR(DISP_CS);
@@ -31,21 +23,21 @@ static inline void mc2pa8201InitSeq(void)
 
     CLR(DISP_CS);
 
-    mc2pa8201SelectReg(0x01);
+    dispdrvSelectReg8(0x01);
     LL_mDelay(100);
 
-    mc2pa8201SelectReg(0x11);
+    dispdrvSelectReg8(0x11);
     LL_mDelay(100);
 
-    mc2pa8201SelectReg(0x20);
+    dispdrvSelectReg8(0x20);
 
-    mc2pa8201SelectReg(0x26); //Set Default Gamma
+    dispdrvSelectReg8(0x26); //Set Default Gamma
     dispdrvSendData8(0x04);
 
-    mc2pa8201SelectReg(0x3A);
+    dispdrvSelectReg8(0x3A);
     dispdrvSendData8(0x05);
 
-    mc2pa8201SelectReg(0x2d);
+    dispdrvSelectReg8(0x2d);
 
     for (uint8_t r1 = 0; r1 < 32; r1++)
         dispdrvSendData8((uint8_t)(r1 << 3));
@@ -64,10 +56,10 @@ static inline void mc2pa8201InitSeq(void)
 //    mc2pa8201SelectReg(0x53);
 //    dispdrvSendData8(0x24);
 
-    mc2pa8201SelectReg(0x36);
+    dispdrvSelectReg8(0x36);
     dispdrvSendData8(0x80);
 
-    mc2pa8201SelectReg(0x29);
+    dispdrvSelectReg8(0x29);
 
     SET(DISP_CS);
 }
@@ -82,9 +74,9 @@ void mc2pa8201Sleep(void)
 {
     CLR(DISP_CS);
 
-    mc2pa8201SelectReg(0x28);    // Display OFF
+    dispdrvSelectReg8(0x28);    // Display OFF
     LL_mDelay(100);
-    mc2pa8201SelectReg(0x10);
+    dispdrvSelectReg8(0x10);
 
     SET(DISP_CS);
 }
@@ -93,9 +85,9 @@ void mc2pa8201Wakeup(void)
 {
     CLR(DISP_CS);
 
-    mc2pa8201SelectReg(0x11);    // Display OFF
+    dispdrvSelectReg8(0x11);    // Display OFF
     LL_mDelay(100);
-    mc2pa8201SelectReg(0x29);
+    dispdrvSelectReg8(0x29);
 
     SET(DISP_CS);
 }
@@ -105,17 +97,17 @@ void mc2pa8201SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     int16_t x1 = x + w - 1;
     int16_t y1 = y + h - 1;
 
-    mc2pa8201SelectReg(0x2A);
+    dispdrvSelectReg8(0x2A);
     dispdrvSendData8((y >> 8) & 0xFF);
     dispdrvSendData8((y >> 0) & 0xFF);
     dispdrvSendData8((y1 >> 8) & 0xFF);
     dispdrvSendData8((y1 >> 0) & 0xFF);
 
-    mc2pa8201SelectReg(0x2B);
+    dispdrvSelectReg8(0x2B);
     dispdrvSendData8((x >> 8) & 0xFF);
     dispdrvSendData8((x >> 0) & 0xFF);
     dispdrvSendData8((x1 >> 8) & 0xFF);
     dispdrvSendData8((x1 >> 0) & 0xFF);
 
-    mc2pa8201SelectReg(0x2C);
+    dispdrvSelectReg8(0x2C);
 }

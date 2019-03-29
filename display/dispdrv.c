@@ -308,6 +308,15 @@ void dispdrvSendData16(uint16_t data)
     dispdrvSendWord(data);
 }
 
+void dispdrvSelectReg8(uint8_t reg)
+{
+    DISP_WAIT_BUSY();
+    CLR(DISP_RS);
+    dispdrvSendData8(reg);
+    DISP_WAIT_BUSY();
+    SET(DISP_RS);
+}
+
 #ifdef _DISP_READ_ENABLED
 
 static void dispdrvReadDelay(void)
