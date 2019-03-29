@@ -248,6 +248,10 @@ $(BUILD_DIR)/%.o: %.s Makefile
 clean:
 	@rm -rf $(BUILD_DIR)
 
+clean_disp:
+	@rm -f $(patsubst %.c,$(BUILD_DIR)/%.o, $(notdir $(wildcard display/gc*/*.c)))
+	@rm -f $(BUILD_DIR)/dispdrv.o $(BUILD_DIR)/layout.o $(BUILD_DIR)/pins.o
+
 .PHONY: flash
 flash: $(BIN)
 	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_flash $(BIN)" -c shutdown
