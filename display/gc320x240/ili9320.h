@@ -15,10 +15,7 @@ void ili9320Shift(int16_t value);
 void ili9320Sleep(void);
 void ili9320Wakeup(void);
 
-void ili9320DrawPixel(int16_t x, int16_t y, uint16_t color);
-void ili9320DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void ili9320DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void ili9320SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

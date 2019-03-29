@@ -13,10 +13,7 @@ void s6d0144Init(DispDriver **driver);
 void s6d0144Sleep(void);
 void s6d0144Wakeup(void);
 
-void s6d0144DrawPixel(int16_t x, int16_t y, uint16_t color);
-void s6d0144DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void s6d0144DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void s6d0144SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

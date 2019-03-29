@@ -13,10 +13,7 @@ void hx8340Init(DispDriver **driver);
 void hx8340Sleep(void);
 void hx8340Wakeup(void);
 
-void hx8340DrawPixel(int16_t x, int16_t y, uint16_t color);
-void hx8340DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void hx8340DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void hx8340SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

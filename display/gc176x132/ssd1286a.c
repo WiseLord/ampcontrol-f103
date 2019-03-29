@@ -10,9 +10,7 @@
 static DispDriver drv = {
     .width = 176,
     .height = 132,
-    .drawPixel = ssd1286aDrawPixel,
-    .drawRectangle = ssd1286aDrawRectangle,
-    .drawImage = ssd1286aDrawImage,
+    .setWindow = ssd1286aSetWindow,
 };
 
 __attribute__((always_inline))
@@ -23,29 +21,6 @@ static inline void ssd1286aSelectReg(uint8_t cmd)
     dispdrvSendData8(cmd);
     DISP_WAIT_BUSY();
     SET(DISP_RS);
-}
-
-__attribute__((always_inline))
-static void inline ssd1286aSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    uint8_t x0 = (uint8_t)x;
-    uint8_t y0 = (uint8_t)y;
-    uint8_t x1 = (uint8_t)(x + w - 1);
-    uint8_t y1 = (uint8_t)(y + h - 1);
-
-    ssd1286aSelectReg(0x44);
-    dispdrvSendData8(y1);
-    dispdrvSendData8(y0);
-
-    ssd1286aSelectReg(0x47);
-    dispdrvSendData8(x1);
-    dispdrvSendData8(x0);
-
-    ssd1286aSelectReg(0x21);
-    dispdrvSendData8(x0);
-    dispdrvSendData8(y0);
-
-    ssd1286aSelectReg(0x22);
 }
 
 static void ssd1286aInitSeq(void)
@@ -152,38 +127,24 @@ void ssd1286aWakeup(void)
     SET(DISP_CS);
 }
 
-void ssd1286aDrawPixel(int16_t x, int16_t y, uint16_t color)
+void ssd1286aSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    uint8_t x0 = (uint8_t)x;
+    uint8_t y0 = (uint8_t)y;
+    uint8_t x1 = (uint8_t)(x + w - 1);
+    uint8_t y1 = (uint8_t)(y + h - 1);
 
-    ssd1286aSetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    ssd1286aSelectReg(0x44);
+    dispdrvSendData8(y1);
+    dispdrvSendData8(y0);
 
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
+    ssd1286aSelectReg(0x47);
+    dispdrvSendData8(x1);
+    dispdrvSendData8(x0);
 
-void ssd1286aDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
+    ssd1286aSelectReg(0x21);
+    dispdrvSendData8(x0);
+    dispdrvSendData8(y0);
 
-    ssd1286aSetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void ssd1286aDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    ssd1286aSetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
+    ssd1286aSelectReg(0x22);
 }

@@ -13,10 +13,7 @@ void mc2pa8201Init(DispDriver **driver);
 void mc2pa8201Sleep(void);
 void mc2pa8201Wakeup(void);
 
-void mc2pa8201DrawPixel(int16_t x, int16_t y, uint16_t color);
-void mc2pa8201DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void mc2pa8201DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void mc2pa8201SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

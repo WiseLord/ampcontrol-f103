@@ -13,10 +13,7 @@ void hx8347dInit(DispDriver **driver);
 void hx8347dSleep(void);
 void hx8347dWakeup(void);
 
-void hx8347dDrawPixel(int16_t x, int16_t y, uint16_t color);
-void hx8347dDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void hx8347dDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void hx8347dSetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

@@ -9,9 +9,7 @@
 static DispDriver drv = {
     .width = 220,
     .height = 176,
-    .drawPixel = lgdp4524DrawPixel,
-    .drawRectangle = lgdp4524DrawRectangle,
-    .drawImage = lgdp4524DrawImage,
+    .setWindow = lgdp4524SetWindow,
 };
 
 __attribute__((always_inline))
@@ -26,22 +24,6 @@ static void lgdp4524WriteReg(uint16_t reg, uint16_t data)
 {
     lgdp4524SelectReg(reg);
     dispdrvSendData16(data);
-}
-
-__attribute__((always_inline))
-static inline void lgdp4524SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    lgdp4524WriteReg(0x0044, (uint16_t)(y | (y1 << 8)));
-    lgdp4524WriteReg(0x0045, (uint16_t)(x | (x1 << 8)));
-
-    // Set cursor
-    lgdp4524WriteReg(0x0021, (uint16_t)(y | (x << 8)));
-
-    // Select RAM mode
-    lgdp4524SelectReg(0x0022);
 }
 
 static inline void lgdp4524InitSeq(void)
@@ -197,35 +179,17 @@ void lgdp4524Wakeup(void)
     SET(DISP_CS);
 }
 
-void lgdp4524DrawPixel(int16_t x, int16_t y, uint16_t color)
+void lgdp4524SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    lgdp4524SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    lgdp4524WriteReg(0x0044, (uint16_t)(y | (y1 << 8)));
+    lgdp4524WriteReg(0x0045, (uint16_t)(x | (x1 << 8)));
 
-    SET(DISP_CS);
-}
+    // Set cursor
+    lgdp4524WriteReg(0x0021, (uint16_t)(y | (x << 8)));
 
-void lgdp4524DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    lgdp4524SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    SET(DISP_CS);
-}
-
-void lgdp4524DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    lgdp4524SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    SET(DISP_CS);
+    // Select RAM mode
+    lgdp4524SelectReg(0x0022);
 }

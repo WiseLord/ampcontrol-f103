@@ -15,10 +15,7 @@ void ssd2119Shift(int16_t value);
 void ssd2119Sleep(void);
 void ssd2119Wakeup(void);
 
-void ssd2119DrawPixel(int16_t x, int16_t y, uint16_t color);
-void ssd2119DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void ssd2119DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void ssd2119SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

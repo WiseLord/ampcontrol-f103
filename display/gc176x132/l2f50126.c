@@ -32,9 +32,7 @@ static const uint8_t gcp16[15] = {
 static DispDriver drv = {
     .width = 176,
     .height = 132,
-    .drawPixel = l2f50126DrawPixel,
-    .drawRectangle = l2f50126DrawRectangle,
-    .drawImage = l2f50126DrawImage,
+    .setWindow = l2f50126SetWindow,
 };
 
 __attribute__((always_inline))
@@ -63,26 +61,6 @@ static void inline l2f50126PulseCS(void)
     CLR(DISP_CS);
 }
 */
-__attribute__((always_inline))
-static void inline l2f50126SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    uint8_t x0 = (uint8_t)x;
-    uint8_t y0 = (uint8_t)y + 8;
-    uint8_t x1 = (uint8_t)(x + w - 1);
-    uint8_t y1 = (uint8_t)(y + 8 + h - 1);
-
-    l2f50126SelectReg(SD_CSET);
-    l2f50126SendData0(y0);
-    l2f50126SendData0(0x01);
-    l2f50126SendData0(y1);
-    l2f50126SendData0(0x01);
-
-    l2f50126SelectReg(SD_PSET);
-    l2f50126SendData0(x0);
-    l2f50126SendData0(x1);
-
-    l2f50126SelectReg(L2F50126_RAMWR);
-}
 
 static void l2f50126InitSeq()
 {
@@ -170,38 +148,22 @@ void l2f50126Wakeup(void)
     SET(DISP_CS);
 }
 
-void l2f50126DrawPixel(int16_t x, int16_t y, uint16_t color)
+void l2f50126SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    uint8_t x0 = (uint8_t)x;
+    uint8_t y0 = (uint8_t)y + 8;
+    uint8_t x1 = (uint8_t)(x + w - 1);
+    uint8_t y1 = (uint8_t)(y + 8 + h - 1);
 
-    l2f50126SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    l2f50126SelectReg(SD_CSET);
+    l2f50126SendData0(y0);
+    l2f50126SendData0(0x01);
+    l2f50126SendData0(y1);
+    l2f50126SendData0(0x01);
 
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
+    l2f50126SelectReg(SD_PSET);
+    l2f50126SendData0(x0);
+    l2f50126SendData0(x1);
 
-void l2f50126DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    l2f50126SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void l2f50126DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    l2f50126SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
+    l2f50126SelectReg(L2F50126_RAMWR);
 }

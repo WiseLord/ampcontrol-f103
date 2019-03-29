@@ -10,9 +10,7 @@
 static DispDriver drv = {
     .width = 480,
     .height = 320,
-    .drawPixel = r61581DrawPixel,
-    .drawRectangle = r61581DrawRectangle,
-    .drawImage = r61581DrawImage,
+    .setWindow = r61581SetWindow,
     .rotate = r61581Rotate,
     .shift = r615811Shift,
 };
@@ -25,27 +23,6 @@ static inline void r61581SelectReg(uint8_t reg)
     dispdrvSendData8(reg);
     DISP_WAIT_BUSY();
     SET(DISP_RS);
-}
-
-__attribute__((always_inline))
-static inline void r61581SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    r61581SelectReg(0x2A);
-    dispdrvSendData8((y >> 8) & 0xFF);
-    dispdrvSendData8((y >> 0) & 0xFF);
-    dispdrvSendData8((y1 >> 8) & 0xFF);
-    dispdrvSendData8((y1 >> 0) & 0xFF);
-
-    r61581SelectReg(0x2B);
-    dispdrvSendData8((x >> 8) & 0xFF);
-    dispdrvSendData8((x >> 0) & 0xFF);
-    dispdrvSendData8((x1 >> 8) & 0xFF);
-    dispdrvSendData8((x1 >> 0) & 0xFF);
-
-    r61581SelectReg(0x2C);
 }
 
 __attribute__((always_inline))
@@ -205,35 +182,22 @@ void r61581Wakeup(void)
     SET(DISP_CS);
 }
 
-void r61581DrawPixel(int16_t x, int16_t y, uint16_t color)
+void r61581SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    r61581SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    r61581SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
 
-    SET(DISP_CS);
-}
+    r61581SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
 
-void r61581DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    r61581SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    SET(DISP_CS);
-}
-
-void r61581DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    r61581SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    SET(DISP_CS);
+    r61581SelectReg(0x2C);
 }

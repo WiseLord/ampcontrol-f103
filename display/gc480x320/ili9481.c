@@ -14,9 +14,7 @@
 static DispDriver drv = {
     .width = ILI9481_HEIGHT,
     .height = ILI9481_WIDTH,
-    .drawPixel = ili9481DrawPixel,
-    .drawRectangle = ili9481DrawRectangle,
-    .drawImage = ili9481DrawImage,
+    .setWindow = ili9481SetWindow,
     .rotate = ili9481Rotate,
 };
 
@@ -28,27 +26,6 @@ static inline void ili9481SelectReg(uint8_t reg)
     dispdrvSendData8(reg);
     DISP_WAIT_BUSY();
     SET(DISP_RS);
-}
-
-__attribute__((always_inline))
-static inline void ili9481SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    ili9481SelectReg(0x2A);
-    dispdrvSendData8((y >> 8) & 0xFF);
-    dispdrvSendData8((y >> 0) & 0xFF);
-    dispdrvSendData8((y1 >> 8) & 0xFF);
-    dispdrvSendData8((y1 >> 0) & 0xFF);
-
-    ili9481SelectReg(0x2B);
-    dispdrvSendData8((x >> 8) & 0xFF);
-    dispdrvSendData8((x >> 0) & 0xFF);
-    dispdrvSendData8((x1 >> 8) & 0xFF);
-    dispdrvSendData8((x1 >> 0) & 0xFF);
-
-    ili9481SelectReg(0x2C);
 }
 
 static inline void ili9481InitSeq(void)
@@ -179,35 +156,22 @@ void ili9481Wakeup(void)
     SET(DISP_CS);
 }
 
-void ili9481DrawPixel(int16_t x, int16_t y, uint16_t color)
+void ili9481SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    ili9481SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    ili9481SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
 
-    SET(DISP_CS);
-}
+    ili9481SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
 
-void ili9481DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    ili9481SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    SET(DISP_CS);
-}
-
-void ili9481DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    ili9481SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    SET(DISP_CS);
+    ili9481SelectReg(0x2C);
 }

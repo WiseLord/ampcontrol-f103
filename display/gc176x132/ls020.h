@@ -13,10 +13,7 @@ void ls020Init(DispDriver **driver);
 void ls020Sleep(void);
 void ls020Wakeup(void);
 
-void ls020DrawPixel(int16_t x, int16_t y, uint16_t color);
-void ls020DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void ls020DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void ls020SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

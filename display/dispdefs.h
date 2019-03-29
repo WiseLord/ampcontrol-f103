@@ -15,9 +15,7 @@ extern "C" {
 #define LCD_BR_MAX          32
 
 typedef struct {
-    void (*drawPixel)(int16_t x, int16_t y, uint16_t color);
-    void (*drawRectangle)(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-    void (*drawImage)(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+    void (*setWindow)(int16_t x, int16_t y, int16_t w, int16_t h);
     void (*rotate)(uint8_t rotate);
     void (*shift)(int16_t value);
 

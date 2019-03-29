@@ -9,9 +9,7 @@
 static DispDriver drv = {
     .width = 320,
     .height = 240,
-    .drawPixel = ssd2119DrawPixel,
-    .drawRectangle = ssd2119DrawRectangle,
-    .drawImage = ssd2119DrawImage,
+    .setWindow = ssd2119SetWindow,
     .rotate = ssd2119Rotate,
     .shift = ssd2119Shift,
 };
@@ -29,23 +27,6 @@ static inline void ssd2119WriteReg(uint16_t reg, uint16_t value)
 {
     ssd2119SelectReg(reg);
     dispdrvSendData16(value);
-}
-
-static inline void ssd2119SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    ssd2119WriteReg(0x0044, (uint16_t)(y | (y1 << 8)));
-    ssd2119WriteReg(0x0045, (uint16_t)x);
-    ssd2119WriteReg(0x0046, (uint16_t)x1);
-
-    // Set cursor
-    ssd2119WriteReg(0x004E, (uint16_t)x);
-    ssd2119WriteReg(0x004F, (uint16_t)y);
-
-    // Select RAM mode
-    ssd2119SelectReg(0x0022);
 }
 
 static inline void ssd2119InitSeq(void)
@@ -155,38 +136,19 @@ void ssd2119Wakeup(void)
     SET(DISP_CS);
 }
 
-void ssd2119DrawPixel(int16_t x, int16_t y, uint16_t color)
+void ssd2119SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    ssd2119SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    ssd2119WriteReg(0x0044, (uint16_t)(y | (y1 << 8)));
+    ssd2119WriteReg(0x0045, (uint16_t)x);
+    ssd2119WriteReg(0x0046, (uint16_t)x1);
 
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
+    // Set cursor
+    ssd2119WriteReg(0x004E, (uint16_t)x);
+    ssd2119WriteReg(0x004F, (uint16_t)y);
 
-void ssd2119DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    ssd2119SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void ssd2119DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    ssd2119SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
+    // Select RAM mode
+    ssd2119SelectReg(0x0022);
 }

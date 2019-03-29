@@ -254,25 +254,8 @@ void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor)
     int16_t x = glcd.rect.x + glcd.x;
     int16_t y = glcd.rect.y + glcd.y;
 
-    if (glcd.drv->drawImage) {
-        // Draw fast by display driver function
-        glcd.drv->drawImage(imgUnRle, x, y, color, bgColor);
-    } else {
-        // Draw slow by pixels if there is no driver-specific drawImage
-        int16_t w = img->width;
-        int16_t h = img->height;
-        for (uint16_t j = 0; j < (h + 7) / 8; j++) {
-            for (uint16_t i = 0; i < w; i++) {
-                uint8_t data = imgUnRle->data[w * j + i];
-                for (uint8_t bit = 0; bit < 8; bit++) {
-                    if (8 * j + bit < h) {
-                        glcd.drv->drawPixel(x + i, y + (8 * j + bit),
-                                            data & (1 << bit) ? color : bgColor);
-                    }
-                }
-            }
-        }
-    }
+    dispdrvDrawImage(imgUnRle, x, y, color, bgColor);
+
     glcdSetX(glcd.x + img->width);
 }
 
@@ -420,9 +403,7 @@ void glcdDrawPixel(int16_t x, int16_t y, uint16_t color)
     x += glcd.rect.x;
     y += glcd.rect.y;
 
-    if (glcd.drv->drawPixel) {
-        glcd.drv->drawPixel(x, y, color);
-    }
+    dispdrvDrawPixel(x, y, color);
 }
 
 void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
@@ -433,15 +414,7 @@ void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
     x += glcd.rect.x;
     y += glcd.rect.y;
 
-    if (glcd.drv->drawRectangle) {
-        glcd.drv->drawRectangle(x, y, w, h, color);
-    } else {
-        for (int16_t i = 0; i < w; i++) {
-            for (int16_t j = 0; j < h; j++) {
-                glcd.drv->drawPixel(x + i, y + j, color);
-            }
-        }
-    }
+    dispdrvDrawRectangle(x, y, w, h, color);
 }
 
 void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)

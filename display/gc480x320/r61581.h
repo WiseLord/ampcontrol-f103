@@ -15,10 +15,7 @@ void r615811Shift(int16_t value);
 void r61581Sleep(void);
 void r61581Wakeup(void);
 
-void r61581DrawPixel(int16_t x, int16_t y, uint16_t color);
-void r61581DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void r61581DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void r61581SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

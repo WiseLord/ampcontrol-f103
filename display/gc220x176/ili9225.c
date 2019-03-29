@@ -9,9 +9,7 @@
 static DispDriver drv = {
     .width = 220,
     .height = 176,
-    .drawPixel = ili9225DrawPixel,
-    .drawRectangle = ili9225DrawRectangle,
-    .drawImage = ili9225DrawImage,
+    .setWindow = ili9225SetWindow,
 };
 
 __attribute__((always_inline))
@@ -26,25 +24,6 @@ static void ili9225WriteReg(uint16_t reg, uint16_t data)
 {
     ili9225SelectReg(reg);
     dispdrvSendData16(data);
-}
-
-__attribute__((always_inline))
-static inline void ili9225SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    ili9225WriteReg(0x0036, (uint16_t)y1);
-    ili9225WriteReg(0x0037, (uint16_t)y);
-    ili9225WriteReg(0x0038, (uint16_t)x1);
-    ili9225WriteReg(0x0039, (uint16_t)x);
-
-    // Set cursor
-    ili9225WriteReg(0x0020, (uint16_t)y);
-    ili9225WriteReg(0x0021, (uint16_t)x);
-
-    // Select RAM mode
-    ili9225SelectReg(0x0022);
 }
 
 static inline void ili9225InitSeq(void)
@@ -134,35 +113,20 @@ void ili9225Wakeup(void)
     SET(DISP_CS);
 }
 
-void ili9225DrawPixel(int16_t x, int16_t y, uint16_t color)
+void ili9225SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    ili9225SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    ili9225WriteReg(0x0036, (uint16_t)y1);
+    ili9225WriteReg(0x0037, (uint16_t)y);
+    ili9225WriteReg(0x0038, (uint16_t)x1);
+    ili9225WriteReg(0x0039, (uint16_t)x);
 
-    SET(DISP_CS);
-}
+    // Set cursor
+    ili9225WriteReg(0x0020, (uint16_t)y);
+    ili9225WriteReg(0x0021, (uint16_t)x);
 
-void ili9225DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    ili9225SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    SET(DISP_CS);
-}
-
-void ili9225DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    ili9225SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    SET(DISP_CS);
+    // Select RAM mode
+    ili9225SelectReg(0x0022);
 }

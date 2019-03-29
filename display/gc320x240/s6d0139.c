@@ -9,9 +9,7 @@
 static DispDriver drv = {
     .width = 320,
     .height = 240,
-    .drawPixel = s6d0139DrawPixel,
-    .drawRectangle = s6d0139DrawRectangle,
-    .drawImage = s6d0139DrawImage,
+    .setWindow = s6d0139SetWindow,
     .rotate = s6d0139Rotate,
 };
 
@@ -28,22 +26,6 @@ static inline void s6d0139WriteReg(uint16_t reg, uint16_t data)
 {
     s6d0139SelectReg(reg);
     dispdrvSendData16(data);
-}
-
-__attribute__((always_inline))
-static inline void s6d0139SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    s6d0139WriteReg(0x0046, (uint16_t)(y | (y1 << 8)));
-    s6d0139WriteReg(0x0048, (uint16_t)x);
-    s6d0139WriteReg(0x0047, (uint16_t)x1);
-
-    s6d0139WriteReg(0x0020, (uint16_t)y);
-    s6d0139WriteReg(0x0021, (uint16_t)x);
-
-    s6d0139SelectReg(0x0022);
 }
 
 static inline void s6d0139InitSeq(void)
@@ -163,35 +145,17 @@ void s6d0139Wakeup(void)
     SET(DISP_CS);
 }
 
-void s6d0139DrawPixel(int16_t x, int16_t y, uint16_t color)
+void s6d0139SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    s6d0139SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    s6d0139WriteReg(0x0046, (uint16_t)(y | (y1 << 8)));
+    s6d0139WriteReg(0x0048, (uint16_t)x);
+    s6d0139WriteReg(0x0047, (uint16_t)x1);
 
-    SET(DISP_CS);
-}
+    s6d0139WriteReg(0x0020, (uint16_t)y);
+    s6d0139WriteReg(0x0021, (uint16_t)x);
 
-void s6d0139DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    s6d0139SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    SET(DISP_CS);
-}
-
-void s6d0139DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    s6d0139SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    SET(DISP_CS);
+    s6d0139SelectReg(0x0022);
 }

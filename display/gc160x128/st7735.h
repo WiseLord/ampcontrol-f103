@@ -13,10 +13,7 @@ void st7735Init(DispDriver **driver);
 void st7735Sleep(void);
 void st7735Wakeup(void);
 
-void st7735DrawPixel(int16_t x, int16_t y, uint16_t color);
-void st7735DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void st7735DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void st7735SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

@@ -14,10 +14,7 @@ void st7793Rotate(uint8_t rotate);
 void st7793Sleep(void);
 void st7793Wakeup(void);
 
-void st7793DrawPixel(int16_t x, int16_t y, uint16_t color);
-void st7793DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void st7793DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void st7793SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

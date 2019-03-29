@@ -13,10 +13,7 @@ void lgdp4524Init(DispDriver **driver);
 void lgdp4524Sleep(void);
 void lgdp4524Wakeup(void);
 
-void lgdp4524DrawPixel(int16_t x, int16_t y, uint16_t color);
-void lgdp4524DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void lgdp4524DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void lgdp4524SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

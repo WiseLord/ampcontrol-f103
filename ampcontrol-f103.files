@@ -66,6 +66,8 @@ display/icons/icons-amp-64.c
 
 display/gc160x128/ili9163.c
 display/gc160x128/ili9163.h
+display/gc160x128/s6d0144.c
+display/gc160x128/s6d0144.h
 display/gc160x128/st7735.c
 display/gc160x128/st7735.h
 
@@ -85,9 +87,13 @@ display/gc220x176/ili9225.c
 display/gc220x176/ili9225.h
 display/gc220x176/lgdp4524.c
 display/gc220x176/lgdp4524.h
+display/gc220x176/s6d0164.c
+display/gc220x176/s6d0164.h
 
-display/gc320x240/hx8347.c
-display/gc320x240/hx8347.h
+display/gc320x240/hx8347a.c
+display/gc320x240/hx8347a.h
+display/gc320x240/hx8347d.c
+display/gc320x240/hx8347d.h
 display/gc320x240/ili9320.c
 display/gc320x240/ili9320.h
 display/gc320x240/ili9341.c
@@ -106,8 +112,11 @@ display/gc320x240/ssd2119.h
 
 display/gc400x240/ili9327.c
 display/gc400x240/ili9327.h
+display/gc400x240/s6d04d1.c
+display/gc400x240/s6d04d1.h
 display/gc400x240/st7793.c
 display/gc400x240/st7793.h
+
 display/gc480x320/ili9481.c
 display/gc480x320/ili9481.h
 display/gc480x320/ili9486.c

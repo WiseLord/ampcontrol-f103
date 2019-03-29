@@ -13,10 +13,7 @@ void l2f50126Init(DispDriver **driver);
 void l2f50126Sleep(void);
 void l2f50126Wakeup(void);
 
-void l2f50126DrawPixel(int16_t x, int16_t y, uint16_t color);
-void l2f50126DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void l2f50126DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void l2f50126SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

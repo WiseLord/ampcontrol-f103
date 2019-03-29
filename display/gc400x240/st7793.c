@@ -9,9 +9,7 @@
 static DispDriver drv = {
     .width = 400,
     .height = 240,
-    .drawPixel = st7793DrawPixel,
-    .drawRectangle = st7793DrawRectangle,
-    .drawImage = st7793DrawImage,
+    .setWindow = st7793SetWindow,
     .rotate = st7793Rotate,
 };
 
@@ -28,25 +26,6 @@ static inline void st7793WriteReg(uint16_t reg, uint16_t data)
 {
     st7793SelectReg(reg);
     dispdrvSendData16(data);
-}
-
-__attribute__((always_inline))
-static inline void st7793SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    st7793WriteReg(0x0210, (uint16_t)y);
-    st7793WriteReg(0x0211, (uint16_t)y1);
-    st7793WriteReg(0x0212, (uint16_t)x);
-    st7793WriteReg(0x0213, (uint16_t)x1);
-
-    // Set cursor
-    st7793WriteReg(0x00200, (uint16_t)y);
-    st7793WriteReg(0x00201, (uint16_t)x);
-
-    // Select RAM mode
-    st7793SelectReg(0x0202);
 }
 
 static inline void st7793InitSeq(void)
@@ -158,35 +137,20 @@ void st7793Wakeup(void)
     SET(DISP_CS);
 }
 
-void st7793DrawPixel(int16_t x, int16_t y, uint16_t color)
+void st7793SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    st7793SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    st7793WriteReg(0x0210, (uint16_t)y);
+    st7793WriteReg(0x0211, (uint16_t)y1);
+    st7793WriteReg(0x0212, (uint16_t)x);
+    st7793WriteReg(0x0213, (uint16_t)x1);
 
-    SET(DISP_CS);
-}
+    // Set cursor
+    st7793WriteReg(0x00200, (uint16_t)y);
+    st7793WriteReg(0x00201, (uint16_t)x);
 
-void st7793DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    st7793SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    SET(DISP_CS);
-}
-
-void st7793DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    st7793SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    SET(DISP_CS);
+    // Select RAM mode
+    st7793SelectReg(0x0202);
 }

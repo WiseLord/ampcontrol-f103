@@ -10,29 +10,8 @@
 static DispDriver drv = {
     .width = 176,
     .height = 132,
-    .drawPixel = ls020DrawPixel,
-    .drawRectangle = ls020DrawRectangle,
-    .drawImage = ls020DrawImage,
+    .setWindow = ls020SetWindow,
 };
-
-__attribute__((always_inline))
-static void inline ls020SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    SET(DISP_RS);
-    CLR(DISP_CS);
-
-    dispdrvSendData16((uint16_t)(0x0800 + y));
-    dispdrvSendData16((uint16_t)(0x0900 + y1));
-
-    dispdrvSendData16((uint16_t)(0x0A00 + x));
-    dispdrvSendData16((uint16_t)(0x0B00 + x1));
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
 
 static void ls020InitSeq(void)
 {
@@ -127,43 +106,21 @@ void ls020Wakeup(void)
     ls020InitSeq();
 }
 
-void ls020DrawPixel(int16_t x, int16_t y, uint16_t color)
+void ls020SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    ls020SetWindow(x, y, 1, 1);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    CLR(DISP_RS);
+    SET(DISP_RS);
     CLR(DISP_CS);
-    dispdrvSendData16(color);
+
+    dispdrvSendData16((uint16_t)(0x0800 + y));
+    dispdrvSendData16((uint16_t)(0x0900 + y1));
+
+    dispdrvSendData16((uint16_t)(0x0A00 + x));
+    dispdrvSendData16((uint16_t)(0x0B00 + x1));
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void ls020DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    ls020SetWindow(x, y, w, h);
-
     CLR(DISP_RS);
-    CLR(DISP_CS);
-
-    dispdrvSendFill(w * h, color);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void ls020DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    ls020SetWindow(x, y, w, h);
-
-    CLR(DISP_RS);
-    CLR(DISP_CS);
-
-    dispdrvSendImage(img, color, bgColor);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
 }

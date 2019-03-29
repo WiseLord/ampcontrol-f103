@@ -9,9 +9,7 @@
 static DispDriver drv = {
     .width = 320,
     .height = 240,
-    .drawPixel = spfd5408DrawPixel,
-    .drawRectangle = spfd5408DrawRectangle,
-    .drawImage = spfd5408DrawImage,
+    .setWindow = spfd5408SetWindow,
 };
 
 __attribute__((always_inline))
@@ -27,25 +25,6 @@ static inline void spfd5408WriteReg(uint16_t reg, uint16_t data)
 {
     spfd5408SelectReg(reg);
     dispdrvSendData16(data);
-}
-
-__attribute__((always_inline))
-static inline void spfd5408SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    spfd5408WriteReg(0x0050, (uint16_t)y);
-    spfd5408WriteReg(0x0051, (uint16_t)y1);
-    spfd5408WriteReg(0x0052, (uint16_t)x);
-    spfd5408WriteReg(0x0053, (uint16_t)x1);
-
-    // Set cursor
-    spfd5408WriteReg(0x0020, (uint16_t)y);
-    spfd5408WriteReg(0x0021, (uint16_t)x);
-
-    // Set RAM mode
-    spfd5408SelectReg(0x0022);
 }
 
 static inline void spfd5408InitSeq(void)
@@ -200,35 +179,20 @@ void spfd5408Wakeup(void)
     SET(DISP_CS);
 }
 
-void spfd5408DrawPixel(int16_t x, int16_t y, uint16_t color)
+void spfd5408SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    spfd5408SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    spfd5408WriteReg(0x0050, (uint16_t)y);
+    spfd5408WriteReg(0x0051, (uint16_t)y1);
+    spfd5408WriteReg(0x0052, (uint16_t)x);
+    spfd5408WriteReg(0x0053, (uint16_t)x1);
 
-    SET(DISP_CS);
-}
+    // Set cursor
+    spfd5408WriteReg(0x0020, (uint16_t)y);
+    spfd5408WriteReg(0x0021, (uint16_t)x);
 
-void spfd5408DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    spfd5408SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    SET(DISP_CS);
-}
-
-void spfd5408DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    spfd5408SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    SET(DISP_CS);
+    // Set RAM mode
+    spfd5408SelectReg(0x0022);
 }

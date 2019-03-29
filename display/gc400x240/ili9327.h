@@ -14,10 +14,7 @@ void ili9327Rotate(uint8_t rotate);
 void ili9327Sleep(void);
 void ili9327Wakeup(void);
 
-void ili9327DrawPixel(int16_t x, int16_t y, uint16_t color);
-void ili9327DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void ili9327DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void ili9327SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

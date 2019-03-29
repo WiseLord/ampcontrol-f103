@@ -10,9 +10,7 @@
 static DispDriver drv = {
     .width = 160,
     .height = 128,
-    .drawPixel = st7735DrawPixel,
-    .drawRectangle = st7735DrawRectangle,
-    .drawImage = st7735DrawImage,
+    .setWindow = st7735SetWindow,
 };
 
 __attribute__((always_inline))
@@ -23,27 +21,6 @@ static inline void st7735SelectReg(uint8_t reg)
     dispdrvSendData8(reg);
     DISP_WAIT_BUSY();
     SET(DISP_RS);
-}
-
-__attribute__((always_inline))
-static inline void st7735SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    st7735SelectReg(0x2A);
-    dispdrvSendData8((y >> 8) & 0xFF);
-    dispdrvSendData8((y >> 0) & 0xFF);
-    dispdrvSendData8((y1 >> 8) & 0xFF);
-    dispdrvSendData8((y1 >> 0) & 0xFF);
-
-    st7735SelectReg(0x2B);
-    dispdrvSendData8((x >> 8) & 0xFF);
-    dispdrvSendData8((x >> 0) & 0xFF);
-    dispdrvSendData8((x1 >> 8) & 0xFF);
-    dispdrvSendData8((x1 >> 0) & 0xFF);
-
-    st7735SelectReg(0x2C);
 }
 
 static inline void st7735InitSeq(void)
@@ -169,38 +146,22 @@ void st7735Wakeup(void)
     SET(DISP_CS);
 }
 
-void st7735DrawPixel(int16_t x, int16_t y, uint16_t color)
+void st7735SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    st7735SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    st7735SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
 
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
+    st7735SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
 
-void st7735DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    st7735SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void st7735DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    st7735SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
+    st7735SelectReg(0x2C);
 }

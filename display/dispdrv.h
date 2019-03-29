@@ -25,13 +25,15 @@ void dispdrvBusIRQ(void);
 
 void dispdrvSendData8(uint8_t data);
 void dispdrvSendData16(uint16_t data);
-void dispdrvSendFill(int32_t size, uint16_t color);
-void dispdrvSendImage(tImage *img, uint16_t color, uint16_t bgColor);
 
 #ifdef _DISP_READ_ENABLED
 uint16_t dispdrvReadData16(void);
 void dispdrvReadReg(uint16_t reg, uint16_t *args, uint8_t nArgs);
 #endif
+
+void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color);
+void dispdrvDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
 
 #ifdef __cplusplus
 }

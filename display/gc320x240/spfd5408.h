@@ -13,10 +13,7 @@ void spfd5408Init(DispDriver **driver);
 void spfd5408Sleep(void);
 void spfd5408Wakeup(void);
 
-void spfd5408DrawPixel(int16_t x, int16_t y, uint16_t color);
-void spfd5408DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void spfd5408DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void spfd5408SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

@@ -308,31 +308,6 @@ void dispdrvSendData16(uint16_t data)
     dispdrvSendWord(data);
 }
 
-void dispdrvSendFill(int32_t size, uint16_t color)
-{
-    for (int32_t i = 0; i < size; i++) {
-        dispdrvSendWord(color);
-    }
-}
-
-void dispdrvSendImage(tImage *img, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    for (uint16_t i = 0; i < w; i++) {
-        for (uint16_t j = 0; j < (h + 7) / 8; j++) {
-            uint8_t data = img->data[w * j + i];
-            for (uint8_t bit = 0; bit < 8; bit++) {
-                if (8 * j + bit < h) {
-                    dispdrvSendWord(data & 0x01 ? color : bgColor);
-                    data >>= 1;
-                }
-            }
-        }
-    }
-}
-
 #ifdef _DISP_READ_ENABLED
 
 static void dispdrvReadDelay(void)
@@ -402,3 +377,54 @@ void dispdrvReadReg(uint16_t reg, uint16_t *args, uint8_t nArgs)
 }
 
 #endif
+
+void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
+{
+    CLR(DISP_CS);
+
+    drv->setWindow(x, y, 1, 1);
+
+    dispdrvSendWord(color);
+
+    DISP_WAIT_BUSY();
+    SET(DISP_CS);
+}
+
+void dispdrvDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+{
+    CLR(DISP_CS);
+
+    drv->setWindow(x, y, w, h);
+
+    for (int32_t i = 0; i < w * h; i++) {
+        dispdrvSendWord(color);
+    }
+
+    DISP_WAIT_BUSY();
+    SET(DISP_CS);
+}
+
+void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
+{
+    int16_t w = img->width;
+    int16_t h = img->height;
+
+    CLR(DISP_CS);
+
+    drv->setWindow(x, y, w, h);
+
+    for (uint16_t i = 0; i < w; i++) {
+        for (uint16_t j = 0; j < (h + 7) / 8; j++) {
+            uint8_t data = img->data[w * j + i];
+            for (uint8_t bit = 0; bit < 8; bit++) {
+                if (8 * j + bit < h) {
+                    dispdrvSendWord(data & 0x01 ? color : bgColor);
+                    data >>= 1;
+                }
+            }
+        }
+    }
+
+    DISP_WAIT_BUSY();
+    SET(DISP_CS);
+}

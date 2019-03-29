@@ -9,9 +9,7 @@
 static DispDriver drv = {
     .width = 320,
     .height = 240,
-    .drawPixel = hx8347aDrawPixel,
-    .drawRectangle = hx8347aDrawRectangle,
-    .drawImage = hx8347aDrawImage,
+    .setWindow = hx8347aSetWindow,
 };
 
 __attribute__((always_inline))
@@ -27,23 +25,6 @@ static inline void hx8347aWriteReg(uint8_t reg, uint8_t value)
 {
     hx8347aSelectReg(reg);
     dispdrvSendData8(value);
-}
-
-__attribute__((always_inline))
-static inline void hx8347aSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    hx8347aWriteReg(0x03, ((y >> 0) & 0xFF));
-    hx8347aWriteReg(0x05, ((y1 >> 0) & 0xFF));
-
-    hx8347aWriteReg(0x06, ((x >> 8) & 0xFF));
-    hx8347aWriteReg(0x07, ((x >> 0) & 0xFF));
-    hx8347aWriteReg(0x08, ((x1 >> 8) & 0xFF));
-    hx8347aWriteReg(0x09, ((x1 >> 0) & 0xFF));
-
-    hx8347aSelectReg(0x22);
 }
 
 static inline void hx8347aInitSeq(void)
@@ -230,35 +211,18 @@ void hx8347aWakeup(void)
     SET(DISP_CS);
 }
 
-void hx8347aDrawPixel(int16_t x, int16_t y, uint16_t color)
+void hx8347aSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    hx8347aSetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    hx8347aWriteReg(0x03, ((y >> 0) & 0xFF));
+    hx8347aWriteReg(0x05, ((y1 >> 0) & 0xFF));
 
-    SET(DISP_CS);
-}
+    hx8347aWriteReg(0x06, ((x >> 8) & 0xFF));
+    hx8347aWriteReg(0x07, ((x >> 0) & 0xFF));
+    hx8347aWriteReg(0x08, ((x1 >> 8) & 0xFF));
+    hx8347aWriteReg(0x09, ((x1 >> 0) & 0xFF));
 
-void hx8347aDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    hx8347aSetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    SET(DISP_CS);
-}
-
-void hx8347aDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    hx8347aSetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    SET(DISP_CS);
+    hx8347aSelectReg(0x22);
 }

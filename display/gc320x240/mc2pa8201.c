@@ -10,9 +10,7 @@
 static DispDriver drv = {
     .width = 320,
     .height = 240,
-    .drawPixel = mc2pa8201DrawPixel,
-    .drawRectangle = mc2pa8201DrawRectangle,
-    .drawImage = mc2pa8201DrawImage,
+    .setWindow = mc2pa8201SetWindow,
 };
 
 __attribute__((always_inline))
@@ -21,27 +19,6 @@ static inline void mc2pa8201SelectReg(uint8_t reg)
     CLR(DISP_RS);
     dispdrvSendData8(reg);
     SET(DISP_RS);
-}
-
-__attribute__((always_inline))
-static inline void mc2pa8201SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    mc2pa8201SelectReg(0x2A);
-    dispdrvSendData8((y >> 8) & 0xFF);
-    dispdrvSendData8((y >> 0) & 0xFF);
-    dispdrvSendData8((y1 >> 8) & 0xFF);
-    dispdrvSendData8((y1 >> 0) & 0xFF);
-
-    mc2pa8201SelectReg(0x2B);
-    dispdrvSendData8((x >> 8) & 0xFF);
-    dispdrvSendData8((x >> 0) & 0xFF);
-    dispdrvSendData8((x1 >> 8) & 0xFF);
-    dispdrvSendData8((x1 >> 0) & 0xFF);
-
-    mc2pa8201SelectReg(0x2C);
 }
 
 static inline void mc2pa8201InitSeq(void)
@@ -123,35 +100,22 @@ void mc2pa8201Wakeup(void)
     SET(DISP_CS);
 }
 
-void mc2pa8201DrawPixel(int16_t x, int16_t y, uint16_t color)
+void mc2pa8201SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    mc2pa8201SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    mc2pa8201SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
 
-    SET(DISP_CS);
-}
+    mc2pa8201SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
 
-void mc2pa8201DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    mc2pa8201SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    SET(DISP_CS);
-}
-
-void mc2pa8201DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    mc2pa8201SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    SET(DISP_CS);
+    mc2pa8201SelectReg(0x2C);
 }

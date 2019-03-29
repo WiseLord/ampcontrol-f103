@@ -14,10 +14,7 @@ void s6d0129Rotate(uint8_t rotate);
 void s6d0129Sleep(void);
 void s6d0129Wakeup(void);
 
-void s6d0129DrawPixel(int16_t x, int16_t y, uint16_t color);
-void s6d0129DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-void s6d0129DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor);
+void s6d0129SetWindow(int16_t x, int16_t y, int16_t w, int16_t h);
 
 #ifdef __cplusplus
 }

@@ -10,9 +10,7 @@
 static DispDriver drv = {
     .width = 400,
     .height = 240,
-    .drawPixel = s6d04d1DrawPixel,
-    .drawRectangle = s6d04d1DrawRectangle,
-    .drawImage = s6d04d1DrawImage,
+    .setWindow = s6d04d1SetWindow,
     .rotate = s6d04d1Rotate,
 };
 
@@ -24,27 +22,6 @@ static inline void s6d04d1SelectReg(uint8_t reg)
     dispdrvSendData8(reg);
     DISP_WAIT_BUSY();
     SET(DISP_RS);
-}
-
-__attribute__((always_inline))
-static inline void s6d04d1SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    s6d04d1SelectReg(0x2A);
-    dispdrvSendData8((y >> 8) & 0xFF);
-    dispdrvSendData8((y >> 0) & 0xFF);
-    dispdrvSendData8((y1 >> 8) & 0xFF);
-    dispdrvSendData8((y1 >> 0) & 0xFF);
-
-    s6d04d1SelectReg(0x2B);
-    dispdrvSendData8((x >> 8) & 0xFF);
-    dispdrvSendData8((x >> 0) & 0xFF);
-    dispdrvSendData8((x1 >> 8) & 0xFF);
-    dispdrvSendData8((x1 >> 0) & 0xFF);
-
-    s6d04d1SelectReg(0x2C);
 }
 
 static inline void s6d04d1InitSeq(void)
@@ -290,38 +267,22 @@ void s6d04d1Wakeup(void)
     SET(DISP_CS);
 }
 
-void s6d04d1DrawPixel(int16_t x, int16_t y, uint16_t color)
+void s6d04d1SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    s6d04d1SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    s6d04d1SelectReg(0x2A);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
 
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
+    s6d04d1SelectReg(0x2B);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
 
-void s6d04d1DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    s6d04d1SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void s6d04d1DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    s6d04d1SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
+    s6d04d1SelectReg(0x2C);
 }

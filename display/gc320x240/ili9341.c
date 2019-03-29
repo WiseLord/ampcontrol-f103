@@ -11,9 +11,7 @@
 static DispDriver drv = {
     .width = 320,
     .height = 240,
-    .drawPixel = ili9341DrawPixel,
-    .drawRectangle = ili9341DrawRectangle,
-    .drawImage = ili9341DrawImage,
+    .setWindow = ili9341SetWindow,
     .rotate = ili9341Rotate,
     .shift = ili9341Shift,
 };
@@ -26,27 +24,6 @@ static inline void ili9341SelectReg(uint8_t reg)
     dispdrvSendData8(reg);
     DISP_WAIT_BUSY();
     SET(DISP_RS);
-}
-
-__attribute__((always_inline))
-static inline void ili9341SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    ili9341SelectReg(ILI9341_CASET);
-    dispdrvSendData8((y >> 8) & 0xFF);
-    dispdrvSendData8((y >> 0) & 0xFF);
-    dispdrvSendData8((y1 >> 8) & 0xFF);
-    dispdrvSendData8((y1 >> 0) & 0xFF);
-
-    ili9341SelectReg(ILI9341_PASET);
-    dispdrvSendData8((x >> 8) & 0xFF);
-    dispdrvSendData8((x >> 0) & 0xFF);
-    dispdrvSendData8((x1 >> 8) & 0xFF);
-    dispdrvSendData8((x1 >> 0) & 0xFF);
-
-    ili9341SelectReg(ILI9341_RAMWR);
 }
 
 static void ili9341InitSeq(void)
@@ -228,38 +205,22 @@ void ili9341Wakeup(void)
     SET(DISP_CS);
 }
 
-void ili9341DrawPixel(int16_t x, int16_t y, uint16_t color)
+void ili9341SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    ili9341SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    ili9341SelectReg(ILI9341_CASET);
+    dispdrvSendData8((y >> 8) & 0xFF);
+    dispdrvSendData8((y >> 0) & 0xFF);
+    dispdrvSendData8((y1 >> 8) & 0xFF);
+    dispdrvSendData8((y1 >> 0) & 0xFF);
 
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
+    ili9341SelectReg(ILI9341_PASET);
+    dispdrvSendData8((x >> 8) & 0xFF);
+    dispdrvSendData8((x >> 0) & 0xFF);
+    dispdrvSendData8((x1 >> 8) & 0xFF);
+    dispdrvSendData8((x1 >> 0) & 0xFF);
 
-void ili9341DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    ili9341SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void ili9341DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    ili9341SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
+    ili9341SelectReg(ILI9341_RAMWR);
 }

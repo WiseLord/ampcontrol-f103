@@ -9,9 +9,7 @@
 static DispDriver drv = {
     .width = 320,
     .height = 240,
-    .drawPixel = ili9320DrawPixel,
-    .drawRectangle = ili9320DrawRectangle,
-    .drawImage = ili9320DrawImage,
+    .setWindow = ili9320SetWindow,
     .rotate = ili9320Rotate,
     .shift = ili9320Shift,
 };
@@ -29,24 +27,6 @@ static inline void ili9320WriteReg(uint16_t reg, uint16_t value)
 {
     ili9320SelectReg(reg);
     dispdrvSendData16(value);
-}
-
-static inline void ili9320SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-    int16_t x1 = x + w - 1;
-    int16_t y1 = y + h - 1;
-
-    ili9320WriteReg(0x0050, (uint16_t)y);
-    ili9320WriteReg(0x0051, (uint16_t)y1);
-    ili9320WriteReg(0x0052, (uint16_t)x);
-    ili9320WriteReg(0x0053, (uint16_t)x1);
-
-    // Set cursor
-    ili9320WriteReg(0x0020, (uint16_t)y);
-    ili9320WriteReg(0x0021, (uint16_t)x);
-
-    // Select RAM mode
-    ili9320SelectReg(0x0022);
 }
 
 static inline void ili9320InitSeq(void)
@@ -193,38 +173,20 @@ void ili9320Wakeup(void)
     SET(DISP_CS);
 }
 
-void ili9320DrawPixel(int16_t x, int16_t y, uint16_t color)
+void ili9320SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    CLR(DISP_CS);
+    int16_t x1 = x + w - 1;
+    int16_t y1 = y + h - 1;
 
-    ili9320SetWindow(x, y, 1, 1);
-    dispdrvSendData16(color);
+    ili9320WriteReg(0x0050, (uint16_t)y);
+    ili9320WriteReg(0x0051, (uint16_t)y1);
+    ili9320WriteReg(0x0052, (uint16_t)x);
+    ili9320WriteReg(0x0053, (uint16_t)x1);
 
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
+    // Set cursor
+    ili9320WriteReg(0x0020, (uint16_t)y);
+    ili9320WriteReg(0x0021, (uint16_t)x);
 
-void ili9320DrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
-{
-    CLR(DISP_CS);
-
-    ili9320SetWindow(x, y, w, h);
-    dispdrvSendFill(w * h, color);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void ili9320DrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
-{
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    CLR(DISP_CS);
-
-    ili9320SetWindow(x, y, w, h);
-    dispdrvSendImage(img, color, bgColor);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
+    // Select RAM mode
+    ili9320SelectReg(0x0022);
 }
