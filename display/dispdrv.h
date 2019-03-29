@@ -27,6 +27,10 @@ void dispdrvSendData8(uint8_t data);
 void dispdrvSendData16(uint16_t data);
 
 void dispdrvSelectReg8(uint8_t reg);
+void dispdrvWriteReg8(uint8_t reg, uint8_t data);
+
+void dispdrvSelectReg16(uint16_t reg);
+void dispdrvWriteReg16(uint16_t reg, uint16_t data);
 
 #ifdef _DISP_READ_ENABLED
 uint16_t dispdrvReadData16(void);

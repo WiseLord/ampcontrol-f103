@@ -317,6 +317,27 @@ void dispdrvSelectReg8(uint8_t reg)
     SET(DISP_RS);
 }
 
+void dispdrvWriteReg8(uint8_t reg, uint8_t data)
+{
+    dispdrvSelectReg8(reg);
+    dispdrvSendData8(data);
+}
+
+void dispdrvSelectReg16(uint16_t reg)
+{
+    DISP_WAIT_BUSY();
+    CLR(DISP_RS);
+    dispdrvSendWord(reg);
+    DISP_WAIT_BUSY();
+    SET(DISP_RS);
+}
+
+void dispdrvWriteReg16(uint16_t reg, uint16_t data)
+{
+    dispdrvSelectReg16(reg);
+    dispdrvSendWord(data);
+}
+
 #ifdef _DISP_READ_ENABLED
 
 static void dispdrvReadDelay(void)
