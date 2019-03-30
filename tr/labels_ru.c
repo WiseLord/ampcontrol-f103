@@ -70,6 +70,7 @@ const char *const labels_ru[LABEL_END] = {
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
 //    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
+//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7418] = "TDA7418",
     [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "ТЕСТ",
 
 //    [LABEL_LANG + LANG_DEFAULT]         = "English",

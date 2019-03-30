@@ -5,7 +5,7 @@ DISPVAR = SPI
 
 TARGET = $(PROJECT)_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
 
-APROC_LIST = TDA7439 TDA731X PT232X
+APROC_LIST = TDA7439 TDA731X PT232X TDA7418
 TUNER_LIST = RDA580X SI470X TEA5767
 FEATURE_LIST =
 
@@ -116,6 +116,9 @@ ifeq "$(findstring TDA731X, $(APROC_LIST))" "TDA731X"
 endif
 ifeq "$(findstring PT232X, $(APROC_LIST))" "PT232X"
   C_SOURCES += audio/pt232x.c
+endif
+ifeq "$(findstring TDA7418, $(APROC_LIST))" "TDA7418"
+  C_SOURCES += audio/tda7418.c
 endif
 C_SOURCES += audio/audio.c
 C_DEFS += $(addprefix -D_, $(APROC_LIST))

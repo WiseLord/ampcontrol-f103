@@ -14,6 +14,9 @@
 #ifdef _PT232X
 #include "pt232x.h"
 #endif
+#ifdef _TDA7418
+#include "tda7418.h"
+#endif
 
 #define FLAG_ON     1
 #define FLAG_OFF    0
@@ -104,6 +107,17 @@ void audioReadSettings(void)
         aProc.api.setSurround = pt232xSetSurround;
         aProc.api.setEffect3d = pt232xSetEffect3D;
         aProc.api.setBypass = pt232xSetBypass;
+        break;
+#endif
+#ifdef _TDA7418
+    case AUDIO_IC_TDA7418:
+        aProc.api.init = tda7418Init;
+
+        aProc.api.setTune = tda7418SetTune;
+        aProc.api.setInput = tda7418SetInput;
+
+        aProc.api.setMute = tda7418SetMute;
+        aProc.api.setLoudness = tda7418SetLoudness;
         break;
 #endif
     case AUDIO_IC_TEST:
