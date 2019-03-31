@@ -23,17 +23,17 @@ extern "C" uint16_t eeReadRaw(uint16_t addr)
     return amp->eeReadRaw(addr);
 }
 
-extern "C" void emulDrawPixel(int16_t x, int16_t y, uint16_t color)
+extern "C" void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
 {
     disp->drawPixel(x, y, color);
 }
 
-extern "C" void emulDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+extern "C" void dispdrvDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     disp->drawRectangle(x, y, w, h, color);
 }
 
-extern "C" void emulDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
+extern "C" void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
 {
     disp->drawImage(img, x, y, color, bgColor);
 }
@@ -42,9 +42,6 @@ extern "C" void dispdrvInit(DispDriver **driver)
 {
     drv.width = EMUL_DISP_WIDTH;
     drv.height = EMUL_DISP_HEIGHT;
-    drv.drawPixel = emulDrawPixel;
-    drv.drawRectangle = emulDrawRectangle;
-    drv.drawImage = emulDrawImage;
 
     *driver = &drv;
 }
