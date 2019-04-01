@@ -95,6 +95,7 @@ static UChar findSymbolCode(const char **string)
 void glcdInit(Glcd **value)
 {
     dispdrvInit();
+    glcd.drv = &dispdrv;
     *value = &glcd;
 }
 
