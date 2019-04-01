@@ -61,20 +61,6 @@ void pinsSetStby(bool value);
 // Periph macros
 #define I2C_AMP         I2C1
 
-// Input pins (buttons and encoder)
-#define BTN_0_Pin               LL_GPIO_PIN_0
-#define BTN_1_Pin               LL_GPIO_PIN_1
-#define BTN_2_Pin               LL_GPIO_PIN_2
-#define BTN_3_Pin               LL_GPIO_PIN_3
-#define BTN_4_Pin               LL_GPIO_PIN_4
-#define BTN_5_Pin               LL_GPIO_PIN_5
-#define ENC_A_Pin               LL_GPIO_PIN_6
-#define ENC_B_Pin               LL_GPIO_PIN_7
-
-#define INPUT_Port              GPIOB
-#define INPUT_Pin               (BTN_0_Pin | BTN_1_Pin | BTN_2_Pin | BTN_3_Pin | \
-                                 BTN_4_Pin | BTN_5_Pin | ENC_A_Pin | ENC_B_Pin)
-
 // Remote control pins
 #define RC_Port                 GPIOA
 #define RC_Pin                  LL_GPIO_PIN_8

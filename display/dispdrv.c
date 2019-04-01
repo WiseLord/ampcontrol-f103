@@ -122,6 +122,8 @@ static inline uint32_t dispDrvGetBusMode(void)
 #endif
 }
 
+#endif // _DISP_8BIT
+
 __attribute__((always_inline))
 static inline void dispdrvReadInput(void)
 {
@@ -132,8 +134,6 @@ static inline void dispdrvReadInput(void)
     drv->bus = DISP_DATA_LO_Port->IDR & 0x00FF;
 #endif
 }
-
-#endif // _DISP_8BIT
 
 __attribute__((always_inline))
 static inline void dispdrvSendWord(uint16_t data)
@@ -287,7 +287,7 @@ void dispdrvBusIRQ(void)
     }
 #endif
 #if defined(_DISP_SPI)
-    drv->bus = INPUT_Port->IDR & 0x00FF;    // Read 8-bit bus
+    dispdrvReadInput();
 #endif
 }
 

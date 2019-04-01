@@ -22,8 +22,14 @@ static void pinsInitButtons(void)
     gpio.Mode = LL_GPIO_MODE_INPUT;
     gpio.Pull = LL_GPIO_PULL_UP;
 
-    gpio.Pin = INPUT_Pin;
-    LL_GPIO_Init(INPUT_Port, &gpio);
+#ifdef _DISP_HI_BYTE
+    gpio.Pin = DISP_DATA_HI_Pin;
+    LL_GPIO_Init(DISP_DATA_HI_Port, &gpio);
+#endif
+#ifdef _DISP_LO_BYTE
+    gpio.Pin = DISP_DATA_LO_Pin;
+    LL_GPIO_Init(DISP_DATA_LO_Port, &gpio);
+#endif
 }
 
 static void pinsInitRc(void)
