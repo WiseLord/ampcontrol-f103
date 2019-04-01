@@ -25,6 +25,7 @@
 #include "gc320x240/s6d0129.h"
 #include "gc320x240/s6d0139.h"
 #include "gc320x240/spfd5408.h"
+#include "gc320x240/ssd1289.h"
 #include "gc320x240/ssd2119.h"
 #include "gc320x240/mc2pa8201.h"
 #include "gc400x240/ili9327.h"
@@ -225,6 +226,8 @@ void dispdrvInit(DispDriver **driver)
     s6d0139Init(driver);
 #elif defined (_SPFD5408)
     spfd5408Init(driver);
+#elif defined (_SSD1289)
+    ssd1289Init(driver);
 #elif defined (_SSD2119)
     ssd2119Init(driver);
 #elif defined (_MC2PA8201)

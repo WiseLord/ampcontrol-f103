@@ -109,6 +109,8 @@ display/gc320x240/s6d0139.c
 display/gc320x240/s6d0139.h
 display/gc320x240/spfd5408.c
 display/gc320x240/spfd5408.h
+display/gc320x240/ssd1289.c
+display/gc320x240/ssd1289.h
 display/gc320x240/ssd2119.c
 display/gc320x240/ssd2119.h
 

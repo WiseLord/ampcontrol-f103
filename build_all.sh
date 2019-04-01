@@ -43,6 +43,7 @@ compile_display "MC2PA8201" "8BIT"
 compile_display "S6D0129"   "8BIT"
 compile_display "S6D0139"   "8BIT"
 compile_display "SPFD5408"  "8BIT"
+compile_display "SSD1289"   "8BIT"
 compile_display "SSD2119"   "8BIT"
 
 # 400x240 color displays
