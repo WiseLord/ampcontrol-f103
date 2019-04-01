@@ -3,11 +3,26 @@ PROJECT = ampcontrol_f103
 DISPLAY = ILI9341
 DISPVAR = SPI
 
-TARGET = $(PROJECT)_$(shell echo $(DISPLAY)_$(DISPVAR) | tr A-Z a-z)
-
 APROC_LIST = TDA7439 TDA731X PT232X TDA7418
 TUNER_LIST = RDA580X SI470X TEA5767
 FEATURE_LIST =
+
+# Lowercase argument
+lc = $(shell echo $1 | tr '[:upper:]' '[:lower:]')
+
+TARGET = $(call lc, $(PROJECT)_$(DISPLAY)_$(DISPVAR))
+
+C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
+
+DISP_HI_BYTE = NO
+DISP_LO_BYTE = YES
+
+ifeq "$(DISP_HI_BYTE)" "YES"
+  C_DEFS += -D_DISP_HI_BYTE
+endif
+ifeq "$(DISP_LO_BYTE)" "YES"
+  C_DEFS += -D_DISP_LO_BYTE
+endif
 
 C_SOURCES = main.c
 
@@ -28,113 +43,87 @@ C_SOURCES += swtimers.c
 C_SOURCES += timers.c
 C_SOURCES += usart.c
 C_SOURCES += tr/labels.c
-C_SOURCES += tr/labels_by.c
-C_SOURCES += tr/labels_ru.c
-C_SOURCES += tr/labels_tr.c
-C_SOURCES += tr/labels_ua.c
-
-C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
+C_SOURCES += $(wildcard tr/labels_*.c)
 
 # Display source files
 C_SOURCES += $(wildcard display/fonts/font*.c)
 C_SOURCES += $(wildcard display/icons/icon*.c)
 
-ifeq "$(DISPLAY)" "ILI9163"
-  C_SOURCES += display/gc160x128/ili9163.c
-else ifeq "$(DISPLAY)" "S6D0144"
-  C_SOURCES += display/gc160x128/s6d0144.c
-else ifeq "$(DISPLAY)" "ST7735"
-  C_SOURCES += display/gc160x128/st7735.c
-else ifeq "$(DISPLAY)" "L2F50126"
-  C_SOURCES += display/gc176x132/l2f50126.c
-else ifeq "$(DISPLAY)" "LPH9157"
-  C_SOURCES += display/gc176x132/lph9157.c
-else ifeq "$(DISPLAY)" "LS020"
-  C_SOURCES += display/gc176x132/ls020.c
-else ifeq "$(DISPLAY)" "SSD1286A"
-  C_SOURCES += display/gc176x132/ssd1286a.c
-else ifeq "$(DISPLAY)" "HX8340"
-  C_SOURCES += display/gc220x176/hx8340.c
-else ifeq "$(DISPLAY)" "ILI9225"
-  C_SOURCES += display/gc220x176/ili9225.c
-else ifeq "$(DISPLAY)" "LGDP4524"
-  C_SOURCES += display/gc220x176/lgdp4524.c
-else ifeq "$(DISPLAY)" "S6D0164"
-  C_SOURCES += display/gc220x176/s6d0164.c
-else ifeq "$(DISPLAY)" "HX8347A"
-  C_SOURCES += display/gc320x240/hx8347a.c
-else ifeq "$(DISPLAY)" "HX8347D"
-  C_SOURCES += display/gc320x240/hx8347d.c
-else ifeq "$(DISPLAY)" "ILI9320"
-  C_SOURCES += display/gc320x240/ili9320.c
-else ifeq "$(DISPLAY)" "ILI9341"
-  C_SOURCES += display/gc320x240/ili9341.c
-else ifeq "$(DISPLAY)" "MC2PA8201"
-  C_SOURCES += display/gc320x240/mc2pa8201.c
-else ifeq "$(DISPLAY)" "S6D0129"
-  C_SOURCES += display/gc320x240/s6d0129.c
-else ifeq "$(DISPLAY)" "S6D0139"
-  C_SOURCES += display/gc320x240/s6d0139.c
-else ifeq "$(DISPLAY)" "SPFD5408"
-  C_SOURCES += display/gc320x240/spfd5408.c
-else ifeq "$(DISPLAY)" "SSD1289"
-  C_SOURCES += display/gc320x240/ssd1289.c
-else ifeq "$(DISPLAY)" "SSD2119"
-  C_SOURCES += display/gc320x240/ssd2119.c
-else ifeq "$(DISPLAY)" "ILI9327"
-  C_SOURCES += display/gc400x240/ili9327.c
-else ifeq "$(DISPLAY)" "S6D04D1"
-  C_SOURCES += display/gc400x240/s6d04d1.c
-else ifeq "$(DISPLAY)" "ST7793"
-  C_SOURCES += display/gc400x240/st7793.c
-else ifeq "$(DISPLAY)" "ILI9481"
-  C_SOURCES += display/gc480x320/ili9481.c
-else ifeq "$(DISPLAY)" "ILI9486"
-  C_SOURCES += display/gc480x320/ili9486.c
-else ifeq "$(DISPLAY)" "R61581"
-  C_SOURCES += display/gc480x320/r61581.c
+ifneq (,$(filter $(DISPLAY), \
+  ILI9163   \
+  S6D0144   \
+  ST7735    \
+))
+  DISPSIZE = 160x128
 endif
+
+ifneq (,$(filter $(DISPLAY), \
+  L2F50126  \
+  LPH9157   \
+  LS020     \
+  SSD1286A  \
+))
+  DISPSIZE = 176x132
+endif
+
+ifneq (,$(filter $(DISPLAY), \
+  HX8340    \
+  ILI9225   \
+  LGDP4524  \
+  S6D0164   \
+))
+  DISPSIZE = 220x176
+endif
+
+ifneq (,$(filter $(DISPLAY), \
+  HX8347A   \
+  HX8347D   \
+  ILI9320   \
+  ILI9341   \
+  MC2PA8201 \
+  S6D0129   \
+  S6D0139   \
+  SPFD5408  \
+  SSD1289   \
+  SSD2119   \
+))
+  DISPSIZE = 320x240
+endif
+
+ifneq (,$(filter $(DISPLAY), \
+  ILI9327   \
+  S6D04D1   \
+  ST7793    \
+))
+  DISPSIZE = 400x240
+endif
+
+ifneq (,$(filter $(DISPLAY), \
+  ILI9481   \
+  ILI9486   \
+  R61581    \
+))
+  DISPSIZE = 480x320
+endif
+
+C_SOURCES += display/gc$(DISPSIZE)/$(call lc,$(DISPLAY)).c
 C_SOURCES += display/dispdrv.c
 C_SOURCES += display/glcd.c
 C_DEFS += -D_$(DISPLAY)
 C_DEFS += -D_DISP_$(DISPVAR)
-C_DEFS += -D_DISP_LO_BYTE
+C_DEFS += -D_DISP_$(DISPSIZE)
 
 C_SOURCES += canvas/canvas.c
 C_SOURCES += canvas/layout.c
-C_SOURCES += canvas/lt160x128.c
-C_SOURCES += canvas/lt176x132.c
-C_SOURCES += canvas/lt220x176.c
-C_SOURCES += canvas/lt320x240.c
-C_SOURCES += canvas/lt400x240.c
-C_SOURCES += canvas/lt480x320.c
+C_SOURCES += canvas/lt$(DISPSIZE).c
 
 # Audio source files
-ifeq "$(findstring TDA7439, $(APROC_LIST))" "TDA7439"
-  C_SOURCES += audio/tda7439.c
-endif
-ifeq "$(findstring TDA731X, $(APROC_LIST))" "TDA731X"
-  C_SOURCES += audio/tda731x.c
-endif
-ifeq "$(findstring PT232X, $(APROC_LIST))" "PT232X"
-  C_SOURCES += audio/pt232x.c
-endif
-ifeq "$(findstring TDA7418, $(APROC_LIST))" "TDA7418"
-  C_SOURCES += audio/tda7418.c
-endif
+C_SOURCES += $(addprefix audio/, $(addsuffix .c, $(call lc, $(APROC_LIST))))
 C_SOURCES += audio/audio.c
 C_DEFS += $(addprefix -D_, $(APROC_LIST))
 
 # Tuner source files
-ifeq "$(findstring RDA580X, $(TUNER_LIST))" "RDA580X"
-  C_SOURCES += tuner/rda580x.c
-endif
-ifeq "$(findstring SI470X, $(TUNER_LIST))" "SI470X"
-  C_SOURCES += tuner/si470x.c
-endif
-ifeq "$(findstring TEA5767, $(TUNER_LIST))" "TEA5767"
-  C_SOURCES += tuner/tea5767.c
-endif
+C_SOURCES += $(addprefix tuner/, $(addsuffix .c, $(call lc, $(TUNER_LIST))))
 C_SOURCES += tuner/stations.c
 C_SOURCES += tuner/tuner.c
 C_DEFS += $(addprefix -D_, $(TUNER_LIST))

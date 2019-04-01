@@ -297,23 +297,23 @@ static void canvasDrawWaterfall(Spectrum *sp)
 
 void layoutInit()
 {
-#if defined (_ILI9163) || defined (_S6D0144) || defined (_ST7735)
+#if defined (_DISP_160x128)
     lt = lt160x128Get();
-#elif defined (_L2F50126) || defined (_LPH9157) || defined (_LS020) || defined (_SSD1286A)
+#elif defined (_DISP_176x132)
     lt = lt176x132Get();
-#elif defined (_HX8340) || defined (_ILI9225) || defined (_LGDP4524) || defined (_S6D0164)
+#elif defined (_DISP_220x176)
     lt = lt220x176Get();
-#elif defined (_HX8347A) || defined (_HX8347D) || defined (_ILI9320) || defined (_ILI9341) || defined (_MC2PA8201) || defined (_S6D0129) || defined (_S6D0139) || defined (_SPFD5408) || defined(_SSD1289) || defined (_SSD2119)
+#elif defined (_DISP_320x240)
     lt = lt320x240Get();
-#elif defined (_ILI9327) || defined (_S6D04D1) || defined (_ST7793)
+#elif defined (_DISP_400x240)
     lt = lt400x240Get();
-#elif defined (_ILI9481) || defined (_ILI9486) || defined (_R61581)
+#elif defined (_DISP_480x320)
     lt = lt480x320Get();
 #else
 #ifdef EMUL_DISP
     lt = ltEmulGet();
 #else
-#error "Unsupported display driver"
+#error "Unsupported display size"
 #endif
 #endif
 
