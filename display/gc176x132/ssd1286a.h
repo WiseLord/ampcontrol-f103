@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void ssd1286aInit(DispDriver **driver);
+void ssd1286aInit(void);
 
 void ssd1286aSleep(void);
 void ssd1286aWakeup(void);

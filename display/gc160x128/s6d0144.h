@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void s6d0144Init(DispDriver **driver);
+void s6d0144Init(void);
 
 void s6d0144Sleep(void);
 void s6d0144Wakeup(void);

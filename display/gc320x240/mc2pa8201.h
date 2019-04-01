@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void mc2pa8201Init(DispDriver **driver);
+void mc2pa8201Init(void);
 
 void mc2pa8201Sleep(void);
 void mc2pa8201Wakeup(void);

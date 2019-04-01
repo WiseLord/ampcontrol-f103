@@ -6,16 +6,15 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 320,
     .height = 240,
+    .init = mc2pa8201Init,
     .setWindow = mc2pa8201SetWindow,
 };
 
-void mc2pa8201Init(DispDriver **driver)
+void mc2pa8201Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     // Initial Sequence

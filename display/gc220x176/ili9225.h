@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void ili9225Init(DispDriver **driver);
+void ili9225Init(void);
 
 void ili9225Sleep(void);
 void ili9225Wakeup(void);

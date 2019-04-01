@@ -6,18 +6,17 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 480,
     .height = 320,
+    .init = r61581Init,
     .setWindow = r61581SetWindow,
     .rotate = r61581Rotate,
     .shift = r615811Shift,
 };
 
-void r61581Init(DispDriver **driver)
+void r61581Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     // Initial Sequence
@@ -131,8 +130,8 @@ void r615811Shift(int16_t value)
     dispdrvSelectReg8(0x33);
     dispdrvSendData8(0);
     dispdrvSendData8(0);
-    dispdrvSendData8((drv.width >> 8) & 0xFF);
-    dispdrvSendData8(drv.width & 0xFF);
+    dispdrvSendData8((dispdrv.width >> 8) & 0xFF);
+    dispdrvSendData8(dispdrv.width & 0xFF);
     dispdrvSendData8(0);
     dispdrvSendData8(0);
 

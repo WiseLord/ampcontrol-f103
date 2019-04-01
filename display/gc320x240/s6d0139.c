@@ -6,17 +6,16 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 320,
     .height = 240,
+    .init = s6d0139Init,
     .setWindow = s6d0139SetWindow,
     .rotate = s6d0139Rotate,
 };
 
-void s6d0139Init(DispDriver **driver)
+void s6d0139Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0000, 0x0001);    // Start Oscillation

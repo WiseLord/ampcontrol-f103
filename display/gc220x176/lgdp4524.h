@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void lgdp4524Init(DispDriver **driver);
+void lgdp4524Init(void);
 
 void lgdp4524Sleep(void);
 void lgdp4524Wakeup(void);

@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void lph9157Init(DispDriver **driver);
+void lph9157Init(void);
 
 void lph9157Sleep(void);
 void lph9157Wakeup(void);

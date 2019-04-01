@@ -6,16 +6,15 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 220,
     .height = 176,
+    .init = lgdp4524Init,
     .setWindow = lgdp4524SetWindow,
 };
 
-void lgdp4524Init(DispDriver **driver)
+void lgdp4524Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0007, 0x0000);

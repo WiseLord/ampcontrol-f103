@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void spfd5408Init(DispDriver **driver);
+void spfd5408Init(void);
 
 void spfd5408Sleep(void);
 void spfd5408Wakeup(void);

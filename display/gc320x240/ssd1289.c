@@ -6,18 +6,17 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 320,
     .height = 240,
+    .init = ssd1289Init,
     .setWindow = ssd1289SetWindow,
     .rotate = ssd1289Rotate,
     .shift = ssd1289Shift,
 };
 
-void ssd1289Init(DispDriver **driver)
+void ssd1289Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0000, 0x0001);

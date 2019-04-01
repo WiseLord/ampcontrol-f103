@@ -15,8 +15,10 @@ extern "C" {
 #define DISP_WAIT_BUSY();
 #endif
 
+extern DispDriver dispdrv;
+
 void dispdrvReset(void);
-void dispdrvInit(DispDriver **glcd);
+void dispdrvInit(void);
 
 void dispdrvPwm(void);
 void dispdrvSetBrightness(int8_t value);

@@ -28,9 +28,10 @@ static const uint8_t gcp16[15] = {
     0x4A, 0x4C, 0x4E, 0x50, 0x64,
 };
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 176,
     .height = 132,
+    .init = l2f50126Init,
     .setWindow = l2f50126SetWindow,
 };
 
@@ -61,10 +62,8 @@ static void inline l2f50126PulseCS(void)
 }
 */
 
-void l2f50126Init(DispDriver **driver)
+void l2f50126Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     l2f50126SelectReg(L2F50126_DATCTL);

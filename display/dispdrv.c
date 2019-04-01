@@ -7,40 +7,10 @@
 #include <stm32f1xx_ll_utils.h>
 #include "../pins.h"
 
-#include "gc160x128/ili9163.h"
-#include "gc160x128/s6d0144.h"
-#include "gc160x128/st7735.h"
-#include "gc176x132/l2f50126.h"
-#include "gc176x132/ls020.h"
-#include "gc176x132/lph9157.h"
-#include "gc176x132/ssd1286a.h"
-#include "gc220x176/hx8340.h"
-#include "gc220x176/ili9225.h"
-#include "gc220x176/lgdp4524.h"
-#include "gc220x176/s6d0164.h"
-#include "gc320x240/hx8347a.h"
-#include "gc320x240/hx8347d.h"
-#include "gc320x240/ili9320.h"
-#include "gc320x240/ili9341.h"
-#include "gc320x240/s6d0129.h"
-#include "gc320x240/s6d0139.h"
-#include "gc320x240/spfd5408.h"
-#include "gc320x240/ssd1289.h"
-#include "gc320x240/ssd2119.h"
-#include "gc320x240/mc2pa8201.h"
-#include "gc400x240/ili9327.h"
-#include "gc400x240/s6d04d1.h"
-#include "gc400x240/st7793.h"
-#include "gc480x320/ili9481.h"
-#include "gc480x320/ili9486.h"
-#include "gc480x320/r61581.h"
-
 #ifdef _DISP_8BIT
 static volatile bool bus_requested = false;
 #endif
 static int8_t brightness;
-
-static DispDriver *drv;
 
 #define BUS_MODE_OUT        0x33333333  // CNF=0b00, MODE=0b11 => Output push-pull 50 MHz
 #define BUS_MODE_IN         0x88888888  // CNF=0b10, MODE=0b00 - Input pullup
@@ -128,10 +98,10 @@ __attribute__((always_inline))
 static inline void dispdrvReadInput(void)
 {
 #ifdef _DISP_HI_BYTE
-    drv->bus = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
+    dispdrv.bus = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
 #endif
 #ifdef _DISP_LO_BYTE
-    drv->bus = DISP_DATA_LO_Port->IDR & 0x00FF;
+    dispdrv.bus = DISP_DATA_LO_Port->IDR & 0x00FF;
 #endif
 }
 
@@ -186,71 +156,13 @@ void dispdrvReset(void)
     LL_mDelay(50);
 }
 
-void dispdrvInit(DispDriver **driver)
+void dispdrvInit(void)
 {
     dispdrvReset();
 
-#if defined (_ILI9163)
-    ili9163Init(driver);
-#elif defined (_S6D0144)
-    s6d0144Init(driver);
-#elif defined (_ST7735)
-    st7735Init(driver);
-#elif defined (_L2F50126)
-    l2f50126Init(driver);
-#elif defined (_LS020)
-    ls020Init(driver);
-#elif defined (_LPH9157)
-    lph9157Init(driver);
-#elif defined (_SSD1286A)
-    ssd1286aInit(driver);
-#elif defined (_HX8340)
-    hx8340Init(driver);
-#elif defined (_ILI9225)
-    ili9225Init(driver);
-#elif defined (_LGDP4524)
-    lgdp4524Init(driver);
-#elif defined (_S6D0164)
-    s6d0164Init(driver);
-#elif defined (_HX8347A)
-    hx8347aInit(driver);
-#elif defined (_HX8347D)
-    hx8347dInit(driver);
-#elif defined (_ILI9320)
-    ili9320Init(driver);
-#elif defined (_ILI9341)
-    ili9341Init(driver);
-#elif defined (_S6D0129)
-    s6d0129Init(driver);
-#elif defined (_S6D0139)
-    s6d0139Init(driver);
-#elif defined (_SPFD5408)
-    spfd5408Init(driver);
-#elif defined (_SSD1289)
-    ssd1289Init(driver);
-#elif defined (_SSD2119)
-    ssd2119Init(driver);
-#elif defined (_MC2PA8201)
-    mc2pa8201Init(driver);
-#elif defined (_ILI9327)
-    ili9327Init(driver);
-#elif defined (_S6D04D1)
-    s6d04d1Init(driver);
-#elif defined (_ST7793)
-    st7793Init(driver);
-#elif defined (_ILI9481)
-    ili9481Init(driver);
-#elif defined (_ILI9486)
-    ili9486Init(driver);
-#elif defined (_R61581)
-    r61581Init(driver);
-#else
-#error "Unsupported display driver"
-#endif
+    dispdrv.init();
 
     SET(DISP_BCKL);
-
-    drv = *driver;
 }
 
 void dispdrvPwm(void)
@@ -274,7 +186,7 @@ void dispdrvSetBrightness(int8_t value)
 
 uint8_t dispdrvGetBus(void)
 {
-    return ~drv->bus;
+    return ~dispdrv.bus;
 }
 
 void dispdrvBusIRQ(void)
@@ -415,7 +327,7 @@ void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
 {
     CLR(DISP_CS);
 
-    drv->setWindow(x, y, 1, 1);
+    dispdrv.setWindow(x, y, 1, 1);
 
     dispdrvSendWord(color);
 
@@ -427,7 +339,7 @@ void dispdrvDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t c
 {
     CLR(DISP_CS);
 
-    drv->setWindow(x, y, w, h);
+    dispdrv.setWindow(x, y, w, h);
 
     for (int32_t i = 0; i < w * h; i++) {
         dispdrvSendWord(color);
@@ -444,7 +356,7 @@ void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
 
     CLR(DISP_CS);
 
-    drv->setWindow(x, y, w, h);
+    dispdrv.setWindow(x, y, w, h);
 
     for (uint16_t i = 0; i < w; i++) {
         for (uint16_t j = 0; j < (h + 7) / 8; j++) {

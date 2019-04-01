@@ -7,18 +7,17 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 320,
     .height = 240,
+    .init = ili9341Init,
     .setWindow = ili9341SetWindow,
     .rotate = ili9341Rotate,
     .shift = ili9341Shift,
 };
 
-void ili9341Init(DispDriver **driver)
+void ili9341Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     dispdrvSelectReg8(ILI9341_SWRESET);
@@ -159,8 +158,8 @@ void ili9341Shift(int16_t value)
     dispdrvSelectReg8(ILI9341_VSCRDEF);
     dispdrvSendData8(0);
     dispdrvSendData8(0);
-    dispdrvSendData8((drv.width >> 8) & 0xFF);
-    dispdrvSendData8(drv.width & 0xFF);
+    dispdrvSendData8((dispdrv.width >> 8) & 0xFF);
+    dispdrvSendData8(dispdrv.width & 0xFF);
     dispdrvSendData8(0);
     dispdrvSendData8(0);
 

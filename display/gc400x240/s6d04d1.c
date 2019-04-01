@@ -6,17 +6,16 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 400,
     .height = 240,
+    .init = s6d04d1Init,
     .setWindow = s6d04d1SetWindow,
     .rotate = s6d04d1Rotate,
 };
 
-void s6d04d1Init(DispDriver **driver)
+void s6d04d1Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0xf4);

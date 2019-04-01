@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void hx8347aInit(DispDriver **driver);
+void hx8347aInit(void);
 
 void hx8347aSleep(void);
 void hx8347aWakeup(void);

@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void ili9481Init(DispDriver **driver);
+void ili9481Init(void);
 void ili9481Rotate(uint8_t rotate);
 
 void ili9481Sleep(void);

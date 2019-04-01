@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void ls020Init(DispDriver **driver);
+void ls020Init(void);
 
 void ls020Sleep(void);
 void ls020Wakeup(void);

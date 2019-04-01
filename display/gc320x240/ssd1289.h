@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void ssd1289Init(DispDriver **driver);
+void ssd1289Init(void);
 void ssd1289Rotate(uint8_t rotate);
 void ssd1289Shift(int16_t value);
 

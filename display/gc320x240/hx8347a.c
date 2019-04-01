@@ -6,16 +6,15 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 320,
     .height = 240,
+    .init = hx8347aInit,
     .setWindow = hx8347aSetWindow,
 };
 
-void hx8347aInit(DispDriver **driver)
+void hx8347aInit(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     // Gamma for CMO 2.8

@@ -6,18 +6,17 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 320,
     .height = 240,
+    .init = ssd2119Init,
     .setWindow = ssd2119SetWindow,
     .rotate = ssd2119Rotate,
     .shift = ssd2119Shift,
 };
 
-void ssd2119Init(DispDriver **driver)
+void ssd2119Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0028, 0x0006);    // VCOM OTP

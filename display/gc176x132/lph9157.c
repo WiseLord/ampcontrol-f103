@@ -6,16 +6,15 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 176,
     .height = 132,
+    .init = lph9157Init,
     .setWindow = lph9157SetWindow,
 };
 
-void lph9157Init(DispDriver **driver)
+void lph9157Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x01);

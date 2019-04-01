@@ -6,18 +6,17 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 480,
     .height = 320,
+    .init = ili9486Init,
     .setWindow = ili9486SetWindow,
     .rotate = ili9486Rotate,
     .shift = ili9486Shift,
 };
 
-void ili9486Init(DispDriver **driver)
+void ili9486Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     // Initial Sequence

@@ -6,16 +6,15 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 176,
     .height = 132,
+    .init = ls020Init,
     .setWindow = ls020SetWindow,
 };
 
-void ls020Init(DispDriver **driver)
+void ls020Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     dispdrvSendData16(0xFDFD);
@@ -98,9 +97,7 @@ void ls020Sleep(void)
 
 void ls020Wakeup(void)
 {
-    DispDriver *driver;
-
-    ls020Init(&driver);
+    ls020Init();
 }
 
 void ls020SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)

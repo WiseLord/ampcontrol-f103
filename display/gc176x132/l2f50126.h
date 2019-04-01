@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void l2f50126Init(DispDriver **driver);
+void l2f50126Init(void);
 
 void l2f50126Sleep(void);
 void l2f50126Wakeup(void);

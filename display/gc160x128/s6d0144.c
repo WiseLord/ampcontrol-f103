@@ -6,16 +6,15 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 160,
     .height = 128,
+    .init = s6d0144Init,
     .setWindow = s6d0144SetWindow,
 };
 
-void s6d0144Init(DispDriver **driver)
+void s6d0144Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     LL_mDelay(1);

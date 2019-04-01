@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include "../dispdefs.h"
 
-void st7735Init(DispDriver **driver);
+void st7735Init(void);
 
 void st7735Sleep(void);
 void st7735Wakeup(void);

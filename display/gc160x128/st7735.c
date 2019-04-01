@@ -6,16 +6,15 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 160,
     .height = 128,
+    .init = st7735Init,
     .setWindow = st7735SetWindow,
 };
 
-void st7735Init(DispDriver **driver)
+void st7735Init(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     // Initial Sequence

@@ -6,16 +6,15 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-static DispDriver drv = {
+DispDriver dispdrv = {
     .width = 176,
     .height = 132,
+    .init = ssd1286aInit,
     .setWindow = ssd1286aSetWindow,
 };
 
-void ssd1286aInit(DispDriver **driver)
+void ssd1286aInit(void)
 {
-    *driver = &drv;
-
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x00);
