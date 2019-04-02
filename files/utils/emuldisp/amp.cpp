@@ -11,7 +11,11 @@
 
 static EmulDisp *disp;
 static Amp *amp;
-static DispDriver drv;
+
+const DispDriver dispdrv = {
+    .width = EMUL_DISP_WIDTH,
+    .height = EMUL_DISP_HEIGHT,
+};
 
 extern "C" void eeUpdateRaw(uint16_t addr, uint16_t data)
 {
@@ -38,12 +42,8 @@ extern "C" void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t col
     disp->drawImage(img, x, y, color, bgColor);
 }
 
-extern "C" void dispdrvInit(DispDriver **driver)
+extern "C" void dispdrvInit(void)
 {
-    drv.width = EMUL_DISP_WIDTH;
-    drv.height = EMUL_DISP_HEIGHT;
-
-    *driver = &drv;
 }
 
 extern "C" uint8_t dispdrvGetBus(void)
