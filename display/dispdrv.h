@@ -15,7 +15,7 @@ extern "C" {
 #define DISP_WAIT_BUSY();
 #endif
 
-extern DispDriver dispdrv;
+extern const DispDriver dispdrv;
 
 void dispdrvReset(void);
 void dispdrvInit(void);

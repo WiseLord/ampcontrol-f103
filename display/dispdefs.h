@@ -22,8 +22,6 @@ typedef struct {
 
     int16_t width;
     int16_t height;
-
-    uint8_t bus;
 } DispDriver;
 
 #ifdef __cplusplus

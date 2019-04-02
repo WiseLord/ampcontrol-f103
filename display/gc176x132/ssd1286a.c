@@ -6,7 +6,7 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-DispDriver dispdrv = {
+const DispDriver dispdrv = {
     .width = 176,
     .height = 132,
     .init = ssd1286aInit,

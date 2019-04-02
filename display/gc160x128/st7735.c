@@ -6,7 +6,7 @@
 #include "../../pins.h"
 #include "../dispdrv.h"
 
-DispDriver dispdrv = {
+const DispDriver dispdrv = {
     .width = 160,
     .height = 128,
     .init = st7735Init,

@@ -20,7 +20,7 @@ typedef struct {
 } GlcdRect;
 
 typedef struct {
-    DispDriver *drv;
+    const DispDriver *drv;
     GlcdRect rect;
     Font font;
     int16_t x;

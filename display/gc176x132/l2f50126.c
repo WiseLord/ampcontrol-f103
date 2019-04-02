@@ -28,7 +28,7 @@ static const uint8_t gcp16[15] = {
     0x4A, 0x4C, 0x4E, 0x50, 0x64,
 };
 
-DispDriver dispdrv = {
+const DispDriver dispdrv = {
     .width = 176,
     .height = 132,
     .init = l2f50126Init,

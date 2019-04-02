@@ -10,7 +10,8 @@
 #ifdef _DISP_8BIT
 static volatile bool bus_requested = false;
 #endif
-static int8_t brightness;
+static volatile int8_t brightness;
+static volatile uint8_t busData;
 
 #define BUS_MODE_OUT        0x33333333  // CNF=0b00, MODE=0b11 => Output push-pull 50 MHz
 #define BUS_MODE_IN         0x88888888  // CNF=0b10, MODE=0b00 - Input pullup
@@ -98,10 +99,10 @@ __attribute__((always_inline))
 static inline void dispdrvReadInput(void)
 {
 #ifdef _DISP_HI_BYTE
-    dispdrv.bus = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
+    busData = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
 #endif
 #ifdef _DISP_LO_BYTE
-    dispdrv.bus = DISP_DATA_LO_Port->IDR & 0x00FF;
+    busData = DISP_DATA_LO_Port->IDR & 0x00FF;
 #endif
 }
 
@@ -186,7 +187,7 @@ void dispdrvSetBrightness(int8_t value)
 
 uint8_t dispdrvGetBus(void)
 {
-    return ~dispdrv.bus;
+    return ~busData;
 }
 
 void dispdrvBusIRQ(void)
