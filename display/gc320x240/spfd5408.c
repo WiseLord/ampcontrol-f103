@@ -1,17 +1,8 @@
-#include "spfd5408.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 320,
-    .height = 240,
-    .init = spfd5408Init,
-    .setWindow = spfd5408SetWindow,
-};
 
 void spfd5408Init(void)
 {
@@ -172,3 +163,12 @@ void spfd5408SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     // Set RAM mode
     dispdrvSelectReg16(0x0022);
 }
+
+const DispDriver dispdrv = {
+    .width = 320,
+    .height = 240,
+    .init = spfd5408Init,
+    .sleep = spfd5408Sleep,
+    .wakeup = spfd5408Wakeup,
+    .setWindow = spfd5408SetWindow,
+};

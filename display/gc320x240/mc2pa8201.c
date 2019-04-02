@@ -1,17 +1,8 @@
-#include "mc2pa8201.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 320,
-    .height = 240,
-    .init = mc2pa8201Init,
-    .setWindow = mc2pa8201SetWindow,
-};
 
 void mc2pa8201Init(void)
 {
@@ -105,3 +96,12 @@ void mc2pa8201SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x2C);
 }
+
+const DispDriver dispdrv = {
+    .width = 320,
+    .height = 240,
+    .init = mc2pa8201Init,
+    .sleep = mc2pa8201Sleep,
+    .wakeup = mc2pa8201Wakeup,
+    .setWindow = mc2pa8201SetWindow,
+};

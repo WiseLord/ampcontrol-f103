@@ -1,18 +1,8 @@
-#include "ili9481.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 480,
-    .height = 320,
-    .init = ili9481Init,
-    .setWindow = ili9481SetWindow,
-    .rotate = ili9481Rotate,
-};
 
 void ili9481Init(void)
 {
@@ -155,3 +145,13 @@ void ili9481SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x2C);
 }
+
+const DispDriver dispdrv = {
+    .width = 480,
+    .height = 320,
+    .init = ili9481Init,
+    .sleep = ili9481Sleep,
+    .wakeup = ili9481Wakeup,
+    .setWindow = ili9481SetWindow,
+    .rotate = ili9481Rotate,
+};

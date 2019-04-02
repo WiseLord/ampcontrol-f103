@@ -16,6 +16,8 @@ extern "C" {
 
 typedef struct {
     void (*init)(void);
+    void (*sleep)(void);
+    void (*wakeup)(void);
     void (*setWindow)(int16_t x, int16_t y, int16_t w, int16_t h);
     void (*rotate)(uint8_t rotate);
     void (*shift)(int16_t value);

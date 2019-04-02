@@ -1,19 +1,8 @@
-#include "ili9320.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 320,
-    .height = 240,
-    .init = ili9320Init,
-    .setWindow = ili9320SetWindow,
-    .rotate = ili9320Rotate,
-    .shift = ili9320Shift,
-};
 
 void ili9320Init(void)
 {
@@ -170,3 +159,14 @@ void ili9320SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     // Select RAM mode
     dispdrvSelectReg16(0x0022);
 }
+
+const DispDriver dispdrv = {
+    .width = 320,
+    .height = 240,
+    .init = ili9320Init,
+    .sleep = ili9320Sleep,
+    .wakeup = ili9320Wakeup,
+    .setWindow = ili9320SetWindow,
+    .rotate = ili9320Rotate,
+    .shift = ili9320Shift,
+};

@@ -1,4 +1,3 @@
-#include "ili9341.h"
 #include "ili9341_regs.h"
 
 #include <stm32f1xx_ll_gpio.h>
@@ -6,15 +5,6 @@
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 320,
-    .height = 240,
-    .init = ili9341Init,
-    .setWindow = ili9341SetWindow,
-    .rotate = ili9341Rotate,
-    .shift = ili9341Shift,
-};
 
 void ili9341Init(void)
 {
@@ -208,3 +198,14 @@ void ili9341SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(ILI9341_RAMWR);
 }
+
+const DispDriver dispdrv = {
+    .width = 320,
+    .height = 240,
+    .init = ili9341Init,
+    .sleep = ili9341Sleep,
+    .wakeup = ili9341Wakeup,
+    .setWindow = ili9341SetWindow,
+    .rotate = ili9341Rotate,
+    .shift = ili9341Shift,
+};

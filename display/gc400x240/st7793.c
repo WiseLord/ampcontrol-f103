@@ -1,18 +1,8 @@
-#include "st7793.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 400,
-    .height = 240,
-    .init = st7793Init,
-    .setWindow = st7793SetWindow,
-    .rotate = st7793Rotate,
-};
 
 void st7793Init(void)
 {
@@ -134,3 +124,13 @@ void st7793SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     // Select RAM mode
     dispdrvSelectReg16(0x0202);
 }
+
+const DispDriver dispdrv = {
+    .width = 400,
+    .height = 240,
+    .init = st7793Init,
+    .sleep = st7793Sleep,
+    .wakeup = st7793Wakeup,
+    .setWindow = st7793SetWindow,
+    .rotate = st7793Rotate,
+};

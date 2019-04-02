@@ -1,17 +1,8 @@
-#include "st7735.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 160,
-    .height = 128,
-    .init = st7735Init,
-    .setWindow = st7735SetWindow,
-};
 
 void st7735Init(void)
 {
@@ -149,3 +140,12 @@ void st7735SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x2C);
 }
+
+const DispDriver dispdrv = {
+    .width = 160,
+    .height = 128,
+    .init = st7735Init,
+    .sleep = st7735Sleep,
+    .wakeup = st7735Wakeup,
+    .setWindow = st7735SetWindow,
+};

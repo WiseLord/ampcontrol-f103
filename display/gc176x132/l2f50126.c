@@ -1,4 +1,3 @@
-#include "l2f50126.h"
 #include "l2f50126_regs.h"
 
 #include <stm32f1xx_ll_gpio.h>
@@ -26,13 +25,6 @@ static const uint8_t gcp64_1[34] = {
 static const uint8_t gcp16[15] = {
     0x13, 0x23, 0x2D, 0x33, 0x38, 0x3C, 0x40, 0x43, 0x46, 0x48,
     0x4A, 0x4C, 0x4E, 0x50, 0x64,
-};
-
-const DispDriver dispdrv = {
-    .width = 176,
-    .height = 132,
-    .init = l2f50126Init,
-    .setWindow = l2f50126SetWindow,
 };
 
 __attribute__((always_inline))
@@ -161,3 +153,12 @@ void l2f50126SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     l2f50126SelectReg(L2F50126_RAMWR);
 }
+
+const DispDriver dispdrv = {
+    .width = 176,
+    .height = 132,
+    .init = l2f50126Init,
+    .sleep = l2f50126Sleep,
+    .wakeup = l2f50126Wakeup,
+    .setWindow = l2f50126SetWindow,
+};

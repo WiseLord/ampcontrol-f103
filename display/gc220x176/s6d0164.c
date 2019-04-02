@@ -1,17 +1,8 @@
-#include "s6d0164.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 220,
-    .height = 176,
-    .init = s6d0164Init,
-    .setWindow = s6d0164SetWindow,
-};
 
 void s6d0164Init(void)
 {
@@ -114,3 +105,12 @@ void s6d0164SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     // Select RAM mode
     dispdrvSelectReg16(0x0022);
 }
+
+const DispDriver dispdrv = {
+    .width = 220,
+    .height = 176,
+    .init = s6d0164Init,
+    .sleep = s6d0164Sleep,
+    .wakeup = s6d0164Wakeup,
+    .setWindow = s6d0164SetWindow,
+};

@@ -1,17 +1,8 @@
-#include "hx8347a.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 320,
-    .height = 240,
-    .init = hx8347aInit,
-    .setWindow = hx8347aSetWindow,
-};
 
 void hx8347aInit(void)
 {
@@ -206,3 +197,12 @@ void hx8347aSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x22);
 }
+
+const DispDriver dispdrv = {
+    .width = 320,
+    .height = 240,
+    .init = hx8347aInit,
+    .sleep = hx8347aSleep,
+    .wakeup = hx8347aWakeup,
+    .setWindow = hx8347aSetWindow,
+};

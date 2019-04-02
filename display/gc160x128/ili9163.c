@@ -1,17 +1,8 @@
-#include "ili9163.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 160,
-    .height = 128,
-    .init = ili9163Init,
-    .setWindow = ili9163SetWindow,
-};
 
 void ili9163Init(void)
 {
@@ -150,3 +141,12 @@ void ili9163SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x2C);
 }
+
+const DispDriver dispdrv = {
+    .width = 160,
+    .height = 128,
+    .sleep = ili9163Sleep,
+    .wakeup = ili9163Wakeup,
+    .init = ili9163Init,
+    .setWindow = ili9163SetWindow,
+};

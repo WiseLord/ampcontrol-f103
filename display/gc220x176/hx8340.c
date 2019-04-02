@@ -1,17 +1,8 @@
-#include "hx8340.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 220,
-    .height = 176,
-    .init = hx8340Init,
-    .setWindow = hx8340SetWindow,
-};
 
 void hx8340Init(void)
 {
@@ -138,3 +129,12 @@ void hx8340SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x22);
 }
+
+const DispDriver dispdrv = {
+    .width = 220,
+    .height = 176,
+    .init = hx8340Init,
+    .sleep = hx8340Sleep,
+    .wakeup = hx8340Wakeup,
+    .setWindow = hx8340SetWindow,
+};

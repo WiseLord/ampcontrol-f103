@@ -1,18 +1,8 @@
-#include "s6d0139.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 320,
-    .height = 240,
-    .init = s6d0139Init,
-    .setWindow = s6d0139SetWindow,
-    .rotate = s6d0139Rotate,
-};
 
 void s6d0139Init(void)
 {
@@ -139,3 +129,13 @@ void s6d0139SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg16(0x0022);
 }
+
+const DispDriver dispdrv = {
+    .width = 320,
+    .height = 240,
+    .init = s6d0139Init,
+    .sleep = s6d0139Sleep,
+    .wakeup = s6d0139Wakeup,
+    .setWindow = s6d0139SetWindow,
+    .rotate = s6d0139Rotate,
+};

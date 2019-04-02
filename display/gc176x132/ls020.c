@@ -1,17 +1,8 @@
-#include "ls020.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 176,
-    .height = 132,
-    .init = ls020Init,
-    .setWindow = ls020SetWindow,
-};
 
 void ls020Init(void)
 {
@@ -118,3 +109,12 @@ void ls020SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     SET(DISP_CS);
     CLR(DISP_RS);
 }
+
+const DispDriver dispdrv = {
+    .width = 176,
+    .height = 132,
+    .init = ls020Init,
+    .sleep = ls020Sleep,
+    .wakeup = ls020Wakeup,
+    .setWindow = ls020SetWindow,
+};

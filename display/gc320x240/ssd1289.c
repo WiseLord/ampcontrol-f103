@@ -1,19 +1,8 @@
-#include "ssd1289.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 320,
-    .height = 240,
-    .init = ssd1289Init,
-    .setWindow = ssd1289SetWindow,
-    .rotate = ssd1289Rotate,
-    .shift = ssd1289Shift,
-};
 
 void ssd1289Init(void)
 {
@@ -149,3 +138,14 @@ void ssd1289SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     // Select RAM mode
     dispdrvSelectReg16(0x0022);
 }
+
+const DispDriver dispdrv = {
+    .width = 320,
+    .height = 240,
+    .init = ssd1289Init,
+    .sleep = ssd1289Sleep,
+    .wakeup = ssd1289Wakeup,
+    .setWindow = ssd1289SetWindow,
+    .rotate = ssd1289Rotate,
+    .shift = ssd1289Shift,
+};

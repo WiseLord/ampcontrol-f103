@@ -1,17 +1,8 @@
-#include "ili9225.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 220,
-    .height = 176,
-    .init = ili9225Init,
-    .setWindow = ili9225SetWindow,
-};
 
 void ili9225Init(void)
 {
@@ -110,3 +101,12 @@ void ili9225SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     // Select RAM mode
     dispdrvSelectReg16(0x0022);
 }
+
+const DispDriver dispdrv = {
+    .width = 220,
+    .height = 176,
+    .init = ili9225Init,
+    .sleep = ili9225Sleep,
+    .wakeup = ili9225Wakeup,
+    .setWindow = ili9225SetWindow,
+};

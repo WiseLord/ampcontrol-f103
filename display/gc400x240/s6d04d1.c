@@ -1,18 +1,8 @@
-#include "s6d04d1.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 400,
-    .height = 240,
-    .init = s6d04d1Init,
-    .setWindow = s6d04d1SetWindow,
-    .rotate = s6d04d1Rotate,
-};
 
 void s6d04d1Init(void)
 {
@@ -270,3 +260,13 @@ void s6d04d1SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x2C);
 }
+
+const DispDriver dispdrv = {
+    .width = 400,
+    .height = 240,
+    .init = s6d04d1Init,
+    .sleep = s6d04d1Sleep,
+    .wakeup = s6d04d1Wakeup,
+    .setWindow = s6d04d1SetWindow,
+    .rotate = s6d04d1Rotate,
+};

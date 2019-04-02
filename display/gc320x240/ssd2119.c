@@ -1,19 +1,8 @@
-#include "ssd2119.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 320,
-    .height = 240,
-    .init = ssd2119Init,
-    .setWindow = ssd2119SetWindow,
-    .rotate = ssd2119Rotate,
-    .shift = ssd2119Shift,
-};
 
 void ssd2119Init(void)
 {
@@ -132,3 +121,14 @@ void ssd2119SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     // Select RAM mode
     dispdrvSelectReg16(0x0022);
 }
+
+const DispDriver dispdrv = {
+    .width = 320,
+    .height = 240,
+    .init = ssd2119Init,
+    .sleep = ssd2119Sleep,
+    .wakeup = ssd2119Wakeup,
+    .setWindow = ssd2119SetWindow,
+    .rotate = ssd2119Rotate,
+    .shift = ssd2119Shift,
+};

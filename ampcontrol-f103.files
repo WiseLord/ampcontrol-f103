@@ -67,66 +67,39 @@ display/icons/icons-amp-48.c
 display/icons/icons-amp-64.c
 
 display/gc160x128/ili9163.c
-display/gc160x128/ili9163.h
 display/gc160x128/s6d0144.c
-display/gc160x128/s6d0144.h
 display/gc160x128/st7735.c
-display/gc160x128/st7735.h
 
 display/gc176x132/l2f50126.c
-display/gc176x132/l2f50126.h
 display/gc176x132/l2f50126_regs.h
 display/gc176x132/lph9157.c
-display/gc176x132/lph9157.h
 display/gc176x132/ls020.c
-display/gc176x132/ls020.h
 display/gc176x132/ssd1286a.c
-display/gc176x132/ssd1286a.h
 
 display/gc220x176/hx8340.c
-display/gc220x176/hx8340.h
 display/gc220x176/ili9225.c
-display/gc220x176/ili9225.h
 display/gc220x176/lgdp4524.c
-display/gc220x176/lgdp4524.h
 display/gc220x176/s6d0164.c
-display/gc220x176/s6d0164.h
 
 display/gc320x240/hx8347a.c
-display/gc320x240/hx8347a.h
 display/gc320x240/hx8347d.c
-display/gc320x240/hx8347d.h
 display/gc320x240/ili9320.c
-display/gc320x240/ili9320.h
 display/gc320x240/ili9341.c
-display/gc320x240/ili9341.h
 display/gc320x240/ili9341_regs.h
 display/gc320x240/mc2pa8201.c
-display/gc320x240/mc2pa8201.h
 display/gc320x240/s6d0129.c
-display/gc320x240/s6d0129.h
 display/gc320x240/s6d0139.c
-display/gc320x240/s6d0139.h
 display/gc320x240/spfd5408.c
-display/gc320x240/spfd5408.h
 display/gc320x240/ssd1289.c
-display/gc320x240/ssd1289.h
 display/gc320x240/ssd2119.c
-display/gc320x240/ssd2119.h
 
 display/gc400x240/ili9327.c
-display/gc400x240/ili9327.h
 display/gc400x240/s6d04d1.c
-display/gc400x240/s6d04d1.h
 display/gc400x240/st7793.c
-display/gc400x240/st7793.h
 
 display/gc480x320/ili9481.c
-display/gc480x320/ili9481.h
 display/gc480x320/ili9486.c
-display/gc480x320/ili9486.h
 display/gc480x320/r61581.c
-display/gc480x320/r61581.h
 
 display/dispdefs.h
 display/dispdrv.c

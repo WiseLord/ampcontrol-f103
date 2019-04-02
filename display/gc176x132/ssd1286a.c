@@ -1,17 +1,8 @@
-#include "ssd1286a.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 176,
-    .height = 132,
-    .init = ssd1286aInit,
-    .setWindow = ssd1286aSetWindow,
-};
 
 void ssd1286aInit(void)
 {
@@ -132,3 +123,12 @@ void ssd1286aSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x22);
 }
+
+const DispDriver dispdrv = {
+    .width = 176,
+    .height = 132,
+    .init = ssd1286aInit,
+    .sleep = ssd1286aSleep,
+    .wakeup = ssd1286aWakeup,
+    .setWindow = ssd1286aSetWindow,
+};

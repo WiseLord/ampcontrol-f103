@@ -1,19 +1,8 @@
-#include "r61581.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
 #include "../../pins.h"
 #include "../dispdrv.h"
-
-const DispDriver dispdrv = {
-    .width = 480,
-    .height = 320,
-    .init = r61581Init,
-    .setWindow = r61581SetWindow,
-    .rotate = r61581Rotate,
-    .shift = r615811Shift,
-};
 
 void r61581Init(void)
 {
@@ -184,3 +173,14 @@ void r61581SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x2C);
 }
+
+const DispDriver dispdrv = {
+    .width = 480,
+    .height = 320,
+    .init = r61581Init,
+    .sleep = r61581Sleep,
+    .wakeup = r61581Wakeup,
+    .setWindow = r61581SetWindow,
+    .rotate = r61581Rotate,
+    .shift = r615811Shift,
+};
