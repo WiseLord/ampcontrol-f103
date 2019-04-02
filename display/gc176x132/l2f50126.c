@@ -1,5 +1,3 @@
-#include "l2f50126_regs.h"
-
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_utils.h>
 
@@ -43,6 +41,7 @@ static inline void l2f50126SelectReg(uint8_t cmd)
     DISP_WAIT_BUSY();
     SET(DISP_RS);
 }
+
 /*
 __attribute__((always_inline))
 static void inline l2f50126PulseCS(void)
@@ -58,17 +57,17 @@ void l2f50126Init(void)
 {
     CLR(DISP_CS);
 
-    l2f50126SelectReg(L2F50126_DATCTL);
+    l2f50126SelectReg(0xBC); // Data Control (data handling in RAM)
     l2f50126SendData0(0x2B);
 
-    //l2f50126PulseCS();
+    // l2f50126PulseCS();
 
-    l2f50126SelectReg(L2F50126_DISCTL);
+    l2f50126SelectReg(0xCA); // Display Control
     for (uint8_t i = 0; i < sizeof(disctl); i++) {
         l2f50126SendData0(disctl[i]);
     }
 
-    l2f50126SelectReg(L2F50126_GCP64);
+    l2f50126SelectReg(0xCB); // pulse set for 64 gray scale
     for (uint8_t i = 0; i < sizeof(gcp64_0); i++) {
         l2f50126SendData0(gcp64_0[i]);
         l2f50126SendData0(0x00);
@@ -78,39 +77,45 @@ void l2f50126Init(void)
         l2f50126SendData0(0x01);
     }
 
-    l2f50126SelectReg(L2F50126_GCP16);
+    l2f50126SelectReg(0xCC); // pulse set for 16 gray scale
     for (uint8_t i = 0; i < sizeof(gcp16); i++) {
         l2f50126SendData0(gcp16[i]);
     }
 
-    l2f50126SelectReg(L2F50126_GSSET);
+    l2f50126SelectReg(0xCD); // set for gray scales
     l2f50126SendData0(0x00);
 
-    l2f50126SelectReg(L2F50126_OSSEL);
+    l2f50126SelectReg(0xD0); // Oscillator select
     l2f50126SendData0(0x00);
 
-    l2f50126SelectReg(L2F50126_SLPOUT);
+    l2f50126SelectReg(0x94); // Display out of sleep (no parameter)
 
-    l2f50126SelectReg(SD_CSET);
+    l2f50126SelectReg(0x15); // column address setting
     l2f50126SendData0(0x08);
     l2f50126SendData0(0x01);
     l2f50126SendData0(0x8B);
     l2f50126SendData0(0x01);
 
-    l2f50126SelectReg(SD_PSET);
+    l2f50126SelectReg(0x75); // page address setting
     l2f50126SendData0(0x00);
     l2f50126SendData0(0x8F);
 
-    l2f50126SelectReg(L2F50126_ASCSET);
+    l2f50126SelectReg(0xAA); // area scroll setting
     l2f50126SendData0(0x00);
     l2f50126SendData0(0xAF);
     l2f50126SendData0(0xAF);
     l2f50126SendData0(0x03);
 
-    l2f50126SelectReg(L2F50126_SCSTART);
+    l2f50126SelectReg(0xAB); // scroll start setting
     l2f50126SendData0(0x00);
 
-    l2f50126SelectReg(L2F50126_DISON);
+    l2f50126SelectReg(0xAF); // Display ON (no parameter)
+
+    // Additional display registers:
+    // l2f50126SelectReg(0xCD); // set for gray scales
+    // l2f50126SelectReg(0xA7); // Display Invert (no parameter)
+    // l2f50126SelectReg(0xA6); // Display Normal (no parameter)
+    // l2f50126SelectReg(0xA8); // partial screen write
 
     SET(DISP_CS);
 }
@@ -119,7 +124,8 @@ void l2f50126Sleep(void)
 {
     CLR(DISP_CS);
 
-    l2f50126SelectReg(L2F50126_SLPIN);
+    l2f50126SelectReg(0x95); // Display Sleep (no parameter)
+    l2f50126SelectReg(0xAE); // Display OFF (no parameter)
 
     SET(DISP_CS);
 
@@ -129,7 +135,8 @@ void l2f50126Wakeup(void)
 {
     CLR(DISP_CS);
 
-    l2f50126SelectReg(L2F50126_SLPOUT);
+    l2f50126SelectReg(0x94); // Display out of sleep (no parameter)
+    l2f50126SelectReg(0xAF); // Display ON (no parameter)
 
     SET(DISP_CS);
 }
@@ -141,17 +148,17 @@ void l2f50126SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     uint8_t x1 = (uint8_t)(x + w - 1);
     uint8_t y1 = (uint8_t)(y + 8 + h - 1);
 
-    l2f50126SelectReg(SD_CSET);
+    l2f50126SelectReg(0x15); // column address setting
     l2f50126SendData0(y0);
     l2f50126SendData0(0x01);
     l2f50126SendData0(y1);
     l2f50126SendData0(0x01);
 
-    l2f50126SelectReg(SD_PSET);
+    l2f50126SelectReg(0x75); // page address setting
     l2f50126SendData0(x0);
     l2f50126SendData0(x1);
 
-    l2f50126SelectReg(L2F50126_RAMWR);
+    l2f50126SelectReg(0x5C); // Display Memory write
 }
 
 const DispDriver dispdrv = {

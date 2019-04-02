@@ -71,7 +71,6 @@ display/gc160x128/s6d0144.c
 display/gc160x128/st7735.c
 
 display/gc176x132/l2f50126.c
-display/gc176x132/l2f50126_regs.h
 display/gc176x132/lph9157.c
 display/gc176x132/ls020.c
 display/gc176x132/ssd1286a.c
@@ -85,7 +84,6 @@ display/gc320x240/hx8347a.c
 display/gc320x240/hx8347d.c
 display/gc320x240/ili9320.c
 display/gc320x240/ili9341.c
-display/gc320x240/ili9341_regs.h
 display/gc320x240/mc2pa8201.c
 display/gc320x240/s6d0129.c
 display/gc320x240/s6d0139.c
