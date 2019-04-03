@@ -105,27 +105,26 @@ static void pt2322SetSpeakers(void)
     int8_t spRearRight = 0;
 
     if (aPar->item[AUDIO_TUNE_BALANCE].value > 0) {
-        spFrontLeft += aPar->item[AUDIO_TUNE_BALANCE].value;
-        spRearLeft += aPar->item[AUDIO_TUNE_BALANCE].value;
+        spFrontLeft -= aPar->item[AUDIO_TUNE_BALANCE].value;
+        spRearLeft -= aPar->item[AUDIO_TUNE_BALANCE].value;
     } else {
-        spFrontRight -= aPar->item[AUDIO_TUNE_BALANCE].value;
-        spRearRight -= aPar->item[AUDIO_TUNE_BALANCE].value;
+        spFrontRight += aPar->item[AUDIO_TUNE_BALANCE].value;
+        spRearRight += aPar->item[AUDIO_TUNE_BALANCE].value;
     }
-
     if (aPar->item[AUDIO_TUNE_FRONTREAR].value > 0) {
-        spRearLeft += aPar->item[AUDIO_TUNE_FRONTREAR].value;
-        spRearRight += aPar->item[AUDIO_TUNE_FRONTREAR].value;
+        spRearLeft -= aPar->item[AUDIO_TUNE_FRONTREAR].value;
+        spRearRight -= aPar->item[AUDIO_TUNE_FRONTREAR].value;
     } else {
-        spFrontLeft -= aPar->item[AUDIO_TUNE_FRONTREAR].value;
-        spFrontRight -= aPar->item[AUDIO_TUNE_FRONTREAR].value;
+        spFrontLeft += aPar->item[AUDIO_TUNE_FRONTREAR].value;
+        spFrontRight += aPar->item[AUDIO_TUNE_FRONTREAR].value;
     }
 
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
-    i2cSend(I2C_AMP, PT2322_TRIM_FL | (uint8_t)(spFrontLeft));
-    i2cSend(I2C_AMP, PT2322_TRIM_FR | (uint8_t)(spFrontRight));
+    i2cSend(I2C_AMP, PT2322_TRIM_FL | (uint8_t)(-spFrontLeft));
+    i2cSend(I2C_AMP, PT2322_TRIM_FR | (uint8_t)(-spFrontRight));
     i2cSend(I2C_AMP, PT2322_TRIM_CT | (uint8_t)(-aPar->item[AUDIO_TUNE_CENTER].value));
-    i2cSend(I2C_AMP, PT2322_TRIM_RL | (uint8_t)(spRearLeft));
-    i2cSend(I2C_AMP, PT2322_TRIM_RR | (uint8_t)(spRearRight));
+    i2cSend(I2C_AMP, PT2322_TRIM_RL | (uint8_t)(-spRearLeft));
+    i2cSend(I2C_AMP, PT2322_TRIM_RR | (uint8_t)(-spRearRight));
     i2cSend(I2C_AMP, PT2322_TRIM_SB | (uint8_t)(-aPar->item[AUDIO_TUNE_SUBWOOFER].value));
     i2cTransmit(I2C_AMP, true);
 }
@@ -180,7 +179,6 @@ void pt232xSetTune(AudioTune tune, int8_t value)
     default:
         break;
     }
-
 }
 
 void pt232xSetInput(uint8_t value)
