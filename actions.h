@@ -75,6 +75,8 @@ enum {
     ACTION_MENU_SELECT,
     ACTION_MENU_CHANGE,
 
+    ACTION_TIMER,
+
     ACTION_TYPE_END
 };
 

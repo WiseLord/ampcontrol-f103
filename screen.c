@@ -154,6 +154,12 @@ Screen screenGetDefault(void)
 
     InputType inType = aProc->par.inType[aProc->par.input];;
 
+    int32_t stbyTimer = swTimGet(SW_TIM_STBY_TIMER);
+
+    if (stbyTimer > 0 && stbyTimer < 60 * 1000 + 999) {
+        return  SCREEN_STBY_TIMER;
+    }
+
     if (IN_TUNER == inType)
         return SCREEN_TUNER;
 
@@ -240,6 +246,9 @@ void screenShow(bool clear)
         break;
     case SCREEN_TEXTEDIT:
         layoutShowTextEdit(clear);
+        break;
+    case SCREEN_STBY_TIMER:
+        layoutShowTimer(clear, swTimGet(SW_TIM_STBY_TIMER));
         break;
     default:
         break;

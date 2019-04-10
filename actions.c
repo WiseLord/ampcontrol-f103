@@ -52,10 +52,10 @@ static void actionDispExpired(Screen screen)
     switch (screen) {
     case SCREEN_STANDBY:
     case SCREEN_MENU:
-        actionSetScreen(SCREEN_STANDBY, SW_TIM_OFF); // TODO: Return to parent screen caused menu
+        actionSetScreen(SCREEN_STANDBY, 1000); // TODO: Return to parent screen caused menu
         break;
     default:
-        actionSetScreen(screenGetDefault(), SW_TIM_OFF);
+        actionSetScreen(screenGetDefault(), 1000);
         break;
     }
 }
@@ -243,12 +243,34 @@ static void actionGetRemote(void)
     }
 }
 
+static void stbyTimerChange(void)
+{
+    int32_t stbyTimer = swTimGet(SW_TIM_STBY_TIMER);
+
+    static const uint8_t stbyTimeMin[] = {
+        2, 5, 10, 20, 40, 60, 90, 120, 180, 240,
+    };
+
+    for (uint8_t i = 0; i < sizeof (stbyTimeMin) / sizeof (stbyTimeMin[0]); i++) {
+        int32_t stbyTime = 1000 * 60 * stbyTimeMin[i];
+        if (stbyTimer < stbyTime) {
+            swTimSet(SW_TIM_STBY_TIMER, stbyTime + 999);
+            break;
+        }
+        if (i == sizeof (stbyTimeMin) / sizeof (stbyTimeMin[0]) - 1) {
+            swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
+        }
+    }
+}
+
 static void actionGetTimers(void)
 {
     if (swTimGet(SW_TIM_DISPLAY) == 0) {
         actionSet(ACTION_DISP_EXPIRED, 0);
     } else if (swTimGet(SW_TIM_INIT_HW) == 0) {
         actionSet(ACTION_INIT_HW, 0);
+    } else if (swTimGet(SW_TIM_STBY_TIMER) == 0) {
+        actionSet(ACTION_STANDBY, FLAG_ON);
     }
 }
 
@@ -454,7 +476,7 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_TIME:
-        action.type = ACTION_RTC_MODE;
+        actionSet(ACTION_RTC_MODE, 0);
         break;
 
     case RC_CMD_STOP:
@@ -471,6 +493,9 @@ static void actionRemapRemote(void)
         break;
     case RC_CMD_FWD:
         actionSet(ACTION_MEDIA, HIDKEY_MEDIA_FORWARD);
+        break;
+    case RC_CMD_TIMER:
+        actionSet(ACTION_TIMER, 0);
         break;
     default:
         break;
@@ -691,6 +716,7 @@ void actionHandle(bool visible)
 
             pinsSetStby(false);     // OFF via relay
 
+            swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
             actionDispExpired(SCREEN_STANDBY);
         }
         break;
@@ -837,6 +863,13 @@ void actionHandle(bool visible)
         menuChange((int8_t)action.value);
         action.param.parent = menuGet()->parent;
         actionSetScreen(SCREEN_MENU, 10000);
+        break;
+
+    case ACTION_TIMER:
+        if (screen == SCREEN_STBY_TIMER) {
+            stbyTimerChange();
+        }
+        actionSetScreen(SCREEN_STBY_TIMER, 5000);
         break;
     default:
         break;

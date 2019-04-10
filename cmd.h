@@ -46,6 +46,7 @@ extern "C" {
     CMD(PAUSE)              \
     CMD(REW)                \
     CMD(FWD)                \
+    CMD(TIMER)              \
 
 #ifdef __cplusplus
 }

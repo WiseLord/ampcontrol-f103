@@ -27,6 +27,8 @@ enum {
 
     SCREEN_TEXTEDIT,
 
+    SCREEN_STBY_TIMER,
+
     SCREEN_END
 };
 

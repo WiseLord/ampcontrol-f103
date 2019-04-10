@@ -17,10 +17,12 @@ enum {
     SW_TIM_INIT_HW,
     SW_TIM_RC_REPEAT,
     SW_TIM_RC_NOACION,
+    SW_TIM_STBY_TIMER,
 
     SW_TIM_END,
 };
 
+void swTimInit(void);
 void swTimUpdate(void);
 
 void swTimSet(SwTimer timer, int32_t value);

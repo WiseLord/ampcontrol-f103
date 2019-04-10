@@ -14,6 +14,7 @@
 #include "rtc.h"
 #include "screen.h"
 #include "spectrum.h"
+#include "swtimers.h"
 #include "timers.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
@@ -96,6 +97,7 @@ int main(void)
     rcInit();
     rtcInit();
 
+    swTimInit();
     LL_SYSTICK_EnableIT();
     timersInit();
 

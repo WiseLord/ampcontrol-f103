@@ -90,7 +90,11 @@ static void canvasDrawTm(RTC_type *rtc, uint8_t tm)
         glcdWriteString("20");
         glcdWriteUChar(LETTER_SPACE_CHAR);
     }
-    glcdWriteNum(time, 2, '0', 10);
+    if (time >= 0) {
+        glcdWriteNum(time, 2, '0', 10);
+    } else {
+        glcdWriteString("--");
+    }
     glcdWriteUChar(LETTER_SPACE_CHAR);
     glcdSetFontColor(canvas->pal->fg);
     glcdSetFontBgColor(canvas->pal->bg);
@@ -681,4 +685,58 @@ void layoutShowTextEdit(bool clear)
         glcdSetFontBgColor(pal->bg);
         glcdDrawRect(glcd->x, glcd->y, lt->textEdit.rect.w - glcd->x, feh, pal->inactive);
     }
+}
+
+void layoutShowTimer(bool clear, int32_t value)
+{
+    (void)clear;
+    Spectrum *sp = spGet();
+
+    int16_t zeroPos;
+    int16_t ltspPos;
+    uint16_t timeLen;
+
+    RTC_type rtc;
+
+    rtc.etm = RTC_NOEDIT;
+
+    if (value < 0) {
+        rtc.hour = -1;
+        rtc.min = -1;
+        rtc.sec = -1;
+    } else {
+        value /= 1000;
+        rtc.hour = (int8_t)(value / 3600);
+        rtc.min = (int8_t)(value / 60 % 60);
+        rtc.sec = (int8_t)(value % 60);
+    }
+
+    // HH:MM:SS
+    glcdSetFont(lt->time.hmsFont);
+    zeroPos = glcdFontSymbolPos('0');
+    ltspPos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
+    timeLen = 6 * (lt->time.hmsFont->chars[zeroPos].image->width);    // 6 digits HHMMSS
+    timeLen += 15 * (lt->time.hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
+    glcdSetXY((lt->rect.w - timeLen) / 2, lt->time.hmsY);
+
+    canvasDrawTm(&rtc, RTC_HOUR);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(':');
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    canvasDrawTm(&rtc, RTC_MIN);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    glcdWriteUChar(':');
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    canvasDrawTm(&rtc, RTC_SEC);
+
+    // Spectrum
+
+    if (!sp->ready) {
+        return;
+    }
+
+    canvasDrawSpectrumChan(sp, SP_CHAN_RIGHT);
+
+    sp->redraw = false;
+    sp->ready = false;
 }

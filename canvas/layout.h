@@ -76,8 +76,8 @@ void layoutShowMenu(bool clear);
 void layoutShowTune(bool clear, AudioTune tune);
 void layoutShowSpectrum(bool clear);
 void layoutShowTuner(bool clear);
-
 void layoutShowTextEdit(bool clear);
+void layoutShowTimer(bool clear, int32_t value);
 
 #ifdef __cplusplus
 }

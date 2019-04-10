@@ -2,6 +2,13 @@
 
 static int32_t swTimers[SW_TIM_END];
 
+void swTimInit(void)
+{
+    for (uint8_t i = 0; i < SW_TIM_END; i++) {
+        swTimers[i] = SW_TIM_OFF;
+    }
+}
+
 void swTimUpdate(void)
 {
     for (uint8_t i = 0; i < SW_TIM_END; i++) {
