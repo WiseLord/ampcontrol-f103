@@ -689,15 +689,19 @@ void layoutShowTextEdit(bool clear)
 
 void layoutShowTimer(bool clear, int32_t value)
 {
-    (void)clear;
     Spectrum *sp = spGet();
 
-    int16_t zeroPos;
-    int16_t ltspPos;
-    uint16_t timeLen;
+    static int8_t hour;
+    static int8_t min;
+    static int8_t sec;
+
+    if (clear) {
+        hour = -1;
+        min = -1;
+        sec = -1;
+    }
 
     RTC_type rtc;
-
     rtc.etm = RTC_NOEDIT;
 
     if (value < 0) {
@@ -713,21 +717,41 @@ void layoutShowTimer(bool clear, int32_t value)
 
     // HH:MM:SS
     glcdSetFont(lt->time.hmsFont);
-    zeroPos = glcdFontSymbolPos('0');
-    ltspPos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
-    timeLen = 6 * (lt->time.hmsFont->chars[zeroPos].image->width);    // 6 digits HHMMSS
-    timeLen += 15 * (lt->time.hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
-    glcdSetXY((lt->rect.w - timeLen) / 2, lt->time.hmsY);
 
-    canvasDrawTm(&rtc, RTC_HOUR);
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    glcdWriteUChar(':');
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    canvasDrawTm(&rtc, RTC_MIN);
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    glcdWriteUChar(':');
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    canvasDrawTm(&rtc, RTC_SEC);
+    int16_t digW = lt->time.hmsFont->chars[glcdFontSymbolPos('0')].image->width;
+    int16_t ltspW = lt->time.hmsFont->chars[glcdFontSymbolPos(LETTER_SPACE_CHAR)].image->width;
+
+    int16_t hmsX = (lt->rect.w - (6 * digW + 15 * ltspW)) /
+                   2; // 6 digits HHMMSS + 13 letter spaces + 2 ':'
+
+    if (clear || rtc.hour != hour) {
+        glcdSetXY(hmsX, lt->time.hmsY);
+        canvasDrawTm(&rtc, RTC_HOUR);
+    }
+    if (clear) {
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+        glcdWriteUChar(':');
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+    }
+
+    if (clear || rtc.min != min) {
+        glcdSetX(hmsX + 2 * digW + 6 * ltspW);
+        canvasDrawTm(&rtc, RTC_MIN);
+    }
+    if (clear) {
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+        glcdWriteUChar(':');
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+    }
+
+    if (clear || rtc.sec != sec) {
+        glcdSetX(hmsX + 4 * digW + 12 * ltspW);
+        canvasDrawTm(&rtc, RTC_SEC);
+    }
+
+    hour = rtc.hour;
+    min = rtc.min;
+    sec = rtc.sec;
 
     // Spectrum
 
