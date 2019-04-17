@@ -31,15 +31,11 @@ typedef enum {
 
 typedef struct {
     uint8_t raw[SPECTRUM_SIZE];
-    uint8_t fall[SPECTRUM_SIZE];
-    uint8_t show[SPECTRUM_SIZE];
-    uint8_t peak[SPECTRUM_SIZE];
-    uint8_t old_show[SPECTRUM_SIZE];
-    uint8_t old_peak[SPECTRUM_SIZE];
 } SpChan;
 
 typedef struct {
     SpChan chan[SP_CHAN_END];
+
     SpMode mode;
     int16_t wtfX;  // waterfall X position
     bool ready;
@@ -49,7 +45,7 @@ typedef struct {
 void spInit(void);
 Spectrum *spGet(void);
 
-void spGetADC(uint8_t *dataL, uint8_t *dataR);
+void spGetADC(Spectrum *sp);
 
 void spConvertADC(void);
 

@@ -8,6 +8,8 @@
 static const Layout *lt;
 static Canvas *canvas;
 
+static SpData spData[SP_CHAN_END];
+
 static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int16_t max)
 {
     const int16_t sc = bar->sc;         // Scale count
@@ -15,7 +17,7 @@ static void canvasDrawBar(const CanvasBar *bar, int16_t value, int16_t min, int1
     const int16_t barPos = bar->barY;
     const uint8_t barHalf = bar->half;
     const uint8_t barMiddle = bar->middle;
-    const uint16_t width = bar->barW;
+    const int16_t width = bar->barW;
 
     if (min + max) { // Non-symmectic scale => rescale to 0..sc
         value = sc * (value - min) / (max - min);
@@ -153,32 +155,35 @@ static void canvasDrawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->pal->bg);
 }
 
-static void canvasImproveSpectrum(SpChan *chan, uint16_t height)
+static void canvasImproveSpectrum(Spectrum *sp, int16_t chan, uint16_t height)
 {
-    for (uint8_t i = 0; i < SPECTRUM_SIZE; i++) {
-        chan->raw[i] = height * chan->raw[i] / N_DB;
+    SpData *spd = &spData[chan];
+    uint8_t *raw = sp->chan[chan].raw;
 
-        chan->old_show[i] = chan->show[i];
-        if (chan->raw[i] < chan->show[i]) {
-            if (chan->show[i] >= chan->fall[i]) {
-                chan->show[i] -= chan->fall[i];
-                chan->fall[i]++;
+    for (uint8_t i = 0; i < SPECTRUM_SIZE; i++) {
+        raw[i] = height * raw[i] / N_DB;
+
+        spd->old_show[i] = spd->show[i];
+        if (raw[i] < spd->show[i]) {
+            if (spd->show[i] >= spd->fall[i]) {
+                spd->show[i] -= spd->fall[i];
+                spd->fall[i]++;
             } else {
-                chan->show[i] = 0;
+                spd->show[i] = 0;
             }
         }
 
-        if (chan->raw[i] > chan->show[i]) {
-            chan->show[i] = chan->raw[i];
-            chan->fall[i] = 1;
+        if (raw[i] > spd->show[i]) {
+            spd->show[i] = raw[i];
+            spd->fall[i] = 1;
         }
 
-        chan->old_peak[i] = chan->peak[i];
-        if (chan->peak[i] <= chan->raw[i]) {
-            chan->peak[i] = chan->raw[i] + 1;
+        spd->old_peak[i] = spd->peak[i];
+        if (spd->peak[i] <= raw[i]) {
+            spd->peak[i] = raw[i] + 1;
         } else {
-            if (chan->peak[i] && chan->peak[i] > chan->show[i] + 1) {
-                chan->peak[i]--;
+            if (spd->peak[i] && spd->peak[i] > spd->show[i] + 1) {
+                spd->peak[i]--;
             }
         }
     }
@@ -239,12 +244,12 @@ static void canvasDrawSpectrumChan(Spectrum *sp, int16_t chan)
 
     const int16_t num = (lt->rect.w + width - 1) / step;    // Number of spectrum columns
 
-    canvasImproveSpectrum(&sp->chan[chan], (uint16_t)lt->rect.h / 2);
+    canvasImproveSpectrum(sp, chan, (uint16_t)lt->rect.h / 2);
 
-    uint8_t *show = sp->chan[chan].show;
-    uint8_t *peak = sp->chan[chan].peak;
-    uint8_t *old_show = sp->chan[chan].old_show;
-    uint8_t *old_peak = sp->chan[chan].old_peak;
+    uint8_t *show = spData[chan].show;
+    uint8_t *peak = spData[chan].peak;
+    uint8_t *old_show = spData[chan].old_show;
+    uint8_t *old_peak = spData[chan].old_peak;
 
     for (int16_t col = 0; col < num; col++) {
         int16_t x = oft + col * step;
@@ -260,14 +265,14 @@ static void canvasDrawSpectrumMixed(Spectrum *sp)
     const uint8_t width = lt->sp.width;
 
     const int16_t num = (lt->rect.w + width - 1) / step;    // Number of spectrum columns
-    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)lt->rect.h / 2);
-    canvasImproveSpectrum(&sp->chan[SP_CHAN_RIGHT], (uint16_t)lt->rect.h / 2);
+    canvasImproveSpectrum(sp, SP_CHAN_LEFT, (uint16_t)lt->rect.h / 2);
+    canvasImproveSpectrum(sp, SP_CHAN_RIGHT, (uint16_t)lt->rect.h / 2);
 
-    uint8_t *showL = sp->chan[SP_CHAN_LEFT].show;
-    uint8_t *old_showL = sp->chan[SP_CHAN_LEFT].old_show;
+    uint8_t *showL = spData[SP_CHAN_LEFT].show;
+    uint8_t *old_showL = spData[SP_CHAN_LEFT].old_show;
 
-    uint8_t *showR = sp->chan[SP_CHAN_RIGHT].show;
-    uint8_t *old_showR = sp->chan[SP_CHAN_RIGHT].old_show;
+    uint8_t *showR = spData[SP_CHAN_RIGHT].show;
+    uint8_t *old_showR = spData[SP_CHAN_RIGHT].old_show;
 
     for (int16_t col = 0; col < num; col++) {
         int16_t show = (*showL++) + (*showR++);
@@ -287,13 +292,13 @@ static void canvasDrawWaterfall(Spectrum *sp)
 
     const uint8_t wfH = lt->sp.wfH;
 
-    glcdShift((uint16_t)(sp->wtfX + 1) % lt->rect.w);
+    glcdShift((sp->wtfX + 1) % lt->rect.w);
 
-    canvasImproveSpectrum(&sp->chan[SP_CHAN_LEFT], (uint16_t)lt->rect.h / 2);
-    canvasImproveSpectrum(&sp->chan[SP_CHAN_RIGHT], (uint16_t)lt->rect.h / 2);
+    canvasImproveSpectrum(sp, SP_CHAN_LEFT, (uint16_t)lt->rect.h / 2);
+    canvasImproveSpectrum(sp, SP_CHAN_RIGHT, (uint16_t)lt->rect.h / 2);
 
     for (uint16_t i = 0; i < (lt->rect.h + wfH - 1) / wfH; i++) {
-        uint16_t level = sp->chan[SP_CHAN_LEFT].show[i] + sp->chan[SP_CHAN_RIGHT].show[i];
+        uint16_t level = spData[SP_CHAN_LEFT].show[i] + spData[SP_CHAN_RIGHT].show[i];
         uint16_t color = level2color(level);
         glcdDrawRect(sp->wtfX, lt->rect.h - 1 - (i * wfH), 1, wfH, color);
     }
@@ -349,7 +354,7 @@ void layoutShowTime(bool clear)
 
     int16_t zeroPos;
     int16_t ltspPos;
-    uint16_t timeLen;
+    int16_t timeLen;
 
     // HH:MM:SS
     glcdSetFont(lt->time.hmsFont);
@@ -399,7 +404,7 @@ void layoutShowTime(bool clear)
                      (int16_t)lt->time.wdFont->chars[0].image->height, canvas->pal->bg);
     wdayOld = wday;
 
-    const char *wdayLabel = labelsGet(LABEL_SUNDAY + wday);
+    const char *wdayLabel = labelsGet((Label)(LABEL_SUNDAY + wday));
 
     glcdSetXY(lt->rect.w / 2, lt->time.wdY);
     glcdSetFontAlign(FONT_ALIGN_CENTER);
@@ -408,6 +413,8 @@ void layoutShowTime(bool clear)
 
 void layoutShowMenu(bool clear)
 {
+    (void)clear;
+
     Menu *menu = menuGet();
 
     const int16_t fHh = (int16_t)lt->menu.headFont->chars[0].image->height;

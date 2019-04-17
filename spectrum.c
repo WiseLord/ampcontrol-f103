@@ -320,10 +320,10 @@ Spectrum *spGet(void)
     return &spectrum;
 }
 
-void spGetADC(uint8_t *dataL, uint8_t *dataR)
+void spGetADC(Spectrum *sp)
 {
-    spGetData((int16_t *)(bufDMA + 0), dataL);
-    spGetData((int16_t *)(bufDMA + 1), dataR);
+    spGetData((int16_t *)(bufDMA + 0), sp->chan[SP_CHAN_LEFT].raw);
+    spGetData((int16_t *)(bufDMA + 1), sp->chan[SP_CHAN_RIGHT].raw);
 }
 
 void spConvertADC(void)

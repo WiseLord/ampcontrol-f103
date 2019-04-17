@@ -210,7 +210,7 @@ void screenShow(bool clear)
     // Get new spectrum data
     if (swTimGet(SW_TIM_SP_CONVERT) <= 0) {
         swTimSet(SW_TIM_SP_CONVERT, 20);
-        spGetADC(spectrum->chan[SP_CHAN_LEFT].raw, spectrum->chan[SP_CHAN_RIGHT].raw);
+        spGetADC(spectrum);
         spectrum->ready = true;
     }
 
