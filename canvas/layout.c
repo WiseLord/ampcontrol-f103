@@ -178,7 +178,6 @@ static void canvasImproveSpectrum(Spectrum *sp, int16_t chan, uint16_t height)
             spd->fall[i] = 1;
         }
 
-        spd->old_peak[i] = spd->peak[i];
         if (spd->peak[i] <= raw[i]) {
             spd->peak[i] = raw[i] + 1;
         } else {
@@ -190,7 +189,7 @@ static void canvasImproveSpectrum(Spectrum *sp, int16_t chan, uint16_t height)
 }
 
 static void canvasDrawSpectrumColumn(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h,
-                                     int16_t s, int16_t os, int16_t p, int16_t op)
+                                     int16_t s, int16_t os, int16_t p)
 {
     const CanvasPalette *pal = canvas->pal;
     if (s == 0) {
@@ -205,10 +204,8 @@ static void canvasDrawSpectrumColumn(bool redraw, int16_t x, int16_t y, int16_t 
     if (os >= h) {
         os = h - 1;
     }
-    if (op >= h) {
-        op = h - 1;
-    }
 
+    // Full redraw the column
     if (redraw) {
         glcdDrawRect(x, y + h - s, w, s, pal->spCol);
 
@@ -218,20 +215,22 @@ static void canvasDrawSpectrumColumn(bool redraw, int16_t x, int16_t y, int16_t 
         return;
     }
 
+    // Draw part of changed column
     if (s > os) {
         glcdDrawRect(x, y + h - s, w, s - os, pal->spCol);
-
     } else if (s < os) {
-        glcdDrawRect(x, y + h - os, w, os - s, canvas->pal->bg);
+        glcdDrawRect(x, y + h - os, w, os - s, pal->bg);
     }
 
+    // Clear old peak
+    if (p >= s) {
+        glcdDrawRect(x, y + h - p - 1, w, 1, pal->bg);
+    }
+
+    // Draw new peak
     if (p > s) {
         glcdDrawRect(x, y + h - p, w, 1, pal->spPeak);
     }
-    if (op > p && op > s) {
-        glcdDrawRect(x, y + h - op, w, 1, canvas->pal->bg);
-    }
-
 }
 
 static void canvasDrawSpectrumChan(Spectrum *sp, int16_t chan)
@@ -249,12 +248,11 @@ static void canvasDrawSpectrumChan(Spectrum *sp, int16_t chan)
     uint8_t *show = spData[chan].show;
     uint8_t *peak = spData[chan].peak;
     uint8_t *old_show = spData[chan].old_show;
-    uint8_t *old_peak = spData[chan].old_peak;
 
     for (int16_t col = 0; col < num; col++) {
         int16_t x = oft + col * step;
         canvasDrawSpectrumColumn(sp->redraw, x, y, width, height,
-                                 *show++, *old_show++, *peak++, *old_peak++);
+                                 *show++, *old_show++, *peak++);
     }
 }
 
@@ -280,7 +278,7 @@ static void canvasDrawSpectrumMixed(Spectrum *sp)
 
         int16_t x = oft + col * step;
         canvasDrawSpectrumColumn(sp->redraw, x, 0, width, lt->rect.h,
-                                 show, old_show, 0, 0);
+                                 show, old_show, 0);
     }
 }
 

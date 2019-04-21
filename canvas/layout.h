@@ -21,7 +21,6 @@ typedef struct {
     uint8_t show[SPECTRUM_SIZE];
     uint8_t peak[SPECTRUM_SIZE];
     uint8_t old_show[SPECTRUM_SIZE];
-    uint8_t old_peak[SPECTRUM_SIZE];
 } SpData;
 
 typedef struct {
