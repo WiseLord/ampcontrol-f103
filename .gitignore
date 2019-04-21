@@ -1,4 +1,6 @@
 build/
 flash/
 *.user
+*.cflags
+*.cxxflags
 backup/
