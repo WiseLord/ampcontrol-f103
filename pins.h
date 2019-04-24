@@ -90,10 +90,10 @@ void pinsSetStby(bool value);
 #define DISP_SPI_SDI            DISP_WR
 
 // Mute and Standby lines
-#define MUTE_Port               GPIOA
-#define MUTE_Pin                LL_GPIO_PIN_13
-#define STBY_Port               GPIOA
-#define STBY_Pin                LL_GPIO_PIN_14
+#define MUTE_Port               GPIOB
+#define MUTE_Pin                LL_GPIO_PIN_11
+#define STBY_Port               GPIOB
+#define STBY_Pin                LL_GPIO_PIN_10
 
 // Main I2C bus
 #define AMP_I2C_Port            GPIOB
