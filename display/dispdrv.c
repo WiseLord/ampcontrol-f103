@@ -56,6 +56,17 @@ static inline void dispdrvSendByte(uint8_t data)
 #endif
 }
 
+__attribute__((always_inline))
+static inline void dispdrvReadInput(void)
+{
+#ifdef _DISP_HI_BYTE
+    busData = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
+#endif
+#ifdef _DISP_LO_BYTE
+    busData = DISP_DATA_LO_Port->IDR & 0x00FF;
+#endif
+}
+
 #if defined(_DISP_8BIT) || defined(_DISP_16BIT)
 
 __attribute__((always_inline))
@@ -74,6 +85,10 @@ static inline void dispdrvBusIn(void)
 __attribute__((always_inline))
 static inline void dispdrvBusOut(void)
 {
+    if (bus_requested) {
+        dispdrvReadInput();
+        bus_requested = false;
+    }
 #ifdef _DISP_HI_BYTE
     DISP_DATA_HI_Port->CRH = BUS_MODE_OUT;
 #endif
@@ -93,18 +108,7 @@ static inline uint32_t dispDrvGetBusMode(void)
 #endif
 }
 
-#endif // _DISP_8BIT
-
-__attribute__((always_inline))
-static inline void dispdrvReadInput(void)
-{
-#ifdef _DISP_HI_BYTE
-    busData = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
-#endif
-#ifdef _DISP_LO_BYTE
-    busData = DISP_DATA_LO_Port->IDR & 0x00FF;
-#endif
-}
+#endif // _DISP_8BIT || _DISP_16BIT
 
 __attribute__((always_inline))
 static inline void dispdrvSendWord(uint16_t data)
@@ -116,23 +120,18 @@ static inline void dispdrvSendWord(uint16_t data)
     CLR(DISP_WR);
     SET(DISP_WR);
 #else
-#ifndef _DISP_SPI
-    dispdrvBusOut();
-#endif
     uint8_t dataH = data >> 8;
     uint8_t dataL = data & 0xFF;
+#ifdef _DISP_8BIT
+    dispdrvBusOut();
+#endif
     dispdrvSendByte(dataH);
     dispdrvSendByte(dataL);
 #ifdef _DISP_8BIT
     dispdrvBusIn();
 #endif
-#endif
-#ifdef _DISP_8BIT
-    if (bus_requested) {
-        dispdrvReadInput();
-        bus_requested = false;
-    }
-#endif
+
+#endif // _DISP_16BIT
 }
 
 void dispdrvReset(void)
@@ -212,10 +211,6 @@ void dispdrvSendData8(uint8_t data)
     dispdrvSendByte(data);
 #ifdef _DISP_8BIT
     dispdrvBusIn();
-    if (bus_requested) {
-        dispdrvReadInput();
-        bus_requested = false;
-    }
 #endif
 }
 
