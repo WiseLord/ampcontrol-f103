@@ -6,6 +6,8 @@
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_rcc.h>
 
+#include <string.h>
+
 #include "eemap.h"
 #include "display/glcd.h"
 
@@ -242,37 +244,26 @@ static inline uint8_t spGetDb(uint16_t value, uint8_t min, uint8_t max)
 
 static void spCplx2dB(FftSample *sp, uint8_t *out)
 {
-    int16_t i, j;
-    uint16_t accum = 0;
+    uint8_t db;
+    uint8_t *po = out;
 
-    for (i = 0, j = 0; i < FFT_SIZE / 2; i++) {
+    memset(po, 0, SPECTRUM_SIZE);
+
+    for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
         uint16_t calc = (uint16_t)((sp[i].fr * sp[i].fr + sp[i].fi * sp[i].fi) >> 15);
 
-        accum += spGetDb(calc, 0, N_DB - 1);
+        db = spGetDb(calc, 0, N_DB - 1);
 
-        if (i < 48) {
-            out[j++] = (uint8_t)(accum >> 0);
-            accum = 0;
-        } else if (i < 96) {
-            if ((i & 0x01) == 0x01) {
-                out[j++] = (uint8_t)(accum >> 1);
-                accum = 0;
-            }
-        } else if (i < 192) {
-            if ((i & 0x03) == 0x03) {
-                out[j++] = (uint8_t)(accum >> 2);
-                accum = 0;
-            }
-        } else if (i < 384) {
-            if ((i & 0x07) == 0x07) {
-                out[j++] = (uint8_t)(accum >> 4);
-                accum = 0;
-            }
-        } else {
-            if ((i & 0x0F) == 0x0F) {
-                out[j++] = (uint8_t)(accum >> 8);
-                accum = 0;
-            }
+        if (*po < db) {
+            *po = db;
+        }
+
+        if ((i < 48) ||
+            ((i < 96) && (i & 0x01) == 0x01) ||
+            ((i < 192) && (i & 0x03) == 0x03) ||
+            ((i < 384) && (i & 0x07) == 0x07) ||
+            ((i & 0x0F) == 0x0F)) {
+            po++;
         }
     }
 }
