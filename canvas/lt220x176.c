@@ -26,9 +26,9 @@ static const Layout lt220x176 = {
     .tune.bar.half = 7,
     .tune.bar.middle = 2,
 
-    .sp.step = 3,
+    .sp.step = 2,
     .sp.oft = 1,
-    .sp.width = 2,
+    .sp.width = 1,
     .sp.wfH = 2,
 
     .tuner.stFont = &fontterminus32,
