@@ -1,4 +1,5 @@
 #include "emuldisp.h"
+#include "emuldisp_stub.h"
 
 #include "../../../canvas/layout.h"
 #include "../../../display/dispdefs.h"

@@ -10,11 +10,6 @@
 #include "../../../actions.h"
 #include "../../../display/fonts/fonts.h"
 
-#define EMUL_DISP_BORDER    5
-#define EMUL_DISP_WIDTH     480
-#define EMUL_DISP_HEIGHT    320
-#define EMUL_DISP_SCALE     2
-
 namespace Ui {
 class EmulDisp;
 }

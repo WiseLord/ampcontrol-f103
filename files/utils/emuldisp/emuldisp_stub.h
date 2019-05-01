@@ -1,0 +1,9 @@
+#ifndef EMULDISP_STUB_H
+#define EMULDISP_STUB_H
+
+#define EMUL_DISP_BORDER    5
+#define EMUL_DISP_WIDTH     480
+#define EMUL_DISP_HEIGHT    320
+#define EMUL_DISP_SCALE     2
+
+#endif // EMULDISP_STUB_H

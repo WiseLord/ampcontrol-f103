@@ -3,14 +3,22 @@
 #include <string.h>
 
 #include "../../../audio/audiodefs.h"
+#include "../../../display/dispdefs.h"
 #include "../../../tuner/stations.h"
 #include "../../../tuner/tunerdefs.h"
 #include "../../../eemap.h"
 #include "../../../spectrum.h"
 #include "../../../usb/usbhid.h"
 
+#include "emuldisp_stub.h"
+
 static Spectrum spectrum;
 static RcData rcData;
+
+const DispDriver dispdrv = {
+    .width = EMUL_DISP_WIDTH,
+    .height = EMUL_DISP_HEIGHT,
+};
 
 static Station st[STATION_COUNT] = {
     [0] = {8750, "Relax FM"},

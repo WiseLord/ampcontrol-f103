@@ -4,9 +4,9 @@ QT += core gui
 QT += widgets
 
 TEMPLATE = app
-CONFIG += c++11
 
-DEFINES += QT_DEPRECATED_WARNINGS
+QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CFLAGS += -std=c11
 
 DEFINES += EMUL_DISP
 
@@ -105,7 +105,8 @@ HEADERS += \
     ../../../spectrum.h \
     ../../../swtimers.h \
     ../../../usb/usbhid.h \
-    ../../../usb/hidkeys.h
+    ../../../usb/hidkeys.h \
+    emuldisp_stub.h
 
 
 FORMS += \

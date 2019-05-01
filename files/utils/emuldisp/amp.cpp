@@ -1,21 +1,16 @@
 #include "amp.h"
 
 #include "emuldisp.h"
+#include "emuldisp_stub.h"
 
 #include <QDebug>
 
 #include "../../../canvas/layout.h"
-#include "../../../display/dispdefs.h"
 #include "../../../eemap.h"
 #include "../../../input.h"
 
 static EmulDisp *disp;
 static Amp *amp;
-
-const DispDriver dispdrv = {
-    .width = EMUL_DISP_WIDTH,
-    .height = EMUL_DISP_HEIGHT,
-};
 
 extern "C" void eeUpdateRaw(uint16_t addr, uint16_t data)
 {
