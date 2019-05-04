@@ -102,6 +102,7 @@ ifneq (,$(filter $(DISPLAY), \
   ILI9481   \
   ILI9486   \
   R61581    \
+  RM68140   \
 ))
   DISPSIZE = 480x320
 endif

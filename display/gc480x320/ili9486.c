@@ -11,30 +11,9 @@ void ili9486Init(void)
     // Initial Sequence
     dispdrvSelectReg8(0x28);     // Display OFF
     LL_mDelay(100);
-    dispdrvSelectReg8(0x10);     // Sleep IN
-    LL_mDelay(50);
-    dispdrvSelectReg8(0xF2);     // ?????
-    dispdrvSendData8(0x18);
-    dispdrvSendData8(0xA3);
-    dispdrvSendData8(0x12);
-    dispdrvSendData8(0x02);
-    dispdrvSendData8(0xB2);
-    dispdrvSendData8(0x12);
-    dispdrvSendData8(0xFF);
-    dispdrvSendData8(0x10);
-    dispdrvSendData8(0x00);
 
-    dispdrvSelectReg8(0xF1);     // ?????
-    dispdrvSendData8(0x36);
-    dispdrvSendData8(0xA4);
-
-    dispdrvSelectReg8(0xF8);     // ?????
-    dispdrvSendData8(0x21);
-    dispdrvSendData8(0x04);
-
-    dispdrvSelectReg8(0xF9);     // ?????
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x08);
+    dispdrvSelectReg8(0x3A);     // Interface Pixel Format
+    dispdrvSendData8(0x55);
 
     dispdrvSelectReg8(0xC0);     // Power Control 1
     dispdrvSendData8(0x0d);
@@ -94,33 +73,15 @@ void ili9486Init(void)
     dispdrvSelectReg8(0x20);     // Display Inversion OFF
 
     dispdrvSelectReg8(0x36);     // Memory Access Control
-    dispdrvSendData8(0x18);
-
-    dispdrvSelectReg8(0x3A);     // Interface Pixel Format
-    dispdrvSendData8(0x55);
+    dispdrvSendData8(0xD8);
 
     dispdrvSelectReg8(0xB4);     // Display Inversion Control
     dispdrvSendData8(0x20);
-
-    dispdrvSelectReg8(0x2A);     // Column Addess Set
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x01);
-    dispdrvSendData8(0xDF);
-
-    dispdrvSelectReg8(0x2B);     // Page Address Set
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x01);
-    dispdrvSendData8(0x3f);
 
     dispdrvSelectReg8(0x11);     // Sleep OUT
 
     LL_mDelay(120);
     dispdrvSelectReg8(0x29);     // Display ON
-    LL_mDelay(120);
-    dispdrvSelectReg8(0x13);     // Normal Display Mode ON
-    dispdrvSelectReg8(0x2C);     // Memory Write
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -132,10 +93,10 @@ void ili9486Rotate(uint8_t rotate)
 
     if (rotate & LCD_ROTATE_180) {
         dispdrvSelectReg8(0x36);
-        dispdrvSendData8(0xD8);
+        dispdrvSendData8(0x08);
     } else {
         dispdrvSelectReg8(0x36);
-        dispdrvSendData8(0x18);
+        dispdrvSendData8(0xD8);
     }
 
     DISP_WAIT_BUSY();
