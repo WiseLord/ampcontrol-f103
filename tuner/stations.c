@@ -3,43 +3,14 @@
 #include "tuner.h"
 #include "../display/glcd.h"
 #include "../eemul.h"
+#include "../mem.h"
 #include <string.h>
 
-/*
-static Station st[STATION_COUNT] = {
-    [0] = {8750, "Relax FM"},
-    [1] = {9240, "Радио-Минск"},
-    [2] = {9370, "Юмор FM"},
-    [3] = {9410, "Легенды FM"},
-    [4] = {9620, "Мелодии Века"},
-    [5] = {9740, "Минская Волна"},
-    [6] = {9800, "Авторадио"},
-    [7] = {9840, "Новое радио"},
-    [8] = {9890, "Русское радио"},
-    [9] = {9950, "Радио Юнистар"},
-    [10] = {10040, "Хит-радио"},
-    [11] = {10120, "Пилот FM"},
-    [12] = {10170, "Центр FM"},
-    [13] = {10210, "Радио РОКС"},
-    [14] = {10250, "Народное радио"},
-    [15] = {10290, "Культура"},
-    [16] = {10370, "Радиус-FM"},
-    [17] = {10460, "Радио Би-Эй"},
-    [18] = {10510, "Столица"},
-    [19] = {10570, "Душевное радио"},
-    [20] = {10620, "1 национальный"},
-    [21] = {10710, "Радио Мир"},
-    [22] = {10790, "Альфа радио"},
-};
-*/
-
-static Station *stRam;
 static Station *stFlash;
 
 void stationsInit()
 {
     stFlash = (Station *)(eeGetPageAddr(EE_PAGE_FM));
-    stRam = (Station *)glcdGetUnrleImgData();
 }
 
 void stationSeek(int8_t direction)
@@ -120,6 +91,8 @@ void stationStore(uint16_t freq, char *name)
     uint16_t num = 0;
     bool saved = false;
 
+    Station *stRam = mem_malloc(sizeof(Station) * STATION_COUNT);
+
     while (num < STATION_COUNT) {
         uint16_t stFreq = stFlash[idx].freq;
 
@@ -163,6 +136,8 @@ void stationStore(uint16_t freq, char *name)
     // Save array in RAM to Flash
     eeErasePages(EE_PAGE_FM, 1);
     eeWritePage(EE_PAGE_FM, stRam, (uint16_t)((num) * sizeof(Station)));
+
+    mem_free(stRam);
 }
 
 void stationRemove(uint16_t freq)
@@ -170,6 +145,8 @@ void stationRemove(uint16_t freq)
     uint16_t idx = 0;
     uint16_t num = 0;
     bool deleted = false;
+
+    Station *stRam = mem_malloc(sizeof(Station) * STATION_COUNT);
 
     while (idx < STATION_COUNT) {
         uint16_t stFreq = stFlash[idx].freq;
@@ -195,4 +172,6 @@ void stationRemove(uint16_t freq)
     // Save array in RAM to Flash
     eeErasePages(EE_PAGE_FM, 1);
     eeWritePage(EE_PAGE_FM, stRam, (uint16_t)((num) * sizeof(Station)));
+
+    mem_free(stRam);
 }

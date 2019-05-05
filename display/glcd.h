@@ -87,9 +87,6 @@ void glcdSetY(int16_t y);
 int16_t glcdFontSymbolPos(UChar code);
 UChar glcdFontSymbolCode(int16_t pos);
 
-tImage *glcdGetUnrleImg(void);
-void *glcdGetUnrleImgData(void);
-
 void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor);
 const tImage *glcdFindIcon(Icon code, const tFont *iFont);
 

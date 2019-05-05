@@ -220,6 +220,8 @@ i2c.h
 input.c
 input.h
 main.c
+mem.c
+mem.h
 menu.c
 menu.h
 pins.c

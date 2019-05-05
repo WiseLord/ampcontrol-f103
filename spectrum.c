@@ -9,7 +9,7 @@
 #include <string.h>
 
 #include "eemap.h"
-#include "display/glcd.h"
+#include "mem.h"
 
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)
 
@@ -17,7 +17,6 @@ static Spectrum spectrum;
 
 // Array with ADC data, interleaved L-R-L-R...
 static int16_t bufDMA[DMA_BUF_SIZE];
-static FftSample *sp; // sp[FFT_SIZE] is shared with glcd unRleImgData
 
 static const uint16_t hammTable[N_HANN / 2] = {
     5027,   5028,   5030,   5032,   5036,   5042,   5048,   5055,
@@ -272,6 +271,8 @@ static void spGetData(int16_t *dma, uint8_t *data)
 {
     int32_t dcOft = 0;
 
+    FftSample *sp = mem_malloc(sizeof (FftSample) * FFT_SIZE);
+
     for (int16_t i = 0; i < FFT_SIZE; i++) {
         sp[i].fr = dma[2 * i];
         dcOft += sp[i].fr;
@@ -289,6 +290,8 @@ static void spGetData(int16_t *dma, uint8_t *data)
     fft_radix4(sp);
 
     spCplx2dB(sp, data);
+
+    mem_free(sp);
 }
 
 static void spReadSettings(void)
@@ -299,8 +302,6 @@ static void spReadSettings(void)
 void spInit(void)
 {
     spReadSettings();
-
-    sp = (FftSample *)glcdGetUnrleImgData(); // Share working FFT buffer with glcd module
 
     spInitDMA();
     spInitADC();

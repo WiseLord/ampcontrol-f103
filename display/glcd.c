@@ -1,20 +1,20 @@
 #include "glcd.h"
 
 #include <string.h>
+#include "../mem.h"
 
 #define STR_BUFSIZE             64
 
 static Glcd glcd;
 static char strbuf[STR_BUFSIZE + 1];    // String buffer
 
-static uint8_t unRleData[4096];         // Shared storage for uncompressed image data
 static tImage unRleImg = {
     .rle = 0
 };
 
-static tImage *glcdUnRleImg(const tImage *img)
+static tImage *glcdUnRleImg(const tImage *img, uint8_t *data)
 {
-    tImage *ret = glcdGetUnrleImg();
+    tImage *ret = &unRleImg;
 
     ret->width = img->width;
     ret->height = img->height;
@@ -22,7 +22,7 @@ static tImage *glcdUnRleImg(const tImage *img)
     if (img->rle) {
         // Uncompress image to storage
         const uint8_t *inPtr = img->data;
-        uint8_t *outPtr = unRleData;
+        uint8_t *outPtr = data;
 
         while (inPtr < img->data + img->size) {
             int8_t size = (int8_t)(*inPtr);
@@ -41,7 +41,8 @@ static tImage *glcdUnRleImg(const tImage *img)
                 return 0;
             }
         }
-        ret->size = (uint16_t)(outPtr - unRleData);
+        ret->data = data;
+        ret->size = (uint16_t)(outPtr - data);
     } else {
         ret->data = img->data;
         ret->size = img->size;
@@ -53,13 +54,12 @@ static tImage *glcdUnRleImg(const tImage *img)
 static UChar findSymbolCode(const char **string)
 {
     UChar code = 0;
-    uint8_t sym;
     uint8_t curr = 0;
 
     const char *str = *string;
 
     while (*str) {
-        sym = *str++;
+        uint8_t sym = *str++;
 
         if ((sym & 0xC0) == 0x80) {         // Not first byte
             code <<= 8;
@@ -132,7 +132,6 @@ GlcdRect glcdGetRect(void)
 
 char *glcdPrepareNum(int32_t number, int8_t width, char lead, uint8_t radix)
 {
-    uint8_t numdiv;
     uint8_t sign = lead;
     int8_t i;
     int32_t num = number;
@@ -148,7 +147,7 @@ char *glcdPrepareNum(int32_t number, int8_t width, char lead, uint8_t radix)
     i = width - 1;
 
     while (num > 0 || i == width - 1) {
-        numdiv = num % radix;
+        uint8_t numdiv = num % radix;
         strbuf[i] = numdiv + 0x30;
         if (numdiv >= 10)
             strbuf[i] += 7;
@@ -232,30 +231,22 @@ UChar glcdFontSymbolCode(int16_t pos)
     return BLOCK_CHAR;
 }
 
-tImage *glcdGetUnrleImg(void)
-{
-    unRleImg.data = unRleData;
-
-    return &unRleImg;
-}
-
-void *glcdGetUnrleImgData(void)
-{
-    return unRleData;
-}
-
 void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor)
 {
     if (img == NULL) {
         return;
     }
 
-    tImage *imgUnRle = glcdUnRleImg(img);
 
     int16_t x = glcd.rect.x + glcd.x;
     int16_t y = glcd.rect.y + glcd.y;
 
+    uint8_t *unRleData = mem_malloc(4096);
+
+    tImage *imgUnRle = glcdUnRleImg(img, unRleData);
     dispdrvDrawImage(imgUnRle, x, y, color, bgColor);
+
+    mem_free(unRleData);
 
     glcdSetX(glcd.x + img->width);
 }
@@ -435,7 +426,7 @@ void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color
         }
         glcdDrawRect(x0, y0, x1 - x0 + 1, 1, color);
     } else {
-        int16_t sX, sY, dX, dY, err, err2;
+        int16_t sX, sY, dX, dY, err;
 
         sX = x0 < x1 ? 1 : -1;
         sY = y0 < y1 ? 1 : -1;
@@ -445,7 +436,7 @@ void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color
 
         while (x0 != x1 || y0 != y1) {
             glcdDrawPixel(x0, y0, color);
-            err2 = err * 2;
+            int16_t err2 = err * 2;
             if (err2 > -dY / 2) {
                 err -= dY;
                 x0 += sX;
