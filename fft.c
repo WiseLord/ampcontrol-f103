@@ -54,11 +54,16 @@ static inline void mult_shf(int16_t cos, int16_t sin, int16_t x, int16_t y,
     *v = (y * cos + x * sin) >> 15;
 }
 
-static int16_t sinTbl(int16_t phi)
+int16_t fft_sin(int16_t phi)
 {
     return ((phi & (N_WAVE / 2)) ? -1 : 1) *
            sinTable[(phi & (N_WAVE / 4)) ? ((N_WAVE / 2) - (phi & (N_WAVE / 2 - 1))) :
                                          (phi & (N_WAVE / 4 - 1))];
+}
+
+int16_t fft_cos(int16_t phi)
+{
+    return fft_sin(phi + N_WAVE / 4);
 }
 
 void fft_rev_bin(FftSample *sp)
@@ -116,13 +121,13 @@ void fft_radix4(FftSample *sp)
             int16_t sin1, sin2, sin3;
             int16_t cos1, cos2, cos3;
 
-            sin1 = sinTbl(1 * phi);
-            sin2 = sinTbl(2 * phi);
-            sin3 = sinTbl(3 * phi);
+            sin1 = fft_sin(1 * phi);
+            sin2 = fft_sin(2 * phi);
+            sin3 = fft_sin(3 * phi);
 
-            cos1 = sinTbl(1 * phi + N_WAVE / 4);
-            cos2 = sinTbl(2 * phi + N_WAVE / 4);
-            cos3 = sinTbl(3 * phi + N_WAVE / 4);
+            cos1 = fft_cos(1 * phi);
+            cos2 = fft_cos(2 * phi);
+            cos3 = fft_cos(3 * phi);
 
             for (int16_t r = 0; r < FFT_SIZE; r += m) {
                 int16_t i0 = i + r;
