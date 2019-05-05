@@ -304,25 +304,7 @@ static void canvasDrawWaterfall(Spectrum *sp)
 
 void layoutInit()
 {
-#if defined (_DISP_160x128)
-    lt = lt160x128Get();
-#elif defined (_DISP_176x132)
-    lt = lt176x132Get();
-#elif defined (_DISP_220x176)
-    lt = lt220x176Get();
-#elif defined (_DISP_320x240)
-    lt = lt320x240Get();
-#elif defined (_DISP_400x240)
-    lt = lt400x240Get();
-#elif defined (_DISP_480x320)
-    lt = lt480x320Get();
-#else
-#ifdef EMUL_DISP
-    lt = ltEmulGet();
-#else
-#error "Unsupported display size"
-#endif
-#endif
+    lt = layoutGet();
 
     canvasInit(&canvas);
 
@@ -332,11 +314,6 @@ void layoutInit()
     canvas->glcd->rect = lt->rect;
 
     menuGet()->dispSize = lt->menu.itemCnt;
-}
-
-const Layout *layoutGet(void)
-{
-    return lt;
 }
 
 void layoutShowTime(bool clear)

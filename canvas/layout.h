@@ -65,16 +65,6 @@ typedef struct {
 } Layout;
 
 // Canvas variants
-const Layout *lt160x128Get(void);
-const Layout *lt176x132Get(void);
-const Layout *lt220x176Get(void);
-const Layout *lt320x240Get(void);
-const Layout *lt400x240Get(void);
-const Layout *lt480x320Get(void);
-#ifdef EMUL_DISP
-const Layout *ltEmulGet(void);
-#endif
-
 void layoutInit(void);
 const Layout *layoutGet(void);
 

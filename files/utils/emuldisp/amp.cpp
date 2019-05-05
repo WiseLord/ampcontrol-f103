@@ -51,29 +51,6 @@ extern "C" void dispdrvSetBrightness(int8_t value)
     disp->setBrightness(value);
 }
 
-extern "C" const Layout *ltEmulGet(void)
-{
-    const Layout *lt;
-
-#if EMUL_DISP_WIDTH == 160 && EMUL_DISP_HEIGHT == 128
-    lt = lt160x128Get();
-#elif EMUL_DISP_WIDTH == 176 && EMUL_DISP_HEIGHT == 132
-    lt = lt176x132Get();
-#elif EMUL_DISP_WIDTH == 220 && EMUL_DISP_HEIGHT == 176
-    lt = lt220x176Get();
-#elif EMUL_DISP_WIDTH == 320 && EMUL_DISP_HEIGHT == 240
-    lt = lt320x240Get();
-#elif EMUL_DISP_WIDTH == 400 && EMUL_DISP_HEIGHT == 240
-    lt = lt400x240Get();
-#elif EMUL_DISP_WIDTH == 480 && EMUL_DISP_HEIGHT == 320
-    lt = lt480x320Get();
-#else
-#error "No such layout"
-#endif
-
-    return lt;
-}
-
 Amp::Amp(QWidget *parent) :
     QMainWindow(parent)
 {

@@ -51,7 +51,7 @@ static const Layout lt220x176 = {
     .lblFont = &fontterminus32,
 };
 
-const Layout *lt220x176Get(void)
+const Layout *layoutGet(void)
 {
     return &lt220x176;
 }

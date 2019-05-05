@@ -8,7 +8,37 @@ TEMPLATE = app
 QMAKE_CXXFLAGS += -std=c++11
 QMAKE_CFLAGS += -std=c11
 
-DEFINES += EMUL_DISP
+CONFIG += DISP_320x240
+
+DISP_160x128 {
+    DEFINES += _DISP_160x128
+    SOURCES +=  ../../../canvas/lt160x128.c
+}
+
+DISP_176x132 {
+    DEFINES += _DISP_176x132
+    SOURCES +=  ../../../canvas/lt176x132.c
+}
+
+DISP_220x176 {
+    DEFINES += _DISP_220x176
+    SOURCES +=  ../../../canvas/lt220x176.c
+}
+
+DISP_320x240 {
+    DEFINES += _DISP_320x240
+    SOURCES +=  ../../../canvas/lt320x240.c
+}
+
+DISP_400x240 {
+    DEFINES += _DISP_400x240
+    SOURCES +=  ../../../canvas/lt400x240.c
+}
+
+DISP_480x320 {
+    DEFINES += _DISP_480x320
+    SOURCES +=  ../../../canvas/lt480x320.c
+}
 
 SOURCES += \
     amp.cpp \
@@ -19,12 +49,6 @@ SOURCES += \
     ../../../audio/audio.c \
     ../../../canvas/canvas.c \
     ../../../canvas/layout.c \
-    ../../../canvas/lt160x128.c \
-    ../../../canvas/lt176x132.c \
-    ../../../canvas/lt220x176.c \
-    ../../../canvas/lt320x240.c \
-    ../../../canvas/lt400x240.c \
-    ../../../canvas/lt480x320.c \
     ../../../display/fonts/font-amp-08.c \
     ../../../display/fonts/font-terminus-12.c \
     ../../../display/fonts/font-terminus-14.c \
