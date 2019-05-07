@@ -27,14 +27,16 @@ static const MenuItem menuItems[MENU_END] = {
 
     [MENU_SETUP]            = {MENU_NULL,               MENU_TYPE_PARENT,   EE_NULL},
 
-    [MENU_SETUP_LANG]       = {MENU_SETUP,              MENU_TYPE_ENUM,     EE_LANGUAGE},
-    [MENU_SETUP_MUTESTBY]   = {MENU_SETUP,              MENU_TYPE_BOOL,     EE_SETUP_MUTESTBY},
+    [MENU_SETUP_SYSTEM]     = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_AUDIO]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_TUNER]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_SPECTRUM]   = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_DISPLAY]    = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
-    [MENU_SETUP_INPUT]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_RC]         = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
+
+    [MENU_SYSTEM_LANG]      = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     EE_LANGUAGE},
+    [MENU_SYSTEM_MUTESTBY]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_BOOL,     EE_SETUP_MUTESTBY},
+    [MENU_SYSTEM_ENC_RES]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_INPUT_ENC_RES},
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IC},
     [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN0},
@@ -61,8 +63,6 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   EE_DISPLAY_BR_STBY},
     [MENU_DISPLAY_BR_WORK]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   EE_DISPLAY_BR_WORK},
     [MENU_DISPLAY_ROTATE]   = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL,     EE_DISPLAY_ROTATE},
-
-    [MENU_INPUT_ENC_RES]    = {MENU_SETUP_INPUT,        MENU_TYPE_NUMBER,   EE_INPUT_ENC_RES},
 
     FOREACH_CMD(GENERATE_MENU_ITEM)
 };
@@ -98,10 +98,10 @@ static int16_t menuGetValue(MenuIdx index)
     Spectrum *sp = spGet();
 
     switch (index) {
-    case MENU_SETUP_LANG:
+    case MENU_SYSTEM_LANG:
         ret = (int16_t)(labelsGetLang());
         break;
-    case MENU_SETUP_MUTESTBY:
+    case MENU_SYSTEM_MUTESTBY:
         ret = pinsGetMuteStby();
         break;
 
@@ -162,7 +162,7 @@ static int16_t menuGetValue(MenuIdx index)
         ret = glcdGetRotate();
         break;
 
-    case MENU_INPUT_ENC_RES:
+    case MENU_SYSTEM_ENC_RES:
         ret = inputGetEncRes();
         break;
     default:
@@ -185,10 +185,10 @@ static void menuStoreCurrentValue(void)
     Spectrum *sp = spGet();
 
     switch (menu.active) {
-    case MENU_SETUP_LANG:
+    case MENU_SYSTEM_LANG:
         labelsSetLang((Lang)(menu.value));
         break;
-    case MENU_SETUP_MUTESTBY:
+    case MENU_SYSTEM_MUTESTBY:
         pinsSetMuteStby(menu.value);
         break;
 
@@ -250,7 +250,7 @@ static void menuStoreCurrentValue(void)
         canvasClear();
         break;
 
-    case MENU_INPUT_ENC_RES:
+    case MENU_SYSTEM_ENC_RES:
         inputSetEncRes((int8_t)menu.value);
         break;
     default:
@@ -287,7 +287,7 @@ static void menuValueChange(int8_t diff)
     menu.value += diff;
 
     switch (menu.active) {
-    case MENU_SETUP_LANG:
+    case MENU_SYSTEM_LANG:
         if (menu.value > LANG_END - 1)
             menu.value = LANG_END - 1;
         if (menu.value < LANG_DEFAULT)
@@ -361,7 +361,7 @@ static void menuValueChange(int8_t diff)
         if (menu.value < LCD_BR_MIN)
             menu.value = LCD_BR_MIN;
         break;
-    case MENU_INPUT_ENC_RES:
+    case MENU_SYSTEM_ENC_RES:
         if (menu.value > ENC_RES_MAX)
             menu.value = ENC_RES_MAX;
         if (menu.value < ENC_RES_MIN)
@@ -509,7 +509,7 @@ const char *menuGetValueStr(MenuIdx index)
 
     // Enum menu types
     switch (index) {
-    case MENU_SETUP_LANG:
+    case MENU_SYSTEM_LANG:
         ret = labelsGet((Label)(LABEL_LANG + value));
         break;
 

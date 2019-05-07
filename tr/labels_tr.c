@@ -9,8 +9,6 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_FRIDAY]          = "CUMA",
     [LABEL_SATURDAY]        = "CUMARTESİ",
 
-    [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Mute/Bekletme Pini",
-
     [LABEL_VOLUME]          = "Volum",
     [LABEL_BASS]            = "Bass",
     [LABEL_MIDDLE]          = "Orta Ses",
@@ -79,19 +77,23 @@ const char *const labels_tr[LABEL_END] = {
 //    [LABEL_LANG + LANG_TR]              = "Türkçe",
 //    [LABEL_LANG + LANG_UA]              = "Українська",
 
+    // NOTE: Keep in sync with MenuIdx in menu.h
     [LABEL_MENU + MENU_NULL]            = "Bir Önceki Menü",
 
     [LABEL_MENU + MENU_SETUP]           = "Menü Ayarları",
-    [LABEL_MENU + MENU_SETUP_LANG]      = "Dil Seçeneği",
+
+    [LABEL_MENU + MENU_SETUP_SYSTEM]    = "Sistem",
     [LABEL_MENU + MENU_SETUP_AUDIO]     = "Ses İşlemcisi",
     [LABEL_MENU + MENU_SETUP_TUNER]     = "Radyo İşlemcisi",
     [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Spectrum Ayarı",
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Ekran Ayarı",
-    [LABEL_MENU + MENU_SETUP_INPUT]     = "Giriş Ayarları",
     [LABEL_MENU + MENU_SETUP_RC]        = "Kumanda Ayarı",
 
-    [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
+    [LABEL_MENU + MENU_SYSTEM_LANG]     = "Dil Seçeneği",
+    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute/Bekletme Pini",
+    [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Enkoder Çözünürlüğü",
 
+    [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Ses Giriş 0",
     [LABEL_MENU + MENU_AUDIO_IN_1]      = "Ses Giriş 1",
     [LABEL_MENU + MENU_AUDIO_IN_2]      = "Ses Giriş 2",
@@ -116,8 +118,6 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Bekleme Parlaklığı",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Parlaklık",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Döndürme",
-
-    [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Enkoder Çözünürlüğü",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Bekleme Butonu",

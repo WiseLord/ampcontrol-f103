@@ -18,7 +18,8 @@ typedef struct {
     int16_t def; // Default value
 } EE_Map;
 
-typedef enum {
+typedef uint16_t EE_Param;
+enum {
     EE_NULL = 0,
 
     EE_AUDIO_IC,
@@ -78,7 +79,7 @@ typedef enum {
     EE_LANGUAGE = 0x80,
 
     FOREACH_CMD(GENERATE_EE_RC)
-} EE_Param;
+};
 
 uint16_t eeMapGetSize(void);
 const EE_Map *eeMapGet(void);

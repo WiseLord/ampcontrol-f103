@@ -9,8 +9,6 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_FRIDAY]          = "ПЯТНИЦА",
     [LABEL_SATURDAY]        = "СУББОТА",
 
-    [LABEL_MENU + MENU_SETUP_MUTESTBY]  = "Выводы Mute и Stby",
-
     [LABEL_VOLUME]          = "Громкость",
     [LABEL_BASS]            = "Тембр НЧ",
     [LABEL_MIDDLE]          = "Тембр СЧ",
@@ -79,19 +77,23 @@ const char *const labels_ru[LABEL_END] = {
 //    [LABEL_LANG + LANG_TR]              = "Türkçe",
 //    [LABEL_LANG + LANG_UA]              = "Українська",
 
+    // NOTE: Keep in sync with MenuIdx in menu.h
     [LABEL_MENU + MENU_NULL]            = "Назад",
 
     [LABEL_MENU + MENU_SETUP]           = "Настройки",
-    [LABEL_MENU + MENU_SETUP_LANG]      = "Язык",
+
+    [LABEL_MENU + MENU_SETUP_SYSTEM]    = "Система",
     [LABEL_MENU + MENU_SETUP_AUDIO]     = "Аудио",
     [LABEL_MENU + MENU_SETUP_TUNER]     = "Тюнер",
     [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Спектр",
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Дисплей",
-    [LABEL_MENU + MENU_SETUP_INPUT]     = "Ввод",
     [LABEL_MENU + MENU_SETUP_RC]        = "Пульт",
 
-    [LABEL_MENU + MENU_AUDIO_IC]        = "Аудиопроцессор",
+    [LABEL_MENU + MENU_SYSTEM_LANG]     = "Язык",
+    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Выводы Mute и Stby",
+    [LABEL_MENU + MENU_SYSTEM_ENC_RES]   = "Разрешение энкодера",
 
+    [LABEL_MENU + MENU_AUDIO_IC]        = "Аудиопроцессор",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Вход 0",
     [LABEL_MENU + MENU_AUDIO_IN_1]      = "Вход 1",
     [LABEL_MENU + MENU_AUDIO_IN_2]      = "Вход 2",
@@ -116,8 +118,6 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яркость STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Яркость",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Развернуть",
-
-    [LABEL_MENU + MENU_INPUT_ENC_RES]   = "Разрешение энкодера",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Режим ожидания",

@@ -342,7 +342,7 @@ static void actionRemapBtnLong(void)
             action.type = ACTION_OPEN_MENU;
             break;
         case SCREEN_STANDBY:
-            actionSet(ACTION_MENU_SELECT, MENU_SETUP_LANG);
+            actionSet(ACTION_MENU_SELECT, MENU_SETUP_SYSTEM);
             break;
         }
         break;
@@ -371,7 +371,7 @@ static void actionRemapRemote(void)
 
     if (SCREEN_STANDBY == screen &&
         action.value == RC_CMD_MENU) {
-        actionSet(ACTION_MENU_SELECT, MENU_SETUP_LANG);
+        actionSet(ACTION_MENU_SELECT, MENU_SETUP_SYSTEM);
         return;
     }
 

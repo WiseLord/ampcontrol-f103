@@ -19,14 +19,17 @@ enum {
     MENU_NULL = 0,
 
     MENU_SETUP,
-    MENU_SETUP_LANG,
-    MENU_SETUP_MUTESTBY,
+
+    MENU_SETUP_SYSTEM,
     MENU_SETUP_AUDIO,
     MENU_SETUP_TUNER,
     MENU_SETUP_SPECTRUM,
     MENU_SETUP_DISPLAY,
-    MENU_SETUP_INPUT,
     MENU_SETUP_RC,
+
+    MENU_SYSTEM_LANG,
+    MENU_SYSTEM_MUTESTBY,
+    MENU_SYSTEM_ENC_RES,
 
     MENU_AUDIO_IC,
     MENU_AUDIO_IN_0,
@@ -54,16 +57,15 @@ enum {
     MENU_DISPLAY_BR_WORK,
     MENU_DISPLAY_ROTATE,
 
-    MENU_INPUT_ENC_RES,
-
     FOREACH_CMD(GENERATE_MENU_RC)
 
     MENU_END
 };
 
-#define MENU_MAX_LEN    (MENU_END - MENU_INPUT_ENC_RES)
+#define MENU_MAX_LEN    (MENU_END - MENU_RC_STBY_SWITCH + 1)
 
-typedef enum {
+typedef uint8_t MenuType;
+enum {
     MENU_TYPE_PARENT,
     MENU_TYPE_BOOL,
     MENU_TYPE_NUMBER,
@@ -71,7 +73,7 @@ typedef enum {
     MENU_TYPE_RC,
 
     MENU_TYPE_END
-} MenuType;
+};
 
 typedef struct {
     MenuIdx parent;
