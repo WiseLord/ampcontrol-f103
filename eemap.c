@@ -65,6 +65,8 @@ static const EE_Map eeMap[] = {
 
     {EE_SPECTRUM_MODE,          SP_MODE_STEREO},
     {EE_INPUT_ENC_RES,          4},
+    {EE_SETUP_MUTESTBY,         true},
+    {EE_SILENCE_TIMER,          5},
 
     {EE_LANGUAGE,               LANG_DEFAULT},
 
@@ -81,18 +83,18 @@ const EE_Map *eeMapGet(void)
     return  eeMap;
 }
 
-void eeUpdate(EE_Param param, int16_t data)
+void eeUpdate(EE_Param param, int16_t value)
 {
-    eeUpdateRaw((uint16_t)param, (uint16_t)data);
+    eeUpdateRaw((uint16_t)param, (uint16_t)value);
 }
 
 int16_t eeRead(EE_Param param)
 {
     uint16_t addr = (uint16_t)param;
-    uint16_t data = eeReadRaw(addr);
+    uint16_t value = eeReadRaw(addr);
 
-    if (data != EE_NOT_FOUND) {
-        return (int16_t)data;
+    if (value != EE_NOT_FOUND) {
+        return (int16_t)value;
     }
 
     // Return default value if not found

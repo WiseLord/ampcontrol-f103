@@ -203,7 +203,7 @@ static void spCplx2dB(FftSample *sp, uint8_t *out)
     }
 }
 
-static void spGetData(int16_t *dma, uint8_t *data)
+static void spGetData(int16_t *dma, SpChan *chan)
 {
     int32_t dcOft = 0;
 
@@ -225,7 +225,18 @@ static void spGetData(int16_t *dma, uint8_t *data)
     fft_rev_bin(sp);
     fft_radix4(sp);
 
-    spCplx2dB(sp, data);
+    spCplx2dB(sp, chan->raw);
+
+    int16_t total = 0;
+    chan->max = 0;
+    for (int16_t i = 0; i < SPECTRUM_SIZE; i++) {
+        uint8_t raw = chan->raw[i];
+        total += raw;
+        if (chan->max < raw) {
+            chan->max = raw;
+        }
+    }
+    chan->avg = (uint8_t)(total / SPECTRUM_SIZE);
 
     mem_free(sp);
 }
@@ -250,8 +261,8 @@ Spectrum *spGet(void)
 
 void spGetADC(Spectrum *sp)
 {
-    spGetData((int16_t *)(bufDMA + 0), sp->chan[SP_CHAN_LEFT].raw);
-    spGetData((int16_t *)(bufDMA + 1), sp->chan[SP_CHAN_RIGHT].raw);
+    spGetData((int16_t *)(bufDMA + 0), &sp->chan[SP_CHAN_LEFT]);
+    spGetData((int16_t *)(bufDMA + 1), &sp->chan[SP_CHAN_RIGHT]);
 }
 
 void spConvertADC(void)

@@ -154,10 +154,16 @@ Screen screenGetDefault(void)
 
     InputType inType = aProc->par.inType[aProc->par.input];;
 
-    int32_t stbyTimer = swTimGet(SW_TIM_STBY_TIMER);
+    int32_t timer;
 
-    if (stbyTimer > 0 && stbyTimer < 60 * 1000 + 999) {
-        return  SCREEN_STBY_TIMER;
+    timer = swTimGet(SW_TIM_STBY_TIMER);
+    if (timer > 0 && timer < 60 * 1000 + 999) {
+        return SCREEN_STBY_TIMER;
+    }
+
+    timer = swTimGet(SW_TIM_SILENCE_TIMER);
+    if (timer > 0 && timer < 30 * 1000 + 999) {
+        return SCREEN_SILENCE_TIMER;
     }
 
     if (IN_TUNER == inType)
@@ -207,11 +213,13 @@ void screenShow(bool clear)
     }
     glcdSetRect(rect);
 
-    // Get new spectrum data
-    if (swTimGet(SW_TIM_SP_CONVERT) <= 0) {
-        swTimSet(SW_TIM_SP_CONVERT, 20);
-        spGetADC(spectrum);
-        spectrum->ready = true;
+    if (screen != SCREEN_STANDBY) {
+        // Get new spectrum data
+        if (swTimGet(SW_TIM_SP_CONVERT) <= 0) {
+            swTimSet(SW_TIM_SP_CONVERT, 20);
+            spGetADC(spectrum);
+            spectrum->ready = true;
+        }
     }
 
     if (clear) {
@@ -249,6 +257,9 @@ void screenShow(bool clear)
         break;
     case SCREEN_STBY_TIMER:
         layoutShowTimer(clear, swTimGet(SW_TIM_STBY_TIMER));
+        break;
+    case SCREEN_SILENCE_TIMER:
+        layoutShowTimer(clear, swTimGet(SW_TIM_SILENCE_TIMER));
         break;
     default:
         break;

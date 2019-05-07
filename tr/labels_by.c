@@ -92,6 +92,7 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Мова",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Вывады Mute і Stby",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Вырашэнне энкодера",
+    [LABEL_MENU + MENU_SYSTEM_STIMER]   = "Таймер цішыні",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аўдыёпрацэсар",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Уваход 0",

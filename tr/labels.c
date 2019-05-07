@@ -99,6 +99,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Language",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute & Stby pins",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Encoder resolution",
+    [LABEL_MENU + MENU_SYSTEM_STIMER]   = "Silence timer",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Input 0",

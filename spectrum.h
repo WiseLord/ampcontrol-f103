@@ -31,6 +31,8 @@ typedef enum {
 
 typedef struct {
     uint8_t raw[SPECTRUM_SIZE];
+    uint8_t avg;
+    uint8_t max;
 } SpChan;
 
 typedef struct {

@@ -9,6 +9,7 @@
 #include "input.h"
 #include "pins.h"
 #include "screen.h"
+#include "settings.h"
 #include "spectrum.h"
 
 #define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC, EE_RC_ ## CMD},
@@ -37,6 +38,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SYSTEM_LANG]      = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     EE_LANGUAGE},
     [MENU_SYSTEM_MUTESTBY]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_BOOL,     EE_SETUP_MUTESTBY},
     [MENU_SYSTEM_ENC_RES]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_INPUT_ENC_RES},
+    [MENU_SYSTEM_STIMER]    = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SILENCE_TIMER},
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IC},
     [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN0},
@@ -165,8 +167,9 @@ static int16_t menuGetValue(MenuIdx index)
     case MENU_SYSTEM_ENC_RES:
         ret = inputGetEncRes();
         break;
+
     default:
-        ret = 0;
+        ret = settingsGet(menuItems[index].cell);
         break;
     }
 
@@ -253,6 +256,7 @@ static void menuStoreCurrentValue(void)
     case MENU_SYSTEM_ENC_RES:
         inputSetEncRes((int8_t)menu.value);
         break;
+
     default:
         break;
     }
@@ -263,6 +267,7 @@ static void menuStoreCurrentValue(void)
 
     if (menu.active < MENU_END) {
         EE_Param cell = menuItems[menu.active].cell;
+        settingsSet(cell, menu.value);
         if (EE_NULL != cell) {
             eeUpdate(menuItems[menu.active].cell, menu.value);
         }
@@ -366,6 +371,12 @@ static void menuValueChange(int8_t diff)
             menu.value = ENC_RES_MAX;
         if (menu.value < ENC_RES_MIN)
             menu.value = ENC_RES_MIN;
+        break;
+    case MENU_SYSTEM_STIMER:
+        if (menu.value > 60)
+            menu.value = 60;
+        if (menu.value < 0)
+            menu.value = 0;
         break;
     default:
         break;

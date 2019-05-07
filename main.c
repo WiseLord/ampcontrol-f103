@@ -13,6 +13,7 @@
 #include "rc.h"
 #include "rtc.h"
 #include "screen.h"
+#include "settings.h"
 #include "spectrum.h"
 #include "swtimers.h"
 #include "timers.h"
@@ -85,6 +86,7 @@ int main(void)
     SystemClock_Config();
 
     eeInit();
+    settingsInit();
     pinsInit();
 
     usbHidInit();

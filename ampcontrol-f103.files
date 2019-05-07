@@ -232,6 +232,8 @@ rtc.c
 rtc.h
 screen.c
 screen.h
+settings.c
+settings.h
 spectrum.c
 spectrum.h
 swtimers.c

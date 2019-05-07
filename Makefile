@@ -39,6 +39,7 @@ C_SOURCES += pins.c
 C_SOURCES += rc.c
 C_SOURCES += rtc.c
 C_SOURCES += screen.c
+C_SOURCES += settings.c
 C_SOURCES += spectrum.c
 C_SOURCES += swtimers.c
 C_SOURCES += timers.c

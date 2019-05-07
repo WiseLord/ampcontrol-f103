@@ -88,10 +88,11 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Спектр",
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Дисплей",
     [LABEL_MENU + MENU_SETUP_RC]        = "Пульт",
+    [LABEL_MENU + MENU_SYSTEM_STIMER]   = "Таймер тиші",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Мова",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Вивiд Mute і Stby",
-    [LABEL_MENU + MENU_SYSTEM_ENC_RES]   = "Крок енкодера",
+    [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Крок енкодера",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аудіопроцесор",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Вхід 0",

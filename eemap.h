@@ -75,6 +75,7 @@ enum {
     EE_SPECTRUM_MODE,
     EE_INPUT_ENC_RES,
     EE_SETUP_MUTESTBY,
+    EE_SILENCE_TIMER,
 
     EE_LANGUAGE = 0x80,
 
@@ -84,7 +85,7 @@ enum {
 uint16_t eeMapGetSize(void);
 const EE_Map *eeMapGet(void);
 
-void eeUpdate(EE_Param param, int16_t data);
+void eeUpdate(EE_Param param, int16_t value);
 int16_t eeRead(EE_Param param);
 
 #ifdef __cplusplus

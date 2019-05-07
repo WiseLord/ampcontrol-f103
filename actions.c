@@ -12,6 +12,7 @@
 #include "pins.h"
 #include "rtc.h"
 #include "screen.h"
+#include "settings.h"
 #include "spectrum.h"
 #include "swtimers.h"
 #include "tuner/stations.h"
@@ -57,6 +58,15 @@ static void actionDispExpired(Screen screen)
     default:
         actionSetScreen(screenGetDefault(), 1000);
         break;
+    }
+}
+
+static void actionResetSilenceTimer(void)
+{
+    int16_t silenceTimer = settingsGet(EE_SILENCE_TIMER);
+
+    if (silenceTimer) {
+        swTimSet(SW_TIM_SILENCE_TIMER, 1000 * 60 * silenceTimer + 999);
     }
 }
 
@@ -270,6 +280,8 @@ static void actionGetTimers(void)
     } else if (swTimGet(SW_TIM_INIT_HW) == 0) {
         actionSet(ACTION_INIT_HW, 0);
     } else if (swTimGet(SW_TIM_STBY_TIMER) == 0) {
+        actionSet(ACTION_STANDBY, FLAG_ON);
+    } else if (swTimGet(SW_TIM_SILENCE_TIMER) == 0) {
         actionSet(ACTION_STANDBY, FLAG_ON);
     }
 }
@@ -717,6 +729,8 @@ void actionHandle(bool visible)
             pinsSetStby(false);     // OFF via relay
 
             swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
+            swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
+
             actionDispExpired(SCREEN_STANDBY);
         }
         break;
@@ -734,6 +748,7 @@ void actionHandle(bool visible)
 
         audioInit();
         audioSetPower(true);
+        actionResetSilenceTimer();
         break;
     case ACTION_DISP_EXPIRED:
         actionDispExpired(screen);
@@ -875,10 +890,24 @@ void actionHandle(bool visible)
         break;
     }
 
+    // Reset silence timer on any user action
+    if (action.type != ACTION_NONE && action.type != ACTION_DISP_EXPIRED) {
+        actionResetSilenceTimer();
+    }
+
+    // Reset silence timer on signal
+    if (screen != SCREEN_STANDBY) {
+        Spectrum *spectrum = spGet();
+        if (spectrum->chan[SP_CHAN_LEFT].max > 128 ||
+            spectrum->chan[SP_CHAN_RIGHT].max > 128) {
+            actionResetSilenceTimer();
+        }
+    }
+
     if (action.visible) {
         screenSet(action.screen);
         screenSetParam(action.param);
-        if (action.timeout) {
+        if (action.timeout > 0) {
             swTimSet(SW_TIM_DISPLAY, action.timeout);
         }
     }

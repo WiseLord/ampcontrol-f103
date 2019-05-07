@@ -18,6 +18,7 @@ enum {
     SW_TIM_RC_REPEAT,
     SW_TIM_RC_NOACION,
     SW_TIM_STBY_TIMER,
+    SW_TIM_SILENCE_TIMER,
 
     SW_TIM_END,
 };
