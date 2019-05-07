@@ -97,8 +97,10 @@ SOURCES += \
     ../../../actions.c \
     ../../../eemap.c \
     ../../../input.c \
+    ../../../mem.c \
     ../../../menu.c \
     ../../../screen.c \
+    ../../../settings.c \
     ../../../swtimers.c \
 
 
@@ -122,10 +124,12 @@ HEADERS += \
     ../../../eemap.h \
     ../../../eemul.h \
     ../../../input.h \
+    ../../../mem.h \
     ../../../menu.h \
     ../../../rc.h \
     ../../../rtc.h \
     ../../../screen.h \
+    ../../../settings.h \
     ../../../spectrum.h \
     ../../../swtimers.h \
     ../../../usb/usbhid.h \
