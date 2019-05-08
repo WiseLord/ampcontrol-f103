@@ -72,6 +72,7 @@ static const EE_Map eeMap[] = {
     {EE_SYSTEM_ENC_RES,         4},
     {EE_SYSTEM_MUTESTBY,        true},
     {EE_SYSTEM_SIL_TIM,         5},
+    {EE_SYSTEM_RTC_CORR,        0},
 
     {EE_SYSTEM_LANG,            LANG_DEFAULT},
 

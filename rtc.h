@@ -49,6 +49,8 @@ typedef struct {
 } Alarm;
 
 void rtcInit(void);
+void rtcSetCorrection(int16_t value);
+
 void rtcIRQ(void);
 
 void rtcGetTime(RTC_type *rtc);

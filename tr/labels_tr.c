@@ -98,6 +98,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute/Bekletme Pini",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Enkoder Çözünürlüğü",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Sessizlik Zamanlayıcısı",
+//    [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Time correction",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Ses Giriş 0",

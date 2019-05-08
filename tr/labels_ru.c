@@ -98,6 +98,7 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Выводы Mute и Stby",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Разрешение энкодера",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Таймер тишины",
+    [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Коррекция времени",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аудиопроцессор",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Вход 0",

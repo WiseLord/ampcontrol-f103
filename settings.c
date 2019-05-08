@@ -3,6 +3,7 @@
 #include "rtc.h"
 
 static uint8_t silenceTimer = 0;
+static int16_t rtcCorr = 0;
 
 void settingsInit(void)
 {
@@ -11,6 +12,7 @@ void settingsInit(void)
     settingsSet(EE_ALARM_DAYS, eeRead(EE_ALARM_DAYS));
 
     settingsSet(EE_SYSTEM_SIL_TIM, eeRead(EE_SYSTEM_SIL_TIM));
+    settingsSet(EE_SYSTEM_RTC_CORR, eeRead(EE_SYSTEM_RTC_CORR));
 }
 
 int16_t settingsGet(EE_Param param)
@@ -31,6 +33,9 @@ int16_t settingsGet(EE_Param param)
         break;
     case EE_SYSTEM_SIL_TIM:
         ret = silenceTimer;
+        break;
+    case EE_SYSTEM_RTC_CORR:
+        ret = rtcCorr;
         break;
     default:
         break;
@@ -55,6 +60,9 @@ void settingsSet(EE_Param param, int16_t value)
         break;
     case EE_SYSTEM_SIL_TIM:
         silenceTimer = (uint8_t)value;
+        break;
+    case EE_SYSTEM_RTC_CORR:
+        rtcCorr = value;
         break;
     default:
         break;

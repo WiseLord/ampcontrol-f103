@@ -75,11 +75,11 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Будні",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "Усі дні",
 
-    //    [LABEL_LANG + LANG_DEFAULT]         = "English",
-    //    [LABEL_LANG + LANG_BY]              = "Беларуская",
-    //    [LABEL_LANG + LANG_RU]              = "Русский",
-    //    [LABEL_LANG + LANG_TR]              = "Türkçe",
-    //    [LABEL_LANG + LANG_UA]              = "Українська",
+//    [LABEL_LANG + LANG_DEFAULT]         = "English",
+//    [LABEL_LANG + LANG_BY]              = "Беларуская",
+//    [LABEL_LANG + LANG_RU]              = "Русский",
+//    [LABEL_LANG + LANG_TR]              = "Türkçe",
+//    [LABEL_LANG + LANG_UA]              = "Українська",
 
     // NOTE: Keep in sync with MenuIdx in menu.h
     [LABEL_MENU + MENU_NULL]            = "Назад",
@@ -98,6 +98,7 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Вивiд Mute і Stby",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Крок енкодера",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Таймер тиші",
+    [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Корекція часу",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аудіопроцесор",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Вхід 0",

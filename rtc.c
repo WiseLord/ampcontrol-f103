@@ -1,6 +1,6 @@
 #include "rtc.h"
 
-#include <time.h>
+#include "settings.h"
 
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_pwr.h>
@@ -153,11 +153,22 @@ void rtcInit(void)
 
         LL_RCC_EnableRTC();
 
+        rtcSetCorrection(settingsGet(EE_SYSTEM_RTC_CORR));
     }
 
     LL_RTC_EnableIT_SEC(RTC);
 
     NVIC_EnableIRQ (RTC_IRQn);
+}
+
+void rtcSetCorrection(int16_t value)
+{
+    if (LL_RTC_EnterInitMode(RTC) != ERROR)
+    {
+        LL_RTC_SetAsynchPrescaler(RTC, (uint32_t)(0x7FFF - value));
+    }
+
+    LL_RTC_ExitInitMode(RTC);
 }
 
 void rtcIRQ(void)

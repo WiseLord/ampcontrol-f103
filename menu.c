@@ -40,6 +40,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SYSTEM_MUTESTBY]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_BOOL,     EE_SYSTEM_MUTESTBY},
     [MENU_SYSTEM_ENC_RES]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SYSTEM_ENC_RES},
     [MENU_SYSTEM_SIL_TIM]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SYSTEM_SIL_TIM},
+    [MENU_SYSTEM_RTC_CORR]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SYSTEM_RTC_CORR},
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IC},
     [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN0},
@@ -261,6 +262,9 @@ static void menuStoreCurrentValue(void)
     case MENU_SYSTEM_ENC_RES:
         inputSetEncRes((int8_t)menu.value);
         break;
+    case MENU_SYSTEM_RTC_CORR:
+        rtcSetCorrection(menu.value);
+        break;
 
     default:
         break;
@@ -382,6 +386,12 @@ static void menuValueChange(int8_t diff)
             menu.value = 60;
         if (menu.value < 0)
             menu.value = 0;
+        break;
+    case MENU_SYSTEM_RTC_CORR:
+        if (menu.value > 20)
+            menu.value = 20;
+        if (menu.value < -20)
+            menu.value = -20;
         break;
     case MENU_ALARM_HOUR:
         if (menu.value > 23)
