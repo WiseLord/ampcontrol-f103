@@ -77,7 +77,7 @@ static uint16_t level2color(uint16_t value)
     return color;
 }
 
-static void canvasDrawTm(RTC_type *rtc, uint8_t tm)
+static void canvasDrawTm(RTC_type *rtc, RtcMode tm)
 {
     int8_t time = *((int8_t *)rtc + tm);
 

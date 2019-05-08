@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #define ALARM_COUNT 1
 
@@ -29,16 +30,17 @@ typedef struct {
     int8_t month;
     int8_t year;
     int8_t wday;
-    int8_t etm;
+    RtcMode etm;
 } RTC_type;
 
-typedef enum {
+typedef uint8_t AlarmDay;
+enum {
     ALARM_DAY_OFF = 0,
     ALARM_DAY_WEEKDAYS,
     ALARM_DAY_ALL_DAYS,
 
     ALARM_DAY_END
-} AlarmDay;
+};
 
 typedef struct {
     int8_t hour;
@@ -54,11 +56,12 @@ void rtcSetTime(int8_t mode, int8_t value);
 void rtcChangeTime(int8_t mode, int8_t diff);
 void rtcEditTime(int8_t mode, int8_t value);
 
-int8_t rtcGetMode(void);
-void rtcSetMode(int8_t mode);
+RtcMode rtcGetMode(void);
+void rtcSetMode(RtcMode mode);
 void rtcChangeMode(int8_t diff);
 
 Alarm *rtcGetAlarm(uint8_t index);
+bool rtcCheckAlarm(void);
 
 #ifdef __cplusplus
 }

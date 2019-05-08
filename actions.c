@@ -662,6 +662,14 @@ void actionUserGet(void)
     }
 
     if (ACTION_NONE == action.type) {
+        Screen screen = screenGet();
+
+        if (screen == SCREEN_STANDBY && rtcCheckAlarm()) {
+            actionSet(ACTION_STANDBY, FLAG_OFF);
+        }
+    }
+
+    if (ACTION_NONE == action.type) {
         actionGetTimers();
     }
 
