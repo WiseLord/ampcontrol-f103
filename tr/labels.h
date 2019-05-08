@@ -9,6 +9,7 @@ extern "C" {
 
 #include "../tuner/tuner.h"
 #include "../audio/audio.h"
+#include "../rtc.h"
 #include "../spectrum.h"
 
 typedef enum {
@@ -67,7 +68,10 @@ typedef enum {
     LABEL_AUDIO_IC = LABEL_SPECTRUM_MODE_END,
     LABEL_AUDIO_IC_END = LABEL_AUDIO_IC + (AUDIO_IC_END - AUDIO_IC_NO),
 
-    LABEL_LANG = LABEL_AUDIO_IC_END,
+    LABEL_ALARM_DAY = LABEL_AUDIO_IC_END,
+    LABEL_ALARM_DAY_END = LABEL_ALARM_DAY + (ALARM_DAY_END - ALARM_DAY_OFF),
+
+    LABEL_LANG = LABEL_ALARM_DAY_END,
     LABEL_LANGUAGE_END = LABEL_LANG + (LANG_END - LANG_DEFAULT),
 
     LABEL_GAIN0 = LABEL_LANGUAGE_END,

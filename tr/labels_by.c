@@ -71,6 +71,10 @@ const char *const labels_by[LABEL_END] = {
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7418] = "TDA7418",
     [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "ТЭСТ",
 
+    [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Выкл",
+    [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Будні",
+    [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "Усе дні",
+
 //    [LABEL_LANG + LANG_DEFAULT]         = "English",
 //    [LABEL_LANG + LANG_BY]              = "Беларуская",
 //    [LABEL_LANG + LANG_RU]              = "Русский",
@@ -87,12 +91,13 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_TUNER]     = "Цюнер",
     [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Спектр",
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Дысплэй",
+    [LABEL_MENU + MENU_SETUP_ALARM]     = "Будзільнік",
     [LABEL_MENU + MENU_SETUP_RC]        = "Пульт",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Мова",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Вывады Mute і Stby",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Вырашэнне энкодера",
-    [LABEL_MENU + MENU_SYSTEM_STIMER]   = "Таймер цішыні",
+    [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Таймер цішыні",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аўдыёпрацэсар",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Уваход 0",
@@ -113,6 +118,10 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_RDS]       = "Уключыць RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Узмацніць НЧ",
     [LABEL_MENU + MENU_TUNER_VOLUME]    = "Гучнасць",
+
+    [LABEL_MENU + MENU_ALARM_HOUR]      = "Гадзіна",
+    [LABEL_MENU + MENU_ALARM_MINUTE]    = "Хвіліна",
+    [LABEL_MENU + MENU_ALARM_DAYS]      = "Дні",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Рэжым экрана",
 

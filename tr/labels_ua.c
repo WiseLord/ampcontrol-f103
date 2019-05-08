@@ -71,6 +71,10 @@ const char *const labels_ua [LABEL_END] = {
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7418] = "TDA7418",
     [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "ТЕСТ",
 
+    [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Вимкн",
+    [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Будні",
+    [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "Усі дні",
+
     //    [LABEL_LANG + LANG_DEFAULT]         = "English",
     //    [LABEL_LANG + LANG_BY]              = "Беларуская",
     //    [LABEL_LANG + LANG_RU]              = "Русский",
@@ -87,12 +91,13 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_TUNER]     = "Тюнер",
     [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Спектр",
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Дисплей",
+    [LABEL_MENU + MENU_SETUP_ALARM]     = "Будильник",
     [LABEL_MENU + MENU_SETUP_RC]        = "Пульт",
-    [LABEL_MENU + MENU_SYSTEM_STIMER]   = "Таймер тиші",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Мова",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Вивiд Mute і Stby",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Крок енкодера",
+    [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Таймер тиші",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аудіопроцесор",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Вхід 0",
@@ -114,6 +119,10 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_BASS]      = "Посилити НЧ",
     [LABEL_MENU + MENU_TUNER_VOLUME]    = "Гучність",
 
+    [LABEL_MENU + MENU_ALARM_HOUR]      = "Година",
+    [LABEL_MENU + MENU_ALARM_MINUTE]    = "Хвилина",
+    [LABEL_MENU + MENU_ALARM_DAYS]      = "Дні",
+
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Режим екрана",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яскравість STBY",
@@ -128,7 +137,7 @@ const char *const labels_ua [LABEL_END] = {
 //    [LABEL_MENU + MENU_RC_MENU]         = "Menu",
 //    [LABEL_MENU + MENU_RC_CHAN_NEXT]    = "Next chan",
 //    [LABEL_MENU + MENU_RC_CHAN_PREV]    = "Prev chan",
-//    [LABEL_MENU + MENU_RC_DIG_0]        = "Digit 0",        // TODO: Simplify
+//    [LABEL_MENU + MENU_RC_DIG_0]        = "Digit 0",
 //    [LABEL_MENU + MENU_RC_DIG_1]        = "Digit 1",
 //    [LABEL_MENU + MENU_RC_DIG_2]        = "Digit 2",
 //    [LABEL_MENU + MENU_RC_DIG_3]        = "Digit 3",

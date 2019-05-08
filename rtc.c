@@ -13,6 +13,8 @@ static int8_t rtcMode = RTC_NOEDIT;
 static const RTC_type rtcMin = { 0,  0, 0,  1,  1,  1, 0, RTC_NOEDIT};
 static const RTC_type rtcMax = {23, 59, 0, 31, 12, 99, 0, RTC_NOEDIT};
 
+static Alarm alarm[ALARM_COUNT];
+
 static int8_t rtcDaysInMonth(RTC_type *rtc)
 {
     int8_t ret = rtc->month;
@@ -210,4 +212,13 @@ void rtcChangeMode(int8_t diff)
     if (rtcMode > RTC_NOEDIT) {
         rtcMode = RTC_HOUR;
     }
+}
+
+Alarm *rtcGetAlarm(uint8_t index)
+{
+    if (index >= ALARM_COUNT) {
+        index = 0;
+    }
+
+    return &alarm[index];
 }

@@ -7,6 +7,8 @@ extern "C" {
 
 #include <stdint.h>
 
+#define ALARM_COUNT 1
+
 typedef uint8_t RtcMode;
 enum {
     RTC_HOUR,
@@ -30,6 +32,20 @@ typedef struct {
     int8_t etm;
 } RTC_type;
 
+typedef enum {
+    ALARM_DAY_OFF = 0,
+    ALARM_DAY_WEEKDAYS,
+    ALARM_DAY_ALL_DAYS,
+
+    ALARM_DAY_END
+} AlarmDay;
+
+typedef struct {
+    int8_t hour;
+    int8_t min;
+    AlarmDay days;
+} Alarm;
+
 void rtcInit(void);
 void rtcIRQ(void);
 
@@ -41,6 +57,8 @@ void rtcEditTime(int8_t mode, int8_t value);
 int8_t rtcGetMode(void);
 void rtcSetMode(int8_t mode);
 void rtcChangeMode(int8_t diff);
+
+Alarm *rtcGetAlarm(uint8_t index);
 
 #ifdef __cplusplus
 }

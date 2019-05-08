@@ -77,6 +77,10 @@ const char *const labels_tr[LABEL_END] = {
 //    [LABEL_LANG + LANG_TR]              = "Türkçe",
 //    [LABEL_LANG + LANG_UA]              = "Українська",
 
+//    [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Off",
+//    [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekdays",
+//    [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "ALl days",
+
     // NOTE: Keep in sync with MenuIdx in menu.h
     [LABEL_MENU + MENU_NULL]            = "Bir Önceki Menü",
 
@@ -87,12 +91,13 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_TUNER]     = "Radyo İşlemcisi",
     [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Spectrum Ayarı",
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Ekran Ayarı",
+//    [LABEL_MENU + MENU_SETUP_ALARM]     = "Alarm",
     [LABEL_MENU + MENU_SETUP_RC]        = "Kumanda Ayarı",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Dil Seçeneği",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute/Bekletme Pini",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Enkoder Çözünürlüğü",
-    [LABEL_MENU + MENU_SYSTEM_STIMER]   = "Sessizlik Zamanlayıcısı",
+    [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Sessizlik Zamanlayıcısı",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
     [LABEL_MENU + MENU_AUDIO_IN_0]      = "Ses Giriş 0",
@@ -113,6 +118,10 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_RDS]       = "Rds Bilgi Gösterimi",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass Kuvetlendirme",
     [LABEL_MENU + MENU_TUNER_VOLUME]    = "Tuner Ses Ayarı",
+
+//    [LABEL_MENU + MENU_ALARM_HOUR]      = "Hour",
+//    [LABEL_MENU + MENU_ALARM_MINUTE]    = "Minute",
+//    [LABEL_MENU + MENU_ALARM_DAYS]      = "Days",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Spectrum Tipi",
 

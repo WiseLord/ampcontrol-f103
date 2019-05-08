@@ -33,12 +33,13 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SETUP_TUNER]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_SPECTRUM]   = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_DISPLAY]    = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
+    [MENU_SETUP_ALARM]      = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
     [MENU_SETUP_RC]         = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
 
-    [MENU_SYSTEM_LANG]      = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     EE_LANGUAGE},
-    [MENU_SYSTEM_MUTESTBY]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_BOOL,     EE_SETUP_MUTESTBY},
-    [MENU_SYSTEM_ENC_RES]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_INPUT_ENC_RES},
-    [MENU_SYSTEM_STIMER]    = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SILENCE_TIMER},
+    [MENU_SYSTEM_LANG]      = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     EE_SYSTEM_LANG},
+    [MENU_SYSTEM_MUTESTBY]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_BOOL,     EE_SYSTEM_MUTESTBY},
+    [MENU_SYSTEM_ENC_RES]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SYSTEM_ENC_RES},
+    [MENU_SYSTEM_SIL_TIM]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SYSTEM_SIL_TIM},
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IC},
     [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     EE_AUDIO_IN0},
@@ -59,6 +60,10 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_TUNER_RDS]        = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     EE_TUNER_RDS},
     [MENU_TUNER_BASS]       = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     EE_TUNER_BASS},
     [MENU_TUNER_VOLUME]     = {MENU_SETUP_TUNER,        MENU_TYPE_NUMBER,   EE_TUNER_VOLUME},
+
+    [MENU_ALARM_HOUR]       = {MENU_SETUP_ALARM,        MENU_TYPE_NUMBER,   EE_ALARM_HOUR},
+    [MENU_ALARM_MINUTE]     = {MENU_SETUP_ALARM,        MENU_TYPE_NUMBER,   EE_ALARM_MINUTE},
+    [MENU_ALARM_DAYS]       = {MENU_SETUP_ALARM,        MENU_TYPE_ENUM,     EE_ALARM_DAYS},
 
     [MENU_SPECTURM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM,     EE_SPECTRUM_MODE},
 
@@ -372,11 +377,29 @@ static void menuValueChange(int8_t diff)
         if (menu.value < ENC_RES_MIN)
             menu.value = ENC_RES_MIN;
         break;
-    case MENU_SYSTEM_STIMER:
+    case MENU_SYSTEM_SIL_TIM:
         if (menu.value > 60)
             menu.value = 60;
         if (menu.value < 0)
             menu.value = 0;
+        break;
+    case MENU_ALARM_HOUR:
+        if (menu.value > 23)
+            menu.value = 0;
+        if (menu.value < 0)
+            menu.value = 23;
+        break;
+    case MENU_ALARM_MINUTE:
+        if (menu.value > 59)
+            menu.value = 0;
+        if (menu.value < 0)
+            menu.value = 59;
+        break;
+    case MENU_ALARM_DAYS:
+        if (menu.value > ALARM_DAY_END - 1)
+            menu.value = ALARM_DAY_END - 1;
+        if (menu.value < ALARM_DAY_OFF)
+            menu.value = ALARM_DAY_OFF;
         break;
     default:
         break;
@@ -554,6 +577,9 @@ const char *menuGetValueStr(MenuIdx index)
         break;
     case MENU_SPECTURM_MODE:
         ret = labelsGet((Label)(LABEL_SPECTRUM_MODE + value));
+        break;
+    case MENU_ALARM_DAYS:
+        ret = labelsGet((Label)(LABEL_ALARM_DAY + value));
         break;
     default:
         ret = noVal;

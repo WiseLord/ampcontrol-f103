@@ -132,7 +132,7 @@ void pinsInit(void)
     pinsInitRc();
     pinsInitDisplay();
 
-    bool muteStby = eeRead(EE_SETUP_MUTESTBY);
+    bool muteStby = eeRead(EE_SYSTEM_MUTESTBY);
     pinsInitMuteStby(muteStby);
 
     OUT_INIT(MUTE, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);

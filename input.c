@@ -10,7 +10,7 @@ static int8_t encRes = 0;
 
 void inputInit(void)
 {
-    encRes = (int8_t)eeRead(EE_INPUT_ENC_RES);
+    encRes = (int8_t)eeRead(EE_SYSTEM_ENC_RES);
     encCnt = 0;
     cmdBuf = BTN_NO;
 }

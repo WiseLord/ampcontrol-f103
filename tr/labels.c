@@ -78,6 +78,10 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7418] = "TDA7418",
     [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "TEST",
 
+    [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Off",
+    [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekdays",
+    [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "ALl days",
+
     [LABEL_LANG + LANG_DEFAULT]         = "English",
     [LABEL_LANG + LANG_BY]              = "Беларуская",
     [LABEL_LANG + LANG_RU]              = "Русский",
@@ -94,15 +98,16 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_TUNER]     = "Tuner",
     [LABEL_MENU + MENU_SETUP_SPECTRUM]  = "Spectrum",
     [LABEL_MENU + MENU_SETUP_DISPLAY]   = "Display",
+    [LABEL_MENU + MENU_SETUP_ALARM]     = "Alarm",
     [LABEL_MENU + MENU_SETUP_RC]        = "Remote",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Language",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute & Stby pins",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Encoder resolution",
-    [LABEL_MENU + MENU_SYSTEM_STIMER]   = "Silence timer",
+    [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Silence timer",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
-    [LABEL_MENU + MENU_AUDIO_IN_0]      = "Input 0",
+    [LABEL_MENU + MENU_AUDIO_IN_0]      = "Input 0",        // TODO: Simplify
     [LABEL_MENU + MENU_AUDIO_IN_1]      = "Input 1",
     [LABEL_MENU + MENU_AUDIO_IN_2]      = "Input 2",
     [LABEL_MENU + MENU_AUDIO_IN_3]      = "Input 3",
@@ -120,6 +125,10 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_RDS]       = "Enable RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass boost",
     [LABEL_MENU + MENU_TUNER_VOLUME]    = "Volume",
+
+    [LABEL_MENU + MENU_ALARM_HOUR]      = "Hour",
+    [LABEL_MENU + MENU_ALARM_MINUTE]    = "Minute",
+    [LABEL_MENU + MENU_ALARM_DAYS]      = "Days",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Display mode",
 
@@ -211,5 +220,5 @@ const char *labelsGet(Label value)
 
 void labelsInit(void)
 {
-    lang = (Lang)(eeRead(EE_LANGUAGE));
+    lang = (Lang)(eeRead(EE_SYSTEM_LANG));
 }

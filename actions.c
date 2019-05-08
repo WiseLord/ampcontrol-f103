@@ -63,7 +63,7 @@ static void actionDispExpired(Screen screen)
 
 static void actionResetSilenceTimer(void)
 {
-    int16_t silenceTimer = settingsGet(EE_SILENCE_TIMER);
+    int16_t silenceTimer = settingsGet(EE_SYSTEM_SIL_TIM);
 
     if (silenceTimer) {
         swTimSet(SW_TIM_SILENCE_TIMER, 1000 * 60 * silenceTimer + 999);

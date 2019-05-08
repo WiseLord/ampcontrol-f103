@@ -14,7 +14,7 @@ static const EE_Map eeMap[] = {
 
     {EE_AUDIO_IC,               AUDIO_IC_TEST},
     {EE_AUDIO_INPUT,            0},
-    {EE_SETUP_MUTESTBY,         false},
+    {EE_SYSTEM_MUTESTBY,        false},
     {EE_AUDIO_LOUDNESS,         false},
     {EE_AUDIO_SURROUND,         false},
     {EE_AUDIO_EFFECT3D,         false},
@@ -64,11 +64,16 @@ static const EE_Map eeMap[] = {
     {EE_DISPLAY_ROTATE,         false},
 
     {EE_SPECTRUM_MODE,          SP_MODE_STEREO},
-    {EE_INPUT_ENC_RES,          4},
-    {EE_SETUP_MUTESTBY,         true},
-    {EE_SILENCE_TIMER,          5},
 
-    {EE_LANGUAGE,               LANG_DEFAULT},
+    {EE_ALARM_HOUR,             7},
+    {EE_ALARM_MINUTE,           30},
+    {EE_ALARM_DAYS,             0},
+
+    {EE_SYSTEM_ENC_RES,         4},
+    {EE_SYSTEM_MUTESTBY,        true},
+    {EE_SYSTEM_SIL_TIM,         5},
+
+    {EE_SYSTEM_LANG,            LANG_DEFAULT},
 
     FOREACH_CMD(GENERATE_EE_RC_MAP)
 };

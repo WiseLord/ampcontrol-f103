@@ -32,7 +32,7 @@ static const AudioGrid gridTestGain         = {  0, 15, (uint8_t)(2.00 * 8)}; //
 
 static void audioTestInit(AudioParam *aPar)
 {
-    aPar->inCnt = 4;
+    aPar->inCnt = 8;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridTestVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridTestTone;
