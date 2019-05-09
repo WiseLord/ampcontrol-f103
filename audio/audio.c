@@ -241,7 +241,7 @@ void audioSetMute(bool value)
 {
     aProc.par.mute = value;
 
-    pinsSetMute(!value);
+    pinsSetMute(value);
 
     if (aProc.api.setMute) {
         aProc.api.setMute(value);

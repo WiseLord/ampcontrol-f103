@@ -82,6 +82,10 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekdays",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "ALl days",
 
+    [LABEL_MUTESTBY + MUTESTBY_SWD] = "SWD",
+    [LABEL_MUTESTBY + MUTESTBY_POS] = "Active 1",
+    [LABEL_MUTESTBY + MUTESTBY_NEG] = "Active 0",
+
     [LABEL_LANG + LANG_DEFAULT]         = "English",
     [LABEL_LANG + LANG_BY]              = "Беларуская",
     [LABEL_LANG + LANG_RU]              = "Русский",
@@ -102,7 +106,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_RC]        = "Remote",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Language",
-    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute & Stby pins",
+    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute & Stby",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Encoder resolution",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Silence timer",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Time correction",

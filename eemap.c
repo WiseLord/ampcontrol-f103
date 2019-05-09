@@ -1,11 +1,12 @@
 #include "eemap.h"
-#include "eemul.h"
 
 #include "audio/audiodefs.h"
 #include "display/dispdefs.h"
+#include "eemul.h"
+#include "settings.h"
+#include "spectrum.h"
 #include "tr/labels.h"
 #include "tuner/tunerdefs.h"
-#include "spectrum.h"
 
 #define GENERATE_EE_RC_MAP(CMD)  {EE_RC_ ## CMD, (int16_t)EE_NOT_FOUND},
 
@@ -14,7 +15,6 @@ static const EE_Map eeMap[] = {
 
     {EE_AUDIO_IC,               AUDIO_IC_TEST},
     {EE_AUDIO_INPUT,            0},
-    {EE_SYSTEM_MUTESTBY,        false},
     {EE_AUDIO_LOUDNESS,         false},
     {EE_AUDIO_SURROUND,         false},
     {EE_AUDIO_EFFECT3D,         false},
@@ -70,7 +70,7 @@ static const EE_Map eeMap[] = {
     {EE_ALARM_DAYS,             0},
 
     {EE_SYSTEM_ENC_RES,         4},
-    {EE_SYSTEM_MUTESTBY,        true},
+    {EE_SYSTEM_MUTESTBY,        MUTESTBY_POS},
     {EE_SYSTEM_SIL_TIM,         5},
     {EE_SYSTEM_RTC_CORR,        0},
 

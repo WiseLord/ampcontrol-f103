@@ -37,7 +37,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SETUP_RC]         = {MENU_SETUP,              MENU_TYPE_PARENT,   EE_NULL},
 
     [MENU_SYSTEM_LANG]      = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     EE_SYSTEM_LANG},
-    [MENU_SYSTEM_MUTESTBY]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_BOOL,     EE_SYSTEM_MUTESTBY},
+    [MENU_SYSTEM_MUTESTBY]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     EE_SYSTEM_MUTESTBY},
     [MENU_SYSTEM_ENC_RES]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SYSTEM_ENC_RES},
     [MENU_SYSTEM_SIL_TIM]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SYSTEM_SIL_TIM},
     [MENU_SYSTEM_RTC_CORR]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   EE_SYSTEM_RTC_CORR},
@@ -108,9 +108,6 @@ static int16_t menuGetValue(MenuIdx index)
     switch (index) {
     case MENU_SYSTEM_LANG:
         ret = (int16_t)(labelsGetLang());
-        break;
-    case MENU_SYSTEM_MUTESTBY:
-        ret = pinsGetMuteStby();
         break;
 
     case MENU_AUDIO_IC:
@@ -198,7 +195,13 @@ static void menuStoreCurrentValue(void)
         labelsSetLang((Lang)(menu.value));
         break;
     case MENU_SYSTEM_MUTESTBY:
-        pinsSetMuteStby(menu.value);
+        pinsInitMuteStby((MuteStby)menu.value);
+        break;
+    case MENU_SYSTEM_ENC_RES:
+        inputSetEncRes((int8_t)menu.value);
+        break;
+    case MENU_SYSTEM_RTC_CORR:
+        rtcSetCorrection(menu.value);
         break;
 
     case MENU_AUDIO_IC:
@@ -259,13 +262,6 @@ static void menuStoreCurrentValue(void)
         canvasClear();
         break;
 
-    case MENU_SYSTEM_ENC_RES:
-        inputSetEncRes((int8_t)menu.value);
-        break;
-    case MENU_SYSTEM_RTC_CORR:
-        rtcSetCorrection(menu.value);
-        break;
-
     default:
         break;
     }
@@ -307,6 +303,31 @@ static void menuValueChange(int8_t diff)
         if (menu.value < LANG_DEFAULT)
             menu.value = LANG_DEFAULT;
         break;
+    case MENU_SYSTEM_MUTESTBY:
+        if (menu.value > MUTESTBY_END - 1)
+            menu.value = MUTESTBY_END - 1;
+        if (menu.value < MUTESTBY_SWD)
+            menu.value = MUTESTBY_SWD;
+        break;
+    case MENU_SYSTEM_ENC_RES:
+        if (menu.value > ENC_RES_MAX)
+            menu.value = ENC_RES_MAX;
+        if (menu.value < ENC_RES_MIN)
+            menu.value = ENC_RES_MIN;
+        break;
+    case MENU_SYSTEM_SIL_TIM:
+        if (menu.value > 60)
+            menu.value = 60;
+        if (menu.value < 0)
+            menu.value = 0;
+        break;
+    case MENU_SYSTEM_RTC_CORR:
+        if (menu.value > 20)
+            menu.value = 20;
+        if (menu.value < -20)
+            menu.value = -20;
+        break;
+
     case MENU_AUDIO_IC:
         if (menu.value > AUDIO_IC_END - 1)
             menu.value = AUDIO_IC_END - 1;
@@ -326,6 +347,7 @@ static void menuValueChange(int8_t diff)
         if (menu.value < IN_TUNER)
             menu.value = IN_TUNER;
         break;
+
     case MENU_TUNER_IC:
         if (menu.value > TUNER_IC_END - 1)
             menu.value = TUNER_IC_END - 1;
@@ -362,12 +384,14 @@ static void menuValueChange(int8_t diff)
         if (menu.value < TUNER_VOLUME_MIN)
             menu.value = TUNER_VOLUME_MIN;
         break;
+
     case MENU_SPECTURM_MODE:
         if (menu.value > SP_MODE_END - 1)
             menu.value = SP_MODE_END - 1;
         if (menu.value < SP_MODE_STEREO)
             menu.value = SP_MODE_STEREO;
         break;
+
     case MENU_DISPLAY_BR_STBY:
     case MENU_DISPLAY_BR_WORK:
         if (menu.value > LCD_BR_MAX)
@@ -375,24 +399,7 @@ static void menuValueChange(int8_t diff)
         if (menu.value < LCD_BR_MIN)
             menu.value = LCD_BR_MIN;
         break;
-    case MENU_SYSTEM_ENC_RES:
-        if (menu.value > ENC_RES_MAX)
-            menu.value = ENC_RES_MAX;
-        if (menu.value < ENC_RES_MIN)
-            menu.value = ENC_RES_MIN;
-        break;
-    case MENU_SYSTEM_SIL_TIM:
-        if (menu.value > 60)
-            menu.value = 60;
-        if (menu.value < 0)
-            menu.value = 0;
-        break;
-    case MENU_SYSTEM_RTC_CORR:
-        if (menu.value > 20)
-            menu.value = 20;
-        if (menu.value < -20)
-            menu.value = -20;
-        break;
+
     case MENU_ALARM_HOUR:
         if (menu.value > 23)
             menu.value = 0;
@@ -555,6 +562,9 @@ const char *menuGetValueStr(MenuIdx index)
     switch (index) {
     case MENU_SYSTEM_LANG:
         ret = labelsGet((Label)(LABEL_LANG + value));
+        break;
+    case MENU_SYSTEM_MUTESTBY:
+        ret = labelsGet((Label)(LABEL_MUTESTBY + value));
         break;
 
     case MENU_AUDIO_IC:

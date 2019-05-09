@@ -7,13 +7,14 @@ extern "C" {
 
 #include <stdbool.h>
 
+#include "settings.h"
+
 void pinsInit(void);
 
 void pinsDeInitAmpI2c(void);
 void pinsInitAmpI2c(void);
 
-void pinsSetMuteStby(bool value);
-bool pinsGetMuteStby(void);
+void pinsInitMuteStby(MuteStby value);
 
 void pinsSetMute(bool value);
 void pinsSetStby(bool value);
@@ -90,10 +91,18 @@ void pinsSetStby(bool value);
 #define DISP_SPI_SDI            DISP_WR
 
 // Mute and Standby lines
+#define SWD_FORCED  // TODO: Return to SWD line when debug finished
+#ifdef SWD_FORCED
 #define MUTE_Port               GPIOB
 #define MUTE_Pin                LL_GPIO_PIN_11
 #define STBY_Port               GPIOB
 #define STBY_Pin                LL_GPIO_PIN_10
+#else
+#define MUTE_Port               GPIOA
+#define MUTE_Pin                LL_GPIO_PIN_13
+#define STBY_Port               GPIOA
+#define STBY_Pin                LL_GPIO_PIN_14
+#endif
 
 // Main I2C bus
 #define AMP_I2C_Port            GPIOB

@@ -75,6 +75,10 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Будні",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "Усе дні",
 
+//    [LABEL_MUTESTBY + MUTESTBY_SWD] = "SWD",
+    [LABEL_MUTESTBY + MUTESTBY_POS] = "Актыўны 1",
+    [LABEL_MUTESTBY + MUTESTBY_NEG] = "Актыўны 0",
+
 //    [LABEL_LANG + LANG_DEFAULT]         = "English",
 //    [LABEL_LANG + LANG_BY]              = "Беларуская",
 //    [LABEL_LANG + LANG_RU]              = "Русский",
@@ -95,7 +99,7 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_RC]        = "Пульт",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Мова",
-    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Вывады Mute і Stby",
+    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute і Stby",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Вырашэнне энкодера",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Таймер цішыні",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Карэкцыя часу",

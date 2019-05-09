@@ -717,16 +717,20 @@ void actionHandle(bool visible)
 
     switch (action.type) {
     case ACTION_POWERUP:
+        pinsSetMute(true);
+        pinsSetStby(true);
+
         swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
         swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
         swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
         swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
+
         audioReadSettings();
         tunerReadSettings();
         break;
     case ACTION_STANDBY:
         if (action.value == FLAG_OFF) {
-            pinsSetStby(true);      // ON via relay
+            pinsSetStby(false);     // ON via relay
             swTimSet(SW_TIM_INIT_HW, 500);
 
             actionSetScreen(SCREEN_TIME, 800);
@@ -741,7 +745,7 @@ void actionHandle(bool visible)
 
             pinsDeInitAmpI2c();
 
-            pinsSetStby(false);     // OFF via relay
+            pinsSetStby(true);      // OFF via relay
 
             swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
             swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
@@ -755,6 +759,8 @@ void actionHandle(bool visible)
         swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
 
         pinsInitAmpI2c();
+        pinsSetStby(false);
+
         tunerInit();
         audioInit();
 

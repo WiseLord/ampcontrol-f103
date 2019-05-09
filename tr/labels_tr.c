@@ -71,6 +71,10 @@ const char *const labels_tr[LABEL_END] = {
 //    [LABEL_AUDIO_IC + AUDIO_IC_TDA7418] = "TDA7418",
 //    [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "TEST",
 
+//    [LABEL_MUTESTBY + MUTESTBY_SWD] = "SWD",
+//    [LABEL_MUTESTBY + MUTESTBY_POS] = "Active 1",
+//    [LABEL_MUTESTBY + MUTESTBY_NEG] = "Active 0",
+
 //    [LABEL_LANG + LANG_DEFAULT]         = "English",
 //    [LABEL_LANG + LANG_BY]              = "Беларуская",
 //    [LABEL_LANG + LANG_RU]              = "Русский",
@@ -95,7 +99,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_RC]        = "Kumanda Ayarı",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Dil Seçeneği",
-    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute/Bekletme Pini",
+    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute/Bekletme",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Enkoder Çözünürlüğü",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Sessizlik Zamanlayıcısı",
 //    [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Time correction",

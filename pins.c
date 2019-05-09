@@ -65,14 +65,18 @@ static void pinsInitDisplay(void)
 #endif
 }
 
-static void pinsInitMuteStby(bool value)
+void pinsInitMuteStby(MuteStby value)
 {
-    if (value) {
-        // JTAG-DP Disabled and SW-DP Disabled
-        LL_GPIO_AF_DisableRemap_SWJ();
-    } else {
+#ifdef SWD_FORCED
+    value = MUTESTBY_SWD;
+#endif
+
+    if (value == MUTESTBY_SWD) {
         // JTAG-DP Disabled and SW-DP Enabled
         LL_GPIO_AF_Remap_SWJ_NOJTAG();
+    } else {
+        // JTAG-DP Disabled and SW-DP Disabled
+        LL_GPIO_AF_DisableRemap_SWJ();
     }
 }
 
@@ -132,37 +136,60 @@ void pinsInit(void)
     pinsInitRc();
     pinsInitDisplay();
 
-    bool muteStby = eeRead(EE_SYSTEM_MUTESTBY);
+    MuteStby muteStby = (MuteStby)settingsGet(EE_SYSTEM_MUTESTBY);
     pinsInitMuteStby(muteStby);
 
     OUT_INIT(MUTE, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
     OUT_INIT(STBY, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
 }
 
-void pinsSetMuteStby(bool value)
-{
-    pinsInitMuteStby(value);
-}
-
-bool pinsGetMuteStby()
-{
-    return (READ_BIT(AFIO->MAPR, AFIO_MAPR_SWJ_CFG_DISABLE) == (AFIO_MAPR_SWJ_CFG_DISABLE));
-}
-
 void pinsSetMute(bool value)
 {
-    if (value) {
-        SET(MUTE);
-    } else {
-        CLR(MUTE);
+    MuteStby muteStby = (MuteStby)settingsGet(EE_SYSTEM_MUTESTBY);
+
+#ifdef SWD_FORCED
+    if (muteStby == MUTESTBY_SWD) {
+        muteStby = MUTESTBY_POS;
+    }
+#endif
+
+    if (muteStby == MUTESTBY_POS) {
+        if (value) {
+            CLR(MUTE);
+        } else {
+            SET(MUTE);
+        }
+    } else if (muteStby == MUTESTBY_NEG) {
+        if (value) {
+            SET(MUTE);
+        } else {
+            CLR(MUTE);
+        }
     }
 }
 
 void pinsSetStby(bool value)
 {
-    if (value) {
-        SET(STBY);
-    } else {
-        CLR(STBY);
+    MuteStby muteStby = (MuteStby)settingsGet(EE_SYSTEM_MUTESTBY);
+
+#ifdef SWD_FORCED
+    if (muteStby == MUTESTBY_SWD) {
+        muteStby = MUTESTBY_POS;
+    }
+#endif
+
+    // TODO: Remove MUTESTBY_SWD condition when debug finished
+    if (muteStby == MUTESTBY_POS) {
+        if (value) {
+            CLR(STBY);
+        } else {
+            SET(STBY);
+        }
+    } else if (muteStby == MUTESTBY_NEG) {
+        if (value) {
+            SET(STBY);
+        } else {
+            CLR(STBY);
+        }
     }
 }
