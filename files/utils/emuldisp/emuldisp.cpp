@@ -1,7 +1,7 @@
 #include "emuldisp.h"
 #include "emuldisp_stub.h"
 
-#include "../../../canvas/layout.h"
+#include "../../../gui/layout.h"
 #include "../../../display/dispdefs.h"
 #include "../../../input.h"
 #include "../../../screen.h"

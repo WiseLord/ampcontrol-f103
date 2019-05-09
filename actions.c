@@ -4,9 +4,9 @@
 #include <string.h>
 
 #include "audio/audio.h"
-#include "canvas/canvas.h"
-#include "canvas/layout.h"
 #include "eemap.h"
+#include "gui/canvas.h"
+#include "gui/layout.h"
 #include "input.h"
 #include "menu.h"
 #include "pins.h"
@@ -18,7 +18,6 @@
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
 #include "usb/usbhid.h"
-#include "stm32f1xx_ll_utils.h"
 
 static void actionGetButtons(void);
 static void actionGetEncoder(void);
@@ -718,6 +717,10 @@ void actionHandle(bool visible)
 
     switch (action.type) {
     case ACTION_POWERUP:
+        swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
+        swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
+        swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
+        swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
         audioReadSettings();
         tunerReadSettings();
         break;

@@ -3,14 +3,14 @@
 
 #include "audio/audio.h"
 #include "display/glcd.h"
-#include "canvas/layout.h"
-#include "tuner/tuner.h"
 #include "eemap.h"
+#include "gui/layout.h"
 #include "input.h"
 #include "pins.h"
 #include "screen.h"
 #include "settings.h"
 #include "spectrum.h"
+#include "tuner/tuner.h"
 
 #define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC, EE_RC_ ## CMD},
 

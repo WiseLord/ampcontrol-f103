@@ -14,16 +14,6 @@ audio/tda7418.h
 audio/tda7439.c
 audio/tda7439.h
 
-canvas/canvas.c
-canvas/canvas.h
-canvas/layout.c
-canvas/layout.h
-canvas/lt160x128.c
-canvas/lt176x132.c
-canvas/lt220x176.c
-canvas/lt320x240.c
-canvas/lt400x240.c
-canvas/lt480x320.c
 
 display/fonts/font-amp-08.c
 display/fonts/font-terminus-12.c
@@ -165,6 +155,17 @@ drivers/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 drivers/STM32_USB_Device_Library/Core/Src/usbd_core.c
 drivers/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
 drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
+
+gui/canvas.c
+gui/canvas.h
+gui/layout.c
+gui/layout.h
+gui/lt160x128.c
+gui/lt176x132.c
+gui/lt220x176.c
+gui/lt320x240.c
+gui/lt400x240.c
+gui/lt480x320.c
 
 system/startup_stm32f103xb.s
 system/stm32f103c8tx_flash.ld

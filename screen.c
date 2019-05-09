@@ -1,13 +1,13 @@
 #include "screen.h"
 
-#include "canvas/layout.h"
-#include "display/glcd.h"
-#include "tr/labels.h"
 #include "actions.h"
+#include "display/glcd.h"
 #include "eemap.h"
 #include "fft.h"
+#include "gui/layout.h"
 #include "spectrum.h"
 #include "swtimers.h"
+#include "tr/labels.h"
 
 static Screen screen = SCREEN_STANDBY;
 static Screen screenDefault = SCREEN_SPECTRUM;

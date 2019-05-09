@@ -5,7 +5,7 @@
 
 #include <QDebug>
 
-#include "../../../canvas/layout.h"
+#include "../../../gui/layout.h"
 #include "../../../eemap.h"
 #include "../../../input.h"
 

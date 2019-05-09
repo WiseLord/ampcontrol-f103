@@ -116,9 +116,9 @@ C_DEFS += -D_$(DISPLAY)
 C_DEFS += -D_DISP_$(DISPVAR)
 C_DEFS += -D_DISP_$(DISPSIZE)
 
-C_SOURCES += canvas/canvas.c
-C_SOURCES += canvas/layout.c
-C_SOURCES += canvas/lt$(DISPSIZE).c
+C_SOURCES += gui/canvas.c
+C_SOURCES += gui/layout.c
+C_SOURCES += gui/lt$(DISPSIZE).c
 
 # Audio source files
 C_SOURCES += $(addprefix audio/, $(addsuffix .c, $(call lc, $(APROC_LIST))))

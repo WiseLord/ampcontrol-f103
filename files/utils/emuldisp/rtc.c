@@ -8,6 +8,8 @@ static int8_t rtcMode = RTC_NOEDIT;
 static const RTC_type rtcMin = { 0,  0, 0,  1,  1,  1, 0, RTC_NOEDIT};
 static const RTC_type rtcMax = {23, 59, 0, 31, 12, 99, 0, RTC_NOEDIT};
 
+static Alarm alarm[ALARM_COUNT];
+
 static int8_t rtcDaysInMonth(RTC_type *rtc)
 {
     int8_t ret = rtc->month;
@@ -100,6 +102,27 @@ static void rtcUpdate(RTC_type *rtc, int8_t mode, int8_t value)
     rtcTime = newTime;
 }
 
+static bool rtcIsAlarmDay(AlarmDay days, int8_t wday)
+{
+    bool ret = false;
+
+    switch (days) {
+    case ALARM_DAY_WEEKDAYS:
+        ret = (wday != 0 && wday != 6); // Not Sunday and not Saturday
+        break;
+    case ALARM_DAY_ALL_DAYS:
+        ret = true;
+        break;
+    }
+
+    return ret;
+}
+
+void rtcSetCorrection(int16_t value)
+{
+
+}
+
 void rtcGetTime(RTC_type *rtc)
 {
     time_t t = time(NULL);
@@ -154,12 +177,12 @@ void rtcEditTime(int8_t mode, int8_t digit)
     rtcUpdate(&rtc, mode, value);
 }
 
-int8_t rtcGetMode(void)
+RtcMode rtcGetMode(void)
 {
     return rtcMode;
 }
 
-void rtcSetMode(int8_t mode)
+void rtcSetMode(RtcMode mode)
 {
     rtcMode = mode;
 }
@@ -174,4 +197,30 @@ void rtcChangeMode(int8_t diff)
     if (rtcMode > RTC_NOEDIT) {
         rtcMode = RTC_HOUR;
     }
+}
+
+Alarm *rtcGetAlarm(uint8_t index)
+{
+    if (index >= ALARM_COUNT) {
+        index = 0;
+    }
+
+    return &alarm[index];
+}
+
+bool rtcCheckAlarm()
+{
+    RTC_type rtc;
+    secToRtc(rtcTime, &rtc);
+
+    uint8_t alarmN = 0;
+
+    if (rtc.hour == alarm[alarmN].hour &&
+        rtc.min == alarm[alarmN].min &&
+        rtc.sec == 0 &&
+        rtcIsAlarmDay(alarm[alarmN].days, rtc.wday)) {
+        return true;
+    }
+
+    return false;
 }
