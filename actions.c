@@ -18,6 +18,7 @@
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
 #include "usb/usbhid.h"
+#include "stm32f1xx_ll_utils.h"
 
 static void actionGetButtons(void);
 static void actionGetEncoder(void);
@@ -30,7 +31,7 @@ static void actionRemapCommon(void);
 static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
-static Action action = {ACTION_STANDBY, false, FLAG_ON, SCREEN_STANDBY, {0}, 0, ACTION_STANDBY};
+static Action action = {ACTION_POWERUP, false, FLAG_ON, SCREEN_STANDBY, {0}, 0, ACTION_POWERUP};
 static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, {0}, 0, ACTION_NONE};
 
 static void actionSet(ActionType type, int16_t value)
@@ -279,6 +280,8 @@ static void actionGetTimers(void)
         actionSet(ACTION_DISP_EXPIRED, 0);
     } else if (swTimGet(SW_TIM_INIT_HW) == 0) {
         actionSet(ACTION_INIT_HW, 0);
+    } else if (swTimGet(SW_TIM_INIT_SW) == 0) {
+        actionSet(ACTION_INIT_SW, 0);
     } else if (swTimGet(SW_TIM_STBY_TIMER) == 0) {
         actionSet(ACTION_STANDBY, FLAG_ON);
     } else if (swTimGet(SW_TIM_SILENCE_TIMER) == 0) {
@@ -714,11 +717,12 @@ void actionHandle(bool visible)
     action.timeout = 0;
 
     switch (action.type) {
+    case ACTION_POWERUP:
+        audioReadSettings();
+        tunerReadSettings();
+        break;
     case ACTION_STANDBY:
         if (action.value == FLAG_OFF) {
-            audioReadSettings();
-            tunerReadSettings();
-
             pinsSetStby(true);      // ON via relay
             swTimSet(SW_TIM_INIT_HW, 500);
 
@@ -738,6 +742,8 @@ void actionHandle(bool visible)
 
             swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
             swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
+            swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
+            swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
 
             actionDispExpired(SCREEN_STANDBY);
         }
@@ -746,15 +752,20 @@ void actionHandle(bool visible)
         swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
 
         pinsInitAmpI2c();
-
-
         tunerInit();
+        audioInit();
+
+        swTimSet(SW_TIM_TUNER_POLL, 400);
+        swTimSet(SW_TIM_INIT_SW, 300);
+        break;
+    case ACTION_INIT_SW:
+        swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
+
         tunerSetPower(true);
         tunerSetVolume(tuner->par.volume);
         tunerSetMute(false);
         tunerSetFreq(tuner->par.freq);
 
-        audioInit();
         audioSetPower(true);
         actionResetSilenceTimer();
         break;

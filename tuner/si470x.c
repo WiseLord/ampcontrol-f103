@@ -29,15 +29,16 @@ static void si470xWriteI2C(uint8_t bytes)
 
 static void si470xInitRegs(void)
 {
-    wrBuf[0] = SI470X_SKMODE;
-//    wrBuf[0] &= ~SI470X_DSMUTE;
+    wrBuf[0] = SI470X_SKMODE | SI470X_RDSM;
 
-    wrBuf[4] = 0;
+    wrBuf[4] = SI470X_RDS;
     if (tPar->deemph != TUNER_DEEMPH_75u) {
         wrBuf[4] |= SI470X_DE;  // 50us used in Europe
     }
 
     wrBuf[5] = SI470X_BLNDADJ_19_37;
+
+    wrBuf[6] = SI470X_SEEKTH & 12; // 25 by default for backward compatibility
 
     wrBuf[7] = SI470X_VOLUME;
     switch (tPar->band) {
@@ -72,16 +73,10 @@ static void si470xInitRegs(void)
         break;
     }
 
-    wrBuf[6] = SI470X_SEEKTH & 12; // 25 by default for backward compatibility
     wrBuf[9] = (SI470X_SKSNR & 0x10) | (SI470X_SKCNT & 0x01);
 
-    wrBuf[10] = 0x01;
+    wrBuf[10] = 0x01 | SI470X_XOSCEN;
     wrBuf[11] = 0x00;
-
-    wrBuf[10] |= SI470X_XOSCEN;
-
-    wrBuf[0] |= SI470X_RDSM; // New method
-    wrBuf[4] |= SI470X_RDS;
 
     si470xWriteI2C(SI470X_WRBUF_SIZE);
 }
@@ -179,14 +174,15 @@ void si470xSetRds(bool value)
 
 void si470xSetPower(bool value)
 {
-    wrBuf[1] |= SI470X_ENABLE;
+    wrBuf[1] = SI470X_ENABLE;
+
     if (value) {
         wrBuf[1] &= ~SI470X_DISABLE;
     } else {
         wrBuf[1] |= SI470X_DISABLE;
     }
 
-    si470xWriteI2C(4);
+    si470xWriteI2C(2);
 }
 
 void si470xUpdateStatus(void)
