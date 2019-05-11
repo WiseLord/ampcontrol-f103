@@ -82,10 +82,3 @@ void usartSendChar(USART_TypeDef *USARTx, char ch)
 
     LL_USART_TransmitData8(USARTx, ch);
 }
-
-void usartSendString(USART_TypeDef *USARTx, char *str)
-{
-    while (*str) {
-        usartSendChar(USARTx, *str++);
-    }
-}

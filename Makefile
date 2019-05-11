@@ -7,12 +7,18 @@ APROC_LIST = TDA7439 TDA731X PT232X TDA7418
 TUNER_LIST = RDA580X SI470X TEA5767
 FEATURE_LIST =
 
+#DEBUG_ENABLED = YES
+
 # Lowercase argument
 lc = $(shell echo $1 | tr '[:upper:]' '[:lower:]')
 
 TARGET = $(call lc, $(PROJECT)_$(DISPLAY)_$(DISPVAR))
 
 C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
+
+ifeq "$(DEBUG_ENABLED)" "YES"
+  C_DEFS += -D_DEBUG_ENABLED
+endif
 
 DISP_HI_BYTE = NO
 DISP_LO_BYTE = YES
@@ -27,6 +33,7 @@ endif
 C_SOURCES = main.c
 
 C_SOURCES += actions.c
+C_SOURCES += debug.c
 C_SOURCES += eemap.c
 C_SOURCES += eemul.c
 C_SOURCES += fft.c

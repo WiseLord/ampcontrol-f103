@@ -5,6 +5,7 @@
 #include <stm32f1xx_ll_utils.h>
 
 #include "actions.h"
+#include "debug.h"
 #include "eemul.h"
 #include "i2c.h"
 #include "input.h"
@@ -88,6 +89,9 @@ int main(void)
     eeInit();
     settingsInit();
     pinsInit();
+
+    dbgInit();
+    DBG("\rInit system\r\n");
 
     usbHidInit();
 

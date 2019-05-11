@@ -14,7 +14,6 @@ audio/tda7418.h
 audio/tda7439.c
 audio/tda7439.h
 
-
 display/fonts/font-amp-08.c
 display/fonts/font-terminus-12.c
 display/fonts/font-terminus-14b.c
@@ -208,6 +207,8 @@ usb/usbhid.h
 actions.c
 actions.h
 cmd.h
+debug.c
+debug.h
 eemap.c
 eemap.h
 eemul.c
