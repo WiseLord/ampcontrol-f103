@@ -333,6 +333,10 @@ void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
 
 void dispdrvDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
+    if ((x + w > dispdrv.width) || (y + h > dispdrv.height)) {
+        return;
+    }
+
     CLR(DISP_CS);
 
     dispdrv.setWindow(x, y, w, h);
@@ -349,6 +353,10 @@ void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
 {
     int16_t w = img->width;
     int16_t h = img->height;
+
+    if ((x + w > dispdrv.width) || (y + h > dispdrv.height)) {
+        return;
+    }
 
     CLR(DISP_CS);
 
