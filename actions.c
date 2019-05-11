@@ -730,6 +730,9 @@ void actionHandle(bool visible)
         break;
     case ACTION_STANDBY:
         if (action.value == FLAG_OFF) {
+            audioReadSettings();
+            tunerReadSettings();
+
             pinsSetStby(false);     // ON via relay
             swTimSet(SW_TIM_INIT_HW, 500);
 
