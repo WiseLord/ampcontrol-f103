@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../eemap.h"
+#include "rds.h"
 #include "stations.h"
 
 #ifdef _RDA580X
@@ -134,6 +135,8 @@ void tunerSaveSettings(void)
 
 void tunerInit(void)
 {
+    rdsReset();
+
     if (tuner.api.init) {
         tuner.api.init(&tuner.par, &tuner.status);
     }
@@ -146,6 +149,8 @@ Tuner *tunerGet(void)
 
 void tunerSetPower(bool value)
 {
+    rdsReset();
+
     if (!value) {
         tunerSaveSettings();
     }
@@ -157,6 +162,8 @@ void tunerSetPower(bool value)
 
 void tunerSetFreq(uint16_t value)
 {
+    rdsReset();
+
     const uint16_t freqMin = tuner.par.fMin;
     const uint16_t freqMax = tuner.par.fMax;
 
@@ -203,6 +210,8 @@ void tunerSetForcedMono(bool value)
 
 void tunerSetRds(bool value)
 {
+    rdsReset();
+
     tuner.par.rds = value;
 
     if (tuner.api.setRds) {
@@ -221,6 +230,8 @@ void tunerSetVolume(int8_t value)
 
 void tunerSeek(int8_t direction)
 {
+    rdsReset();
+
     if (tuner.api.seek) {
         tuner.api.seek(direction);
     }
@@ -272,6 +283,8 @@ void tunerMove(int8_t direction)
 
 void tunerUpdateStatus(void)
 {
+    tuner.status.flags = TUNER_FLAG_INIT;
+
     if (tuner.api.updateStatus) {
         tuner.api.updateStatus();
     }

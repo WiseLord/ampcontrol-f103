@@ -41,6 +41,9 @@ static const Layout lt220x176 = {
     .tuner.bar.middle = 2,
     .tuner.iconSpace = 2,
 
+    .rds.psFont = &fontterminus20b,
+    .rds.textFont = &fontterminus18,
+
     .textEdit.rect.x = 2,
     .textEdit.rect.y = 38,
     .textEdit.rect.w = 216,

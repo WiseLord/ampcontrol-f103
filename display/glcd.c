@@ -188,6 +188,11 @@ void glcdSetFontAlign(uint8_t align)
     glcd.font.align = align;
 }
 
+int16_t glcdGetFontHeight(const tFont *font)
+{
+    return font->chars->image->height;
+}
+
 void glcdSetXY(int16_t x, int16_t y)
 {
     glcd.x = x;

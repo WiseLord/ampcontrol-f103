@@ -134,6 +134,7 @@ C_DEFS += $(addprefix -D_, $(APROC_LIST))
 
 # Tuner source files
 C_SOURCES += $(addprefix tuner/, $(addsuffix .c, $(call lc, $(TUNER_LIST))))
+C_SOURCES += tuner/rds.c
 C_SOURCES += tuner/stations.c
 C_SOURCES += tuner/tuner.c
 C_DEFS += $(addprefix -D_, $(TUNER_LIST))

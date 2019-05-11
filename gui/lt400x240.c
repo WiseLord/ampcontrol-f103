@@ -41,6 +41,9 @@ static const Layout lt400x240 = {
     .tuner.bar.middle = 2,
     .tuner.iconSpace = 3,
 
+    .rds.psFont = &fontterminus28b,
+    .rds.textFont = &fontterminus22b,
+
     .textEdit.rect.x = 50,
     .textEdit.rect.y = 50,
     .textEdit.rect.w = 300,

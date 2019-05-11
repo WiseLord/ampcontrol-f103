@@ -79,6 +79,7 @@ void glcdSetFont(const tFont *font);
 void glcdSetFontColor(uint16_t color);
 void glcdSetFontBgColor(uint16_t color);
 void glcdSetFontAlign(uint8_t align);
+int16_t glcdGetFontHeight(const tFont *font);
 
 void glcdSetXY(int16_t x, int16_t y);
 void glcdSetX(int16_t x);

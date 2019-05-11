@@ -1,6 +1,8 @@
 #include "rda580x.h"
 
 #include "rda580x_regs.h"
+#include "rds.h"
+
 #include "../i2c.h"
 #include "../pins.h"
 
@@ -47,7 +49,7 @@ static void rda580xInitRegs(void)
         wrBuf[0] |= RDA5807_BASS;
     if (tPar->forcedMono)
         wrBuf[0] |= RDA580X_MONO;
-    wrBuf[1] = RDA580X_SKMODE | RDA580X_CLK_MODE_32768;
+    wrBuf[1] = RDA580X_SKMODE | RDA580X_CLK_MODE_32768 | RDA5807_NEW_METHOD;
     if (tPar->rds)
         wrBuf[1] |= RDA5807_RDS_EN;
     rda580xWriteReg(0x02);
@@ -208,8 +210,6 @@ void rda580xUpdateStatus()
     tStatus->freq = rda580xGetFreq();
     tStatus->rssi = (rdBuf[2] & RDA580X_RSSI) >> 2;
 
-    tStatus->flags = TUNER_FLAG_INIT;
-
     if (rdBuf[0] & RDA580X_ST) {
         tStatus->flags |= TUNER_FLAG_STEREO;
     }
@@ -221,11 +221,25 @@ void rda580xUpdateStatus()
         tStatus->flags |= TUNER_FLAG_BANDLIM;
     }
 
+    if (tPar->rds &&
+        (rdBuf[0] & RDA5807_RDSR) && (rdBuf[0] & RDA5807_RDSS)) {
+        // If there are no non-correctable errors in blocks A-D
+        if ((rdBuf[3] & RDA5807_BLERA) != RDA5807_BLERA &&
+            (rdBuf[3] & RDA5807_BLERB) != RDA5807_BLERB ) {
+
+            RdsBlock rdsBlock;
+            rdsBufToBlock(&rdBuf[4], &rdsBlock);
+            rdsDecode(&rdsBlock);
+        }
+    }
+
     if (seeking == true) {
         if (wrBuf[0] & RDA580X_SEEKUP) {
             tStatus->flags |= TUNER_FLAG_SEEKUP;
         } else {
             tStatus->flags |= TUNER_FLAG_SEEKDOWN;
         }
+
+        tStatus->flags |= TUNER_FLAG_RDS_READY;
     }
 }

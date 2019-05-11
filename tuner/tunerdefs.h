@@ -27,14 +27,16 @@ typedef enum {
 
 typedef uint16_t TunerFlag;
 enum {
-    TUNER_FLAG_INIT     = 0x0000,
+    TUNER_FLAG_INIT         = 0x0000,
 
-    TUNER_FLAG_READY    = 0x0001, // Ready (seek/tune complete)
-    TUNER_FLAG_STEREO   = 0x0002, // Stereo reception
-    TUNER_FLAG_BANDLIM  = 0x0004, // Band limit reached
+    TUNER_FLAG_READY        = 0x0001, // Ready (seek/tune complete)
+    TUNER_FLAG_STEREO       = 0x0002, // Stereo reception
+    TUNER_FLAG_BANDLIM      = 0x0004, // Band limit reached
 
-    TUNER_FLAG_SEEKUP   = 0x0010, // Seek up in progress
-    TUNER_FLAG_SEEKDOWN = 0x0020, // Seek down in progress
+    TUNER_FLAG_SEEKUP       = 0x0010, // Seek up in progress
+    TUNER_FLAG_SEEKDOWN     = 0x0020, // Seek down in progress
+
+    TUNER_FLAG_RDS_READY    = 0x0100, // RDS is ready
 };
 
 typedef enum {

@@ -1,6 +1,8 @@
 #include "si470x.h"
 
 #include "si470x_regs.h"
+#include "rds.h"
+
 #include "../i2c.h"
 #include "../pins.h"
 
@@ -193,8 +195,6 @@ void si470xUpdateStatus(void)
     tStatus->freq = si470xGetFreq();
     tStatus->rssi = rdBuf[1] & SI740X_RSSI;
 
-    tStatus->flags = TUNER_FLAG_INIT;
-
     if (rdBuf[0] & SI740X_ST) {
         tStatus->flags |= TUNER_FLAG_STEREO;
     }
@@ -203,6 +203,21 @@ void si470xUpdateStatus(void)
     }
     if (rdBuf[0] & SI740X_SFBL) {
         tStatus->flags |= TUNER_FLAG_BANDLIM;
+    }
+
+    if (tPar->rds &&
+        (rdBuf[0] & SI740X_RDSR) && (rdBuf[0] & SI740X_RDSS)) {
+        if ((rdBuf[0] & SI740X_BLERA) != SI740X_BLERA &&
+            (rdBuf[2] & SI740X_BLERB) != SI740X_BLERB &&
+            (rdBuf[2] & SI740X_BLERC) != SI740X_BLERC &&
+            (rdBuf[2] & SI740X_BLERD) != SI740X_BLERD) {
+
+            RdsBlock rdsBlock;
+            rdsBufToBlock(&rdBuf[4], &rdsBlock);
+            rdsDecode(&rdsBlock);
+
+            tStatus->flags |= TUNER_FLAG_RDS_READY;
+        }
     }
 
     if (seeking == true) {
