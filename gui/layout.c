@@ -319,9 +319,7 @@ static void drawWaterfall(Spectrum *sp)
 
 static void drawRds(Rds *rds)
 {
-
-    // Station name / RDS
-    glcdSetFont(lt->tuner.nameFont);
+    glcdSetFont(lt->rds.psFont);
     glcdSetXY(0, lt->rect.h / 2);
     uint16_t nameLen = glcdWriteString(rds->PS);
 
@@ -330,7 +328,7 @@ static void drawRds(Rds *rds)
                  canvas->pal->bg);
 
 
-    glcdSetFont(&fontterminus22b);
+    glcdSetFont(lt->rds.textFont);
     glcdSetXY(0, lt->rect.h / 2 + lt->tuner.nameFont->chars[0].image->height);
     glcdWriteString(rds->text);
 }

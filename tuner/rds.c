@@ -67,12 +67,14 @@ void rdsDecode(RdsBlock *block)
     rdsFlagCounter = RDS_FLAG_INIT;
 
     rds.PI = block->a;
-    rds.group = (block->b >> RDS_B_GROUP_POS) & (RDS_B_GROUP_MASK >> RDS_B_GROUP_POS);
-    rds.version = (block->b >> RDS_B_VERSION_POS) & (RDS_B_VERSION_MASK >> RDS_B_VERSION_POS);
+
+    uint8_t rdsGroup = (block->b >> RDS_B_GROUP_POS) & (RDS_B_GROUP_MASK >> RDS_B_GROUP_POS);
+    uint8_t rdsVersion = (block->b >> RDS_B_VERSION_POS) & (RDS_B_VERSION_MASK >> RDS_B_VERSION_POS);
+
     rds.TP = (block->b >> RDS_B_TP_POS) & (RDS_B_TP_MASK >> RDS_B_TP_POS);
     rds.PTY = (block->b >> RDS_B_PTY_POS) & (RDS_B_PTY_MASK >> RDS_B_PTY_POS);
 
-    switch (rds.group) {
+    switch (rdsGroup) {
     case 0: {
         uint8_t PSN_index = (block->b >> RDS_B_PS_POS) & (RDS_B_PS_MASK >> RDS_B_PS_POS);
         bool DI = (block->b >> RDS_B_DI_POS) & (RDS_B_DI_MASK >> RDS_B_DI_POS);
@@ -101,7 +103,7 @@ void rdsDecode(RdsBlock *block)
     }
     case 2: {
         uint8_t text_index = (block->b >> RDS_B_TEXT_POS) & (RDS_B_TEXT_MASK >> RDS_B_TEXT_POS);
-        switch (rds.version) {
+        switch (rdsVersion) {
         case RDS_VERSION_A:
             rds.text[4 * text_index + 0] = (block->c >> 8) & 0x7F;
             rds.text[4 * text_index + 1] = (block->c >> 0) & 0x7F;

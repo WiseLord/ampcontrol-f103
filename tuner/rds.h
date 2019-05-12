@@ -14,8 +14,6 @@ typedef struct {
 typedef struct {
     uint16_t PI;        // Program identification code
 
-    uint8_t group;
-    uint8_t version;
     uint8_t TP;         // Traffic program identification code
     uint8_t PTY;        // Program type code
 

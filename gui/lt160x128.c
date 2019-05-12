@@ -41,7 +41,7 @@ static const Layout lt160x128 = {
     .tuner.bar.middle = 2,
     .tuner.iconSpace = 1,
 
-    .rds.psFont = &fontterminus14b,
+    .rds.psFont = &fontterminus14,
     .rds.textFont = &fontterminus12,
 
     .textEdit.rect.x = 2,

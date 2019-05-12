@@ -120,7 +120,7 @@ static bool rtcIsAlarmDay(AlarmDay days, int8_t wday)
 
 void rtcSetCorrection(int16_t value)
 {
-
+    (void)value;
 }
 
 void rtcGetTime(RTC_type *rtc)

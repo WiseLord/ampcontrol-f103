@@ -4,9 +4,11 @@
 
 #include "../../../audio/audiodefs.h"
 #include "../../../display/dispdefs.h"
+#include "../../../tuner/rds.h"
 #include "../../../tuner/stations.h"
-#include "../../../tuner/tunerdefs.h"
+#include "../../../tuner/tuner.h"
 #include "../../../eemap.h"
+#include "../../../settings.h"
 #include "../../../spectrum.h"
 #include "../../../usb/usbhid.h"
 
@@ -14,6 +16,22 @@
 
 static Spectrum spectrum;
 static RcData rcData;
+static Rds rds = {
+    .PI = 0xDEAD,
+
+    .TP = 0,
+    .PTY = 15,
+
+    .TA = 0,
+    .MS = 1,
+    .DI_ST = 1,
+    .DI_AH = 0,
+    .DI_CMP = 0,
+    .DI_stPTY = 0,
+
+    .PS = "My Radio",
+    .text = "RDS text transmitted by the station",
+};
 
 const DispDriver dispdrv = {
     .width = EMUL_DISP_WIDTH,
@@ -119,6 +137,11 @@ void pinsInitAmpI2c(void)
 {
 }
 
+void pinsInitMuteStby(MuteStby value)
+{
+    (void)value;
+}
+
 Spectrum *spGet(void)
 {
     return &spectrum;
@@ -130,6 +153,21 @@ void spGetADC(Spectrum *sp)
         sp->chan[SP_CHAN_LEFT].raw[i] = (rand() & 0xFF) * (rand() & 0xFF) / 256;
         sp->chan[SP_CHAN_RIGHT].raw[i] = (rand() & 0xFF) * (rand() & 0xFF) / 256;
     }
+}
+
+void rdsReset(void)
+{
+
+}
+
+bool rdsGetFlag(void)
+{
+    return tunerGet()->par.rds;
+}
+
+Rds *rdsGet(void)
+{
+    return &rds;
 }
 
 void usbHidSendKey(HidKey key)

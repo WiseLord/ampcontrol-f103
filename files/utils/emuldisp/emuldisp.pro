@@ -105,6 +105,7 @@ SOURCES += \
 
 
 HEADERS += \
+    ../../../tuner/rds.h \
     amp.h \
     emuldisp.h \
     ../../../audio/audio.h \
