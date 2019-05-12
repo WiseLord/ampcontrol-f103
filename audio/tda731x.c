@@ -37,12 +37,6 @@ void tda731xInit(AudioParam *param)
 {
     aPar = param;
 
-    switch (aPar->ic) {
-    default:
-        aPar->inCnt = 3;
-        break;
-    }
-
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridTone;
     aPar->item[AUDIO_TUNE_TREBLE].grid    = &gridTone;

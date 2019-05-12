@@ -21,6 +21,8 @@
 #define FLAG_ON     1
 #define FLAG_OFF    0
 
+#define TEST_IN_CNT     8
+
 static AudioProc aProc;
 
 static const AudioGrid gridTestVolume       = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step
@@ -32,8 +34,6 @@ static const AudioGrid gridTestGain         = {  0, 15, (uint8_t)(2.00 * 8)}; //
 
 static void audioTestInit(AudioParam *aPar)
 {
-    aPar->inCnt = 8;
-
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridTestVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridTestTone;
     aPar->item[AUDIO_TUNE_MIDDLE].grid    = &gridTestTone;
@@ -77,6 +77,8 @@ void audioReadSettings(void)
     switch (aProc.par.ic) {
 #ifdef _TDA7439
     case AUDIO_IC_TDA7439:
+        aProc.par.inCnt = TDA7439_IN_CNT;
+
         aProc.api.init = tda7439Init;
 
         aProc.api.setTune = tda7439SetTune;
@@ -87,6 +89,8 @@ void audioReadSettings(void)
 #endif
 #ifdef _TDA731X
     case AUDIO_IC_TDA7313:
+        aProc.par.inCnt = TDA7313_IN_CNT;
+
         aProc.api.init = tda731xInit;
 
         aProc.api.setTune = tda731xSetTune;
@@ -98,6 +102,8 @@ void audioReadSettings(void)
 #endif
 #ifdef _PT232X
     case AUDIO_IC_PT232X:
+        aProc.par.inCnt = PT2323_IN_CNT;
+
         aProc.api.init = pt232xInit;
 
         aProc.api.setTune = pt232xSetTune;
@@ -111,6 +117,8 @@ void audioReadSettings(void)
 #endif
 #ifdef _TDA7418
     case AUDIO_IC_TDA7418:
+        aProc.par.inCnt = TDA7418_IN_CNT;
+
         aProc.api.init = tda7418Init;
 
         aProc.api.setTune = tda7418SetTune;
@@ -121,6 +129,7 @@ void audioReadSettings(void)
         break;
 #endif
     case AUDIO_IC_TEST:
+        aProc.par.inCnt = TEST_IN_CNT;
         aProc.api.init = audioTestInit;
         break;
     default:

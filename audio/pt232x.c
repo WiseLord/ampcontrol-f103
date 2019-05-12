@@ -52,9 +52,6 @@
 #define PT2323_MIX              0x90
 #define PT2323_MIX_6DB          0x01
 
-// Number of inputs
-#define PT2323_IN_CNT           5
-
 static const AudioGrid gridVolume     = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step
 static const AudioGrid gridTone       = { -7,  7, (uint8_t)(2.00 * 8)}; // -14..14dB with 2dB step
 static const AudioGrid gridBalance    = { -7,  7, (uint8_t)(1.00 * 8)}; // -7..7dB with 1dB step
@@ -132,7 +129,6 @@ static void pt2322SetSpeakers(void)
 void pt232xInit(AudioParam *param)
 {
     aPar = param;
-    aPar->inCnt = PT2323_IN_CNT;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridTone;

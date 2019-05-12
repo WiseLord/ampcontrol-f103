@@ -81,9 +81,6 @@
 #define TDA7418_SOFTMUTE_OP96MS     0x02
 #define TDA7418_SOFTMUTE_1P23MS     0x04
 
-// Number of inputs
-#define TDA7418_IN_CNT              4
-
 static const AudioGrid gridVolume    = {-79, 15, (uint8_t)(1.00 * 8)}; // -79..15dB with 1dB step
 static const AudioGrid gridToneBal   = {-15, 15, (uint8_t)(1.00 * 8)}; // -15..15dB with 1dB step
 static const AudioGrid gridSubwoofer = {-15,  0, (uint8_t)(1.00 * 8)}; // -15..0dB with 1dB step
@@ -134,7 +131,6 @@ static void tda7418SetSpeakers(void)
 void tda7418Init(AudioParam *param)
 {
     aPar = param;
-    aPar->inCnt = TDA7418_IN_CNT;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridToneBal;

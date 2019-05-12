@@ -10,6 +10,8 @@ extern "C" {
 
 #include "audiodefs.h"
 
+#define PT2323_IN_CNT       5
+
 void pt232xInit(AudioParam *param);
 
 void pt232xSetTune(AudioTune tune, int8_t value);

@@ -10,6 +10,8 @@
 
 #include "audiodefs.h"
 
+#define TDA7439_IN_CNT      4
+
 void tda7439Init(AudioParam *param);
 
 void tda7439SetTune(AudioTune tune, int8_t value);

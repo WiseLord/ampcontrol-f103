@@ -277,6 +277,7 @@ static void menuStoreCurrentValue(void)
             eeUpdate(menuItems[menu.active].cell, menu.value);
         }
     }
+
 }
 
 static void menuValueChange(int8_t diff)
@@ -427,6 +428,62 @@ static void menuValueChange(int8_t diff)
     }
 }
 
+static bool menuIsValid(MenuIdx index)
+{
+    AudioProc *aProc = audioGet();
+    Tuner *tuner = tunerGet();
+
+    switch (index) {
+    case MENU_NULL:
+        // Don't allow null menu
+        return false;
+    case MENU_AUDIO_IN_0:
+    case MENU_AUDIO_IN_1:
+    case MENU_AUDIO_IN_2:
+    case MENU_AUDIO_IN_3:
+    case MENU_AUDIO_IN_4:
+    case MENU_AUDIO_IN_5:
+    case MENU_AUDIO_IN_6:
+    case MENU_AUDIO_IN_7:
+        // Limit Audio inputs
+        if (index - MENU_AUDIO_IN_0 >= aProc->par.inCnt) {
+            return false;
+        }
+        break;
+    case MENU_TUNER_RDS:
+        switch (tuner->par.ic) {
+        case TUNER_IC_RDA5807:
+        case TUNER_IC_SI4703:
+            break;
+        default:
+            return false;
+        }
+        break;
+    case MENU_TUNER_BASS:
+        switch (tuner->par.ic) {
+        case TUNER_IC_RDA5807:
+            break;
+        default:
+            return false;
+        }
+        break;
+    }
+
+    if (aProc->par.ic == AUDIO_IC_NO) {
+        if (index >= MENU_AUDIO_IN_0 && index <= MENU_AUDIO_IN_7) {
+            return false;
+        }
+    }
+
+    if (tuner->par.ic == TUNER_IC_NO) {
+        if (index >= MENU_TUNER_BAND && index <= MENU_TUNER_VOLUME) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 static void menuSelect(MenuIdx index)
 {
     menu.selected = 0;
@@ -447,14 +504,33 @@ static void menuSelect(MenuIdx index)
         menu.active = MENU_NULL;
     }
     for (MenuIdx item = 0; item < MENU_END; item++) {
-        if ((menuItems[item].parent == menu.parent) && item) {
+        if ((menuItems[item].parent == menu.parent) && menuIsValid(item)) {
             menu.list[idx++] = (uint8_t)item;
-            if (idx >= MENU_MAX_LEN)
+            if (idx >= MENU_MAX_LEN) {
                 break;
+            }
         }
     }
 
     menu.listSize = idx;
+}
+
+static void menuUpdate(MenuIdx index)
+{
+    switch (index) {
+    case MENU_AUDIO_IC:
+        audioReadSettings();
+        break;
+    case MENU_TUNER_IC:
+        tunerReadSettings();
+        break;
+    default:
+        return;
+    }
+
+    canvasClear();
+    menuSelect(index);
+    menu.active = index;
 }
 
 Menu *menuGet(void)
@@ -477,6 +553,7 @@ void menuSetActive(MenuIdx index)
             if (index == MENU_DISPLAY_BR_STBY || index == MENU_DISPLAY_BR_WORK) {
                 dispdrvSetBrightness(screenGetBrightness(BR_WORK));
             }
+            menuUpdate(index);
         }
 
         return;
