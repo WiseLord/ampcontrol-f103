@@ -137,10 +137,10 @@ static void actionNavigateCommon(RcCmd cmd)
         actionSet(ACTION_DISP_EXPIRED, 0);
         break;
     case RC_CMD_NAV_RIGHT:
-        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_FORWARD);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFD);
         break;
     case RC_CMD_NAV_LEFT:
-        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_BACK);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
         break;
     case RC_CMD_NAV_UP:
     case RC_CMD_CHAN_NEXT:
@@ -494,19 +494,19 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_STOP:
-        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_STOPCD);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_STOP);
         break;
     case RC_CMD_PLAY:
-        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_PLAYPAUSE);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
         break;
     case RC_CMD_PAUSE:
-        actionSet(ACTION_MEDIA, HIDKEY_PAUSE);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PAUSE);
         break;
     case RC_CMD_REW:
-        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_BACK);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
         break;
     case RC_CMD_FWD:
-        actionSet(ACTION_MEDIA, HIDKEY_MEDIA_FORWARD);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFD);
         break;
     case RC_CMD_TIMER:
         actionSet(ACTION_TIMER, 0);
@@ -794,7 +794,7 @@ void actionHandle(bool visible)
     case ACTION_MEDIA:
         switch (inType) {
         case IN_PC:
-            usbHidSendKey((HidKey)action.value);
+            usbHidSendMediaKey((HidKey)action.value);
             break;
         }
         break;
@@ -810,9 +810,9 @@ void actionHandle(bool visible)
             break;
         case IN_PC:
             if (action.value > 0) {
-                usbHidSendKey(HIDKEY_MEDIA_NEXTSONG);
+                usbHidSendMediaKey(HIDMEDIAKEY_NEXT_TRACK);
             } else if (action.value < 0) {
-                usbHidSendKey(HIDKEY_MEDIA_PREVIOUSSONG);
+                usbHidSendMediaKey(HIDMEDIAKEY_PREV_TRACK);
             }
             break;
         }

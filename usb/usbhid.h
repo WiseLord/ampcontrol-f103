@@ -16,9 +16,15 @@ typedef struct {
     uint8_t key[KBD_KEYS];
 } HidKeyboard;
 
+typedef struct {
+    uint8_t id;
+    uint8_t key;
+} HidMediaKeys;
+
 void usbHidInit(void);
 
 void usbHidSendKey(HidKey key);
+void usbHidSendMediaKey(HidMediaKey key);
 
 #ifdef __cplusplus
 }

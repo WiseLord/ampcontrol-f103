@@ -17,7 +17,7 @@ extern "C" {
 #define USBD_SUPPORT_USER_STRING            0
 #define USBD_SELF_POWERED                   1
 #define USBD_CUSTOMHID_OUTREPORT_BUF_SIZE   2
-#define USBD_AMP_REPORT_DESC_SIZE           41
+#define USBD_AMP_REPORT_DESC_SIZE           78
 
 #define DEVICE_FS           0
 

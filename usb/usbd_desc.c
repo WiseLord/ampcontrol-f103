@@ -6,10 +6,10 @@
 #define USBD_LANGID_STRING              0x0409
 #define USBD_MANUFACTURER_STRING        "WiseLord"
 #define USBD_PID_FS                     0x5750
-#define USBD_PRODUCT_STRING_FS          "Ampcontrol HID"
-#define USBD_SERIALNUMBER_STRING_FS     "00000000001A"
-#define USBD_CONFIGURATION_STRING_FS    "Amp HID Config"
-#define USBD_INTERFACE_STRING_FS        "Amp HID Interface"
+#define USBD_PRODUCT_STRING_FS          "Ampcontrol"
+#define USBD_SERIALNUMBER_STRING_FS     "000032F103CB"
+#define USBD_CONFIGURATION_STRING_FS    "Amp Config"
+#define USBD_INTERFACE_STRING_FS        "Amp Interface"
 
 // Internal string descriptor buffer
 static uint8_t USBD_StrDescBuf[USBD_MAX_STR_DESC_SIZ] __ALIGN_END;

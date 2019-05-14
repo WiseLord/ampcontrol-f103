@@ -174,3 +174,8 @@ void usbHidSendKey(HidKey key)
 {
     (void)key;
 }
+
+void usbHidSendMediaKey(HidMediaKey key)
+{
+    (void)key;
+}

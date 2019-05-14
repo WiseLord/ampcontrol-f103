@@ -4,9 +4,10 @@
 #include "usbd_amp.h"
 
 #include <stm32f1xx_ll_utils.h>
+#include <string.h>
 
-#define REPORT_ID_KEYBOARD  0x01
-#define REPORT_ID_MOUSE     0x02
+#define REPORT_ID_KEYBOARD      0x01
+#define REPORT_ID_MEDIAKEYS     0x02
 
 static int8_t usbHidInitFS(void);
 static int8_t usbHidDeInitFS(void);
@@ -15,32 +16,50 @@ static int8_t usbHidOutEventFS(uint8_t event_idx, uint8_t state);
 static USBD_HandleTypeDef hUsbDeviceFS;
 
 static HidKeyboard keyboardHID;
+static HidMediaKeys mediakeysHID;
 
 static uint8_t usbHidReportDescFS[USBD_AMP_REPORT_DESC_SIZE] __ALIGN_END = {
-    // 41 bytes
-    0x05, 0x01,                 //  Usage Page (Generic Desktop Ctrls)
-    0x09, 0x06,                 //  Usage (Keyboard)
-    0xA1, 0x01,                 //  Collection (Application)
-    0x85, REPORT_ID_KEYBOARD,   //      Report ID (1)
-    0x05, 0x07,                 //      Usage Page (Kbrd/Keypad)
-    0x75, 0x01,                 //      Report Size (1)
-    0x95, 0x08,                 //      Report Count (8)
-    0x19, 0xE0,                 //      Usage Minimum (0xE0)
-    0x29, 0xE7,                 //      Usage Maximum (0xE7)
-    0x15, 0x00,                 //      Logical Minimum (0)
-    0x25, 0x01,                 //      Logical Maximum (1)
-    0x81, 0x02,                 //      Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0x95, KBD_KEYS,             //      Report Count (KBD_KEYS)
-    0x75, 0x08,                 //      Report Size (8)
-    0x15, 0x00,                 //      Logical Minimum (0)
-    0x25, 0xff,                 //      Logical Maximum (255)
-    0x05, 0x07,                 //      Usage Page (Kbrd/Keypad)
-    0x19, 0x00,                 //      Usage Minimum (0)
-    0x29, 0xff,                 //      Usage Maximum (255)
-    0x81, 0x00,                 //      Input (Data,Array,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0xC0,                       //  End Collection
+    0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
+    0x09, 0x06,                    // USAGE (Keyboard)
+    0xa1, 0x01,                    // COLLECTION (Application)
+    0x85, 0x01,                    //   REPORT_ID (1)
+    0x05, 0x07,                    //   USAGE_PAGE (Keyboard)
+    0x75, 0x01,                    //   REPORT_SIZE (1)
+    0x95, 0x08,                    //   REPORT_COUNT (8)
+    0x19, 0xe0,                    //   USAGE_MINIMUM (Keyboard LeftControl)
+    0x29, 0xe7,                    //   USAGE_MAXIMUM (Keyboard Right GUI)
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+    0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
+    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+    0x05, 0x07,                    //   USAGE_PAGE (Keyboard)
+    0x75, 0x08,                    //   REPORT_SIZE (8)
+    0x95, 0x02,                    //   REPORT_COUNT (2)
+    0x19, 0x00,                    //   USAGE_MINIMUM (Reserved (no event indicated))
+    0x29, 0x7f,                    //   USAGE_MAXIMUM (Keyboard Mute)
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+    0x25, 0x7f,                    //   LOGICAL_MAXIMUM (127)
+    0x81, 0x00,                    //   INPUT (Data,Ary,Abs)
+    0xc0,                          // END_COLLECTION
+    0x05, 0x0c,                    // USAGE_PAGE (Consumer Devices)
+    0x09, 0x01,                    // USAGE (Consumer Control)
+    0xa1, 0x01,                    // COLLECTION (Application)
+    0x85, 0x02,                    //   REPORT_ID (2)
+    0x05, 0x0c,                    //   USAGE_PAGE (Consumer Devices)
+    0x75, 0x08,                    //   REPORT_SIZE (8)
+    0x95, 0x01,                    //   REPORT_COUNT (1)
+    0x15, 0x01,                    //   LOGICAL_MINIMUM (1)
+    0x25, 0x08,                    //   LOGICAL_MAXIMUM (8)
+    0x09, 0xb6,                    //   USAGE (Scan Previous Track)
+    0x09, 0xb5,                    //   USAGE (Scan Next Track)
+    0x09, 0xb7,                    //   USAGE (Stop)
+    0x09, 0xb0,                    //   USAGE (Play)
+    0x09, 0xb1,                    //   USAGE (Pause)
+    0x09, 0xb4,                    //   USAGE (Rewind)
+    0x09, 0xb3,                    //   USAGE (Fast Forward)
+    0x09, 0xe2,                    //   USAGE (Mute)
+    0x81, 0x00,                    //   INPUT (Data,Ary,Abs)
+    0xc0                           // END_COLLECTION
 };
-
 
 static USBD_AMP_ItfTypeDef USBD_AmpHidFopsFS = {
     usbHidReportDescFS,
@@ -80,12 +99,11 @@ static void usbHidSend(void *data, uint16_t size)
 
 void usbHidInit(void)
 {
-    keyboardHID.id = REPORT_ID_KEYBOARD;
-    keyboardHID.modifiers = 0;
+    memset(&keyboardHID, 0, sizeof (keyboardHID));
+    memset(&mediakeysHID, 0, sizeof (mediakeysHID));
 
-    for (uint8_t i = 0; i < KBD_KEYS; i++) {
-        keyboardHID.key[i] = 0;
-    }
+    keyboardHID.id = REPORT_ID_KEYBOARD;
+    mediakeysHID.id = REPORT_ID_MEDIAKEYS;
 
     USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
     USBD_RegisterClass(&hUsbDeviceFS, &USBD_AMP);
@@ -102,4 +120,12 @@ void usbHidSendKey(HidKey key)
 
     keyboardHID.key[0] = 0;
     usbHidSend(&keyboardHID, sizeof(keyboardHID));
+}
+
+void usbHidSendMediaKey(HidMediaKey key)
+{
+    mediakeysHID.key = key;
+    usbHidSend(&mediakeysHID, sizeof(mediakeysHID));
+    mediakeysHID.key = HIDMEDIAKEY_NONE;
+    usbHidSend(&mediakeysHID, sizeof(mediakeysHID));
 }
