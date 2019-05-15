@@ -54,9 +54,9 @@ void rtcSetCorrection(int16_t value);
 void rtcIRQ(void);
 
 void rtcGetTime(RTC_type *rtc);
-void rtcSetTime(int8_t mode, int8_t value);
-void rtcChangeTime(int8_t mode, int8_t diff);
-void rtcEditTime(int8_t mode, int8_t value);
+void rtcSetTime(RtcMode mode, int8_t value);
+void rtcChangeTime(RtcMode mode, int8_t diff);
+void rtcEditTime(RtcMode mode, int8_t value);
 
 RtcMode rtcGetMode(void);
 void rtcSetMode(RtcMode mode);

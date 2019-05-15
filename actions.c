@@ -846,7 +846,7 @@ void actionHandle(bool visible)
     case ACTION_RTC_SET_DATE:
     case ACTION_RTC_SET_MONTH:
     case ACTION_RTC_SET_YEAR:
-        rtcSetTime((int8_t)(action.type - ACTION_RTC_SET_HOUR), (int8_t)(action.value));
+        rtcSetTime((RtcMode)(action.type - ACTION_RTC_SET_HOUR), (int8_t)(action.value));
         actionSetScreen(screen, 5000);
         break;
 

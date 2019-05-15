@@ -86,7 +86,7 @@ static void secToRtc(uint32_t time, RTC_type *rtc)
     rtc->date = (int8_t)(tm + 1);
 }
 
-static void rtcUpdate(RTC_type *rtc, int8_t mode, int8_t value)
+static void rtcUpdate(RTC_type *rtc, RtcMode mode, int8_t value)
 {
     int8_t *time = (int8_t *)rtc + mode;
     int8_t timeMax = *((const int8_t *)&rtcMax + mode);
@@ -181,7 +181,7 @@ void rtcGetTime(RTC_type *rtc)
     secToRtc(rtcTime, rtc);
 }
 
-void rtcSetTime(int8_t mode, int8_t value)
+void rtcSetTime(RtcMode mode, int8_t value)
 {
     RTC_type rtc;
     secToRtc(rtcTime, &rtc);
@@ -189,7 +189,7 @@ void rtcSetTime(int8_t mode, int8_t value)
     rtcUpdate(&rtc, mode, value);
 }
 
-void rtcChangeTime(int8_t mode, int8_t diff)
+void rtcChangeTime(RtcMode mode, int8_t diff)
 {
     RTC_type rtc;
     secToRtc(rtcTime, &rtc);
@@ -200,7 +200,7 @@ void rtcChangeTime(int8_t mode, int8_t diff)
     rtcUpdate(&rtc, mode, value);
 }
 
-void rtcEditTime(int8_t mode, int8_t digit)
+void rtcEditTime(RtcMode mode, int8_t digit)
 {
     RTC_type rtc;
     secToRtc(rtcTime, &rtc);
