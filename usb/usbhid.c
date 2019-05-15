@@ -45,10 +45,10 @@ static uint8_t usbHidReportDescFS[USBD_AMP_REPORT_DESC_SIZE] __ALIGN_END = {
     0xa1, 0x01,                    // COLLECTION (Application)
     0x85, 0x02,                    //   REPORT_ID (2)
     0x05, 0x0c,                    //   USAGE_PAGE (Consumer Devices)
-    0x75, 0x08,                    //   REPORT_SIZE (8)
-    0x95, 0x01,                    //   REPORT_COUNT (1)
-    0x15, 0x01,                    //   LOGICAL_MINIMUM (1)
-    0x25, 0x08,                    //   LOGICAL_MAXIMUM (8)
+    0x75, 0x01,                    //   REPORT_SIZE (1)
+    0x95, 0x08,                    //   REPORT_COUNT (8)
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+    0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
     0x09, 0xb6,                    //   USAGE (Scan Previous Track)
     0x09, 0xb5,                    //   USAGE (Scan Next Track)
     0x09, 0xb7,                    //   USAGE (Stop)
@@ -57,7 +57,7 @@ static uint8_t usbHidReportDescFS[USBD_AMP_REPORT_DESC_SIZE] __ALIGN_END = {
     0x09, 0xb4,                    //   USAGE (Rewind)
     0x09, 0xb3,                    //   USAGE (Fast Forward)
     0x09, 0xe2,                    //   USAGE (Mute)
-    0x81, 0x00,                    //   INPUT (Data,Ary,Abs)
+    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
     0xc0                           // END_COLLECTION
 };
 
