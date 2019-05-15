@@ -129,12 +129,22 @@ static void actionNavigateTextEdit(RcCmd cmd)
 
 static void actionNavigateCommon(RcCmd cmd)
 {
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
+
     switch (cmd) {
     case RC_CMD_NAV_OK:
         action.type = ACTION_OPEN_MENU;
         break;
     case RC_CMD_NAV_BACK:
-        actionSet(ACTION_DISP_EXPIRED, 0);
+        switch (inType) {
+        case IN_PC:
+            actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
+            break;
+        default:
+            actionSet(ACTION_DISP_EXPIRED, 0);
+            break;
+        }
         break;
     case RC_CMD_NAV_RIGHT:
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFD);
@@ -333,14 +343,15 @@ static void actionRemapBtnLong(void)
         actionSet(ACTION_RTC_MODE, 0);
         break;
     case BTN_D2:
-        switch (screen) {
-        case SCREEN_TEXTEDIT:
-            action.type = ACTION_TUNER_DEL_STATION;
-            break;
-        default:
-            if (inType == IN_TUNER) {
+        switch (inType) {
+        case IN_TUNER:
+            if (screen == SCREEN_TEXTEDIT) {
+                action.type = ACTION_TUNER_DEL_STATION;
+            } else {
                 action.type = ACTION_TUNER_EDIT_NAME;
             }
+            break;
+        default:
             break;
         }
         break;
