@@ -7,7 +7,7 @@
 * family: xos4 Terminus
 * size: 28
 * style: Regular
-* included characters:  !"#$%&'()*+,-./0123456789:;<=>?\x0040ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~«°±·»ÇÖÜçöüĞğİıŞşЁЄІЇЎАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёєіїўҐґ █
+* included characters:  !"#$%&'()*+,-./0123456789:;<=>?\x0040ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~«°±·»ÀÂÇÈÉÊËÎÏÔÖÙÛÜàâçèéêëîïôöùûüÿĞğİıŞşŸЁЄІЇЎАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёєіїўҐґ █
 * antialiasing: no
 * type: proportional
 * encoding: UTF-8
@@ -3557,6 +3557,76 @@ static const tImage fontterminus28_0xc2bb = { image_data_fontterminus28_0xc2bb, 
 #endif
 
 #if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc380[27] = {
+    // ∙∙∙██∙∙∙∙∙∙
+    // ∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙██∙∙∙∙∙██∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ███████████
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf3, 0xc0, 0xe0, 0x30, 0x11, 0x13, 0x16, 0x14, 0x10, 0x30, 0xe0, 0xc0, 0xff, 0xff, 0x07, 0x20, 0xfc, 0xff, 0xff, 0x3f, 0x3f, 0x07, 0x00, 0x02, 0x3f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc380 = { image_data_fontterminus28_0xc380, 11, 28, 27, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc382[27] = {
+    // ∙∙∙∙███∙∙∙∙
+    // ∙∙∙██∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙██∙∙∙∙∙██∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ███████████
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf3, 0xc0, 0xe0, 0x34, 0x16, 0x13, 0x11, 0x13, 0x16, 0x34, 0xe0, 0xc0, 0xff, 0xff, 0x07, 0x20, 0xfc, 0xff, 0xff, 0x3f, 0x3f, 0x07, 0x00, 0x02, 0x3f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc382 = { image_data_fontterminus28_0xc382, 11, 28, 27, yes};
+#endif
+
+#if (0x0 == 0x0)
 static const uint8_t image_data_fontterminus28_0xc387[36] = {
     // ∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙
@@ -3589,6 +3659,251 @@ static const uint8_t image_data_fontterminus28_0xc387[36] = {
     0xfd, 0xc0, 0xe0, 0x30, 0x05, 0x10, 0xfb, 0x30, 0xe0, 0xc0, 0xff, 0xff, 0x07, 0x00, 0xed, 0x01, 0x01, 0x0f, 0x1f, 0x30, 0x20, 0xe0, 0xe0, 0x20, 0x20, 0x30, 0x1e, 0x0e, 0x00, 0x00, 0x04, 0x06, 0x03, 0x01, 0x05, 0x00
 };
 static const tImage fontterminus28_0xc387 = { image_data_fontterminus28_0xc387, 11, 28, 36, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc388[22] = {
+    // ∙∙∙██∙∙∙∙∙∙
+    // ∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ███████████
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ████████∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ███████████
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf9, 0xf0, 0xf0, 0x10, 0x11, 0x13, 0x16, 0x14, 0x04, 0x10, 0x02, 0xff, 0x06, 0x10, 0x03, 0x00, 0x02, 0x3f, 0x09, 0x20, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc388 = { image_data_fontterminus28_0xc388, 11, 28, 22, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc389[23] = {
+    // ∙∙∙∙∙∙██∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙
+    // ∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ███████████
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ████████∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ███████████
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf8, 0xf0, 0xf0, 0x10, 0x10, 0x14, 0x16, 0x13, 0x11, 0x03, 0x10, 0x02, 0xff, 0x06, 0x10, 0x03, 0x00, 0x02, 0x3f, 0x09, 0x20, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc389 = { image_data_fontterminus28_0xc389, 11, 28, 23, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc38a[24] = {
+    // ∙∙∙∙███∙∙∙∙
+    // ∙∙∙██∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ███████████
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ████████∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ███████████
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf3, 0xf0, 0xf0, 0x14, 0x16, 0x13, 0x11, 0x13, 0x16, 0x14, 0x10, 0x10, 0xff, 0xff, 0x06, 0x10, 0x03, 0x00, 0x02, 0x3f, 0x09, 0x20, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc38a = { image_data_fontterminus28_0xc38a, 11, 28, 24, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc38b[24] = {
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ███████████
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ████████∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ███████████
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xfc, 0xf0, 0xf0, 0x17, 0x17, 0x03, 0x10, 0xfa, 0x17, 0x17, 0x10, 0x10, 0xff, 0xff, 0x06, 0x10, 0x03, 0x00, 0x02, 0x3f, 0x09, 0x20, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc38b = { image_data_fontterminus28_0xc38b, 11, 28, 24, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc38e[23] = {
+    // ∙∙███∙∙
+    // ∙██∙██∙
+    // ██∙∙∙██
+    // ∙∙∙∙∙∙∙
+    // ∙██████
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙██████
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    0xf9, 0x04, 0x16, 0x13, 0xf1, 0xf3, 0x16, 0x14, 0x03, 0x00, 0x02, 0xff, 0x03, 0x00, 0xfa, 0x20, 0x20, 0x3f, 0x3f, 0x20, 0x20, 0x07, 0x00
+};
+static const tImage fontterminus28_0xc38e = { image_data_fontterminus28_0xc38e, 7, 28, 23, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc38f[23] = {
+    // ██∙∙∙██
+    // ██∙∙∙██
+    // ██∙∙∙██
+    // ∙∙∙∙∙∙∙
+    // ∙██████
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙██████
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    0xf9, 0x07, 0x17, 0x10, 0xf0, 0xf0, 0x17, 0x17, 0x03, 0x00, 0x02, 0xff, 0x03, 0x00, 0xfa, 0x20, 0x20, 0x3f, 0x3f, 0x20, 0x20, 0x07, 0x00
+};
+static const tImage fontterminus28_0xc38f = { image_data_fontterminus28_0xc38f, 7, 28, 23, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc394[30] = {
+    // ∙∙∙∙███∙∙∙∙
+    // ∙∙∙██∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙██∙∙∙∙∙██∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙██∙
+    // ∙∙███████∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf3, 0xc0, 0xe0, 0x34, 0x16, 0x13, 0x11, 0x13, 0x16, 0x34, 0xe0, 0xc0, 0xff, 0xff, 0x07, 0x00, 0xfb, 0xff, 0xff, 0x0f, 0x1f, 0x30, 0x05, 0x20, 0xfd, 0x30, 0x1f, 0x0f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc394 = { image_data_fontterminus28_0xc394, 11, 28, 30, yes};
 #endif
 
 #if (0x0 == 0x0)
@@ -3627,6 +3942,76 @@ static const tImage fontterminus28_0xc396 = { image_data_fontterminus28_0xc396, 
 #endif
 
 #if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc399[30] = {
+    // ∙∙∙██∙∙∙∙∙∙
+    // ∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙██∙
+    // ∙∙███████∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf3, 0xf0, 0xf0, 0x00, 0x01, 0x03, 0x06, 0x04, 0x00, 0x00, 0xf0, 0xf0, 0xff, 0xff, 0x07, 0x00, 0xfb, 0xff, 0xff, 0x0f, 0x1f, 0x30, 0x05, 0x20, 0xfd, 0x30, 0x1f, 0x0f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc399 = { image_data_fontterminus28_0xc399, 11, 28, 30, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc39b[30] = {
+    // ∙∙∙∙███∙∙∙∙
+    // ∙∙∙██∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙██∙
+    // ∙∙███████∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf3, 0xf0, 0xf0, 0x04, 0x06, 0x03, 0x01, 0x03, 0x06, 0x04, 0xf0, 0xf0, 0xff, 0xff, 0x07, 0x00, 0xfb, 0xff, 0xff, 0x0f, 0x1f, 0x30, 0x05, 0x20, 0xfd, 0x30, 0x1f, 0x0f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc39b = { image_data_fontterminus28_0xc39b, 11, 28, 30, yes};
+#endif
+
+#if (0x0 == 0x0)
 static const uint8_t image_data_fontterminus28_0xc39c[30] = {
     // ∙∙██∙∙∙██∙∙
     // ∙∙██∙∙∙██∙∙
@@ -3659,6 +4044,76 @@ static const uint8_t image_data_fontterminus28_0xc39c[30] = {
     0xfc, 0xf0, 0xf0, 0x07, 0x07, 0x03, 0x00, 0xfa, 0x07, 0x07, 0xf0, 0xf0, 0xff, 0xff, 0x07, 0x00, 0xfb, 0xff, 0xff, 0x0f, 0x1f, 0x30, 0x05, 0x20, 0xfd, 0x30, 0x1f, 0x0f, 0x0b, 0x00
 };
 static const tImage fontterminus28_0xc39c = { image_data_fontterminus28_0xc39c, 11, 28, 30, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3a0[28] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙██∙∙∙∙∙∙
+    // ∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙∙∙∙∙∙∙∙██∙
+    // ∙∙∙∙∙∙∙∙∙██
+    // ∙∙∙∙∙∙∙∙∙██
+    // ∙∙█████████
+    // ∙██∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙∙██
+    // ∙∙█████████
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0x03, 0x00, 0xfc, 0x20, 0x60, 0xc0, 0x80, 0x04, 0x00, 0xfd, 0x80, 0xc0, 0x62, 0x05, 0x22, 0xfa, 0x26, 0xfc, 0xf8, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0x02, 0x3f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc3a0 = { image_data_fontterminus28_0xc3a0, 11, 28, 28, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3a2[30] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙███∙∙∙∙
+    // ∙∙∙██∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙∙∙∙∙∙∙∙██∙
+    // ∙∙∙∙∙∙∙∙∙██
+    // ∙∙∙∙∙∙∙∙∙██
+    // ∙∙█████████
+    // ∙██∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙∙██
+    // ∙∙█████████
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf2, 0x00, 0x00, 0x80, 0xc0, 0x60, 0x20, 0x60, 0xc0, 0x80, 0x00, 0x00, 0x80, 0xc0, 0x62, 0x05, 0x22, 0xfa, 0x26, 0xfc, 0xf8, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0x02, 0x3f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc3a2 = { image_data_fontterminus28_0xc3a2, 11, 28, 30, yes};
 #endif
 
 #if (0x0 == 0x0)
@@ -3697,6 +4152,251 @@ static const tImage fontterminus28_0xc3a7 = { image_data_fontterminus28_0xc3a7, 
 #endif
 
 #if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3a8[29] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙██∙∙∙∙∙∙
+    // ∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙██∙∙∙∙∙██∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ███████████
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ∙██∙∙∙∙∙∙██
+    // ∙∙████████∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0x03, 0x00, 0xfc, 0x20, 0x60, 0xc0, 0x80, 0x04, 0x00, 0xfd, 0xf8, 0xfc, 0x86, 0x05, 0x82, 0xfa, 0x86, 0xfc, 0xf8, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0xfe, 0x30, 0x10, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc3a8 = { image_data_fontterminus28_0xc3a8, 11, 28, 29, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3a9[29] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙██∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙
+    // ∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙██∙∙∙∙∙██∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ███████████
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ∙██∙∙∙∙∙∙██
+    // ∙∙████████∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0x04, 0x00, 0xfc, 0x80, 0xc0, 0x60, 0x20, 0x03, 0x00, 0xfd, 0xf8, 0xfc, 0x86, 0x05, 0x82, 0xfa, 0x86, 0xfc, 0xf8, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0xfe, 0x30, 0x10, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc3a9 = { image_data_fontterminus28_0xc3a9, 11, 28, 29, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3aa[31] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙███∙∙∙∙
+    // ∙∙∙██∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙██∙∙∙∙∙██∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ███████████
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ∙██∙∙∙∙∙∙██
+    // ∙∙████████∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf2, 0x00, 0x00, 0x80, 0xc0, 0x60, 0x20, 0x60, 0xc0, 0x80, 0x00, 0x00, 0xf8, 0xfc, 0x86, 0x05, 0x82, 0xfa, 0x86, 0xfc, 0xf8, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0xfe, 0x30, 0x10, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc3aa = { image_data_fontterminus28_0xc3aa, 11, 28, 31, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3ab[31] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙██∙∙∙∙∙██∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ███████████
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙∙
+    // ∙██∙∙∙∙∙∙██
+    // ∙∙████████∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xfc, 0x00, 0x00, 0xe0, 0xe0, 0x03, 0x00, 0xf9, 0xe0, 0xe0, 0x00, 0x00, 0xf8, 0xfc, 0x86, 0x05, 0x82, 0xfa, 0x86, 0xfc, 0xf8, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0xfe, 0x30, 0x10, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc3ab = { image_data_fontterminus28_0xc3ab, 11, 28, 31, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3ae[24] = {
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙███∙∙
+    // ∙██∙██∙
+    // ██∙∙∙██
+    // ∙∙∙∙∙∙∙
+    // ∙████∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙██████
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    0xf4, 0x80, 0xc0, 0x60, 0x20, 0x60, 0xc0, 0x80, 0x00, 0x02, 0x02, 0xfe, 0xfe, 0x03, 0x00, 0xfa, 0x20, 0x20, 0x3f, 0x3f, 0x20, 0x20, 0x07, 0x00
+};
+static const tImage fontterminus28_0xc3ae = { image_data_fontterminus28_0xc3ae, 7, 28, 24, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3af[23] = {
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ██∙∙∙██
+    // ██∙∙∙██
+    // ██∙∙∙██
+    // ∙∙∙∙∙∙∙
+    // ∙████∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙∙∙██∙∙
+    // ∙██████
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙
+    0x02, 0xe0, 0x03, 0x00, 0xf9, 0xe0, 0xe0, 0x00, 0x02, 0x02, 0xfe, 0xfe, 0x03, 0x00, 0xfa, 0x20, 0x20, 0x3f, 0x3f, 0x20, 0x20, 0x07, 0x00
+};
+static const tImage fontterminus28_0xc3af = { image_data_fontterminus28_0xc3af, 7, 28, 23, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3b4[32] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙███∙∙∙∙
+    // ∙∙∙██∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙███████∙∙
+    // ∙██∙∙∙∙∙██∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙██∙
+    // ∙∙███████∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf2, 0x00, 0x00, 0x80, 0xc0, 0x60, 0x20, 0x60, 0xc0, 0x80, 0x00, 0x00, 0xf8, 0xfc, 0x06, 0x05, 0x02, 0xfa, 0x06, 0xfc, 0xf8, 0x0f, 0x1f, 0x30, 0x05, 0x20, 0xfd, 0x30, 0x1f, 0x0f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc3b4 = { image_data_fontterminus28_0xc3b4, 11, 28, 32, yes};
+#endif
+
+#if (0x0 == 0x0)
 static const uint8_t image_data_fontterminus28_0xc3b6[32] = {
     // ∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙
@@ -3732,6 +4432,76 @@ static const tImage fontterminus28_0xc3b6 = { image_data_fontterminus28_0xc3b6, 
 #endif
 
 #if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3b9[25] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙██∙∙∙∙∙∙
+    // ∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙∙██
+    // ∙∙█████████
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0x03, 0x00, 0xfc, 0x20, 0x60, 0xc0, 0x80, 0x04, 0x00, 0x02, 0xfe, 0x07, 0x00, 0xfb, 0xfe, 0xfe, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0x02, 0x3f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc3b9 = { image_data_fontterminus28_0xc3b9, 11, 28, 25, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3bb[28] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙███∙∙∙∙
+    // ∙∙∙██∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙∙██
+    // ∙∙█████████
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xf3, 0x00, 0x00, 0x80, 0xc0, 0x60, 0x20, 0x60, 0xc0, 0x80, 0x00, 0x00, 0xfe, 0xfe, 0x07, 0x00, 0xfb, 0xfe, 0xfe, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0x02, 0x3f, 0x0b, 0x00
+};
+static const tImage fontterminus28_0xc3bb = { image_data_fontterminus28_0xc3bb, 11, 28, 28, yes};
+#endif
+
+#if (0x0 == 0x0)
 static const uint8_t image_data_fontterminus28_0xc3bc[28] = {
     // ∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙
@@ -3764,6 +4534,41 @@ static const uint8_t image_data_fontterminus28_0xc3bc[28] = {
     0xfc, 0x00, 0x00, 0xe0, 0xe0, 0x03, 0x00, 0xfa, 0xe0, 0xe0, 0x00, 0x00, 0xfe, 0xfe, 0x07, 0x00, 0xfb, 0xfe, 0xfe, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0x02, 0x3f, 0x0b, 0x00
 };
 static const tImage fontterminus28_0xc3bc = { image_data_fontterminus28_0xc3bc, 11, 28, 28, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc3bf[34] = {
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙██∙∙∙██∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙∙██
+    // ∙∙█████████
+    // ∙∙∙∙∙∙∙∙∙██
+    // ∙∙∙∙∙∙∙∙∙██
+    // ∙∙∙∙∙∙∙∙∙██
+    // ∙∙∙∙∙∙∙∙██∙
+    // ∙████████∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙
+    0xfc, 0x00, 0x00, 0xe0, 0xe0, 0x03, 0x00, 0xfa, 0xe0, 0xe0, 0x00, 0x00, 0xfe, 0xfe, 0x07, 0x00, 0xfb, 0xfe, 0xfe, 0x0f, 0x1f, 0x30, 0x06, 0x20, 0xfd, 0xff, 0xff, 0x00, 0x07, 0x04, 0xfd, 0x06, 0x03, 0x01
+};
+static const tImage fontterminus28_0xc3bf = { image_data_fontterminus28_0xc3bf, 11, 28, 34, yes};
 #endif
 
 #if (0x0 == 0x0)
@@ -3977,6 +4782,41 @@ static const tImage fontterminus28_0xc59f = { image_data_fontterminus28_0xc59f, 
 #endif
 
 #if (0x0 == 0x0)
+static const uint8_t image_data_fontterminus28_0xc5b8[29] = {
+    // ∙∙██∙∙∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙∙
+    // ∙∙██∙∙∙██∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙∙∙∙∙∙██
+    // ██∙∙∙∙∙∙∙∙██
+    // ∙██∙∙∙∙∙∙██∙
+    // ∙██∙∙∙∙∙∙██∙
+    // ∙∙██∙∙∙∙██∙∙
+    // ∙∙██∙∙∙∙██∙∙
+    // ∙∙∙██∙∙██∙∙∙
+    // ∙∙∙██∙∙██∙∙∙
+    // ∙∙∙∙████∙∙∙∙
+    // ∙∙∙∙████∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙██∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙
+    0xfc, 0x30, 0xf0, 0xc7, 0x07, 0x03, 0x00, 0xf1, 0x07, 0x07, 0xc0, 0xf0, 0x30, 0x00, 0x00, 0x03, 0x0f, 0x3c, 0xf0, 0xf0, 0x3c, 0x0f, 0x03, 0x07, 0x00, 0x02, 0x3f, 0x11, 0x00
+};
+static const tImage fontterminus28_0xc5b8 = { image_data_fontterminus28_0xc5b8, 12, 28, 29, yes};
+#endif
+
+#if (0x0c38b == 0x0)
 static const uint8_t image_data_fontterminus28_0xd081[24] = {
     // ∙∙██∙∙∙██∙∙
     // ∙∙██∙∙∙██∙∙
@@ -4081,7 +4921,7 @@ static const uint8_t image_data_fontterminus28_0xd086[21] = {
 static const tImage fontterminus28_0xd086 = { image_data_fontterminus28_0xd086, 6, 28, 21, yes};
 #endif
 
-#if (0x0 == 0x0)
+#if (0x0c38f == 0x0)
 static const uint8_t image_data_fontterminus28_0xd087[23] = {
     // ██∙∙∙██
     // ██∙∙∙██
@@ -6391,7 +7231,7 @@ static const uint8_t image_data_fontterminus28_0xd18f[24] = {
 static const tImage fontterminus28_0xd18f = { image_data_fontterminus28_0xd18f, 11, 28, 24, yes};
 #endif
 
-#if (0x0 == 0x0)
+#if (0x0c3ab == 0x0)
 static const uint8_t image_data_fontterminus28_0xd191[31] = {
     // ∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙
@@ -6496,7 +7336,7 @@ static const uint8_t image_data_fontterminus28_0xd196[21] = {
 static const tImage fontterminus28_0xd196 = { image_data_fontterminus28_0xd196, 6, 28, 21, yes};
 #endif
 
-#if (0x0 == 0x0)
+#if (0x0c3af == 0x0)
 static const uint8_t image_data_fontterminus28_0xd197[23] = {
     // ∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙
@@ -7510,11 +8350,83 @@ static const tChar fontterminus28_array[] = {
 #endif
 
 #if (0x0 == 0x0)
+    // character: 'À'
+    {0xc380, &fontterminus28_0xc380},
+#else
+    // character: 'À' == ''
+    {0xc380, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'Â'
+    {0xc382, &fontterminus28_0xc382},
+#else
+    // character: 'Â' == ''
+    {0xc382, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
     // character: 'Ç'
     {0xc387, &fontterminus28_0xc387},
 #else
     // character: 'Ç' == ''
     {0xc387, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'È'
+    {0xc388, &fontterminus28_0xc388},
+#else
+    // character: 'È' == ''
+    {0xc388, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'É'
+    {0xc389, &fontterminus28_0xc389},
+#else
+    // character: 'É' == ''
+    {0xc389, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'Ê'
+    {0xc38a, &fontterminus28_0xc38a},
+#else
+    // character: 'Ê' == ''
+    {0xc38a, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'Ë'
+    {0xc38b, &fontterminus28_0xc38b},
+#else
+    // character: 'Ë' == ''
+    {0xc38b, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'Î'
+    {0xc38e, &fontterminus28_0xc38e},
+#else
+    // character: 'Î' == ''
+    {0xc38e, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'Ï'
+    {0xc38f, &fontterminus28_0xc38f},
+#else
+    // character: 'Ï' == ''
+    {0xc38f, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'Ô'
+    {0xc394, &fontterminus28_0xc394},
+#else
+    // character: 'Ô' == ''
+    {0xc394, &fontterminus28_0x},
 #endif
 
 #if (0x0 == 0x0)
@@ -7526,11 +8438,43 @@ static const tChar fontterminus28_array[] = {
 #endif
 
 #if (0x0 == 0x0)
+    // character: 'Ù'
+    {0xc399, &fontterminus28_0xc399},
+#else
+    // character: 'Ù' == ''
+    {0xc399, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'Û'
+    {0xc39b, &fontterminus28_0xc39b},
+#else
+    // character: 'Û' == ''
+    {0xc39b, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
     // character: 'Ü'
     {0xc39c, &fontterminus28_0xc39c},
 #else
     // character: 'Ü' == ''
     {0xc39c, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'à'
+    {0xc3a0, &fontterminus28_0xc3a0},
+#else
+    // character: 'à' == ''
+    {0xc3a0, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'â'
+    {0xc3a2, &fontterminus28_0xc3a2},
+#else
+    // character: 'â' == ''
+    {0xc3a2, &fontterminus28_0x},
 #endif
 
 #if (0x0 == 0x0)
@@ -7542,6 +8486,62 @@ static const tChar fontterminus28_array[] = {
 #endif
 
 #if (0x0 == 0x0)
+    // character: 'è'
+    {0xc3a8, &fontterminus28_0xc3a8},
+#else
+    // character: 'è' == ''
+    {0xc3a8, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'é'
+    {0xc3a9, &fontterminus28_0xc3a9},
+#else
+    // character: 'é' == ''
+    {0xc3a9, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'ê'
+    {0xc3aa, &fontterminus28_0xc3aa},
+#else
+    // character: 'ê' == ''
+    {0xc3aa, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'ë'
+    {0xc3ab, &fontterminus28_0xc3ab},
+#else
+    // character: 'ë' == ''
+    {0xc3ab, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'î'
+    {0xc3ae, &fontterminus28_0xc3ae},
+#else
+    // character: 'î' == ''
+    {0xc3ae, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'ï'
+    {0xc3af, &fontterminus28_0xc3af},
+#else
+    // character: 'ï' == ''
+    {0xc3af, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'ô'
+    {0xc3b4, &fontterminus28_0xc3b4},
+#else
+    // character: 'ô' == ''
+    {0xc3b4, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
     // character: 'ö'
     {0xc3b6, &fontterminus28_0xc3b6},
 #else
@@ -7550,11 +8550,35 @@ static const tChar fontterminus28_array[] = {
 #endif
 
 #if (0x0 == 0x0)
+    // character: 'ù'
+    {0xc3b9, &fontterminus28_0xc3b9},
+#else
+    // character: 'ù' == ''
+    {0xc3b9, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'û'
+    {0xc3bb, &fontterminus28_0xc3bb},
+#else
+    // character: 'û' == ''
+    {0xc3bb, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
     // character: 'ü'
     {0xc3bc, &fontterminus28_0xc3bc},
 #else
     // character: 'ü' == ''
     {0xc3bc, &fontterminus28_0x},
+#endif
+
+#if (0x0 == 0x0)
+    // character: 'ÿ'
+    {0xc3bf, &fontterminus28_0xc3bf},
+#else
+    // character: 'ÿ' == ''
+    {0xc3bf, &fontterminus28_0x},
 #endif
 
 #if (0x0 == 0x0)
@@ -7606,11 +8630,19 @@ static const tChar fontterminus28_array[] = {
 #endif
 
 #if (0x0 == 0x0)
+    // character: 'Ÿ'
+    {0xc5b8, &fontterminus28_0xc5b8},
+#else
+    // character: 'Ÿ' == ''
+    {0xc5b8, &fontterminus28_0x},
+#endif
+
+#if (0x0c38b == 0x0)
     // character: 'Ё'
     {0xd081, &fontterminus28_0xd081},
 #else
-    // character: 'Ё' == ''
-    {0xd081, &fontterminus28_0x},
+    // character: 'Ё' == 'Ë'
+    {0xd081, &fontterminus28_0xc38b},
 #endif
 
 #if (0x0 == 0x0)
@@ -7629,12 +8661,12 @@ static const tChar fontterminus28_array[] = {
     {0xd086, &fontterminus28_0x49},
 #endif
 
-#if (0x0 == 0x0)
+#if (0x0c38f == 0x0)
     // character: 'Ї'
     {0xd087, &fontterminus28_0xd087},
 #else
-    // character: 'Ї' == ''
-    {0xd087, &fontterminus28_0x},
+    // character: 'Ї' == 'Ï'
+    {0xd087, &fontterminus28_0xc38f},
 #endif
 
 #if (0x0 == 0x0)
@@ -8157,12 +9189,12 @@ static const tChar fontterminus28_array[] = {
     {0xd18f, &fontterminus28_0x},
 #endif
 
-#if (0x0 == 0x0)
+#if (0x0c3ab == 0x0)
     // character: 'ё'
     {0xd191, &fontterminus28_0xd191},
 #else
-    // character: 'ё' == ''
-    {0xd191, &fontterminus28_0x},
+    // character: 'ё' == 'ë'
+    {0xd191, &fontterminus28_0xc3ab},
 #endif
 
 #if (0x0 == 0x0)
@@ -8181,12 +9213,12 @@ static const tChar fontterminus28_array[] = {
     {0xd196, &fontterminus28_0x69},
 #endif
 
-#if (0x0 == 0x0)
+#if (0x0c3af == 0x0)
     // character: 'ї'
     {0xd197, &fontterminus28_0xd197},
 #else
-    // character: 'ї' == ''
-    {0xd197, &fontterminus28_0x},
+    // character: 'ї' == 'ï'
+    {0xd197, &fontterminus28_0xc3af},
 #endif
 
 #if (0x0 == 0x0)
@@ -8232,4 +9264,4 @@ static const tChar fontterminus28_array[] = {
 };
 
 
-const tFont fontterminus28 = { 190, fontterminus28_array };
+const tFont fontterminus28 = { 214, fontterminus28_array };

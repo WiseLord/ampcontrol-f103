@@ -60,7 +60,6 @@ extern const tFont fontterminus28;
 extern const tFont fontterminus28b;
 extern const tFont fontterminus32;
 extern const tFont fontterminus32b;
-extern const tFont fontamp08;
 // Modified fonts - full character set
 extern const tFont fontterminusmod18x3;
 extern const tFont fontterminusmod22x2;
