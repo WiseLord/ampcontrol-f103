@@ -75,12 +75,6 @@ const char *const labels_tr[LABEL_END] = {
 //    [LABEL_MUTESTBY + MUTESTBY_POS] = "Active 1",
 //    [LABEL_MUTESTBY + MUTESTBY_NEG] = "Active 0",
 
-//    [LABEL_LANG + LANG_DEFAULT]         = "English",
-//    [LABEL_LANG + LANG_BY]              = "Беларуская",
-//    [LABEL_LANG + LANG_RU]              = "Русский",
-//    [LABEL_LANG + LANG_TR]              = "Türkçe",
-//    [LABEL_LANG + LANG_UA]              = "Українська",
-
 //    [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Off",
 //    [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekdays",
 //    [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "ALl days",

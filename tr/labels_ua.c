@@ -79,12 +79,6 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MUTESTBY + MUTESTBY_POS] = "Актив. 1",
     [LABEL_MUTESTBY + MUTESTBY_NEG] = "Актив. 0",
 
-//    [LABEL_LANG + LANG_DEFAULT]         = "English",
-//    [LABEL_LANG + LANG_BY]              = "Беларуская",
-//    [LABEL_LANG + LANG_RU]              = "Русский",
-//    [LABEL_LANG + LANG_TR]              = "Türkçe",
-//    [LABEL_LANG + LANG_UA]              = "Українська",
-
     // NOTE: Keep in sync with MenuIdx in menu.h
     [LABEL_MENU + MENU_NULL]            = "Назад",
 
