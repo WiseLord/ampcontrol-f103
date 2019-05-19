@@ -7,6 +7,21 @@
 
 static Lang lang = LANG_END;
 
+static const char *const lang_names[LANG_END] = {
+    [LANG_DEFAULT]         = "English",
+    [LANG_BY]              = "Беларуская",
+    [LANG_FR]              = "Français",
+    [LANG_RU]              = "Русский",
+    [LANG_TR]              = "Türkçe",
+    [LANG_UA]              = "Українська",
+};
+
+extern const char *const labels_by[LABEL_END];
+extern const char *const labels_fr[LABEL_END];
+extern const char *const labels_ru[LABEL_END];
+extern const char *const labels_tr[LABEL_END];
+extern const char *const labels_ua[LABEL_END];
+
 static const char *const labels_default[LABEL_END] = {
     [LABEL_SUNDAY]          = "SUNDAY",
     [LABEL_MONDAY]          = "MONDAY",
@@ -85,13 +100,6 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MUTESTBY + MUTESTBY_SWD] = "SWD",
     [LABEL_MUTESTBY + MUTESTBY_POS] = "Active 1",
     [LABEL_MUTESTBY + MUTESTBY_NEG] = "Active 0",
-
-    [LABEL_LANG + LANG_DEFAULT]         = "English",
-    [LABEL_LANG + LANG_BY]              = "Беларуская",
-    [LABEL_LANG + LANG_FR]              = "Français",
-    [LABEL_LANG + LANG_RU]              = "Русский",
-    [LABEL_LANG + LANG_TR]              = "Türkçe",
-    [LABEL_LANG + LANG_UA]              = "Українська",
 
     // NOTE: Keep in sync with MenuIdx in menu.h
     [LABEL_MENU + MENU_NULL]            = "Up menu",
@@ -194,6 +202,11 @@ void labelsSetLang(Lang value)
 Lang labelsGetLang(void)
 {
     return  lang;
+}
+
+const char *labelsGetLangName(Lang value)
+{
+    return lang_names[value];
 }
 
 const char *labelsGet(Label value)

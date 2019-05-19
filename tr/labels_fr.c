@@ -9,12 +9,12 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_FRIDAY]          = "VENDREDI",
     [LABEL_SATURDAY]        = "SAMEDI",
 
-    [LABEL_VOLUME]          = "Volume",
+//    [LABEL_VOLUME]          = "Volume",
     [LABEL_BASS]            = "Basses",
     [LABEL_MIDDLE]          = "Médiums",
     [LABEL_TREBLE]          = "Aigus",
     [LABEL_FRONTREAR]       = "Avant/arrière",
-    [LABEL_BALANCE]         = "Balance",
+//    [LABEL_BALANCE]         = "Balance",
     [LABEL_CENTER]          = "Centre",
     [LABEL_SUBWOOFER]       = "Caisson de basses",
     [LABEL_PREAMP]          = "Préamp",
@@ -33,8 +33,8 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_IN_SATELLITE]    = "Satellite",
     [LABEL_IN_MIXER]        = "Mélangeur",
 
-    [LABEL_BOOL_OFF]        = "OFF",
-    [LABEL_BOOL_ON]         = "ON",
+//    [LABEL_BOOL_OFF]        = "OFF",
+//    [LABEL_BOOL_ON]         = "ON",
 
     [LABEL_TUNER_FM_STATION_NAME]   = "Nom de la station",
 

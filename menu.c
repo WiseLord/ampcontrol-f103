@@ -638,7 +638,7 @@ const char *menuGetValueStr(MenuIdx index)
     // Enum menu types
     switch (index) {
     case MENU_SYSTEM_LANG:
-        ret = labelsGet((Label)(LABEL_LANG + value));
+        ret = labelsGetLangName((Lang)value);
         break;
     case MENU_SYSTEM_MUTESTBY:
         ret = labelsGet((Label)(LABEL_MUTESTBY + value));

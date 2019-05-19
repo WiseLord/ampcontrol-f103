@@ -76,10 +76,7 @@ typedef enum {
     LABEL_MUTESTBY = LABEL_ALARM_DAY_END,
     LABEL_MUTESTBY_END = LABEL_MUTESTBY + (MUTESTBY_END - MUTESTBY_SWD),
 
-    LABEL_LANG = LABEL_MUTESTBY_END,
-    LABEL_LANG_END = LABEL_LANG + (LANG_END - LANG_DEFAULT),
-
-    LABEL_GAIN0 = LABEL_LANG_END,
+    LABEL_GAIN0 = LABEL_MUTESTBY_END,
     LABEL_GAIN1,
     LABEL_GAIN2,
     LABEL_GAIN3,
@@ -109,14 +106,9 @@ typedef enum {
     LABEL_END = LABEL_MENU_END,
 } Label;
 
-extern const char *const labels_by[LABEL_END];
-extern const char *const labels_fr[LABEL_END];
-extern const char *const labels_ru[LABEL_END];
-extern const char *const labels_tr[LABEL_END];
-extern const char *const labels_ua[LABEL_END];
-
 void labelsSetLang(Lang value);
 Lang labelsGetLang(void);
+const char *labelsGetLangName(Lang value);
 
 const char *labelsGet(Label value);
 
