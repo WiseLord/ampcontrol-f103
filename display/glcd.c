@@ -130,6 +130,11 @@ GlcdRect glcdGetRect(void)
     return glcd.rect;
 }
 
+char *glcdGetStrBuf(void)
+{
+    return strbuf;
+}
+
 char *glcdPrepareNum(int32_t number, int8_t width, char lead, uint8_t radix)
 {
     uint8_t sign = lead;
@@ -463,8 +468,8 @@ void glcdDrawFrame(int16_t x, int16_t y, int16_t w, int16_t h, int16_t t, uint16
     glcdDrawRect(x + w - t, y, t, h - t, color);
 }
 
-void glcdDrawRoundedFrame(int16_t x, int16_t y, int16_t w, int16_t h, int16_t t, int16_t r,
-                          uint16_t color)
+void glcdDrawRoundedFrame(int16_t x, int16_t y, int16_t w, int16_t h,
+                          int16_t t, int16_t r, uint16_t color)
 {
     int16_t xc = x + r;
     int16_t yc = y + r;

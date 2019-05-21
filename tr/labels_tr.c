@@ -99,14 +99,7 @@ const char *const labels_tr[LABEL_END] = {
 //    [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Time correction",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
-    [LABEL_MENU + MENU_AUDIO_IN_0]      = "Ses Giriş 0",
-    [LABEL_MENU + MENU_AUDIO_IN_1]      = "Ses Giriş 1",
-    [LABEL_MENU + MENU_AUDIO_IN_2]      = "Ses Giriş 2",
-    [LABEL_MENU + MENU_AUDIO_IN_3]      = "Ses Giriş 3",
-    [LABEL_MENU + MENU_AUDIO_IN_4]      = "Ses Giriş 4",
-    [LABEL_MENU + MENU_AUDIO_IN_5]      = "Ses Giriş 5",
-    [LABEL_MENU + MENU_AUDIO_IN_6]      = "Ses Giriş 6",
-    [LABEL_MENU + MENU_AUDIO_IN_7]      = "Ses Giriş 7",
+    [LABEL_MENU + MENU_AUDIO_IN]        = "Ses Giriş 0",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner İşlemci Modeli",
     [LABEL_MENU + MENU_TUNER_BAND]      = "Bant Modeli",
