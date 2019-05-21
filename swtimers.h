@@ -11,7 +11,7 @@ extern "C" {
 
 typedef uint8_t SwTimer;
 enum {
-    SW_TIM_DISPLAY,
+    SW_TIM_DISPLAY = 0,
     SW_TIM_SP_CONVERT,
     SW_TIM_TUNER_POLL,
     SW_TIM_INIT_HW,
@@ -20,6 +20,7 @@ enum {
     SW_TIM_RC_NOACION,
     SW_TIM_STBY_TIMER,
     SW_TIM_SILENCE_TIMER,
+    SW_TIM_RTC_INIT,
 
     SW_TIM_END,
 };

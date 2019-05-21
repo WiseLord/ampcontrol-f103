@@ -295,6 +295,8 @@ static void actionGetTimers(void)
         actionSet(ACTION_STANDBY, FLAG_ON);
     } else if (swTimGet(SW_TIM_SILENCE_TIMER) == 0) {
         actionSet(ACTION_STANDBY, FLAG_ON);
+    } else if (swTimGet(SW_TIM_RTC_INIT) == 0) {
+        actionSet(ACTION_INIT_RTC, 0);
     }
 }
 
@@ -627,6 +629,7 @@ static void actionRemapCommon(void)
     if (SCREEN_STANDBY == screen &&
         (ACTION_STANDBY != action.type &&
          ACTION_REMOTE != action.type &&
+         ACTION_INIT_RTC != action.type &&
          ACTION_MENU_SELECT != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
@@ -736,6 +739,8 @@ void actionHandle(bool visible)
         swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
         swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
 
+        swTimSet(SW_TIM_RTC_INIT, 500);
+
         audioReadSettings();
         tunerReadSettings();
         break;
@@ -780,6 +785,9 @@ void actionHandle(bool visible)
 
         swTimSet(SW_TIM_TUNER_POLL, 400);
         swTimSet(SW_TIM_INIT_SW, 300);
+        break;
+    case ACTION_INIT_RTC:
+        rtcInit();
         break;
     case ACTION_INIT_SW:
         swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);

@@ -1,11 +1,22 @@
 #include "rtc.h"
 
 #include "settings.h"
+#include "swtimers.h"
 
 #include <stm32f1xx_ll_bus.h>
 #include <stm32f1xx_ll_pwr.h>
 #include <stm32f1xx_ll_rcc.h>
 #include <stm32f1xx_ll_rtc.h>
+
+typedef uint8_t RtcPhase;
+enum {
+    RTC_INIT_DISABLED = 0,
+    RTC_INIT_LSE_ENABLED,
+    RTC_INIT_READY,
+
+    RTC_INIT_END
+};
+static RtcPhase rtcPhase = RTC_INIT_DISABLED;
 
 static uint32_t rtcTime;
 static RtcMode rtcMode = RTC_NOEDIT;
@@ -127,44 +138,57 @@ static bool rtcIsAlarmDay(AlarmDay days, int8_t wday)
 
 void rtcInit(void)
 {
-    // Power interface clock enable
-    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+    switch (rtcPhase) {
+    case RTC_INIT_DISABLED:
+        // Power interface clock enable
+        LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
-    // Backup interface clock enable
-    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_BKP);
+        // Backup interface clock enable
+        LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_BKP);
 
-    // Enable access to the backup domain
-    LL_PWR_EnableBkUpAccess();
+        // Enable access to the backup domain
+        LL_PWR_EnableBkUpAccess();
 
-    // Check if RTC has been enabled or not
-    if (LL_RCC_IsEnabledRTC() == 0) {
+        if (LL_RCC_IsEnabledRTC()) {
+            LL_RTC_EnableIT_SEC(RTC);
+            NVIC_EnableIRQ (RTC_IRQn);
 
-        // Backup domain reset
-        LL_RCC_ForceBackupDomainReset();
-        LL_RCC_ReleaseBackupDomainReset();
+            rtcPhase = RTC_INIT_READY;
+            swTimSet(SW_TIM_RTC_INIT, SW_TIM_OFF);
+        } else {
+            // Backup domain reset
+            LL_RCC_ForceBackupDomainReset();
+            LL_RCC_ReleaseBackupDomainReset();
 
-        LL_RCC_LSE_Enable();
+            LL_RCC_LSE_Enable();
 
-        while (LL_RCC_LSE_IsReady() != 1);
-
-        if (LL_RCC_GetRTCClockSource() != LL_RCC_RTC_CLKSOURCE_LSE) {
-            LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
+            rtcPhase = RTC_INIT_LSE_ENABLED;
+            swTimSet(SW_TIM_RTC_INIT, 500);
         }
+        break;
+    case RTC_INIT_LSE_ENABLED:
+        if (LL_RCC_LSE_IsReady()) {
+            if (LL_RCC_GetRTCClockSource() != LL_RCC_RTC_CLKSOURCE_LSE) {
+                LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
+            }
+            LL_RCC_EnableRTC();
 
-        LL_RCC_EnableRTC();
+            rtcSetCorrection(settingsGet(EE_SYSTEM_RTC_CORR));
 
-        rtcSetCorrection(settingsGet(EE_SYSTEM_RTC_CORR));
+            LL_RTC_EnableIT_SEC(RTC);
+            NVIC_EnableIRQ (RTC_IRQn);
+            rtcPhase = RTC_INIT_READY;
+            swTimSet(SW_TIM_RTC_INIT, SW_TIM_OFF);
+        } else {
+            swTimSet(SW_TIM_RTC_INIT, 500);
+        }
+        break;
     }
-
-    LL_RTC_EnableIT_SEC(RTC);
-
-    NVIC_EnableIRQ (RTC_IRQn);
 }
 
 void rtcSetCorrection(int16_t value)
 {
-    if (LL_RTC_EnterInitMode(RTC) != ERROR)
-    {
+    if (LL_RTC_EnterInitMode(RTC) != ERROR) {
         LL_RTC_SetAsynchPrescaler(RTC, (uint32_t)(0x7FFF - value));
     }
 
