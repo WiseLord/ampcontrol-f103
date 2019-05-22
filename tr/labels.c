@@ -16,12 +16,6 @@ static const char *const lang_names[LANG_END] = {
     [LANG_UA]              = "Українська",
 };
 
-extern const char *const labels_by[LABEL_END];
-extern const char *const labels_fr[LABEL_END];
-extern const char *const labels_ru[LABEL_END];
-extern const char *const labels_tr[LABEL_END];
-extern const char *const labels_ua[LABEL_END];
-
 static const char *const labels_default[LABEL_END] = {
     [LABEL_SUNDAY]          = "SUNDAY",
     [LABEL_MONDAY]          = "MONDAY",

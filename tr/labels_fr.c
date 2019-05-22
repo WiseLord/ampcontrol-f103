@@ -38,11 +38,7 @@ const char *const labels_fr[LABEL_END] = {
 
     [LABEL_TUNER_FM_STATION_NAME]   = "Nom de la station",
 
-//    [LABEL_TUNER_IC + TUNER_IC_NO]      = "No",
-//    [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
-//    [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
-//    [LABEL_TUNER_IC + TUNER_IC_TEA5767] = "TEA5767",
-//    [LABEL_TUNER_IC + TUNER_IC_TEST]    = "TEST",
+    [LABEL_TUNER_IC + TUNER_IC_NO]      = "Aucun",
 
     [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "FM US/Europe",
     [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "FM Japonnaise",
@@ -65,11 +61,6 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Cascade",
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Aucun",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
-//    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7418] = "TDA7418",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "TEST",
 
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Off",
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Jours de semaine",

@@ -39,10 +39,6 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_TUNER_FM_STATION_NAME]   = "Имя FM станции",
 
     [LABEL_TUNER_IC + TUNER_IC_NO]        = "Нет",
-//    [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
-//    [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
-//    [LABEL_TUNER_IC + TUNER_IC_TEA5767] = "TEA5767",
-//    [LABEL_TUNER_IC + TUNER_IC_TEST]    = "TEST",
 
     [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "США/Европа FM",
     [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Япония FM",
@@ -65,11 +61,6 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Водопад",
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Нет",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
-//    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
-//    [LABEL_AUDIO_IC + AUDIO_IC_TDA7418] = "TDA7418",
-    [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "ТЕСТ",
 
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Выкл",
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Будни",
