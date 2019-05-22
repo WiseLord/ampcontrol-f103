@@ -326,10 +326,10 @@ static void menuValueChange(int8_t diff)
             menu.value = 0;
         break;
     case MENU_SYSTEM_RTC_CORR:
-        if (menu.value > 20)
-            menu.value = 20;
-        if (menu.value < -20)
-            menu.value = -20;
+        if (menu.value > 64)
+            menu.value = 64;
+        if (menu.value < -63)
+            menu.value = -63;
         break;
 
     case MENU_AUDIO_IC:

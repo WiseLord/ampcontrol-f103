@@ -168,10 +168,19 @@ void rtcInit(void)
         break;
     case RTC_INIT_LSE_ENABLED:
         if (LL_RCC_LSE_IsReady()) {
-            if (LL_RCC_GetRTCClockSource() != LL_RCC_RTC_CLKSOURCE_LSE) {
-                LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
-            }
+            LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
             LL_RCC_EnableRTC();
+
+            if (LL_RTC_DeInit(RTC) != SUCCESS) {
+                swTimSet(SW_TIM_RTC_INIT, 500);
+                break;
+            }
+
+            LL_RTC_InitTypeDef rtc_initstruct = {32766, LL_RTC_CALIB_OUTPUT_NONE};
+            if (LL_RTC_Init(RTC, &rtc_initstruct) != SUCCESS) {
+                swTimSet(SW_TIM_RTC_INIT, 500);
+                break;
+            }
 
             rtcSetCorrection(settingsGet(EE_SYSTEM_RTC_CORR));
 
@@ -189,9 +198,8 @@ void rtcInit(void)
 void rtcSetCorrection(int16_t value)
 {
     if (LL_RTC_EnterInitMode(RTC) != ERROR) {
-        LL_RTC_SetAsynchPrescaler(RTC, (uint32_t)(0x7FFF - value));
+        LL_RTC_CAL_SetCoarseDigital(BKP, (uint32_t)(64 - value));
     }
-
     LL_RTC_ExitInitMode(RTC);
 }
 
