@@ -178,6 +178,9 @@ tr/labels_ru.c
 tr/labels_tr.c
 tr/labels_ua.c
 
+tuner/qn8006.c
+tuner/qn8006.h
+tuner/qn8006_regs.h
 tuner/rds.c
 tuner/rds.h
 tuner/rda580x.c

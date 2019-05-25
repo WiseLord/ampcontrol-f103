@@ -15,6 +15,9 @@
 #ifdef _TEA5767
 #include "tea5767.h"
 #endif
+#ifdef _QN8006
+#include "qn8006.h"
+#endif
 
 static Tuner tuner;
 
@@ -112,6 +115,20 @@ void tunerReadSettings(void)
         tuner.api.setPower = tea5767SetPower;
 
         tuner.api.updateStatus = tea5767UpdateStatus;
+        break;
+#endif
+#ifdef _QN8006
+    case TUNER_IC_QN8006:
+        tuner.api.init = qn8006Init;
+
+        tuner.api.setFreq = qn8006SetFreq;
+        tuner.api.seek = qn8006Seek;
+
+        tuner.api.setMute = qn8006SetMute;
+
+        tuner.api.setPower = qn8006SetPower;
+
+        tuner.api.updateStatus = qn8006UpdateStatus;
         break;
 #endif
     case TUNER_IC_TEST:

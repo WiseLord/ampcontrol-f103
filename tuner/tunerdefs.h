@@ -19,6 +19,7 @@ typedef enum {
     TUNER_IC_RDA5807,
     TUNER_IC_SI4703,
     TUNER_IC_TEA5767,
+    TUNER_IC_QN8006,
 
     TUNER_IC_TEST,
 
