@@ -50,8 +50,9 @@ static void rda580xInitRegs(void)
     if (tPar->forcedMono)
         wrBuf[0] |= RDA580X_MONO;
     wrBuf[1] = RDA580X_SKMODE | RDA580X_CLK_MODE_32768 | RDA5807_NEW_METHOD;
-    if (tPar->rds)
+    if (tPar->rds) {
         wrBuf[1] |= RDA5807_RDS_EN;
+    }
     rda580xWriteReg(0x02);
 
     wrBuf[2] = 0x00;

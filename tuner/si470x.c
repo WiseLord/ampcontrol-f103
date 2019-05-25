@@ -33,7 +33,10 @@ static void si470xInitRegs(void)
 {
     wrBuf[0] = SI470X_SKMODE | SI470X_RDSM;
 
-    wrBuf[4] = SI470X_RDS;
+    wrBuf[4] = 0;
+    if (tPar->rds) {
+        wrBuf[4] |= SI470X_RDS;
+    }
     if (tPar->deemph != TUNER_DEEMPH_75u) {
         wrBuf[4] |= SI470X_DE;  // 50us used in Europe
     }
