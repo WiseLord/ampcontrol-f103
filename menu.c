@@ -2,7 +2,6 @@
 #include "tr/labels.h"
 
 #include <string.h>
-#include <stdlib.h>
 
 #include "audio/audio.h"
 #include "display/glcd.h"
@@ -601,17 +600,18 @@ MenuIdx menuGetFirstChild(void)
 const char *menuGetName(MenuIdx index)
 {
     char *buf = glcdGetStrBuf();
+    memset(buf, 0, STR_BUFSIZE);
 
     if (index >= MENU_AUDIO_IN_0 && index <= MENU_AUDIO_IN_7) {
         strncpy(buf, labelsGet((Label)(LABEL_MENU + MENU_AUDIO_IN)), 60);
         size_t len = strlen(buf);
-        buf[len] = ' ';
-        itoa(index - MENU_AUDIO_IN, &buf[len + 1], 10);
+        buf[len++] = ' ';
+        buf[len++] = (char)('0' + (index - MENU_AUDIO_IN));
     } else if (index >= MENU_RC_DIG_0 && index <= MENU_RC_DIG_9) {
         strncpy(buf, labelsGet((Label)(LABEL_MENU + MENU_RC_DIG)), 60);
         size_t len = strlen(buf);
-        buf[len] = ' ';
-        itoa(index - MENU_RC_DIG, &buf[len + 1], 10);
+        buf[len++] = ' ';
+        buf[len++] = (char)('0' + (index - MENU_RC_DIG));
     } else {
         strncpy(buf, labelsGet((Label)(LABEL_MENU + (index - MENU_NULL))), 60);
     }

@@ -118,6 +118,11 @@ static bool rtcIsAlarmDay(AlarmDay days, int8_t wday)
     return ret;
 }
 
+void rtcInit(void)
+{
+
+}
+
 void rtcSetCorrection(int16_t value)
 {
     (void)value;
@@ -139,7 +144,7 @@ void rtcGetTime(RTC_type *rtc)
     rtc->wday = (int8_t)lt->tm_wday;
 }
 
-void rtcSetTime(int8_t mode, int8_t value)
+void rtcSetTime(RtcMode mode, int8_t value)
 {
     RTC_type rtc;
     secToRtc(rtcTime, &rtc);
@@ -147,7 +152,7 @@ void rtcSetTime(int8_t mode, int8_t value)
     rtcUpdate(&rtc, mode, value);
 }
 
-void rtcChangeTime(int8_t mode, int8_t diff)
+void rtcChangeTime(RtcMode mode, int8_t diff)
 {
     RTC_type rtc;
     secToRtc(rtcTime, &rtc);
@@ -158,7 +163,7 @@ void rtcChangeTime(int8_t mode, int8_t diff)
     rtcUpdate(&rtc, mode, value);
 }
 
-void rtcEditTime(int8_t mode, int8_t digit)
+void rtcEditTime(RtcMode mode, int8_t digit)
 {
     RTC_type rtc;
     secToRtc(rtcTime, &rtc);

@@ -31,6 +31,8 @@ typedef struct {
 
 typedef int32_t UChar;
 
+#define STR_BUFSIZE             64
+
 //Colors
 #define RGB_TO_565(x)                   (((x >> 8) & 0xF800) | ((x >> 5) & 0x7E0) | ((x >> 3) & 0x1F))
 #define LCD_COLOR_BLACK                 RGB_TO_565(0x000000)

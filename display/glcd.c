@@ -3,8 +3,6 @@
 #include <string.h>
 #include "../mem.h"
 
-#define STR_BUFSIZE             64
-
 static Glcd glcd;
 static char strbuf[STR_BUFSIZE + 1];    // String buffer
 
