@@ -948,8 +948,8 @@ void actionHandle(bool visible)
     // Reset silence timer on signal
     if (screen != SCREEN_STANDBY) {
         Spectrum *spectrum = spGet();
-        if (spectrum->chan[SP_CHAN_LEFT].max > 128 ||
-            spectrum->chan[SP_CHAN_RIGHT].max > 128) {
+        if (spectrum->data[SP_CHAN_LEFT].max > 128 ||
+            spectrum->data[SP_CHAN_RIGHT].max > 128) {
             actionResetSilenceTimer();
         }
     }

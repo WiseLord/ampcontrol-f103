@@ -16,12 +16,24 @@ extern "C" {
 #include "../tuner/stations.h"
 #include "../tuner/tuner.h"
 
+typedef union {
+    struct {
+        uint8_t show[SP_CHAN_END];   // Value to show
+        uint8_t prev[SP_CHAN_END];   // Previous value
+        uint8_t peak[SP_CHAN_END];   // Peak value
+        uint8_t fall[SP_CHAN_END];   // Fall speed
+    };
+    struct {
+        int16_t showW;
+        int16_t prevW;
+        int16_t peakW;
+        int16_t fallW;
+    };
+} SpCol;
+
 typedef struct {
-    uint8_t fall[SPECTRUM_SIZE];
-    uint8_t show[SPECTRUM_SIZE];
-    uint8_t peak[SPECTRUM_SIZE];
-    uint8_t old_show[SPECTRUM_SIZE];
-} SpData;
+    SpCol col[SPECTRUM_SIZE];
+} SpDrawData;
 
 typedef struct {
     const tFont *hmsFont;       // Font to draw hours/minutes/seconds

@@ -203,7 +203,7 @@ static void spCplx2dB(FftSample *sp, uint8_t *out)
     }
 }
 
-static void spGetData(int16_t *dma, SpChan *chan)
+static void spGetData(int16_t *dma, SpData *chan)
 {
     int32_t dcOft = 0;
 
@@ -261,8 +261,8 @@ Spectrum *spGet(void)
 
 void spGetADC(Spectrum *sp)
 {
-    spGetData((int16_t *)(bufDMA + 0), &sp->chan[SP_CHAN_LEFT]);
-    spGetData((int16_t *)(bufDMA + 1), &sp->chan[SP_CHAN_RIGHT]);
+    spGetData((int16_t *)(bufDMA + 0), &sp->data[SP_CHAN_LEFT]);
+    spGetData((int16_t *)(bufDMA + 1), &sp->data[SP_CHAN_RIGHT]);
 }
 
 void spConvertADC(void)

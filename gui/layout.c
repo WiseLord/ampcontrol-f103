@@ -10,22 +10,20 @@
 static const Layout *lt;
 static Canvas *canvas;
 
-static SpData spData[SP_CHAN_END];
+static SpDrawData spDrawData;
 
-static uint16_t level2color(uint16_t value);
+static uint16_t level2color(int16_t value);
 static void drawBar(const CanvasBar *bar, int16_t value, int16_t min, int16_t max);
 static void drawTm(RTC_type *rtc, RtcMode tm);
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
-static void improveSpectrum(Spectrum *sp, int16_t chan, uint16_t height);
-static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h,
-                      int16_t s, int16_t os, int16_t p);
-static void drawSpectrumChan(Spectrum *sp, int16_t chan);
-static void drawSpectrumMixed(Spectrum *sp);
+static void calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpCol *spCol);
+static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h, SpCol *col);
 static void drawWaterfall(Spectrum *sp);
+static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect);
 static void drawRds(Rds *rds);
 
 
-static uint16_t level2color(uint16_t value)
+static uint16_t level2color(int16_t value)
 {
     uint16_t color = 0xFFFF;
 
@@ -170,42 +168,70 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->pal->bg);
 }
 
-static void improveSpectrum(Spectrum *sp, int16_t chan, uint16_t height)
+static void calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpCol *spCol)
 {
-    SpData *spd = &spData[chan];
-    uint8_t *raw = sp->chan[chan].raw;
+    int16_t raw;
 
-    for (uint8_t i = 0; i < SPECTRUM_SIZE; i++) {
-        raw[i] = height * raw[i] / N_DB;
+    SpCol *spDrawCol = &spDrawData.col[col];
 
-        spd->old_show[i] = spd->show[i];
-        if (raw[i] < spd->show[i]) {
-            if (spd->show[i] >= spd->fall[i]) {
-                spd->show[i] -= spd->fall[i];
-                spd->fall[i]++;
-            } else {
-                spd->show[i] = 0;
-            }
-        }
-
-        if (raw[i] > spd->show[i]) {
-            spd->show[i] = raw[i];
-            spd->fall[i] = 1;
-        }
-
-        if (spd->peak[i] <= raw[i]) {
-            spd->peak[i] = raw[i] + 1;
+    if (chan == SP_CHAN_BOTH) {
+        uint8_t rawL = sp->data[SP_CHAN_LEFT].raw[col];
+        uint8_t rawR = sp->data[SP_CHAN_RIGHT].raw[col];
+        if (rawL > rawR) {
+            raw = rawL;
         } else {
-            if (spd->peak[i] && spd->peak[i] > spd->show[i] + 1) {
-                spd->peak[i]--;
-            }
+            raw = rawR;
         }
+        *spCol = *spDrawCol;
+    } else {
+        raw = sp->data[chan].raw[col];
+        spCol->showW = spDrawCol->show[chan];
+        spCol->prevW = spDrawCol->prev[chan];
+        spCol->peakW = spDrawCol->peak[chan];
+        spCol->fallW = spDrawCol->fall[chan];
+    }
+
+    raw = scale * raw / N_DB;
+
+    spCol->prevW = spCol->showW;
+    if (raw < spCol->showW) {
+        if (spCol->showW >= spCol->fallW) {
+            spCol->showW -= spCol->fallW;
+            spCol->fallW++;
+        } else {
+            spCol->showW = 0;
+        }
+    }
+
+    if (raw > spCol->showW) {
+        spCol->showW = raw;
+        spCol->fallW = 1;
+    }
+
+    if (spCol->peakW <= raw) {
+        spCol->peakW = raw + 1;
+    } else {
+        if (spCol->peakW && spCol->peakW > spCol->showW + 1) {
+            spCol->peakW--;
+        }
+    }
+
+    if (chan == SP_CHAN_BOTH) {
+        *spDrawCol = *spCol;
+    } else {
+        spDrawCol->show[chan] = (uint8_t)spCol->showW;
+        spDrawCol->prev[chan] = (uint8_t)spCol->prevW;
+        spDrawCol->peak[chan] = (uint8_t)spCol->peakW;
+        spDrawCol->fall[chan] = (uint8_t)spCol->fallW;
     }
 }
 
-static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h,
-                      int16_t s, int16_t os, int16_t p)
+static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h, SpCol *col)
 {
+    int16_t s = col->showW;
+    int16_t os = col->prevW;
+    int16_t p = col->peakW;
+
     const CanvasPalette *pal = canvas->pal;
     if (s == 0) {
         s = 1;
@@ -248,55 +274,6 @@ static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h,
     }
 }
 
-static void drawSpectrumChan(Spectrum *sp, int16_t chan)
-{
-    const uint8_t step = lt->sp.step;
-    const uint8_t oft = lt->sp.oft;
-    const uint8_t width = lt->sp.width;
-    const int16_t height = lt->rect.h / 2;
-    const int16_t y = chan * height;
-
-    const int16_t num = (lt->rect.w + width - 1) / step;    // Number of spectrum columns
-
-    improveSpectrum(sp, chan, (uint16_t)lt->rect.h / 2);
-
-    uint8_t *show = spData[chan].show;
-    uint8_t *peak = spData[chan].peak;
-    uint8_t *old_show = spData[chan].old_show;
-
-    for (int16_t col = 0; col < num; col++) {
-        int16_t x = oft + col * step;
-        drawSpCol(sp->redraw, x, y, width, height,
-                  *show++, *old_show++, *peak++);
-    }
-}
-
-static void drawSpectrumMixed(Spectrum *sp)
-{
-    const uint8_t step = lt->sp.step;
-    const uint8_t oft = lt->sp.oft;
-    const uint8_t width = lt->sp.width;
-
-    const int16_t num = (lt->rect.w + width - 1) / step;    // Number of spectrum columns
-    improveSpectrum(sp, SP_CHAN_LEFT, (uint16_t)lt->rect.h / 2);
-    improveSpectrum(sp, SP_CHAN_RIGHT, (uint16_t)lt->rect.h / 2);
-
-    uint8_t *showL = spData[SP_CHAN_LEFT].show;
-    uint8_t *old_showL = spData[SP_CHAN_LEFT].old_show;
-
-    uint8_t *showR = spData[SP_CHAN_RIGHT].show;
-    uint8_t *old_showR = spData[SP_CHAN_RIGHT].old_show;
-
-    for (int16_t col = 0; col < num; col++) {
-        int16_t show = (*showL++) + (*showR++);
-        int16_t old_show = (*old_showL++) + (*old_showR++);
-
-        int16_t x = oft + col * step;
-        drawSpCol(sp->redraw, x, 0, width, lt->rect.h,
-                  show, old_show, 0);
-    }
-}
-
 static void drawWaterfall(Spectrum *sp)
 {
     if (++sp->wtfX >= lt->rect.w) {
@@ -307,13 +284,38 @@ static void drawWaterfall(Spectrum *sp)
 
     glcdShift((sp->wtfX + 1) % lt->rect.w);
 
-    improveSpectrum(sp, SP_CHAN_LEFT, (uint16_t)lt->rect.h / 2);
-    improveSpectrum(sp, SP_CHAN_RIGHT, (uint16_t)lt->rect.h / 2);
+    for (uint8_t col = 0; col < (lt->rect.h + wfH - 1) / wfH; col++) {
 
-    for (uint16_t i = 0; i < (lt->rect.h + wfH - 1) / wfH; i++) {
-        uint16_t level = spData[SP_CHAN_LEFT].show[i] + spData[SP_CHAN_RIGHT].show[i];
-        uint16_t color = level2color(level);
-        glcdDrawRect(sp->wtfX, lt->rect.h - 1 - (i * wfH), 1, wfH, color);
+        SpCol spCol;
+        calcSpCol(sp, SP_CHAN_BOTH, lt->rect.h, col, &spCol);
+
+        uint16_t color = level2color(spCol.showW);
+        glcdDrawRect(sp->wtfX, lt->rect.h - 1 - (col * wfH), 1, wfH, color);
+    }
+}
+
+static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect)
+{
+    const uint8_t step = lt->sp.step;
+    const uint8_t oft = lt->sp.oft;
+    const int16_t width = lt->sp.width;
+
+    const int16_t height = rect->h;
+    const int16_t y = rect->y;
+
+    const int16_t num = (lt->rect.w + width - 1) / step;    // Number of spectrum columns
+
+    if (sp->redraw) {
+        memset(&spDrawData, 0, sizeof (SpDrawData));
+        memset(sp->data, 0, sizeof (SpData) * SP_CHAN_END);
+    }
+
+    for (uint8_t col = 0; col < num; col++) {
+        int16_t x = oft + col * step;
+
+        SpCol spCol;
+        calcSpCol(sp, chan, height, col, &spCol);
+        drawSpCol(sp->redraw, x, y, width, height, &spCol);
     }
 }
 
@@ -501,7 +503,10 @@ void layoutShowTune(bool clear, AudioTune aTune)
         return;
     }
 
-    drawSpectrumChan(sp, SP_CHAN_RIGHT);
+    GlcdRect rect = canvas->glcd->rect;
+    rect.h /= 2;
+    rect.y = rect.h;
+    drawSpectrum(sp, SP_CHAN_BOTH, &rect);
 
     sp->redraw = false;
     sp->ready = false;
@@ -517,13 +522,17 @@ void layoutShowSpectrum(bool clear)
         return;
     }
 
+    GlcdRect rect = canvas->glcd->rect;
+
     switch (sp->mode) {
     case SP_MODE_STEREO:
-        drawSpectrumChan(sp, SP_CHAN_LEFT);
-        drawSpectrumChan(sp, SP_CHAN_RIGHT);
+        rect.h /= 2;
+        drawSpectrum(sp, SP_CHAN_LEFT, &rect);
+        rect.y = rect.h;
+        drawSpectrum(sp, SP_CHAN_RIGHT, &rect);
         break;
     case SP_MODE_MIXED:
-        drawSpectrumMixed(sp);
+        drawSpectrum(sp, SP_CHAN_BOTH, &rect);
         break;
     case SP_MODE_WATERFALL:
         drawWaterfall(sp);
@@ -641,7 +650,10 @@ void layoutShowTuner(bool clear)
         return;
     }
 
-    drawSpectrumChan(sp, SP_CHAN_RIGHT);
+    GlcdRect rect = canvas->glcd->rect;
+    rect.h /= 2;
+    rect.y = rect.h;
+    drawSpectrum(sp, SP_CHAN_BOTH, &rect);
 
     sp->redraw = false;
     sp->ready = false;
@@ -787,7 +799,10 @@ void layoutShowTimer(bool clear, int32_t value)
         return;
     }
 
-    drawSpectrumChan(sp, SP_CHAN_RIGHT);
+    GlcdRect rect = canvas->glcd->rect;
+    rect.h /= 2;
+    rect.y = rect.h;
+    drawSpectrum(sp, SP_CHAN_BOTH, &rect);
 
     sp->redraw = false;
     sp->ready = false;

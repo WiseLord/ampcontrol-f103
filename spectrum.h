@@ -10,20 +10,23 @@ extern "C" {
 
 #include "fft.h"
 
+typedef uint8_t SpChan;
 enum {
     SP_CHAN_LEFT = 0,
     SP_CHAN_RIGHT,
+    SP_CHAN_BOTH,
 
-    SP_CHAN_END
+    SP_CHAN_END = SP_CHAN_BOTH
 };
 
-typedef enum {
+typedef uint8_t SpMode;
+enum {
     SP_MODE_STEREO = 0,
     SP_MODE_MIXED,
     SP_MODE_WATERFALL,
 
     SP_MODE_END
-} SpMode;
+};
 
 #define SPECTRUM_SIZE   128
 #define N_HANN          1024
@@ -33,10 +36,10 @@ typedef struct {
     uint8_t raw[SPECTRUM_SIZE];
     uint8_t avg;
     uint8_t max;
-} SpChan;
+} SpData;
 
 typedef struct {
-    SpChan chan[SP_CHAN_END];
+    SpData data[SP_CHAN_END];
 
     SpMode mode;
     int16_t wtfX;  // waterfall X position
