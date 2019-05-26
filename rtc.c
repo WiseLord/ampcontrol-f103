@@ -142,19 +142,13 @@ void rtcInit(void)
     case RTC_INIT_DISABLED:
         // Power interface clock enable
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-
         // Backup interface clock enable
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_BKP);
-
         // Enable access to the backup domain
         LL_PWR_EnableBkUpAccess();
 
         if (LL_RCC_IsEnabledRTC()) {
-            LL_RTC_EnableIT_SEC(RTC);
-            NVIC_EnableIRQ (RTC_IRQn);
-
             rtcPhase = RTC_INIT_READY;
-            swTimSet(SW_TIM_RTC_INIT, SW_TIM_OFF);
         } else {
             // Backup domain reset
             LL_RCC_ForceBackupDomainReset();
@@ -163,7 +157,6 @@ void rtcInit(void)
             LL_RCC_LSE_Enable();
 
             rtcPhase = RTC_INIT_LSE_ENABLED;
-            swTimSet(SW_TIM_RTC_INIT, 500);
         }
         break;
     case RTC_INIT_LSE_ENABLED:
@@ -171,27 +164,29 @@ void rtcInit(void)
             LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
             LL_RCC_EnableRTC();
 
+            LL_RTC_InitTypeDef rtc_initstruct = {32766, LL_RTC_CALIB_OUTPUT_NONE};
+
             if (LL_RTC_DeInit(RTC) != SUCCESS) {
-                swTimSet(SW_TIM_RTC_INIT, 500);
                 break;
             }
 
-            LL_RTC_InitTypeDef rtc_initstruct = {32766, LL_RTC_CALIB_OUTPUT_NONE};
             if (LL_RTC_Init(RTC, &rtc_initstruct) != SUCCESS) {
-                swTimSet(SW_TIM_RTC_INIT, 500);
                 break;
             }
 
             rtcSetCorrection(settingsGet(EE_SYSTEM_RTC_CORR));
 
-            LL_RTC_EnableIT_SEC(RTC);
-            NVIC_EnableIRQ (RTC_IRQn);
             rtcPhase = RTC_INIT_READY;
-            swTimSet(SW_TIM_RTC_INIT, SW_TIM_OFF);
-        } else {
-            swTimSet(SW_TIM_RTC_INIT, 500);
         }
         break;
+    }
+
+    if (rtcPhase == RTC_INIT_READY) {
+        LL_RTC_EnableIT_SEC(RTC);
+        NVIC_EnableIRQ (RTC_IRQn);
+        swTimSet(SW_TIM_RTC_INIT, SW_TIM_OFF);
+    } else {
+        swTimSet(SW_TIM_RTC_INIT, 500);
     }
 }
 
