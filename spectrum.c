@@ -244,6 +244,7 @@ static void spGetData(int16_t *dma, SpData *chan)
 static void spReadSettings(void)
 {
     spectrum.mode = (SpMode)(eeRead(EE_SPECTRUM_MODE));
+    spectrum.peaks = (uint8_t)eeRead(EE_SPECTRUM_PEAKS);
 }
 
 void spInit(void)

@@ -107,6 +107,7 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_ALARM_DAYS]      = "Дні",
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Рэжым экрана",
+    [LABEL_MENU + MENU_SPECTRUM_PEAKS]  = "Пікавы ўзровень",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яркасць STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Яркасць",

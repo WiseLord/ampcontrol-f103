@@ -64,6 +64,7 @@ static const EE_Map eeMap[] = {
     {EE_DISPLAY_ROTATE,         false},
 
     {EE_SPECTRUM_MODE,          SP_MODE_STEREO},
+    {EE_SPECTRUM_PEAKS,         true},
 
     {EE_ALARM_HOUR,             7},
     {EE_ALARM_MINUTE,           30},

@@ -69,6 +69,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_ALARM_DAYS]       = {MENU_SETUP_ALARM,        MENU_TYPE_ENUM,     EE_ALARM_DAYS},
 
     [MENU_SPECTURM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM,     EE_SPECTRUM_MODE},
+    [MENU_SPECTRUM_PEAKS]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_BOOL,     EE_SPECTRUM_PEAKS},
 
     [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   EE_DISPLAY_BR_STBY},
     [MENU_DISPLAY_BR_WORK]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   EE_DISPLAY_BR_WORK},
@@ -157,7 +158,10 @@ static int16_t menuGetValue(MenuIdx index)
         break;
 
     case MENU_SPECTURM_MODE:
-        ret = (int16_t)(sp->mode);
+        ret = sp->mode;
+        break;
+    case MENU_SPECTRUM_PEAKS:
+        ret = sp->peaks;
         break;
 
     case MENU_DISPLAY_BR_STBY:
@@ -252,6 +256,9 @@ static void menuStoreCurrentValue(void)
 
     case MENU_SPECTURM_MODE:
         sp->mode = (SpMode)(menu.value);
+        break;
+    case MENU_SPECTRUM_PEAKS:
+        sp->peaks = (uint8_t)(menu.value);
         break;
 
     case MENU_DISPLAY_BR_STBY:

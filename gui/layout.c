@@ -315,6 +315,9 @@ static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect)
 
         SpCol spCol;
         calcSpCol(sp, chan, height, col, &spCol);
+        if (!sp->peaks) {
+            spCol.peakW = 0;
+        }
         drawSpCol(sp->redraw, x, y, width, height, &spCol);
     }
 }
