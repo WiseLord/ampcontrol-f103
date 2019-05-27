@@ -1,8 +1,6 @@
 #include "eemul.h"
 #include "eemap.h"
 
-#include <stm32f103xb.h>
-#include <stm32f1xx.h>
 #include <stm32f1xx_ll_utils.h>
 
 #define REC_SIZE            4

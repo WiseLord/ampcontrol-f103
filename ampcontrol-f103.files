@@ -95,6 +95,8 @@ display/glcd.c
 display/glcd.h
 
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
+drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h
+drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xg.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 drivers/CMSIS/Include/cmsis_gcc.h
@@ -166,6 +168,8 @@ gui/lt400x240.c
 gui/lt480x320.c
 
 system/startup_stm32f103xb.s
+system/startup_stm32f103xe.s
+system/startup_stm32f103xg.s
 system/stm32f103c8tx_flash.ld
 system/stm32f10x-openocd.cfg
 system/system_stm32f1xx.c

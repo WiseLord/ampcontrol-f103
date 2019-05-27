@@ -7,6 +7,7 @@ APROC_LIST = TDA7439 TDA731X PT232X TDA7418
 TUNER_LIST = RDA580X SI470X TEA5767
 FEATURE_LIST =
 
+F10X_MCU = STM32F103xB
 #DEBUG_ENABLED = YES
 
 # Lowercase argument
@@ -14,7 +15,8 @@ lc = $(shell echo $1 | tr '[:upper:]' '[:lower:]')
 
 TARGET = $(call lc, $(PROJECT)_$(DISPLAY)_$(DISPVAR))
 
-C_DEFS = -DUSE_FULL_LL_DRIVER -DSTM32F103xB
+
+C_DEFS = -DUSE_FULL_LL_DRIVER -D$(F10X_MCU)
 
 ifeq "$(DEBUG_ENABLED)" "YES"
   C_DEFS += -D_DEBUG_ENABLED
@@ -179,7 +181,7 @@ C_INCLUDES += \
 AS_DEFS +=
 
 ASM_SOURCES += \
-  system/startup_stm32f103xb.s
+  system/startup_$(call lc, $(F10X_MCU)).s
 
 # Build directory
 BUILD_DIR = build
