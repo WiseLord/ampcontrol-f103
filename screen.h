@@ -8,8 +8,9 @@ extern "C" {
 #include <stdint.h>
 
 #include "audio/audio.h"
-#include "rtc.h"
 #include "menu.h"
+#include "spectrum.h"
+#include "rtc.h"
 
 typedef uint8_t Screen;
 enum {
@@ -18,8 +19,8 @@ enum {
     SCREEN_TIME,
     SCREEN_SPECTRUM,
 
-    SCREEN_AUDIO_INPUT,
     SCREEN_AUDIO_PARAM,
+    SCREEN_AUDIO_INPUT,
 
     SCREEN_TUNER,
 
@@ -43,8 +44,8 @@ typedef enum {
 typedef union {
     AudioTune tune;
     uint8_t input;
-    RtcMode rtc;
     MenuIdx parent;
+    SpMode spMode;
 } ScreenParam;
 
 void screenReadSettings(void);
@@ -64,6 +65,7 @@ int8_t screenGetBrightness(BrMode mode);
 void screenSetBrightness(BrMode mode, int8_t value);
 void screenChangeBrighness(BrMode mode, int8_t diff);
 
+void screenToClear(void);
 void screenShow(bool clear);
 
 #ifdef __cplusplus

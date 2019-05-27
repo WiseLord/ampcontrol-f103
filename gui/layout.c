@@ -16,7 +16,7 @@ static uint16_t level2color(int16_t value);
 static void drawBar(const CanvasBar *bar, int16_t value, int16_t min, int16_t max);
 static void drawTm(RTC_type *rtc, RtcMode tm);
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
-static void calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpCol *spCol);
+static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpCol *spCol);
 static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h, SpCol *col);
 static void drawWaterfall(Spectrum *sp);
 static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect);
@@ -168,7 +168,7 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->pal->bg);
 }
 
-static void calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpCol *spCol)
+static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpCol *spCol)
 {
     int16_t raw;
 
@@ -224,6 +224,8 @@ static void calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, Sp
         spDrawCol->peak[chan] = (uint8_t)spCol->peakW;
         spDrawCol->fall[chan] = (uint8_t)spCol->fallW;
     }
+
+    return (uint8_t)(spCol->showW * N_DB / scale);
 }
 
 static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h, SpCol *col)
@@ -287,9 +289,9 @@ static void drawWaterfall(Spectrum *sp)
     for (uint8_t col = 0; col < (lt->rect.h + wfH - 1) / wfH; col++) {
 
         SpCol spCol;
-        calcSpCol(sp, SP_CHAN_BOTH, lt->rect.h, col, &spCol);
+        uint8_t raw = calcSpCol(sp, SP_CHAN_BOTH, lt->rect.h, col, &spCol);
 
-        uint16_t color = level2color(spCol.showW);
+        uint16_t color = level2color(raw);
         glcdDrawRect(sp->wtfX, lt->rect.h - 1 - (col * wfH), 1, wfH, color);
     }
 }

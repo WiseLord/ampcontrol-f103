@@ -146,4 +146,5 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_RC_REW]          = "Крок назад",
     [LABEL_MENU + MENU_RC_FWD]          = "Крок наперад",
     [LABEL_MENU + MENU_RC_TIMER]        = "Таймер",
+    [LABEL_MENU + MENU_RC_SP_MODE]      = "Рэжым спектру",
 };

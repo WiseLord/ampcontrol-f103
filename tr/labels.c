@@ -171,6 +171,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_RC_REW]          = "Rewind",
     [LABEL_MENU + MENU_RC_FWD]          = "Flash forward",
     [LABEL_MENU + MENU_RC_TIMER]        = "Timer",
+    [LABEL_MENU + MENU_RC_SP_MODE]      = "Spectrum mode",
 };
 
 void labelsSetLang(Lang value)

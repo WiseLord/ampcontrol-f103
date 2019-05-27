@@ -40,7 +40,7 @@ typedef struct {
 
 typedef struct {
     SpData data[SP_CHAN_END];
-    uint8_t mode;
+    SpMode mode;
     bool peaks;
     int16_t wtfX;  // waterfall X position
     bool ready;

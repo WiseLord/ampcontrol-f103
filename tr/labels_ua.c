@@ -146,4 +146,5 @@ const char *const labels_ua [LABEL_END] = {
 //    [LABEL_MENU + MENU_RC_REW]          = "Rewind",
 //    [LABEL_MENU + MENU_RC_FWD]          = "Flash forward",
 //    [LABEL_MENU + MENU_RC_TIMER]        = "Timer",
+    [LABEL_MENU + MENU_RC_SP_MODE]      = "Режим спектра",
 };

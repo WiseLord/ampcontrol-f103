@@ -283,6 +283,17 @@ static void stbyTimerChange(void)
     }
 }
 
+static void spModeChange(Spectrum *sp)
+{
+    if (++sp->mode >= (sp->peaks ? SP_MODE_END : SP_MODE_WATERFALL)) {
+        sp->mode = SP_MODE_STEREO;
+        sp->peaks = !sp->peaks;
+        eeUpdate(EE_SPECTRUM_PEAKS, sp->peaks);
+    }
+    screenToClear();
+    eeUpdate(EE_SPECTRUM_MODE, sp->mode);
+}
+
 static void actionGetTimers(void)
 {
     if (swTimGet(SW_TIM_DISPLAY) == 0) {
@@ -524,6 +535,9 @@ static void actionRemapRemote(void)
     case RC_CMD_TIMER:
         actionSet(ACTION_TIMER, 0);
         break;
+    case RC_CMD_SP_MODE:
+        actionSet(ACTION_SP_MODE, 0);
+        break;
     default:
         break;
     }
@@ -725,6 +739,7 @@ void actionHandle(bool visible)
 
     const Layout *lt = layoutGet();
     Canvas *canvas = canvasGet();
+    Spectrum *sp = spGet();
 
     action.visible = visible;
     action.timeout = 0;
@@ -935,6 +950,12 @@ void actionHandle(bool visible)
             stbyTimerChange();
         }
         actionSetScreen(SCREEN_STBY_TIMER, 5000);
+        break;
+    case ACTION_SP_MODE:
+        if (screen == SCREEN_SPECTRUM) {
+            spModeChange(sp);
+        }
+        actionSetScreen(SCREEN_SPECTRUM, 3000);
         break;
     default:
         break;

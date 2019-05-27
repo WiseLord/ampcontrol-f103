@@ -28,11 +28,10 @@ Canvas *canvasGet(void)
 
 void canvasClear(void)
 {
-    glcdShift(0);
-
     GlcdRect rect = glcdGetRect();
 
     glcdDrawRect(0, 0, rect.w, rect.h, canvas.pal->bg);
+    glcdShift(0);
 
     const int16_t ft = canvas.glcd->drv->height / 100;
 

@@ -146,4 +146,5 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_MENU + MENU_RC_REW]          = "Rembobiner",
     [LABEL_MENU + MENU_RC_FWD]          = "Réinitialisation mémoire",
     [LABEL_MENU + MENU_RC_TIMER]        = "Minuteur",
+//    [LABEL_MENU + MENU_RC_SP_MODE]      = "Spectrum mode",
 };

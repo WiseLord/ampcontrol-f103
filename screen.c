@@ -12,6 +12,7 @@
 static Screen screen = SCREEN_STANDBY;
 static Screen screenDefault = SCREEN_SPECTRUM;
 static ScreenParam scrPar;
+static bool scrToClear = false;
 
 // TODO: Read from backup memory
 static int8_t brightness[BR_END];
@@ -29,8 +30,8 @@ static bool screenCheckClear(void)
     if (screen != scrPrev) {
         clear = true;
         switch (screen) {
-        case SCREEN_TIME:
         case SCREEN_STANDBY:
+        case SCREEN_TIME:
             if (scrPrev == SCREEN_STANDBY || scrPrev == SCREEN_TIME) {
                 clear = false;
             }
@@ -72,6 +73,11 @@ static bool screenCheckClear(void)
         }
     } else {
         switch (screen) {
+        case SCREEN_SPECTRUM:
+            if (scrPar.spMode != scrParPrev.spMode) {
+                clear = true;
+            }
+            break;
         case SCREEN_AUDIO_PARAM:
             if (scrPar.tune != scrParPrev.tune) {
                 clear = true;
@@ -199,11 +205,21 @@ void screenChangeBrighness(BrMode mode, int8_t diff)
     screenSetBrightness(mode, br);
 }
 
+void screenToClear(void)
+{
+    scrToClear = true;
+}
+
 void screenShow(bool clear)
 {
     Spectrum *spectrum = spGet();
 
     GlcdRect rect = layoutGet()->rect;
+
+    if (scrToClear) {
+        clear = true;
+        scrToClear = false;
+    }
 
     if (!clear) {
         clear = screenCheckClear();
@@ -223,8 +239,8 @@ void screenShow(bool clear)
     }
 
     if (clear) {
-        spectrum->wtfX = 0;
         canvasClear();
+        spectrum->wtfX = 0;
         spectrum->redraw = true;
     }
 
