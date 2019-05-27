@@ -476,6 +476,15 @@ static bool menuIsValid(MenuIdx index)
             return false;
         }
         break;
+    case MENU_TUNER_VOLUME:
+        switch (tuner->par.ic) {
+        case TUNER_IC_RDA5807:
+        case TUNER_IC_SI4703:
+            break;
+        default:
+            return false;
+        }
+        break;
     }
 
     if (aProc->par.ic == AUDIO_IC_NO) {
