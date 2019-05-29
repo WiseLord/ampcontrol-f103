@@ -76,7 +76,10 @@ void ili9341Init(void)
     dispdrvSendData8(0xE2);
     dispdrvSendData8(0x27);
 
-    // Retate
+    dispdrvSelectReg8(0xB8); // Hack for unknown display with ID 1602
+    dispdrvSendData8(0x01);
+
+    // Rotate
     dispdrvSelectReg8(0x36); // Memory Access Control
     dispdrvSendData8(0x08);
 
