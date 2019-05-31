@@ -6,7 +6,7 @@ static const Layout lt176x132 = {
     .rect.w = 176,
     .rect.h = 132,
 
-    .time.hmsFont = &fontterminusdig42,
+    .time.hmsFont = &fontterminusdig40,
     .time.dmyFont = &fontterminusdig30,
     .time.wdFont = &fontterminus32,
     .time.hmsY = 6,
