@@ -933,14 +933,17 @@ void actionHandle(bool visible)
         actionSetScreen(action.prevScreen, 2000);
         break;
 
-    case ACTION_MENU_SELECT:
+    case ACTION_MENU_SELECT: {
+        MenuIdx parent = menuGet()->parent;
         menuSetActive((MenuIdx)action.value);
-        action.param.parent = menuGet()->parent;
+        if (parent != menuGet()->parent) {
+            screenToClear();
+        }
         actionSetScreen(SCREEN_MENU, 10000);
         break;
+    }
     case ACTION_MENU_CHANGE:
         menuChange((int8_t)action.value);
-        action.param.parent = menuGet()->parent;
         actionSetScreen(SCREEN_MENU, 10000);
         break;
 

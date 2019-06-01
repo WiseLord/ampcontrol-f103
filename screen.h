@@ -42,7 +42,6 @@ typedef enum {
 
 typedef union {
     AudioTune tune;
-    MenuIdx parent;
     SpMode spMode;
 } ScreenParam;
 

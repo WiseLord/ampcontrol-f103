@@ -23,8 +23,10 @@ static bool screenCheckClear(void)
     static ScreenMode scrPrev = SCREEN_STANDBY;
     static ScreenParam scrParPrev;
 
-    // Check if we need to clear screen
-    if (screen.mode != scrPrev) {
+    if (scrToClear) {
+        clear = true;
+        scrToClear = false;
+    } else if (screen.mode != scrPrev) {
         clear = true;
         switch (screen.mode) {
         case SCREEN_STANDBY:
@@ -46,13 +48,6 @@ static bool screenCheckClear(void)
         } else {
             swTimSet(SW_TIM_TUNER_POLL, SW_TIM_OFF);
         }
-
-        // Handle standby/work brightness
-        if (screen.mode == SCREEN_STANDBY) {
-            screenChangeBrighness(BR_STBY, 0);
-        } else {
-            screenChangeBrighness(BR_WORK, 0);
-        }
     } else {
         switch (screen.mode) {
         case SCREEN_SPECTRUM:
@@ -65,13 +60,17 @@ static bool screenCheckClear(void)
                 clear = true;
             }
             break;
-        case SCREEN_MENU:
-            if (scrPar.parent != scrParPrev.parent) {
-                clear = true;
-            }
-            break;
         default:
             break;
+        }
+    }
+
+    if (clear) {
+        // Handle standby/work brightness
+        if (screen.mode == SCREEN_STANDBY) {
+            screenChangeBrighness(BR_STBY, 0);
+        } else {
+            screenChangeBrighness(BR_WORK, 0);
         }
     }
 
@@ -192,11 +191,6 @@ void screenShow(bool clear)
     Spectrum *spectrum = spGet();
 
     GlcdRect rect = layoutGet()->rect;
-
-    if (scrToClear) {
-        clear = true;
-        scrToClear = false;
-    }
 
     if (!clear) {
         clear = screenCheckClear();
