@@ -8,7 +8,6 @@
 #include "swtimers.h"
 #include "tr/labels.h"
 
-static ScreenParam scrPar;
 static bool scrToClear = false;
 
 static Screen screen = {
@@ -21,7 +20,6 @@ static bool screenCheckClear(void)
     bool clear = false;
 
     static ScreenMode scrPrev = SCREEN_STANDBY;
-    static ScreenParam scrParPrev;
 
     if (scrToClear) {
         clear = true;
@@ -48,24 +46,9 @@ static bool screenCheckClear(void)
         } else {
             swTimSet(SW_TIM_TUNER_POLL, SW_TIM_OFF);
         }
-    } else {
-        switch (screen.mode) {
-        case SCREEN_SPECTRUM:
-            if (scrPar.spMode != scrParPrev.spMode) {
-                clear = true;
-            }
-            break;
-        case SCREEN_AUDIO_PARAM:
-            if (scrPar.tune != scrParPrev.tune) {
-                clear = true;
-            }
-            break;
-        default:
-            break;
-        }
     }
 
-    if (clear) {
+    if (screen.mode != scrPrev || clear) {
         // Handle standby/work brightness
         if (screen.mode == SCREEN_STANDBY) {
             screenChangeBrighness(BR_STBY, 0);
@@ -76,7 +59,6 @@ static bool screenCheckClear(void)
 
     // Save current screen and screen parameter
     scrPrev = screen.mode;
-    scrParPrev = scrPar;
 
     return clear;
 }
@@ -117,13 +99,6 @@ ScreenMode screenGet()
 {
     return screen.mode;
 }
-
-
-void screenSetParam(ScreenParam param)
-{
-    scrPar = param;
-}
-
 
 void screenSetDefault(ScreenMode value)
 {
@@ -224,7 +199,7 @@ void screenShow(bool clear)
         layoutShowSpectrum(clear);
         break;
     case SCREEN_AUDIO_PARAM:
-        layoutShowTune(clear, scrPar.tune);
+        layoutShowTune(clear);
         break;
     case SCREEN_TUNER:
         if (swTimGet(SW_TIM_TUNER_POLL) == 0) {

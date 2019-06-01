@@ -90,7 +90,6 @@ typedef struct {
     int16_t value;
 
     ScreenMode screen;
-    ScreenParam param;
     int16_t timeout;
 
     ScreenMode prevScreen;

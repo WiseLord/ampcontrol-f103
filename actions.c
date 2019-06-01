@@ -30,8 +30,8 @@ static void actionRemapCommon(void);
 static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
-static Action action = {ACTION_POWERUP, false, FLAG_ON, SCREEN_STANDBY, {0}, 0, ACTION_POWERUP};
-static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, {0}, 0, ACTION_NONE};
+static Action action = {ACTION_POWERUP, false, FLAG_ON, SCREEN_STANDBY, 0, ACTION_POWERUP};
+static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, 0, ACTION_NONE};
 
 static void actionSet(ActionType type, int16_t value)
 {
@@ -47,7 +47,6 @@ static void actionSetScreen(ScreenMode screen, int16_t timeout)
 
 static void actionDispExpired(ScreenMode screen)
 {
-    memset(&action.param, 0, sizeof (action.param));
     rtcSetMode(RTC_NOEDIT);
 
     switch (screen) {
@@ -166,10 +165,10 @@ static void actionNavigateCommon(RcCmd cmd)
 static void actionNextAudioParam(AudioProc *aProc)
 {
     do {
-        action.param.tune++;
-        if (action.param.tune >= AUDIO_TUNE_END)
-            action.param.tune = AUDIO_TUNE_VOLUME;
-    } while (aProc->par.item[action.param.tune].grid == NULL && action.param.tune != AUDIO_TUNE_VOLUME);
+        aProc->tune++;
+        if (aProc->tune >= AUDIO_TUNE_END)
+            aProc->tune = AUDIO_TUNE_VOLUME;
+    } while (aProc->par.item[aProc->tune].grid == NULL && aProc->tune != AUDIO_TUNE_VOLUME);
 }
 
 static uint8_t actionGetNextAudioInput(AudioProc *aProc)
@@ -401,6 +400,7 @@ static void actionRemapBtnLong(void)
 static void actionRemapRemote(void)
 {
     ScreenMode screen = screenGet();
+    AudioProc *aProc = audioGet();
 
     if (screen == SCREEN_MENU) {
         Menu *menu = menuGet();
@@ -474,32 +474,32 @@ static void actionRemapRemote(void)
 
     case RC_CMD_BASS_UP:
         screenSet(SCREEN_AUDIO_PARAM);
-        action.param.tune = AUDIO_TUNE_BASS;
+        aProc->tune = AUDIO_TUNE_BASS;
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_BASS_DOWN:
         screenSet(SCREEN_AUDIO_PARAM);
-        action.param.tune = AUDIO_TUNE_BASS;
+        aProc->tune = AUDIO_TUNE_BASS;
         actionSet(ACTION_ENCODER, -1);
         break;
     case RC_CMD_MIDDLE_UP:
         screenSet(SCREEN_AUDIO_PARAM);
-        action.param.tune = AUDIO_TUNE_MIDDLE;
+        aProc->tune = AUDIO_TUNE_MIDDLE;
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_MIDDLE_DOWN:
         screenSet(SCREEN_AUDIO_PARAM);
-        action.param.tune = AUDIO_TUNE_MIDDLE;
+        aProc->tune = AUDIO_TUNE_MIDDLE;
         actionSet(ACTION_ENCODER, -1);
         break;
     case RC_CMD_TREBLE_UP:
         screenSet(SCREEN_AUDIO_PARAM);
-        action.param.tune = AUDIO_TUNE_TREBLE;
+        aProc->tune = AUDIO_TUNE_TREBLE;
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_TREBLE_DOWN:
         screenSet(SCREEN_AUDIO_PARAM);
-        action.param.tune = AUDIO_TUNE_TREBLE;
+        aProc->tune = AUDIO_TUNE_TREBLE;
         actionSet(ACTION_ENCODER, -1);
         break;
 
@@ -573,6 +573,7 @@ static void actionRemapNavigate(void)
 static void actionRemapEncoder(void)
 {
     ScreenMode screen = screenGet();
+    AudioProc *aProc = audioGet();
 
     if (SCREEN_STANDBY == screen)
         return;
@@ -602,7 +603,7 @@ static void actionRemapEncoder(void)
         screenSet(SCREEN_AUDIO_PARAM);
         switch (screen) {
         case SCREEN_SPECTRUM:
-            action.param.tune = AUDIO_TUNE_VOLUME;
+            aProc->tune = AUDIO_TUNE_VOLUME;
         default:
             break;
         }
@@ -854,9 +855,10 @@ void actionHandle(bool visible)
 
     case ACTION_OPEN_MENU:
         if (screen == SCREEN_AUDIO_PARAM) {
+            screenToClear();
             actionNextAudioParam(aProc);
         } else {
-            action.param.tune = AUDIO_TUNE_VOLUME;
+            aProc->tune = AUDIO_TUNE_VOLUME;
         }
         actionSetScreen(SCREEN_AUDIO_PARAM, 5000);
         break;
@@ -885,15 +887,15 @@ void actionHandle(bool visible)
         break;
 
     case ACTION_AUDIO_INPUT:
-        if (screen == SCREEN_AUDIO_PARAM && action.param.tune == AUDIO_TUNE_GAIN) {
+        if (screen == SCREEN_AUDIO_PARAM && aProc->tune == AUDIO_TUNE_GAIN) {
             audioSetInput(actionGetNextAudioInput(aProc));
-            screenToClear();
         }
-        action.param.tune = AUDIO_TUNE_GAIN;
+        screenToClear();
+        aProc->tune = AUDIO_TUNE_GAIN;
         actionSetScreen(SCREEN_AUDIO_PARAM, 5000);
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
-        audioChangeTune(action.param.tune, (int8_t)(action.value));
+        audioChangeTune(aProc->tune, (int8_t)(action.value));
         actionSetScreen(SCREEN_AUDIO_PARAM, 5000);
         break;
 
@@ -979,7 +981,6 @@ void actionHandle(bool visible)
 
     if (action.visible) {
         screenSet(action.screen);
-        screenSetParam(action.param);
         if (action.timeout > 0) {
             swTimSet(SW_TIM_DISPLAY, action.timeout);
         }

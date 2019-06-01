@@ -454,7 +454,7 @@ void layoutShowMenu(bool clear)
     }
 }
 
-void layoutShowTune(bool clear, AudioTune aTune)
+void layoutShowTune(bool clear)
 {
     const tFont *iconSet = lt->iconSet;
     static int16_t valueOld;
@@ -466,14 +466,14 @@ void layoutShowTune(bool clear, AudioTune aTune)
     const char *label = labelsGet(LABEL_IN_TUNER + inType);
     Icon icon = (ICON_TUNER + inType);
 
-    if (aTune < AUDIO_TUNE_GAIN) {
-        label = labelsGet(LABEL_VOLUME + aTune);
-        icon = ICON_VOLUME + aTune;
+    if (aProc->tune < AUDIO_TUNE_GAIN) {
+        label = labelsGet(LABEL_VOLUME + aProc->tune);
+        icon = ICON_VOLUME + aProc->tune;
     }
 
-    const int16_t value = aProc->par.item[aTune].value;
+    const int16_t value = aProc->par.item[aProc->tune].value;
 
-    const AudioGrid *grid = aProc->par.item[aTune].grid;
+    const AudioGrid *grid = aProc->par.item[aProc->tune].grid;
     const int8_t min = grid ? grid->min : 0;
     const int8_t max = grid ? grid->max : 0;
     const uint8_t mStep = grid ? grid->mStep : 0;

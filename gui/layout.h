@@ -101,7 +101,7 @@ const Layout *layoutGet(void);
 
 void layoutShowTime(bool clear);
 void layoutShowMenu(bool clear);
-void layoutShowTune(bool clear, AudioTune tune);
+void layoutShowTune(bool clear);
 void layoutShowSpectrum(bool clear);
 void layoutShowTuner(bool clear);
 void layoutShowTextEdit(bool clear);

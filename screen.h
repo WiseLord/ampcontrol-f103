@@ -40,11 +40,6 @@ typedef enum {
     BR_END
 } BrMode;
 
-typedef union {
-    AudioTune tune;
-    SpMode spMode;
-} ScreenParam;
-
 typedef struct {
     ScreenMode mode;
     ScreenMode def;
@@ -58,8 +53,6 @@ void screenInit(void);
 
 void screenSet(ScreenMode value);
 ScreenMode screenGet(void);
-
-void screenSetParam(ScreenParam param);
 
 void screenSetDefault(ScreenMode value);
 ScreenMode screenGetDefault(void);

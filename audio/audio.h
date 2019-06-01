@@ -30,6 +30,7 @@ typedef struct {
 typedef struct {
     AudioApi api;
     AudioParam par;
+    AudioTune tune;
 } AudioProc;
 
 void audioReadSettings(void);
