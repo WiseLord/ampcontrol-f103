@@ -8,8 +8,8 @@
 
 #include <string.h>
 
-#include "eemap.h"
 #include "mem.h"
+#include "settings.h"
 
 #define DMA_BUF_SIZE        (FFT_SIZE * 2)
 
@@ -243,8 +243,8 @@ static void spGetData(int16_t *dma, SpData *chan)
 
 static void spReadSettings(void)
 {
-    spectrum.mode = (SpMode)(eeRead(EE_SPECTRUM_MODE));
-    spectrum.peaks = (uint8_t)eeRead(EE_SPECTRUM_PEAKS);
+    spectrum.mode = (SpMode)settingsRead(PARAM_SPECTRUM_MODE);
+    spectrum.peaks = (uint8_t)settingsRead(PARAM_SPECTRUM_PEAKS);
 }
 
 void spInit(void)

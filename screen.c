@@ -2,7 +2,6 @@
 
 #include "actions.h"
 #include "display/glcd.h"
-#include "eemap.h"
 #include "fft.h"
 #include "gui/layout.h"
 #include "spectrum.h"
@@ -108,7 +107,7 @@ static bool screenCheckClear(void)
 void screenReadSettings(void)
 {
     for (BrMode mode = BR_STBY; mode < BR_END; mode++) {
-        brightness[mode] = (int8_t)eeRead(EE_DISPLAY_BR_STBY + mode);
+        brightness[mode] = (int8_t)settingsRead(PARAM_DISPLAY_BR_STBY + mode);
         if (brightness[mode] < LCD_BR_MIN) {
             brightness[mode] = LCD_BR_MIN;
         } else if (brightness[mode] > LCD_BR_MAX) {
@@ -119,7 +118,7 @@ void screenReadSettings(void)
 
 void screenSaveSettings(void)
 {
-    eeUpdate(EE_DISPLAY_BR_WORK, brightness[BR_WORK]);
+    settingsStore(PARAM_DISPLAY_BR_WORK, brightness[BR_WORK]);
 }
 
 

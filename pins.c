@@ -8,7 +8,6 @@
 #include <stm32f1xx_ll_utils.h>
 
 #include "display/glcd.h"
-#include "eemap.h"
 #include "i2c.h"
 #include "settings.h"
 
@@ -137,7 +136,7 @@ void pinsInit(void)
     pinsInitRc();
     pinsInitDisplay();
 
-    MuteStby muteStby = (MuteStby)settingsGet(EE_SYSTEM_MUTESTBY);
+    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
     pinsInitMuteStby(muteStby);
 
     OUT_INIT(MUTE, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
@@ -146,7 +145,7 @@ void pinsInit(void)
 
 void pinsSetMute(bool value)
 {
-    MuteStby muteStby = (MuteStby)settingsGet(EE_SYSTEM_MUTESTBY);
+    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
 
 #ifdef SWD_FORCED
     if (muteStby == MUTESTBY_SWD) {
@@ -171,7 +170,7 @@ void pinsSetMute(bool value)
 
 void pinsSetStby(bool value)
 {
-    MuteStby muteStby = (MuteStby)settingsGet(EE_SYSTEM_MUTESTBY);
+    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
 
 #ifdef SWD_FORCED
     if (muteStby == MUTESTBY_SWD) {

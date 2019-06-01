@@ -1,7 +1,7 @@
 #include "labels.h"
 
 #include "../rc.h"
-#include "../eemap.h"
+#include "../settings.h"
 
 #define GENERATE_MENU_RC_TEXT(CMD)    [LABEL_MENU + MENU_RC_ ## CMD] =  # CMD,
 
@@ -223,5 +223,5 @@ const char *labelsGet(Label value)
 
 void labelsInit(void)
 {
-    lang = (Lang)(eeRead(EE_SYSTEM_LANG));
+    lang = (Lang)(settingsRead(PARAM_SYSTEM_LANG));
 }

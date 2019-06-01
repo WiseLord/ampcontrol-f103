@@ -1,6 +1,5 @@
 #include "layout.h"
 
-#include "../eemap.h"
 #include "../menu.h"
 #include "../tr/labels.h"
 #include "../tuner/rds.h"
@@ -346,7 +345,7 @@ void layoutInit()
 
     canvasInit(&canvas);
 
-    bool rotate = eeRead(EE_DISPLAY_ROTATE);
+    bool rotate = settingsRead(PARAM_DISPLAY_ROTATE);
     glcdRotate(rotate);
 
     canvas->glcd->rect = lt->rect;

@@ -174,7 +174,7 @@ void rtcInit(void)
                 break;
             }
 
-            rtcSetCorrection(settingsGet(EE_SYSTEM_RTC_CORR));
+            rtcSetCorrection(settingsGet(PARAM_SYSTEM_RTC_CORR));
 
             rtcPhase = RTC_INIT_READY;
         }

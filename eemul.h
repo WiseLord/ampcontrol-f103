@@ -24,8 +24,8 @@ void *eeGetPageAddr(uint16_t page);
 void eeErasePages(uint16_t page, uint16_t count);
 void eeWritePage(uint16_t page, void *addr, uint16_t bytes);
 
-void eeUpdateRaw(uint16_t addr, uint16_t data);
-uint16_t eeReadRaw(uint16_t addr);
+void eeUpdateRaw(uint16_t cell, uint16_t data);
+uint16_t eeReadRaw(uint16_t cell);
 
 #ifdef __cplusplus
 }

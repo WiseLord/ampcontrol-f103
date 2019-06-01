@@ -5,7 +5,7 @@
 #include <stm32f1xx_ll_gpio.h>
 #include <stm32f1xx_ll_tim.h>
 
-#include "eemap.h"
+#include "settings.h"
 
 static uint16_t rcCode[RC_CMD_END]; // Array with rc commands
 
@@ -296,7 +296,7 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
 void rcInit(void)
 {
     for (RcCmd cmd = 0; cmd < RC_CMD_END; cmd++) {
-        rcCode[cmd] = (uint16_t)eeRead(EE_RC_STBY_SWITCH + cmd);
+        rcCode[cmd] = (uint16_t)settingsRead(PARAM_RC_STBY_SWITCH + cmd);
     }
 
     NVIC_SetPriority(EXTI9_5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));

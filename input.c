@@ -1,7 +1,7 @@
 #include "input.h"
 
 #include "display/dispdrv.h"
-#include "eemap.h"
+#include "settings.h"
 
 static volatile int8_t encCnt = 0;
 static volatile CmdBtn cmdBuf = BTN_NO;
@@ -10,7 +10,7 @@ static int8_t encRes = 0;
 
 void inputInit(void)
 {
-    encRes = (int8_t)eeRead(EE_SYSTEM_ENC_RES);
+    encRes = (int8_t)settingsRead(PARAM_SYSTEM_ENC_RES);
     encCnt = 0;
     cmdBuf = BTN_NO;
 }

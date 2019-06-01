@@ -209,8 +209,6 @@ actions.h
 cmd.h
 debug.c
 debug.h
-eemap.c
-eemap.h
 eemul.c
 eemul.h
 fft.c

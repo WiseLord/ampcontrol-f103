@@ -36,7 +36,6 @@ C_SOURCES = main.c
 
 C_SOURCES += actions.c
 C_SOURCES += debug.c
-C_SOURCES += eemap.c
 C_SOURCES += eemul.c
 C_SOURCES += fft.c
 C_SOURCES += handlers.c

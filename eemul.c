@@ -1,5 +1,5 @@
 #include "eemul.h"
-#include "eemap.h"
+#include "settings.h"
 
 #include <stm32f1xx_ll_utils.h>
 
@@ -89,15 +89,16 @@ static void eeCopyPage(uint16_t addr, uint16_t data)
 
     const EE_Map *eeMap = eeMapGet();
 
-    for (uint16_t i = 0; i < eeMapGetSize(); i++) {
-        uint16_t param = eeMap[i].par;
-        uint16_t last = eeFindLastCell(param, EE_CELLS_NUM - 1);
+    for (uint16_t i = 0; i < PARAM_END; i++) {
+        uint16_t cell = eeMap[i].cell;
+        uint16_t last = eeFindLastCell(cell, EE_CELLS_NUM - 1);
         if (last != EE_NOT_FOUND) {
             uint16_t eeAddr = *ADDR(last);
             uint16_t eeData = *DATA(last);
 
-            if (eeAddr == addr)
+            if (eeAddr == addr) {
                 eeData = data;
+            }
 
             *raw = eeAddr;
             eeWaitBusy();
@@ -189,13 +190,13 @@ void eeWritePage(uint16_t page, void *addr, uint16_t bytes)
     eeLock();
 }
 
-uint16_t eeReadRaw(uint16_t addr)
+uint16_t eeReadRaw(uint16_t cell)
 {
     uint16_t ret = EE_NOT_FOUND;
 
-    uint16_t cell = eeFindEmptyCell();
-    if (cell != EE_NOT_FOUND) {
-        uint16_t last = eeFindLastCell(addr, cell - 1);
+    uint16_t emtpyCell = eeFindEmptyCell();
+    if (emtpyCell != EE_NOT_FOUND) {
+        uint16_t last = eeFindLastCell(cell, emtpyCell - 1);
         if (last == EE_NOT_FOUND) {
             ret = EE_NOT_FOUND;
         } else {
@@ -206,29 +207,29 @@ uint16_t eeReadRaw(uint16_t addr)
     return ret;
 }
 
-void eeUpdateRaw(uint16_t addr, uint16_t data)
+void eeUpdateRaw(uint16_t cell, uint16_t data)
 {
-    uint16_t cell = eeFindEmptyCell();
+    uint16_t emptyCell = eeFindEmptyCell();
 
-    if (cell != EE_NOT_FOUND) {
-        uint16_t last = eeFindLastCell(addr, cell - 1);
-        if (last == EE_NOT_FOUND || *DATA(last) != data) {
+    if (emptyCell != EE_NOT_FOUND) {
+        uint16_t lastCell = eeFindLastCell(cell, emptyCell - 1);
+        if (lastCell == EE_NOT_FOUND || *DATA(lastCell) != data) {
             eeUnlock();
             eeWaitBusy();
             SET_BIT(FLASH->CR, FLASH_CR_PG);
-            uint16_t *raw = ADDR(cell);
-            *raw = addr;
+            uint16_t *raw = ADDR(emptyCell);
+            *raw = cell;
             eeWaitBusy();
-            raw = DATA(cell);
+            raw = DATA(emptyCell);
             *raw = data;
             eeWaitBusy();
             CLEAR_BIT(FLASH->CR, FLASH_CR_PG);
             eeLock();
         }
     } else {
-        uint16_t last = eeFindLastCell(addr, EE_CELLS_NUM - 1);
-        if (last == EE_NOT_FOUND || *DATA(last) != data) {
-            eeCopyPage(addr, data);
+        uint16_t lastCell = eeFindLastCell(cell, EE_CELLS_NUM - 1);
+        if (lastCell == EE_NOT_FOUND || *DATA(lastCell) != data) {
+            eeCopyPage(cell, data);
             eeSwapPage();
         }
     }

@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "../eemap.h"
+#include "../settings.h"
 #include "rds.h"
 #include "stations.h"
 
@@ -41,20 +41,20 @@ void tunerReadSettings(void)
     // Read stored parameters
     memset(&tuner, 0, sizeof(tuner));
 
-    tuner.par.ic = (TunerIC)(eeRead(EE_TUNER_IC));
+    tuner.par.ic = (TunerIC)(settingsRead(PARAM_TUNER_IC));
 
-    tuner.par.band = (TunerBand)(eeRead(EE_TUNER_BAND));
-    tuner.par.step = (TunerStep)(eeRead(EE_TUNER_STEP));
-    tuner.par.deemph = (TunerDeemph)(eeRead(EE_TUNER_DEEMPH));
-    tuner.par.mode = (TunerMode)(eeRead(EE_TUNER_MODE));
+    tuner.par.band = (TunerBand)(settingsRead(PARAM_TUNER_BAND));
+    tuner.par.step = (TunerStep)(settingsRead(PARAM_TUNER_STEP));
+    tuner.par.deemph = (TunerDeemph)(settingsRead(PARAM_TUNER_DEEMPH));
+    tuner.par.mode = (TunerMode)(settingsRead(PARAM_TUNER_MODE));
 
-    tuner.par.forcedMono = eeRead(EE_TUNER_FMONO);
-    tuner.par.rds = eeRead(EE_TUNER_RDS);
-    tuner.par.bassBoost = eeRead(EE_TUNER_BASS);
+    tuner.par.forcedMono = settingsRead(PARAM_TUNER_FMONO);
+    tuner.par.rds = settingsRead(PARAM_TUNER_RDS);
+    tuner.par.bassBoost = settingsRead(PARAM_TUNER_BASS);
 
-    tuner.par.volume = eeRead(EE_TUNER_VOLUME) & 0x0F;
+    tuner.par.volume = settingsRead(PARAM_TUNER_VOLUME) & 0x0F;
 
-    tuner.par.freq = (uint16_t)eeRead(EE_TUNER_FREQ);
+    tuner.par.freq = (uint16_t)settingsRead(PARAM_TUNER_FREQ);
     tuner.status.freq = tuner.par.freq;
 
     tuner.par.fMin = 8700;
@@ -126,11 +126,11 @@ void tunerReadSettings(void)
 
 void tunerSaveSettings(void)
 {
-    eeUpdate(EE_TUNER_FMONO, tuner.par.forcedMono);
-    eeUpdate(EE_TUNER_RDS, tuner.par.rds);
-    eeUpdate(EE_TUNER_BASS, tuner.par.bassBoost);
+    settingsStore(PARAM_TUNER_FMONO, tuner.par.forcedMono);
+    settingsStore(PARAM_TUNER_RDS, tuner.par.rds);
+    settingsStore(PARAM_TUNER_BASS, tuner.par.bassBoost);
 
-    eeUpdate(EE_TUNER_FREQ, (int16_t)tuner.status.freq);
+    settingsStore(PARAM_TUNER_FREQ, (int16_t)tuner.status.freq);
 }
 
 void tunerInit(void)

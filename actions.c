@@ -4,12 +4,12 @@
 #include <string.h>
 
 #include "audio/audio.h"
-#include "eemap.h"
 #include "gui/canvas.h"
 #include "gui/layout.h"
 #include "input.h"
 #include "menu.h"
 #include "pins.h"
+#include "rc.h"
 #include "rtc.h"
 #include "screen.h"
 #include "settings.h"
@@ -63,7 +63,7 @@ static void actionDispExpired(Screen screen)
 
 static void actionResetSilenceTimer(void)
 {
-    int16_t silenceTimer = settingsGet(EE_SYSTEM_SIL_TIM);
+    int16_t silenceTimer = settingsGet(PARAM_SYSTEM_SIL_TIM);
 
     if (silenceTimer) {
         swTimSet(SW_TIM_SILENCE_TIMER, 1000 * 60 * silenceTimer + 999);
@@ -288,10 +288,10 @@ static void spModeChange(Spectrum *sp)
     if (++sp->mode >= (sp->peaks ? SP_MODE_END : SP_MODE_WATERFALL)) {
         sp->mode = SP_MODE_STEREO;
         sp->peaks = !sp->peaks;
-        eeUpdate(EE_SPECTRUM_PEAKS, sp->peaks);
+        settingsStore(PARAM_SPECTRUM_PEAKS, sp->peaks);
     }
     screenToClear();
-    eeUpdate(EE_SPECTRUM_MODE, sp->mode);
+    settingsStore(PARAM_SPECTRUM_MODE, sp->mode);
 }
 
 static void actionGetTimers(void)
