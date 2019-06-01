@@ -637,6 +637,26 @@ static void actionRemapCommon(void)
             action.value = !aProc->par.mute;
         }
         break;
+    case ACTION_AUDIO_LOUDNESS:
+        if (FLAG_SWITCH == action.value) {
+            action.value = !aProc->par.loudness;
+        }
+        break;
+    case ACTION_AUDIO_SURROUND:
+        if (FLAG_SWITCH == action.value) {
+            action.value = !aProc->par.surround;
+        }
+        break;
+    case ACTION_AUDIO_EFFECT3D:
+        if (FLAG_SWITCH == action.value) {
+            action.value = !aProc->par.effect3d;
+        }
+        break;
+    case ACTION_AUDIO_BYPASS:
+        if (FLAG_SWITCH == action.value) {
+            action.value = !aProc->par.bypass;
+        }
+        break;
     default:
         break;
     }
@@ -901,7 +921,43 @@ void actionHandle(bool visible)
 
     case ACTION_AUDIO_MUTE:
         audioSetMute(action.value);
-        // TODO: handle screen
+        if (aProc->tune != AUDIO_FLAG_MUTE) {
+            screenToClear();
+        }
+        aProc->tune = AUDIO_FLAG_MUTE;
+        actionSetScreen(SCREEN_AUDIO_FLAG, 3000);
+        break;
+    case ACTION_AUDIO_LOUDNESS:
+        audioSetLoudness(action.value);
+        if (aProc->tune != AUDIO_FLAG_LOUDNESS) {
+            screenToClear();
+        }
+        aProc->tune = AUDIO_FLAG_LOUDNESS;
+        actionSetScreen(SCREEN_AUDIO_FLAG, 3000);
+        break;
+    case ACTION_AUDIO_SURROUND:
+        audioSetSurround(action.value);
+        if (aProc->tune != AUDIO_FLAG_SURROUND) {
+            screenToClear();
+        }
+        aProc->tune = AUDIO_FLAG_SURROUND;
+        actionSetScreen(SCREEN_AUDIO_FLAG, 3000);
+        break;
+    case ACTION_AUDIO_EFFECT3D:
+        audioSetEffect3D(action.value);
+        if (aProc->tune != AUDIO_FLAG_EFFECT3D) {
+            screenToClear();
+        }
+        aProc->tune = AUDIO_FLAG_EFFECT3D;
+        actionSetScreen(SCREEN_AUDIO_FLAG, 3000);
+        break;
+    case ACTION_AUDIO_BYPASS:
+        audioSetBypass(action.value);
+        if (aProc->tune != AUDIO_FLAG_BYPASS) {
+            screenToClear();
+        }
+        aProc->tune = AUDIO_FLAG_BYPASS;
+        actionSetScreen(SCREEN_AUDIO_FLAG, 3000);
         break;
 
     case ACTION_TUNER_EDIT_NAME:

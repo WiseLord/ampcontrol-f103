@@ -201,6 +201,9 @@ void screenShow(bool clear)
     case SCREEN_AUDIO_PARAM:
         layoutShowTune(clear);
         break;
+    case SCREEN_AUDIO_FLAG:
+        layoutShowAudioFlag(clear);
+        break;
     case SCREEN_TUNER:
         if (swTimGet(SW_TIM_TUNER_POLL) == 0) {
             tunerUpdateStatus();

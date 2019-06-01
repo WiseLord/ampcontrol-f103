@@ -36,7 +36,13 @@ enum {
 
     AUDIO_TUNE_GAIN,
 
-    AUDIO_TUNE_END
+    AUDIO_TUNE_END,
+
+    AUDIO_FLAG_MUTE = 0,
+    AUDIO_FLAG_LOUDNESS,
+    AUDIO_FLAG_SURROUND,
+    AUDIO_FLAG_EFFECT3D,
+    AUDIO_FLAG_BYPASS,
 };
 
 typedef uint8_t InputType;

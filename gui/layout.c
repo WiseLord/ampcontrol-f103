@@ -516,6 +516,69 @@ void layoutShowTune(bool clear)
     sp->ready = false;
 }
 
+void layoutShowAudioFlag(bool clear)
+{
+    AudioProc *aProc = audioGet();
+    const tFont *iconSet = lt->iconSet;
+    Label label;
+    Icon icon;
+
+    switch (aProc->tune) {
+    case AUDIO_FLAG_LOUDNESS:
+        label = (Label)(LABEL_MENU + MENU_RC_LOUDNESS);
+        icon = aProc->par.loudness ? ICON_LOUDNESS_ON : ICON_LOUDNESS_OFF;
+        break;
+    case AUDIO_FLAG_SURROUND:
+        label = (Label)(LABEL_MENU + MENU_RC_SURROUND);
+        icon = aProc->par.surround ? ICON_SURROUND_ON : ICON_SURROUND_OFF;
+        break;
+    case AUDIO_FLAG_EFFECT3D:
+        label = (Label)(LABEL_MENU + MENU_RC_EFFECT_3D);
+        icon = aProc->par.effect3d ? ICON_EFFECT_3D_ON : ICON_EFFECT_3D_OFF;
+        break;
+    case AUDIO_FLAG_BYPASS:
+        label = (Label)(LABEL_MENU + MENU_RC_TONE_BYPASS);
+        icon = aProc->par.bypass ? ICON_TONE_BYPASS_ON : ICON_TONE_BYPASS_OFF;
+        break;
+    default:
+        label = (Label)(LABEL_MENU + MENU_RC_MUTE);
+        icon = aProc->par.mute ? ICON_MUTE_ON : ICON_MUTE_OFF;
+        break;
+    }
+
+    if (clear) {
+        // Label
+        glcdSetFont(lt->lblFont);
+        glcdSetFontColor(canvas->pal->fg);
+        glcdSetXY(0, 0);
+        glcdWriteStringConst(labelsGet(label));
+    }
+
+    // Icon
+    static Icon iconOld = ICON_MUTE_OFF;
+    if (clear || icon != iconOld) {
+        glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
+        const tImage *img = glcdFindIcon(icon, iconSet);
+        glcdDrawImage(img, canvas->pal->fg, canvas->pal->bg);
+        iconOld = icon;
+    }
+
+    // Spectrum
+    Spectrum *sp = spGet();
+
+    if (!sp->ready) {
+        return;
+    }
+
+    GlcdRect rect = canvas->glcd->rect;
+    rect.h /= 2;
+    rect.y = rect.h;
+    drawSpectrum(sp, SP_CHAN_BOTH, &rect);
+
+    sp->redraw = false;
+    sp->ready = false;
+}
+
 void layoutShowSpectrum(bool clear)
 {
     (void)clear;
