@@ -20,7 +20,6 @@ enum {
     SCREEN_SPECTRUM,
 
     SCREEN_AUDIO_PARAM,
-    SCREEN_AUDIO_INPUT,
 
     SCREEN_TUNER,
 
@@ -43,7 +42,6 @@ typedef enum {
 
 typedef union {
     AudioTune tune;
-    uint8_t input;
     MenuIdx parent;
     SpMode spMode;
 } ScreenParam;

@@ -172,11 +172,15 @@ static void actionNextAudioParam(AudioProc *aProc)
     } while (aProc->par.item[action.param.tune].grid == NULL && action.param.tune != AUDIO_TUNE_VOLUME);
 }
 
-static void actionNextAudioInput(AudioProc *aProc)
+static uint8_t actionGetNextAudioInput(AudioProc *aProc)
 {
-    action.param.input++;
-    if (action.param.input >= aProc->par.inCnt)
-        action.param.input = 0;
+    uint8_t ret = aProc->par.input + 1;
+
+    if (ret >= aProc->par.inCnt) {
+        ret = 0;
+    }
+
+    return  ret;
 }
 
 static void actionGetButtons(void)
@@ -211,7 +215,6 @@ static bool isRemoteCmdRepeatable(RcCmd cmd)
     case RC_CMD_NAV_DOWN:
         switch (screen) {
         case SCREEN_AUDIO_PARAM:
-        case SCREEN_AUDIO_INPUT:
             return true;
         }
         break;
@@ -598,9 +601,6 @@ static void actionRemapEncoder(void)
     if (ACTION_AUDIO_PARAM_CHANGE == action.type) {
         screenSet(SCREEN_AUDIO_PARAM);
         switch (screen) {
-        case SCREEN_AUDIO_INPUT:
-            action.param.tune = AUDIO_TUNE_GAIN;
-            break;
         case SCREEN_SPECTRUM:
             action.param.tune = AUDIO_TUNE_VOLUME;
         default:
@@ -885,13 +885,12 @@ void actionHandle(bool visible)
         break;
 
     case ACTION_AUDIO_INPUT:
-        if (screen == SCREEN_AUDIO_INPUT) {
-            actionNextAudioInput(aProc);
-            audioSetInput(action.param.input);
-        } else {
-            action.param.input = aProc->par.input;
+        if (screen == SCREEN_AUDIO_PARAM && action.param.tune == AUDIO_TUNE_GAIN) {
+            audioSetInput(actionGetNextAudioInput(aProc));
+            screenToClear();
         }
-        actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
+        action.param.tune = AUDIO_TUNE_GAIN;
+        actionSetScreen(SCREEN_AUDIO_PARAM, 5000);
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
         audioChangeTune(action.param.tune, (int8_t)(action.value));

@@ -23,8 +23,6 @@ static bool screenCheckClear(void)
     static ScreenMode scrPrev = SCREEN_STANDBY;
     static ScreenParam scrParPrev;
 
-    AudioProc *aProc = audioGet();
-
     // Check if we need to clear screen
     if (screen.mode != scrPrev) {
         clear = true;
@@ -33,21 +31,6 @@ static bool screenCheckClear(void)
         case SCREEN_TIME:
             if (scrPrev == SCREEN_STANDBY || scrPrev == SCREEN_TIME) {
                 clear = false;
-            }
-            break;
-        case SCREEN_AUDIO_PARAM:
-            if (scrPrev == SCREEN_AUDIO_INPUT && scrPar.tune == AUDIO_TUNE_GAIN) {
-                clear = false;
-            }
-            break;
-        case SCREEN_AUDIO_INPUT:
-            if (scrPrev == SCREEN_AUDIO_PARAM) {
-                if (scrParPrev.tune == AUDIO_TUNE_GAIN) {
-                    InputType inType = aProc->par.inType[aProc->par.input];
-                    if (IN_TUNER != inType) {
-                        clear = false;
-                    }
-                }
             }
             break;
         case SCREEN_MENU:
@@ -79,11 +62,6 @@ static bool screenCheckClear(void)
             break;
         case SCREEN_AUDIO_PARAM:
             if (scrPar.tune != scrParPrev.tune) {
-                clear = true;
-            }
-            break;
-        case SCREEN_AUDIO_INPUT:
-            if (scrPar.input != scrParPrev.input) {
                 clear = true;
             }
             break;
@@ -250,9 +228,6 @@ void screenShow(bool clear)
         break;
     case SCREEN_SPECTRUM:
         layoutShowSpectrum(clear);
-        break;
-    case SCREEN_AUDIO_INPUT:
-        layoutShowTune(clear, AUDIO_TUNE_GAIN);
         break;
     case SCREEN_AUDIO_PARAM:
         layoutShowTune(clear, scrPar.tune);
