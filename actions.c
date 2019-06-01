@@ -39,13 +39,13 @@ static void actionSet(ActionType type, int16_t value)
     action.value = value;
 }
 
-static void actionSetScreen(Screen screen, int16_t timeout)
+static void actionSetScreen(ScreenMode screen, int16_t timeout)
 {
     action.screen = screen;
     action.timeout = timeout;
 }
 
-static void actionDispExpired(Screen screen)
+static void actionDispExpired(ScreenMode screen)
 {
     memset(&action.param, 0, sizeof (action.param));
     rtcSetMode(RTC_NOEDIT);
@@ -201,7 +201,7 @@ static void actionGetEncoder(void)
 
 static bool isRemoteCmdRepeatable(RcCmd cmd)
 {
-    Screen screen = screenGet();
+    ScreenMode screen = screenGet();
 
     switch (cmd) {
     case RC_CMD_VOL_UP:
@@ -345,7 +345,7 @@ static void actionRemapBtnShort(void)
 
 static void actionRemapBtnLong(void)
 {
-    Screen screen = screenGet();
+    ScreenMode screen = screenGet();
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
@@ -397,7 +397,7 @@ static void actionRemapBtnLong(void)
 
 static void actionRemapRemote(void)
 {
-    Screen screen = screenGet();
+    ScreenMode screen = screenGet();
 
     if (screen == SCREEN_MENU) {
         Menu *menu = menuGet();
@@ -545,7 +545,7 @@ static void actionRemapRemote(void)
 
 static void actionRemapNavigate(void)
 {
-    Screen screen = screenGet();
+    ScreenMode screen = screenGet();
 
     switch (screen) {
     case SCREEN_MENU:
@@ -569,7 +569,7 @@ static void actionRemapNavigate(void)
 
 static void actionRemapEncoder(void)
 {
-    Screen screen = screenGet();
+    ScreenMode screen = screenGet();
 
     if (SCREEN_STANDBY == screen)
         return;
@@ -612,7 +612,7 @@ static void actionRemapEncoder(void)
 
 static void actionRemapCommon(void)
 {
-    Screen screen = screenGet();
+    ScreenMode screen = screenGet();
     AudioProc *aProc = audioGet();
 
     switch (action.type) {
@@ -692,7 +692,7 @@ void actionUserGet(void)
     }
 
     if (ACTION_NONE == action.type) {
-        Screen screen = screenGet();
+        ScreenMode screen = screenGet();
 
         if (screen == SCREEN_STANDBY && rtcCheckAlarm()) {
             actionSet(ACTION_STANDBY, FLAG_OFF);
@@ -731,7 +731,7 @@ void actionUserGet(void)
 
 void actionHandle(bool visible)
 {
-    Screen screen = screenGet();
+    ScreenMode screen = screenGet();
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
     Tuner *tuner = tunerGet();

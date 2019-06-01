@@ -89,11 +89,11 @@ typedef struct {
     bool visible;
     int16_t value;
 
-    Screen screen;
+    ScreenMode screen;
     ScreenParam param;
     int16_t timeout;
 
-    Screen prevScreen;
+    ScreenMode prevScreen;
 } Action;
 
 void actionQueue(ActionType type, int16_t value);

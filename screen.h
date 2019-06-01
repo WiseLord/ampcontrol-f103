@@ -12,7 +12,7 @@ extern "C" {
 #include "spectrum.h"
 #include "rtc.h"
 
-typedef uint8_t Screen;
+typedef uint8_t ScreenMode;
 enum {
     SCREEN_STANDBY,
 
@@ -48,18 +48,24 @@ typedef union {
     SpMode spMode;
 } ScreenParam;
 
+typedef struct {
+    ScreenMode mode;
+    ScreenMode def;
+    int8_t br[BR_END];
+} Screen;
+
 void screenReadSettings(void);
 void screenSaveSettings(void);
 
 void screenInit(void);
 
-void screenSet(Screen value);
-Screen screenGet(void);
+void screenSet(ScreenMode value);
+ScreenMode screenGet(void);
 
 void screenSetParam(ScreenParam param);
 
-void screenSetDefault(Screen value);
-Screen screenGetDefault(void);
+void screenSetDefault(ScreenMode value);
+ScreenMode screenGetDefault(void);
 
 int8_t screenGetBrightness(BrMode mode);
 void screenSetBrightness(BrMode mode, int8_t value);

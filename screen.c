@@ -8,27 +8,27 @@
 #include "swtimers.h"
 #include "tr/labels.h"
 
-static Screen screen = SCREEN_STANDBY;
-static Screen screenDefault = SCREEN_SPECTRUM;
 static ScreenParam scrPar;
 static bool scrToClear = false;
 
-// TODO: Read from backup memory
-static int8_t brightness[BR_END];
+static Screen screen = {
+    .mode = SCREEN_STANDBY,
+    .def = SCREEN_SPECTRUM,
+};
 
 static bool screenCheckClear(void)
 {
     bool clear = false;
 
-    static Screen scrPrev = SCREEN_STANDBY;
+    static ScreenMode scrPrev = SCREEN_STANDBY;
     static ScreenParam scrParPrev;
 
     AudioProc *aProc = audioGet();
 
     // Check if we need to clear screen
-    if (screen != scrPrev) {
+    if (screen.mode != scrPrev) {
         clear = true;
-        switch (screen) {
+        switch (screen.mode) {
         case SCREEN_STANDBY:
         case SCREEN_TIME:
             if (scrPrev == SCREEN_STANDBY || scrPrev == SCREEN_TIME) {
@@ -58,20 +58,20 @@ static bool screenCheckClear(void)
         }
 
         // Enable/disable tuner polling
-        if (screen == SCREEN_TUNER) {
+        if (screen.mode == SCREEN_TUNER) {
             swTimSet(SW_TIM_TUNER_POLL, 100);
         } else {
             swTimSet(SW_TIM_TUNER_POLL, SW_TIM_OFF);
         }
 
         // Handle standby/work brightness
-        if (screen == SCREEN_STANDBY) {
+        if (screen.mode == SCREEN_STANDBY) {
             screenChangeBrighness(BR_STBY, 0);
         } else {
             screenChangeBrighness(BR_WORK, 0);
         }
     } else {
-        switch (screen) {
+        switch (screen.mode) {
         case SCREEN_SPECTRUM:
             if (scrPar.spMode != scrParPrev.spMode) {
                 clear = true;
@@ -98,7 +98,7 @@ static bool screenCheckClear(void)
     }
 
     // Save current screen and screen parameter
-    scrPrev = screen;
+    scrPrev = screen.mode;
     scrParPrev = scrPar;
 
     return clear;
@@ -106,19 +106,19 @@ static bool screenCheckClear(void)
 
 void screenReadSettings(void)
 {
-    for (BrMode mode = BR_STBY; mode < BR_END; mode++) {
-        brightness[mode] = (int8_t)settingsRead(PARAM_DISPLAY_BR_STBY + mode);
-        if (brightness[mode] < LCD_BR_MIN) {
-            brightness[mode] = LCD_BR_MIN;
-        } else if (brightness[mode] > LCD_BR_MAX) {
-            brightness[mode] = LCD_BR_MAX;
+    for (BrMode brMode = BR_STBY; brMode < BR_END; brMode++) {
+        screen.br[brMode] = (int8_t)settingsRead((Param)(PARAM_DISPLAY_BR_STBY + brMode));
+        if (screen.br[brMode] < LCD_BR_MIN) {
+            screen.br[brMode] = LCD_BR_MIN;
+        } else if (screen.br[brMode] > LCD_BR_MAX) {
+            screen.br[brMode] = LCD_BR_MAX;
         }
     }
 }
 
 void screenSaveSettings(void)
 {
-    settingsStore(PARAM_DISPLAY_BR_WORK, brightness[BR_WORK]);
+    settingsStore(PARAM_DISPLAY_BR_WORK, screen.br[BR_WORK]);
 }
 
 
@@ -128,17 +128,17 @@ void screenInit(void)
     layoutInit();
     canvasClear();
     screenReadSettings();
-    dispdrvSetBrightness(brightness[BR_STBY]);
+    dispdrvSetBrightness(screen.br[BR_STBY]);
 }
 
-void screenSet(Screen value)
+void screenSet(ScreenMode value)
 {
-    screen = value;
+    screen.mode = value;
 }
 
-Screen screenGet()
+ScreenMode screenGet()
 {
-    return screen;
+    return screen.mode;
 }
 
 
@@ -148,12 +148,12 @@ void screenSetParam(ScreenParam param)
 }
 
 
-void screenSetDefault(Screen value)
+void screenSetDefault(ScreenMode value)
 {
-    screenDefault = value;
+    screen.def = value;
 }
 
-Screen screenGetDefault(void)
+ScreenMode screenGetDefault(void)
 {
     AudioProc *aProc = audioGet();
 
@@ -174,18 +174,18 @@ Screen screenGetDefault(void)
     if (IN_TUNER == inType)
         return SCREEN_TUNER;
 
-    return screenDefault;
+    return screen.def;
 }
 
 
 int8_t screenGetBrightness(BrMode mode)
 {
-    return brightness[mode];
+    return screen.br[mode];
 }
 
 void screenSetBrightness(BrMode mode, int8_t value)
 {
-    brightness[mode] = value;
+    screen.br[mode] = value;
 
     dispdrvSetBrightness(value);
 }
@@ -222,13 +222,13 @@ void screenShow(bool clear)
 
     if (!clear) {
         clear = screenCheckClear();
-        if (screen == SCREEN_TEXTEDIT) {
+        if (screen.mode == SCREEN_TEXTEDIT) {
             rect = layoutGet()->textEdit.rect;
         }
     }
     glcdSetRect(rect);
 
-    if (screen != SCREEN_STANDBY) {
+    if (screen.mode != SCREEN_STANDBY) {
         // Get new spectrum data
         if (swTimGet(SW_TIM_SP_CONVERT) <= 0) {
             swTimSet(SW_TIM_SP_CONVERT, 20);
@@ -243,7 +243,7 @@ void screenShow(bool clear)
         spectrum->redraw = true;
     }
 
-    switch (screen) {
+    switch (screen.mode) {
     case SCREEN_STANDBY:
     case SCREEN_TIME:
         layoutShowTime(clear);
