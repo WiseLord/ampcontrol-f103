@@ -162,8 +162,6 @@ int16_t settingsRead(Param param)
         return (int16_t)EE_NOT_FOUND;
     }
 
-    uint16_t cell = eeMap[param].cell;
-
     uint16_t value = eeReadRaw(eeMap[param].cell);
 
     if (value != EE_NOT_FOUND) {
@@ -171,18 +169,7 @@ int16_t settingsRead(Param param)
     }
 
     // Return default value if not found
-    int16_t def = (int16_t)EE_NOT_FOUND;
-
-    const EE_Map *eeMap = eeMapGet();
-
-    for (uint16_t i = 0; i < PARAM_END; i++) {
-        if (eeMap[i].cell == cell) {
-            def = eeMap[i].def;
-            break;
-        }
-    }
-
-    return def;
+    return eeMap[param].def;
 }
 
 void settingsStore(Param param, int16_t value)
