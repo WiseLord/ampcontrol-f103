@@ -5,9 +5,17 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
 #include <stdbool.h>
 
-#include "settings.h"
+typedef uint16_t MuteStby;
+enum {
+    MUTESTBY_SWD = 0,
+    MUTESTBY_POS,
+    MUTESTBY_NEG,
+
+    MUTESTBY_END,
+};
 
 void pinsInit(void);
 

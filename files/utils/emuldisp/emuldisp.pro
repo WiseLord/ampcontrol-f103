@@ -93,8 +93,8 @@ SOURCES += \
     ../../../input.c \
     ../../../mem.c \
     ../../../menu.c \
-    ../../../screen.c \
-    ../../../settings.c \
+	../../../screen.c \
+	../../../settings.c \
     ../../../swtimers.c \
 
 
@@ -121,8 +121,9 @@ HEADERS += \
     ../../../input.h \
     ../../../mem.h \
     ../../../menu.h \
-    ../../../rc.h \
-    ../../../rtc.h \
+	../../../pins.h \
+	../../../rc.h \
+	../../../rtc.h \
     ../../../screen.h \
     ../../../settings.h \
     ../../../spectrum.h \

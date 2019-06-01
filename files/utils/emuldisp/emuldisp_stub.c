@@ -8,6 +8,7 @@
 #include "../../../tuner/stations.h"
 #include "../../../tuner/tuner.h"
 #include "../../../eemap.h"
+#include "../../../pins.h"
 #include "../../../settings.h"
 #include "../../../spectrum.h"
 #include "../../../usb/usbhid.h"

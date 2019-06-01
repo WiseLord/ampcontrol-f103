@@ -10,6 +10,7 @@
 #include "display/glcd.h"
 #include "eemap.h"
 #include "i2c.h"
+#include "settings.h"
 
 #ifdef _SI470X
 #include "tuner/si470x.h"
