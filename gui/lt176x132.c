@@ -26,11 +26,6 @@ static const Layout lt176x132 = {
     .tune.bar.half = 5,
     .tune.bar.middle = 2,
 
-    .sp.step = 2,
-    .sp.oft = 0,
-    .sp.width = 1,
-    .sp.wfH = 1,
-
     .tuner.stFont = &fontterminus32,
     .tuner.nameFont = &fontterminus16,
     .tuner.bar.sc = 72,

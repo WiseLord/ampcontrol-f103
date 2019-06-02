@@ -26,11 +26,6 @@ static const Layout lt480x320 = {
     .tune.bar.half = 15,
     .tune.bar.middle = 2,
 
-    .sp.step = 4,
-    .sp.oft = 1,
-    .sp.width = 2,
-    .sp.wfH = 3,
-
     .tuner.stFont = &fontterminusmod24x3,
     .tuner.nameFont = &fontterminus32b,
     .tuner.bar.sc = 82,

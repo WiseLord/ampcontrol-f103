@@ -224,7 +224,7 @@ static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
         spDrawCol->fall[chan] = (uint8_t)spCol->fallW;
     }
 
-    return (uint8_t)(spCol->showW * N_DB / scale);
+    return (uint8_t)raw;
 }
 
 static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h, SpCol *col)
@@ -280,31 +280,35 @@ static void drawWaterfall(Spectrum *sp)
     if (++sp->wtfX >= lt->rect.w) {
         sp->wtfX = 0;
     }
-
-    const uint8_t wfH = lt->sp.wfH;
-
     glcdShift((sp->wtfX + 1) % lt->rect.w);
 
-    for (uint8_t col = 0; col < (lt->rect.h + wfH - 1) / wfH; col++) {
-
+    for (uint8_t col = 0; col < SPECTRUM_SIZE; col++) {
         SpCol spCol;
-        uint8_t raw = calcSpCol(sp, SP_CHAN_BOTH, lt->rect.h, col, &spCol);
+        calcSpCol(sp, SP_CHAN_BOTH, 224, col, &spCol);
+        uint16_t color = level2color(spCol.showW);
 
-        uint16_t color = level2color(raw);
-        glcdDrawRect(sp->wtfX, lt->rect.h - 1 - (col * wfH), 1, wfH, color);
+        int16_t posCurr = (col * lt->rect.h) / SPECTRUM_SIZE;
+        int16_t posNext = ((col + 1) * lt->rect.h) / SPECTRUM_SIZE;
+
+        int16_t wfH = (posNext - posCurr);
+        if (wfH) {
+            glcdDrawRect(sp->wtfX, lt->rect.h - posCurr - wfH, 1, wfH, color);
+        }
     }
 }
 
 static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect)
 {
-    const uint8_t step = lt->sp.step;
-    const uint8_t oft = lt->sp.oft;
-    const int16_t width = lt->sp.width;
+    const int16_t step = (rect->w  + 1) / SPECTRUM_SIZE + 1;    // Step of columns
+    const int16_t colW = step - (step / 2);                     // Column width
+    const int16_t num = (rect->w + colW - 1) / step;            // Number of columns
 
-    const int16_t height = rect->h;
+    const int16_t width = (num - 1) * step + colW;              // Width of spectrum
+    const int16_t height = rect->h;                             // Height of spectrum
+
+    const int16_t oft = (rect->w - width) / 2;                  // Spectrum offset for symmetry
+
     const int16_t y = rect->y;
-
-    const int16_t num = (lt->rect.w + width - 1) / step;    // Number of spectrum columns
 
     if (sp->redraw) {
         memset(&spDrawData, 0, sizeof (SpDrawData));
@@ -319,7 +323,7 @@ static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect)
         if (!sp->peaks) {
             spCol.peakW = 0;
         }
-        drawSpCol(sp->redraw, x, y, width, height, &spCol);
+        drawSpCol(sp->redraw, x, y, colW, height, &spCol);
     }
 }
 

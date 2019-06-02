@@ -8,34 +8,34 @@ TEMPLATE = app
 QMAKE_CXXFLAGS += -std=c++11
 QMAKE_CFLAGS += -std=c11
 
-CONFIG += DISP_320x240
+CONFIG += _DISP_320x240
 
-DISP_160x128 {
+_DISP_160x128 {
     DEFINES += _DISP_160x128
     SOURCES +=  ../../../gui/lt160x128.c
 }
 
-DISP_176x132 {
+_DISP_176x132 {
     DEFINES += _DISP_176x132
     SOURCES +=  ../../../gui/lt176x132.c
 }
 
-DISP_220x176 {
+_DISP_220x176 {
     DEFINES += _DISP_220x176
     SOURCES +=  ../../../gui/lt220x176.c
 }
 
-DISP_320x240 {
+_DISP_320x240 {
     DEFINES += _DISP_320x240
     SOURCES +=  ../../../gui/lt320x240.c
 }
 
-DISP_400x240 {
+_DISP_400x240 {
     DEFINES += _DISP_400x240
     SOURCES +=  ../../../gui/lt400x240.c
 }
 
-DISP_480x320 {
+_DISP_480x320 {
     DEFINES += _DISP_480x320
     SOURCES +=  ../../../gui/lt480x320.c
 }
@@ -89,7 +89,6 @@ SOURCES += \
     ../../../tuner/stations.c \
     ../../../tuner/tuner.c \
     ../../../actions.c \
-    ../../../eemap.c \
     ../../../input.c \
     ../../../mem.c \
     ../../../menu.c \
@@ -116,7 +115,6 @@ HEADERS += \
     ../../../tuner/tuner.h \
     ../../../tuner/tunerdefs.h \
     ../../../actions.h \
-    ../../../eemap.h \
     ../../../eemul.h \
     ../../../input.h \
     ../../../mem.h \

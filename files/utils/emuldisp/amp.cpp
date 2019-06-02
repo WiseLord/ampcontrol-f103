@@ -6,8 +6,8 @@
 #include <QDebug>
 
 #include "../../../gui/layout.h"
-#include "../../../eemap.h"
 #include "../../../input.h"
+#include "../../../settings.h"
 
 static EmulDisp *disp;
 static Amp *amp;

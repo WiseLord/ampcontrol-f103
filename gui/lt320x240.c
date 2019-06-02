@@ -26,11 +26,6 @@ static const Layout lt320x240 = {
     .tune.bar.half = 10,
     .tune.bar.middle = 2,
 
-    .sp.step = 3,
-    .sp.oft = 0,
-    .sp.width = 2,
-    .sp.wfH = 2,
-
     .tuner.stFont = &fontterminusmod18x3,
     .tuner.nameFont = &fontterminus28b,
     .tuner.bar.sc = 66,

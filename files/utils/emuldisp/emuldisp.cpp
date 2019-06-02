@@ -5,6 +5,7 @@
 #include "../../../display/dispdefs.h"
 #include "../../../input.h"
 #include "../../../screen.h"
+#include "../../../spectrum.h"
 #include "../../../swtimers.h"
 #include "../../../tr/labels.h"
 
@@ -32,8 +33,12 @@ void EmulDisp::init()
     screenInit();
     inputInit();
 
+    settingsInit();
     audioReadSettings();
     tunerReadSettings();
+
+    spGet()->mode = (SpMode)settingsRead(PARAM_SPECTRUM_MODE);
+    spGet()->peaks = (uint8_t)settingsRead(PARAM_SPECTRUM_PEAKS);
 
     stationsInit();
 
