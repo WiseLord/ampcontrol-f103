@@ -461,7 +461,6 @@ void layoutShowMenu(bool clear)
 void layoutShowTune(bool clear)
 {
     const tFont *iconSet = lt->iconSet;
-    static int16_t valueOld;
 
     Spectrum *sp = spGet();
     AudioProc *aProc = audioGet();
@@ -475,6 +474,10 @@ void layoutShowTune(bool clear)
         icon = ICON_VOLUME + aProc->tune;
     }
 
+    if (icon == ICON_VOLUME && aProc->par.mute) {
+        icon = ICON_MUTE_ON;
+    }
+
     const int16_t value = aProc->par.item[aProc->tune].value;
 
     const AudioGrid *grid = aProc->par.item[aProc->tune].grid;
@@ -482,19 +485,24 @@ void layoutShowTune(bool clear)
     const int8_t max = grid ? grid->max : 0;
     const uint8_t mStep = grid ? grid->mStep : 0;
 
-
     if (clear) {
         // Label
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas->pal->fg);
         glcdSetXY(0, 0);
         glcdWriteStringConst(label);
+    }
+
+    static Icon iconOld = ICON_VOLUME;
+    if (clear || iconOld != icon) {
         // Icon
         glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
         glcdDrawImage(img, canvas->pal->fg, canvas->pal->bg);
     }
+    iconOld = icon;
 
+    static int16_t valueOld;
     if (clear || valueOld != value) {
         // Bar
         drawBar(&lt->tune.bar, value, min, max);

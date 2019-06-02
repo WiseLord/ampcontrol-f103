@@ -107,24 +107,28 @@ void screenSetDefault(ScreenMode value)
 
 ScreenMode screenGetDefault(void)
 {
-    AudioProc *aProc = audioGet();
-
-    InputType inType = aProc->par.inType[aProc->par.input];;
-
     int32_t timer;
 
     timer = swTimGet(SW_TIM_STBY_TIMER);
     if (timer > 0 && timer < 60 * 1000 + 999) {
         return SCREEN_STBY_TIMER;
     }
-
     timer = swTimGet(SW_TIM_SILENCE_TIMER);
     if (timer > 0 && timer < 30 * 1000 + 999) {
         return SCREEN_SILENCE_TIMER;
     }
 
-    if (IN_TUNER == inType)
+    AudioProc *aProc = audioGet();
+
+    if (aProc->par.mute) {
+        return SCREEN_AUDIO_PARAM;
+    }
+
+    InputType inType = aProc->par.inType[aProc->par.input];;
+
+    if (IN_TUNER == inType) {
         return SCREEN_TUNER;
+    }
 
     return screen.def;
 }
