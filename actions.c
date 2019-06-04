@@ -47,7 +47,10 @@ static void actionSetScreen(ScreenMode screen, int16_t timeout)
 
 static void actionDispExpired(ScreenMode screen)
 {
+    AudioProc *aProc = audioGet();
+
     rtcSetMode(RTC_NOEDIT);
+    aProc->tune = AUDIO_TUNE_VOLUME;
 
     switch (screen) {
     case SCREEN_STANDBY:
@@ -603,7 +606,9 @@ static void actionRemapEncoder(void)
         screenSet(SCREEN_AUDIO_PARAM);
         switch (screen) {
         case SCREEN_SPECTRUM:
+        case SCREEN_AUDIO_FLAG:
             aProc->tune = AUDIO_TUNE_VOLUME;
+            break;
         default:
             break;
         }
