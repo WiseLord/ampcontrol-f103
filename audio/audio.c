@@ -216,6 +216,15 @@ void audioSetTune(AudioTune tune, int8_t value)
     }
 
     if (aProc.api.setTune) {
+        switch (tune) {
+        case AUDIO_TUNE_BASS:
+        case AUDIO_TUNE_MIDDLE:
+        case AUDIO_TUNE_TREBLE:
+            if (!aProc.api.setBypass && aProc.par.bypass) {
+                value = 0;
+            }
+            break;
+        }
         aProc.api.setTune(tune, value);
     }
 }
@@ -292,5 +301,9 @@ void audioSetBypass(bool value)
 
     if (aProc.api.setBypass) {
         aProc.api.setBypass(value);
+    } else {
+        audioSetTune(AUDIO_TUNE_BASS, aProc.par.item[AUDIO_TUNE_BASS].value);
+        audioSetTune(AUDIO_TUNE_MIDDLE, aProc.par.item[AUDIO_TUNE_MIDDLE].value);
+        audioSetTune(AUDIO_TUNE_TREBLE, aProc.par.item[AUDIO_TUNE_TREBLE].value);
     }
 }
