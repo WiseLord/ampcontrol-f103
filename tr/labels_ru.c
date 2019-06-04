@@ -115,7 +115,7 @@ const char *const labels_ru[LABEL_END] = {
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Режим ожидания",
-    [LABEL_MENU + MENU_RC_MUTE]         = "Приглушение",
+    [LABEL_MENU + MENU_RC_MUTE]         = "Тишина",
     [LABEL_MENU + MENU_RC_VOL_UP]       = "Громкость +",
     [LABEL_MENU + MENU_RC_VOL_DOWN]     = "Громкость -",
     [LABEL_MENU + MENU_RC_MENU]         = "Меню",
@@ -135,10 +135,10 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_MENU + MENU_RC_MIDDLE_DOWN]  = "СЧ -",
     [LABEL_MENU + MENU_RC_TREBLE_UP]    = "ВЧ +",
     [LABEL_MENU + MENU_RC_TREBLE_DOWN]  = "ВЧ -",
-    [LABEL_MENU + MENU_RC_LOUDNESS]     = "Тонкоррекция",
-    [LABEL_MENU + MENU_RC_SURROUND]     = "Звук вокруг",
+    [LABEL_MENU + MENU_RC_LOUDNESS]     = "Тонкомпенс.",
+    [LABEL_MENU + MENU_RC_SURROUND]     = "Окруж. звук",
     [LABEL_MENU + MENU_RC_EFFECT_3D]    = "3D эффект",
-    [LABEL_MENU + MENU_RC_TONE_BYPASS]  = "Отключить тон",
+    [LABEL_MENU + MENU_RC_TONE_BYPASS]  = "Откл. тон",
     [LABEL_MENU + MENU_RC_TIME]         = "Час",
     [LABEL_MENU + MENU_RC_STOP]         = "Стоп",
     [LABEL_MENU + MENU_RC_PLAY]         = "Играть",
