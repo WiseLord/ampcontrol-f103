@@ -909,14 +909,17 @@ void actionHandle(bool visible)
     case ACTION_RTC_MODE:
         if (scrMode == SCREEN_TIME) {
             rtcChangeMode(+1);
-            actionSetScreen(SCREEN_TIME, 15000);
         } else {
             rtcSetMode(RTC_NOEDIT);
-            actionSetScreen(SCREEN_TIME, 5000);
         }
+        actionSetScreen(SCREEN_TIME, rtcGetMode() == RTC_NOEDIT ? 5000 : 30000);
         break;
     case ACTION_RTC_CHANGE:
-        rtcChangeTime(rtcGetMode(), (int8_t)(action.value));
+        if (action.value < 0) {
+            rtcChangeTime(rtcGetMode(), DIRECTION_DOWN);
+        } else if (action.value > 0) {
+            rtcChangeTime(rtcGetMode(), DIRECTION_UP);
+        }
         actionSetScreen(scrMode, 5000);
         break;
     case ACTION_RTC_SET_HOUR:
@@ -1042,6 +1045,7 @@ void actionHandle(bool visible)
         break;
     case ACTION_SCR_DEF:
         aProc->tune = AUDIO_TUNE_GAIN;
+        rtcSetMode(RTC_NOEDIT);
         if (scrMode == screen->def) {
             scrDefChange(screen);
         }

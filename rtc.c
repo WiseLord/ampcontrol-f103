@@ -21,8 +21,8 @@ static RtcPhase rtcPhase = RTC_INIT_DISABLED;
 static uint32_t rtcTime;
 static RtcMode rtcMode = RTC_NOEDIT;
 
-static const RTC_type rtcMin = { 0,  0, 0,  1,  1,  1, 0, RTC_NOEDIT};
-static const RTC_type rtcMax = {23, 59, 0, 31, 12, 99, 0, RTC_NOEDIT};
+static const RTC_type rtcMin = { 0,  0, -1,  1,  1,  1, 0, RTC_NOEDIT};
+static const RTC_type rtcMax = {23, 59, 60, 31, 12, 99, 0, RTC_NOEDIT};
 
 static Alarm alarm[ALARM_COUNT];
 
@@ -111,13 +111,19 @@ static void rtcUpdate(RTC_type *rtc, RtcMode mode, int8_t value)
     if (value < timeMin)
         value = timeMax;
 
+    if (mode == RTC_SEC) {
+        if (value > 30) {
+            value = 60;
+        } else {
+            value = 0;
+        }
+    }
+
     *time = value;
 
-    uint32_t newTime = rtcToSec(rtc);
+    rtcTime = rtcToSec(rtc);
 
-    rtcTime = newTime;
-
-    LL_RTC_TIME_SetCounter(RTC, newTime);
+    LL_RTC_TIME_SetCounter(RTC, rtcTime);
 }
 
 static bool rtcIsAlarmDay(AlarmDay days, int8_t wday)
@@ -234,8 +240,10 @@ void rtcEditTime(RtcMode mode, int8_t digit)
 
     int8_t value = *((int8_t *)&rtc + mode);
     int8_t timeMax = *((const int8_t *)&rtcMax + mode);
-    if (mode == RTC_DATE)
+
+    if (mode == RTC_DATE) {
         timeMax = rtcDaysInMonth(&rtc);
+    }
 
     value %= 10;
     value *= 10;
