@@ -4,6 +4,7 @@
 #include "display/dispdefs.h"
 #include "eemul.h"
 #include "pins.h"
+#include "rc.h"
 #include "rtc.h"
 #include "spectrum.h"
 #include "tr/labels.h"
@@ -13,7 +14,7 @@ static uint8_t silenceTimer = 0;
 static int16_t rtcCorr = 0;
 static uint8_t muteStby = 0;
 
-#define GENERATE_EE_RC_MAP(CMD)  [PARAM_RC_ ## CMD] = {0x81 + PARAM_RC_ ## CMD, (int16_t)EE_NOT_FOUND},
+#define GENERATE_EE_RC_MAP(CMD)  [PARAM_RC_ ## CMD] = {0x80 + RC_CMD_ ## CMD, (int16_t)EE_NOT_FOUND},
 
 static const EE_Map eeMap[] = {
     [PARAM_NULL]            =   {0x00,  0},
@@ -75,12 +76,11 @@ static const EE_Map eeMap[] = {
     [PARAM_ALARM_MINUTE]    =   {0x61,  30},
     [PARAM_ALARM_DAYS]      =   {0x62,  0},
 
-    [PARAM_SYSTEM_ENC_RES]  =   {0x70,  4},
+    [PARAM_SYSTEM_LANG]     =   {0x70,  LANG_DEFAULT},
     [PARAM_SYSTEM_MUTESTBY] =   {0x71,  MUTESTBY_POS},
     [PARAM_SYSTEM_SIL_TIM]  =   {0x72,  5},
     [PARAM_SYSTEM_RTC_CORR] =   {0x73,  0},
-
-    [PARAM_SYSTEM_LANG]     =   {0x80,  LANG_DEFAULT},
+    [PARAM_SYSTEM_ENC_RES]  =   {0x74,  4},
 
     FOREACH_CMD(GENERATE_EE_RC_MAP)
 };
