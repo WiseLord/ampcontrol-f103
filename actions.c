@@ -526,11 +526,8 @@ static void actionRemapRemote(void)
     case RC_CMD_STOP:
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_STOP);
         break;
-    case RC_CMD_PLAY:
+    case RC_CMD_PLAY_PAUSE:
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
-        break;
-    case RC_CMD_PAUSE:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PAUSE);
         break;
     case RC_CMD_REW:
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);

@@ -42,8 +42,7 @@ extern "C" {
     CMD(TONE_BYPASS)        \
     CMD(TIME)               \
     CMD(STOP)               \
-    CMD(PLAY)               \
-    CMD(PAUSE)              \
+    CMD(PLAY_PAUSE)         \
     CMD(REW)                \
     CMD(FWD)                \
     CMD(TIMER)              \
