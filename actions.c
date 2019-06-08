@@ -580,13 +580,6 @@ static void actionRemapNavigate(void)
     case SCREEN_TEXTEDIT:
         actionNavigateTextEdit((RcCmd)action.value);
         break;
-    case SCREEN_TIME:
-        if (action.value == RC_CMD_NAV_LEFT || action.value == RC_CMD_CHAN_PREV) {
-            actionSet(ACTION_RTC_MODE, -1);
-        } else if (action.value == RC_CMD_NAV_RIGHT || action.value == RC_CMD_CHAN_NEXT) {
-            actionSet(ACTION_RTC_MODE, +1);
-        }
-        break;
     default:
         actionNavigateCommon((RcCmd)action.value);
         break;
@@ -915,7 +908,7 @@ void actionHandle(bool visible)
 
     case ACTION_RTC_MODE:
         if (scrMode == SCREEN_TIME) {
-            rtcChangeMode((int8_t)action.value);
+            rtcChangeMode(+1);
             actionSetScreen(SCREEN_TIME, 15000);
         } else {
             rtcSetMode(RTC_NOEDIT);
@@ -1048,6 +1041,7 @@ void actionHandle(bool visible)
         actionSetScreen(SCREEN_SPECTRUM, 3000);
         break;
     case ACTION_SCR_DEF:
+        aProc->tune = AUDIO_TUNE_GAIN;
         if (scrMode == screen->def) {
             scrDefChange(screen);
         }
