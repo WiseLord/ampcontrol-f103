@@ -20,7 +20,6 @@ static bool screenCheckClear(void)
     bool clear = false;
 
     static ScreenMode scrPrev = SCREEN_STANDBY;
-
     if (scrToClear) {
         clear = true;
         scrToClear = false;
@@ -38,13 +37,6 @@ static bool screenCheckClear(void)
             break;
         default:
             break;
-        }
-
-        // Enable/disable tuner polling
-        if (screen.mode == SCREEN_TUNER) {
-            swTimSet(SW_TIM_TUNER_POLL, 100);
-        } else {
-            swTimSet(SW_TIM_TUNER_POLL, SW_TIM_OFF);
         }
     }
 
@@ -73,11 +65,12 @@ void screenReadSettings(void)
             screen.br[brMode] = LCD_BR_MAX;
         }
     }
+    screen.def = (ScreenMode)settingsRead(PARAM_DISPLAY_DEF);
 }
 
 void screenSaveSettings(void)
 {
-    settingsStore(PARAM_DISPLAY_BR_WORK, screen.br[BR_WORK]);
+    settingsStore(PARAM_DISPLAY_DEF, screen.def);
 }
 
 
@@ -90,22 +83,22 @@ void screenInit(void)
     dispdrvSetBrightness(screen.br[BR_STBY]);
 }
 
-void screenSet(ScreenMode value)
+Screen *screenGet(void)
+{
+    return &screen;
+}
+
+void screenSetMode(ScreenMode value)
 {
     screen.mode = value;
 }
 
-ScreenMode screenGet()
+ScreenMode screenGetMode()
 {
     return screen.mode;
 }
 
-void screenSetDefault(ScreenMode value)
-{
-    screen.def = value;
-}
-
-ScreenMode screenGetDefault(void)
+ScreenMode screenCalcDef(void)
 {
     int32_t timer;
 
@@ -122,12 +115,6 @@ ScreenMode screenGetDefault(void)
 
     if (aProc->par.mute) {
         return SCREEN_AUDIO_PARAM;
-    }
-
-    InputType inType = aProc->par.inType[aProc->par.input];;
-
-    if (IN_TUNER == inType) {
-        return SCREEN_TUNER;
     }
 
     return screen.def;
@@ -167,9 +154,10 @@ void screenToClear(void)
 
 void screenShow(bool clear)
 {
-    Spectrum *spectrum = spGet();
-
     GlcdRect rect = layoutGet()->rect;
+    Spectrum *spectrum = spGet();
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
 
     if (!clear) {
         clear = screenCheckClear();
@@ -185,6 +173,15 @@ void screenShow(bool clear)
             swTimSet(SW_TIM_SP_CONVERT, 20);
             spGetADC(spectrum);
             spectrum->ready = true;
+        }
+
+        if (swTimGet(SW_TIM_INPUT_POLL) == 0) {
+            if (screen.mode == SCREEN_AUDIO_INPUT) {
+                if (inType == IN_TUNER) {
+                    tunerUpdateStatus();
+                }
+            }
+            swTimSet(SW_TIM_INPUT_POLL, 100);
         }
     }
 
@@ -208,12 +205,8 @@ void screenShow(bool clear)
     case SCREEN_AUDIO_FLAG:
         layoutShowAudioFlag(clear);
         break;
-    case SCREEN_TUNER:
-        if (swTimGet(SW_TIM_TUNER_POLL) == 0) {
-            tunerUpdateStatus();
-            swTimSet(SW_TIM_TUNER_POLL, 100);
-        }
-        layoutShowTuner(clear);
+    case SCREEN_AUDIO_INPUT:
+        layoutShowAudioInput(clear);
         break;
     case SCREEN_MENU:
         layoutShowMenu(clear);

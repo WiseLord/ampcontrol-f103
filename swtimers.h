@@ -13,7 +13,7 @@ typedef uint8_t SwTimer;
 enum {
     SW_TIM_DISPLAY = 0,
     SW_TIM_SP_CONVERT,
-    SW_TIM_TUNER_POLL,
+    SW_TIM_INPUT_POLL,
     SW_TIM_INIT_HW,
     SW_TIM_INIT_SW,
     SW_TIM_RC_REPEAT,

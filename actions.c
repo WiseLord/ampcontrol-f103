@@ -48,9 +48,10 @@ static void actionSetScreen(ScreenMode screen, int16_t timeout)
 static void actionDispExpired(ScreenMode screen)
 {
     AudioProc *aProc = audioGet();
+    ScreenMode scrDef = screenCalcDef();
 
     rtcSetMode(RTC_NOEDIT);
-    aProc->tune = AUDIO_TUNE_VOLUME;
+    aProc->tune = scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME;
 
     switch (screen) {
     case SCREEN_STANDBY:
@@ -58,7 +59,7 @@ static void actionDispExpired(ScreenMode screen)
         actionSetScreen(SCREEN_STANDBY, 1000); // TODO: Return to parent screen caused menu
         break;
     default:
-        actionSetScreen(screenGetDefault(), 1000);
+        actionSetScreen(scrDef, 1000);
         break;
     }
 }
@@ -207,7 +208,9 @@ static void actionGetEncoder(void)
 
 static bool isRemoteCmdRepeatable(RcCmd cmd)
 {
-    ScreenMode screen = screenGet();
+    ScreenMode screen = screenGetMode();
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
 
     switch (cmd) {
     case RC_CMD_VOL_UP:
@@ -223,8 +226,10 @@ static bool isRemoteCmdRepeatable(RcCmd cmd)
     case RC_CMD_NAV_LEFT:
     case RC_CMD_NAV_RIGHT:
         switch (screen) {
-        case SCREEN_TUNER:
-            return true;
+        case SCREEN_AUDIO_INPUT:
+            if (inType == IN_TUNER) {
+                return true;
+            }
         }
         break;
     }
@@ -299,6 +304,21 @@ static void spModeChange(Spectrum *sp)
     settingsStore(PARAM_SPECTRUM_MODE, sp->mode);
 }
 
+static void scrDefChange(Screen *screen)
+{
+    switch (screen->def) {
+    case SCREEN_SPECTRUM:
+        screen->def = SCREEN_AUDIO_INPUT;
+        break;
+    case SCREEN_AUDIO_INPUT:
+        screen->def = SCREEN_TIME;
+        break;
+    default:
+        screen->def = SCREEN_SPECTRUM;
+        break;
+    }
+}
+
 static void actionGetTimers(void)
 {
     if (swTimGet(SW_TIM_DISPLAY) == 0) {
@@ -350,7 +370,7 @@ static void actionRemapBtnShort(void)
 
 static void actionRemapBtnLong(void)
 {
-    ScreenMode screen = screenGet();
+    ScreenMode screen = screenGetMode();
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
@@ -402,7 +422,7 @@ static void actionRemapBtnLong(void)
 
 static void actionRemapRemote(void)
 {
-    ScreenMode screen = screenGet();
+    ScreenMode screen = screenGetMode();
     AudioProc *aProc = audioGet();
 
     if (screen == SCREEN_MENU) {
@@ -476,32 +496,32 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_BASS_UP:
-        screenSet(SCREEN_AUDIO_PARAM);
+        screenSetMode(SCREEN_AUDIO_PARAM);
         aProc->tune = AUDIO_TUNE_BASS;
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_BASS_DOWN:
-        screenSet(SCREEN_AUDIO_PARAM);
+        screenSetMode(SCREEN_AUDIO_PARAM);
         aProc->tune = AUDIO_TUNE_BASS;
         actionSet(ACTION_ENCODER, -1);
         break;
     case RC_CMD_MIDDLE_UP:
-        screenSet(SCREEN_AUDIO_PARAM);
+        screenSetMode(SCREEN_AUDIO_PARAM);
         aProc->tune = AUDIO_TUNE_MIDDLE;
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_MIDDLE_DOWN:
-        screenSet(SCREEN_AUDIO_PARAM);
+        screenSetMode(SCREEN_AUDIO_PARAM);
         aProc->tune = AUDIO_TUNE_MIDDLE;
         actionSet(ACTION_ENCODER, -1);
         break;
     case RC_CMD_TREBLE_UP:
-        screenSet(SCREEN_AUDIO_PARAM);
+        screenSetMode(SCREEN_AUDIO_PARAM);
         aProc->tune = AUDIO_TUNE_TREBLE;
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_TREBLE_DOWN:
-        screenSet(SCREEN_AUDIO_PARAM);
+        screenSetMode(SCREEN_AUDIO_PARAM);
         aProc->tune = AUDIO_TUNE_TREBLE;
         actionSet(ACTION_ENCODER, -1);
         break;
@@ -541,6 +561,9 @@ static void actionRemapRemote(void)
     case RC_CMD_SP_MODE:
         actionSet(ACTION_SP_MODE, 0);
         break;
+    case RC_CMD_SCR_DEF:
+        actionSet(ACTION_SCR_DEF, 0);
+        break;
     default:
         break;
     }
@@ -548,7 +571,7 @@ static void actionRemapRemote(void)
 
 static void actionRemapNavigate(void)
 {
-    ScreenMode screen = screenGet();
+    ScreenMode screen = screenGetMode();
 
     switch (screen) {
     case SCREEN_MENU:
@@ -572,7 +595,7 @@ static void actionRemapNavigate(void)
 
 static void actionRemapEncoder(void)
 {
-    ScreenMode screen = screenGet();
+    ScreenMode screen = screenGetMode();
     AudioProc *aProc = audioGet();
 
     if (SCREEN_STANDBY == screen)
@@ -600,10 +623,11 @@ static void actionRemapEncoder(void)
     }
 
     if (ACTION_AUDIO_PARAM_CHANGE == action.type) {
-        screenSet(SCREEN_AUDIO_PARAM);
+        screenSetMode(SCREEN_AUDIO_PARAM);
         switch (screen) {
         case SCREEN_SPECTRUM:
         case SCREEN_AUDIO_FLAG:
+        case SCREEN_AUDIO_INPUT:
             aProc->tune = AUDIO_TUNE_VOLUME;
             break;
         default:
@@ -615,7 +639,7 @@ static void actionRemapEncoder(void)
 
 static void actionRemapCommon(void)
 {
-    ScreenMode screen = screenGet();
+    ScreenMode screen = screenGetMode();
     AudioProc *aProc = audioGet();
 
     switch (action.type) {
@@ -715,7 +739,7 @@ void actionUserGet(void)
     }
 
     if (ACTION_NONE == action.type) {
-        ScreenMode screen = screenGet();
+        ScreenMode screen = screenGetMode();
 
         if (screen == SCREEN_STANDBY && rtcCheckAlarm()) {
             actionSet(ACTION_STANDBY, FLAG_OFF);
@@ -754,7 +778,9 @@ void actionUserGet(void)
 
 void actionHandle(bool visible)
 {
-    ScreenMode screen = screenGet();
+    Screen *screen = screenGet();
+    ScreenMode scrMode = screen->mode;
+
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
     Tuner *tuner = tunerGet();
@@ -808,6 +834,7 @@ void actionHandle(bool visible)
             swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
             swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
             swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
+            swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
 
             actionDispExpired(SCREEN_STANDBY);
         }
@@ -821,7 +848,7 @@ void actionHandle(bool visible)
         tunerInit();
         audioInit();
 
-        swTimSet(SW_TIM_TUNER_POLL, 400);
+        swTimSet(SW_TIM_INPUT_POLL, 800);
         swTimSet(SW_TIM_INIT_SW, 300);
         break;
     case ACTION_INIT_RTC:
@@ -839,10 +866,10 @@ void actionHandle(bool visible)
         actionResetSilenceTimer();
         break;
     case ACTION_DISP_EXPIRED:
-        actionDispExpired(screen);
+        actionDispExpired(scrMode);
         break;
     case ACTION_DIGIT:
-        if (screen == SCREEN_TIME) {
+        if (scrMode == SCREEN_TIME) {
             rtcEditTime(rtcGetMode(), (int8_t)(action.value));
             actionSetScreen(SCREEN_TIME, 5000);
         }
@@ -863,7 +890,7 @@ void actionHandle(bool visible)
             } else if (action.value < 0) {
                 tunerMove(TUNER_DIR_DOWN);
             }
-            actionSetScreen(SCREEN_TUNER, 5000);
+            actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
             break;
         case IN_PC:
             if (action.value > 0) {
@@ -871,12 +898,13 @@ void actionHandle(bool visible)
             } else if (action.value < 0) {
                 usbHidSendMediaKey(HIDMEDIAKEY_PREV_TRACK);
             }
+            actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
             break;
         }
         break;
 
     case ACTION_OPEN_MENU:
-        if (screen == SCREEN_AUDIO_PARAM) {
+        if (scrMode == SCREEN_AUDIO_PARAM) {
             screenToClear();
             actionNextAudioParam(aProc);
         } else {
@@ -886,7 +914,7 @@ void actionHandle(bool visible)
         break;
 
     case ACTION_RTC_MODE:
-        if (screen == SCREEN_TIME) {
+        if (scrMode == SCREEN_TIME) {
             rtcChangeMode((int8_t)action.value);
             actionSetScreen(SCREEN_TIME, 15000);
         } else {
@@ -896,7 +924,7 @@ void actionHandle(bool visible)
         break;
     case ACTION_RTC_CHANGE:
         rtcChangeTime(rtcGetMode(), (int8_t)(action.value));
-        actionSetScreen(screen, 5000);
+        actionSetScreen(scrMode, 5000);
         break;
     case ACTION_RTC_SET_HOUR:
     case ACTION_RTC_SET_MIN:
@@ -905,20 +933,20 @@ void actionHandle(bool visible)
     case ACTION_RTC_SET_MONTH:
     case ACTION_RTC_SET_YEAR:
         rtcSetTime((RtcMode)(action.type - ACTION_RTC_SET_HOUR), (int8_t)(action.value));
-        actionSetScreen(screen, 5000);
+        actionSetScreen(scrMode, 5000);
         break;
 
     case ACTION_AUDIO_INPUT:
-        if (screen == SCREEN_AUDIO_PARAM && aProc->tune == AUDIO_TUNE_GAIN) {
+        if (scrMode == SCREEN_AUDIO_INPUT) {
             audioSetInput(actionGetNextAudioInput(aProc));
         }
         screenToClear();
         aProc->tune = AUDIO_TUNE_GAIN;
-        actionSetScreen(SCREEN_AUDIO_PARAM, 5000);
+        actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
         audioChangeTune(aProc->tune, (int8_t)(action.value));
-        actionSetScreen(SCREEN_AUDIO_PARAM, 5000);
+        actionSetScreen(SCREEN_AUDIO_PARAM, 3000);
         break;
 
     case ACTION_AUDIO_MUTE:
@@ -965,7 +993,7 @@ void actionHandle(bool visible)
     case ACTION_TUNER_EDIT_NAME:
         glcdSetFont(lt->textEdit.editFont);
         texteditSet(stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);
-        action.prevScreen = SCREEN_TUNER;
+        action.prevScreen = SCREEN_AUDIO_INPUT;
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
         break;
     case ACTION_TUNER_DEL_STATION:
@@ -1008,16 +1036,22 @@ void actionHandle(bool visible)
         break;
 
     case ACTION_TIMER:
-        if (screen == SCREEN_STBY_TIMER) {
+        if (scrMode == SCREEN_STBY_TIMER) {
             stbyTimerChange();
         }
         actionSetScreen(SCREEN_STBY_TIMER, 5000);
         break;
     case ACTION_SP_MODE:
-        if (screen == SCREEN_SPECTRUM) {
+        if (scrMode == SCREEN_SPECTRUM) {
             spModeChange(sp);
         }
         actionSetScreen(SCREEN_SPECTRUM, 3000);
+        break;
+    case ACTION_SCR_DEF:
+        if (scrMode == screen->def) {
+            scrDefChange(screen);
+        }
+        actionSetScreen(screen->def, 3000);
         break;
     default:
         break;
@@ -1029,7 +1063,7 @@ void actionHandle(bool visible)
     }
 
     // Reset silence timer on signal
-    if (screen != SCREEN_STANDBY) {
+    if (scrMode != SCREEN_STANDBY) {
         Spectrum *spectrum = spGet();
         if (spectrum->data[SP_CHAN_LEFT].max > 128 ||
             spectrum->data[SP_CHAN_RIGHT].max > 128) {
@@ -1038,7 +1072,7 @@ void actionHandle(bool visible)
     }
 
     if (action.visible) {
-        screenSet(action.screen);
+        screenSetMode(action.screen);
         if (action.timeout > 0) {
             swTimSet(SW_TIM_DISPLAY, action.timeout);
         }

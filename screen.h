@@ -14,15 +14,14 @@ extern "C" {
 
 typedef uint8_t ScreenMode;
 enum {
-    SCREEN_STANDBY,
+    SCREEN_STANDBY = 0,
 
     SCREEN_TIME,
     SCREEN_SPECTRUM,
 
     SCREEN_AUDIO_PARAM,
     SCREEN_AUDIO_FLAG,
-
-    SCREEN_TUNER,
+    SCREEN_AUDIO_INPUT,
 
     SCREEN_MENU,
 
@@ -35,7 +34,7 @@ enum {
 };
 
 typedef enum {
-    BR_STBY,
+    BR_STBY = 0,
     BR_WORK,
 
     BR_END
@@ -52,11 +51,12 @@ void screenSaveSettings(void);
 
 void screenInit(void);
 
-void screenSet(ScreenMode value);
-ScreenMode screenGet(void);
+Screen *screenGet(void);
 
-void screenSetDefault(ScreenMode value);
-ScreenMode screenGetDefault(void);
+void screenSetMode(ScreenMode value);
+ScreenMode screenGetMode(void);
+
+ScreenMode screenCalcDef(void);
 
 int8_t screenGetBrightness(BrMode mode);
 void screenSetBrightness(BrMode mode, int8_t value);

@@ -6,6 +6,7 @@
 #include "pins.h"
 #include "rc.h"
 #include "rtc.h"
+#include "screen.h"
 #include "spectrum.h"
 #include "tr/labels.h"
 #include "tuner/tunerdefs.h"
@@ -68,6 +69,7 @@ static const EE_Map eeMap[] = {
     [PARAM_DISPLAY_BR_STBY] =   {0x40,  3},
     [PARAM_DISPLAY_BR_WORK] =   {0x41,  LCD_BR_MAX},
     [PARAM_DISPLAY_ROTATE]  =   {0x42,  false},
+    [PARAM_DISPLAY_DEF]     =   {0x43,  SCREEN_SPECTRUM},
 
     [PARAM_SPECTRUM_MODE]   =   {0x50,  SP_MODE_STEREO},
     [PARAM_SPECTRUM_PEAKS]  =   {0x51,  true},

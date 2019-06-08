@@ -738,6 +738,60 @@ void layoutShowTuner(bool clear)
     sp->ready = false;
 }
 
+void layoutShowAudioInput(bool clear)
+{
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
+
+    if (inType == IN_TUNER) {
+        layoutShowTuner(clear);
+        return;
+    }
+
+    const tFont *iconSet = lt->iconSet;
+    const char *label = labelsGet(LABEL_IN_TUNER + inType);
+    Icon icon = (ICON_TUNER + inType);
+
+    if (aProc->tune < AUDIO_TUNE_GAIN) {
+        label = labelsGet(LABEL_VOLUME + aProc->tune);
+        icon = ICON_VOLUME + aProc->tune;
+    }
+
+    if (clear) {
+        // Label
+        glcdSetFont(lt->lblFont);
+        glcdSetFontColor(canvas->pal->fg);
+        glcdSetXY(0, 0);
+        glcdWriteStringConst(label);
+    }
+
+    static Icon iconOld = ICON_VOLUME;
+    if (clear || iconOld != icon) {
+        // Icon
+        glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
+        const tImage *img = glcdFindIcon(icon, iconSet);
+        glcdDrawImage(img, canvas->pal->fg, canvas->pal->bg);
+    }
+    iconOld = icon;
+
+    Spectrum *sp = spGet();
+    // Spectrum
+    if (!sp->ready) {
+        return;
+    }
+
+    GlcdRect rect = canvas->glcd->rect;
+    rect.y = lt->lblFont->chars[0].image->height;
+    rect.h = (rect.h - rect.y) / 2;
+    drawSpectrum(sp, SP_CHAN_LEFT, &rect);
+    rect.y += rect.h;
+    drawSpectrum(sp, SP_CHAN_RIGHT, &rect);
+
+    sp->redraw = false;
+    sp->ready = false;
+
+}
+
 void layoutShowTextEdit(bool clear)
 {
     TextEdit *te = &canvas->te;

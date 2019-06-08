@@ -47,6 +47,7 @@ extern "C" {
     CMD(FWD)                \
     CMD(TIMER)              \
     CMD(SP_MODE)            \
+    CMD(SCR_DEF)            \
 
 #ifdef __cplusplus
 }

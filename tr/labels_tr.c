@@ -146,4 +146,5 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_RC_FWD]          = "İleri Sar",
     [LABEL_MENU + MENU_RC_TIMER]        = "Kapatma Saati",
 //    [LABEL_MENU + MENU_RC_SP_MODE]      = "Spectrum mode",
+//    [LABEL_MENU + MENU_RC_SCR_DEF]      = "Default screen",
 };

@@ -80,6 +80,7 @@ enum {
 
     ACTION_TIMER,
     ACTION_SP_MODE,
+    ACTION_SCR_DEF,
 
     ACTION_TYPE_END
 };
