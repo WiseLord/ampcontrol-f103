@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 
 #include "audio/audio.h"
+#include "display/icons/icons.h"
 #include "menu.h"
 #include "spectrum.h"
 #include "rtc.h"
@@ -43,6 +44,7 @@ typedef enum {
 typedef struct {
     ScreenMode mode;
     ScreenMode def;
+    Icon iconHint;
     int8_t br[BR_END];
 } Screen;
 

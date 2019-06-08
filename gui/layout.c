@@ -738,7 +738,7 @@ void layoutShowTuner(bool clear)
     sp->ready = false;
 }
 
-void layoutShowAudioInput(bool clear)
+void layoutShowAudioInput(bool clear, Icon icon)
 {
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
@@ -750,11 +750,9 @@ void layoutShowAudioInput(bool clear)
 
     const tFont *iconSet = lt->iconSet;
     const char *label = labelsGet(LABEL_IN_TUNER + inType);
-    Icon icon = (ICON_TUNER + inType);
 
-    if (aProc->tune < AUDIO_TUNE_GAIN) {
-        label = labelsGet(LABEL_VOLUME + aProc->tune);
-        icon = ICON_VOLUME + aProc->tune;
+    if (icon == ICON_EMPTY) {
+        icon = (ICON_TUNER + inType);
     }
 
     if (clear) {

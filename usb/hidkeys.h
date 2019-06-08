@@ -159,7 +159,7 @@ enum {
     HIDMEDIAKEY_PLAY            = 0x08,
     HIDMEDIAKEY_PAUSE           = 0x10,
     HIDMEDIAKEY_REWIND          = 0x20,
-    HIDMEDIAKEY_FFD             = 0x40,
+    HIDMEDIAKEY_FFWD            = 0x40,
     HIDMEDIAKEY_MUTE            = 0x80,
 };
 

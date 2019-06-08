@@ -5,7 +5,8 @@
 
 #include "../fonts/fonts.h"
 
-typedef enum {
+typedef uint8_t Icon;
+enum {
     ICON_EMPTY = 0x00,
 
     // Various icons
@@ -51,8 +52,14 @@ typedef enum {
     ICON_TONE_BYPASS_ON,
     ICON_TONE_BYPASS_OFF,
 
-    ICON_END
-} Icon;
+    // Media keys
+    ICON_PREV_TRACK = 0x80,
+    ICON_NEXT_TRACK,
+    ICON_STOP,
+    ICON_PLAY_PAUSE,
+    ICON_REWIND,
+    ICON_FFWD,
+};
 
 extern const tFont iconsamp24;
 extern const tFont iconsamp32;

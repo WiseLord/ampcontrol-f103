@@ -97,7 +97,7 @@ void layoutShowTune(bool clear);
 void layoutShowAudioFlag(bool clear);
 void layoutShowSpectrum(bool clear);
 void layoutShowTuner(bool clear);
-void layoutShowAudioInput(bool clear);
+void layoutShowAudioInput(bool clear, Icon icon);
 void layoutShowTextEdit(bool clear);
 void layoutShowTimer(bool clear, int32_t value);
 

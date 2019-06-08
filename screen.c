@@ -206,7 +206,7 @@ void screenShow(bool clear)
         layoutShowAudioFlag(clear);
         break;
     case SCREEN_AUDIO_INPUT:
-        layoutShowAudioInput(clear);
+        layoutShowAudioInput(clear, screen.iconHint);
         break;
     case SCREEN_MENU:
         layoutShowMenu(clear);

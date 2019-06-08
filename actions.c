@@ -45,15 +45,19 @@ static void actionSetScreen(ScreenMode screen, int16_t timeout)
     action.timeout = timeout;
 }
 
-static void actionDispExpired(ScreenMode screen)
+static void actionDispExpired(ScreenMode scrMode)
 {
     AudioProc *aProc = audioGet();
-    ScreenMode scrDef = screenCalcDef();
+
+    Screen *screen = screenGet();
+    ScreenMode scrDef = screen->def;
+
+    screen->iconHint = ICON_EMPTY;
 
     rtcSetMode(RTC_NOEDIT);
     aProc->tune = scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME;
 
-    switch (screen) {
+    switch (scrMode) {
     case SCREEN_STANDBY:
     case SCREEN_MENU:
         actionSetScreen(SCREEN_STANDBY, 1000); // TODO: Return to parent screen caused menu
@@ -134,6 +138,7 @@ static void actionNavigateCommon(RcCmd cmd)
 {
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
+    Screen *screen = screenGet();
 
     switch (cmd) {
     case RC_CMD_NAV_OK:
@@ -142,6 +147,7 @@ static void actionNavigateCommon(RcCmd cmd)
     case RC_CMD_NAV_BACK:
         switch (inType) {
         case IN_PC:
+            screen->iconHint = ICON_PLAY_PAUSE;
             actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
             break;
         default:
@@ -150,9 +156,11 @@ static void actionNavigateCommon(RcCmd cmd)
         }
         break;
     case RC_CMD_NAV_RIGHT:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFD);
+        screen->iconHint = ICON_FFWD;
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFWD);
         break;
     case RC_CMD_NAV_LEFT:
+        screen->iconHint = ICON_REWIND;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
         break;
     case RC_CMD_NAV_UP:
@@ -422,10 +430,12 @@ static void actionRemapBtnLong(void)
 
 static void actionRemapRemote(void)
 {
-    ScreenMode screen = screenGetMode();
+    Screen *screen = screenGet();
+    ScreenMode scrMode = screen->mode;
+
     AudioProc *aProc = audioGet();
 
-    if (screen == SCREEN_MENU) {
+    if (scrMode == SCREEN_MENU) {
         Menu *menu = menuGet();
         if ((menu->parent == MENU_SETUP_RC) && (menu->selected)) {
             actionSet(ACTION_MENU_CHANGE, 0);
@@ -433,13 +443,13 @@ static void actionRemapRemote(void)
         }
     }
 
-    if (SCREEN_STANDBY == screen &&
+    if (SCREEN_STANDBY == scrMode &&
         action.value == RC_CMD_MENU) {
         actionSet(ACTION_MENU_SELECT, MENU_SETUP_SYSTEM);
         return;
     }
 
-    if (SCREEN_STANDBY == screen &&
+    if (SCREEN_STANDBY == scrMode &&
         action.value != RC_CMD_STBY_SWITCH)
         return;
 
@@ -544,16 +554,20 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_STOP:
+        screen->iconHint = ICON_STOP;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_STOP);
         break;
     case RC_CMD_PLAY_PAUSE:
+        screen->iconHint = ICON_PLAY_PAUSE;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
         break;
     case RC_CMD_REW:
+        screen->iconHint = ICON_REWIND;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
         break;
     case RC_CMD_FWD:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFD);
+        screen->iconHint = ICON_FFWD;
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFWD);
         break;
     case RC_CMD_TIMER:
         actionSet(ACTION_TIMER, 0);
@@ -872,6 +886,7 @@ void actionHandle(bool visible)
         switch (inType) {
         case IN_PC:
             usbHidSendMediaKey((HidKey)action.value);
+            actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
             break;
         }
         break;
@@ -880,18 +895,22 @@ void actionHandle(bool visible)
         case IN_TUNER:
             if (action.value > 0) {
                 tunerMove(TUNER_DIR_UP);
+                screen->iconHint = ICON_NEXT_TRACK;
             } else if (action.value < 0) {
                 tunerMove(TUNER_DIR_DOWN);
+                screen->iconHint = ICON_PREV_TRACK;
             }
-            actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
+            actionSetScreen(SCREEN_AUDIO_INPUT, 3000);
             break;
         case IN_PC:
             if (action.value > 0) {
                 usbHidSendMediaKey(HIDMEDIAKEY_NEXT_TRACK);
+                screen->iconHint = ICON_NEXT_TRACK;
             } else if (action.value < 0) {
                 usbHidSendMediaKey(HIDMEDIAKEY_PREV_TRACK);
+                screen->iconHint = ICON_PREV_TRACK;
             }
-            actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
+            actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
             break;
         }
         break;
@@ -937,7 +956,7 @@ void actionHandle(bool visible)
             audioSetInput(actionGetNextAudioInput(aProc));
         }
         screenToClear();
-        aProc->tune = AUDIO_TUNE_GAIN;
+        screen->iconHint = ICON_EMPTY;
         actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
@@ -1044,7 +1063,6 @@ void actionHandle(bool visible)
         actionSetScreen(SCREEN_SPECTRUM, 3000);
         break;
     case ACTION_SCR_DEF:
-        aProc->tune = AUDIO_TUNE_GAIN;
         rtcSetMode(RTC_NOEDIT);
         if (scrMode == screen->def) {
             scrDefChange(screen);
