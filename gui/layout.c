@@ -11,7 +11,6 @@ static Canvas *canvas;
 
 static SpDrawData spDrawData;
 
-static void drawBar(const CanvasBar *bar, int16_t value, int16_t min, int16_t max);
 static void drawTm(RTC_type *rtc, RtcMode tm);
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
 static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpCol *spCol);
@@ -19,43 +18,6 @@ static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h, S
 static void drawWaterfall(Spectrum *sp);
 static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect);
 static void drawRds(Rds *rds);
-
-static void drawBar(const CanvasBar *bar, int16_t value, int16_t min, int16_t max)
-{
-    const int16_t sc = bar->sc;         // Scale count
-    const uint8_t sw = bar->sw;         // Scale width
-    const int16_t barPos = bar->barY;
-    const uint8_t barHalf = bar->half;
-    const uint8_t barMiddle = bar->middle;
-    const int16_t width = bar->barW;
-
-    if (min + max) { // Non-symmectic scale => rescale to 0..sc
-        value = sc * (value - min) / (max - min);
-    } else { // Symmetric scale => rescale to -sc/2..sc/2
-        value = (sc / 2) * value / (max ? max : 1);
-    }
-
-    for (uint16_t i = 0; i < sc; i++) {
-        uint16_t color = canvas->pal->fg;
-
-        if (min + max) { // Non-symmetric scale
-            if (i >= value) {
-                color = canvas->pal->bg;
-            }
-        } else { // Symmetric scale
-            if ((value > 0 && i >= value + (sc / 2)) ||
-                (value >= 0 && i < (sc / 2 - 1)) ||
-                (value < 0 && i < value + (sc / 2)) ||
-                (value <= 0 && i > (sc / 2))) {
-                color = canvas->pal->bg;
-            }
-        }
-
-        glcdDrawRect(i * (width / sc), barPos, sw, barHalf, color);
-        glcdDrawRect(i * (width / sc), barPos + barHalf, sw, barMiddle, canvas->pal->fg);
-        glcdDrawRect(i * (width / sc), barPos + barHalf + barMiddle, sw, barHalf, color);
-    }
-}
 
 static void drawTm(RTC_type *rtc, RtcMode tm)
 {
@@ -473,7 +435,7 @@ void layoutShowTune(bool clear)
     static int16_t valueOld;
     if (clear || valueOld != value) {
         // Bar
-        drawBar(&lt->tune.bar, value, min, max);
+        drawBar(&lt->tune.bar, value, min, max, canvas->pal->fg, canvas->pal->bg);
         // Value
         glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
@@ -602,7 +564,7 @@ void layoutShowTuner(bool clear)
 
     const tImage *icon = NULL;;
     const uint8_t iconSpace = lt->tuner.iconSpace;
-    const CanvasBar *bar = &lt->tuner.bar;
+    const StripedBar *bar = &lt->tuner.bar;
 
     // Frequency
     uint16_t freq = tuner->status.freq;
@@ -627,7 +589,7 @@ void layoutShowTuner(bool clear)
         glcdWriteNum(freq % 100, 2, '0', 10);
 
         // Scale
-        drawBar(bar, (int16_t)freq, freqMin, freqMax);
+        drawBar(bar, (int16_t)freq, freqMin, freqMax, canvas->pal->fg, canvas->pal->bg);
 
         glcdSetFont(lt->tuner.stFont);
         glcdSetXY(lt->rect.w, lt->tune.valY);

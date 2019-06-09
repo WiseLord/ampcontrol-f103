@@ -15,6 +15,7 @@ extern "C" {
 #include "../audio/audiodefs.h"
 #include "../tuner/stations.h"
 #include "../tuner/tuner.h"
+#include "widget/stripedbar.h"
 
 typedef union {
     struct {
@@ -53,13 +54,13 @@ typedef struct {
 typedef struct {
     const tFont *valFont;       // Foft to draw tune label
     int16_t valY;               // Y position of the tune value
-    CanvasBar bar;
+    StripedBar bar;
 } LayoutTune;
 
 typedef struct {
     const tFont *stFont;        // Foft to draw station number
     const tFont *nameFont;      // Foft to draw station name
-    CanvasBar bar;
+    StripedBar bar;
     uint8_t iconSpace;          // Space between icons
 } LayoutTuner;
 

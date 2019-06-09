@@ -1,6 +1,10 @@
 #ifndef TEXTEDIT_H
 #define TEXTEDIT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #include "../../display/glcd.h"
@@ -22,5 +26,9 @@ void texteditSet(TextEdit *te, char *text, uint8_t maxLen, uint8_t maxSymbols);
 void texteditChange(TextEdit *te, int8_t value);
 void texteditAddChar(TextEdit *te);
 void texteditDelChar(TextEdit *te);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // TEXTEDIT_H

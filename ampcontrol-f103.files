@@ -161,6 +161,8 @@ gui/lt320x240.c
 gui/lt400x240.c
 gui/lt480x320.c
 
+gui/widget/stripedbar.c
+gui/widget/stripedbar.h
 gui/widget/textedit.c
 gui/widget/textedit.h
 
