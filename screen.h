@@ -58,8 +58,6 @@ Screen *screenGet(void);
 void screenSetMode(ScreenMode value);
 ScreenMode screenGetMode(void);
 
-ScreenMode screenCalcDef(void);
-
 int8_t screenGetBrightness(BrMode mode);
 void screenSetBrightness(BrMode mode, int8_t value);
 void screenChangeBrighness(BrMode mode, int8_t diff);

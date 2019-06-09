@@ -52,6 +52,21 @@ static void actionDispExpired(ScreenMode scrMode)
     Screen *screen = screenGet();
     ScreenMode scrDef = screen->def;
 
+    int32_t timer;
+
+    timer = swTimGet(SW_TIM_STBY_TIMER);
+    if (timer > 0 && timer < 60 * 1000 + 999) {
+        scrDef = SCREEN_STBY_TIMER;
+    }
+    timer = swTimGet(SW_TIM_SILENCE_TIMER);
+    if (timer > 0 && timer < 30 * 1000 + 999) {
+        scrDef = SCREEN_SILENCE_TIMER;
+    }
+
+    if (aProc->par.mute) {
+        scrDef = SCREEN_AUDIO_INPUT;
+    }
+
     screen->iconHint = ICON_EMPTY;
 
     rtcSetMode(RTC_NOEDIT);

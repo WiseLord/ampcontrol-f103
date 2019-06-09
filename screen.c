@@ -98,29 +98,6 @@ ScreenMode screenGetMode()
     return screen.mode;
 }
 
-ScreenMode screenCalcDef(void)
-{
-    int32_t timer;
-
-    timer = swTimGet(SW_TIM_STBY_TIMER);
-    if (timer > 0 && timer < 60 * 1000 + 999) {
-        return SCREEN_STBY_TIMER;
-    }
-    timer = swTimGet(SW_TIM_SILENCE_TIMER);
-    if (timer > 0 && timer < 30 * 1000 + 999) {
-        return SCREEN_SILENCE_TIMER;
-    }
-
-    AudioProc *aProc = audioGet();
-
-    if (aProc->par.mute) {
-        return SCREEN_AUDIO_PARAM;
-    }
-
-    return screen.def;
-}
-
-
 int8_t screenGetBrightness(BrMode mode)
 {
     return screen.br[mode];

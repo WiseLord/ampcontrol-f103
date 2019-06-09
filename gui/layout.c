@@ -743,7 +743,7 @@ void layoutShowAudioInput(bool clear, Icon icon)
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
-    if (inType == IN_TUNER) {
+    if (inType == IN_TUNER && !aProc->par.mute) {
         layoutShowTuner(clear);
         return;
     }
@@ -753,6 +753,10 @@ void layoutShowAudioInput(bool clear, Icon icon)
 
     if (icon == ICON_EMPTY) {
         icon = (ICON_TUNER + inType);
+    }
+
+    if (aProc->par.mute) {
+        icon = ICON_MUTE_ON;
     }
 
     if (clear) {
