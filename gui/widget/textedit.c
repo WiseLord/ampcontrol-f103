@@ -1,8 +1,9 @@
 #include "textedit.h"
+#include "../canvas.h"
 
 #include <string.h>
 
-void texteditSet(TextEdit *te, char *text, uint8_t maxLen, uint8_t maxSymbols)
+void textEditSet(TextEdit *te, char *text, uint8_t maxLen, uint8_t maxSymbols)
 {
     strncpy(te->str, text, maxLen);
     te->uLen = glcdStrToUStr(te->str, te->uStr);
@@ -18,7 +19,7 @@ void texteditSet(TextEdit *te, char *text, uint8_t maxLen, uint8_t maxSymbols)
     te->maxSymbols = maxSymbols;
 }
 
-void texteditChange(TextEdit *te, int8_t value)
+void textEditChange(TextEdit *te, int8_t value)
 {
     te->sPos += value;
 
@@ -29,7 +30,7 @@ void texteditChange(TextEdit *te, int8_t value)
     }
 }
 
-void texteditAddChar(TextEdit *te)
+void textEditAddChar(TextEdit *te)
 {
     if (te->uLen >= te->maxSymbols) {
         return;
@@ -41,11 +42,11 @@ void texteditAddChar(TextEdit *te)
 
     glcdUStrToStr(te->uStr, te->str);
     if ((int16_t)strlen(te->str) >= te->maxLen) {
-        texteditDelChar(te);
+        textEditDelChar(te);
     }
 }
 
-void texteditDelChar(TextEdit *te)
+void textEditDelChar(TextEdit *te)
 {
     if (te->uLen > 0) {
         te->uLen--;
@@ -53,4 +54,74 @@ void texteditDelChar(TextEdit *te)
     te->uStr[te->uLen] = 0;
 
     glcdUStrToStr(te->uStr, te->str);
+}
+
+void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear)
+{
+    Canvas *canvas = canvasGet();
+
+    Glcd *glcd = canvas->glcd;
+    const CanvasPalette *pal = canvas->pal;
+
+    const tFont *editFont = lt->editFont;
+    const int16_t feh = editFont->chars[0].image->height;
+    const int16_t few = editFont->chars[0].image->width;
+
+    const GlcdRect *rect = &lt->rect;
+
+    const int16_t yPos = (rect->h - feh) / 2;
+    const int16_t xRoll = rect->w - few * 3 / 2;
+
+    glcdSetFont(editFont);
+
+    if (clear) {
+        glcdSetXY(0, 0);
+        glcdSetFontBgColor(pal->inactive);
+        glcdSetStringFramed(true);
+        glcdWriteStringConst(te->name);
+        glcdSetStringFramed(false);
+        // The rest of space after edit line
+        glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->inactive);
+    }
+
+    glcdSetXY(0, yPos);
+
+    // String itself
+    for (uint16_t i = 0; i < te->uLen; i++) {
+        glcdWriteUChar(te->uStr[i]);
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+    }
+
+    glcdSetFontBgColor(pal->fg);
+    glcdWriteUChar(LETTER_SPACE_CHAR);
+    glcdSetFontBgColor(pal->bg);
+
+    // The rest of space after edit line
+    glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->bg);
+
+    // Gray vertical offset before the roller
+    glcdDrawRect(xRoll - few / 4, 0, few / 4, rect->h, pal->inactive);
+    // The roller
+    for (int8_t i = -2; i <= 2; i++) {
+        glcdSetXY(xRoll, yPos + i * feh);
+        int16_t sPos = te->sPos + i;
+        UChar uCode = ' ';
+        if (sPos >= 0 && sPos <= te->lastPos) {
+            uCode = editFont->chars[te->sPos + i].code;
+        }
+
+        glcdSetFontBgColor(pal->inactive);
+        if (i == 0) {
+            glcdSetFontColor(pal->fg);
+        } else {
+            glcdSetFontColor(pal->gray);
+        }
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+        glcdWriteUChar(uCode);
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+
+        glcdSetFontColor(pal->fg);
+        glcdSetFontBgColor(pal->bg);
+        glcdDrawRect(glcd->x, glcd->y, rect->w - glcd->x, feh, pal->inactive);
+    }
 }

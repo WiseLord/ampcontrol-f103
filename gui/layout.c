@@ -435,7 +435,9 @@ void layoutShowTune(bool clear)
     static int16_t valueOld;
     if (clear || valueOld != value) {
         // Bar
-        drawBar(&lt->tune.bar, value, min, max, canvas->pal->fg, canvas->pal->bg);
+        StripedBar bar = {value, min, max};
+        stripedBarDraw(&bar, &lt->tune.bar, clear);
+
         // Value
         glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
@@ -564,7 +566,7 @@ void layoutShowTuner(bool clear)
 
     const tImage *icon = NULL;;
     const uint8_t iconSpace = lt->tuner.iconSpace;
-    const StripedBar *bar = &lt->tuner.bar;
+    const LayoutStripedBar *ltTunerBar = &lt->tuner.bar;
 
     // Frequency
     uint16_t freq = tuner->status.freq;
@@ -589,7 +591,8 @@ void layoutShowTuner(bool clear)
         glcdWriteNum(freq % 100, 2, '0', 10);
 
         // Scale
-        drawBar(bar, (int16_t)freq, freqMin, freqMax, canvas->pal->fg, canvas->pal->bg);
+        StripedBar bar = {(int16_t)freq, freqMin, freqMax};
+        stripedBarDraw(&bar, ltTunerBar, clear);
 
         glcdSetFont(lt->tuner.stFont);
         glcdSetXY(lt->rect.w, lt->tune.valY);
@@ -727,69 +730,8 @@ void layoutShowAudioInput(bool clear, Icon icon)
 void layoutShowTextEdit(bool clear)
 {
     TextEdit *te = &canvas->te;
-    Glcd *glcd = canvas->glcd;
-    const CanvasPalette *pal = canvas->pal;
 
-    const tFont *editFont = lt->textEdit.editFont;
-    const int16_t feh = editFont->chars[0].image->height;
-    const int16_t few = editFont->chars[0].image->width;
-    const GlcdRect *rect = &lt->textEdit.rect;
-
-    const int16_t yPos = (rect->h - feh) / 2;
-    const int16_t xRoll = rect->w - few * 3 / 2;
-
-    glcdSetFont(editFont);
-
-    if (clear) {
-        glcdSetXY(0, 0);
-        glcdSetFontBgColor(pal->inactive);
-        glcdSetStringFramed(true);
-        glcdWriteStringConst(labelsGet(LABEL_TUNER_FM_STATION_NAME));
-        glcdSetStringFramed(false);
-        // The rest of space after edit line
-        glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->inactive);
-    }
-
-    glcdSetXY(0, yPos);
-
-    // String itself
-    for (uint16_t i = 0; i < te->uLen; i++) {
-        glcdWriteUChar(te->uStr[i]);
-        glcdWriteUChar(LETTER_SPACE_CHAR);
-    }
-
-    glcdSetFontBgColor(pal->fg);
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    glcdSetFontBgColor(pal->bg);
-
-    // The rest of space after edit line
-    glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->bg);
-
-    // Gray vertical offset before the roller
-    glcdDrawRect(xRoll - few / 4, 0, few / 4, rect->h, pal->inactive);
-    // The roller
-    for (int8_t i = -2; i <= 2; i++) {
-        glcdSetXY(xRoll, yPos + i * feh);
-        int16_t sPos = te->sPos + i;
-        UChar uCode = ' ';
-        if (sPos >= 0 && sPos <= te->lastPos) {
-            uCode = editFont->chars[te->sPos + i].code;
-        }
-
-        glcdSetFontBgColor(pal->inactive);
-        if (i == 0) {
-            glcdSetFontColor(pal->fg);
-        } else {
-            glcdSetFontColor(pal->gray);
-        }
-        glcdWriteUChar(LETTER_SPACE_CHAR);
-        glcdWriteUChar(uCode);
-        glcdWriteUChar(LETTER_SPACE_CHAR);
-
-        glcdSetFontColor(pal->fg);
-        glcdSetFontBgColor(pal->bg);
-        glcdDrawRect(glcd->x, glcd->y, lt->textEdit.rect.w - glcd->x, feh, pal->inactive);
-    }
+    textEditDraw(te, &lt->textEdit, clear);
 }
 
 void layoutShowTimer(bool clear, int32_t value)

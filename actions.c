@@ -15,6 +15,7 @@
 #include "settings.h"
 #include "spectrum.h"
 #include "swtimers.h"
+#include "tr/labels.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
 #include "usb/usbhid.h"
@@ -1022,7 +1023,8 @@ void actionHandle(bool visible)
 
     case ACTION_TUNER_EDIT_NAME:
         glcdSetFont(lt->textEdit.editFont);
-        texteditSet(&canvas->te, stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);
+        canvas->te.name = labelsGet(LABEL_TUNER_FM_STATION_NAME);
+        textEditSet(&canvas->te, stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);
         action.prevScreen = SCREEN_AUDIO_INPUT;
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
         break;
@@ -1032,15 +1034,15 @@ void actionHandle(bool visible)
         break;
 
     case ACTION_TEXTEDIT_CHANGE:
-        texteditChange(&canvas->te, (int8_t)action.value);
+        textEditChange(&canvas->te, (int8_t)action.value);
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
         break;
     case ACTION_TEXTEDIT_ADD_CHAR:
-        texteditAddChar(&canvas->te);
+        textEditAddChar(&canvas->te);
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
         break;
     case ACTION_TEXTEDIT_DEL_CHAR:
-        texteditDelChar(&canvas->te);
+        textEditDelChar(&canvas->te);
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
         break;
     case ACTION_TEXTEDIT_APPLY:

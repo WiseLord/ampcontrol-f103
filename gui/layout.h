@@ -54,13 +54,13 @@ typedef struct {
 typedef struct {
     const tFont *valFont;       // Foft to draw tune label
     int16_t valY;               // Y position of the tune value
-    StripedBar bar;
+    LayoutStripedBar bar;
 } LayoutTune;
 
 typedef struct {
     const tFont *stFont;        // Foft to draw station number
     const tFont *nameFont;      // Foft to draw station name
-    StripedBar bar;
+    LayoutStripedBar bar;
     uint8_t iconSpace;          // Space between icons
 } LayoutTuner;
 
@@ -68,11 +68,6 @@ typedef struct {
     const tFont *psFont;        // Foft to draw PS
     const tFont *textFont;      // Foft to draw text
 } LayoutRds;
-
-typedef struct {
-    GlcdRect rect;
-    const tFont *editFont;      // Editor font
-} LayoutTextEdit;
 
 typedef struct {
     GlcdRect rect;

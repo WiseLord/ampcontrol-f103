@@ -6,17 +6,24 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 
-typedef struct {
+typedef const struct {
     int16_t sc;                 // Count of bar lines
     uint8_t sw;                 // Width of bar line
     int16_t barY;               // Y pos of the bar
     int16_t barW;               // Width of the bar
     uint8_t half;               // Height of upper/lower bar part
     uint8_t middle;             // Height of middle bar part
+} LayoutStripedBar;
+
+typedef struct {
+    int16_t value;
+    int16_t min;
+    int16_t max;
 } StripedBar;
 
-void drawBar(const StripedBar *bar, int16_t value, int16_t min, int16_t max, uint16_t colorFg, uint16_t colorBg);
+void stripedBarDraw(StripedBar *bar, LayoutStripedBar *lt, bool clear);
 
 #ifdef __cplusplus
 }
