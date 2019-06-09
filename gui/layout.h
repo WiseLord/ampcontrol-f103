@@ -15,6 +15,8 @@ extern "C" {
 #include "../audio/audiodefs.h"
 #include "../tuner/stations.h"
 #include "../tuner/tuner.h"
+
+#include "widget/spectrumcolumn.h"
 #include "widget/stripedbar.h"
 
 typedef union {
@@ -24,12 +26,7 @@ typedef union {
         uint8_t peak[SP_CHAN_END];   // Peak value
         uint8_t fall[SP_CHAN_END];   // Fall speed
     };
-    struct {
-        int16_t showW;
-        int16_t prevW;
-        int16_t peakW;
-        int16_t fallW;
-    };
+    SpectrumColumn col;
 } SpCol;
 
 typedef struct {

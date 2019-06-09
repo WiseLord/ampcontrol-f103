@@ -13,8 +13,7 @@ static SpDrawData spDrawData;
 
 static void drawTm(RTC_type *rtc, RtcMode tm);
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
-static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpCol *spCol);
-static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h, SpCol *col);
+static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol);
 static void drawWaterfall(Spectrum *sp);
 static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect);
 static void drawRds(Rds *rds);
@@ -97,7 +96,7 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas->pal->bg);
 }
 
-static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpCol *spCol)
+static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol)
 {
     int16_t raw;
 
@@ -111,7 +110,7 @@ static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
         } else {
             raw = rawR;
         }
-        *spCol = *spDrawCol;
+        *spCol = spDrawCol->col;
     } else {
         raw = sp->data[chan].raw[col];
         spCol->showW = spDrawCol->show[chan];
@@ -146,7 +145,7 @@ static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
     }
 
     if (chan == SP_CHAN_BOTH) {
-        *spDrawCol = *spCol;
+        spDrawCol->col = *spCol;
     } else {
         spDrawCol->show[chan] = (uint8_t)spCol->showW;
         spDrawCol->prev[chan] = (uint8_t)spCol->prevW;
@@ -157,54 +156,6 @@ static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
     return (uint8_t)raw;
 }
 
-static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h, SpCol *col)
-{
-    int16_t s = col->showW;
-    int16_t os = col->prevW;
-    int16_t p = col->peakW;
-
-    const CanvasPalette *pal = canvas->pal;
-    if (s == 0) {
-        s = 1;
-    }
-    if (s >= h) {
-        s = h - 1;
-    }
-    if (p >= h) {
-        p = h - 1;
-    }
-    if (os >= h) {
-        os = h - 1;
-    }
-
-    // Full redraw the column
-    if (redraw) {
-        glcdDrawRect(x, y + h - s, w, s, pal->spCol);
-
-        if (p > s) {
-            glcdDrawRect(x, y + h - p, w, 1, pal->spPeak);
-        }
-        return;
-    }
-
-    // Draw part of changed column
-    if (s > os) {
-        glcdDrawRect(x, y + h - s, w, s - os, pal->spCol);
-    } else if (s < os) {
-        glcdDrawRect(x, y + h - os, w, os - s, pal->bg);
-    }
-
-    // Clear old peak
-    if (p >= s) {
-        glcdDrawRect(x, y + h - p - 1, w, 1, pal->bg);
-    }
-
-    // Draw new peak
-    if (p > s) {
-        glcdDrawRect(x, y + h - p, w, 1, pal->spPeak);
-    }
-}
-
 static void drawWaterfall(Spectrum *sp)
 {
     if (++sp->wtfX >= lt->rect.w) {
@@ -213,7 +164,7 @@ static void drawWaterfall(Spectrum *sp)
     glcdShift((sp->wtfX + 1) % lt->rect.w);
 
     for (uint8_t col = 0; col < SPECTRUM_SIZE; col++) {
-        SpCol spCol;
+        SpectrumColumn spCol;
         calcSpCol(sp, SP_CHAN_BOTH, 224, col, &spCol);
         uint16_t color = glcdGetRainbowColor((uint8_t)spCol.showW);
 
@@ -248,12 +199,13 @@ static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect)
     for (uint8_t col = 0; col < num; col++) {
         int16_t x = oft + col * step;
 
-        SpCol spCol;
+        SpectrumColumn spCol;
         calcSpCol(sp, chan, height, col, &spCol);
         if (!sp->peaks) {
             spCol.peakW = 0;
         }
-        drawSpCol(sp->redraw, x, y, colW, height, &spCol);
+        GlcdRect rect = {x, y, colW, height};
+        spectrumColumnDraw(&spCol, &rect, sp->redraw);
     }
 }
 
