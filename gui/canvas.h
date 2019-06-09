@@ -6,12 +6,9 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <stddef.h>
 
 #include "../display/glcd.h"
-
-#define TE_STR_LEN      64
-#define TE_USTR_LEN     32
+#include "widget/textedit.h"
 
 typedef struct {
     int16_t sc;                 // Count of bar lines
@@ -21,16 +18,6 @@ typedef struct {
     uint8_t half;               // Height of upper/lower bar part
     uint8_t middle;             // Height of middle bar part
 } CanvasBar;
-
-typedef struct {
-    char str[TE_STR_LEN];       // String to edit
-    UChar uStr[TE_USTR_LEN];    // String being edited
-    uint16_t uLen;              // Length of uStr
-    int16_t sPos;               // Current symbol position
-    int16_t lastPos;            // Last char position
-    uint8_t maxLen;             // Maximum string length allowed
-    uint8_t maxSymbols;         // Maximum symbols count allowed
-} TextEdit;
 
 typedef struct {
     uint16_t fg;
@@ -52,11 +39,6 @@ void canvasInit(Canvas **value);
 Canvas *canvasGet(void);
 
 void canvasClear(void);
-
-void texteditSet(char *text, uint8_t maxLen, uint8_t maxSymbols);
-void texteditChange(int8_t value);
-void texteditAddChar(void);
-void texteditDelChar(void);
 
 #ifdef __cplusplus
 }

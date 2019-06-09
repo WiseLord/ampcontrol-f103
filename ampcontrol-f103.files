@@ -161,6 +161,9 @@ gui/lt320x240.c
 gui/lt400x240.c
 gui/lt480x320.c
 
+gui/widget/textedit.c
+gui/widget/textedit.h
+
 system/startup_stm32f103xb.s
 system/startup_stm32f103xe.s
 system/startup_stm32f103xg.s

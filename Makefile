@@ -127,6 +127,7 @@ C_DEFS += -D_DISP_$(DISPSIZE)
 C_SOURCES += gui/canvas.c
 C_SOURCES += gui/layout.c
 C_SOURCES += gui/lt$(DISPSIZE).c
+C_SOURCES += $(wildcard gui/widget/*.c)
 
 # Audio source files
 C_SOURCES += $(addprefix audio/, $(addsuffix .c, $(call lc, $(APROC_LIST))))
