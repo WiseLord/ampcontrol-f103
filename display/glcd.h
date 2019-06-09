@@ -65,6 +65,8 @@ typedef int32_t UChar;
 #define LCD_COLOR_WITCH_HAZE            RGB_TO_565(0xFFFF80)
 #define LCD_COLOR_WHITE                 RGB_TO_565(0xFFFFFF)
 
+uint16_t glcdGetRainbowColor(uint8_t value);
+
 void glcdInit(Glcd **value);
 
 bool glcdGetRotate(void);

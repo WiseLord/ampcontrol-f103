@@ -11,7 +11,6 @@ static Canvas *canvas;
 
 static SpDrawData spDrawData;
 
-static uint16_t level2color(int16_t value);
 static void drawBar(const CanvasBar *bar, int16_t value, int16_t min, int16_t max);
 static void drawTm(RTC_type *rtc, RtcMode tm);
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
@@ -20,37 +19,6 @@ static void drawSpCol(bool redraw, int16_t x, int16_t y, int16_t w, int16_t h, S
 static void drawWaterfall(Spectrum *sp);
 static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect);
 static void drawRds(Rds *rds);
-
-
-static uint16_t level2color(int16_t value)
-{
-    uint16_t color = 0xFFFF;
-
-    if (value < 32) {           // Black => Blue
-        color = 0x0000;
-        color |= (value - 0);
-    } else if (value < 64) {    // Blue => Cyan
-        color = 0x003F;
-        color |= ((value - 32) << 6);
-    } else if (value < 96) {    // Cyan => Olive
-        color = 0x07E0;
-        color |= (95 - value);
-    } else if (value < 128) {   // Olive => Yellow
-        color = 0x07E0;
-        color |= ((value - 96) << 11);
-    } else if (value < 160) {   // Yellow => Red
-        color = 0xF800;
-        color |= ((159 - value) << 6);
-    } else if (value < 192) {   // Red => Purple
-        color = 0xF800;
-        color |= (value - 160);
-    } else if (value < 224) {   // Purple => White
-        color = 0xF83F;
-        color |= ((value - 160) << 6);
-    }
-
-    return color;
-}
 
 static void drawBar(const CanvasBar *bar, int16_t value, int16_t min, int16_t max)
 {
@@ -285,7 +253,7 @@ static void drawWaterfall(Spectrum *sp)
     for (uint8_t col = 0; col < SPECTRUM_SIZE; col++) {
         SpCol spCol;
         calcSpCol(sp, SP_CHAN_BOTH, 224, col, &spCol);
-        uint16_t color = level2color(spCol.showW);
+        uint16_t color = glcdGetRainbowColor((uint8_t)spCol.showW);
 
         int16_t posCurr = (col * lt->rect.h) / SPECTRUM_SIZE;
         int16_t posNext = ((col + 1) * lt->rect.h) / SPECTRUM_SIZE;

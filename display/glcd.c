@@ -90,6 +90,36 @@ static UChar findSymbolCode(const char **string)
     return BLOCK_CHAR;
 }
 
+uint16_t glcdGetRainbowColor(uint8_t value)
+{
+    uint16_t color = 0xFFFF;
+
+    if (value < 32) {           // Black => Blue
+        color = 0x0000;
+        color |= (value - 0);
+    } else if (value < 64) {    // Blue => Cyan
+        color = 0x003F;
+        color |= ((value - 32) << 6);
+    } else if (value < 96) {    // Cyan => Olive
+        color = 0x07E0;
+        color |= (95 - value);
+    } else if (value < 128) {   // Olive => Yellow
+        color = 0x07E0;
+        color |= ((value - 96) << 11);
+    } else if (value < 160) {   // Yellow => Red
+        color = 0xF800;
+        color |= ((159 - value) << 6);
+    } else if (value < 192) {   // Red => Purple
+        color = 0xF800;
+        color |= (value - 160);
+    } else if (value < 224) {   // Purple => White
+        color = 0xF83F;
+        color |= ((value - 160) << 6);
+    }
+
+    return color;
+}
+
 void glcdInit(Glcd **value)
 {
     dispdrvInit();
