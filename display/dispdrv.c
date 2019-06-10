@@ -7,7 +7,7 @@
 #include <stm32f1xx_ll_utils.h>
 #include "../pins.h"
 
-#ifdef _DISP_8BIT
+#ifndef _DISP_SPI
 static volatile bool bus_requested = false;
 #endif
 static volatile int8_t brightness;
@@ -46,7 +46,7 @@ static inline void dispdrvSendByte(uint8_t data)
     LL_SPI_TransmitData8(SPI2, data);
 #else
 #if defined(_DISP_HI_BYTE) && !defined(_DISP_16BIT)
-    DISP_DATA_HI_Port->BSRR = 0xFF000000 | (data << 8);
+    DISP_DATA_HI_Port->BSRR = 0xFF000000 | (uint16_t)(data << 8);
 #endif
 #if defined(_DISP_LO_BYTE) || defined(_DISP_16BIT)
     DISP_DATA_LO_Port->BSRR = 0x00FF0000 | data;
@@ -191,15 +191,14 @@ uint8_t dispdrvGetBus(void)
 
 void dispdrvBusIRQ(void)
 {
-#ifdef _DISP_8BIT
+#if defined(_DISP_SPI)
+    dispdrvReadInput();
+#else
     if (dispDrvGetBusMode() == BUS_MODE_OUT) {
         bus_requested = true;               // Postpone read bus until in input mode
     } else {
         dispdrvReadInput();                 // Read bus immediately
     }
-#endif
-#if defined(_DISP_SPI)
-    dispdrvReadInput();
 #endif
 }
 
