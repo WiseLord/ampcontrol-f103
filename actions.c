@@ -523,31 +523,49 @@ static void actionRemapRemote(void)
 
     case RC_CMD_BASS_UP:
         screenSetMode(SCREEN_AUDIO_PARAM);
+        if (aProc->tune != AUDIO_TUNE_BASS) {
+            screenToClear();
+        }
         aProc->tune = AUDIO_TUNE_BASS;
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_BASS_DOWN:
         screenSetMode(SCREEN_AUDIO_PARAM);
+        if (aProc->tune != AUDIO_TUNE_BASS) {
+            screenToClear();
+        }
         aProc->tune = AUDIO_TUNE_BASS;
         actionSet(ACTION_ENCODER, -1);
         break;
     case RC_CMD_MIDDLE_UP:
         screenSetMode(SCREEN_AUDIO_PARAM);
+        if (aProc->tune != AUDIO_TUNE_MIDDLE) {
+            screenToClear();
+        }
         aProc->tune = AUDIO_TUNE_MIDDLE;
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_MIDDLE_DOWN:
         screenSetMode(SCREEN_AUDIO_PARAM);
+        if (aProc->tune != AUDIO_TUNE_MIDDLE) {
+            screenToClear();
+        }
         aProc->tune = AUDIO_TUNE_MIDDLE;
         actionSet(ACTION_ENCODER, -1);
         break;
     case RC_CMD_TREBLE_UP:
         screenSetMode(SCREEN_AUDIO_PARAM);
+        if (aProc->tune != AUDIO_TUNE_TREBLE) {
+            screenToClear();
+        }
         aProc->tune = AUDIO_TUNE_TREBLE;
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_TREBLE_DOWN:
         screenSetMode(SCREEN_AUDIO_PARAM);
+        if (aProc->tune != AUDIO_TUNE_TREBLE) {
+            screenToClear();
+        }
         aProc->tune = AUDIO_TUNE_TREBLE;
         actionSet(ACTION_ENCODER, -1);
         break;
