@@ -22,6 +22,7 @@ typedef enum {
     LANG_RU,
     LANG_TR,
     LANG_UA,
+    LANG_RO,
 
     LANG_END
 } Lang;
@@ -103,6 +104,7 @@ extern const char *const labels_fr[LABEL_END];
 extern const char *const labels_ru[LABEL_END];
 extern const char *const labels_tr[LABEL_END];
 extern const char *const labels_ua[LABEL_END];
+extern const char *const labels_ro[LABEL_END];
 
 void labelsSetLang(Lang value);
 Lang labelsGetLang(void);
