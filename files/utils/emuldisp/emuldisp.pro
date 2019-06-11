@@ -49,6 +49,9 @@ SOURCES += \
     ../../../audio/audio.c \
     ../../../gui/canvas.c \
     ../../../gui/layout.c \
+    ../../../gui/widget/spectrumcolumn.c \
+    ../../../gui/widget/stripedbar.c \
+    ../../../gui/widget/textedit.c \
     ../../../display/fonts/font-terminus-12.c \
     ../../../display/fonts/font-terminus-14.c \
     ../../../display/fonts/font-terminus-14b.c \
@@ -86,6 +89,7 @@ SOURCES += \
     ../../../tr/labels_ru.c \
     ../../../tr/labels_tr.c \
     ../../../tr/labels_ua.c \
+    ../../../tr/labels_ro.c \
     ../../../tuner/stations.c \
     ../../../tuner/tuner.c \
     ../../../actions.c \
@@ -105,6 +109,9 @@ HEADERS += \
     ../../../audio/audiodefs.h \
     ../../../gui/canvas.h \
     ../../../gui/layout.h \
+    ../../../gui/widget/spectrumcolumn.h \
+    ../../../gui/widget/stripedbar.h \
+    ../../../gui/widget/textedit.h \
     ../../../display/fonts/fonts.h \
     ../../../display/icons/icons.h \
     ../../../display/dispdefs.h \
