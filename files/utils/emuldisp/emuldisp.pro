@@ -86,6 +86,7 @@ SOURCES += \
     ../../../tr/labels.c \
     ../../../tr/labels_by.c \
     ../../../tr/labels_fr.c \
+    ../../../tr/labels_ro.c \
     ../../../tr/labels_ru.c \
     ../../../tr/labels_tr.c \
     ../../../tr/labels_ua.c \
