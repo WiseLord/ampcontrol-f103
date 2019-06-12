@@ -125,7 +125,6 @@ C_DEFS += -D_DISP_$(DISPVAR)
 C_DEFS += -D_DISP_$(DISPSIZE)
 
 C_SOURCES += gui/canvas.c
-C_SOURCES += gui/layout.c
 C_SOURCES += gui/lt$(DISPSIZE).c
 C_SOURCES += $(wildcard gui/widget/*.c)
 

@@ -3,7 +3,7 @@
 #include "actions.h"
 #include "display/glcd.h"
 #include "fft.h"
-#include "gui/layout.h"
+#include "gui/canvas.h"
 #include "spectrum.h"
 #include "swtimers.h"
 #include "tr/labels.h"
@@ -19,7 +19,8 @@ static bool screenCheckClear(void)
 {
     bool clear = false;
 
-    static ScreenMode scrPrev = SCREEN_STANDBY;
+    static ScreenMode scrPrev = SCREEN_END;
+
     if (scrToClear) {
         clear = true;
         scrToClear = false;
@@ -77,8 +78,8 @@ void screenSaveSettings(void)
 void screenInit(void)
 {
     labelsInit();
-    layoutInit();
-    canvasClear();
+    canvasInit();
+
     screenReadSettings();
     dispdrvSetBrightness(screen.br[BR_STBY]);
 }
@@ -131,7 +132,7 @@ void screenToClear(void)
 
 void screenShow(bool clear)
 {
-    GlcdRect rect = layoutGet()->rect;
+    GlcdRect rect = canvasGet()->layout->rect;
     Spectrum *spectrum = spGet();
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
@@ -139,7 +140,7 @@ void screenShow(bool clear)
     if (!clear) {
         clear = screenCheckClear();
         if (screen.mode == SCREEN_TEXTEDIT) {
-            rect = layoutGet()->textEdit.rect;
+            rect = canvasGet()->layout->textEdit.rect;
         }
     }
     glcdSetRect(rect);
@@ -171,31 +172,31 @@ void screenShow(bool clear)
     switch (screen.mode) {
     case SCREEN_STANDBY:
     case SCREEN_TIME:
-        layoutShowTime(clear);
+        canvasShowTime(clear);
         break;
     case SCREEN_SPECTRUM:
-        layoutShowSpectrum(clear);
+        canvasShowSpectrum(clear);
         break;
     case SCREEN_AUDIO_PARAM:
-        layoutShowTune(clear);
+        canvasShowTune(clear);
         break;
     case SCREEN_AUDIO_FLAG:
-        layoutShowAudioFlag(clear);
+        canvasShowAudioFlag(clear);
         break;
     case SCREEN_AUDIO_INPUT:
-        layoutShowAudioInput(clear, screen.iconHint);
+        canvasShowAudioInput(clear, screen.iconHint);
         break;
     case SCREEN_MENU:
-        layoutShowMenu(clear);
+        canvasShowMenu(clear);
         break;
     case SCREEN_TEXTEDIT:
-        layoutShowTextEdit(clear);
+        canvasShowTextEdit(clear);
         break;
     case SCREEN_STBY_TIMER:
-        layoutShowTimer(clear, swTimGet(SW_TIM_STBY_TIMER));
+        canvasShowTimer(clear, swTimGet(SW_TIM_STBY_TIMER));
         break;
     case SCREEN_SILENCE_TIMER:
-        layoutShowTimer(clear, swTimGet(SW_TIM_SILENCE_TIMER));
+        canvasShowTimer(clear, swTimGet(SW_TIM_SILENCE_TIMER));
         break;
     default:
         break;

@@ -61,7 +61,7 @@ void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear)
     Canvas *canvas = canvasGet();
 
     Glcd *glcd = canvas->glcd;
-    const CanvasPalette *pal = canvas->pal;
+    const Palette *pal = canvas->pal;
 
     const tFont *editFont = lt->editFont;
     const int16_t feh = editFont->chars[0].image->height;

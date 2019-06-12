@@ -5,7 +5,6 @@
 
 #include "audio/audio.h"
 #include "gui/canvas.h"
-#include "gui/layout.h"
 #include "input.h"
 #include "menu.h"
 #include "pins.h"
@@ -827,8 +826,9 @@ void actionHandle(bool visible)
     Tuner *tuner = tunerGet();
     int8_t stNum = stationGetNum(tuner->status.freq);
 
-    const Layout *lt = layoutGet();
     Canvas *canvas = canvasGet();
+    const Layout *lt = canvas->layout;
+
     Spectrum *sp = spGet();
 
     action.visible = visible;
@@ -839,15 +839,7 @@ void actionHandle(bool visible)
         pinsSetMute(true);
         pinsSetStby(true);
 
-        swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
-        swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
-        swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
-        swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
-
         swTimSet(SW_TIM_RTC_INIT, 500);
-
-        audioReadSettings();
-        tunerReadSettings();
         break;
     case ACTION_STANDBY:
         if (action.value == FLAG_OFF) {

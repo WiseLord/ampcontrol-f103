@@ -152,7 +152,6 @@ drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
 
 gui/canvas.c
 gui/canvas.h
-gui/layout.c
 gui/layout.h
 gui/lt160x128.c
 gui/lt176x132.c

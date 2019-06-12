@@ -5,7 +5,7 @@
 
 #include "audio/audio.h"
 #include "display/glcd.h"
-#include "gui/layout.h"
+#include "gui/canvas.h"
 #include "input.h"
 #include "pins.h"
 #include "rc.h"

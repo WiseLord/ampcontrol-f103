@@ -48,7 +48,9 @@ SOURCES += \
     rtc.c \
     ../../../audio/audio.c \
     ../../../gui/canvas.c \
-    ../../../gui/layout.c \
+    ../../../gui/widget/spectrumcolumn.c \
+    ../../../gui/widget/stripedbar.c \
+    ../../../gui/widget/textedit.c \
     ../../../display/fonts/font-terminus-12.c \
     ../../../display/fonts/font-terminus-14.c \
     ../../../display/fonts/font-terminus-14b.c \
@@ -92,25 +94,29 @@ SOURCES += \
     ../../../input.c \
     ../../../mem.c \
     ../../../menu.c \
-	../../../screen.c \
-	../../../settings.c \
+    ../../../screen.c \
+    ../../../settings.c \
     ../../../swtimers.c \
 
 
 HEADERS += \
-    ../../../tuner/rds.h \
     amp.h \
     emuldisp.h \
+    emuldisp_stub.h \
     ../../../audio/audio.h \
     ../../../audio/audiodefs.h \
     ../../../gui/canvas.h \
     ../../../gui/layout.h \
+    ../../../gui/widget/spectrumcolumn.h \
+    ../../../gui/widget/stripedbar.h \
+    ../../../gui/widget/textedit.h \
     ../../../display/fonts/fonts.h \
     ../../../display/icons/icons.h \
     ../../../display/dispdefs.h \
     ../../../display/dispdrv.h \
     ../../../display/glcd.h \
     ../../../tr/labels.h \
+    ../../../tuner/rds.h \
     ../../../tuner/stations.h \
     ../../../tuner/tuner.h \
     ../../../tuner/tunerdefs.h \
@@ -119,16 +125,15 @@ HEADERS += \
     ../../../input.h \
     ../../../mem.h \
     ../../../menu.h \
-	../../../pins.h \
-	../../../rc.h \
-	../../../rtc.h \
+    ../../../pins.h \
+    ../../../rc.h \
+    ../../../rtc.h \
     ../../../screen.h \
     ../../../settings.h \
     ../../../spectrum.h \
     ../../../swtimers.h \
     ../../../usb/usbhid.h \
     ../../../usb/hidkeys.h \
-    emuldisp_stub.h
 
 
 FORMS += \
