@@ -4,16 +4,10 @@
 #include <stm32f1xx_ll_exti.h>
 #include <stm32f1xx_ll_i2c.h>
 #include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
 #include <stm32f1xx_ll_utils.h>
 
-#include "display/glcd.h"
 #include "i2c.h"
 #include "settings.h"
-
-#ifdef _SI470X
-#include "tuner/si470x.h"
-#endif
 
 static void pinsInitButtons(void)
 {

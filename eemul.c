@@ -1,7 +1,9 @@
 #include "eemul.h"
-#include "settings.h"
 
+#include <stm32f1xx.h>
 #include <stm32f1xx_ll_utils.h>
+
+#include "settings.h"
 
 #define REC_SIZE            4
 #define RECS_ON_PAGE        (EE_PAGE_SIZE / REC_SIZE)
@@ -27,7 +29,6 @@ static uint16_t currPage;
 
 #define HEAD_ERASED         ((uint32_t)0xFFFF)
 #define HEAD_VALID          ((uint32_t)0x0000)
-
 
 __attribute__((always_inline))
 static inline void eeUnlock(void)

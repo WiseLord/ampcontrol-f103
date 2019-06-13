@@ -6,10 +6,7 @@
 
 #include "actions.h"
 #include "debug.h"
-#include "eemul.h"
-#include "i2c.h"
 #include "input.h"
-#include "menu.h"
 #include "pins.h"
 #include "rc.h"
 #include "rtc.h"
@@ -18,8 +15,6 @@
 #include "spectrum.h"
 #include "swtimers.h"
 #include "timers.h"
-#include "tuner/stations.h"
-#include "tuner/tuner.h"
 #include "usb/usbhid.h"
 
 #ifndef NVIC_PRIORITYGROUP_0
@@ -86,7 +81,6 @@ int main(void)
     LL_Init();
     SystemClock_Config();
 
-    eeInit();
     settingsInit();
     pinsInit();
 
@@ -94,9 +88,7 @@ int main(void)
     DBG("\rInit system\r\n");
 
     usbHidInit();
-
     screenInit();
-
     spInit();
 
     inputInit();
@@ -106,10 +98,6 @@ int main(void)
     swTimInit();
     LL_SYSTICK_EnableIT();
     timersInit();
-
-    stationsInit();
-    audioReadSettings();
-    tunerReadSettings();
 
     while (1) {
         actionHandle(ACTION_VISIBLE);

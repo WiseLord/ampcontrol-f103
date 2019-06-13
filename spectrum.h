@@ -5,10 +5,8 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
 #include <stdbool.h>
-
-#include "fft.h"
+#include <stdint.h>
 
 typedef uint8_t SpChan;
 enum {

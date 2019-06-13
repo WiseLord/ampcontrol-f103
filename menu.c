@@ -1,17 +1,15 @@
 #include "menu.h"
-#include "tr/labels.h"
 
 #include <string.h>
 
 #include "audio/audio.h"
-#include "display/glcd.h"
 #include "gui/canvas.h"
 #include "input.h"
-#include "pins.h"
 #include "rc.h"
 #include "screen.h"
 #include "settings.h"
 #include "spectrum.h"
+#include "tr/labels.h"
 #include "tuner/tuner.h"
 
 #define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC, PARAM_RC_ ## CMD},

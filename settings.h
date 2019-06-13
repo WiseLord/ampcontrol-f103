@@ -1,6 +1,10 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "cmd.h"
 
@@ -96,5 +100,9 @@ int16_t settingsRead(Param param);
 void settingsStore(Param param, int16_t value);
 
 const EE_Map *eeMapGet(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SETTINGS_H

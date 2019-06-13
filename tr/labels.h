@@ -11,7 +11,6 @@ extern "C" {
 #include "../audio/audio.h"
 #include "../pins.h"
 #include "../rtc.h"
-#include "../settings.h"
 #include "../spectrum.h"
 
 typedef enum {

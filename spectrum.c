@@ -8,6 +8,7 @@
 
 #include <string.h>
 
+#include "fft.h"
 #include "mem.h"
 #include "settings.h"
 

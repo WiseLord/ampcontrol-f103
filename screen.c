@@ -1,10 +1,9 @@
 #include "screen.h"
 
-#include "actions.h"
-#include "display/glcd.h"
-#include "fft.h"
+#include "display/dispdefs.h"
 #include "gui/canvas.h"
-#include "spectrum.h"
+#include "menu.h"
+#include "settings.h"
 #include "swtimers.h"
 #include "tr/labels.h"
 

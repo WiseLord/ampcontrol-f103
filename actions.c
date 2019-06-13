@@ -1,7 +1,6 @@
 #include "actions.h"
 
 #include <stddef.h>
-#include <string.h>
 
 #include "audio/audio.h"
 #include "gui/canvas.h"
@@ -10,7 +9,6 @@
 #include "pins.h"
 #include "rc.h"
 #include "rtc.h"
-#include "screen.h"
 #include "settings.h"
 #include "spectrum.h"
 #include "swtimers.h"
@@ -18,6 +16,7 @@
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
 #include "usb/usbhid.h"
+#include "usb/hidkeys.h"
 
 static void actionGetButtons(void);
 static void actionGetEncoder(void);

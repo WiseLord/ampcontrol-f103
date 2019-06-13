@@ -3,9 +3,7 @@
 #include "audio/audiodefs.h"
 #include "display/dispdefs.h"
 #include "eemul.h"
-#include "pins.h"
 #include "rc.h"
-#include "rtc.h"
 #include "screen.h"
 #include "spectrum.h"
 #include "tr/labels.h"
@@ -89,6 +87,11 @@ static const EE_Map eeMap[] = {
 
 void settingsInit(void)
 {
+    eeInit();
+
+    audioReadSettings();
+    tunerReadSettings();
+
     settingsSet(PARAM_ALARM_HOUR, settingsRead(PARAM_ALARM_HOUR));
     settingsSet(PARAM_ALARM_MINUTE, settingsRead(PARAM_ALARM_MINUTE));
     settingsSet(PARAM_ALARM_DAYS, settingsRead(PARAM_ALARM_DAYS));

@@ -5,8 +5,6 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
 void timersInit(void);
 
 #ifdef __cplusplus
