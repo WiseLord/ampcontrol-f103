@@ -11,8 +11,6 @@ static int8_t encRes = 0;
 void inputInit(void)
 {
     encRes = (int8_t)settingsRead(PARAM_SYSTEM_ENC_RES);
-    encCnt = 0;
-    cmdBuf = BTN_NO;
 }
 
 void inputSetEncRes(int8_t value)
@@ -80,25 +78,8 @@ int8_t getEncoder(void)
     int8_t ret = 0;
 
     if (encRes) {
-        if (encRes > 0) {
-            while (encCnt >= encRes) {
-                ret++;
-                encCnt -= encRes;
-            }
-            while (encCnt <= -encRes) {
-                ret--;
-                encCnt += encRes;
-            }
-        } else {
-            while (encCnt <= encRes) {
-                ret++;
-                encCnt -= encRes;
-            }
-            while (encCnt >= -encRes) {
-                ret--;
-                encCnt += encRes;
-            }
-        }
+        ret = encCnt / encRes;
+        encCnt -= (ret * encRes);
     } else {
         ret = encCnt;
         encCnt = 0;
