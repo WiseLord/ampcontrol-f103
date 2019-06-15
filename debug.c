@@ -6,9 +6,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#define USART_DBG               USART2
+#define USART_DBG               USART1
 
-static void dbgPutChar(char ch)
+__attribute__((always_inline))
+static inline void dbgPutChar(char ch)
 {
     usartSendChar(USART_DBG, ch);
 }
@@ -23,6 +24,11 @@ static void dbgPutString(char *str)
 void dbgInit()
 {
     usartInit(USART_DBG, 115200);
+}
+
+void dbgSendChar(char ch)
+{
+    dbgPutChar(ch);
 }
 
 void dbgPrintf (const char *fmt, ...)

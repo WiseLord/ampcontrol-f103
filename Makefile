@@ -41,6 +41,7 @@ C_SOURCES += fft.c
 C_SOURCES += handlers.c
 C_SOURCES += i2c.c
 C_SOURCES += input.c
+C_SOURCES += karadio.c
 C_SOURCES += mem.c
 C_SOURCES += menu.c
 C_SOURCES += pins.c

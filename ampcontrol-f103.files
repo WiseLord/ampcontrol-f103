@@ -225,6 +225,8 @@ i2c.c
 i2c.h
 input.c
 input.h
+karadio.c
+karadio.h
 main.c
 mem.c
 mem.h

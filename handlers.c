@@ -3,9 +3,11 @@
 #include <stm32f1xx_ll_exti.h>
 #include <stm32f1xx_ll_rtc.h>
 #include <stm32f1xx_ll_tim.h>
+#include <stm32f1xx_ll_usart.h>
 
 #include "display/dispdrv.h"
 #include "input.h"
+#include "karadio.h"
 #include "pins.h"
 #include "rc.h"
 #include "rtc.h"
@@ -80,6 +82,16 @@ void TIM2_IRQHandler(void)
         // Callbacks
         dispdrvPwm();
         spConvertADC();
+    }
+}
+
+void USART2_IRQHandler(void)
+{
+    // Check RXNE flag value in SR register
+    if (LL_USART_IsActiveFlag_RXNE(USART_KARADIO) && LL_USART_IsEnabledIT_RXNE(USART_KARADIO)) {
+        karadioIRQ();
+    } else {
+        // Call Error function
     }
 }
 

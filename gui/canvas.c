@@ -1,6 +1,7 @@
 #include "canvas.h"
 #include <string.h>
 
+#include "../karadio.h"
 #include "../menu.h"
 #include "../rtc.h"
 #include "../settings.h"
@@ -695,6 +696,64 @@ void canvasShowTuner(bool clear)
     sp->ready = false;
 }
 
+void canvasShowKaradio(bool clear)
+{
+    const Layout *lt = canvas.layout;
+
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
+
+    const tFont *iconSet = lt->iconSet;
+    const char *label = labelsGet(LABEL_IN_TUNER + inType);
+
+    Icon icon = ICON_KARADIO;
+
+    if (clear) {
+        // Label
+        glcdSetFont(lt->lblFont);
+        glcdSetFontColor(canvas.pal->fg);
+        glcdSetXY(0, 0);
+        glcdWriteStringConst(label);
+    }
+
+    if (clear) {
+        // Icon
+        glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
+        const tImage *img = glcdFindIcon(icon, iconSet);
+        glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
+    }
+
+    uint16_t nameLen;
+
+    glcdSetFont(lt->rds.psFont);
+    glcdSetXY(0, lt->lblFont->chars[0].image->height);
+    nameLen = glcdWriteString(karadioGetName());
+    glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                 lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
+                 canvas.pal->bg);
+
+    glcdSetFont(lt->rds.textFont);
+    glcdSetXY(0, canvas.glcd->y + lt->tuner.nameFont->chars[0].image->height);
+    nameLen = glcdWriteString(karadioGetMeta());
+    glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                 lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
+                 canvas.pal->bg);
+
+    Spectrum *sp = spGet();
+    // Spectrum
+    if (!sp->ready) {
+        return;
+    }
+
+    GlcdRect rect = canvas.glcd->rect;
+    rect.h = (rect.h - rect.y) / 2;
+    rect.y += rect.h;
+    drawSpectrum(sp, SP_CHAN_BOTH, &rect);
+
+    sp->redraw = false;
+    sp->ready = false;
+}
+
 void canvasShowAudioInput(bool clear, Icon icon)
 {
     const Layout *lt = canvas.layout;
@@ -704,6 +763,11 @@ void canvasShowAudioInput(bool clear, Icon icon)
 
     if (inType == IN_TUNER && !aProc->par.mute) {
         canvasShowTuner(clear);
+        return;
+    }
+
+    if (inType == IN_KARADIO && !aProc->par.mute) {
+        canvasShowKaradio(clear);
         return;
     }
 
@@ -750,7 +814,6 @@ void canvasShowAudioInput(bool clear, Icon icon)
 
     sp->redraw = false;
     sp->ready = false;
-
 }
 
 void canvasShowTextEdit(bool clear)

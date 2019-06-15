@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 void dbgInit(void);
+void dbgSendChar(char ch);
 void dbgPrintf (const char *fmt, ...);
 
 #ifdef __cplusplus

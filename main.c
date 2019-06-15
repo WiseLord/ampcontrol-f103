@@ -7,6 +7,7 @@
 #include "actions.h"
 #include "debug.h"
 #include "input.h"
+#include "karadio.h"
 #include "pins.h"
 #include "rc.h"
 #include "rtc.h"
@@ -94,6 +95,8 @@ int main(void)
     inputInit();
     rcInit();
     rtcInit();
+
+    karadioInit();
 
     swTimInit();
     LL_SYSTICK_EnableIT();

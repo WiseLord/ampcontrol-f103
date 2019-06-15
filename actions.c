@@ -5,6 +5,7 @@
 #include "audio/audio.h"
 #include "gui/canvas.h"
 #include "input.h"
+#include "karadio.h"
 #include "menu.h"
 #include "pins.h"
 #include "rc.h"
@@ -913,6 +914,9 @@ void actionHandle(bool visible)
             usbHidSendMediaKey((HidKey)action.value);
             actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
             break;
+        case IN_KARADIO:
+            karadioSendMediaCmd((HidKey)action.value);
+            break;
         }
         break;
     case ACTION_CHAN:
@@ -936,6 +940,13 @@ void actionHandle(bool visible)
                 screen->iconHint = ICON_PREV_TRACK;
             }
             actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
+            break;
+        case IN_KARADIO:
+            if (action.value > 0) {
+                karadioSendMediaCmd(HIDMEDIAKEY_NEXT_TRACK);
+            } else if (action.value < 0) {
+                karadioSendMediaCmd(HIDMEDIAKEY_PREV_TRACK);
+            }
             break;
         }
         break;
