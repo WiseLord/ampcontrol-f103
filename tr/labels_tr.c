@@ -32,6 +32,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_IN_PROJECTOR]    = "Projeksiyon",
     [LABEL_IN_SATELLITE]    = "Uydu Alıcısı",
     [LABEL_IN_MIXER]        = "Mikser",
+//    [LABEL_IN_KARADIO]      = "KaRadio",
 
     [LABEL_BOOL_OFF]        = "Kapalı",
     [LABEL_BOOL_ON]         = "Açık",

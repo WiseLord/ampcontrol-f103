@@ -48,6 +48,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_IN_PROJECTOR]    = "Projector",
     [LABEL_IN_SATELLITE]    = "Satellite",
     [LABEL_IN_MIXER]        = "Mixer",
+    [LABEL_IN_KARADIO]      = "KaRadio",
 
     [LABEL_BOOL_OFF]        = "OFF",
     [LABEL_BOOL_ON]         = "ON",

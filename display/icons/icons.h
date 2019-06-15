@@ -39,6 +39,7 @@ enum {
     ICON_PROJECTOR,
     ICON_SATELLITE,
     ICON_MIXER,
+    ICON_KARADIO,
 
     // On/off icons
     ICON_MUTE_ON = 0x60,

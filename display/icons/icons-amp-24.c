@@ -7,7 +7,7 @@
 * family: Liberation Sans
 * size: 14
 * style: Bold
-* included characters: \x0000\x0001\x0002\x0003 !"#$%&'(\x0040ABCDEFGHIJKL`abcdefghi\x0080\x0081\x0082\x0083\x0084\x0085
+* included characters: \x0000\x0001\x0002\x0003 !"#$%&'(\x0040ABCDEFGHIJKLM`abcdefghi\x0080\x0081\x0082\x0083\x0084\x0085
 * antialiasing: no
 * type: proportional
 * encoding: UTF-16
@@ -821,6 +821,37 @@ static const tImage iconsamp24_0x004c = { image_data_iconsamp24_0x004c, 24, 24, 
 #endif
 
 #if (0x0 == 0x0)
+static const uint8_t image_data_iconsamp24_0x004d[71] = {
+    // ∙∙∙∙█∙∙∙∙∙∙∙∙∙∙∙∙∙∙█∙∙∙∙
+    // ∙∙∙█∙∙█∙∙∙∙██∙∙∙∙█∙∙█∙∙∙
+    // ∙∙∙█∙█∙∙█∙████∙█∙∙█∙█∙∙∙
+    // ∙∙∙█∙█∙∙█∙████∙█∙∙█∙█∙∙∙
+    // ∙∙∙█∙∙█∙∙∙∙██∙∙∙∙█∙∙█∙∙∙
+    // ∙∙∙∙█∙∙∙∙∙████∙∙∙∙∙█∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙████∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙████∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙████∙∙∙∙∙∙∙∙∙∙
+    // ██∙∙∙██∙∙██████∙∙██████∙
+    // ██∙∙██∙∙∙██∙∙██∙∙██∙∙∙██
+    // ██∙██∙∙∙∙██∙∙██∙∙██∙∙∙██
+    // ████∙∙∙∙∙██∙∙██∙∙██∙∙∙██
+    // ███∙∙∙∙∙████████∙██████∙
+    // ████∙∙∙∙██∙∙∙∙██∙████∙∙∙
+    // ██∙██∙∙∙██∙∙∙∙██∙██∙██∙∙
+    // ██∙∙██∙∙██∙∙∙∙██∙██∙∙██∙
+    // ██∙∙∙██████████████∙∙∙██
+    // ∙∙∙∙∙∙∙██∙∙∙∙∙∙██∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙██∙∙∙∙∙∙██∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙██∙∙∙∙∙∙██∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙████████████∙∙∙∙∙∙
+    // ∙∙∙∙∙∙██∙∙∙∙∙∙∙∙██∙∙∙∙∙∙
+    // ∙∙∙∙∙∙██∙∙∙∙∙∙∙∙██∙∙∙∙∙∙
+    0x03, 0x00, 0xee, 0x1e, 0x21, 0x0c, 0x12, 0x00, 0x0c, 0x00, 0xec, 0xfe, 0xfe, 0xec, 0x00, 0x0c, 0x00, 0x12, 0x0c, 0x21, 0x1e, 0x03, 0x00, 0xde, 0xfe, 0xfe, 0x70, 0xd8, 0x8c, 0x06, 0x02, 0x00, 0xe0, 0xfe, 0x3f, 0x23, 0x23, 0x3f, 0xfe, 0xe0, 0x00, 0xfe, 0xfe, 0x62, 0xe2, 0xa2, 0x3e, 0x1c, 0x03, 0x03, 0x00, 0x00, 0x01, 0x03, 0xe2, 0xfe, 0x3f, 0x23, 0x04, 0x22, 0xf6, 0x23, 0x3f, 0xfe, 0xe3, 0x03, 0x00, 0x00, 0x01, 0x03, 0x02
+};
+static const tImage iconsamp24_0x004d = { image_data_iconsamp24_0x004d, 24, 24, 71, yes};
+#endif
+
+#if (0x0 == 0x0)
 static const uint8_t image_data_iconsamp24_0x0060[72] = {
     // ██∙∙∙∙∙∙∙∙∙∙██∙∙∙∙∙∙∙∙██
     // ███∙∙∙∙∙∙∙∙███∙∙∙∙∙∙∙███
@@ -1528,6 +1559,14 @@ static const tChar iconsamp24_array[] = {
 #endif
 
 #if (0x0 == 0x0)
+    // character: 'M'
+    {0x004d, &iconsamp24_0x004d},
+#else
+    // character: 'M' == ''
+    {0x004d, &iconsamp24_0x},
+#endif
+
+#if (0x0 == 0x0)
     // character: '`'
     {0x0060, &iconsamp24_0x0060},
 #else
@@ -1658,4 +1697,4 @@ static const tChar iconsamp24_array[] = {
 };
 
 
-const tFont iconsamp24 = { 42, iconsamp24_array };
+const tFont iconsamp24 = { 43, iconsamp24_array };
