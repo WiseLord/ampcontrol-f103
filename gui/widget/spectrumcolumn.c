@@ -17,6 +17,8 @@ void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear)
 
     const Palette *pal = canvas->pal;
 
+    y += rect->h;
+
     if (s == 0) {
         s = 1;
     }
@@ -32,28 +34,28 @@ void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear)
 
     // Full redraw the column
     if (clear) {
-        glcdDrawRect(x, y + h - s, w, s, pal->spCol);
+        dispdrvDrawRectangle(x, y - s, w, s, pal->spCol);
 
         if (p > s) {
-            glcdDrawRect(x, y + h - p, w, 1, pal->spPeak);
+            dispdrvDrawRectangle(x, y - p, w, 1, pal->spPeak);
         }
         return;
     }
 
     // Draw part of changed column
     if (s > os) {
-        glcdDrawRect(x, y + h - s, w, s - os, pal->spCol);
+        dispdrvDrawRectangle(x, y - s, w, s - os, pal->spCol);
     } else if (s < os) {
-        glcdDrawRect(x, y + h - os, w, os - s, pal->bg);
+        dispdrvDrawRectangle(x, y - os, w, os - s, pal->bg);
     }
 
     // Clear old peak
     if (p >= s) {
-        glcdDrawRect(x, y + h - p - 1, w, 1, pal->bg);
+        dispdrvDrawRectangle(x, y - p - 1, w, 1, pal->bg);
     }
 
     // Draw new peak
     if (p > s) {
-        glcdDrawRect(x, y + h - p, w, 1, pal->spPeak);
+        dispdrvDrawRectangle(x, y - p, w, 1, pal->spPeak);
     }
 }
