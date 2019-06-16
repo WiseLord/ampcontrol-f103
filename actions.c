@@ -417,10 +417,24 @@ static void actionRemapBtnLong(void)
         }
         break;
     case BTN_D3:
-        actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_PREV);
+        switch (inType) {
+        case IN_TUNER:
+            actionSet(ACTION_SEEK, -1);
+            break;
+        default:
+            actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_PREV);
+            break;
+        }
         break;
     case BTN_D4:
-        actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_NEXT);
+        switch (inType) {
+        case IN_TUNER:
+            actionSet(ACTION_SEEK, +1);
+            break;
+        default:
+            actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_NEXT);
+            break;
+        }
         break;
     case BTN_D5:
         switch (screen) {
@@ -920,6 +934,20 @@ void actionHandle(bool visible)
             break;
         case IN_KARADIO:
             karadioSendMediaCmd((HidKey)action.value);
+            break;
+        }
+        break;
+    case ACTION_SEEK:
+        switch (inType) {
+        case IN_TUNER:
+            if (action.value > 0) {
+                tunerSeek(TUNER_DIR_UP);
+            } else if (action.value < 0) {
+                tunerSeek(TUNER_DIR_DOWN);
+            }
+            actionSetScreen(SCREEN_AUDIO_INPUT, 3000);
+            break;
+        default:
             break;
         }
         break;
