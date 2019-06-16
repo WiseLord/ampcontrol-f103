@@ -5,6 +5,7 @@
 #include "../../../display/dispdefs.h"
 #include "../../../input.h"
 #include "../../../screen.h"
+#include "../../../settings.h"
 #include "../../../spectrum.h"
 #include "../../../swtimers.h"
 #include "../../../tr/labels.h"

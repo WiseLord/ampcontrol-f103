@@ -123,6 +123,7 @@ HEADERS += \
     ../../../actions.h \
     ../../../eemul.h \
     ../../../input.h \
+    ../../../karadio.h \
     ../../../mem.h \
     ../../../menu.h \
     ../../../pins.h \
