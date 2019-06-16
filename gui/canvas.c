@@ -11,6 +11,12 @@
 #include "../tuner/stations.h"
 
 typedef union {
+    RTC_type rtc;
+} DrawData;
+
+static DrawData prev;
+
+typedef union {
     struct {
         uint8_t show[SP_CHAN_END];   // Value to show
         uint8_t prev[SP_CHAN_END];   // Previous value
@@ -77,9 +83,10 @@ void canvasClear(void)
 
     glcdSetFontColor(canvas.pal->fg);
     glcdSetFontBgColor(canvas.pal->bg);
+
+    memset(&prev, 0, sizeof(prev));
 }
 
-static void drawTm(RTC_type *rtc, RtcMode tm);
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
 static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
                          SpectrumColumn *spCol);
@@ -87,29 +94,44 @@ static void drawWaterfall(Spectrum *sp);
 static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect);
 static void drawRds(Rds *rds);
 
-static void drawTm(RTC_type *rtc, RtcMode tm)
+static void drawTmSpacer(char spacer, bool clear)
 {
-    int8_t time = *((int8_t *)rtc + tm);
-
-    glcdSetFontColor(canvas.pal->fg);
-    glcdSetFontBgColor(canvas.pal->bg);
-    if (rtc->etm == tm) {
-        glcdSetFontColor(canvas.pal->bg);
-        glcdSetFontBgColor(canvas.pal->fg);
-    }
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    if (tm == RTC_YEAR) {
-        glcdWriteString("20");
+    if (clear) {
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+        glcdWriteUChar(spacer);
         glcdWriteUChar(LETTER_SPACE_CHAR);
     }
-    if (time >= 0) {
-        glcdWriteNum(time, 2, '0', 10);
-    } else {
-        glcdWriteString("--");
+}
+
+static void drawTm(RTC_type *rtc, RtcMode tm, bool clear)
+{
+    int8_t time = *((int8_t *)rtc + tm);
+    int8_t oldTime = *((int8_t *)&prev.rtc + tm);
+
+    bool etmChange = ((rtc->etm != prev.rtc.etm) &&
+                      (rtc->etm == tm || prev.rtc.etm == tm));
+
+    if (clear || time != oldTime || etmChange) {
+        glcdSetFontColor(canvas.pal->fg);
+        glcdSetFontBgColor(canvas.pal->bg);
+        if (rtc->etm == tm) {
+            glcdSetFontColor(canvas.pal->bg);
+            glcdSetFontBgColor(canvas.pal->fg);
+        }
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+        if (tm == RTC_YEAR) {
+            glcdWriteString("20");
+            glcdWriteUChar(LETTER_SPACE_CHAR);
+        }
+        if (time >= 0) {
+            glcdWriteNum(time, 2, '0', 10);
+        } else {
+            glcdWriteString("--");
+        }
+        glcdWriteUChar(LETTER_SPACE_CHAR);
+        glcdSetFontColor(canvas.pal->fg);
+        glcdSetFontBgColor(canvas.pal->bg);
     }
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    glcdSetFontColor(canvas.pal->fg);
-    glcdSetFontBgColor(canvas.pal->bg);
 }
 
 static void drawMenuItem(uint8_t idx, const tFont *fontItem)
@@ -304,8 +326,6 @@ static void drawRds(Rds *rds)
 
 void canvasShowTime(bool clear)
 {
-    (void)clear;
-
     const Layout *lt = canvas.layout;
 
     RTC_type rtcStruct; // TODO: Use one struct in rtc driver
@@ -315,63 +335,69 @@ void canvasShowTime(bool clear)
 
     rtcGetTime(rtc);
 
-    int16_t zeroPos;
-    int16_t ltspPos;
-    int16_t timeLen;
-
     // HH:MM:SS
     glcdSetFont(lt->time.hmsFont);
-    zeroPos = glcdFontSymbolPos('0');
-    ltspPos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
-    timeLen = 6 * (lt->time.hmsFont->chars[zeroPos].image->width);    // 6 digits HHMMSS
-    timeLen += 15 * (lt->time.hmsFont->chars[ltspPos].image->width);  // 13 letter spaces + 2 ':'
-    glcdSetXY((lt->rect.w - timeLen) / 2, lt->time.hmsY);
 
-    drawTm(rtc, RTC_HOUR);
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    glcdWriteUChar(':');
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    drawTm(rtc, RTC_MIN);
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    glcdWriteUChar(':');
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    drawTm(rtc, RTC_SEC);
+    int16_t digW = lt->time.hmsFont->chars[glcdFontSymbolPos('0')].image->width;
+    int16_t ltspW = lt->time.hmsFont->chars[glcdFontSymbolPos(LETTER_SPACE_CHAR)].image->width;
+
+    int16_t timeLen = 6 * digW + 15 * ltspW;    // 6 digits HHMMSS + 13 letter spaces + 2 ':'
+    int16_t timeX = (lt->rect.w - (timeLen)) / 2;
+
+    glcdSetXY(timeX, lt->time.hmsY);
+    drawTm(rtc, RTC_HOUR, clear);
+
+    drawTmSpacer(':', clear);
+
+    timeX += digW * 2 + ltspW * 6;
+    glcdSetXY(timeX, lt->time.hmsY);
+    drawTm(rtc, RTC_MIN, clear);
+
+    drawTmSpacer(':', clear);
+
+    timeX += digW * 2 + ltspW * 6;
+    glcdSetXY(timeX, lt->time.hmsY);
+    drawTm(rtc, RTC_SEC, clear);
 
     // DD:MM:YYYY
     glcdSetFont(lt->time.dmyFont);
-    zeroPos = glcdFontSymbolPos('0');
-    ltspPos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
-    timeLen = 8 * (lt->time.dmyFont->chars[zeroPos].image->width);    // 8 digits HHMMSS
-    timeLen += 17 *
-               (lt->time.dmyFont->chars[ltspPos].image->width);  // 15 letter spaces + 2 '.'
-    glcdSetXY((lt->rect.w - timeLen) / 2, lt->time.dmyY);
 
-    drawTm(rtc, RTC_DATE);
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    glcdWriteUChar('.');
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    drawTm(rtc, RTC_MONTH);
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    glcdWriteUChar('.');
-    glcdWriteUChar(LETTER_SPACE_CHAR);
-    drawTm(rtc, RTC_YEAR);
+    digW = lt->time.dmyFont->chars[glcdFontSymbolPos('0')].image->width;
+    ltspW = lt->time.dmyFont->chars[glcdFontSymbolPos(LETTER_SPACE_CHAR)].image->width;
+    timeLen = 8 * digW + 17 * ltspW;            // 8 digits HHMMSS + 15 letter spaces + 2 '.'
+
+    timeX = (lt->rect.w - timeLen) / 2;
+    glcdSetXY(timeX, lt->time.dmyY);
+    drawTm(rtc, RTC_DATE, clear);
+
+    drawTmSpacer('.', clear);
+
+    timeX += digW * 2 + ltspW * 6;
+    glcdSetXY(timeX, lt->time.dmyY);
+    drawTm(rtc, RTC_MONTH, clear);
+
+    drawTmSpacer('.', clear);
+
+    timeX += digW * 2 + ltspW * 6;
+    glcdSetXY(timeX, lt->time.dmyY);
+    drawTm(rtc, RTC_YEAR, clear);
 
     // Weekday
     glcdSetFont(lt->time.wdFont);
     glcdSetFontColor(canvas.pal->fg);
 
-    static int8_t wdayOld = 0;
-    int8_t wday = rtc->wday;
-    if (wday != wdayOld)    // Clear the area with weekday label
+    if (clear || rtc->wday != prev.rtc.wday) {
+        // Clear the area with weekday label
         glcdDrawRect(0, lt->time.wdY, lt->rect.w,
                      (int16_t)lt->time.wdFont->chars[0].image->height, canvas.pal->bg);
-    wdayOld = wday;
 
-    const char *wdayLabel = labelsGet((Label)(LABEL_SUNDAY + wday));
+        const char *wdayLabel = labelsGet((Label)(LABEL_SUNDAY + rtc->wday));
+        glcdSetXY(lt->rect.w / 2, lt->time.wdY);
+        glcdSetFontAlign(FONT_ALIGN_CENTER);
+        glcdWriteStringConst(wdayLabel);
+    }
 
-    glcdSetXY(lt->rect.w / 2, lt->time.wdY);
-    glcdSetFontAlign(FONT_ALIGN_CENTER);
-    glcdWriteStringConst(wdayLabel);
+    prev.rtc = *rtc;
 }
 
 void canvasShowMenu(bool clear)
@@ -848,18 +874,6 @@ void canvasShowTimer(bool clear, int32_t value)
 {
     const Layout *lt = canvas.layout;
 
-    Spectrum *sp = spGet();
-
-    static int8_t hour;
-    static int8_t min;
-    static int8_t sec;
-
-    if (clear) {
-        hour = -1;
-        min = -1;
-        sec = -1;
-    }
-
     RTC_type rtc;
     rtc.etm = RTC_NOEDIT;
 
@@ -880,39 +894,28 @@ void canvasShowTimer(bool clear, int32_t value)
     int16_t digW = lt->time.hmsFont->chars[glcdFontSymbolPos('0')].image->width;
     int16_t ltspW = lt->time.hmsFont->chars[glcdFontSymbolPos(LETTER_SPACE_CHAR)].image->width;
 
-    int16_t hmsX = (lt->rect.w - (6 * digW + 15 * ltspW)) /
-                   2; // 6 digits HHMMSS + 13 letter spaces + 2 ':'
+    int16_t timeLen = 6 * digW + 15 * ltspW;    // 6 digits HHMMSS + 13 letter spaces + 2 ':'
+    int16_t timeX = (lt->rect.w - timeLen) / 2;
 
-    if (clear || rtc.hour != hour) {
-        glcdSetXY(hmsX, lt->time.hmsY);
-        drawTm(&rtc, RTC_HOUR);
-    }
-    if (clear) {
-        glcdWriteUChar(LETTER_SPACE_CHAR);
-        glcdWriteUChar(':');
-        glcdWriteUChar(LETTER_SPACE_CHAR);
-    }
+    glcdSetXY(timeX, lt->time.hmsY);
+    drawTm(&rtc, RTC_HOUR, clear);
 
-    if (clear || rtc.min != min) {
-        glcdSetX(hmsX + 2 * digW + 6 * ltspW);
-        drawTm(&rtc, RTC_MIN);
-    }
-    if (clear) {
-        glcdWriteUChar(LETTER_SPACE_CHAR);
-        glcdWriteUChar(':');
-        glcdWriteUChar(LETTER_SPACE_CHAR);
-    }
+    drawTmSpacer(':', clear);
 
-    if (clear || rtc.sec != sec) {
-        glcdSetX(hmsX + 4 * digW + 12 * ltspW);
-        drawTm(&rtc, RTC_SEC);
-    }
+    timeX += digW * 2 + ltspW * 6;
+    glcdSetX(timeX);
+    drawTm(&rtc, RTC_MIN, clear);
 
-    hour = rtc.hour;
-    min = rtc.min;
-    sec = rtc.sec;
+    drawTmSpacer(':', clear);
+
+    timeX += digW * 2 + ltspW * 6;
+    glcdSetX(timeX);
+    drawTm(&rtc, RTC_SEC, clear);
+
+    prev.rtc = rtc;
 
     // Spectrum
+    Spectrum *sp = spGet();
 
     if (!sp->ready) {
         return;

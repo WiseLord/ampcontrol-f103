@@ -9,17 +9,21 @@ FEATURE_LIST =
 
 F10X_MCU = STM32F103xB
 #DEBUG_ENABLED = YES
+#DEBUG_FPS = YES
 
 # Lowercase argument
 lc = $(shell echo $1 | tr '[:upper:]' '[:lower:]')
 
 TARGET = $(call lc, $(PROJECT)_$(DISPLAY)_$(DISPVAR))
 
-
 C_DEFS = -DUSE_FULL_LL_DRIVER -D$(F10X_MCU)
 
 ifeq "$(DEBUG_ENABLED)" "YES"
   C_DEFS += -D_DEBUG_ENABLED
+endif
+
+ifeq "$(DEBUG_FPS)" "YES"
+  C_DEFS += -D_DEBUG_FPS
 endif
 
 DISP_HI_BYTE = NO

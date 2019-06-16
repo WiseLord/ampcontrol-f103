@@ -103,7 +103,7 @@ int main(void)
     LL_SYSTICK_EnableIT();
     timersInit();
 
-#ifdef _DEBUG_ENABLED
+#ifdef _DEBUG_FPS
     int32_t fpsCnt = 0;
 #endif
 
@@ -111,10 +111,10 @@ int main(void)
         actionHandle(ACTION_VISIBLE);
         screenShow(false);
         actionUserGet();
-#ifdef _DEBUG_ENABLED
+#ifdef _DEBUG_FPS
         int32_t cnt = getSysTimer();
-        fpsCnt = (cnt == fpsCnt) ? 0 : 1000 / (cnt - fpsCnt);
-//        DBG("FPS: %d \r\n", fpsCnt);
+        fpsCnt = (cnt == fpsCnt) ? 1000 : 1000 / (cnt - fpsCnt);
+        DBG("FPS: %d \r\n", fpsCnt);
         fpsCnt = cnt;
 #endif
     }
