@@ -12,6 +12,14 @@
 
 typedef union {
     RTC_type rtc;
+    struct {
+        uint16_t freq;
+        int16_t value;
+        Icon icon;
+        bool stereo;
+        bool forcedMono;
+        bool rdsFlag;
+    } par;
 } DrawData;
 
 static DrawData prev;
@@ -470,17 +478,15 @@ void canvasShowTune(bool clear)
         glcdWriteStringConst(label);
     }
 
-    static Icon iconOld = ICON_VOLUME;
-    if (clear || iconOld != icon) {
+    if (clear || icon != prev.par.icon) {
         // Icon
         glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
+        prev.par.icon = icon;
     }
-    iconOld = icon;
 
-    static int16_t valueOld;
-    if (clear || valueOld != value) {
+    if (clear || value != prev.par.value) {
         // Bar
         StripedBar bar = {value, min, max};
         stripedBarDraw(&bar, &lt->tune.bar, clear);
@@ -490,8 +496,8 @@ void canvasShowTune(bool clear)
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
         glcdWriteNum((value * mStep) / 8, 3, ' ', 10);
+        prev.par.value = value;
     }
-    valueOld = value;
 
     // Spectrum
     if (!sp->ready) {
@@ -548,12 +554,11 @@ void canvasShowAudioFlag(bool clear)
     }
 
     // Icon
-    static Icon iconOld = ICON_MUTE_OFF;
-    if (clear || icon != iconOld) {
+    if (clear || icon != prev.par.icon) {
         glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
-        iconOld = icon;
+        prev.par.icon = icon;
     }
 
     // Spectrum
@@ -621,9 +626,10 @@ void canvasShowTuner(bool clear)
 
     // Frequency
     uint16_t freq = tuner->status.freq;
-    static uint16_t freqOld = 0;
 
-    if (clear || freqOld != freq) {
+    if (clear || freq != prev.par.freq) {
+        prev.par.freq = freq;
+
         int16_t freqMin = (int16_t)tuner->par.fMin;
         int16_t freqMax = (int16_t)tuner->par.fMax;
 
@@ -666,29 +672,27 @@ void canvasShowTuner(bool clear)
         uint16_t nameLen = glcdWriteString(stationGetName(stNum));
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y, lt->tuner.bar.barW - nameLen, fh, canvas.pal->bg);
     }
-    freqOld = freq;
 
     // Stereo / forced mono indicator
     bool forcedMono = tuner->par.forcedMono;
     bool stereo = ((tuner->status.flags & TUNER_FLAG_STEREO) == TUNER_FLAG_STEREO);
-    static bool stereoOld = false;
-    static bool forcedMonoOld = false;
-    if (clear || (stereoOld != stereo) || (forcedMonoOld != forcedMono)) {
+
+    if (clear || (stereo != prev.par.stereo) || (forcedMono != prev.par.forcedMono)) {
+        prev.par.stereo = stereo;
+        prev.par.forcedMono = forcedMono;
         icon = glcdFindIcon(forcedMono ? ICON_FMONO : ICON_STEREO, iconSet);
         if (icon) {
             glcdSetXY(lt->rect.w - icon->width, 0);
             glcdDrawImage(icon, (stereo || forcedMono) ?
                           canvas.pal->active : canvas.pal->inactive, canvas.pal->bg);
         }
-        stereoOld = stereo;
-        forcedMonoOld = forcedMono;
     }
 
     // RDS enabled indicator
     bool rdsFlag = rdsGetFlag();
-    static bool rdsFlagOld = false;
-    bool rdsSpClear = (clear || (rdsFlagOld != rdsFlag));
-    rdsFlagOld = rdsFlag;
+
+    bool rdsSpClear = (clear || (rdsFlag != prev.par.rdsFlag));
+    prev.par.rdsFlag = rdsFlag;
 
     if (rdsSpClear) {
         icon = glcdFindIcon(ICON_RDS, iconSet);
@@ -835,14 +839,13 @@ void canvasShowAudioInput(bool clear, Icon icon)
         glcdWriteStringConst(label);
     }
 
-    static Icon iconOld = ICON_VOLUME;
-    if (clear || iconOld != icon) {
-        // Icon
+    // Icon
+    if (clear || icon != prev.par.icon) {
+        prev.par.icon = icon;
         glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
     }
-    iconOld = icon;
 
     Spectrum *sp = spGet();
     // Spectrum
