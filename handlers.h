@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
+int32_t getSysTimer(void);
+
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void MemManage_Handler(void);

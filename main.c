@@ -6,6 +6,7 @@
 
 #include "actions.h"
 #include "debug.h"
+#include "handlers.h"
 #include "input.h"
 #include "karadio.h"
 #include "pins.h"
@@ -102,9 +103,19 @@ int main(void)
     LL_SYSTICK_EnableIT();
     timersInit();
 
+#ifdef _DEBUG_ENABLED
+    int32_t fpsCnt = 0;
+#endif
+
     while (1) {
         actionHandle(ACTION_VISIBLE);
         screenShow(false);
         actionUserGet();
+#ifdef _DEBUG_ENABLED
+        int32_t cnt = getSysTimer();
+        fpsCnt = (cnt == fpsCnt) ? 0 : 1000 / (cnt - fpsCnt);
+        DBG("FPS: %d \r\n", fpsCnt);
+        fpsCnt = cnt;
+#endif
     }
 }

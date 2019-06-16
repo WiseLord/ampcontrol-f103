@@ -15,6 +15,13 @@
 #include "swtimers.h"
 #include "usb/usbd_conf.h"
 
+static int32_t sysTimer = 0;
+
+int32_t getSysTimer(void)
+{
+    return sysTimer;
+}
+
 void NMI_Handler(void)
 {
 }
@@ -60,6 +67,8 @@ void SysTick_Handler(void)
     dispdrvBusIRQ();
     inputPoll();
     swTimUpdate();
+
+    sysTimer++;
 }
 
 void RTC_IRQHandler(void)
