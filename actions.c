@@ -859,6 +859,8 @@ void actionHandle(bool visible)
             tunerSetMute(true);
             tunerSetPower(false);
 
+            karadioSetEnabled(false);
+
             pinsDeInitAmpI2c();
 
             pinsSetStby(true);      // OFF via relay
@@ -898,9 +900,7 @@ void actionHandle(bool visible)
         audioSetPower(true);
         actionResetSilenceTimer();
 
-        if (inType == IN_KARADIO) {
-            karadioUpdateStatus();
-        }
+        karadioSetEnabled(inType == IN_KARADIO);
         break;
     case ACTION_DISP_EXPIRED:
         actionDispExpired(scrMode);
@@ -996,9 +996,9 @@ void actionHandle(bool visible)
             audioSetInput(actionGetNextAudioInput(aProc));
             inType = aProc->par.inType[aProc->par.input];
         }
-        if (inType == IN_KARADIO) {
-            karadioUpdateStatus();
-        }
+
+        karadioSetEnabled(inType == IN_KARADIO);
+
         screenToClear();
         screen->iconHint = ICON_EMPTY;
         actionSetScreen(SCREEN_AUDIO_INPUT, 5000);

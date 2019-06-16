@@ -201,3 +201,8 @@ void karadioSendMediaCmd(uint8_t cmd)
 void eeInit()
 {
 }
+
+void karadioSetEnabled(bool value)
+{
+    krData.playing = value;
+}

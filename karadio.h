@@ -19,6 +19,9 @@ typedef struct {
 } KaRadioData;
 
 void karadioInit(void);
+
+void karadioSetEnabled(bool value);
+
 KaRadioData *karadioGet(void);
 
 void karadioUpdateStatus(void);

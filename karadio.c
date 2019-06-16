@@ -59,20 +59,40 @@ static void karadioSendCmd (const char *type, const char *cmd)
     karadioPutChar('\n');
 }
 
+static void karadioClearStatus()
+{
+    krData.flags = 0;
+    bufIdx = 0;
+    krData.playing = false;
+
+    memset(stName, 0, ST_NAME_SIZE);
+    memset(stMeta, 0, ST_META_SIZE);
+}
+
 void karadioInit(void)
 {
     NVIC_SetPriority(USART2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
     NVIC_EnableIRQ(USART2_IRQn);
 
     usartInit(USART_KARADIO, 115200);
-    LL_USART_EnableIT_RXNE(USART_KARADIO);
 
     krData.name = stName;
     krData.meta = stMeta;
 
-    krData.flags = 0;
+    karadioClearStatus();
+}
 
-    bufIdx = 0;
+void karadioSetEnabled(bool value)
+{
+    if (value) {
+        LL_USART_EnableIT_RXNE(USART_KARADIO);
+        karadioUpdateStatus();
+        karadioSendCmd(CMD_CLI, CLI_PLAY);
+    } else {
+        LL_USART_DisableIT_RXNE(USART_KARADIO);
+        karadioSendCmd(CMD_CLI, CLI_STOP);
+        karadioClearStatus();
+    }
 }
 
 KaRadioData *karadioGet(void)
