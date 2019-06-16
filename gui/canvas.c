@@ -700,11 +700,8 @@ void canvasShowKaradio(bool clear)
 {
     const Layout *lt = canvas.layout;
 
-    AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
-
     const tFont *iconSet = lt->iconSet;
-    const char *label = labelsGet(LABEL_IN_TUNER + inType);
+    const char *label = labelsGet(LABEL_IN_KARADIO);
 
     Icon icon = ICON_KARADIO;
 
@@ -723,21 +720,43 @@ void canvasShowKaradio(bool clear)
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
     }
 
+    int16_t yPos = iconSet->chars[0].image->height;
+
+    KaRadioData *krData = karadioGet();
     uint16_t nameLen;
 
-    glcdSetFont(lt->rds.psFont);
-    glcdSetXY(0, lt->lblFont->chars[0].image->height);
-    nameLen = glcdWriteString(karadioGetName());
-    glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
-                 lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
-                 canvas.pal->bg);
+    if (clear || (krData->flags & KARADIO_FLAG_NAME)) {
 
-    glcdSetFont(lt->rds.textFont);
-    glcdSetXY(0, canvas.glcd->y + lt->tuner.nameFont->chars[0].image->height);
-    nameLen = glcdWriteString(karadioGetMeta());
-    glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
-                 lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
-                 canvas.pal->bg);
+        krData->flags &= ~KARADIO_FLAG_NAME;
+        glcdSetFont(lt->rds.psFont);
+        glcdSetXY(0, yPos);
+        if (krData->playing) {
+            nameLen = glcdWriteString(krData->name);
+        } else {
+            nameLen = 0;
+        }
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                     lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
+                     canvas.pal->bg);
+    }
+
+    yPos += lt->rds.psFont->chars[0].image->height;
+
+    if (clear || (krData->flags & KARADIO_FLAG_META)) {
+        krData->flags &= ~KARADIO_FLAG_META;
+        glcdSetFont(lt->rds.textFont);
+        glcdSetXY(0, yPos);
+        if (krData->playing) {
+            nameLen = glcdWriteString(krData->meta);
+        } else {
+            nameLen = 0;
+        }
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                     lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
+                     canvas.pal->bg);
+    }
+
+    yPos += lt->tuner.nameFont->chars[0].image->height;
 
     Spectrum *sp = spGet();
     // Spectrum
@@ -746,8 +765,8 @@ void canvasShowKaradio(bool clear)
     }
 
     GlcdRect rect = canvas.glcd->rect;
-    rect.h = (rect.h - rect.y) / 2;
-    rect.y += rect.h;
+    rect.y = yPos;
+    rect.h = rect.h - rect.y;
     drawSpectrum(sp, SP_CHAN_BOTH, &rect);
 
     sp->redraw = false;

@@ -16,11 +16,14 @@
 #define CLI_STOP    "stop"
 #define CLI_PREV    "prev"
 #define CLI_NEXT    "next"
+#define CLI_INFO  "info"
 
 #define CLI_META    "##CLI.META#:"
 #define CLI_NAMESET "##CLI.NAMESET#:"
+#define CLI_STOPPED "##CLI.STOPPED#"
+#define CLI_PLAYING "##CLI.PLAYING#"
 
-#define RX_BUF_SIZE     256
+#define RX_BUF_SIZE     128
 #define ST_NAME_SIZE    40
 #define ST_META_SIZE    64
 
@@ -30,6 +33,8 @@ static char stMeta[ST_META_SIZE];
 
 static int32_t bufIdx = 0;
 
+static KaRadioData krData;
+
 static void karadioPutChar(char ch)
 {
     usartSendChar(USART_KARADIO, ch);
@@ -38,6 +43,7 @@ static void karadioPutChar(char ch)
 static void karadioSendCmd (const char *type, const char *cmd)
 {
     const char *str;
+    karadioPutChar('\n');
 
     str = type;
     while (*str) {
@@ -61,7 +67,22 @@ void karadioInit(void)
     usartInit(USART_KARADIO, 115200);
     LL_USART_EnableIT_RXNE(USART_KARADIO);
 
+    krData.name = stName;
+    krData.meta = stMeta;
+
+    krData.flags = 0;
+
     bufIdx = 0;
+}
+
+KaRadioData *karadioGet(void)
+{
+    return &krData;
+}
+
+void karadioUpdateStatus(void)
+{
+    karadioSendCmd(CMD_CLI, CLI_INFO);
 }
 
 void karadioSendMediaCmd(uint8_t cmd)
@@ -84,24 +105,22 @@ void karadioSendMediaCmd(uint8_t cmd)
     }
 }
 
-char *karadioGetName(void)
-{
-    return stName;
-}
-
-char *karadioGetMeta()
-{
-    return stMeta;
-}
-
 static void parse(char *line)
 {
     char *ici;
 
-    if ((ici = strstr(line, CLI_META)) != NULL) {
-        strncpy(stMeta, ici + sizeof(CLI_META), ST_META_SIZE);
+    if ((ici = strstr(line, CLI_PLAYING)) != NULL) {
+        krData.playing = true;
+        krData.flags |= (KARADIO_FLAG_ALL);
+    } else  if ((ici = strstr(line, CLI_STOPPED)) != NULL) {
+        krData.playing = false;
+        krData.flags |= (KARADIO_FLAG_ALL);
+    } else  if ((ici = strstr(line, CLI_META)) != NULL) {
+        strncpy(krData.meta, ici + sizeof(CLI_META), ST_META_SIZE);
+        krData.flags |= KARADIO_FLAG_META;
     } else if ((ici = strstr(line, CLI_NAMESET)) != NULL) {
-        strncpy(stName, ici + sizeof(CLI_NAMESET), ST_NAME_SIZE);
+        strncpy(krData.name, ici + sizeof(CLI_NAMESET), ST_NAME_SIZE);
+        krData.flags |= KARADIO_FLAG_NAME;
     }
 }
 
@@ -124,7 +143,11 @@ void karadioIRQ()
         bufIdx = 0;
         break;
     default:
-        rxBuf[bufIdx++] = data;
+        rxBuf[bufIdx] = data;
+        if (++bufIdx >= RX_BUF_SIZE) {
+            bufIdx = 0;
+            rxBuf[bufIdx] = 0;
+        }
         break;
     }
 }

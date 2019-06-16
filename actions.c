@@ -70,7 +70,7 @@ static void actionDispExpired(ScreenMode scrMode)
     screen->iconHint = ICON_EMPTY;
 
     rtcSetMode(RTC_NOEDIT);
-    aProc->tune = scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME;
+    aProc->tune = (scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME);
 
     switch (scrMode) {
     case SCREEN_STANDBY:
@@ -897,6 +897,10 @@ void actionHandle(bool visible)
 
         audioSetPower(true);
         actionResetSilenceTimer();
+
+        if (inType == IN_KARADIO) {
+            karadioUpdateStatus();
+        }
         break;
     case ACTION_DISP_EXPIRED:
         actionDispExpired(scrMode);
@@ -990,6 +994,10 @@ void actionHandle(bool visible)
     case ACTION_AUDIO_INPUT:
         if (scrMode == SCREEN_AUDIO_INPUT) {
             audioSetInput(actionGetNextAudioInput(aProc));
+            inType = aProc->par.inType[aProc->par.input];
+        }
+        if (inType == IN_KARADIO) {
+            karadioUpdateStatus();
         }
         screenToClear();
         screen->iconHint = ICON_EMPTY;

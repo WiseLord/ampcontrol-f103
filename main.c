@@ -114,7 +114,7 @@ int main(void)
 #ifdef _DEBUG_ENABLED
         int32_t cnt = getSysTimer();
         fpsCnt = (cnt == fpsCnt) ? 0 : 1000 / (cnt - fpsCnt);
-        DBG("FPS: %d \r\n", fpsCnt);
+//        DBG("FPS: %d \r\n", fpsCnt);
         fpsCnt = cnt;
 #endif
     }
