@@ -275,7 +275,6 @@ void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor)
         return;
     }
 
-
     int16_t x = glcd.rect.x + glcd.x;
     int16_t y = glcd.rect.y + glcd.y;
 
