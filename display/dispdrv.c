@@ -332,11 +332,20 @@ void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
 
 void dispdrvDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
+    int16_t xOft = x > 0 ? 0 : -x;
+
+    x += xOft;
+    w -= xOft;
+
     if (x + w > dispdrv.width) {
         w = dispdrv.width - x;
     }
     if (y + h > dispdrv.height) {
         h = dispdrv.height - y;
+    }
+
+    if (w < 0 || h < 0) {
+        return;
     }
 
     CLR(DISP_CS);
@@ -356,6 +365,11 @@ void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
     int16_t w = img->width;
     int16_t h = img->height;
 
+    int16_t xOft = x > 0 ? 0 : -x;
+
+    x += xOft;
+    w -= xOft;
+
     if (x + w > dispdrv.width) {
         w = dispdrv.width - x;
     }
@@ -363,13 +377,17 @@ void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
         h = dispdrv.height - y;
     }
 
+    if (w < 0 || h < 0) {
+        return;
+    }
+
     CLR(DISP_CS);
 
     dispdrv.setWindow(x, y, w, h);
 
-    for (uint16_t i = 0; i < w; i++) {
-        for (uint16_t j = 0; j < (h + 7) / 8; j++) {
-            uint8_t data = img->data[img->width * j + i];
+    for (int16_t i = 0; i < w; i++) {
+        for (int16_t j = 0; j < (h + 7) / 8; j++) {
+            uint8_t data = img->data[img->width * j + i + xOft];
             for (uint8_t bit = 0; bit < 8; bit++) {
                 if (8 * j + bit < h) {
                     dispdrvSendWord(data & 0x01 ? color : bgColor);
