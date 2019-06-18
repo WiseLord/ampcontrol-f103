@@ -77,7 +77,7 @@ Canvas *canvasGet(void)
 
 void canvasClear(void)
 {
-    GlcdRect rect = glcdGetRect();
+    GlcdRect rect = canvas.glcd->rect;
 
     glcdDrawRect(0, 0, rect.w, rect.h, canvas.pal->bg);
     glcdShift(0);
@@ -701,7 +701,7 @@ void canvasShowTuner(bool clear)
             glcdDrawImage(icon, rdsFlag ? canvas.pal->active : canvas.pal->inactive, canvas.pal->bg);
         }
         // Clear RDS/Spectrum area
-        GlcdRect rect = glcdGetRect();
+        GlcdRect rect = canvas.glcd->rect;
         glcdDrawRect(0, rect.h / 2, rect.w, rect.h / 2, canvas.pal->bg);
         sp->redraw = true;
     }

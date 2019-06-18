@@ -34,28 +34,28 @@ void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear)
 
     // Full redraw the column
     if (clear) {
-        dispdrvDrawRectangle(x, y - s, w, s, pal->spCol);
+        glcdDrawRect(x, y - s, w, s, pal->spCol);
 
         if (p > s) {
-            dispdrvDrawRectangle(x, y - p, w, 1, pal->spPeak);
+            glcdDrawRect(x, y - p, w, 1, pal->spPeak);
         }
         return;
     }
 
     // Draw part of changed column
     if (s > os) {
-        dispdrvDrawRectangle(x, y - s, w, s - os, pal->spCol);
+        glcdDrawRect(x, y - s, w, s - os, pal->spCol);
     } else if (s < os) {
-        dispdrvDrawRectangle(x, y - os, w, os - s, pal->bg);
+        glcdDrawRect(x, y - os, w, os - s, pal->bg);
     }
 
     // Clear old peak
     if (p >= s) {
-        dispdrvDrawRectangle(x, y - p - 1, w, 1, pal->bg);
+        glcdDrawRect(x, y - p - 1, w, 1, pal->bg);
     }
 
     // Draw new peak
     if (p > s) {
-        dispdrvDrawRectangle(x, y - p, w, 1, pal->spPeak);
+        glcdDrawRect(x, y - p, w, 1, pal->spPeak);
     }
 }

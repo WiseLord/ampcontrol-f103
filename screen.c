@@ -136,13 +136,18 @@ void screenShow(bool clear)
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
+    glcdSetRect(&rect);
+
     if (!clear) {
         clear = screenCheckClear();
         if (screen.mode == SCREEN_TEXTEDIT) {
             rect = canvasGet()->layout->textEdit.rect;
+            if (clear) {
+                glcdDrawFrame(rect.x - 1, rect.y - 1, rect.w + 2, rect.h + 2, 1, canvasGet()->pal->fg);
+            }
+            glcdSetRect(&rect);
         }
     }
-    glcdSetRect(rect);
 
     if (screen.mode != SCREEN_STANDBY) {
         // Get new spectrum data
