@@ -18,6 +18,12 @@ TARGET = $(call lc, $(PROJECT)_$(DISPLAY)_$(DISPVAR))
 
 C_DEFS = -DUSE_FULL_LL_DRIVER -D$(F10X_MCU)
 
+ifneq (,$(filter $(DISPLAY), \
+  DISP24BIT    \
+))
+  C_DEFS += -D_COLOR_24BIT
+endif
+
 ifeq "$(DEBUG_ENABLED)" "YES"
   C_DEFS += -D_DEBUG_ENABLED
 endif

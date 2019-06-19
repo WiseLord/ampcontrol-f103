@@ -134,6 +134,38 @@ static inline void dispdrvSendWord(uint16_t data)
 #endif // _DISP_16BIT
 }
 
+#ifdef _COLOR_24BIT
+__attribute__((always_inline))
+static inline void dispdrvSendTriplet(uint16_t data)
+{
+    uint8_t dataH = (data & 0xF800) >> 8;
+    uint8_t dataM = (data & 0x07E0) >> 5;
+    uint8_t dataL = (data & 0x001F) << 3;
+
+#ifdef _DISP_8BIT
+    dispdrvBusOut();
+#endif
+
+    dispdrvSendByte(dataH);
+    dispdrvSendByte(dataM);
+    dispdrvSendByte(dataL);
+
+#ifdef _DISP_8BIT
+    dispdrvBusIn();
+#endif
+}
+#endif
+
+__attribute__((always_inline))
+static inline void dispdrvSendColor(uint16_t data)
+{
+#ifdef _COLOR_24BIT
+    dispdrvSendTriplet(color);
+#else
+    dispdrvSendWord(data);
+#endif
+}
+
 void dispdrvReset(void)
 {
 #ifdef _DISP_SPI
@@ -324,7 +356,7 @@ void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
 
     dispdrv.setWindow(x, y, 1, 1);
 
-    dispdrvSendWord(color);
+    dispdrvSendColor(color);
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -337,7 +369,7 @@ void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
     dispdrv.setWindow(x, y, w, h);
 
     for (int32_t i = 0; i < w * h; i++) {
-        dispdrvSendWord(color);
+        dispdrvSendColor(color);
     }
 
     DISP_WAIT_BUSY();
@@ -355,7 +387,7 @@ void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_
         for (int16_t j = 0; j < h; j++) {
             uint8_t data = img->data[img->width * ((j + yOft) >> 3) + i + xOft];
             if (j < h) {
-                dispdrvSendWord(data & (1 << ((j + yOft) & 0x7)) ? color : bgColor);
+                dispdrvSendColor(data & (1 << ((j + yOft) & 0x7)) ? color : bgColor);
             }
         }
     }
