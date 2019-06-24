@@ -48,6 +48,7 @@ SOURCES += \
     rtc.c \
     ../../../audio/audio.c \
     ../../../gui/canvas.c \
+	../../../gui/palette.c \
     ../../../gui/widget/spectrumcolumn.c \
     ../../../gui/widget/stripedbar.c \
     ../../../gui/widget/textedit.c \
@@ -107,6 +108,7 @@ HEADERS += \
     ../../../audio/audiodefs.h \
     ../../../gui/canvas.h \
     ../../../gui/layout.h \
+	../../../gui/palette.h \
     ../../../gui/widget/spectrumcolumn.h \
     ../../../gui/widget/stripedbar.h \
     ../../../gui/widget/textedit.h \

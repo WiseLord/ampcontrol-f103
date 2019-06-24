@@ -159,7 +159,8 @@ gui/lt220x176.c
 gui/lt320x240.c
 gui/lt400x240.c
 gui/lt480x320.c
-
+gui/palette.c
+gui/palette.h
 gui/widget/spectrumcolumn.c
 gui/widget/spectrumcolumn.h
 gui/widget/stripedbar.c

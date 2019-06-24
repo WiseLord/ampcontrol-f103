@@ -8,16 +8,7 @@ extern "C" {
 #include <stdint.h>
 
 #include "layout.h"
-
-typedef struct {
-    uint16_t fg;
-    uint16_t bg;
-    uint16_t gray;
-    uint16_t spCol;
-    uint16_t spPeak;
-    uint16_t inactive;
-    uint16_t active;
-} Palette;
+#include "palette.h"
 
 typedef struct {
     Glcd *glcd;

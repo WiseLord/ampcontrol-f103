@@ -38,19 +38,7 @@ typedef struct {
     SpCol col[SPECTRUM_SIZE];
 } SpDrawData;
 
-static const Palette canvasPalette = {
-    .fg = LCD_COLOR_WHITE,
-    .bg = LCD_COLOR_BLACK,
-    .gray = LCD_COLOR_GRAY,
-    .spCol = LCD_COLOR_ELECTRIC_BLUE,
-    .spPeak = LCD_COLOR_WITCH_HAZE,
-    .inactive = LCD_COLOR_NERO,
-    .active = LCD_COLOR_AQUA,
-};
-
-static Canvas canvas = {
-    .pal = &canvasPalette,
-};
+static Canvas canvas;
 
 static SpDrawData spDrawData;
 
@@ -61,6 +49,7 @@ void canvasInit(void)
     glcdInit(&canvas.glcd);
 
     canvas.layout = layoutGet();
+    canvas.pal = paletteGet();
 
     bool rotate = settingsRead(PARAM_DISPLAY_ROTATE);
     glcdRotate(rotate);
