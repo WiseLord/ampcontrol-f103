@@ -49,7 +49,10 @@ void canvasInit(void)
     glcdInit(&canvas.glcd);
 
     canvas.layout = layoutGet();
-    canvas.pal = paletteGet();
+
+    PalIdx palIdx = (PalIdx)settingsRead(PARAM_DISPLAY_PALETTE);
+    paletteSetIndex(palIdx);
+    canvas.pal = paletteGet(palIdx);
 
     bool rotate = settingsRead(PARAM_DISPLAY_ROTATE);
     glcdRotate(rotate);

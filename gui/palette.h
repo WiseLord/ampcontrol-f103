@@ -13,6 +13,19 @@ typedef struct {
     uint16_t spPeak;
 } Palette;
 
-const Palette *paletteGet(void);
+typedef int8_t PalIdx;
+enum {
+    PAL_DEFAULT,
+
+    PAL_SNOW = PAL_DEFAULT,
+    PAL_AQUA,
+    PAL_FIRE,
+
+    PAL_END
+};
+
+const Palette *paletteGet(PalIdx index);
+PalIdx paletteGetIndex(void);
+void paletteSetIndex(PalIdx index);
 
 #endif // PALETTE_H

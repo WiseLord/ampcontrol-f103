@@ -68,6 +68,7 @@ static const EE_Map eeMap[] = {
     [PARAM_DISPLAY_BR_WORK] =   {0x41,  LCD_BR_MAX},
     [PARAM_DISPLAY_ROTATE]  =   {0x42,  false},
     [PARAM_DISPLAY_DEF]     =   {0x43,  SCREEN_SPECTRUM},
+    [PARAM_DISPLAY_PALETTE] =   {0x44,  PAL_DEFAULT},
 
     [PARAM_SPECTRUM_MODE]   =   {0x50,  SP_MODE_STEREO},
     [PARAM_SPECTRUM_PEAKS]  =   {0x51,  true},
