@@ -91,6 +91,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
     [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7418] = "TDA7418",
+    [LABEL_AUDIO_IC + AUDIO_IC_TDA7440] = "TDA7440",
     [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "TEST",
 
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Off",

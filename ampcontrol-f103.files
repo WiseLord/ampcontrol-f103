@@ -13,6 +13,8 @@ audio/tda7418.c
 audio/tda7418.h
 audio/tda7439.c
 audio/tda7439.h
+audio/tda7440.c
+audio/tda7440.h
 
 display/fonts/font-terminus-12.c
 display/fonts/font-terminus-14b.c

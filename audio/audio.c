@@ -17,6 +17,14 @@
 #ifdef _TDA7418
 #include "tda7418.h"
 #endif
+#ifdef _TDA7440
+#include "tda7440.h"
+
+#ifndef _TDA7439
+#error "_TDA7439 needs to be defined in order to use TDA7440"
+#endif
+
+#endif
 
 #define FLAG_ON     1
 #define FLAG_OFF    0
@@ -126,6 +134,18 @@ void audioReadSettings(void)
 
         aProc.api.setMute = tda7418SetMute;
         aProc.api.setLoudness = tda7418SetLoudness;
+        break;
+#endif
+#ifdef _TDA7440
+    case AUDIO_IC_TDA7440:
+        aProc.par.inCnt = TDA7440_IN_CNT;
+
+        aProc.api.init = tda7440Init;
+
+        aProc.api.setTune = tda7440SetTune;
+        aProc.api.setInput = tda7440SetInput;
+
+        aProc.api.setMute = tda7440SetMute;
         break;
 #endif
     case AUDIO_IC_TEST:
