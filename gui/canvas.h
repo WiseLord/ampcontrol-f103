@@ -7,29 +7,31 @@ extern "C" {
 
 #include <stdint.h>
 
-#include "../display/glcd.h"
-#include "widget/textedit.h"
-
-typedef struct {
-    uint16_t fg;
-    uint16_t bg;
-    uint16_t gray;
-    uint16_t spCol;
-    uint16_t spPeak;
-    uint16_t inactive;
-    uint16_t active;
-} CanvasPalette;
+#include "layout.h"
+#include "palette.h"
 
 typedef struct {
     Glcd *glcd;
-    const CanvasPalette *pal;
+    const Palette *pal;
+    const Layout *layout;
     TextEdit te;
 } Canvas;
 
-void canvasInit(Canvas **value);
+void canvasInit(void);
 Canvas *canvasGet(void);
 
 void canvasClear(void);
+
+void canvasShowTime(bool clear);
+void canvasShowMenu(bool clear);
+void canvasShowTune(bool clear);
+void canvasShowAudioFlag(bool clear);
+void canvasShowSpectrum(bool clear);
+void canvasShowTuner(bool clear);
+void canvasShowKaradio(bool clear);
+void canvasShowAudioInput(bool clear, Icon icon);
+void canvasShowTextEdit(bool clear);
+void canvasShowTimer(bool clear, int32_t value);
 
 #ifdef __cplusplus
 }

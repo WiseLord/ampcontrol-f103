@@ -49,6 +49,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_IN_PROJECTOR]    = "Projector",
     [LABEL_IN_SATELLITE]    = "Satellite",
     [LABEL_IN_MIXER]        = "Mixer",
+    [LABEL_IN_KARADIO]      = "KaRadio",
 
     [LABEL_BOOL_OFF]        = "OFF",
     [LABEL_BOOL_ON]         = "ON",
@@ -80,6 +81,10 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stereo",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Mixed",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Waterfall",
+
+    [LABEL_PAL_MODE + PAL_SNOW]         = "Snow",
+    [LABEL_PAL_MODE + PAL_AQUA]         = "Aqua",
+    [LABEL_PAL_MODE + PAL_FIRE]         = "Fire",
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "No",
     [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
@@ -138,6 +143,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "STBY brightness",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Brightness",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Rotate",
+    [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Palette",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Switch standby",

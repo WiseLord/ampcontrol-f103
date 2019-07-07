@@ -33,8 +33,10 @@ typedef int32_t UChar;
 
 #define STR_BUFSIZE             64
 
+typedef uint16_t uint16_t;
+
 //Colors
-#define RGB_TO_565(x)                   (((x >> 8) & 0xF800) | ((x >> 5) & 0x7E0) | ((x >> 3) & 0x1F))
+#define RGB_TO_565(x)                   ((uint16_t)(((x >> 8) & 0xF800) | ((x >> 5) & 0x7E0) | ((x >> 3) & 0x1F)))
 #define LCD_COLOR_BLACK                 RGB_TO_565(0x000000)
 #define LCD_COLOR_NAVI                  RGB_TO_565(0x000080)
 #define LCD_COLOR_BLUE                  RGB_TO_565(0x0000FF)
@@ -73,8 +75,8 @@ bool glcdGetRotate(void);
 void glcdRotate(uint8_t rotate);
 void glcdShift(int16_t pos);
 
-void glcdSetRect(GlcdRect rect);
-GlcdRect glcdGetRect(void);
+void glcdSetRect(const GlcdRect *rect);
+GlcdRect *glcdGetRect(void);
 
 char *glcdGetStrBuf(void);
 char *glcdPrepareNum(int32_t number, int8_t width, char lead, uint8_t radix);
@@ -105,11 +107,13 @@ uint16_t glcdWriteStringConst(const char *string);
 uint16_t glcdWriteString(char *string);
 
 void glcdDrawPixel(int16_t x, int16_t y, uint16_t color);
+
 void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+
 void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
+
 void glcdDrawFrame(int16_t x, int16_t y, int16_t w, int16_t h, int16_t t, uint16_t color);
-void glcdDrawRoundedFrame(int16_t x, int16_t y, int16_t w, int16_t h,
-                          int16_t t, int16_t r, uint16_t color);
+void glcdDrawRFrame(int16_t x, int16_t y, int16_t w, int16_t h, int16_t t, int16_t r, uint16_t color);
 
 void glcdDrawCircle(int16_t xc, int16_t yc, int16_t r, uint16_t color);
 void glcdDrawRing(int16_t xc, int16_t yc, int16_t r, int16_t t, uint16_t color);

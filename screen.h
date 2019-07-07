@@ -6,12 +6,9 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 
-#include "audio/audio.h"
 #include "display/icons/icons.h"
-#include "menu.h"
-#include "spectrum.h"
-#include "rtc.h"
 
 typedef uint8_t ScreenMode;
 enum {

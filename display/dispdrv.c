@@ -134,6 +134,38 @@ static inline void dispdrvSendWord(uint16_t data)
 #endif // _DISP_16BIT
 }
 
+#ifdef _COLOR_24BIT
+__attribute__((always_inline))
+static inline void dispdrvSendTriplet(uint16_t data)
+{
+    uint8_t dataH = (data & 0xF800) >> 8;
+    uint8_t dataM = (data & 0x07E0) >> 5;
+    uint8_t dataL = (data & 0x001F) << 3;
+
+#ifdef _DISP_8BIT
+    dispdrvBusOut();
+#endif
+
+    dispdrvSendByte(dataH);
+    dispdrvSendByte(dataM);
+    dispdrvSendByte(dataL);
+
+#ifdef _DISP_8BIT
+    dispdrvBusIn();
+#endif
+}
+#endif
+
+__attribute__((always_inline))
+static inline void dispdrvSendColor(uint16_t data)
+{
+#ifdef _COLOR_24BIT
+    dispdrvSendTriplet(color);
+#else
+    dispdrvSendWord(data);
+#endif
+}
+
 void dispdrvReset(void)
 {
 #ifdef _DISP_SPI
@@ -324,51 +356,38 @@ void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
 
     dispdrv.setWindow(x, y, 1, 1);
 
-    dispdrvSendWord(color);
+    dispdrvSendColor(color);
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
-void dispdrvDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
-    if ((x + w > dispdrv.width) || (y + h > dispdrv.height)) {
-        return;
-    }
-
     CLR(DISP_CS);
 
     dispdrv.setWindow(x, y, w, h);
 
     for (int32_t i = 0; i < w * h; i++) {
-        dispdrvSendWord(color);
+        dispdrvSendColor(color);
     }
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
 
-void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
+void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor,
+                      int16_t xOft, int16_t yOft, int16_t w, int16_t h)
 {
-    int16_t w = img->width;
-    int16_t h = img->height;
-
-    if ((x + w > dispdrv.width) || (y + h > dispdrv.height)) {
-        return;
-    }
-
     CLR(DISP_CS);
 
     dispdrv.setWindow(x, y, w, h);
 
-    for (uint16_t i = 0; i < w; i++) {
-        for (uint16_t j = 0; j < (h + 7) / 8; j++) {
-            uint8_t data = img->data[w * j + i];
-            for (uint8_t bit = 0; bit < 8; bit++) {
-                if (8 * j + bit < h) {
-                    dispdrvSendWord(data & 0x01 ? color : bgColor);
-                    data >>= 1;
-                }
+    for (int16_t i = 0; i < w; i++) {
+        for (int16_t j = 0; j < h; j++) {
+            uint8_t data = img->data[img->width * ((j + yOft) >> 3) + i + xOft];
+            if (j < h) {
+                dispdrvSendColor(data & (1 << ((j + yOft) & 0x7)) ? color : bgColor);
             }
         }
     }

@@ -61,7 +61,7 @@ void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear)
     Canvas *canvas = canvasGet();
 
     Glcd *glcd = canvas->glcd;
-    const CanvasPalette *pal = canvas->pal;
+    const Palette *pal = canvas->pal;
 
     const tFont *editFont = lt->editFont;
     const int16_t feh = editFont->chars[0].image->height;
@@ -76,12 +76,12 @@ void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear)
 
     if (clear) {
         glcdSetXY(0, 0);
-        glcdSetFontBgColor(pal->inactive);
+        glcdSetFontBgColor(pal->selected);
         glcdSetStringFramed(true);
         glcdWriteStringConst(te->name);
         glcdSetStringFramed(false);
         // The rest of space after edit line
-        glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->inactive);
+        glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->selected);
     }
 
     glcdSetXY(0, yPos);
@@ -100,7 +100,7 @@ void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear)
     glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->bg);
 
     // Gray vertical offset before the roller
-    glcdDrawRect(xRoll - few / 4, 0, few / 4, rect->h, pal->inactive);
+    glcdDrawRect(xRoll - few / 4, 0, few / 4, rect->h, pal->selected);
     // The roller
     for (int8_t i = -2; i <= 2; i++) {
         glcdSetXY(xRoll, yPos + i * feh);
@@ -110,11 +110,11 @@ void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear)
             uCode = editFont->chars[te->sPos + i].code;
         }
 
-        glcdSetFontBgColor(pal->inactive);
+        glcdSetFontBgColor(pal->selected);
         if (i == 0) {
             glcdSetFontColor(pal->fg);
         } else {
-            glcdSetFontColor(pal->gray);
+            glcdSetFontColor(pal->inactive);
         }
         glcdWriteUChar(LETTER_SPACE_CHAR);
         glcdWriteUChar(uCode);
@@ -122,6 +122,6 @@ void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear)
 
         glcdSetFontColor(pal->fg);
         glcdSetFontBgColor(pal->bg);
-        glcdDrawRect(glcd->x, glcd->y, rect->w - glcd->x, feh, pal->inactive);
+        glcdDrawRect(glcd->x, glcd->y, rect->w - glcd->x, feh, pal->selected);
     }
 }

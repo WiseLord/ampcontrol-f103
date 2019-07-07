@@ -5,14 +5,13 @@
 extern "C" {
 #endif
 
-#include "../menu.h"
-
-#include "../tuner/tuner.h"
 #include "../audio/audio.h"
+#include "../gui/palette.h"
+#include "../menu.h"
 #include "../pins.h"
 #include "../rtc.h"
-#include "../settings.h"
 #include "../spectrum.h"
+#include "../tuner/tuner.h"
 
 typedef enum {
     LANG_DEFAULT = 0,
@@ -59,6 +58,7 @@ typedef enum {
     LABEL_IN_PROJECTOR,
     LABEL_IN_SATELLITE,
     LABEL_IN_MIXER,
+    LABEL_IN_KARADIO,
 
     LABEL_BOOL_OFF,
     LABEL_BOOL_ON,
@@ -83,7 +83,10 @@ typedef enum {
     LABEL_SPECTRUM_MODE = LABEL_TUNER_MODE_END,
     LABEL_SPECTRUM_MODE_END = LABEL_SPECTRUM_MODE + (SP_MODE_END - SP_MODE_STEREO),
 
-    LABEL_AUDIO_IC = LABEL_SPECTRUM_MODE_END,
+    LABEL_PAL_MODE = LABEL_SPECTRUM_MODE_END,
+    LABEL_PAL_MODE_END = LABEL_PAL_MODE + (PAL_END - PAL_DEFAULT),
+
+    LABEL_AUDIO_IC = LABEL_PAL_MODE_END,
     LABEL_AUDIO_IC_END = LABEL_AUDIO_IC + (AUDIO_IC_END - AUDIO_IC_NO),
 
     LABEL_ALARM_DAY = LABEL_AUDIO_IC_END,

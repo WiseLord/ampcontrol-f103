@@ -3,9 +3,7 @@
 #include "audio/audiodefs.h"
 #include "display/dispdefs.h"
 #include "eemul.h"
-#include "pins.h"
 #include "rc.h"
-#include "rtc.h"
 #include "screen.h"
 #include "spectrum.h"
 #include "tr/labels.h"
@@ -70,6 +68,7 @@ static const EE_Map eeMap[] = {
     [PARAM_DISPLAY_BR_WORK] =   {0x41,  LCD_BR_MAX},
     [PARAM_DISPLAY_ROTATE]  =   {0x42,  false},
     [PARAM_DISPLAY_DEF]     =   {0x43,  SCREEN_SPECTRUM},
+    [PARAM_DISPLAY_PALETTE] =   {0x44,  PAL_DEFAULT},
 
     [PARAM_SPECTRUM_MODE]   =   {0x50,  SP_MODE_STEREO},
     [PARAM_SPECTRUM_PEAKS]  =   {0x51,  true},
@@ -89,6 +88,11 @@ static const EE_Map eeMap[] = {
 
 void settingsInit(void)
 {
+    eeInit();
+
+    audioReadSettings();
+    tunerReadSettings();
+
     settingsSet(PARAM_ALARM_HOUR, settingsRead(PARAM_ALARM_HOUR));
     settingsSet(PARAM_ALARM_MINUTE, settingsRead(PARAM_ALARM_MINUTE));
     settingsSet(PARAM_ALARM_DAYS, settingsRead(PARAM_ALARM_DAYS));

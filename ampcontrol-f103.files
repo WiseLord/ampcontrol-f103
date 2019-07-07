@@ -152,7 +152,6 @@ drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
 
 gui/canvas.c
 gui/canvas.h
-gui/layout.c
 gui/layout.h
 gui/lt160x128.c
 gui/lt176x132.c
@@ -160,7 +159,8 @@ gui/lt220x176.c
 gui/lt320x240.c
 gui/lt400x240.c
 gui/lt480x320.c
-
+gui/palette.c
+gui/palette.h
 gui/widget/spectrumcolumn.c
 gui/widget/spectrumcolumn.h
 gui/widget/stripedbar.c
@@ -226,6 +226,8 @@ i2c.c
 i2c.h
 input.c
 input.h
+karadio.c
+karadio.h
 main.c
 mem.c
 mem.h

@@ -1,17 +1,15 @@
 #include "menu.h"
-#include "tr/labels.h"
 
 #include <string.h>
 
 #include "audio/audio.h"
-#include "display/glcd.h"
-#include "gui/layout.h"
+#include "gui/canvas.h"
 #include "input.h"
-#include "pins.h"
 #include "rc.h"
 #include "screen.h"
 #include "settings.h"
 #include "spectrum.h"
+#include "tr/labels.h"
 #include "tuner/tuner.h"
 
 #define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC, PARAM_RC_ ## CMD},
@@ -74,6 +72,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   PARAM_DISPLAY_BR_STBY},
     [MENU_DISPLAY_BR_WORK]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   PARAM_DISPLAY_BR_WORK},
     [MENU_DISPLAY_ROTATE]   = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL,     PARAM_DISPLAY_ROTATE},
+    [MENU_DISPLAY_PALETTE]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_ENUM,     PARAM_DISPLAY_PALETTE},
 
     FOREACH_CMD(GENERATE_MENU_ITEM)
 };
@@ -168,9 +167,11 @@ static int16_t menuGetValue(MenuIdx index)
     case MENU_DISPLAY_BR_WORK:
         ret = screenGetBrightness(BR_STBY + index - MENU_DISPLAY_BR_STBY);
         break;
-
     case MENU_DISPLAY_ROTATE:
         ret = glcdGetRotate();
+        break;
+    case MENU_DISPLAY_PALETTE:
+        ret = paletteGetIndex();
         break;
 
     case MENU_SYSTEM_ENC_RES:
@@ -265,10 +266,13 @@ static void menuStoreCurrentValue(void)
     case MENU_DISPLAY_BR_WORK:
         screenSetBrightness(BR_STBY + menu.active - MENU_DISPLAY_BR_STBY, (int8_t)menu.value);
         break;
-
     case MENU_DISPLAY_ROTATE:
         glcdRotate((bool)menu.value);
         canvasClear();
+        break;
+    case MENU_DISPLAY_PALETTE:
+        paletteSetIndex((PalIdx)menu.value);
+        canvasGet()->pal = paletteGet((PalIdx)menu.value);
         break;
 
     default:
@@ -406,6 +410,12 @@ static void menuValueChange(int8_t diff)
             menu.value = LCD_BR_MAX;
         if (menu.value < LCD_BR_MIN)
             menu.value = LCD_BR_MIN;
+        break;
+    case MENU_DISPLAY_PALETTE:
+        if (menu.value > PAL_END)
+            menu.value = PAL_END;
+        if (menu.value < PAL_DEFAULT)
+            menu.value = PAL_DEFAULT;
         break;
 
     case MENU_ALARM_HOUR:
@@ -705,11 +715,14 @@ const char *menuGetValueStr(MenuIdx index)
     case MENU_TUNER_MODE:
         ret = labelsGet((Label)(LABEL_TUNER_MODE + value));
         break;
+    case MENU_ALARM_DAYS:
+        ret = labelsGet((Label)(LABEL_ALARM_DAY + value));
+        break;
     case MENU_SPECTURM_MODE:
         ret = labelsGet((Label)(LABEL_SPECTRUM_MODE + value));
         break;
-    case MENU_ALARM_DAYS:
-        ret = labelsGet((Label)(LABEL_ALARM_DAY + value));
+    case MENU_DISPLAY_PALETTE:
+        ret = labelsGet((Label)(LABEL_PAL_MODE + value));
         break;
     default:
         ret = noVal;

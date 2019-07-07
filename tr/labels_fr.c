@@ -32,6 +32,7 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_IN_PROJECTOR]    = "Projecteur",
     [LABEL_IN_SATELLITE]    = "Satellite",
     [LABEL_IN_MIXER]        = "Mélangeur",
+//    [LABEL_IN_KARADIO]      = "KaRadio",
 
 //    [LABEL_BOOL_OFF]        = "OFF",
 //    [LABEL_BOOL_ON]         = "ON",

@@ -27,13 +27,19 @@ extern "C" void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
     disp->drawPixel(x, y, color);
 }
 
-extern "C" void dispdrvDrawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+extern "C" void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     disp->drawRectangle(x, y, w, h, color);
 }
 
-extern "C" void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)
+extern "C" void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor,
+                                 int16_t xOft, int16_t yOft, int16_t w, int16_t h)
 {
+    (void)xOft;
+    (void)yOft;
+    (void)w;
+    (void)h;
+
     disp->drawImage(img, x, y, color, bgColor);
 }
 

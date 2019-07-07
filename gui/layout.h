@@ -5,33 +5,12 @@
 extern "C" {
 #endif
 
-#include "canvas.h"
-
 #include <stdint.h>
-#include <stddef.h>
 
-#include "../rtc.h"
-#include "../spectrum.h"
-#include "../audio/audiodefs.h"
-#include "../tuner/stations.h"
-#include "../tuner/tuner.h"
-
+#include "../display/glcd.h"
 #include "widget/spectrumcolumn.h"
 #include "widget/stripedbar.h"
-
-typedef union {
-    struct {
-        uint8_t show[SP_CHAN_END];   // Value to show
-        uint8_t prev[SP_CHAN_END];   // Previous value
-        uint8_t peak[SP_CHAN_END];   // Peak value
-        uint8_t fall[SP_CHAN_END];   // Fall speed
-    };
-    SpectrumColumn col;
-} SpCol;
-
-typedef struct {
-    SpCol col[SPECTRUM_SIZE];
-} SpDrawData;
+#include "widget/textedit.h"
 
 typedef struct {
     const tFont *hmsFont;       // Font to draw hours/minutes/seconds
@@ -80,19 +59,7 @@ typedef struct {
     const tFont *iconSet;       // Main icon set
 } Layout;
 
-// Canvas variants
-void layoutInit(void);
 const Layout *layoutGet(void);
-
-void layoutShowTime(bool clear);
-void layoutShowMenu(bool clear);
-void layoutShowTune(bool clear);
-void layoutShowAudioFlag(bool clear);
-void layoutShowSpectrum(bool clear);
-void layoutShowTuner(bool clear);
-void layoutShowAudioInput(bool clear, Icon icon);
-void layoutShowTextEdit(bool clear);
-void layoutShowTimer(bool clear, int32_t value);
 
 #ifdef __cplusplus
 }

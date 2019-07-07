@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
 #include <stdbool.h>
-#include <stm32f1xx_ll_bus.h>
+#include <stdint.h>
+#include <stm32f1xx.h>
 
 #define I2C_NOACK       0
 #define I2C_ACK         1

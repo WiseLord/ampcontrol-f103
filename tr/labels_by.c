@@ -32,6 +32,7 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_IN_PROJECTOR]    = "Праектар",
     [LABEL_IN_SATELLITE]    = "Спадарожнік",
     [LABEL_IN_MIXER]        = "Міксер",
+//    [LABEL_IN_KARADIO]      = "KaRadio",
 
     [LABEL_BOOL_OFF]        = "ВЫКЛ",
     [LABEL_BOOL_ON]         = "УКЛ",

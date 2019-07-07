@@ -4,9 +4,11 @@
 
 #include "../../../audio/audiodefs.h"
 #include "../../../display/dispdefs.h"
+#include "../../../display/dispdrv.h"
 #include "../../../tuner/rds.h"
 #include "../../../tuner/stations.h"
 #include "../../../tuner/tuner.h"
+#include "../../../karadio.h"
 #include "../../../pins.h"
 #include "../../../rc.h"
 #include "../../../settings.h"
@@ -38,6 +40,8 @@ const DispDriver dispdrv = {
     .width = EMUL_DISP_WIDTH,
     .height = EMUL_DISP_HEIGHT,
 };
+
+static KaRadioData krData = {"Station name", "Artist - title", KARADIO_FLAG_ALL, true};
 
 static Station st[STATION_COUNT] = {
     [0] = {8750, "Relax FM"},
@@ -179,4 +183,26 @@ void usbHidSendKey(HidKey key)
 void usbHidSendMediaKey(HidMediaKey key)
 {
     (void)key;
+}
+
+KaRadioData *karadioGet(void)
+{
+    return &krData;
+}
+void karadioUpdateStatus(void)
+{
+}
+
+void karadioSendMediaCmd(uint8_t cmd)
+{
+    (void)cmd;
+}
+
+void eeInit()
+{
+}
+
+void karadioSetEnabled(bool value)
+{
+    krData.playing = value;
 }

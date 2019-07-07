@@ -1,17 +1,15 @@
 #include "actions.h"
 
 #include <stddef.h>
-#include <string.h>
 
 #include "audio/audio.h"
 #include "gui/canvas.h"
-#include "gui/layout.h"
 #include "input.h"
+#include "karadio.h"
 #include "menu.h"
 #include "pins.h"
 #include "rc.h"
 #include "rtc.h"
-#include "screen.h"
 #include "settings.h"
 #include "spectrum.h"
 #include "swtimers.h"
@@ -19,6 +17,7 @@
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
 #include "usb/usbhid.h"
+#include "usb/hidkeys.h"
 
 static void actionGetButtons(void);
 static void actionGetEncoder(void);
@@ -71,7 +70,7 @@ static void actionDispExpired(ScreenMode scrMode)
     screen->iconHint = ICON_EMPTY;
 
     rtcSetMode(RTC_NOEDIT);
-    aProc->tune = scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME;
+    aProc->tune = (scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME);
 
     switch (scrMode) {
     case SCREEN_STANDBY:
@@ -418,10 +417,24 @@ static void actionRemapBtnLong(void)
         }
         break;
     case BTN_D3:
-        actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_PREV);
+        switch (inType) {
+        case IN_TUNER:
+            actionSet(ACTION_SEEK, -1);
+            break;
+        default:
+            actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_PREV);
+            break;
+        }
         break;
     case BTN_D4:
-        actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_NEXT);
+        switch (inType) {
+        case IN_TUNER:
+            actionSet(ACTION_SEEK, +1);
+            break;
+        default:
+            actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_NEXT);
+            break;
+        }
         break;
     case BTN_D5:
         switch (screen) {
@@ -827,8 +840,9 @@ void actionHandle(bool visible)
     Tuner *tuner = tunerGet();
     int8_t stNum = stationGetNum(tuner->status.freq);
 
-    const Layout *lt = layoutGet();
     Canvas *canvas = canvasGet();
+    const Layout *lt = canvas->layout;
+
     Spectrum *sp = spGet();
 
     action.visible = visible;
@@ -839,15 +853,7 @@ void actionHandle(bool visible)
         pinsSetMute(true);
         pinsSetStby(true);
 
-        swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
-        swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
-        swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
-        swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
-
         swTimSet(SW_TIM_RTC_INIT, 500);
-
-        audioReadSettings();
-        tunerReadSettings();
         break;
     case ACTION_STANDBY:
         if (action.value == FLAG_OFF) {
@@ -866,6 +872,8 @@ void actionHandle(bool visible)
 
             tunerSetMute(true);
             tunerSetPower(false);
+
+            karadioSetEnabled(false);
 
             pinsDeInitAmpI2c();
 
@@ -905,6 +913,8 @@ void actionHandle(bool visible)
 
         audioSetPower(true);
         actionResetSilenceTimer();
+
+        karadioSetEnabled(inType == IN_KARADIO);
         break;
     case ACTION_DISP_EXPIRED:
         actionDispExpired(scrMode);
@@ -921,6 +931,23 @@ void actionHandle(bool visible)
         case IN_PC:
             usbHidSendMediaKey((HidKey)action.value);
             actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
+            break;
+        case IN_KARADIO:
+            karadioSendMediaCmd((HidKey)action.value);
+            break;
+        }
+        break;
+    case ACTION_SEEK:
+        switch (inType) {
+        case IN_TUNER:
+            if (action.value > 0) {
+                tunerSeek(TUNER_DIR_UP);
+            } else if (action.value < 0) {
+                tunerSeek(TUNER_DIR_DOWN);
+            }
+            actionSetScreen(SCREEN_AUDIO_INPUT, 3000);
+            break;
+        default:
             break;
         }
         break;
@@ -945,6 +972,13 @@ void actionHandle(bool visible)
                 screen->iconHint = ICON_PREV_TRACK;
             }
             actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
+            break;
+        case IN_KARADIO:
+            if (action.value > 0) {
+                karadioSendMediaCmd(HIDMEDIAKEY_NEXT_TRACK);
+            } else if (action.value < 0) {
+                karadioSendMediaCmd(HIDMEDIAKEY_PREV_TRACK);
+            }
             break;
         }
         break;
@@ -988,7 +1022,11 @@ void actionHandle(bool visible)
     case ACTION_AUDIO_INPUT:
         if (scrMode == SCREEN_AUDIO_INPUT) {
             audioSetInput(actionGetNextAudioInput(aProc));
+            inType = aProc->par.inType[aProc->par.input];
         }
+
+        karadioSetEnabled(inType == IN_KARADIO);
+
         screenToClear();
         screen->iconHint = ICON_EMPTY;
         actionSetScreen(SCREEN_AUDIO_INPUT, 5000);

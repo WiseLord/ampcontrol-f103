@@ -38,6 +38,8 @@ static void tunerTestUpdateStatus(void)
 
 void tunerReadSettings(void)
 {
+    stationsInit();
+
     // Read stored parameters
     memset(&tuner, 0, sizeof(tuner));
 

@@ -32,6 +32,7 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_IN_PROJECTOR]    = "Проектор",
     [LABEL_IN_SATELLITE]    = "Супутник",
     [LABEL_IN_MIXER]        = "Мікшер",
+//    [LABEL_IN_KARADIO]      = "KaRadio",
 
     [LABEL_BOOL_OFF]        = "ВИМКН",
     [LABEL_BOOL_ON]         = "ВКЛ",

@@ -60,6 +60,7 @@ enum {
     IN_PROJECTOR,
     IN_SATELLITE,
     IN_MIXER,
+    IN_KARADIO,
 
     IN_END
 };

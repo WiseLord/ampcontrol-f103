@@ -48,7 +48,7 @@ SOURCES += \
     rtc.c \
     ../../../audio/audio.c \
     ../../../gui/canvas.c \
-    ../../../gui/layout.c \
+	../../../gui/palette.c \
     ../../../gui/widget/spectrumcolumn.c \
     ../../../gui/widget/stripedbar.c \
     ../../../gui/widget/textedit.c \
@@ -89,26 +89,26 @@ SOURCES += \
     ../../../tr/labels_ru.c \
     ../../../tr/labels_tr.c \
     ../../../tr/labels_ua.c \
-    ../../../tr/labels_ro.c \
     ../../../tuner/stations.c \
     ../../../tuner/tuner.c \
     ../../../actions.c \
     ../../../input.c \
     ../../../mem.c \
     ../../../menu.c \
-	../../../screen.c \
-	../../../settings.c \
+    ../../../screen.c \
+    ../../../settings.c \
     ../../../swtimers.c \
 
 
 HEADERS += \
-    ../../../tuner/rds.h \
     amp.h \
     emuldisp.h \
+    emuldisp_stub.h \
     ../../../audio/audio.h \
     ../../../audio/audiodefs.h \
     ../../../gui/canvas.h \
     ../../../gui/layout.h \
+	../../../gui/palette.h \
     ../../../gui/widget/spectrumcolumn.h \
     ../../../gui/widget/stripedbar.h \
     ../../../gui/widget/textedit.h \
@@ -118,24 +118,25 @@ HEADERS += \
     ../../../display/dispdrv.h \
     ../../../display/glcd.h \
     ../../../tr/labels.h \
+    ../../../tuner/rds.h \
     ../../../tuner/stations.h \
     ../../../tuner/tuner.h \
     ../../../tuner/tunerdefs.h \
     ../../../actions.h \
     ../../../eemul.h \
     ../../../input.h \
+    ../../../karadio.h \
     ../../../mem.h \
     ../../../menu.h \
-	../../../pins.h \
-	../../../rc.h \
-	../../../rtc.h \
+    ../../../pins.h \
+    ../../../rc.h \
+    ../../../rtc.h \
     ../../../screen.h \
     ../../../settings.h \
     ../../../spectrum.h \
     ../../../swtimers.h \
     ../../../usb/usbhid.h \
     ../../../usb/hidkeys.h \
-    emuldisp_stub.h
 
 
 FORMS += \

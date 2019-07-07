@@ -9,17 +9,27 @@ FEATURE_LIST =
 
 F10X_MCU = STM32F103xB
 #DEBUG_ENABLED = YES
+#DEBUG_FPS = YES
 
 # Lowercase argument
 lc = $(shell echo $1 | tr '[:upper:]' '[:lower:]')
 
 TARGET = $(call lc, $(PROJECT)_$(DISPLAY)_$(DISPVAR))
 
-
 C_DEFS = -DUSE_FULL_LL_DRIVER -D$(F10X_MCU)
+
+ifneq (,$(filter $(DISPLAY), \
+  DISP24BIT    \
+))
+  C_DEFS += -D_COLOR_24BIT
+endif
 
 ifeq "$(DEBUG_ENABLED)" "YES"
   C_DEFS += -D_DEBUG_ENABLED
+endif
+
+ifeq "$(DEBUG_FPS)" "YES"
+  C_DEFS += -D_DEBUG_FPS
 endif
 
 DISP_HI_BYTE = NO
@@ -41,6 +51,7 @@ C_SOURCES += fft.c
 C_SOURCES += handlers.c
 C_SOURCES += i2c.c
 C_SOURCES += input.c
+C_SOURCES += karadio.c
 C_SOURCES += mem.c
 C_SOURCES += menu.c
 C_SOURCES += pins.c
@@ -125,8 +136,8 @@ C_DEFS += -D_DISP_$(DISPVAR)
 C_DEFS += -D_DISP_$(DISPSIZE)
 
 C_SOURCES += gui/canvas.c
-C_SOURCES += gui/layout.c
 C_SOURCES += gui/lt$(DISPSIZE).c
+C_SOURCES += gui/palette.c
 C_SOURCES += $(wildcard gui/widget/*.c)
 
 # Audio source files
