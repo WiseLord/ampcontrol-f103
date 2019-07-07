@@ -35,7 +35,9 @@ void tda7439Init(AudioParam *param)
 
     aPar->item[AUDIO_TUNE_VOLUME].grid  = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid    = &gridTone;
-    aPar->item[AUDIO_TUNE_MIDDLE].grid  = &gridTone;
+    if (aPar->ic == AUDIO_IC_TDA7439) {
+        aPar->item[AUDIO_TUNE_MIDDLE].grid  = &gridTone;
+    }
     aPar->item[AUDIO_TUNE_TREBLE].grid  = &gridTone;
     aPar->item[AUDIO_TUNE_PREAMP].grid  = &gridPreamp;
     aPar->item[AUDIO_TUNE_BALANCE].grid = &gridBalance;

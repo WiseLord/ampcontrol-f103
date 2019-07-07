@@ -77,6 +77,7 @@ void audioReadSettings(void)
     switch (aProc.par.ic) {
 #ifdef _TDA7439
     case AUDIO_IC_TDA7439:
+    case AUDIO_IC_TDA7440:
         aProc.par.inCnt = TDA7439_IN_CNT;
 
         aProc.api.init = tda7439Init;
