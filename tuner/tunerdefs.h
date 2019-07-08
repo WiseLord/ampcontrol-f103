@@ -96,6 +96,23 @@ typedef struct {
     uint8_t rssi;
 } TunerStatus;
 
+typedef struct {
+    void (*init)(TunerParam *param, TunerStatus *status);
+    void (*setFreq)(uint16_t freq);
+    void (*seek)(int8_t direction);
+
+    void (*setVolume)(int8_t value);
+
+    void (*setMute)(bool value);
+    void (*setBassBoost)(bool value);
+    void (*setForcedMono)(bool value);
+    void (*setRds)(bool value);
+
+    void (*setPower)(bool value);
+
+    void (*updateStatus)(void);
+} TunerApi;
+
 #ifdef __cplusplus
 }
 #endif

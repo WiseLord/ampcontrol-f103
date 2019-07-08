@@ -25,6 +25,18 @@ static uint8_t rdBuf[TEA5767_RDBUF_SIZE];
 static TunerParam *tPar;
 static TunerStatus *tStatus;
 
+static const TunerApi tea5767Api = {
+    .init = tea5767Init,
+    .setFreq = tea5767SetFreq,
+    .seek = tea5767Seek,
+
+    .setMute = tea5767SetMute,
+
+    .setPower = tea5767SetPower,
+
+    .updateStatus = tea5767UpdateStatus,
+};
+
 static HiLoState hiloState = HILO_STATE_OK;
 
 static void tea5767WriteI2C(uint8_t bytes)
@@ -140,6 +152,11 @@ static uint16_t tea5767GetFreq(void)
     freq = ((freq + tPar->fStep / 2) / tPar->fStep) * 10;
 
     return freq;
+}
+
+const TunerApi *tea5767GetApi(void)
+{
+    return &tea5767Api;
 }
 
 void tea5767Init(TunerParam *param, TunerStatus *status)

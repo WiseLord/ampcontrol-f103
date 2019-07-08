@@ -13,6 +13,8 @@ extern "C" {
 #define RDA580X_VOL_MIN             0
 #define RDA580X_VOL_MAX             15
 
+const TunerApi *rda580xGetApi(void);
+
 void rda580xInit(TunerParam *param, TunerStatus *status);
 
 void rda580xSetFreq(uint16_t value);

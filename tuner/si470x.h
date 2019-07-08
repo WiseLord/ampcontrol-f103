@@ -13,6 +13,8 @@ extern "C" {
 #define SI470X_VOL_MIN              0
 #define SI470X_VOL_MAX              15
 
+const TunerApi *si470xGetApi(void);
+
 void si470xInit(TunerParam *param, TunerStatus *status);
 
 void si470xSetFreq(uint16_t value);

@@ -10,6 +10,8 @@ extern "C" {
 
 #include "tunerdefs.h"
 
+const TunerApi *tea5767GetApi(void);
+
 void tea5767Init(TunerParam *param, TunerStatus *status);
 
 void tea5767SetFreq(uint16_t value);

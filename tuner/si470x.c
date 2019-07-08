@@ -17,6 +17,22 @@ static uint8_t rdBuf[SI470X_RDBUF_SIZE];
 static TunerParam *tPar;
 static TunerStatus *tStatus;
 
+static const TunerApi si470xApi = {
+    .init = si470xInit,
+    .setFreq = si470xSetFreq,
+    .seek = si470xSeek,
+
+    .setVolume = si470xSetVolume,
+
+    .setMute = si470xSetMute,
+    .setForcedMono = si470xSetForcedMono,
+    .setRds = si470xSetRds,
+
+    .setPower = si470xSetPower,
+
+    .updateStatus = si470xUpdateStatus,
+};
+
 static bool seeking = false;
 
 static void si470xWriteI2C(uint8_t bytes)
@@ -90,6 +106,11 @@ static uint16_t si470xGetFreq()
     chan |= rdBuf[3];
 
     return chan * tPar->fStep + tPar->fMin;
+}
+
+const TunerApi *si470xGetApi(void)
+{
+    return &si470xApi;
 }
 
 void si470xInit(TunerParam *param, TunerStatus *status)

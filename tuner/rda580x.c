@@ -18,6 +18,23 @@ static uint8_t rdBuf[RDA5807_RDBUF_SIZE];
 static TunerParam *tPar;
 static TunerStatus *tStatus;
 
+static const TunerApi rda580xApi = {
+    .init = rda580xInit,
+    .setFreq = rda580xSetFreq,
+    .seek = rda580xSeek,
+
+    .setVolume = rda580xSetVolume,
+
+    .setMute = rda580xSetMute,
+    .setBassBoost = rda580xSetBassBoost,
+    .setForcedMono = rda580xSetForcedMono,
+    .setRds = rda580xSetRds,
+
+    .setPower = rda580xSetPower,
+
+    .updateStatus = rda580xUpdateStatus,
+};
+
 static bool seeking = false;
 
 static void rda580xWriteReg(uint8_t reg)
@@ -119,6 +136,11 @@ static uint16_t rda580xGetFreq(void)
     chan |= rdBuf[1];
 
     return chan * tPar->fStep + tPar->fMin;
+}
+
+const TunerApi *rda580xGetApi(void)
+{
+    return &rda580xApi;
 }
 
 void rda580xInit(TunerParam *param, TunerStatus *status)

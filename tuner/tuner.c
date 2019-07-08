@@ -36,6 +36,11 @@ static void tunerTestUpdateStatus(void)
     }
 }
 
+static const TunerApi tunerTestApi = {
+    .seek = tunerStep,
+    .updateStatus = tunerTestUpdateStatus,
+};
+
 void tunerReadSettings(void)
 {
     stationsInit();
@@ -64,63 +69,23 @@ void tunerReadSettings(void)
     tuner.par.fStep = 10;
 
     // API initialization
+    tuner.api = &tunerTestApi;
     switch (tuner.par.ic) {
 #ifdef _RDA580X
     case TUNER_IC_RDA5807:
-        tuner.api.init = rda580xInit;
-
-        tuner.api.setFreq = rda580xSetFreq;
-        tuner.api.seek = rda580xSeek;
-
-        tuner.api.setVolume = rda580xSetVolume;
-
-        tuner.api.setMute = rda580xSetMute;
-        tuner.api.setBassBoost = rda580xSetBassBoost;
-        tuner.api.setForcedMono = rda580xSetForcedMono;
-        tuner.api.setRds = rda580xSetRds;
-
-        tuner.api.setPower = rda580xSetPower;
-
-        tuner.api.updateStatus = rda580xUpdateStatus;
+        tuner.api = rda580xGetApi();
         break;
 #endif
 #ifdef _SI470X
     case TUNER_IC_SI4703:
-        tuner.api.init = si470xInit;
-
-        tuner.api.setFreq = si470xSetFreq;
-        tuner.api.seek = si470xSeek;
-
-        tuner.api.setVolume = si470xSetVolume;
-
-        tuner.api.setMute = si470xSetMute;
-        tuner.api.setForcedMono = si470xSetForcedMono;
-        tuner.api.setRds = si470xSetRds;
-
-        tuner.api.setPower = si470xSetPower;
-
-        tuner.api.updateStatus = si470xUpdateStatus;
+        tuner.api = si470xGetApi();
         break;
 #endif
 #ifdef _TEA5767
     case TUNER_IC_TEA5767:
-        tuner.api.init = tea5767Init;
-
-        tuner.api.setFreq = tea5767SetFreq;
-        tuner.api.seek = tea5767Seek;
-
-        tuner.api.setMute = tea5767SetMute;
-
-        tuner.api.setPower = tea5767SetPower;
-
-        tuner.api.updateStatus = tea5767UpdateStatus;
+        tuner.api = tea5767GetApi();
         break;
 #endif
-    case TUNER_IC_TEST:
-        tuner.api.seek = tunerStep;
-
-        tuner.api.updateStatus = tunerTestUpdateStatus;
-        break;
     default:
         break;
     }
@@ -139,8 +104,8 @@ void tunerInit(void)
 {
     rdsReset();
 
-    if (tuner.api.init) {
-        tuner.api.init(&tuner.par, &tuner.status);
+    if (tuner.api->init) {
+        tuner.api->init(&tuner.par, &tuner.status);
     }
 }
 
@@ -157,8 +122,8 @@ void tunerSetPower(bool value)
         tunerSaveSettings();
     }
 
-    if (tuner.api.setPower) {
-        tuner.api.setPower(value);
+    if (tuner.api->setPower) {
+        tuner.api->setPower(value);
     }
 }
 
@@ -178,8 +143,8 @@ void tunerSetFreq(uint16_t value)
     tuner.par.freq = value;
     tuner.status.freq = tuner.par.freq;
 
-    if (tuner.api.setFreq) {
-        tuner.api.setFreq(value);
+    if (tuner.api->setFreq) {
+        tuner.api->setFreq(value);
     }
 }
 
@@ -187,8 +152,8 @@ void tunerSetMute(bool value)
 {
     tuner.par.mute = value;
 
-    if (tuner.api.setMute) {
-        tuner.api.setMute(value);
+    if (tuner.api->setMute) {
+        tuner.api->setMute(value);
     }
 }
 
@@ -196,8 +161,8 @@ void tunerSetBassBoost(bool value)
 {
     tuner.par.bassBoost = value;
 
-    if (tuner.api.setBassBoost) {
-        tuner.api.setBassBoost(value);
+    if (tuner.api->setBassBoost) {
+        tuner.api->setBassBoost(value);
     }
 }
 
@@ -205,8 +170,8 @@ void tunerSetForcedMono(bool value)
 {
     tuner.par.forcedMono = value;
 
-    if (tuner.api.setForcedMono) {
-        tuner.api.setForcedMono(value);
+    if (tuner.api->setForcedMono) {
+        tuner.api->setForcedMono(value);
     }
 }
 
@@ -216,8 +181,8 @@ void tunerSetRds(bool value)
 
     tuner.par.rds = value;
 
-    if (tuner.api.setRds) {
-        tuner.api.setRds(value);
+    if (tuner.api->setRds) {
+        tuner.api->setRds(value);
     }
 }
 
@@ -225,8 +190,8 @@ void tunerSetVolume(int8_t value)
 {
     tuner.par.volume = value;
 
-    if (tuner.api.setVolume) {
-        tuner.api.setVolume(value);
+    if (tuner.api->setVolume) {
+        tuner.api->setVolume(value);
     }
 }
 
@@ -234,8 +199,8 @@ void tunerSeek(int8_t direction)
 {
     rdsReset();
 
-    if (tuner.api.seek) {
-        tuner.api.seek(direction);
+    if (tuner.api->seek) {
+        tuner.api->seek(direction);
     }
 }
 
@@ -287,7 +252,7 @@ void tunerUpdateStatus(void)
 {
     tuner.status.flags = TUNER_FLAG_INIT;
 
-    if (tuner.api.updateStatus) {
-        tuner.api.updateStatus();
+    if (tuner.api->updateStatus) {
+        tuner.api->updateStatus();
     }
 }
