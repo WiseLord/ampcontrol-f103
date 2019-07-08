@@ -12,6 +12,8 @@
 
 #define TDA7418_IN_CNT      4
 
+const AudioApi *tda7418GetApi(void);
+
 void tda7418Init(AudioParam *param);
 
 void tda7418SetTune(AudioTune tune, int8_t value);

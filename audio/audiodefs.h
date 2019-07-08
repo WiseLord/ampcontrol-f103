@@ -93,6 +93,21 @@ typedef struct {
     bool bypass;
 } AudioParam;
 
+typedef struct {
+    void (*init)(AudioParam *param);
+
+    void (*setTune)(AudioTune tune, int8_t value);
+    void (*setInput)(uint8_t value);
+
+    void (*setMute)(bool value);
+    void (*setLoudness)(bool value);
+    void (*setSurround)(bool value);
+    void (*setEffect3d)(bool value);
+    void (*setBypass)(bool value);
+
+    void (*setPower)(bool value);
+} AudioApi;
+
 #ifdef __cplusplus
 }
 #endif

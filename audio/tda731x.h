@@ -12,6 +12,8 @@
 
 #define TDA7313_IN_CNT      3
 
+const AudioApi *tda731xGetApi(void);
+
 void tda731xInit(AudioParam *param);
 
 void tda731xSetTune(AudioTune tune, int8_t value);

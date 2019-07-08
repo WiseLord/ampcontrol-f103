@@ -29,9 +29,24 @@ static const AudioGrid gridGain    = {  0, 15, (uint8_t)(2.00 * 8)}; // 0..30dB 
 
 static AudioParam *aPar;
 
+static const AudioApi tda7439Api = {
+    .init = tda7439Init,
+
+    .setTune = tda7439SetTune,
+    .setInput = tda7439SetInput,
+
+    .setMute = tda7439SetMute,
+};
+
+const AudioApi *tda7439GetApi(void)
+{
+    return &tda7439Api;
+}
+
 void tda7439Init(AudioParam *param)
 {
     aPar = param;
+    aPar->inCnt = TDA7439_IN_CNT;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid  = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid    = &gridTone;

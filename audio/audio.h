@@ -13,22 +13,7 @@ extern "C" {
 #define STEP_MULT   8
 
 typedef struct {
-    void (*init)(AudioParam *param);
-
-    void (*setTune)(AudioTune tune, int8_t value);
-    void (*setInput)(uint8_t value);
-
-    void (*setMute)(bool value);
-    void (*setLoudness)(bool value);
-    void (*setSurround)(bool value);
-    void (*setEffect3d)(bool value);
-    void (*setBypass)(bool value);
-
-    void (*setPower)(bool value);
-} AudioApi;
-
-typedef struct {
-    AudioApi api;
+    const AudioApi *api;
     AudioParam par;
     AudioTune tune;
 } AudioProc;

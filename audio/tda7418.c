@@ -88,6 +88,16 @@ static const AudioGrid gridGain      = {  0, 15, (uint8_t)(1.00 * 8)}; // 0..15d
 
 static AudioParam *aPar;
 
+static const AudioApi tda7418Api = {
+    .init = tda7418Init,
+
+    .setTune = tda7418SetTune,
+    .setInput = tda7418SetInput,
+
+    .setMute = tda7418SetMute,
+    .setLoudness = tda7418SetLoudness,
+};
+
 static void tda7418InputGain(uint8_t input, int8_t gain)
 {
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
@@ -127,10 +137,15 @@ static void tda7418SetSpeakers(void)
     i2cTransmit(I2C_AMP, true);
 }
 
+const AudioApi *tda7418GetApi(void)
+{
+    return &tda7418Api;
+}
 
 void tda7418Init(AudioParam *param)
 {
     aPar = param;
+    aPar->inCnt = TDA7418_IN_CNT;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridToneBal;

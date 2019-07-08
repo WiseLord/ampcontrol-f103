@@ -24,6 +24,16 @@ static const AudioGrid gridGain    = {  0,  3, (uint8_t)(3.75 * 8)}; // 0..11.25
 
 static AudioParam *aPar;
 
+static const AudioApi tda731xApi = {
+    .init = tda731xInit,
+
+    .setTune = tda731xSetTune,
+    .setInput = tda731xSetInput,
+
+    .setMute = tda731xSetMute,
+    .setLoudness = tda731xSetLoudness,
+};
+
 static void tda731xSwitch(uint8_t input, int8_t gain, bool loudness)
 {
     i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
@@ -33,9 +43,15 @@ static void tda731xSwitch(uint8_t input, int8_t gain, bool loudness)
     i2cTransmit(I2C_AMP, true);
 }
 
+const AudioApi *tda731xGetApi(void)
+{
+    return &tda731xApi;
+}
+
 void tda731xInit(AudioParam *param)
 {
     aPar = param;
+    aPar->inCnt = TDA7313_IN_CNT;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridTone;

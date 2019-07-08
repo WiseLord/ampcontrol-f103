@@ -60,6 +60,18 @@ static const AudioGrid gridGain       = {  0,  1, (uint8_t)(6.00 * 8)}; // 0..6d
 
 static AudioParam *aPar;
 
+static const AudioApi pt232xApi = {
+    .init = pt232xInit,
+
+    .setTune = pt232xSetTune,
+    .setInput = pt232xSetInput,
+
+    .setMute = pt232xSetMute,
+    .setSurround = pt232xSetSurround,
+    .setEffect3d = pt232xSetEffect3D,
+    .setBypass = pt232xSetBypass,
+};
+
 static void pt232xReset(void)
 {
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
@@ -126,9 +138,15 @@ static void pt2322SetSpeakers(void)
     i2cTransmit(I2C_AMP, true);
 }
 
+const AudioApi *pt232xGetApi(void)
+{
+    return &pt232xApi;
+}
+
 void pt232xInit(AudioParam *param)
 {
     aPar = param;
+    aPar->inCnt = PT2323_IN_CNT;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridTone;
