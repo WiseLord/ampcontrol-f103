@@ -15,7 +15,7 @@ typedef struct {
 
 typedef int8_t PalIdx;
 enum {
-    PAL_DEFAULT,
+    PAL_DEFAULT = 0,
 
     PAL_SNOW = PAL_DEFAULT,
     PAL_AQUA,

@@ -61,6 +61,10 @@ const char *const labels_ro[LABEL_END] = {
 //    [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Mixed",
 //    [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Waterfall",
 
+//    [LABEL_PAL_MODE + PAL_SNOW]         = "Snow",
+//    [LABEL_PAL_MODE + PAL_AQUA]         = "Aqua",
+//    [LABEL_PAL_MODE + PAL_FIRE]         = "Fire",
+
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Fara",
 
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Oprit",
@@ -113,6 +117,7 @@ const char *const labels_ro[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Luminozitate STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Luminozitate",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Rotire",
+//    [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Palette",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Comutare standby",

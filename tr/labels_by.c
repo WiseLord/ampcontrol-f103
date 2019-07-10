@@ -61,6 +61,10 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Змешаны",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Вадаспад",
 
+    [LABEL_PAL_MODE + PAL_SNOW]         = "Снег",
+    [LABEL_PAL_MODE + PAL_AQUA]         = "Вада",
+    [LABEL_PAL_MODE + PAL_FIRE]         = "Агонь",
+
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Няма",
 
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Выкл",
@@ -113,6 +117,7 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яркасць STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Яркасць",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Круціць",
+    [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Палітра",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Рэжым чакання",

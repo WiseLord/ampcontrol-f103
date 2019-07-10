@@ -412,8 +412,8 @@ static void menuValueChange(int8_t diff)
             menu.value = LCD_BR_MIN;
         break;
     case MENU_DISPLAY_PALETTE:
-        if (menu.value > PAL_END)
-            menu.value = PAL_END;
+        if (menu.value > PAL_END - 1)
+            menu.value = PAL_END - 1;
         if (menu.value < PAL_DEFAULT)
             menu.value = PAL_DEFAULT;
         break;

@@ -61,6 +61,10 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Karışık",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Renk Şelalesi",
 
+//    [LABEL_PAL_MODE + PAL_SNOW]         = "Snow",
+//    [LABEL_PAL_MODE + PAL_AQUA]         = "Aqua",
+//    [LABEL_PAL_MODE + PAL_FIRE]         = "Fire",
+
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Yok",
 
     [LABEL_MUTESTBY + MUTESTBY_SWD] = "Çıkış Pinleri Pasif",
@@ -113,6 +117,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Bekleme Parlaklığı",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Genel Parlaklık",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Ekran Döndürme",
+//    [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Palette",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Bekleme Butonu",

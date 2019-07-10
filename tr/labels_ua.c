@@ -61,6 +61,10 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Суміщення",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Водоспад",
 
+    [LABEL_PAL_MODE + PAL_SNOW]         = "Сніг",
+    [LABEL_PAL_MODE + PAL_AQUA]         = "Вода",
+    [LABEL_PAL_MODE + PAL_FIRE]         = "Вогонь",
+
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Немає",
 
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Вимкн",
@@ -113,6 +117,7 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яскравість STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Яскравість",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Розгорнути",
+    [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Палітра",
 
     // NOTE: Keep in sync with cmd.h define list
 //    [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Switch standby",
