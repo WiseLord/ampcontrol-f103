@@ -111,7 +111,7 @@ static void rda580xInitRegs(void)
     }
     rda580xWriteReg(0x03);
 
-    wrBuf[4] = RDA580X_SOFTMUTE_EN;
+    wrBuf[4] = RDA580X_AFCD;
     if (tPar->deemph != TUNER_DEEMPH_75u)
         wrBuf[4] |= RDA580X_DE;
     wrBuf[5] |= RDA580X_GPIO3_ST_IND;
