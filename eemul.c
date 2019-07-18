@@ -146,7 +146,7 @@ void eeInit()
 
     currPage = EE_PAGE_0;
 
-    if ((head0 != HEAD_VALID && head0 != HEAD_VALID) || (head0 == head1)) {
+    if ((head0 != HEAD_VALID && head1 != HEAD_VALID) || (head0 == head1)) {
         eeErasePages(EE_PAGE_0, EE_PAGE_STEP * 2);
         eeFormatPage(EE_PAGE_0);
     } else if (HEAD_VALID == head0) {
@@ -167,12 +167,13 @@ void eeErasePages(uint16_t page, uint16_t count)
     eeWaitBusy();
     SET_BIT(FLASH->CR, FLASH_CR_PER);
     for (uint8_t i = 0; i < count; i++) {
-        WRITE_REG(FLASH->AR, FLASH_BASE + EE_PAGE_SIZE * page + i);
+        WRITE_REG(FLASH->AR, FLASH_BASE + EE_PAGE_SIZE * (page + i));
         SET_BIT(FLASH->CR, FLASH_CR_STRT);
         eeWaitBusy();
     }
     CLEAR_BIT(FLASH->CR, FLASH_CR_PER);
     eeLock();
+    eeWaitBusy();
 }
 
 void eeWritePage(uint16_t page, void *addr, uint16_t bytes)
@@ -195,14 +196,16 @@ uint16_t eeReadRaw(uint16_t cell)
 {
     uint16_t ret = EE_NOT_FOUND;
 
-    uint16_t emtpyCell = eeFindEmptyCell();
-    if (emtpyCell != EE_NOT_FOUND) {
-        uint16_t last = eeFindLastCell(cell, emtpyCell - 1);
-        if (last == EE_NOT_FOUND) {
-            ret = EE_NOT_FOUND;
-        } else {
-            ret = *DATA(last);
-        }
+    uint16_t emptyCell = eeFindEmptyCell();
+    if (emptyCell == EE_NOT_FOUND) {
+        emptyCell = EE_CELLS_NUM;
+    }
+
+    uint16_t last = eeFindLastCell(cell, emptyCell - 1);
+    if (last == EE_NOT_FOUND) {
+        ret = EE_NOT_FOUND;
+    } else {
+        ret = *DATA(last);
     }
 
     return ret;

@@ -239,7 +239,6 @@ vpath %.s $(sort $(dir $(ASM_SOURCES)))
 ELF = $(BUILD_DIR)/$(TARGET).elf
 BIN = flash/$(TARGET).bin
 
-FW_BACKUP = backup/$(TARGET).bin
 EE_BACKUP = backup/$(PROJECT)_eeprom.bin
 
 all: $(BIN) size
@@ -278,10 +277,10 @@ flash: $(BIN)
 erase:
 	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_erase" -c shutdown
 
-.PHONY: backup
-backup:
+.PHONY: ee_backup
+ee_backup:
 	@mkdir -p backup
-	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_read $(FW_BACKUP) $(EE_BACKUP)" -c shutdown
+	$(OPENOCD) -f $(OPENOCD_CFG) -c "stm_ee_read $(EE_BACKUP)" -c shutdown
 
 .PHONY: ee_flash
 ee_flash: $(EE_BACKUP)
