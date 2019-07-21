@@ -10,6 +10,7 @@ FEATURE_LIST =
 F10X_MCU = STM32F103xB
 #DEBUG_ENABLED = YES
 #DEBUG_FPS = YES
+#DEBUG_KARADIO = YES
 
 # Lowercase argument
 lc = $(shell echo $1 | tr '[:upper:]' '[:lower:]')
@@ -30,6 +31,10 @@ endif
 
 ifeq "$(DEBUG_FPS)" "YES"
   C_DEFS += -D_DEBUG_FPS
+endif
+
+ifeq "$(DEBUG_KARADIO)" "YES"
+  C_DEFS += -D_DEBUG_KARADIO
 endif
 
 DISP_HI_BYTE = NO

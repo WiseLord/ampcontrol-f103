@@ -3,10 +3,9 @@
 #include "mem.h"
 #include "usart.h"
 
+#include <stm32f1xx_ll_usart.h>
 #include <stdarg.h>
 #include <stdio.h>
-
-#define USART_DBG               USART1
 
 __attribute__((always_inline))
 static inline void dbgPutChar(char ch)
@@ -23,7 +22,11 @@ static void dbgPutString(char *str)
 
 void dbgInit()
 {
+    NVIC_SetPriority(USART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+    NVIC_EnableIRQ(USART1_IRQn);
+
     usartInit(USART_DBG, 115200);
+    LL_USART_EnableIT_RXNE(USART_DBG);
 }
 
 void dbgSendChar(char ch)
@@ -43,4 +46,15 @@ void dbgPrintf (const char *fmt, ...)
     dbgPutString(buffer);
 
     mem_free(buffer);
+}
+
+void dbgIRQ()
+{
+#ifdef _DEBUG_KARADIO
+    char data;
+
+    data = LL_USART_ReceiveData8(USART_DBG);
+
+    usartSendChar(USART_KARADIO, data);
+#endif
 }

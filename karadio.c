@@ -3,6 +3,8 @@
 #include <stm32f1xx_ll_usart.h>
 #include <string.h>
 
+#include "audio/audio.h"
+
 #include "usart.h"
 #include "usb/hidkeys.h"
 
@@ -16,12 +18,19 @@
 #define CLI_STOP    "stop"
 #define CLI_PREV    "prev"
 #define CLI_NEXT    "next"
-#define CLI_INFO  "info"
+#define CLI_INFO    "info"
 
 #define CLI_META    "##CLI.META#:"
 #define CLI_NAMESET "##CLI.NAMESET#:"
 #define CLI_STOPPED "##CLI.STOPPED#"
 #define CLI_PLAYING "##CLI.PLAYING#"
+
+#define TRYING      "Trying "
+#define IP          "ip:"
+#define AUTOSTART   "autostart:"
+
+#define SYS_BOOT    "boot"
+#define WIFI_DISCON "discon"
 
 #define RX_BUF_SIZE     128
 #define ST_NAME_SIZE    40
@@ -34,6 +43,7 @@ static char stMeta[ST_META_SIZE];
 static int32_t bufIdx = 0;
 
 static KaRadioData krData;
+static bool kEnabled = true;
 
 static void karadioPutChar(char ch)
 {
@@ -75,6 +85,7 @@ void karadioInit(void)
     NVIC_EnableIRQ(USART2_IRQn);
 
     usartInit(USART_KARADIO, 115200);
+    LL_USART_EnableIT_RXNE(USART_KARADIO);
 
     krData.name = stName;
     krData.meta = stMeta;
@@ -84,15 +95,15 @@ void karadioInit(void)
 
 void karadioSetEnabled(bool value)
 {
-    if (value) {
-        LL_USART_EnableIT_RXNE(USART_KARADIO);
-        karadioUpdateStatus();
-        karadioSendCmd(CMD_CLI, CLI_PLAY);
-    } else {
-        LL_USART_DisableIT_RXNE(USART_KARADIO);
-        karadioSendCmd(CMD_CLI, CLI_STOP);
+    if (value && !kEnabled) {
+//        karadioUpdateStatus();
+        karadioSendCmd(CMD_SYS, SYS_BOOT);
+    } else if (!value && kEnabled) {
+        karadioSendCmd(CMD_WIFI, WIFI_DISCON);
         karadioClearStatus();
     }
+
+    kEnabled = value;
 }
 
 KaRadioData *karadioGet(void)
@@ -138,9 +149,21 @@ static void parse(char *line)
     } else  if ((ici = strstr(line, CLI_META)) != NULL) {
         strncpy(krData.meta, ici + sizeof(CLI_META), ST_META_SIZE);
         krData.flags |= KARADIO_FLAG_META;
+
+        AudioProc *aProc = audioGet();
+        InputType inType = aProc->par.inType[aProc->par.input];
+        karadioSetEnabled(inType == IN_KARADIO);
     } else if ((ici = strstr(line, CLI_NAMESET)) != NULL) {
         strncpy(krData.name, ici + sizeof(CLI_NAMESET), ST_NAME_SIZE);
         krData.flags |= KARADIO_FLAG_NAME;
+    } else if ((ici = strstr(line, TRYING)) != NULL) {
+        krData.playing = true;
+        strncpy(krData.meta, ici, ST_META_SIZE);
+        krData.flags |= KARADIO_FLAG_META;
+    } else if ((ici = strstr(line, IP)) != NULL) {
+        krData.playing = true;
+        strncpy(krData.meta, ici, ST_META_SIZE);
+        krData.flags |= KARADIO_FLAG_META;
     }
 }
 
@@ -150,7 +173,9 @@ void karadioIRQ()
 
     data = LL_USART_ReceiveData8(USART_KARADIO);
 
+#ifdef _DEBUG_KARADIO
     dbgSendChar(data);
+#endif
 
     switch (data) {
     case '\n':

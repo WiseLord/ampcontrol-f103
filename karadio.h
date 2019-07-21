@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define USART_KARADIO           USART2
-
 #define KARADIO_FLAG_NAME       0x01
 #define KARADIO_FLAG_META       0x02
 
