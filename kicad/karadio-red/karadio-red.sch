@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:karadio-red-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -683,4 +684,75 @@ Wire Wire Line
 	5800 2700 5800 3100
 Text Label 4850 3300 0    50   ~ 0
 ~RST
+$Comp
+L Memory_EEPROM:25LCxxx U3
+U 1 1 5D361D11
+P 9000 3050
+F 0 "U3" H 8750 3300 50  0000 C CNN
+F 1 "23LCV1024" H 9250 3300 50  0000 C CNN
+F 2 "Package_SO:SO-8_3.9x4.9mm_P1.27mm" H 9000 3050 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21832H.pdf" H 9000 3050 50  0001 C CNN
+	1    9000 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0120
+U 1 1 5D3667F3
+P 9000 2700
+F 0 "#PWR0120" H 9000 2550 50  0001 C CNN
+F 1 "+3V3" H 9015 2873 50  0000 C CNN
+F 2 "" H 9000 2700 50  0001 C CNN
+F 3 "" H 9000 2700 50  0001 C CNN
+	1    9000 2700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9000 2700 9000 2750
+$Comp
+L power:GNDD #PWR0121
+U 1 1 5D369461
+P 9000 3400
+F 0 "#PWR0121" H 9000 3150 50  0001 C CNN
+F 1 "GNDD" H 9004 3245 50  0000 C CNN
+F 2 "" H 9000 3400 50  0001 C CNN
+F 3 "" H 9000 3400 50  0001 C CNN
+	1    9000 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9000 3400 9000 3350
+Text Label 8400 3150 0    50   ~ 0
+CS
+Wire Wire Line
+	8600 3150 8400 3150
+Text Label 9650 3150 2    50   ~ 0
+MISO
+Wire Wire Line
+	9650 3150 9400 3150
+NoConn ~ 8600 2950
+Wire Wire Line
+	9400 3050 9650 3050
+Text Label 9650 3050 2    50   ~ 0
+SI
+Wire Wire Line
+	9400 2950 9650 2950
+Text Label 9650 2950 2    50   ~ 0
+SCK
+$Comp
+L power:GNDD #PWR0122
+U 1 1 5D382FBD
+P 8550 3400
+F 0 "#PWR0122" H 8550 3150 50  0001 C CNN
+F 1 "GNDD" H 8554 3245 50  0000 C CNN
+F 2 "" H 8550 3400 50  0001 C CNN
+F 3 "" H 8550 3400 50  0001 C CNN
+	1    8550 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8600 3050 8550 3050
+Wire Wire Line
+	8550 3050 8550 3400
+Text Notes 8350 3950 0    50   ~ 0
+R1 - install if control board not used\n\nU3 - install for better caching
 $EndSCHEMATC
