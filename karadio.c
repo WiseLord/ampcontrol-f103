@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "audio/audio.h"
-
+#include "ringbuf.h"
 #include "usart.h"
 #include "usb/hidkeys.h"
 
@@ -32,11 +32,12 @@
 #define SYS_BOOT    "boot"
 #define WIFI_DISCON "discon"
 
-#define RX_BUF_SIZE     128
+#define LINE_SIZE       128
 #define ST_NAME_SIZE    40
 #define ST_META_SIZE    64
+#define RINGBUF_SIZE    512
 
-static char rxBuf[RX_BUF_SIZE];
+static char lineBuf[LINE_SIZE];
 static char stName[ST_NAME_SIZE];
 static char stMeta[ST_META_SIZE];
 
@@ -44,6 +45,9 @@ static int32_t bufIdx = 0;
 
 static KaRadioData krData;
 static bool kEnabled = true;
+
+static RingBuf ringBuf;
+static char ringBufData[RINGBUF_SIZE];
 
 static void karadioPutChar(char ch)
 {
@@ -84,13 +88,15 @@ void karadioInit(void)
     NVIC_SetPriority(USART2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
     NVIC_EnableIRQ(USART2_IRQn);
 
-    usartInit(USART_KARADIO, 115200);
-    LL_USART_EnableIT_RXNE(USART_KARADIO);
-
     krData.name = stName;
     krData.meta = stMeta;
 
     karadioClearStatus();
+
+    ringBufInit(&ringBuf, ringBufData, sizeof (ringBufData));
+
+    usartInit(USART_KARADIO, 115200);
+    LL_USART_EnableIT_RXNE(USART_KARADIO);
 }
 
 void karadioSetEnabled(bool value)
@@ -136,7 +142,7 @@ void karadioSendMediaCmd(uint8_t cmd)
     }
 }
 
-static void parse(char *line)
+static void karadioParseLine(char *line)
 {
     char *ici;
 
@@ -167,32 +173,45 @@ static void parse(char *line)
     }
 }
 
-void karadioIRQ()
+static void karadioRead(char data)
 {
-    char data;
-
-    data = LL_USART_ReceiveData8(USART_KARADIO);
-
-#ifdef _DEBUG_KARADIO
-    dbgSendChar(data);
-#endif
-
     switch (data) {
     case '\n':
     case '\r':
         if (bufIdx == 0) {
             break;
         }
-        rxBuf[bufIdx] = 0;
-        parse(rxBuf);
+        lineBuf[bufIdx] = 0;
+        karadioParseLine(lineBuf);
         bufIdx = 0;
         break;
     default:
-        rxBuf[bufIdx] = data;
-        if (++bufIdx >= RX_BUF_SIZE) {
+        lineBuf[bufIdx] = data;
+        if (++bufIdx >= LINE_SIZE) {
             bufIdx = 0;
-            rxBuf[bufIdx] = 0;
+            lineBuf[bufIdx] = 0;
         }
         break;
     }
+}
+
+void karadioGetData(void)
+{
+    uint16_t size = ringBufGetSize(&ringBuf);
+
+    for (uint16_t i = 0; i < size; i++) {
+        char ch = ringBufPopChar(&ringBuf);
+        karadioRead(ch);
+    }
+}
+
+void karadioIRQ()
+{
+    char data = LL_USART_ReceiveData8(USART_KARADIO);
+
+#ifdef _DEBUG_KARADIO
+    dbgSendChar(data);
+#endif
+
+    ringBufPushChar(&ringBuf, data);
 }

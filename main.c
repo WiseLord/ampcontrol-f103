@@ -109,6 +109,7 @@ int main(void)
 
     while (1) {
         actionHandle(ACTION_VISIBLE);
+        karadioGetData();
         screenShow(false);
         actionUserGet();
 #ifdef _DEBUG_FPS

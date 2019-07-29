@@ -61,6 +61,7 @@ C_SOURCES += mem.c
 C_SOURCES += menu.c
 C_SOURCES += pins.c
 C_SOURCES += rc.c
+C_SOURCES += ringbuf.c
 C_SOURCES += rtc.c
 C_SOURCES += screen.c
 C_SOURCES += settings.c

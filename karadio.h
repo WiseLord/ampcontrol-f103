@@ -25,6 +25,7 @@ KaRadioData *karadioGet(void);
 void karadioUpdateStatus(void);
 void karadioSendMediaCmd(uint8_t cmd);
 
+void karadioGetData(void);
 void karadioIRQ(void);
 
 #endif // KARADIO_H
