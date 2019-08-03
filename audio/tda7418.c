@@ -145,7 +145,6 @@ const AudioApi *tda7418GetApi(void)
 void tda7418Init(AudioParam *param)
 {
     aPar = param;
-    aPar->inCnt = TDA7418_IN_CNT;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridToneBal;

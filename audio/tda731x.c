@@ -51,7 +51,6 @@ const AudioApi *tda731xGetApi(void)
 void tda731xInit(AudioParam *param)
 {
     aPar = param;
-    aPar->inCnt = TDA7313_IN_CNT;
 
     aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->item[AUDIO_TUNE_BASS].grid      = &gridTone;

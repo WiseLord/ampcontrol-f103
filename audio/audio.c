@@ -75,33 +75,36 @@ void audioReadSettings(void)
 
     aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
 
-    aProc.par.inCnt = MAX_INPUTS;
-
     // API initialization
-    aProc.api = &audioTestApi;
     switch (aProc.par.ic) {
 #ifdef _TDA7439
     case AUDIO_IC_TDA7439:
     case AUDIO_IC_TDA7440:
         aProc.api = tda7439GetApi();
+        aProc.par.inCnt = TDA7439_IN_CNT;
         break;
 #endif
 #ifdef _TDA731X
     case AUDIO_IC_TDA7313:
         aProc.api = tda731xGetApi();
+        aProc.par.inCnt = TDA7313_IN_CNT;
         break;
 #endif
 #ifdef _PT232X
     case AUDIO_IC_PT232X:
         aProc.api = pt232xGetApi();
+        aProc.par.inCnt = PT2323_IN_CNT;
         break;
 #endif
 #ifdef _TDA7418
     case AUDIO_IC_TDA7418:
         aProc.api = tda7418GetApi();
+        aProc.par.inCnt = TDA7418_IN_CNT;
         break;
 #endif
     default:
+        aProc.api = &audioTestApi;
+        aProc.par.inCnt = MAX_INPUTS;
         break;
     }
 }
