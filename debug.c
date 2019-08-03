@@ -50,11 +50,11 @@ void dbgPrintf (const char *fmt, ...)
 
 void dbgIRQ()
 {
+    char data = LL_USART_ReceiveData8(USART_DBG);
+
 #ifdef _DEBUG_KARADIO
-    char data;
-
-    data = LL_USART_ReceiveData8(USART_DBG);
-
     usartSendChar(USART_KARADIO, data);
+#else
+    (void)data;
 #endif
 }
