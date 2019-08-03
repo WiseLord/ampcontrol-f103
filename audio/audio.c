@@ -21,8 +21,6 @@
 #define FLAG_ON     1
 #define FLAG_OFF    0
 
-#define TEST_IN_CNT     8
-
 static AudioProc aProc;
 
 static const AudioGrid gridTestVolume       = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step
@@ -67,17 +65,17 @@ void audioReadSettings(void)
         aProc.par.item[par - PARAM_AUDIO_VOLUME].value = (int8_t)settingsRead(par);
     }
 
-    for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN7; par++) {
+    for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN_LAST; par++) {
         aProc.par.gain[par - PARAM_AUDIO_GAIN0] = (int8_t)settingsRead(par);
     }
 
-    for (Param par = PARAM_AUDIO_IN0; par <= PARAM_AUDIO_IN7; par++) {
+    for (Param par = PARAM_AUDIO_IN0; par <= PARAM_AUDIO_IN_LAST; par++) {
         aProc.par.inType[par - PARAM_AUDIO_IN0] = (InputType)settingsRead(par);
     }
 
     aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
 
-    aProc.par.inCnt = TEST_IN_CNT;
+    aProc.par.inCnt = MAX_INPUTS;
 
     // API initialization
     aProc.api = &audioTestApi;
@@ -121,7 +119,7 @@ void audioSaveSettings(void)
         settingsStore(par, aProc.par.item[par - PARAM_AUDIO_VOLUME].value);
     }
 
-    for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN7; par++) {
+    for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN_LAST; par++) {
         settingsStore(par, aProc.par.gain[par - PARAM_AUDIO_GAIN0]);
     }
 }

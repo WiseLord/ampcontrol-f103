@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MAX_INPUTS  8
+#define MAX_INPUTS  10
 
 typedef enum {
     AUDIO_IC_NO = 0,

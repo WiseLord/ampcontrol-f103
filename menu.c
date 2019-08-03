@@ -51,6 +51,8 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_AUDIO_IN_5]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN5},
     [MENU_AUDIO_IN_6]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN6},
     [MENU_AUDIO_IN_7]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN7},
+    [MENU_AUDIO_IN_8]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN8},
+    [MENU_AUDIO_IN_9]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN9},
 
     [MENU_TUNER_IC]         = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     PARAM_TUNER_IC},
     [MENU_TUNER_BAND]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     PARAM_TUNER_BAND},
@@ -123,6 +125,8 @@ static int16_t menuGetValue(MenuIdx index)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
+    case MENU_AUDIO_IN_8:
+    case MENU_AUDIO_IN_9:
         ret = aProc->par.inType[index - MENU_AUDIO_IN_0];
         break;
 
@@ -222,6 +226,8 @@ static void menuStoreCurrentValue(void)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
+    case MENU_AUDIO_IN_8:
+    case MENU_AUDIO_IN_9:
         aProc->par.inType[menu.active - MENU_AUDIO_IN_0] = (InputType)menu.value;
         break;
 
@@ -354,6 +360,8 @@ static void menuValueChange(int8_t diff)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
+    case MENU_AUDIO_IN_8:
+    case MENU_AUDIO_IN_9:
         if (menu.value > IN_END - 1)
             menu.value = IN_END - 1;
         if (menu.value < IN_TUNER)
@@ -462,6 +470,8 @@ static bool menuIsValid(MenuIdx index)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
+    case MENU_AUDIO_IN_8:
+    case MENU_AUDIO_IN_9:
         // Limit Audio inputs
         if (index - MENU_AUDIO_IN_0 >= aProc->par.inCnt) {
             return false;
@@ -496,7 +506,7 @@ static bool menuIsValid(MenuIdx index)
     }
 
     if (aProc->par.ic == AUDIO_IC_NO) {
-        if (index >= MENU_AUDIO_IN_0 && index <= MENU_AUDIO_IN_7) {
+        if (index >= MENU_AUDIO_IN_0 && index <= MENU_AUDIO_IN_LAST) {
             return false;
         }
     }
@@ -626,7 +636,7 @@ const char *menuGetName(MenuIdx index)
     char *buf = glcdGetStrBuf();
     memset(buf, 0, STR_BUFSIZE);
 
-    if (index >= MENU_AUDIO_IN_0 && index <= MENU_AUDIO_IN_7) {
+    if (index >= MENU_AUDIO_IN_0 && index <= MENU_AUDIO_IN_LAST) {
         strncpy(buf, labelsGet((Label)(LABEL_MENU + MENU_AUDIO_IN)), 60);
         size_t len = strlen(buf);
         buf[len++] = ' ';
@@ -698,6 +708,8 @@ const char *menuGetValueStr(MenuIdx index)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
+    case MENU_AUDIO_IN_8:
+    case MENU_AUDIO_IN_9:
         ret = labelsGet((Label)(LABEL_IN_TUNER + value));
         break;
     case MENU_TUNER_IC:
