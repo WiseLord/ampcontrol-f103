@@ -421,7 +421,7 @@ static void actionRemapBtnLong(void)
     case BTN_D3:
         switch (inType) {
         case IN_TUNER:
-            actionSet(ACTION_SEEK, -1);
+            actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
             break;
         default:
             actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_PREV);
@@ -431,7 +431,7 @@ static void actionRemapBtnLong(void)
     case BTN_D4:
         switch (inType) {
         case IN_TUNER:
-            actionSet(ACTION_SEEK, +1);
+            actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFWD);
             break;
         default:
             actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_NEXT);
@@ -934,26 +934,20 @@ void actionHandle(bool visible)
 
     case ACTION_MEDIA:
         switch (inType) {
+        case IN_TUNER:
+            if (action.value == HIDMEDIAKEY_FFWD) {
+                tunerSeek(TUNER_DIR_UP);
+            } else if (action.value == HIDMEDIAKEY_REWIND) {
+                tunerSeek(TUNER_DIR_DOWN);
+            }
+            actionSetScreen(SCREEN_AUDIO_INPUT, 3000);
+            break;
         case IN_PC:
             usbHidSendMediaKey((HidKey)action.value);
             actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
             break;
         case IN_KARADIO:
             karadioSendMediaCmd((HidKey)action.value);
-            break;
-        }
-        break;
-    case ACTION_SEEK:
-        switch (inType) {
-        case IN_TUNER:
-            if (action.value > 0) {
-                tunerSeek(TUNER_DIR_UP);
-            } else if (action.value < 0) {
-                tunerSeek(TUNER_DIR_DOWN);
-            }
-            actionSetScreen(SCREEN_AUDIO_INPUT, 3000);
-            break;
-        default:
             break;
         }
         break;

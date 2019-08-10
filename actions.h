@@ -42,7 +42,6 @@ enum {
 
     ACTION_DIGIT,
 
-    ACTION_SEEK,
     ACTION_CHAN,
     ACTION_MEDIA,
 
