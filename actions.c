@@ -33,6 +33,8 @@ static void actionRemapEncoder(void);
 static Action action = {ACTION_POWERUP, false, FLAG_ON, SCREEN_STANDBY, 0, ACTION_POWERUP};
 static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, 0, ACTION_NONE};
 
+static bool deviceActive = false;
+
 static void actionSet(ActionType type, int16_t value)
 {
     action.type = type;
@@ -879,6 +881,8 @@ void actionHandle(bool visible)
 
             pinsSetStby(true);      // OFF via relay
 
+            deviceActive = false;
+
             swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
             swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
             swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
@@ -896,6 +900,8 @@ void actionHandle(bool visible)
 
         tunerInit();
         audioInit();
+
+        deviceActive = true;
 
         swTimSet(SW_TIM_INPUT_POLL, 800);
         swTimSet(SW_TIM_INIT_SW, 300);
@@ -1166,4 +1172,9 @@ void actionHandle(bool visible)
             swTimSet(SW_TIM_DISPLAY, action.timeout);
         }
     }
+}
+
+bool actionIsDeviceActive(void)
+{
+    return deviceActive;
 }

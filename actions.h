@@ -102,6 +102,8 @@ void actionQueue(ActionType type, int16_t value);
 void actionUserGet(void);
 void actionHandle(bool visible);
 
+bool actionIsDeviceActive(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -3,6 +3,7 @@
 #include <stm32f1xx_ll_usart.h>
 #include <string.h>
 
+#include "actions.h"
 #include "audio/audio.h"
 #include "ringbuf.h"
 #include "usart.h"
@@ -40,7 +41,7 @@ static char lineBuf[LINE_SIZE];
 static int32_t bufIdx = 0;
 
 static KaRadioData krData;
-static bool kEnabled = true;
+static bool kEnabled = false;
 
 static RingBuf ringBuf;
 static char ringBufData[RINGBUF_SIZE];
@@ -93,13 +94,11 @@ void karadioSetEnabled(bool value)
 {
     if (value) {
         if (!kEnabled) {
-            karadioSendCmd(CMD_CLI, CLI_PLAY);
+            karadioSendCmd(CMD_SYS, SYS_BOOT);
         }
     } else {
-        if (kEnabled) {
-            karadioSendCmd(CMD_CLI, CLI_STOP);
-            karadioClearStatus();
-        }
+        karadioSendCmd(CMD_WIFI, WIFI_DISCON);
+        karadioClearStatus();
     }
 
     kEnabled = value;
@@ -171,12 +170,12 @@ static void karadioParseLine(char *line)
         }
     } else if (strstr(line, TRYING) == line) {
         char *apName = line + sizeof(TRYING);
-        char *sp = strstr(apName, " ");
-        if (sp != apName) {
-            *sp = '\0';
+        char *cm = strstr(apName, ",");
+        if (cm != apName) {
+            *cm = '\0';
         }
         karadioUpdateName(line);
-        karadioUpdateMeta("---");
+        karadioUpdateMeta(cm + 1);
     } else if (strstr(line, IP) == line) {
         char *ip = line + sizeof(IP);
         char *cm = strstr(ip, ",");
@@ -187,8 +186,11 @@ static void karadioParseLine(char *line)
     } else if (strstr(line, AUTOSTART) == line) {
         AudioProc *aProc = audioGet();
         InputType inType = aProc->par.inType[aProc->par.input];
-        kEnabled = false;
-        karadioSetEnabled(inType == IN_KARADIO);
+        if (actionIsDeviceActive() && (inType == IN_KARADIO)) {
+            karadioSendCmd(CMD_CLI, CLI_PLAY);
+        } else {
+            karadioSendCmd(CMD_CLI, CLI_STOP);
+        }
     }
 }
 
