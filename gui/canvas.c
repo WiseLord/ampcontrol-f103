@@ -728,35 +728,36 @@ void canvasShowKaradio(bool clear)
     Icon icon = ICON_KARADIO;
 
     if (clear) {
-        // Label
-        glcdSetFont(lt->lblFont);
-        glcdSetFontColor(canvas.pal->fg);
-        glcdSetXY(0, 0);
-        glcdWriteStringConst(label);
-    }
-
-    if (clear) {
         // Icon
         glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
     }
 
-    int16_t yPos = iconSet->chars[0].image->height;
-
     KaRadioData *krData = karadioGet();
     uint16_t nameLen;
+
+    if (clear || (krData->flags & KARADIO_FLAG_NAME)) {
+        // Label
+        glcdSetFont(lt->lblFont);
+        glcdSetFontColor(canvas.pal->fg);
+        glcdSetXY(0, 0);
+        nameLen = glcdWriteStringConst(label);
+        nameLen += glcdWriteString(" ");
+        nameLen += glcdWriteString(krData->num);
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                     lt->rect.w - nameLen - iconSet->chars[0].image->width, lt->lblFont->chars[0].image->height,
+                     canvas.pal->bg);
+    }
+
+    int16_t yPos = lt->lblFont->chars[0].image->height;
 
     if (clear || (krData->flags & KARADIO_FLAG_NAME)) {
 
         krData->flags &= ~KARADIO_FLAG_NAME;
         glcdSetFont(lt->rds.psFont);
         glcdSetXY(0, yPos);
-        if (krData->playing) {
-            nameLen = glcdWriteString(krData->name);
-        } else {
-            nameLen = 0;
-        }
+        nameLen = glcdWriteString(krData->name);
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
                      lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
                      canvas.pal->bg);
@@ -768,13 +769,9 @@ void canvasShowKaradio(bool clear)
         krData->flags &= ~KARADIO_FLAG_META;
         glcdSetFont(lt->rds.textFont);
         glcdSetXY(0, yPos);
-        if (krData->playing) {
-            nameLen = glcdWriteString(krData->meta);
-        } else {
-            nameLen = 0;
-        }
+        nameLen = glcdWriteString(krData->meta);
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
-                     lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
+                     lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height,
                      canvas.pal->bg);
     }
 

@@ -9,11 +9,15 @@
 
 #define KARADIO_FLAG_ALL        (KARADIO_FLAG_NAME | KARADIO_FLAG_META)
 
+#define ST_NUM_SIZE             4
+#define ST_NAME_SIZE            40
+#define ST_META_SIZE            64
+
 typedef struct {
-    char *name;
-    char *meta;
+    char num[ST_NUM_SIZE];
+    char name[ST_NAME_SIZE];
+    char meta[ST_META_SIZE];
     uint16_t flags;
-    bool playing;
 } KaRadioData;
 
 void karadioInit(void);

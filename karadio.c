@@ -10,36 +10,32 @@
 
 #include "debug.h"
 
-#define CMD_CLI     "cli"
-#define CMD_SYS     "sys"
-#define CMD_WIFI    "wifi"
+#define CMD_CLI         "cli"
+#define CMD_SYS         "sys"
+#define CMD_WIFI        "wifi"
 
-#define CLI_PLAY    "start"
-#define CLI_STOP    "stop"
-#define CLI_PREV    "prev"
-#define CLI_NEXT    "next"
-#define CLI_INFO    "info"
+#define CLI_PLAY        "start"
+#define CLI_STOP        "stop"
+#define CLI_PREV        "prev"
+#define CLI_NEXT        "next"
+#define CLI_INFO        "info"
 
-#define CLI_META    "##CLI.META#:"
-#define CLI_NAMESET "##CLI.NAMESET#:"
-#define CLI_STOPPED "##CLI.STOPPED#"
-#define CLI_PLAYING "##CLI.PLAYING#"
+#define CLI_META        "##CLI.META#:"
+#define CLI_NAMESET     "##CLI.NAMESET#:"
+#define CLI_STOPPED     "##CLI.STOPPED#"
+#define CLI_PLAYING     "##CLI.PLAYING#"
 
-#define TRYING      "Trying "
-#define IP          "ip:"
-#define AUTOSTART   "autostart:"
+#define TRYING          "Trying "
+#define IP              "ip:"
+#define AUTOSTART       "autostart:"
 
-#define SYS_BOOT    "boot"
-#define WIFI_DISCON "discon"
+#define SYS_BOOT        "boot"
+#define WIFI_DISCON     "discon"
 
 #define LINE_SIZE       128
-#define ST_NAME_SIZE    40
-#define ST_META_SIZE    64
 #define RINGBUF_SIZE    512
 
 static char lineBuf[LINE_SIZE];
-static char stName[ST_NAME_SIZE];
-static char stMeta[ST_META_SIZE];
 
 static int32_t bufIdx = 0;
 
@@ -75,21 +71,15 @@ static void karadioSendCmd (const char *type, const char *cmd)
 
 static void karadioClearStatus()
 {
-    krData.flags = 0;
     bufIdx = 0;
-    krData.playing = false;
 
-    memset(stName, 0, ST_NAME_SIZE);
-    memset(stMeta, 0, ST_META_SIZE);
+    memset(&krData, 0, sizeof(KaRadioData));
 }
 
 void karadioInit(void)
 {
     NVIC_SetPriority(USART2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
     NVIC_EnableIRQ(USART2_IRQn);
-
-    krData.name = stName;
-    krData.meta = stMeta;
 
     karadioClearStatus();
 
@@ -101,12 +91,15 @@ void karadioInit(void)
 
 void karadioSetEnabled(bool value)
 {
-    if (value && !kEnabled) {
-//        karadioUpdateStatus();
-        karadioSendCmd(CMD_SYS, SYS_BOOT);
-    } else if (!value && kEnabled) {
-        karadioSendCmd(CMD_WIFI, WIFI_DISCON);
-        karadioClearStatus();
+    if (value) {
+        if (!kEnabled) {
+            karadioSendCmd(CMD_CLI, CLI_PLAY);
+        }
+    } else {
+        if (kEnabled) {
+            karadioSendCmd(CMD_CLI, CLI_STOP);
+            karadioClearStatus();
+        }
     }
 
     kEnabled = value;
@@ -142,34 +135,60 @@ void karadioSendMediaCmd(uint8_t cmd)
     }
 }
 
+static void karadioUpdateNumber(const char *str, size_t numLen)
+{
+    if (numLen > ST_NUM_SIZE)
+        numLen = ST_NUM_SIZE;
+    strncpy(krData.num, str, numLen);
+}
+
+static void karadioUpdateName(const char *str)
+{
+    strncpy(krData.name, str, ST_NAME_SIZE);
+    krData.flags |= KARADIO_FLAG_NAME;
+}
+
+static void karadioUpdateMeta(const char *str)
+{
+    strncpy(krData.meta, str, ST_META_SIZE);
+    krData.flags |= KARADIO_FLAG_META;
+}
+
 static void karadioParseLine(char *line)
 {
-    char *ici;
-
-    if ((ici = strstr(line, CLI_PLAYING)) != NULL) {
-        krData.playing = true;
+    if (strstr(line, CLI_PLAYING) == line) {
         krData.flags |= (KARADIO_FLAG_ALL);
-    } else  if ((ici = strstr(line, CLI_STOPPED)) != NULL) {
-        krData.playing = false;
-        krData.flags |= (KARADIO_FLAG_ALL);
-    } else  if ((ici = strstr(line, CLI_META)) != NULL) {
-        strncpy(krData.meta, ici + sizeof(CLI_META), ST_META_SIZE);
-        krData.flags |= KARADIO_FLAG_META;
-
+    } else if (strstr(line, CLI_STOPPED) == line) {
+        karadioUpdateMeta("---");
+    } else if (strstr(line, CLI_META) == line) {
+        karadioUpdateMeta(line + sizeof(CLI_META));
+    } else if (strstr(line, CLI_NAMESET) == line) {
+        char *nameset = line + sizeof(CLI_NAMESET);
+        char *sp = strstr(nameset, " ");
+        if (sp != nameset) {
+            karadioUpdateNumber(nameset, (size_t)(sp - nameset));
+            karadioUpdateName(sp + 1);
+        }
+    } else if (strstr(line, TRYING) == line) {
+        char *apName = line + sizeof(TRYING);
+        char *sp = strstr(apName, " ");
+        if (sp != apName) {
+            *sp = '\0';
+        }
+        karadioUpdateName(line);
+        karadioUpdateMeta("---");
+    } else if (strstr(line, IP) == line) {
+        char *ip = line + sizeof(IP);
+        char *cm = strstr(ip, ",");
+        if (cm != ip) {
+            *cm = '\0';
+        }
+        karadioUpdateMeta(line);
+    } else if (strstr(line, AUTOSTART) == line) {
         AudioProc *aProc = audioGet();
         InputType inType = aProc->par.inType[aProc->par.input];
+        kEnabled = false;
         karadioSetEnabled(inType == IN_KARADIO);
-    } else if ((ici = strstr(line, CLI_NAMESET)) != NULL) {
-        strncpy(krData.name, ici + sizeof(CLI_NAMESET), ST_NAME_SIZE);
-        krData.flags |= KARADIO_FLAG_NAME;
-    } else if ((ici = strstr(line, TRYING)) != NULL) {
-        krData.playing = true;
-        strncpy(krData.meta, ici, ST_META_SIZE);
-        krData.flags |= KARADIO_FLAG_META;
-    } else if ((ici = strstr(line, IP)) != NULL) {
-        krData.playing = true;
-        strncpy(krData.meta, ici, ST_META_SIZE);
-        krData.flags |= KARADIO_FLAG_META;
     }
 }
 
