@@ -182,11 +182,11 @@ static void actionNavigateCommon(RcCmd cmd)
         break;
     case RC_CMD_NAV_UP:
     case RC_CMD_CHAN_NEXT:
-        actionSet(ACTION_CHAN, +1);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_NEXT_TRACK);
         break;
     case RC_CMD_NAV_DOWN:
     case RC_CMD_CHAN_PREV:
-        actionSet(ACTION_CHAN, -1);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PREV_TRACK);
         break;
     }
 }
@@ -504,10 +504,10 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_CHAN_NEXT:
-        actionSet(ACTION_CHAN, +1);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_NEXT_TRACK);
         break;
     case RC_CMD_CHAN_PREV:
-        actionSet(ACTION_CHAN, -1);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PREV_TRACK);
         break;
 
     case RC_CMD_DIG_0:
@@ -935,10 +935,21 @@ void actionHandle(bool visible)
     case ACTION_MEDIA:
         switch (inType) {
         case IN_TUNER:
-            if (action.value == HIDMEDIAKEY_FFWD) {
-                tunerSeek(TUNER_DIR_UP);
-            } else if (action.value == HIDMEDIAKEY_REWIND) {
+            switch (action.value) {
+            case HIDMEDIAKEY_PREV_TRACK:
+                tunerMove(TUNER_DIR_DOWN);
+                screen->iconHint = ICON_PREV_TRACK;
+                break;
+            case HIDMEDIAKEY_NEXT_TRACK:
+                tunerMove(TUNER_DIR_UP);
+                screen->iconHint = ICON_NEXT_TRACK;
+                break;
+            case HIDMEDIAKEY_REWIND:
                 tunerSeek(TUNER_DIR_DOWN);
+                break;
+            case HIDMEDIAKEY_FFWD:
+                tunerSeek(TUNER_DIR_UP);
+                break;
             }
             actionSetScreen(SCREEN_AUDIO_INPUT, 3000);
             break;
@@ -948,37 +959,7 @@ void actionHandle(bool visible)
             break;
         case IN_KARADIO:
             karadioSendMediaCmd((HidKey)action.value);
-            break;
-        }
-        break;
-    case ACTION_CHAN:
-        switch (inType) {
-        case IN_TUNER:
-            if (action.value > 0) {
-                tunerMove(TUNER_DIR_UP);
-                screen->iconHint = ICON_NEXT_TRACK;
-            } else if (action.value < 0) {
-                tunerMove(TUNER_DIR_DOWN);
-                screen->iconHint = ICON_PREV_TRACK;
-            }
-            actionSetScreen(SCREEN_AUDIO_INPUT, 3000);
-            break;
-        case IN_PC:
-            if (action.value > 0) {
-                usbHidSendMediaKey(HIDMEDIAKEY_NEXT_TRACK);
-                screen->iconHint = ICON_NEXT_TRACK;
-            } else if (action.value < 0) {
-                usbHidSendMediaKey(HIDMEDIAKEY_PREV_TRACK);
-                screen->iconHint = ICON_PREV_TRACK;
-            }
             actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
-            break;
-        case IN_KARADIO:
-            if (action.value > 0) {
-                karadioSendMediaCmd(HIDMEDIAKEY_NEXT_TRACK);
-            } else if (action.value < 0) {
-                karadioSendMediaCmd(HIDMEDIAKEY_PREV_TRACK);
-            }
             break;
         }
         break;

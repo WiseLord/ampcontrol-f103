@@ -42,7 +42,6 @@ enum {
 
     ACTION_DIGIT,
 
-    ACTION_CHAN,
     ACTION_MEDIA,
 
     ACTION_OPEN_MENU,
