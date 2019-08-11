@@ -48,6 +48,8 @@ display/icons/icons-amp-32.c
 display/icons/icons-amp-48.c
 display/icons/icons-amp-64.c
 
+display/gc130x130/ssd1283a.c
+
 display/gc160x128/ili9163.c
 display/gc160x128/s6d0144.c
 display/gc160x128/st7735.c
