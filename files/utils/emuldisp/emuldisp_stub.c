@@ -41,7 +41,7 @@ const DispDriver dispdrv = {
     .height = EMUL_DISP_HEIGHT,
 };
 
-static KaRadioData krData = {"Station name", "Artist - title", KARADIO_FLAG_ALL, true};
+static KaRadioData krData = {"25", "Station name", "Artist - title", KARADIO_FLAG_ALL};
 
 static Station st[STATION_COUNT] = {
     [0] = {8750, "Relax FM"},
@@ -204,5 +204,5 @@ void eeInit()
 
 void karadioSetEnabled(bool value)
 {
-    krData.playing = value;
+    (void)value;
 }

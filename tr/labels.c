@@ -96,7 +96,7 @@ static const char *const labels_default[LABEL_END] = {
 
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Off",
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekdays",
-    [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "ALl days",
+    [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "All days",
 
     [LABEL_MUTESTBY + MUTESTBY_SWD] = "SWD",
     [LABEL_MUTESTBY + MUTESTBY_POS] = "Active 1",
