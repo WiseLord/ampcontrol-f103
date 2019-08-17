@@ -78,7 +78,7 @@ void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear)
         glcdSetXY(0, 0);
         glcdSetFontBgColor(pal->selected);
         glcdSetStringFramed(true);
-        glcdWriteStringConst(te->name);
+        glcdWriteString(te->name);
         glcdSetStringFramed(false);
         // The rest of space after edit line
         glcdDrawRect(glcd->x, yPos, xRoll - glcd->x, feh, pal->selected);

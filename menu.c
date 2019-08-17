@@ -675,7 +675,7 @@ const char *menuGetValueStr(MenuIdx index)
     }
 
     if (menuItems[index].type == MENU_TYPE_NUMBER) {
-        ret = glcdPrepareNum(value, 5, ' ', 10);
+        ret = glcdPrepareString("%5d", value);
         return ret;
     }
 
@@ -683,7 +683,7 @@ const char *menuGetValueStr(MenuIdx index)
         if ((uint16_t)value == EE_NOT_FOUND) {
             ret = noVal;
         } else {
-            ret = glcdPrepareNum((uint16_t)value, 4, '0', 16);
+            ret = glcdPrepareString("%04d", (uint16_t)value);
         }
         return ret;
     }

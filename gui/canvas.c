@@ -124,7 +124,7 @@ static void drawTm(RTC_type *rtc, RtcMode tm, bool clear)
             glcdWriteUChar(LETTER_SPACE_CHAR);
         }
         if (time >= 0) {
-            glcdWriteNum(time, 2, '0', 10);
+            glcdWriteString(glcdPrepareString("%02d", time));
         } else {
             glcdWriteString("--");
         }
@@ -164,7 +164,7 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     } else {
         glcdWriteString("< ");
     }
-    glcdWriteStringConst(name);
+    glcdWriteString(name);
 
     // Draw menu value
     int16_t x = canvas.glcd->x;
@@ -179,7 +179,7 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
         glcdSetFontBgColor(color);
     }
     glcdSetStringFramed(true);
-    uint16_t strLen = glcdWriteStringConst(menuGetValueStr(menuIdx));
+    uint16_t strLen = glcdWriteString(menuGetValueStr(menuIdx));
     glcdSetStringFramed(false);
 
     glcdSetFontColor(color);
@@ -394,7 +394,7 @@ void canvasShowTime(bool clear)
         const char *wdayLabel = labelsGet((Label)(LABEL_SUNDAY + rtc->wday));
         glcdSetXY(lt->rect.w / 2, lt->time.wdY);
         glcdSetFontAlign(FONT_ALIGN_CENTER);
-        glcdWriteStringConst(wdayLabel);
+        glcdWriteString(wdayLabel);
     }
 
     prev.rtc = *rtc;
@@ -420,7 +420,7 @@ void canvasShowMenu(bool clear)
     glcdSetFontColor(canvas.pal->fg);
 
     glcdSetXY(2, 0);
-    glcdWriteStringConst(parentName);
+    glcdWriteString(parentName);
     // Fill free space after header
     glcdDrawRect(canvas.glcd->x, canvas.glcd->y, lt->rect.w - canvas.glcd->x, fHh, canvas.pal->bg);
 
@@ -467,7 +467,7 @@ void canvasShowTune(bool clear)
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
-        glcdWriteStringConst(label);
+        glcdWriteString(label);
     }
 
     if (clear || icon != prev.par.icon) {
@@ -487,7 +487,7 @@ void canvasShowTune(bool clear)
         glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
-        glcdWriteNum((value * mStep) / 8, 3, ' ', 10);
+        glcdWriteString(glcdPrepareString("%3d", value * mStep / 8));
         prev.par.value = value;
     }
 
@@ -542,7 +542,7 @@ void canvasShowAudioFlag(bool clear)
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
-        glcdWriteStringConst(labelsGet(label));
+        glcdWriteString(labelsGet(label));
     }
 
     // Icon
@@ -631,13 +631,7 @@ void canvasShowTuner(bool clear)
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
 
-        glcdWriteString("FM ");
-
-        glcdWriteNum(freq / 100, 3, ' ', 10);
-        glcdWriteUChar(LETTER_SPACE_CHAR);
-        glcdWriteUChar('.');
-        glcdWriteUChar(LETTER_SPACE_CHAR);
-        glcdWriteNum(freq % 100, 2, '0', 10);
+        glcdWriteString(glcdPrepareString("FM %3d.%02d", freq/100, freq%100));
 
         // Scale
         StripedBar bar = {(int16_t)freq, freqMin, freqMax};
@@ -650,7 +644,7 @@ void canvasShowTuner(bool clear)
         // Station number
         int8_t stNum = stationGetNum(freq);
         if (stNum >= 0) {
-            glcdWriteNum(stNum + 1, 2, ' ', 10);
+            glcdWriteString(glcdPrepareString("%2d", stNum));
         } else {
             glcdWriteString("--");
         }
@@ -742,7 +736,7 @@ void canvasShowKaradio(bool clear)
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
-        nameLen = glcdWriteStringConst(label);
+        nameLen = glcdWriteString(label);
         nameLen += glcdWriteString(" ");
         nameLen += glcdWriteString(krData->num);
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
@@ -825,7 +819,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
-        glcdWriteStringConst(label);
+        glcdWriteString(label);
     }
 
     // Icon
