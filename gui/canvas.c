@@ -9,6 +9,7 @@
 #include "../tr/labels.h"
 #include "../tuner/rds.h"
 #include "../tuner/stations.h"
+#include "../utils.h"
 
 typedef union {
     RTC_type rtc;
@@ -124,7 +125,7 @@ static void drawTm(RTC_type *rtc, RtcMode tm, bool clear)
             glcdWriteUChar(LETTER_SPACE_CHAR);
         }
         if (time >= 0) {
-            glcdWriteString(glcdPrepareString("%02d", time));
+            glcdWriteString(utilMkStr("%02d", time));
         } else {
             glcdWriteString("--");
         }
@@ -145,7 +146,6 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
 
     int16_t width = lt->rect.w;
     MenuIdx menuIdx = menu->list[idx];
-    const char *name = menuGetName(menuIdx);
     uint8_t active = (menu->active == menu->list[idx]);
 
     const uint8_t ih = fIh + 4; // Menu item height
@@ -164,7 +164,8 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     } else {
         glcdWriteString("< ");
     }
-    glcdWriteString(name);
+
+    glcdWriteString(menuGetName(menuIdx));
 
     // Draw menu value
     int16_t x = canvas.glcd->x;
@@ -487,7 +488,7 @@ void canvasShowTune(bool clear)
         glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(FONT_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
-        glcdWriteString(glcdPrepareString("%3d", value * mStep / 8));
+        glcdWriteString(utilMkStr("%3d", value * mStep / 8));
         prev.par.value = value;
     }
 
@@ -631,7 +632,7 @@ void canvasShowTuner(bool clear)
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
 
-        glcdWriteString(glcdPrepareString("FM %3d.%02d", freq/100, freq%100));
+        glcdWriteString(utilMkStr("FM %3d.%02d", freq/100, freq%100));
 
         // Scale
         StripedBar bar = {(int16_t)freq, freqMin, freqMax};
@@ -644,7 +645,7 @@ void canvasShowTuner(bool clear)
         // Station number
         int8_t stNum = stationGetNum(freq);
         if (stNum >= 0) {
-            glcdWriteString(glcdPrepareString("%2d", stNum));
+            glcdWriteString(utilMkStr("%2d", stNum));
         } else {
             glcdWriteString("--");
         }

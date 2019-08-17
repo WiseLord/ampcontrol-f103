@@ -2,11 +2,8 @@
 
 #include <string.h>
 #include "../mem.h"
-#include <stdarg.h>
-#include <stdio.h>
 
 static Glcd glcd;
-static char strbuf[STR_BUFSIZE + 1];    // String buffer
 
 static tImage unRleImg = {
     .rle = 0
@@ -166,23 +163,6 @@ void glcdSetRect(const GlcdRect *rect)
 GlcdRect *glcdGetRect(void)
 {
     return &glcd.rect;
-}
-
-char *glcdGetStrBuf(void)
-{
-    return strbuf;
-}
-
-char *glcdPrepareString(const char *fmt, ...)
-{
-    char *buffer = strbuf;
-
-    va_list args;
-    va_start (args, fmt);
-    vsprintf (buffer, fmt, args);
-    va_end (args);
-
-    return buffer;
 }
 
 void glcdSetFont(const tFont *font)

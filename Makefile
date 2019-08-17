@@ -65,6 +65,7 @@ C_SOURCES += spectrum.c
 C_SOURCES += swtimers.c
 C_SOURCES += timers.c
 C_SOURCES += usart.c
+C_SOURCES += utils.c
 C_SOURCES += tr/labels.c
 C_SOURCES += $(wildcard tr/labels_*.c)
 

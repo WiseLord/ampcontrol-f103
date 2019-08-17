@@ -11,6 +11,7 @@
 #include "spectrum.h"
 #include "tr/labels.h"
 #include "tuner/tuner.h"
+#include "utils.h"
 
 #define GENERATE_MENU_ITEM(CMD)    [MENU_RC_ ## CMD] = {MENU_SETUP_RC, MENU_TYPE_RC, PARAM_RC_ ## CMD},
 
@@ -633,24 +634,22 @@ MenuIdx menuGetFirstChild(void)
 
 const char *menuGetName(MenuIdx index)
 {
-    char *buf = glcdGetStrBuf();
-    memset(buf, 0, STR_BUFSIZE);
+    char *name;
 
     if (index >= MENU_AUDIO_IN_0 && index <= MENU_AUDIO_IN_LAST) {
-        strncpy(buf, labelsGet((Label)(LABEL_MENU + MENU_AUDIO_IN)), 60);
-        size_t len = strlen(buf);
-        buf[len++] = ' ';
-        buf[len++] = (char)('0' + (index - MENU_AUDIO_IN));
+        name = utilMkStr("%s %d",
+                         labelsGet((Label)(LABEL_MENU + MENU_AUDIO_IN)),
+                         index - MENU_AUDIO_IN);
     } else if (index >= MENU_RC_DIG_0 && index <= MENU_RC_DIG_9) {
-        strncpy(buf, labelsGet((Label)(LABEL_MENU + MENU_RC_DIG)), 60);
-        size_t len = strlen(buf);
-        buf[len++] = ' ';
-        buf[len++] = (char)('0' + (index - MENU_RC_DIG));
+        name = utilMkStr("%s %d",
+                         labelsGet((Label)(LABEL_MENU + MENU_RC_DIG)),
+                         index - MENU_RC_DIG);
     } else {
-        strncpy(buf, labelsGet((Label)(LABEL_MENU + (index - MENU_NULL))), 60);
+        name = utilMkStr("%s",
+                         labelsGet((Label)(LABEL_MENU + (index - MENU_NULL))));
     }
 
-    return buf;
+    return name;
 }
 
 const char *menuGetValueStr(MenuIdx index)
@@ -675,7 +674,7 @@ const char *menuGetValueStr(MenuIdx index)
     }
 
     if (menuItems[index].type == MENU_TYPE_NUMBER) {
-        ret = glcdPrepareString("%5d", value);
+        ret = utilMkStr("%5d", value);
         return ret;
     }
 
@@ -683,7 +682,7 @@ const char *menuGetValueStr(MenuIdx index)
         if ((uint16_t)value == EE_NOT_FOUND) {
             ret = noVal;
         } else {
-            ret = glcdPrepareString("%04d", (uint16_t)value);
+            ret = utilMkStr("%04d", (uint16_t)value);
         }
         return ret;
     }
