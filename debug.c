@@ -7,16 +7,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-__attribute__((always_inline))
-static inline void dbgPutChar(char ch)
-{
-    usartSendChar(USART_DBG, ch);
-}
-
 static void dbgPutString(char *str)
 {
     while (*str) {
-        dbgPutChar(*str++);
+        usartSendChar(USART_DBG, *str++);
     }
 }
 
@@ -27,11 +21,7 @@ void dbgInit()
 
     usartInit(USART_DBG, 115200);
     LL_USART_EnableIT_RXNE(USART_DBG);
-}
-
-void dbgSendChar(char ch)
-{
-    dbgPutChar(ch);
+    usartSendChar(USART_DBG, '\r');
 }
 
 void dbgPrintf (const char *fmt, ...)
@@ -40,10 +30,11 @@ void dbgPrintf (const char *fmt, ...)
 
     va_list args;
     va_start (args, fmt);
-    vsnprintf (buffer, 2048, fmt, args);
+    vsprintf (buffer, fmt, args);
     va_end (args);
 
     dbgPutString(buffer);
+    dbgPutString("\r\n");
 
     mem_free(buffer);
 }

@@ -8,9 +8,9 @@ TUNER_LIST = RDA580X SI470X TEA5767
 FEATURE_LIST =
 
 F10X_MCU = STM32F103xB
-#DEBUG_ENABLED = YES
+
 #DEBUG_FPS = YES
-#DEBUG_KARADIO = YES
+DEBUG_KARADIO = YES
 
 # Lowercase argument
 lc = $(shell echo $1 | tr '[:upper:]' '[:lower:]')
@@ -23,10 +23,6 @@ ifneq (,$(filter $(DISPLAY), \
   DISP24BIT    \
 ))
   C_DEFS += -D_COLOR_24BIT
-endif
-
-ifeq "$(DEBUG_ENABLED)" "YES"
-  C_DEFS += -D_DEBUG_ENABLED
 endif
 
 ifeq "$(DEBUG_FPS)" "YES"

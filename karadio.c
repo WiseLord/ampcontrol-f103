@@ -231,7 +231,7 @@ void karadioIRQ()
     char data = LL_USART_ReceiveData8(USART_KARADIO);
 
 #ifdef _DEBUG_KARADIO
-    dbgSendChar(data);
+    usartSendChar(USART_DBG, data);
 #endif
 
     ringBufPushChar(&ringBuf, data);
