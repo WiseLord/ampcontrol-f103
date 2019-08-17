@@ -18,6 +18,7 @@
 #include "swtimers.h"
 #include "timers.h"
 #include "usb/usbhid.h"
+#include "utils.h"
 
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0    ((uint32_t)0x00000007)
@@ -87,7 +88,7 @@ int main(void)
     pinsInit();
 
     dbgInit();
-    DBG("Init system");
+    dbg("Init system");
 
     usbHidInit();
     screenInit();
@@ -115,7 +116,7 @@ int main(void)
 #ifdef _DEBUG_FPS
         int32_t cnt = getSysTimer();
         fpsCnt = (cnt == fpsCnt) ? 1000 : 1000 / (cnt - fpsCnt);
-        DBG("FPS: %d \r\n", fpsCnt);
+        dbg(utilMkStr("FPS: %d", fpsCnt));
         fpsCnt = cnt;
 #endif
     }

@@ -7,10 +7,8 @@ extern "C" {
 
 #include <stdint.h>
 
-#define DBG(fmt, ...)  do { dbgPrintf(fmt, ## __VA_ARGS__); } while(0)
-
 void dbgInit(void);
-void dbgPrintf (const char *fmt, ...);
+void dbg(const char *str);
 void dbgIRQ(void);
 
 #ifdef __cplusplus

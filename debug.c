@@ -4,10 +4,8 @@
 #include "usart.h"
 
 #include <stm32f1xx_ll_usart.h>
-#include <stdarg.h>
-#include <stdio.h>
 
-static void dbgPutString(char *str)
+static void dbgPutString(const char *str)
 {
     while (*str) {
         usartSendChar(USART_DBG, *str++);
@@ -24,19 +22,11 @@ void dbgInit()
     usartSendChar(USART_DBG, '\r');
 }
 
-void dbgPrintf (const char *fmt, ...)
+
+void dbg(const char *str)
 {
-    char *buffer = mem_malloc(2048);
-
-    va_list args;
-    va_start (args, fmt);
-    vsprintf (buffer, fmt, args);
-    va_end (args);
-
-    dbgPutString(buffer);
+    dbgPutString(str);
     dbgPutString("\r\n");
-
-    mem_free(buffer);
 }
 
 void dbgIRQ()

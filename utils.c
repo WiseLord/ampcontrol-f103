@@ -1,10 +1,9 @@
 #include "utils.h"
+
 #include <stdarg.h>
 #include <stdio.h>
 
-#define STR_BUFSIZE     64
-
-static char strbuf[STR_BUFSIZE + 1];    // String buffer
+static char strbuf[256];    // String buffer
 
 char *utilMkStr(const char *fmt, ...)
 {
