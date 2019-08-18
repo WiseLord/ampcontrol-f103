@@ -7,6 +7,7 @@ TEMPLATE = app
 
 QMAKE_CXXFLAGS += -std=c++11
 QMAKE_CFLAGS += -std=c11
+INCLUDEPATH += ../../../display
 
 CONFIG += _DISP_320x240
 
@@ -41,17 +42,8 @@ _DISP_480x320 {
 }
 
 SOURCES += \
-    amp.cpp \
-    emuldisp.cpp \
-    emuldisp_stub.c \
-    main.cpp \
-    rtc.c \
+    ../../../actions.c \
     ../../../audio/audio.c \
-    ../../../gui/canvas.c \
-	../../../gui/palette.c \
-    ../../../gui/widget/spectrumcolumn.c \
-    ../../../gui/widget/stripedbar.c \
-    ../../../gui/widget/textedit.c \
     ../../../display/fonts/font-terminus-12.c \
     ../../../display/fonts/font-terminus-14.c \
     ../../../display/fonts/font-terminus-14b.c \
@@ -78,11 +70,22 @@ SOURCES += \
     ../../../display/fonts/font-terminus-dig-120.c \
     ../../../display/fonts/font-terminus-mod-18x3.c \
     ../../../display/fonts/font-terminus-mod-24x3.c \
-    ../../../display/icons/icons-amp-24.c \
-    ../../../display/icons/icons-amp-32.c \
-    ../../../display/icons/icons-amp-48.c \
-    ../../../display/icons/icons-amp-64.c \
     ../../../display/glcd.c \
+    ../../../gui/canvas.c \
+    ../../../gui/icons/icons-amp-24.c \
+    ../../../gui/icons/icons-amp-32.c \
+    ../../../gui/icons/icons-amp-48.c \
+    ../../../gui/icons/icons-amp-64.c \
+    ../../../gui/palette.c \
+    ../../../gui/widget/spectrumcolumn.c \
+    ../../../gui/widget/stripedbar.c \
+    ../../../gui/widget/textedit.c \
+    ../../../input.c \
+    ../../../mem.c \
+    ../../../menu.c \
+    ../../../screen.c \
+    ../../../settings.c \
+    ../../../swtimers.c \
     ../../../tr/labels.c \
     ../../../tr/labels_by.c \
     ../../../tr/labels_fr.c \
@@ -92,40 +95,30 @@ SOURCES += \
     ../../../tr/labels_ua.c \
     ../../../tuner/stations.c \
     ../../../tuner/tuner.c \
-    ../../../actions.c \
-    ../../../input.c \
-    ../../../mem.c \
-    ../../../menu.c \
-    ../../../screen.c \
-    ../../../settings.c \
-    ../../../swtimers.c \
+    ../../../utils.c \
+    amp.cpp \
+    emuldisp.cpp \
+    emuldisp_stub.c \
+    main.cpp \
+    rtc.c \
 
 
 HEADERS += \
-    amp.h \
-    emuldisp.h \
-    emuldisp_stub.h \
+    ../../../actions.h \
     ../../../audio/audio.h \
     ../../../audio/audiodefs.h \
-    ../../../gui/canvas.h \
-    ../../../gui/layout.h \
-	../../../gui/palette.h \
-    ../../../gui/widget/spectrumcolumn.h \
-    ../../../gui/widget/stripedbar.h \
-    ../../../gui/widget/textedit.h \
-    ../../../display/fonts/fonts.h \
-    ../../../display/icons/icons.h \
+    ../../../display/fonts.h \
     ../../../display/dispdefs.h \
     ../../../display/dispdrv.h \
     ../../../display/glcd.h \
-    ../../../tr/labels.h \
-    ../../../tuner/rds.h \
-    ../../../tuner/stations.h \
-    ../../../tuner/tuner.h \
-    ../../../tuner/tunerdefs.h \
-    ../../../actions.h \
     ../../../eemul.h \
-    ../../../input.h \
+    ../../../gui/canvas.h \
+    ../../../gui/icons.h \
+    ../../../gui/layout.h \
+    ../../../gui/palette.h \
+    ../../../gui/widget/spectrumcolumn.h \
+    ../../../gui/widget/stripedbar.h \
+    ../../../gui/widget/textedit.h \
     ../../../karadio.h \
     ../../../mem.h \
     ../../../menu.h \
@@ -136,8 +129,18 @@ HEADERS += \
     ../../../settings.h \
     ../../../spectrum.h \
     ../../../swtimers.h \
+    ../../../tr/labels.h \
+    ../../../tuner/rds.h \
+    ../../../tuner/stations.h \
+    ../../../tuner/tuner.h \
+    ../../../tuner/tunerdefs.h \
+    ../../../input.h \
     ../../../usb/usbhid.h \
     ../../../usb/hidkeys.h \
+    ../../../utils.h \
+    amp.h \
+    emuldisp.h \
+    emuldisp_stub.h \
 
 
 FORMS += \

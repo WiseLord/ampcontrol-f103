@@ -8,7 +8,7 @@
 #include <QTimer>
 
 #include "../../../actions.h"
-#include "../../../display/fonts/fonts.h"
+#include "../../../display/fonts.h"
 
 namespace Ui {
 class EmulDisp;
