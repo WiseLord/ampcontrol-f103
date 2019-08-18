@@ -216,6 +216,8 @@ usb/usbhid.h
 actions.c
 actions.h
 cmd.h
+control.c
+control.h
 debug.c
 debug.h
 eemul.c

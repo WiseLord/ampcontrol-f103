@@ -46,6 +46,7 @@ endif
 C_SOURCES = main.c
 
 C_SOURCES += actions.c
+C_SOURCES += control.c
 C_SOURCES += debug.c
 C_SOURCES += eemul.c
 C_SOURCES += fft.c

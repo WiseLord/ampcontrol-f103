@@ -9,7 +9,6 @@ extern "C" {
 
 void dbgInit(void);
 void dbg(const char *str);
-void dbgIRQ(void);
 
 #ifdef __cplusplus
 }

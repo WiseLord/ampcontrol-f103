@@ -1,6 +1,5 @@
 #include "debug.h"
 
-#include "mem.h"
 #include "usart.h"
 
 #include <stm32f1xx_ll_usart.h>
@@ -27,15 +26,4 @@ void dbg(const char *str)
 {
     dbgPutString(str);
     dbgPutString("\r\n");
-}
-
-void dbgIRQ()
-{
-    char data = LL_USART_ReceiveData8(USART_DBG);
-
-#ifdef _DEBUG_KARADIO
-    usartSendChar(USART_KARADIO, data);
-#else
-    (void)data;
-#endif
 }

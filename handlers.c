@@ -5,7 +5,7 @@
 #include <stm32f1xx_ll_tim.h>
 #include <stm32f1xx_ll_usart.h>
 
-#include "debug.h"
+#include "control.h"
 #include "display/dispdrv.h"
 #include "input.h"
 #include "karadio.h"
@@ -99,7 +99,7 @@ void USART1_IRQHandler(void)
 {
     // Check RXNE flag value in SR register
     if (LL_USART_IsActiveFlag_RXNE(USART1) && LL_USART_IsEnabledIT_RXNE(USART1)) {
-        dbgIRQ();
+        controlIRQ();
     } else {
         // Call Error function
     }

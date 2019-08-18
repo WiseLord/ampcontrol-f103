@@ -5,6 +5,7 @@
 #include <stm32f1xx_ll_utils.h>
 
 #include "actions.h"
+#include "control.h"
 #include "debug.h"
 #include "handlers.h"
 #include "input.h"
@@ -98,6 +99,7 @@ int main(void)
     rcInit();
     rtcInit();
 
+    controlInit();
     karadioInit();
 
     swTimInit();
@@ -110,6 +112,7 @@ int main(void)
 
     while (1) {
         actionHandle(ACTION_VISIBLE);
+        controlGetData();
         karadioGetData();
         screenShow(false);
         actionUserGet();

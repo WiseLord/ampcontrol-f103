@@ -207,10 +207,9 @@ static void karadioRead(char data)
         bufIdx = 0;
         break;
     default:
-        lineBuf[bufIdx] = data;
-        if (++bufIdx >= LINE_SIZE) {
-            bufIdx = 0;
-            lineBuf[bufIdx] = 0;
+        lineBuf[bufIdx++] = data;
+        if (bufIdx >= LINE_SIZE) {
+            lineBuf[--bufIdx] = 0;
         }
         break;
     }
