@@ -71,7 +71,6 @@ C_SOURCES += $(wildcard tr/labels_*.c)
 
 # Display source files
 C_SOURCES += $(wildcard display/fonts/font*.c)
-C_SOURCES += $(wildcard display/icons/icon*.c)
 
 ifneq (,$(filter $(DISPLAY), \
   ILI9163   \
@@ -142,6 +141,7 @@ C_SOURCES += gui/canvas.c
 C_SOURCES += gui/lt$(DISPSIZE).c
 C_SOURCES += gui/palette.c
 C_SOURCES += $(wildcard gui/widget/*.c)
+C_SOURCES += $(wildcard gui/icons/icon*.c)
 
 # Audio source files
 C_SOURCES += $(addprefix audio/, $(addsuffix .c, $(call lc, $(APROC_LIST))))
@@ -163,6 +163,7 @@ C_SOURCES += \
   usb/usbhid.c
 
 C_INCLUDES += \
+  -Idisplay \
   -Iusb
 
 C_SOURCES += \

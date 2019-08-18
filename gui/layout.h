@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 
 #include "../display/glcd.h"
+#include "icons.h"
 #include "widget/spectrumcolumn.h"
 #include "widget/stripedbar.h"
 #include "widget/textedit.h"

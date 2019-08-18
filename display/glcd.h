@@ -8,8 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "fonts/fonts.h"
-#include "icons/icons.h"
+#include "fonts.h"
 #include "dispdrv.h"
 
 typedef struct {
@@ -89,7 +88,6 @@ int16_t glcdFontSymbolPos(UChar code);
 UChar glcdFontSymbolCode(int16_t pos);
 
 void glcdDrawImage(const tImage *img, uint16_t color, uint16_t bgColor);
-const tImage *glcdFindIcon(Icon code, const tFont *iFont);
 
 uint16_t glcdStrToUStr(const char *str, UChar *ustr);
 void glcdUStrToStr(const UChar *ustr, char *str);

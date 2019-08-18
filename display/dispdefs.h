@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "fonts/fonts.h"
+#include "fonts.h"
 
 #define LCD_ROTATE_0        0x00
 #define LCD_ROTATE_180      0x02

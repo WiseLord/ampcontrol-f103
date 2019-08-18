@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "display/icons/icons.h"
+#include "gui/icons.h"
 
 typedef uint8_t ScreenMode;
 enum {

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "../fonts/fonts.h"
+#include "fonts.h"
 
 typedef uint8_t Icon;
 enum {

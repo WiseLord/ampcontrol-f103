@@ -14,6 +14,7 @@ audio/tda7418.h
 audio/tda7439.c
 audio/tda7439.h
 
+display/fonts.h
 display/fonts/font-terminus-12.c
 display/fonts/font-terminus-14b.c
 display/fonts/font-terminus-14.c
@@ -40,13 +41,6 @@ display/fonts/font-terminus-dig-96.c
 display/fonts/font-terminus-dig-120.c
 display/fonts/font-terminus-mod-18x3.c
 display/fonts/font-terminus-mod-24x3.c
-display/fonts/fonts.h
-
-display/icons/icons.h
-display/icons/icons-amp-24.c
-display/icons/icons-amp-32.c
-display/icons/icons-amp-48.c
-display/icons/icons-amp-64.c
 
 display/gc130x130/ssd1283a.c
 
@@ -154,6 +148,11 @@ drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
 
 gui/canvas.c
 gui/canvas.h
+gui/icons.h
+gui/icons/icons-amp-24.c
+gui/icons/icons-amp-32.c
+gui/icons/icons-amp-48.c
+gui/icons/icons-amp-64.c
 gui/layout.h
 gui/lt160x128.c
 gui/lt176x132.c
