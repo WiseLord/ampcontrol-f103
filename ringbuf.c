@@ -10,18 +10,33 @@ void ringBufInit(RingBuf *rb, char *data, uint16_t size)
 
 void ringBufPushChar(RingBuf *rb, char ch)
 {
-    rb->data[rb->wrPos++] = ch;
-    if (rb->wrPos >= rb->capacity) {
-        rb->wrPos = 0;
+    uint16_t wrPos = rb->wrPos + 1;
+
+    if (wrPos >= rb->capacity) {
+        wrPos = 0;
     }
+    if (wrPos == rb->rdPos) {
+        return;
+    }
+
+    rb->data[wrPos] = ch;
+    rb->wrPos = wrPos;
 }
 
 char ringBufPopChar(RingBuf *rb)
 {
-    char ch = rb->data[rb->rdPos++];
-    if (rb->rdPos >= rb->capacity) {
-        rb->rdPos = 0;
+    if (rb->rdPos == rb->wrPos) {
+        return 0;
     }
+
+    uint16_t rdPos = rb->rdPos + 1;
+
+    if (rdPos >= rb->capacity) {
+        rdPos = 0;
+    }
+
+    char ch = rb->data[rdPos];
+    rb->rdPos = rdPos;
 
     return ch;
 }
