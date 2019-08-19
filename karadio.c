@@ -8,6 +8,7 @@
 #include "ringbuf.h"
 #include "usart.h"
 #include "usb/hidkeys.h"
+#include "utils.h"
 
 #include "debug.h"
 
@@ -33,18 +34,14 @@
 #define SYS_BOOT        "boot"
 #define WIFI_DISCON     "discon"
 
-#define LINE_SIZE       128
-#define RINGBUF_SIZE    512
-
-static char lineBuf[LINE_SIZE];
-
-static int32_t bufIdx = 0;
+#define KARADIO_RB_SIZE 128
 
 static KaRadioData krData;
 static bool kEnabled = false;
 
-static RingBuf ringBuf;
-static char ringBufData[RINGBUF_SIZE];
+static RingBuf krRingBuf;
+static char krRbData[KARADIO_RB_SIZE];
+static LineParse krLp;
 
 static void karadioPutChar(char ch)
 {
@@ -72,7 +69,7 @@ static void karadioSendCmd (const char *type, const char *cmd)
 
 static void karadioClearStatus()
 {
-    bufIdx = 0;
+    krLp.idx = 0;
 
     memset(&krData, 0, sizeof(KaRadioData));
 }
@@ -84,7 +81,7 @@ void karadioInit(void)
 
     karadioClearStatus();
 
-    ringBufInit(&ringBuf, ringBufData, sizeof (ringBufData));
+    ringBufInit(&krRingBuf, krRbData, sizeof(krRbData));
 
     usartInit(USART_KARADIO, 115200);
     LL_USART_EnableIT_RXNE(USART_KARADIO);
@@ -194,34 +191,15 @@ static void karadioParseLine(char *line)
     }
 }
 
-static void karadioRead(char data)
-{
-    switch (data) {
-    case '\n':
-    case '\r':
-        if (bufIdx == 0) {
-            break;
-        }
-        lineBuf[bufIdx] = 0;
-        karadioParseLine(lineBuf);
-        bufIdx = 0;
-        break;
-    default:
-        lineBuf[bufIdx++] = data;
-        if (bufIdx >= LINE_SIZE) {
-            lineBuf[--bufIdx] = 0;
-        }
-        break;
-    }
-}
-
 void karadioGetData(void)
 {
-    uint16_t size = ringBufGetSize(&ringBuf);
+    uint16_t size = ringBufGetSize(&krRingBuf);
 
     for (uint16_t i = 0; i < size; i++) {
-        char ch = ringBufPopChar(&ringBuf);
-        karadioRead(ch);
+        char ch = ringBufPopChar(&krRingBuf);
+        if (utilReadChar(&krLp, ch)) {
+            karadioParseLine(krLp.line);
+        }
     }
 }
 
@@ -233,5 +211,5 @@ void karadioIRQ()
     usartSendChar(USART_DBG, data);
 #endif
 
-    ringBufPushChar(&ringBuf, data);
+    ringBufPushChar(&krRingBuf, data);
 }

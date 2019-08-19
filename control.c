@@ -4,15 +4,15 @@
 #include "ringbuf.h"
 #include "usart.h"
 #include "utils.h"
+
 #include <stm32f1xx_ll_usart.h>
+#include <stdbool.h>
 
 #define CMDBUF_SIZE     64
 
-static RingBuf cmdBuf;
-static char cmdBufData[CMDBUF_SIZE];
-
-static int32_t bufIdx = 0;
-static char lineBuf[CMDBUF_SIZE];
+static RingBuf cmdRb;
+static char cmdRbData[CMDBUF_SIZE];
+static LineParse cmdLp;
 
 static void controlParseLine(char *line)
 {
@@ -21,7 +21,7 @@ static void controlParseLine(char *line)
 
 void controlInit(void)
 {
-    ringBufInit(&cmdBuf, cmdBufData, sizeof (cmdBufData));
+    ringBufInit(&cmdRb, cmdRbData, sizeof(cmdRbData));
 }
 
 void controlIRQ(void)
@@ -32,36 +32,17 @@ void controlIRQ(void)
     usartSendChar(USART_KARADIO, data);
 #endif
 
-    ringBufPushChar(&cmdBuf, data);
-}
-
-static void controlRead(char data)
-{
-    switch (data) {
-    case '\n':
-    case '\r':
-        if (bufIdx == 0) {
-            break;
-        }
-        lineBuf[bufIdx] = 0;
-        controlParseLine(lineBuf);
-        bufIdx = 0;
-        break;
-    default:
-        lineBuf[bufIdx++] = data;
-        if (bufIdx >= CMDBUF_SIZE) {
-            lineBuf[--bufIdx] = 0;
-        }
-        break;
-    }
+    ringBufPushChar(&cmdRb, data);
 }
 
 void controlGetData(void)
 {
-    uint16_t size = ringBufGetSize(&cmdBuf);
+    uint16_t size = ringBufGetSize(&cmdRb);
 
     for (uint16_t i = 0; i < size; i++) {
-        char ch = ringBufPopChar(&cmdBuf);
-        controlRead(ch);
+        char ch = ringBufPopChar(&cmdRb);
+        if (utilReadChar(&cmdLp, ch)) {
+            controlParseLine(cmdLp.line);
+        }
     }
 }
