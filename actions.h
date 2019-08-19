@@ -12,6 +12,9 @@ extern "C" {
 
 #define FLAG_OFF        0
 #define FLAG_ON         1
+
+#define FLAG_EXIT       0
+#define FLAG_ENTER      1
 #define FLAG_SWITCH     2
 
 #define FLAG_NEXT       -1

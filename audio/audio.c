@@ -18,9 +18,6 @@
 #include "tda7418.h"
 #endif
 
-#define FLAG_ON     1
-#define FLAG_OFF    0
-
 static AudioProc aProc;
 
 static const AudioGrid gridTestVolume       = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step

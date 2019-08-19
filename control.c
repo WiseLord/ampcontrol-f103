@@ -1,22 +1,52 @@
 #include "control.h"
 
+#include <stm32f1xx_ll_usart.h>
+#include <stdbool.h>
+#include <string.h>
+
+#include "actions.h"
 #include "debug.h"
 #include "ringbuf.h"
 #include "usart.h"
 #include "utils.h"
 
-#include <stm32f1xx_ll_usart.h>
-#include <stdbool.h>
-
 #define CMDBUF_SIZE     64
+
+#define CTRL_AMP        "amp"
+
+#define CTRL_STBY       "stby"
+
+#define CTRL_ENTER      "enter"
+#define CTRL_EXIT       "exit"
+#define CTRL_TOGGLE     "toggle"
 
 static RingBuf cmdRb;
 static char cmdRbData[CMDBUF_SIZE];
 static LineParse cmdLp;
 
+static void controlParseAmpStby(char *line)
+{
+    if (strstr(line, CTRL_ENTER) == line) {
+        actionQueue(ACTION_STANDBY, FLAG_ENTER);
+    } else if (strstr(line, CTRL_EXIT) == line) {
+        actionQueue(ACTION_STANDBY, FLAG_EXIT);
+    } else if (strstr(line, CTRL_TOGGLE)) {
+        actionQueue(ACTION_STANDBY, FLAG_SWITCH);
+    }
+}
+
+static void controlParseAmp(char *line)
+{
+    if (strstr(line, CTRL_STBY ".")) {
+        controlParseAmpStby(line + sizeof(CTRL_STBY));
+    }
+}
+
 static void controlParseLine(char *line)
 {
-    dbg(utilMkStr("Parse '%s'", line));
+    if (strstr(line, CTRL_AMP ".") == line) {
+        controlParseAmp(line + sizeof(CTRL_AMP));
+    }
 }
 
 void controlInit(void)

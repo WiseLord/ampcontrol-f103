@@ -30,7 +30,9 @@ static void actionRemapCommon(void);
 static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
-static Action action = {ACTION_POWERUP, false, FLAG_ON, SCREEN_STANDBY, 0, ACTION_POWERUP};
+static void actionHandleStby(int16_t value);
+
+static Action action = {ACTION_POWERUP, false, FLAG_ENTER, SCREEN_STANDBY, 0, ACTION_POWERUP};
 static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, 0, ACTION_NONE};
 
 static bool deviceActive = false;
@@ -109,7 +111,7 @@ static void actionNavigateMenu(RcCmd cmd)
             menu->selected = false;
         } else if (menuIsTop()) {
             // TODO: Return to original screen called menu
-            actionSet(ACTION_STANDBY, FLAG_ON);
+            actionSet(ACTION_STANDBY, FLAG_ENTER);
         } else {
             actionSet(ACTION_MENU_SELECT, (int16_t)menu->parent);
         }
@@ -353,9 +355,9 @@ static void actionGetTimers(void)
     } else if (swTimGet(SW_TIM_INIT_SW) == 0) {
         actionSet(ACTION_INIT_SW, 0);
     } else if (swTimGet(SW_TIM_STBY_TIMER) == 0) {
-        actionSet(ACTION_STANDBY, FLAG_ON);
+        actionSet(ACTION_STANDBY, FLAG_ENTER);
     } else if (swTimGet(SW_TIM_SILENCE_TIMER) == 0) {
-        actionSet(ACTION_STANDBY, FLAG_ON);
+        actionSet(ACTION_STANDBY, FLAG_ENTER);
     } else if (swTimGet(SW_TIM_RTC_INIT) == 0) {
         actionSet(ACTION_INIT_RTC, 0);
     }
@@ -692,7 +694,6 @@ static void actionRemapEncoder(void)
     }
 }
 
-
 static void actionRemapCommon(void)
 {
     ScreenMode screen = screenGetMode();
@@ -701,7 +702,7 @@ static void actionRemapCommon(void)
     switch (action.type) {
     case ACTION_STANDBY:
         if (FLAG_SWITCH == action.value) {
-            action.value = (SCREEN_STANDBY == screen ? FLAG_OFF : FLAG_ON);
+            action.value = (deviceActive ? FLAG_ENTER : FLAG_EXIT);
         }
         break;
     case ACTION_OPEN_MENU:
@@ -761,6 +762,45 @@ static void actionRemapCommon(void)
     }
 }
 
+static void actionHandleStby(int16_t value)
+{
+    if (value == FLAG_EXIT) {
+        if (!deviceActive) {
+            audioReadSettings();
+            tunerReadSettings();
+
+            pinsSetStby(false);     // ON via relay
+            swTimSet(SW_TIM_INIT_HW, 500);
+
+            actionSetScreen(SCREEN_TIME, 800);
+        }
+    } else {
+        screenSaveSettings();
+
+        audioSetMute(true);
+        audioSetPower(false);
+
+        tunerSetMute(true);
+        tunerSetPower(false);
+
+        karadioSetEnabled(false);
+
+        pinsDeInitAmpI2c();
+
+        pinsSetStby(true);      // OFF via relay
+
+        deviceActive = false;
+
+        swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
+        swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
+        swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
+        swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
+        swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
+
+        actionDispExpired(SCREEN_STANDBY);
+    }
+}
+
 static void actionDequeue(void)
 {
     action.type = qaction.type;
@@ -798,7 +838,7 @@ void actionUserGet(void)
         ScreenMode screen = screenGetMode();
 
         if (screen == SCREEN_STANDBY && rtcCheckAlarm()) {
-            actionSet(ACTION_STANDBY, FLAG_OFF);
+            actionSet(ACTION_STANDBY, FLAG_EXIT);
         }
     }
 
@@ -858,39 +898,7 @@ void actionHandle(bool visible)
         swTimSet(SW_TIM_RTC_INIT, 500);
         break;
     case ACTION_STANDBY:
-        if (action.value == FLAG_OFF) {
-            audioReadSettings();
-            tunerReadSettings();
-
-            pinsSetStby(false);     // ON via relay
-            swTimSet(SW_TIM_INIT_HW, 500);
-
-            actionSetScreen(SCREEN_TIME, 800);
-        } else {
-            screenSaveSettings();
-
-            audioSetMute(true);
-            audioSetPower(false);
-
-            tunerSetMute(true);
-            tunerSetPower(false);
-
-            karadioSetEnabled(false);
-
-            pinsDeInitAmpI2c();
-
-            pinsSetStby(true);      // OFF via relay
-
-            deviceActive = false;
-
-            swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
-            swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
-            swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
-            swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
-            swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
-
-            actionDispExpired(SCREEN_STANDBY);
-        }
+        actionHandleStby(action.value);
         break;
     case ACTION_INIT_HW:
         swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
