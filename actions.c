@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 #include "audio/audio.h"
+#include "control.h"
 #include "gui/canvas.h"
 #include "input.h"
 #include "karadio.h"
@@ -30,7 +31,9 @@ static void actionRemapCommon(void);
 static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
+static void actionHandlePowerUp(void);
 static void actionHandleStby(int16_t value);
+static void actionHandleInitHw(void);
 
 static Action action = {ACTION_POWERUP, false, FLAG_ENTER, SCREEN_STANDBY, 0, ACTION_POWERUP};
 static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, 0, ACTION_NONE};
@@ -762,6 +765,17 @@ static void actionRemapCommon(void)
     }
 }
 
+static void actionHandlePowerUp()
+{
+    pinsSetMute(true);
+    pinsSetStby(true);
+
+    swTimSet(SW_TIM_RTC_INIT, 500);
+
+    ampStatus = AMP_STATUS_STBY;
+    controlReportStby(ampStatus);
+}
+
 static void actionHandleStby(int16_t value)
 {
     if (value == FLAG_EXIT) {
@@ -772,9 +786,9 @@ static void actionHandleStby(int16_t value)
             pinsSetStby(false);     // ON via relay
             swTimSet(SW_TIM_INIT_HW, 500);
 
-            ampStatus = AMP_STATUS_INIT;
-
             actionSetScreen(SCREEN_TIME, 800);
+
+            ampStatus = AMP_STATUS_INIT_HW;
         }
     } else {
         screenSaveSettings();
@@ -791,8 +805,6 @@ static void actionHandleStby(int16_t value)
 
         pinsSetStby(true);      // OFF via relay
 
-        ampStatus = AMP_STATUS_STBY;
-
         swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
         swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
         swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
@@ -800,7 +812,51 @@ static void actionHandleStby(int16_t value)
         swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
 
         actionDispExpired(SCREEN_STANDBY);
+
+        ampStatus = AMP_STATUS_STBY;
     }
+    controlReportStby(ampStatus);
+}
+
+static void actionHandleInitHw(void)
+{
+    swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
+
+    pinsInitAmpI2c();
+    pinsSetStby(false);
+
+    tunerInit();
+    audioInit();
+
+    swTimSet(SW_TIM_INPUT_POLL, 800);
+    swTimSet(SW_TIM_INIT_SW, 300);
+
+    ampStatus = AMP_STATUS_INIT_SW;
+
+    controlReportStby(ampStatus);
+}
+
+static void actionHandleInitSw(void)
+{
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
+    Tuner *tuner = tunerGet();
+
+    swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
+
+    tunerSetPower(true);
+    tunerSetVolume(tuner->par.volume);
+    tunerSetMute(false);
+    tunerSetFreq(tuner->par.freq);
+
+    audioSetPower(true);
+    actionResetSilenceTimer();
+
+    karadioSetEnabled(inType == IN_KARADIO);
+
+    ampStatus = AMP_STATUS_ACTIVE;
+
+    controlReportStby(ampStatus);
 }
 
 static void actionDequeue(void)
@@ -894,43 +950,19 @@ void actionHandle(bool visible)
 
     switch (action.type) {
     case ACTION_POWERUP:
-        pinsSetMute(true);
-        pinsSetStby(true);
-
-        swTimSet(SW_TIM_RTC_INIT, 500);
+        actionHandlePowerUp();
         break;
     case ACTION_STANDBY:
         actionHandleStby(action.value);
         break;
     case ACTION_INIT_HW:
-        swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
-
-        pinsInitAmpI2c();
-        pinsSetStby(false);
-
-        tunerInit();
-        audioInit();
-
-        ampStatus = AMP_STATUS_ACTIVE;
-
-        swTimSet(SW_TIM_INPUT_POLL, 800);
-        swTimSet(SW_TIM_INIT_SW, 300);
+        actionHandleInitHw();
         break;
     case ACTION_INIT_RTC:
         rtcInit();
         break;
     case ACTION_INIT_SW:
-        swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
-
-        tunerSetPower(true);
-        tunerSetVolume(tuner->par.volume);
-        tunerSetMute(false);
-        tunerSetFreq(tuner->par.freq);
-
-        audioSetPower(true);
-        actionResetSilenceTimer();
-
-        karadioSetEnabled(inType == IN_KARADIO);
+        actionHandleInitSw();
         break;
     case ACTION_DISP_EXPIRED:
         actionDispExpired(scrMode);

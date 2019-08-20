@@ -89,7 +89,6 @@ int main(void)
     pinsInit();
 
     dbgInit();
-    dbg("Init system");
 
     usbHidInit();
     screenInit();

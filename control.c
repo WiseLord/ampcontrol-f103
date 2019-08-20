@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "actions.h"
 #include "debug.h"
 #include "ringbuf.h"
 #include "usart.h"
@@ -16,12 +15,22 @@ static RingBuf cmdRb;
 static char cmdRbData[CMDBUF_SIZE];
 static LineParse cmdLp;
 
-static const char *CTRL_AMP     = "amp.";
-static const char *CTRL_STBY    = "stby.";
+static const char *CTRL_AMP     = "amp";
+static const char *CTRL_STBY    = ".stby";
 
-static const char *CTRL_ENTER   = "enter";
-static const char *CTRL_EXIT    = "exit";
-static const char *CTRL_TOGGLE  = "toggle";
+static const char *CTRL_ENTER   = ".enter";
+static const char *CTRL_EXIT    = ".exit";
+static const char *CTRL_TOGGLE  = ".toggle";
+
+static bool isEndOfLine(const char *line)
+{
+    if (*line == '\0') {
+        return true;
+    } else if (*line == '\r' || *line == '\n') {
+        return true;
+    }
+    return false;
+}
 
 static void controlParseAmpStby(char *line)
 {
@@ -31,6 +40,8 @@ static void controlParseAmpStby(char *line)
         actionQueue(ACTION_STANDBY, FLAG_EXIT);
     } else if (strstr(line, CTRL_TOGGLE) == line) {
         actionQueue(ACTION_STANDBY, FLAG_SWITCH);
+    } else if (isEndOfLine(line)) {
+        controlReportStby(actionGetAmpStatus());
     }
 }
 
@@ -74,4 +85,25 @@ void controlGetData(void)
             controlParseLine(cmdLp.line);
         }
     }
+}
+
+void controlReportStby(AmpStatus value)
+{
+    char *status = "UNKNOWN";
+
+    switch (value) {
+    case AMP_STATUS_STBY:
+        status = "STANDBY";
+        break;
+    case AMP_STATUS_INIT_HW:
+        status = "INIT_HW";
+        break;
+    case AMP_STATUS_INIT_SW:
+        status = "INIT_SW";
+        break;
+    case AMP_STATUS_ACTIVE:
+        status = "ACTIVE";
+        break;
+    }
+    dbg(utilMkStr("##AMP.STATUS#: %s", status));
 }

@@ -29,7 +29,8 @@ extern "C" {
 typedef uint8_t AmpStatus;
 enum {
     AMP_STATUS_STBY,
-    AMP_STATUS_INIT,
+    AMP_STATUS_INIT_HW,
+    AMP_STATUS_INIT_SW,
     AMP_STATUS_ACTIVE,
 
     AMP_STATUS_END
