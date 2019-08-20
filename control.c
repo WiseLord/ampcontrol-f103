@@ -17,12 +17,13 @@ static char cmdRbData[CMDBUF_SIZE];
 static LineParse cmdLp;
 
 static const char *CTRL_AMP     = "amp";
-static const char *CTRL_STBY    = ".stby";
+
+static const char *CTRL_STATUS  = ".status";
 static const char *CTRL_INPUT   = ".input";
 
-static const char *CTRL_ENTER   = ".enter";
-static const char *CTRL_EXIT    = ".exit";
-static const char *CTRL_TOGGLE  = ".toggle";
+static const char *CTRL_ON      = ".on";
+static const char *CTRL_OFF     = ".off";
+static const char *CTRL_TOGGLE  = ".togggle";
 
 static bool isEndOfLine(const char *line)
 {
@@ -38,12 +39,6 @@ static void controlParseAmpStby(char *line)
 {
     if (isEndOfLine(line)) {
         controlReportAmpStatus();
-    } else if (strstr(line, CTRL_ENTER) == line) {
-        actionQueue(ACTION_STANDBY, FLAG_ENTER);
-    } else if (strstr(line, CTRL_EXIT) == line) {
-        actionQueue(ACTION_STANDBY, FLAG_EXIT);
-    } else if (strstr(line, CTRL_TOGGLE) == line) {
-        actionQueue(ACTION_STANDBY, FLAG_SWITCH);
     }
 }
 
@@ -56,9 +51,17 @@ static void controlParseAmpInput(char *line)
 
 static void controlParseAmp(char *line)
 {
-    if (strstr(line, CTRL_STBY) == line) {
-        controlParseAmpStby(line + strlen(CTRL_STBY));
-    } if (strstr(line, CTRL_INPUT) == line) {
+    if (isEndOfLine(line)) {
+        //
+    } else if (strstr(line, CTRL_ON) == line) {
+        actionQueue(ACTION_STANDBY, FLAG_EXIT);
+    } else if (strstr(line, CTRL_OFF) == line) {
+        actionQueue(ACTION_STANDBY, FLAG_ENTER);
+    } else if (strstr(line, CTRL_TOGGLE) == line) {
+        actionQueue(ACTION_STANDBY, FLAG_SWITCH);
+    } else if (strstr(line, CTRL_STATUS) == line) {
+        controlParseAmpStby(line + strlen(CTRL_STATUS));
+    } else if (strstr(line, CTRL_INPUT) == line) {
         controlParseAmpInput(line + strlen(CTRL_INPUT));
     }
 }
