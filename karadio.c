@@ -183,7 +183,7 @@ static void karadioParseLine(char *line)
     } else if (strstr(line, AUTOSTART) == line) {
         AudioProc *aProc = audioGet();
         InputType inType = aProc->par.inType[aProc->par.input];
-        if (actionIsDeviceActive() && (inType == IN_KARADIO)) {
+        if ((actionGetAmpStatus() == AMP_STATUS_ACTIVE) && (inType == IN_KARADIO)) {
             karadioSendCmd(CMD_CLI, CLI_PLAY);
         } else {
             karadioSendCmd(CMD_CLI, CLI_STOP);

@@ -35,7 +35,7 @@ static void actionHandleStby(int16_t value);
 static Action action = {ACTION_POWERUP, false, FLAG_ENTER, SCREEN_STANDBY, 0, ACTION_POWERUP};
 static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, 0, ACTION_NONE};
 
-static bool deviceActive = false;
+static AmpStatus ampStatus = AMP_STATUS_STBY;
 
 static void actionSet(ActionType type, int16_t value)
 {
@@ -702,7 +702,7 @@ static void actionRemapCommon(void)
     switch (action.type) {
     case ACTION_STANDBY:
         if (FLAG_SWITCH == action.value) {
-            action.value = (deviceActive ? FLAG_ENTER : FLAG_EXIT);
+            action.value = (ampStatus ? FLAG_ENTER : FLAG_EXIT);
         }
         break;
     case ACTION_OPEN_MENU:
@@ -765,12 +765,14 @@ static void actionRemapCommon(void)
 static void actionHandleStby(int16_t value)
 {
     if (value == FLAG_EXIT) {
-        if (!deviceActive) {
+        if (!ampStatus) {
             audioReadSettings();
             tunerReadSettings();
 
             pinsSetStby(false);     // ON via relay
             swTimSet(SW_TIM_INIT_HW, 500);
+
+            ampStatus = AMP_STATUS_INIT;
 
             actionSetScreen(SCREEN_TIME, 800);
         }
@@ -789,7 +791,7 @@ static void actionHandleStby(int16_t value)
 
         pinsSetStby(true);      // OFF via relay
 
-        deviceActive = false;
+        ampStatus = AMP_STATUS_STBY;
 
         swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
         swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
@@ -909,7 +911,7 @@ void actionHandle(bool visible)
         tunerInit();
         audioInit();
 
-        deviceActive = true;
+        ampStatus = AMP_STATUS_ACTIVE;
 
         swTimSet(SW_TIM_INPUT_POLL, 800);
         swTimSet(SW_TIM_INIT_SW, 300);
@@ -1157,7 +1159,7 @@ void actionHandle(bool visible)
     }
 }
 
-bool actionIsDeviceActive(void)
+AmpStatus actionGetAmpStatus(void)
 {
-    return deviceActive;
+    return ampStatus;
 }
