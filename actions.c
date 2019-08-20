@@ -773,7 +773,7 @@ static void actionHandlePowerUp()
     swTimSet(SW_TIM_RTC_INIT, 500);
 
     ampStatus = AMP_STATUS_STBY;
-    controlReportStby(ampStatus);
+    controlReportAmpStatus();
 }
 
 static void actionHandleStby(int16_t value)
@@ -788,7 +788,7 @@ static void actionHandleStby(int16_t value)
 
             actionSetScreen(SCREEN_TIME, 800);
 
-            ampStatus = AMP_STATUS_INIT_HW;
+            ampStatus = AMP_STATUS_INIT;
         }
     } else {
         screenSaveSettings();
@@ -815,7 +815,7 @@ static void actionHandleStby(int16_t value)
 
         ampStatus = AMP_STATUS_STBY;
     }
-    controlReportStby(ampStatus);
+    controlReportAmpStatus();
 }
 
 static void actionHandleInitHw(void)
@@ -830,10 +830,6 @@ static void actionHandleInitHw(void)
 
     swTimSet(SW_TIM_INPUT_POLL, 800);
     swTimSet(SW_TIM_INIT_SW, 300);
-
-    ampStatus = AMP_STATUS_INIT_SW;
-
-    controlReportStby(ampStatus);
 }
 
 static void actionHandleInitSw(void)
@@ -856,7 +852,8 @@ static void actionHandleInitSw(void)
 
     ampStatus = AMP_STATUS_ACTIVE;
 
-    controlReportStby(ampStatus);
+    controlReportAmpStatus();
+    controlReportInput();
 }
 
 static void actionDequeue(void)
@@ -1046,6 +1043,7 @@ void actionHandle(bool visible)
         if (scrMode == SCREEN_AUDIO_INPUT) {
             audioSetInput(actionGetNextAudioInput(aProc));
             inType = aProc->par.inType[aProc->par.input];
+            controlReportInput();
         }
 
         karadioSetEnabled(inType == IN_KARADIO);

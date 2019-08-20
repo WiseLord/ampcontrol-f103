@@ -13,7 +13,8 @@ void controlIRQ(void);
 
 void controlGetData(void);
 
-void controlReportStby(AmpStatus value);
+void controlReportAmpStatus(void);
+void controlReportInput(void);
 
 #ifdef __cplusplus
 }

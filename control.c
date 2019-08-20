@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "audio/audio.h"
 #include "debug.h"
 #include "ringbuf.h"
 #include "usart.h"
@@ -17,6 +18,7 @@ static LineParse cmdLp;
 
 static const char *CTRL_AMP     = "amp";
 static const char *CTRL_STBY    = ".stby";
+static const char *CTRL_INPUT   = ".input";
 
 static const char *CTRL_ENTER   = ".enter";
 static const char *CTRL_EXIT    = ".exit";
@@ -34,14 +36,21 @@ static bool isEndOfLine(const char *line)
 
 static void controlParseAmpStby(char *line)
 {
-    if (strstr(line, CTRL_ENTER) == line) {
+    if (isEndOfLine(line)) {
+        controlReportAmpStatus();
+    } else if (strstr(line, CTRL_ENTER) == line) {
         actionQueue(ACTION_STANDBY, FLAG_ENTER);
     } else if (strstr(line, CTRL_EXIT) == line) {
         actionQueue(ACTION_STANDBY, FLAG_EXIT);
     } else if (strstr(line, CTRL_TOGGLE) == line) {
         actionQueue(ACTION_STANDBY, FLAG_SWITCH);
-    } else if (isEndOfLine(line)) {
-        controlReportStby(actionGetAmpStatus());
+    }
+}
+
+static void controlParseAmpInput(char *line)
+{
+    if (isEndOfLine(line)) {
+        controlReportInput();
     }
 }
 
@@ -49,6 +58,8 @@ static void controlParseAmp(char *line)
 {
     if (strstr(line, CTRL_STBY) == line) {
         controlParseAmpStby(line + strlen(CTRL_STBY));
+    } if (strstr(line, CTRL_INPUT) == line) {
+        controlParseAmpInput(line + strlen(CTRL_INPUT));
     }
 }
 
@@ -87,23 +98,30 @@ void controlGetData(void)
     }
 }
 
-void controlReportStby(AmpStatus value)
+void controlReportAmpStatus(void)
 {
+    AmpStatus ampStatus = actionGetAmpStatus();
+
     char *status = "UNKNOWN";
 
-    switch (value) {
+    switch (ampStatus) {
     case AMP_STATUS_STBY:
         status = "STANDBY";
         break;
-    case AMP_STATUS_INIT_HW:
-        status = "INIT_HW";
-        break;
-    case AMP_STATUS_INIT_SW:
-        status = "INIT_SW";
+    case AMP_STATUS_INIT:
+        status = "INIT";
         break;
     case AMP_STATUS_ACTIVE:
         status = "ACTIVE";
         break;
     }
+
     dbg(utilMkStr("##AMP.STATUS#: %s", status));
+}
+
+void controlReportInput(void)
+{
+    AudioProc *aProc = audioGet();
+
+    dbg(utilMkStr("##AMP.INPUT#: %d", aProc->par.input));
 }
