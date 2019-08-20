@@ -12,17 +12,16 @@
 
 #define CMDBUF_SIZE     64
 
-#define CTRL_AMP        "amp"
-
-#define CTRL_STBY       "stby"
-
-#define CTRL_ENTER      "enter"
-#define CTRL_EXIT       "exit"
-#define CTRL_TOGGLE     "toggle"
-
 static RingBuf cmdRb;
 static char cmdRbData[CMDBUF_SIZE];
 static LineParse cmdLp;
+
+static const char *CTRL_AMP     = "amp.";
+static const char *CTRL_STBY    = "stby.";
+
+static const char *CTRL_ENTER   = "enter";
+static const char *CTRL_EXIT    = "exit";
+static const char *CTRL_TOGGLE  = "toggle";
 
 static void controlParseAmpStby(char *line)
 {
@@ -30,22 +29,22 @@ static void controlParseAmpStby(char *line)
         actionQueue(ACTION_STANDBY, FLAG_ENTER);
     } else if (strstr(line, CTRL_EXIT) == line) {
         actionQueue(ACTION_STANDBY, FLAG_EXIT);
-    } else if (strstr(line, CTRL_TOGGLE)) {
+    } else if (strstr(line, CTRL_TOGGLE) == line) {
         actionQueue(ACTION_STANDBY, FLAG_SWITCH);
     }
 }
 
 static void controlParseAmp(char *line)
 {
-    if (strstr(line, CTRL_STBY ".")) {
-        controlParseAmpStby(line + sizeof(CTRL_STBY));
+    if (strstr(line, CTRL_STBY) == line) {
+        controlParseAmpStby(line + strlen(CTRL_STBY));
     }
 }
 
 static void controlParseLine(char *line)
 {
-    if (strstr(line, CTRL_AMP ".") == line) {
-        controlParseAmp(line + sizeof(CTRL_AMP));
+    if (strstr(line, CTRL_AMP) == line) {
+        controlParseAmp(line + strlen(CTRL_AMP));
     }
 }
 
