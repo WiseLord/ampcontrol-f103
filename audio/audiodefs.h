@@ -10,15 +10,19 @@ extern "C" {
 
 #define MAX_INPUTS  10
 
-typedef enum {
-    AUDIO_IC_NO = 0,
-    AUDIO_IC_TDA7439,
-    AUDIO_IC_TDA7313,
-    AUDIO_IC_PT232X,
-    AUDIO_IC_TDA7418,
-    AUDIO_IC_TDA7440,
+#define FOREACH_AUDIO_IC(AUDIO_IC)  \
+    AUDIO_IC(NO)                    \
+    AUDIO_IC(TDA7439)               \
+    AUDIO_IC(TDA7313)               \
+    AUDIO_IC(PT232X)                \
+    AUDIO_IC(TDA7418)               \
+    AUDIO_IC(TDA7440)               \
+    AUDIO_IC(TEST)                  \
 
-    AUDIO_IC_TEST,
+#define GENERATE_AUDIO_IC(IC)    AUDIO_IC_ ## IC,
+
+typedef enum {
+    FOREACH_AUDIO_IC(GENERATE_AUDIO_IC)
 
     AUDIO_IC_END
 } AudioIC;

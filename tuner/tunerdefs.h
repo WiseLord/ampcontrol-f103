@@ -14,13 +14,17 @@ extern "C" {
 #define TUNER_VOLUME_MIN    0
 #define TUNER_VOLUME_MAX    15
 
-typedef enum {
-    TUNER_IC_NO = 0,
-    TUNER_IC_RDA5807,
-    TUNER_IC_SI4703,
-    TUNER_IC_TEA5767,
+#define FOREACH_TUNER_IC(TUNER_IC)  \
+    TUNER_IC(NO)                    \
+    TUNER_IC(RDA5807)               \
+    TUNER_IC(SI4703)                \
+    TUNER_IC(TEA5767)               \
+    TUNER_IC(TEST)                  \
 
-    TUNER_IC_TEST,
+#define GENERATE_TUNER_IC(IC) TUNER_IC_ ## IC,
+
+typedef enum {
+    FOREACH_TUNER_IC(GENERATE_TUNER_IC)
 
     TUNER_IC_END
 } TunerIC;

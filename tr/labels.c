@@ -3,7 +3,9 @@
 #include "../rc.h"
 #include "../settings.h"
 
-#define GENERATE_MENU_RC_TEXT(CMD)    [LABEL_MENU + MENU_RC_ ## CMD] =  # CMD,
+#define GENERATE_MENU_RC_TEXT(CMD)  [LABEL_MENU + MENU_RC_ ## CMD] = # CMD,
+#define GENERATE_AUDIO_IC_TEXT(IC)  [LABEL_AUDIO_IC + AUDIO_IC_ ## IC] = # IC,
+#define GENERATE_TUNER_IC_TEXT(IC)  [LABEL_TUNER_IC + TUNER_IC_ ## IC] = # IC,
 
 static Lang lang = LANG_END;
 
@@ -56,11 +58,7 @@ static const char *const labels_default[LABEL_END] = {
 
     [LABEL_TUNER_FM_STATION_NAME]   = "FM station name",
 
-    [LABEL_TUNER_IC + TUNER_IC_NO]      = "No",
-    [LABEL_TUNER_IC + TUNER_IC_RDA5807] = "RDA5807",
-    [LABEL_TUNER_IC + TUNER_IC_SI4703]  = "Si4703",
-    [LABEL_TUNER_IC + TUNER_IC_TEA5767] = "TEA5767",
-    [LABEL_TUNER_IC + TUNER_IC_TEST]    = "TEST",
+    FOREACH_TUNER_IC(GENERATE_TUNER_IC_TEXT)
 
     [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "US/Europe FM",
     [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Japan FM",
@@ -86,13 +84,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_PAL_MODE + PAL_AQUA]         = "Aqua",
     [LABEL_PAL_MODE + PAL_FIRE]         = "Fire",
 
-    [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "No",
-    [LABEL_AUDIO_IC + AUDIO_IC_TDA7439] = "TDA7439",
-    [LABEL_AUDIO_IC + AUDIO_IC_TDA7313] = "TDA7313",
-    [LABEL_AUDIO_IC + AUDIO_IC_PT232X]  = "PT232x",
-    [LABEL_AUDIO_IC + AUDIO_IC_TDA7418] = "TDA7418",
-    [LABEL_AUDIO_IC + AUDIO_IC_TDA7440] = "TDA7440",
-    [LABEL_AUDIO_IC + AUDIO_IC_TEST]    = "TEST",
+    FOREACH_AUDIO_IC(GENERATE_AUDIO_IC_TEXT)
 
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Off",
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekdays",
