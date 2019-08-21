@@ -25,6 +25,12 @@ static const char *CTRL_ON      = ".on";
 static const char *CTRL_OFF     = ".off";
 static const char *CTRL_TOGGLE  = ".togggle";
 
+#define GENERATE_AUDIO_TUNE_TEXT(TUNE)  # TUNE,
+
+static const char *const CTRL_AUDIO_TUNE[] = {
+    FOREACH_AUDIO_TUNE(GENERATE_AUDIO_TUNE_TEXT)
+};
+
 static bool isEndOfLine(const char *line)
 {
     if (*line == '\0') {
@@ -35,7 +41,7 @@ static bool isEndOfLine(const char *line)
     return false;
 }
 
-static void controlParseAmpStby(char *line)
+static void controlParseAmpStatus(char *line)
 {
     if (isEndOfLine(line)) {
         controlReportAmpStatus();
@@ -45,7 +51,7 @@ static void controlParseAmpStby(char *line)
 static void controlParseAmpInput(char *line)
 {
     if (isEndOfLine(line)) {
-        controlReportInput();
+        controlReportAudioInput();
     }
 }
 
@@ -60,7 +66,7 @@ static void controlParseAmp(char *line)
     } else if (strstr(line, CTRL_TOGGLE) == line) {
         actionQueue(ACTION_STANDBY, FLAG_SWITCH);
     } else if (strstr(line, CTRL_STATUS) == line) {
-        controlParseAmpStby(line + strlen(CTRL_STATUS));
+        controlParseAmpStatus(line + strlen(CTRL_STATUS));
     } else if (strstr(line, CTRL_INPUT) == line) {
         controlParseAmpInput(line + strlen(CTRL_INPUT));
     }
@@ -122,9 +128,30 @@ void controlReportAmpStatus(void)
     dbg(utilMkStr("##AMP.STATUS#: %s", status));
 }
 
-void controlReportInput(void)
+void controlReportAudioInput(void)
 {
-    AudioProc *aProc = audioGet();
+    AudioParam *par = &audioGet()->par;
 
-    dbg(utilMkStr("##AMP.INPUT#: %d", aProc->par.input));
+    dbg(utilMkStr("##AMP.AUDIO.INPUT#: %u", par->input));
+}
+
+void controlReportAudioTune(AudioTune tune)
+{
+    AudioParam *par = &audioGet()->par;
+
+    dbg(utilMkStr("##AMP.AUDIO.%s#: %d", CTRL_AUDIO_TUNE[tune], par->tune[tune].value));
+}
+
+void controlReportAudio(void)
+{
+    controlReportAudioInput();
+    for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END; tune++) {
+        controlReportAudioTune(tune);
+    }
+}
+
+void controlReportAll()
+{
+    controlReportAmpStatus();
+    controlReportAudio();
 }

@@ -113,19 +113,19 @@ static void tda7418SetSpeakers(void)
     int8_t spRearLeft = 0;
     int8_t spRearRight = 0;
 
-    if (aPar->item[AUDIO_TUNE_BALANCE].value > 0) {
-        spFrontLeft -= aPar->item[AUDIO_TUNE_BALANCE].value;
-        spRearLeft -= aPar->item[AUDIO_TUNE_BALANCE].value;
+    if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
+        spFrontLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
+        spRearLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
     } else {
-        spFrontRight += aPar->item[AUDIO_TUNE_BALANCE].value;
-        spRearRight += aPar->item[AUDIO_TUNE_BALANCE].value;
+        spFrontRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
+        spRearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
     }
-    if (aPar->item[AUDIO_TUNE_FRONTREAR].value > 0) {
-        spRearLeft -= aPar->item[AUDIO_TUNE_FRONTREAR].value;
-        spRearRight -= aPar->item[AUDIO_TUNE_FRONTREAR].value;
+    if (aPar->tune[AUDIO_TUNE_FRONTREAR].value > 0) {
+        spRearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+        spRearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
     } else {
-        spFrontLeft += aPar->item[AUDIO_TUNE_FRONTREAR].value;
-        spFrontRight += aPar->item[AUDIO_TUNE_FRONTREAR].value;
+        spFrontLeft += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+        spFrontRight += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
     }
 
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
@@ -146,14 +146,14 @@ void tda7418Init(AudioParam *param)
 {
     aPar = param;
 
-    aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
-    aPar->item[AUDIO_TUNE_BASS].grid      = &gridToneBal;
-    aPar->item[AUDIO_TUNE_MIDDLE].grid    = &gridToneBal;
-    aPar->item[AUDIO_TUNE_TREBLE].grid    = &gridToneBal;
-    aPar->item[AUDIO_TUNE_FRONTREAR].grid = &gridToneBal;
-    aPar->item[AUDIO_TUNE_BALANCE].grid   = &gridToneBal;
-    aPar->item[AUDIO_TUNE_SUBWOOFER].grid = &gridSubwoofer;
-    aPar->item[AUDIO_TUNE_GAIN].grid      = &gridGain;
+    aPar->tune[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
+    aPar->tune[AUDIO_TUNE_BASS].grid      = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_MIDDLE].grid    = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_TREBLE].grid    = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridSubwoofer;
+    aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
 
     tda7418SetMute(true);
 }
@@ -207,7 +207,7 @@ void tda7418SetTune(AudioTune tune, int8_t value)
 
 void tda7418SetInput(uint8_t value)
 {
-    tda7418InputGain(value, aPar->item[AUDIO_TUNE_GAIN].value);
+    tda7418InputGain(value, aPar->tune[AUDIO_TUNE_GAIN].value);
 }
 
 void tda7418SetMute(bool value)

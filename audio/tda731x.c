@@ -52,12 +52,12 @@ void tda731xInit(AudioParam *param)
 {
     aPar = param;
 
-    aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
-    aPar->item[AUDIO_TUNE_BASS].grid      = &gridTone;
-    aPar->item[AUDIO_TUNE_TREBLE].grid    = &gridTone;
-    aPar->item[AUDIO_TUNE_BALANCE].grid   = &gridBalance;
-    aPar->item[AUDIO_TUNE_FRONTREAR].grid = &gridBalance;
-    aPar->item[AUDIO_TUNE_GAIN].grid      = &gridGain;
+    aPar->tune[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
+    aPar->tune[AUDIO_TUNE_BASS].grid      = &gridTone;
+    aPar->tune[AUDIO_TUNE_TREBLE].grid    = &gridTone;
+    aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridBalance;
+    aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridBalance;
+    aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
 
     tda731xSetMute(true);
 }
@@ -69,19 +69,19 @@ void tda731xSetTune(AudioTune tune, int8_t value)
     int8_t spRearLeft = 0;
     int8_t spRearRight = 0;
 
-    if (aPar->item[AUDIO_TUNE_BALANCE].value > 0) {
-        spFrontLeft -= aPar->item[AUDIO_TUNE_BALANCE].value;
-        spRearLeft -= aPar->item[AUDIO_TUNE_BALANCE].value;
+    if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
+        spFrontLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
+        spRearLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
     } else {
-        spFrontRight += aPar->item[AUDIO_TUNE_BALANCE].value;
-        spRearRight += aPar->item[AUDIO_TUNE_BALANCE].value;
+        spFrontRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
+        spRearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
     }
-    if (aPar->item[AUDIO_TUNE_FRONTREAR].value > 0) {
-        spRearLeft -= aPar->item[AUDIO_TUNE_FRONTREAR].value;
-        spRearRight -= aPar->item[AUDIO_TUNE_FRONTREAR].value;
+    if (aPar->tune[AUDIO_TUNE_FRONTREAR].value > 0) {
+        spRearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+        spRearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
     } else {
-        spFrontLeft += aPar->item[AUDIO_TUNE_FRONTREAR].value;
-        spFrontRight += aPar->item[AUDIO_TUNE_FRONTREAR].value;
+        spFrontLeft += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+        spFrontRight += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
     }
 
     switch (tune) {
@@ -119,7 +119,7 @@ void tda731xSetTune(AudioTune tune, int8_t value)
 
 void tda731xSetInput(uint8_t value)
 {
-    tda731xSwitch(value, aPar->item[AUDIO_TUNE_GAIN].value, aPar->loudness);
+    tda731xSwitch(value, aPar->tune[AUDIO_TUNE_GAIN].value, aPar->loudness);
 }
 
 void tda731xSetMute(bool value)
@@ -131,12 +131,12 @@ void tda731xSetMute(bool value)
         i2cSend(I2C_AMP, TDA731X_SP_FRONT_LEFT | TDA731X_MUTE);
         i2cSend(I2C_AMP, TDA731X_SP_FRONT_RIGHT | TDA731X_MUTE);
     } else {
-        tda731xSetTune(AUDIO_TUNE_VOLUME, aPar->item[AUDIO_TUNE_VOLUME].value);
+        tda731xSetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME].value);
     }
     i2cTransmit(I2C_AMP, true);
 }
 
 void tda731xSetLoudness(bool value)
 {
-    tda731xSwitch(aPar->input, aPar->item[AUDIO_TUNE_GAIN].value, value);
+    tda731xSwitch(aPar->input, aPar->tune[AUDIO_TUNE_GAIN].value, value);
 }

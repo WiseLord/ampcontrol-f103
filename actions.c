@@ -202,7 +202,7 @@ static void actionNextAudioParam(AudioProc *aProc)
         aProc->tune++;
         if (aProc->tune >= AUDIO_TUNE_END)
             aProc->tune = AUDIO_TUNE_VOLUME;
-    } while (aProc->par.item[aProc->tune].grid == NULL && aProc->tune != AUDIO_TUNE_VOLUME);
+    } while (aProc->par.tune[aProc->tune].grid == NULL && aProc->tune != AUDIO_TUNE_VOLUME);
 }
 
 static uint8_t actionGetNextAudioInput(AudioProc *aProc)
@@ -852,8 +852,7 @@ static void actionHandleInitSw(void)
 
     ampStatus = AMP_STATUS_ACTIVE;
 
-    controlReportAmpStatus();
-    controlReportInput();
+    controlReportAll();
 }
 
 static void actionDequeue(void)
@@ -1043,7 +1042,8 @@ void actionHandle(bool visible)
         if (scrMode == SCREEN_AUDIO_INPUT) {
             audioSetInput(actionGetNextAudioInput(aProc));
             inType = aProc->par.inType[aProc->par.input];
-            controlReportInput();
+            controlReportAudioInput();
+            controlReportAudioTune(AUDIO_TUNE_GAIN);
         }
 
         karadioSetEnabled(inType == IN_KARADIO);
@@ -1055,6 +1055,7 @@ void actionHandle(bool visible)
     case ACTION_AUDIO_PARAM_CHANGE:
         audioChangeTune(aProc->tune, (int8_t)(action.value));
         actionSetScreen(SCREEN_AUDIO_PARAM, 3000);
+        controlReportAudioTune(aProc->tune);
         break;
 
     case ACTION_AUDIO_MUTE:

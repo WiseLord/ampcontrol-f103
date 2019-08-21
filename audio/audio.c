@@ -29,16 +29,16 @@ static const AudioGrid gridTestGain         = {  0, 15, (uint8_t)(2.00 * 8)}; //
 
 static void audioTestInit(AudioParam *aPar)
 {
-    aPar->item[AUDIO_TUNE_VOLUME].grid    = &gridTestVolume;
-    aPar->item[AUDIO_TUNE_BASS].grid      = &gridTestTone;
-    aPar->item[AUDIO_TUNE_MIDDLE].grid    = &gridTestTone;
-    aPar->item[AUDIO_TUNE_TREBLE].grid    = &gridTestTone;
-    aPar->item[AUDIO_TUNE_FRONTREAR].grid = &gridTestBalance;
-    aPar->item[AUDIO_TUNE_BALANCE].grid   = &gridTestBalance;
-    aPar->item[AUDIO_TUNE_CENTER].grid    = &gridTestCenterSub;
-    aPar->item[AUDIO_TUNE_SUBWOOFER].grid = &gridTestCenterSub;
-    aPar->item[AUDIO_TUNE_PREAMP].grid    = &gridTestPreamp;
-    aPar->item[AUDIO_TUNE_GAIN].grid      = &gridTestGain;
+    aPar->tune[AUDIO_TUNE_VOLUME].grid    = &gridTestVolume;
+    aPar->tune[AUDIO_TUNE_BASS].grid      = &gridTestTone;
+    aPar->tune[AUDIO_TUNE_MIDDLE].grid    = &gridTestTone;
+    aPar->tune[AUDIO_TUNE_TREBLE].grid    = &gridTestTone;
+    aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridTestBalance;
+    aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridTestBalance;
+    aPar->tune[AUDIO_TUNE_CENTER].grid    = &gridTestCenterSub;
+    aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridTestCenterSub;
+    aPar->tune[AUDIO_TUNE_PREAMP].grid    = &gridTestPreamp;
+    aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridTestGain;
 }
 
 static const AudioApi audioTestApi = {
@@ -59,7 +59,7 @@ void audioReadSettings(void)
     aProc.par.input = (uint8_t)settingsRead(PARAM_AUDIO_INPUT);
 
     for (Param par = PARAM_AUDIO_VOLUME; par <= PARAM_AUDIO_PREAMP; par++) {
-        aProc.par.item[par - PARAM_AUDIO_VOLUME].value = (int8_t)settingsRead(par);
+        aProc.par.tune[par - PARAM_AUDIO_VOLUME].value = (int8_t)settingsRead(par);
     }
 
     for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN_LAST; par++) {
@@ -70,7 +70,7 @@ void audioReadSettings(void)
         aProc.par.inType[par - PARAM_AUDIO_IN0] = (InputType)settingsRead(par);
     }
 
-    aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
+    aProc.par.tune[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
 
     // API initialization
     switch (aProc.par.ic) {
@@ -116,7 +116,7 @@ void audioSaveSettings(void)
     settingsStore(PARAM_AUDIO_BYPASS, aProc.par.bypass);
 
     for (Param par = PARAM_AUDIO_VOLUME; par <= PARAM_AUDIO_PREAMP; par++) {
-        settingsStore(par, aProc.par.item[par - PARAM_AUDIO_VOLUME].value);
+        settingsStore(par, aProc.par.tune[par - PARAM_AUDIO_VOLUME].value);
     }
 
     for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN_LAST; par++) {
@@ -151,7 +151,7 @@ void audioSetPower(bool value)
         audioSetBypass(aProc.par.bypass);
 
         for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END; tune++) {
-            audioSetTune(tune, aProc.par.item[tune].value);
+            audioSetTune(tune, aProc.par.tune[tune].value);
         }
     }
 
@@ -165,11 +165,11 @@ void audioSetTune(AudioTune tune, int8_t value)
     if (tune >= AUDIO_TUNE_END)
         return;
 
-    if (aProc.par.item[tune].grid == 0)
+    if (aProc.par.tune[tune].grid == 0)
         return;
 
-    int8_t min = aProc.par.item[tune].grid->min;
-    int8_t max = aProc.par.item[tune].grid->max;
+    int8_t min = aProc.par.tune[tune].grid->min;
+    int8_t max = aProc.par.tune[tune].grid->max;
 
     if (value < min) {
         value = min;
@@ -177,7 +177,7 @@ void audioSetTune(AudioTune tune, int8_t value)
         value = max;
     }
 
-    aProc.par.item[tune].value = value;
+    aProc.par.tune[tune].value = value;
     if (tune == AUDIO_TUNE_GAIN) {
         aProc.par.gain[aProc.par.input] = value;
     } else if (tune == AUDIO_TUNE_VOLUME) {
@@ -203,7 +203,7 @@ void audioChangeTune(AudioTune tune, int8_t diff)
     if (tune >= AUDIO_TUNE_END)
         return;
 
-    int8_t value = aProc.par.item[tune].value;
+    int8_t value = aProc.par.tune[tune].value;
 
     value += diff;
 
@@ -216,7 +216,7 @@ void audioSetInput(uint8_t value)
         value = 0;
 
     aProc.par.input = value;
-    aProc.par.item[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
+    aProc.par.tune[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
 
     if (aProc.api->setInput) {
         aProc.api->setInput(value);
@@ -270,8 +270,8 @@ void audioSetBypass(bool value)
     if (aProc.api->setBypass) {
         aProc.api->setBypass(value);
     } else {
-        audioSetTune(AUDIO_TUNE_BASS, aProc.par.item[AUDIO_TUNE_BASS].value);
-        audioSetTune(AUDIO_TUNE_MIDDLE, aProc.par.item[AUDIO_TUNE_MIDDLE].value);
-        audioSetTune(AUDIO_TUNE_TREBLE, aProc.par.item[AUDIO_TUNE_TREBLE].value);
+        audioSetTune(AUDIO_TUNE_BASS, aProc.par.tune[AUDIO_TUNE_BASS].value);
+        audioSetTune(AUDIO_TUNE_MIDDLE, aProc.par.tune[AUDIO_TUNE_MIDDLE].value);
+        audioSetTune(AUDIO_TUNE_TREBLE, aProc.par.tune[AUDIO_TUNE_TREBLE].value);
     }
 }

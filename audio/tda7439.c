@@ -47,31 +47,31 @@ void tda7439Init(AudioParam *param)
 {
     aPar = param;
 
-    aPar->item[AUDIO_TUNE_VOLUME].grid  = &gridVolume;
-    aPar->item[AUDIO_TUNE_BASS].grid    = &gridTone;
+    aPar->tune[AUDIO_TUNE_VOLUME].grid  = &gridVolume;
+    aPar->tune[AUDIO_TUNE_BASS].grid    = &gridTone;
     if (aPar->ic == AUDIO_IC_TDA7439) {
-        aPar->item[AUDIO_TUNE_MIDDLE].grid  = &gridTone;
+        aPar->tune[AUDIO_TUNE_MIDDLE].grid  = &gridTone;
     }
-    aPar->item[AUDIO_TUNE_TREBLE].grid  = &gridTone;
-    aPar->item[AUDIO_TUNE_PREAMP].grid  = &gridPreamp;
-    aPar->item[AUDIO_TUNE_BALANCE].grid = &gridBalance;
-    aPar->item[AUDIO_TUNE_GAIN].grid    = &gridGain;
+    aPar->tune[AUDIO_TUNE_TREBLE].grid  = &gridTone;
+    aPar->tune[AUDIO_TUNE_PREAMP].grid  = &gridPreamp;
+    aPar->tune[AUDIO_TUNE_BALANCE].grid = &gridBalance;
+    aPar->tune[AUDIO_TUNE_GAIN].grid    = &gridGain;
 
     tda7439SetMute(true);
 }
 
 void tda7439SetTune(AudioTune tune, int8_t value)
 {
-    int8_t spLeft = aPar->item[AUDIO_TUNE_VOLUME].value;
-    int8_t spRight = aPar->item[AUDIO_TUNE_VOLUME].value;
-    int8_t volMin = aPar->item[AUDIO_TUNE_VOLUME].grid->min;
+    int8_t spLeft = aPar->tune[AUDIO_TUNE_VOLUME].value;
+    int8_t spRight = aPar->tune[AUDIO_TUNE_VOLUME].value;
+    int8_t volMin = aPar->tune[AUDIO_TUNE_VOLUME].grid->min;
 
-    if (aPar->item[AUDIO_TUNE_BALANCE].value > 0) {
-        spLeft -= aPar->item[AUDIO_TUNE_BALANCE].value;
+    if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
+        spLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
         if (spLeft < volMin)
             spLeft = volMin;
     } else {
-        spRight += aPar->item[AUDIO_TUNE_BALANCE].value;
+        spRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
         if (spRight < volMin)
             spRight = volMin;
     }
@@ -127,6 +127,6 @@ void tda7439SetMute(bool value)
         i2cSend(I2C_AMP, TDA7439_SPEAKER_MUTE);
         i2cTransmit(I2C_AMP, true);
     } else {
-        tda7439SetTune(AUDIO_TUNE_VOLUME, aPar->item[AUDIO_TUNE_VOLUME].value);
+        tda7439SetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME].value);
     }
 }

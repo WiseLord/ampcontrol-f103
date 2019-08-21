@@ -21,6 +21,20 @@ extern "C" {
 
 #define GENERATE_AUDIO_IC(IC)    AUDIO_IC_ ## IC,
 
+#define FOREACH_AUDIO_TUNE(AUDIO_TUNE)  \
+    AUDIO_TUNE(VOLUME)                  \
+    AUDIO_TUNE(BASS)                    \
+    AUDIO_TUNE(MIDDLE)                  \
+    AUDIO_TUNE(TREBLE)                  \
+    AUDIO_TUNE(FRONTREAR)               \
+    AUDIO_TUNE(BALANCE)                 \
+    AUDIO_TUNE(CENTER)                  \
+    AUDIO_TUNE(SUBWOOFER)               \
+    AUDIO_TUNE(PREAMP)                  \
+    AUDIO_TUNE(GAIN)                    \
+
+#define GENERATE_AUDIO_TUNE(TUNE)    AUDIO_TUNE_ ## TUNE,
+
 typedef enum {
     FOREACH_AUDIO_IC(GENERATE_AUDIO_IC)
 
@@ -29,17 +43,7 @@ typedef enum {
 
 typedef uint8_t AudioTune;
 enum {
-    AUDIO_TUNE_VOLUME = 0,
-    AUDIO_TUNE_BASS,
-    AUDIO_TUNE_MIDDLE,
-    AUDIO_TUNE_TREBLE,
-    AUDIO_TUNE_FRONTREAR,
-    AUDIO_TUNE_BALANCE,
-    AUDIO_TUNE_CENTER,
-    AUDIO_TUNE_SUBWOOFER,
-    AUDIO_TUNE_PREAMP,
-
-    AUDIO_TUNE_GAIN,
+    FOREACH_AUDIO_TUNE(GENERATE_AUDIO_TUNE)
 
     AUDIO_TUNE_END,
 
@@ -83,7 +87,7 @@ typedef struct {
 
 typedef struct {
     AudioIC ic;
-    AudioTuneItem item[AUDIO_TUNE_END];
+    AudioTuneItem tune[AUDIO_TUNE_END];
 
     InputType inType[MAX_INPUTS];
     int8_t gain[MAX_INPUTS];

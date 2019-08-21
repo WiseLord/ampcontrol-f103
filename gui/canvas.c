@@ -476,9 +476,9 @@ void canvasShowTune(bool clear)
         icon = ICON_MUTE_ON;
     }
 
-    const int16_t value = aProc->par.item[aProc->tune].value;
+    const int16_t value = aProc->par.tune[aProc->tune].value;
 
-    const AudioGrid *grid = aProc->par.item[aProc->tune].grid;
+    const AudioGrid *grid = aProc->par.tune[aProc->tune].grid;
     const int8_t min = grid ? grid->min : 0;
     const int8_t max = grid ? grid->max : 0;
     const uint8_t mStep = grid ? grid->mStep : 0;
