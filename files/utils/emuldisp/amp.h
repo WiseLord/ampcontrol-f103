@@ -26,6 +26,8 @@ public:
 
     uint8_t bus;
 
+    void showMessage(const QString &text, int timeout = 0);
+
 private:
     int dialValue;
     int dialMax;

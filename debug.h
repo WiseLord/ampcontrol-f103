@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 
 void dbgInit(void);
+char dbgGetChar(void);
 void dbg(const char *str);
 
 #ifdef __cplusplus

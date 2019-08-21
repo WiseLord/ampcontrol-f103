@@ -1,13 +1,11 @@
 #include "control.h"
 
-#include <stm32f1xx_ll_usart.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include "audio/audio.h"
 #include "debug.h"
 #include "ringbuf.h"
-#include "usart.h"
 #include "utils.h"
 
 #define CMDBUF_SIZE     64
@@ -86,7 +84,7 @@ void controlInit(void)
 
 void controlIRQ(void)
 {
-    char data = LL_USART_ReceiveData8(USART_DBG);
+    char data = dbgGetChar();
 
 #ifdef _DEBUG_KARADIO
     usartSendChar(USART_KARADIO, data);

@@ -206,3 +206,14 @@ void karadioSetEnabled(bool value)
 {
     (void)value;
 }
+
+
+char dbgGetChar()
+{
+    return 0;
+}
+
+void dbg(const char *str)
+{
+
+}

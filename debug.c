@@ -21,6 +21,10 @@ void dbgInit()
     usartSendChar(USART_DBG, '\r');
 }
 
+char dbgGetChar()
+{
+    return LL_USART_ReceiveData8(USART_DBG);
+}
 
 void dbg(const char *str)
 {

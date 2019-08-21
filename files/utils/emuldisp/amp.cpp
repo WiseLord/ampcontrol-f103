@@ -101,6 +101,11 @@ uint16_t Amp::eeReadRaw(uint16_t addr)
     return EE_NOT_FOUND;
 }
 
+void Amp::showMessage(const QString &text, int timeout)
+{
+    this->statusBar()->showMessage(text, timeout);
+}
+
 void Amp::dialChanged(int value)
 {
     int diff = (value + dialMax - dialValue) % dialMax;
@@ -115,79 +120,79 @@ void Amp::dialChanged(int value)
 
     dialValue = value;
 
-    this->statusBar()->showMessage(QString("ENC value: %1").arg(diff), 200);
+    showMessage(QString("ENC value: %1").arg(diff), 200);
 }
 
 void Amp::on_btn0_pressed()
 {
     this->bus |= BTN_D0;
-    this->statusBar()->showMessage("BTN_D0 pressed", 1000);
+    showMessage("BTN_D0 pressed", 1000);
 }
 
 void Amp::on_btn0_released()
 {
     this->bus &= ~BTN_D0;
-    this->statusBar()->showMessage("BTN_D0 released", 1000);
+    showMessage("BTN_D0 released", 1000);
 }
 
 void Amp::on_btn1_pressed()
 {
     this->bus |= BTN_D1;
-    this->statusBar()->showMessage("BTN_D1 pressed", 1000);
+    showMessage("BTN_D1 pressed", 1000);
 }
 
 void Amp::on_btn1_released()
 {
     this->bus &= ~BTN_D1;
-    this->statusBar()->showMessage("BTN_D1 released", 1000);
+    showMessage("BTN_D1 released", 1000);
 }
 
 void Amp::on_btn2_pressed()
 {
     this->bus |= BTN_D2;
-    this->statusBar()->showMessage("BTN_D2 pressed", 1000);
+    showMessage("BTN_D2 pressed", 1000);
 }
 
 void Amp::on_btn2_released()
 {
     this->bus &= ~BTN_D2;
-    this->statusBar()->showMessage("BTN_D2 released", 1000);
+    showMessage("BTN_D2 released", 1000);
 }
 
 void Amp::on_btn3_pressed()
 {
     this->bus |= BTN_D3;
-    this->statusBar()->showMessage("BTN_D3 pressed", 1000);
+    showMessage("BTN_D3 pressed", 1000);
 }
 
 void Amp::on_btn3_released()
 {
     this->bus &= ~BTN_D3;
-    this->statusBar()->showMessage("BTN_D3 released", 1000);
+    showMessage("BTN_D3 released", 1000);
 }
 
 void Amp::on_btn4_pressed()
 {
     this->bus |= BTN_D4;
-    this->statusBar()->showMessage("BTN_D4 pressed", 1000);
+    showMessage("BTN_D4 pressed", 1000);
 }
 
 void Amp::on_btn4_released()
 {
     this->bus &= ~BTN_D4;
-    this->statusBar()->showMessage("BTN_D4 released", 1000);
+    showMessage("BTN_D4 released", 1000);
 }
 
 void Amp::on_btn5_pressed()
 {
     this->bus |= BTN_D5;
-    this->statusBar()->showMessage("BTN_D5 pressed", 1000);
+    showMessage("BTN_D5 pressed", 1000);
 }
 
 void Amp::on_btn5_released()
 {
     this->bus &= ~BTN_D5;
-    this->statusBar()->showMessage("BTN_D5 released", 1000);
+    showMessage("BTN_D5 released", 1000);
 }
 
 void Amp::on_dial_valueChanged(int value)

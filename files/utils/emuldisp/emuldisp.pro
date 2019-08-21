@@ -44,6 +44,7 @@ _DISP_480x320 {
 SOURCES += \
     ../../../actions.c \
     ../../../audio/audio.c \
+	../../../control.c \
     ../../../display/fonts/font-terminus-12.c \
     ../../../display/fonts/font-terminus-14.c \
     ../../../display/fonts/font-terminus-14b.c \
@@ -83,6 +84,7 @@ SOURCES += \
     ../../../input.c \
     ../../../mem.c \
     ../../../menu.c \
+	../../../ringbuf.c \
     ../../../screen.c \
     ../../../settings.c \
     ../../../swtimers.c \
@@ -107,6 +109,8 @@ HEADERS += \
     ../../../actions.h \
     ../../../audio/audio.h \
     ../../../audio/audiodefs.h \
+	../../../control.h \
+	../../../debug.h \
     ../../../display/fonts.h \
     ../../../display/dispdefs.h \
     ../../../display/dispdrv.h \
@@ -124,6 +128,7 @@ HEADERS += \
     ../../../menu.h \
     ../../../pins.h \
     ../../../rc.h \
+	../../../ringbuf.h \
     ../../../rtc.h \
     ../../../screen.h \
     ../../../settings.h \
