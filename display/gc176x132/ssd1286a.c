@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void ssd1286aInit(void)
@@ -80,19 +76,19 @@ void ssd1286aWakeup(void)
     dispdrvSendData8(0x1f);
     dispdrvSendData8(0x92);
 
-    LL_mDelay(20);
+    utilmDelay(20);
 
     dispdrvSelectReg8(0x11);
     dispdrvSendData8(0x61);
     dispdrvSendData8(0x1c);
 
-    LL_mDelay(20);
+    utilmDelay(20);
 
     dispdrvSelectReg8(0x12);
     dispdrvSendData8(0x04);
     dispdrvSendData8(0x0f);
 
-    LL_mDelay(20);
+    utilmDelay(20);
 
     dispdrvSelectReg8(0x07);
     dispdrvSendData8(0x00);

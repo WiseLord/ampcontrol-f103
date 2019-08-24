@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void ili9225Init(void)
@@ -18,12 +14,12 @@ void ili9225Init(void)
 
     // Power On sequence
 
-    LL_mDelay(50); // Delay 50ms
+    utilmDelay(50); // Delay 50ms
 
     dispdrvWriteReg16(0x0010, 0x0A00);    // Set SAP,DSTB,STB
     dispdrvWriteReg16(0x0011, 0x1038);    // Set APON,PON,AON,VCI1EN,VC
 
-    LL_mDelay(50); // Delay 50ms
+    utilmDelay(50); // Delay 50ms
 
     dispdrvWriteReg16(0x0012, 0x6121);    // Internal reference voltage= Vci;
     dispdrvWriteReg16(0x0013, 0x0062);    // Set GVDD
@@ -55,7 +51,7 @@ void ili9225Init(void)
     dispdrvWriteReg16(0x0058, 0x0E00);
     dispdrvWriteReg16(0x0059, 0x000E);
 
-    LL_mDelay(50); // Delay 50ms
+    utilmDelay(50); // Delay 50ms
 
     dispdrvWriteReg16(0x0007, 0x1017);  // 65K color and display ON*/
 
@@ -67,7 +63,7 @@ void ili9225Sleep(void)
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x0010, 0x0A01);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
     SET(DISP_CS);
@@ -78,7 +74,7 @@ void ili9225Wakeup(void)
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0010, 0x0A00);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x0007, 0x1017);    // 65K color and display ON
 
     SET(DISP_CS);

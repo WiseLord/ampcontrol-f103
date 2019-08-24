@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void rm68140Init(void)
@@ -9,7 +5,7 @@ void rm68140Init(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x01);    // Soft Reset
-    LL_mDelay(150);
+    utilmDelay(150);
     dispdrvSelectReg8(0x28);    // Display OFF
 
     dispdrvSelectReg8(0x3A);    // Interface Pixel Format
@@ -26,7 +22,7 @@ void rm68140Init(void)
     dispdrvSelectReg8(0x20);    // Display inversion off
 
     dispdrvSelectReg8(0x11);    // Sleep OUT
-    LL_mDelay(120);
+    utilmDelay(120);
     dispdrvSelectReg8(0x29);    // Display ON
 
     DISP_WAIT_BUSY();
@@ -77,7 +73,7 @@ void rm68140Sleep(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x28);    // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x10);
 
     DISP_WAIT_BUSY();
@@ -89,7 +85,7 @@ void rm68140Wakeup(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x11);    // Display ON
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x29);
 
     SET(DISP_CS);

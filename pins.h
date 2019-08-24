@@ -8,6 +8,8 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
+#include <stm32f1xx_ll_gpio.h>
+
 typedef uint16_t MuteStby;
 enum {
     MUTESTBY_SWD = 0,
@@ -26,6 +28,9 @@ void pinsInitMuteStby(MuteStby value);
 
 void pinsSetMute(bool value);
 void pinsSetStby(bool value);
+
+#define IS_GPIO_HI(x)           ((x ## _Pin) & 0x00FF0000U)
+#define IS_GPIO_LO(x)           ((x ## _Pin) & 0x0000FF00U)
 
 #define CONCAT(x,y)             x ## y
 
@@ -78,6 +83,8 @@ void pinsSetStby(bool value);
 #define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
 
 // TFT LCD pins
+#define DISP_DATA_HI_Port       GPIOB
+#define DISP_DATA_HI_Pin        0
 #define DISP_DATA_LO_Port       GPIOB
 #define DISP_DATA_LO_Pin        (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
                                  LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)

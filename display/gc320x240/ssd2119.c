@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void ssd2119Init(void)
@@ -34,13 +30,13 @@ void ssd2119Init(void)
 
     // Power On Sequence
     dispdrvWriteReg16(0x000C, 0x0004);
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x000D, 0x0009);
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x001E, 0x0068);
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x000E, 0x2700);
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x0026, 0x7C00);
     dispdrvWriteReg16(0x0027, 0x006D);
 

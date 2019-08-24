@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void mc2pa8201Init(void)
@@ -10,15 +6,15 @@ void mc2pa8201Init(void)
 
     // Initial Sequence
     // Wait for reset
-    LL_mDelay(50);
+    utilmDelay(50);
 
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x01);
-    LL_mDelay(100);
+    utilmDelay(100);
 
     dispdrvSelectReg8(0x11);
-    LL_mDelay(100);
+    utilmDelay(100);
 
     dispdrvSelectReg8(0x20);
 
@@ -60,7 +56,7 @@ void mc2pa8201Sleep(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x28);    // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x10);
 
     SET(DISP_CS);
@@ -71,7 +67,7 @@ void mc2pa8201Wakeup(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x11);    // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x29);
 
     SET(DISP_CS);

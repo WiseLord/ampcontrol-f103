@@ -4,7 +4,14 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <stm32f1xx_ll_utils.h>
+
 static char strbuf[256];    // String buffer
+
+void utilmDelay(uint32_t delay)
+{
+    LL_mDelay(delay);
+}
 
 char *utilMkStr(const char *fmt, ...)
 {

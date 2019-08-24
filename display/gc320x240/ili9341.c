@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void ili9341Init(void)
@@ -9,7 +5,7 @@ void ili9341Init(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x01); // Software Reset
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvSelectReg8(0x28); // Display OFF
 
     dispdrvSelectReg8(0xCF); // Power Control B

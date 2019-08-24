@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void st7793Init(void)
@@ -28,7 +24,7 @@ void st7793Init(void)
     dispdrvWriteReg16(0x0759, 0x0070);
 
     //--------------End Power Control Registers Initial ------------------------//
-    LL_mDelay(100);
+    utilmDelay(100);
     //--------------Display Windows 240 X 400-----------------------------------//
 
     dispdrvWriteReg16(0x0210, 0x0000);
@@ -37,7 +33,7 @@ void st7793Init(void)
     dispdrvWriteReg16(0x0213, 0x018f);
 
     //--------------End Display Windows 240 X 400-------------------------------//
-    LL_mDelay(10);
+    utilmDelay(10);
     //--------------Gamma Cluster Setting---------------------------------------//
 
     dispdrvWriteReg16(0x0380, 0x0100);
@@ -60,7 +56,7 @@ void st7793Init(void)
     //---------------End Vcom Setting-------------------------------------------//
 
     dispdrvWriteReg16(0x0007, 0x0100);
-    LL_mDelay(200);
+    utilmDelay(200);
     dispdrvWriteReg16(0x0200, 0x0000);
     dispdrvWriteReg16(0x0201, 0x0000);
 
@@ -87,9 +83,9 @@ void st7793Sleep(void)
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0007, 0x0000);
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x0102, 0x0180);
-    LL_mDelay(200);
+    utilmDelay(200);
 
     SET(DISP_CS);
 }
@@ -99,9 +95,9 @@ void st7793Wakeup(void)
     CLR(DISP_CS);
 
     // Power On Sequence
-    LL_mDelay(200);
+    utilmDelay(200);
     dispdrvWriteReg16(0x0102, 0x01b0);
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x0007, 0x0100);
 
     SET(DISP_CS);

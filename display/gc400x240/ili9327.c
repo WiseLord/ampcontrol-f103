@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 static uint8_t shiftX = 0;
@@ -15,7 +11,7 @@ void ili9327Init(void)
     dispdrvSendData8(0x20);
 
     dispdrvSelectReg8(0x11);
-    LL_mDelay(100);
+    utilmDelay(100);
 
     dispdrvSelectReg8(0xD1);
     dispdrvSendData8(0x00);
@@ -112,7 +108,7 @@ void ili9327Sleep(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x28);    // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x10);
 
     SET(DISP_CS);
@@ -123,7 +119,7 @@ void ili9327Wakeup(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x11);    // Display ON
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x29);
 
     SET(DISP_CS);

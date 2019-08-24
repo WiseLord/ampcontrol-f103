@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void lgdp4524Init(void)
@@ -13,7 +9,7 @@ void lgdp4524Init(void)
     dispdrvWriteReg16(0x0013, 0x0000);
     dispdrvWriteReg16(0x0014, 0x0331);
 
-    LL_mDelay(15); // Delay 15ms
+    utilmDelay(15); // Delay 15ms
 
     dispdrvWriteReg16(0x0012, 0x0009);
     dispdrvWriteReg16(0x0011, 0x0000);
@@ -23,12 +19,12 @@ void lgdp4524Init(void)
     dispdrvWriteReg16(0x0011, 0x0200);
     dispdrvWriteReg16(0x0012, 0x0019);
 
-    LL_mDelay(20); // Delay 20ms
+    utilmDelay(20); // Delay 20ms
 
     dispdrvWriteReg16(0x0013, 0x2C31);
     dispdrvWriteReg16(0x0010, 0x0140);
 
-    LL_mDelay(20); // Delay 20ms
+    utilmDelay(20); // Delay 20ms
 
     dispdrvWriteReg16(0x0060, 0x2000);
     dispdrvWriteReg16(0x0060, 0x0000);
@@ -63,17 +59,17 @@ void lgdp4524Init(void)
     dispdrvWriteReg16(0x0071, 0x0040);
     dispdrvWriteReg16(0x0072, 0x0002);
 
-    LL_mDelay(10); // Delay 10ms
+    utilmDelay(10); // Delay 10ms
 
     dispdrvWriteReg16(0x0010, 0x3250);
     dispdrvWriteReg16(0x0007, 0x0001);
 
-    LL_mDelay(30); // Delay 30ms
+    utilmDelay(30); // Delay 30ms
 
     dispdrvWriteReg16(0x0007, 0x0021);
     dispdrvWriteReg16(0x0007, 0x0023);
 
-    LL_mDelay(30); // Delay 30ms
+    utilmDelay(30); // Delay 30ms
 
     dispdrvWriteReg16(0x0007, 0x0037);  // 65K color and display ON*/
 
@@ -87,21 +83,21 @@ void lgdp4524Sleep(void)
 
     dispdrvWriteReg16(0x0007, 0x0036);
 
-    LL_mDelay(20);
+    utilmDelay(20);
 
     dispdrvWriteReg16(0x0007, 0x0026);
 
-    LL_mDelay(20);
+    utilmDelay(20);
 
     dispdrvWriteReg16(0x0007, 0x0000);
 
-    LL_mDelay(10);
+    utilmDelay(10);
 
     dispdrvWriteReg16(0x0010, 0x0004);
     dispdrvWriteReg16(0x0012, 0x0000);
     dispdrvWriteReg16(0x0013, 0x0000);
 
-    LL_mDelay(10);
+    utilmDelay(10);
 
     dispdrvWriteReg16(0x0010, 0x0008);
 
@@ -114,12 +110,12 @@ void lgdp4524Wakeup(void)
 
     dispdrvWriteReg16(0x0000, 0x0001);
 
-    LL_mDelay(10); // Delay 10ms
+    utilmDelay(10); // Delay 10ms
 
     dispdrvWriteReg16(0x0010, 0x0000);
     dispdrvWriteReg16(0x0014, 0x0331);
 
-    LL_mDelay(15); // Delay 15ms
+    utilmDelay(15); // Delay 15ms
 
     dispdrvWriteReg16(0x0012, 0x0009);
     dispdrvWriteReg16(0x0011, 0x0000);
@@ -129,22 +125,22 @@ void lgdp4524Wakeup(void)
     dispdrvWriteReg16(0x0011, 0x0200);
     dispdrvWriteReg16(0x0012, 0x0019);
 
-    LL_mDelay(20); // Delay 20ms
+    utilmDelay(20); // Delay 20ms
 
     dispdrvWriteReg16(0x0013, 0x2C31);
     dispdrvWriteReg16(0x0010, 0x0140);
 
-    LL_mDelay(20); // Delay 20ms
+    utilmDelay(20); // Delay 20ms
 
     dispdrvWriteReg16(0x0010, 0x3250);
     dispdrvWriteReg16(0x0007, 0x0001);
 
-    LL_mDelay(30); // Delay 30ms
+    utilmDelay(30); // Delay 30ms
 
     dispdrvWriteReg16(0x0007, 0x0021);
     dispdrvWriteReg16(0x0007, 0x0023);
 
-    LL_mDelay(30); // Delay 30ms
+    utilmDelay(30); // Delay 30ms
 
     dispdrvWriteReg16(0x0007, 0x0037);  // 65K color and display ON*/
 

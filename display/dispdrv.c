@@ -45,13 +45,14 @@ static inline void dispdrvSendByte(uint8_t data)
     while (!LL_SPI_IsActiveFlag_TXE(SPI2));
     LL_SPI_TransmitData8(SPI2, data);
 #else
-#if defined(_DISP_HI_BYTE) && !defined(_DISP_16BIT)
+#if IS_GPIO_LO(DISP_DATA_LO)
+    DISP_DATA_LO_Port->BSRR = 0x00FF0000 | data;
+#elif IS_GPIO_HI(DISP_DATA_HI)
     DISP_DATA_HI_Port->BSRR = 0xFF000000 | (uint16_t)(data << 8);
 #endif
-#if defined(_DISP_LO_BYTE) || defined(_DISP_16BIT)
-    DISP_DATA_LO_Port->BSRR = 0x00FF0000 | data;
-#endif
+    __ASM volatile ("nop");
     CLR(DISP_WR);
+    __ASM volatile ("nop");
     SET(DISP_WR);
 #endif
 }
@@ -59,11 +60,10 @@ static inline void dispdrvSendByte(uint8_t data)
 __attribute__((always_inline))
 static inline void dispdrvReadInput(void)
 {
-#ifdef _DISP_HI_BYTE
-    busData = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
-#endif
-#ifdef _DISP_LO_BYTE
+#if IS_GPIO_LO(DISP_DATA_LO)
     busData = DISP_DATA_LO_Port->IDR & 0x00FF;
+#elif IS_GPIO_HI(DISP_DATA_HI)
+    busData = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
 #endif
 }
 
@@ -72,13 +72,13 @@ static inline void dispdrvReadInput(void)
 __attribute__((always_inline))
 static inline void dispdrvBusIn(void)
 {
-#ifdef _DISP_HI_BYTE
-    DISP_DATA_HI_Port->BSRR = 0x0000FF00;   // Set HIGH level on all data lines
-    DISP_DATA_HI_Port->CRH = BUS_MODE_IN;
-#endif
-#ifdef _DISP_LO_BYTE
+#if IS_GPIO_LO(DISP_DATA_LO)
     DISP_DATA_LO_Port->BSRR = 0x000000FF;   // Set HIGH level on all data lines
     DISP_DATA_LO_Port->CRL = BUS_MODE_IN;
+#endif
+#if IS_GPIO_HI(DISP_DATA_HI)
+    DISP_DATA_HI_Port->BSRR = 0x0000FF00;   // Set HIGH level on all data lines
+    DISP_DATA_HI_Port->CRH = BUS_MODE_IN;
 #endif
 }
 
@@ -89,22 +89,23 @@ static inline void dispdrvBusOut(void)
         dispdrvReadInput();
         bus_requested = false;
     }
-#ifdef _DISP_HI_BYTE
-    DISP_DATA_HI_Port->CRH = BUS_MODE_OUT;
-#endif
-#ifdef _DISP_LO_BYTE
+#if IS_GPIO_LO(DISP_DATA_LO)
     DISP_DATA_LO_Port->CRL = BUS_MODE_OUT;
+#endif
+#if IS_GPIO_HI(DISP_DATA_HI)
+    DISP_DATA_HI_Port->CRH = BUS_MODE_OUT;
 #endif
 }
 
 __attribute__((always_inline))
 static inline uint32_t dispDrvGetBusMode(void)
 {
-#ifdef _DISP_HI_BYTE
-    return DISP_DATA_HI_Port->CRH;
-#endif
-#ifdef _DISP_LO_BYTE
+#if IS_GPIO_LO(DISP_DATA_LO)
     return DISP_DATA_LO_Port->CRL;
+#elif IS_GPIO_HI(DISP_DATA_HI)
+    return DISP_DATA_HI_Port->CRH;
+#else
+    return BUS_MODE_IN;
 #endif
 }
 
@@ -182,10 +183,10 @@ void dispdrvReset(void)
 
 #ifdef _DISP_RST_ENABLED
     CLR(DISP_RST);
-    LL_mDelay(50);
+    utilmDelay(50);
     SET(DISP_RST);
 #endif
-    LL_mDelay(50);
+    utilmDelay(50);
 }
 
 void dispdrvInit(void)
@@ -295,10 +296,10 @@ static inline uint8_t dispdrvReadByte(void)
 
     CLR(DISP_RD);
     dispdrvReadDelay();
-#ifdef _DISP_HI_BYTE
-    ret = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
-#else
+#if IS_GPIO_LO(DISP_DATA_LO)
     ret = (DISP_DATA_LO_Port->IDR & 0x00FF);
+#else
+    ret = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
 #endif
     SET(DISP_RD);
 

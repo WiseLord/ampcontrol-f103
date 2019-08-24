@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void s6d04d1Init(void)
@@ -21,7 +17,7 @@ void s6d04d1Init(void)
     dispdrvSendData8(0x0b);
     dispdrvSendData8(0xf0);
     dispdrvSendData8(0x00);
-    LL_mDelay(10);
+    utilmDelay(10);
 
     dispdrvSelectReg8(0xf3);
     dispdrvSendData8(0xff);
@@ -191,13 +187,13 @@ void s6d04d1Init(void)
     dispdrvSendData8(0x40);
 
     dispdrvSelectReg8(0x11);
-    LL_mDelay(120);
+    utilmDelay(120);
 
     dispdrvSelectReg8(0xF1);
     dispdrvSendData8(0x00);
 
     dispdrvSelectReg8(0x29);
-    LL_mDelay(40);
+    utilmDelay(40);
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -224,7 +220,7 @@ void s6d04d1Sleep(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x28);    // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x10);
 
     SET(DISP_CS);
@@ -235,7 +231,7 @@ void s6d04d1Wakeup(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x11);    // Display ON
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x29);
 
     SET(DISP_CS);

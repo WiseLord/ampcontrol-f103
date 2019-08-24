@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void ili9486Init(void)
@@ -10,7 +6,7 @@ void ili9486Init(void)
 
     // Initial Sequence
     dispdrvSelectReg8(0x28);     // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
 
     dispdrvSelectReg8(0x3A);     // Interface Pixel Format
     dispdrvSendData8(0x55);
@@ -80,7 +76,7 @@ void ili9486Init(void)
 
     dispdrvSelectReg8(0x11);     // Sleep OUT
 
-    LL_mDelay(120);
+    utilmDelay(120);
     dispdrvSelectReg8(0x29);     // Display ON
 
     DISP_WAIT_BUSY();
@@ -127,7 +123,7 @@ void ili9486Sleep(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x28);    // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x10);
 
     DISP_WAIT_BUSY();
@@ -139,7 +135,7 @@ void ili9486Wakeup(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x11);    // Display ON
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x29);
 
     SET(DISP_CS);

@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void hx8347aInit(void)
@@ -51,7 +47,7 @@ void hx8347aInit(void)
     dispdrvWriteReg8(0x3B, 0x00); // P_RTN=0000, P_NW=000
     dispdrvWriteReg8(0x3C, 0xF0); // I_RTN=1111, I_NW=000
     dispdrvWriteReg8(0x3D, 0x00); // DIV=00
-    LL_mDelay(20);
+    utilmDelay(20);
     dispdrvWriteReg8(0x35, 0x38); // EQS=38h
     dispdrvWriteReg8(0x36, 0x78); // EQP=78h
 
@@ -63,7 +59,7 @@ void hx8347aInit(void)
     // Power Supply Setting
     dispdrvWriteReg8(0x19, 0x49); // OSCADJ=10 0000, OSD_EN=1 //60Hz
     dispdrvWriteReg8(0x93, 0x0C); // RADJ=1100
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg8(0x20, 0x40); // BT=0100
 
     dispdrvWriteReg8(0x1D, 0x07); // VC1=111
@@ -73,25 +69,25 @@ void hx8347aInit(void)
     // VCOM Setting for CMO 2.8” Panel
     dispdrvWriteReg8(0x44, 0x4D); // VCM=101 0000
     dispdrvWriteReg8(0x45, 0x11); // VDV=1 0001
-    LL_mDelay(10);
+    utilmDelay(10);
 
     dispdrvWriteReg8(0x1C, 0x04); // AP=100
-    LL_mDelay(20);
+    utilmDelay(20);
     dispdrvWriteReg8(0x1B, 0x18); // GASENB=0, PON=1, DK=1, XDK=0, DDVDH_TRI=0, STB=0
-    LL_mDelay(40);
+    utilmDelay(40);
     dispdrvWriteReg8(0x1B, 0x10); // GASENB=0, PON=1, DK=0, XDK=0, DDVDH_TRI=0, STB=0
-    LL_mDelay(40);
+    utilmDelay(40);
 
     dispdrvWriteReg8(0x43, 0x80); //Set VCOMG=1
-    LL_mDelay(100);
+    utilmDelay(100);
 
     // Display ON Setting
     dispdrvWriteReg8(0x90, 0x7F); // SAP=0111 1111
     dispdrvWriteReg8(0x26, 0x04); //GON=0, DTE=0, D=01
-    LL_mDelay(40);
+    utilmDelay(40);
     dispdrvWriteReg8(0x26, 0x24); //GON=1, DTE=0, D=01
     dispdrvWriteReg8(0x26, 0x2C); //GON=1, DTE=0, D=11
-    LL_mDelay(40);
+    utilmDelay(40);
 
     dispdrvWriteReg8(0x26, 0x3C); //GON=1, DTE=1, D=11
 
@@ -109,27 +105,27 @@ void hx8347aSleep(void)
 
     // Display Off
     dispdrvWriteReg8(0x26, 0x38); //GON=1, DTE=1, D=10
-    LL_mDelay(40);
+    utilmDelay(40);
     dispdrvWriteReg8(0x26, 0x28); //GON=1, DTE=0, D=10
-    LL_mDelay(40);
+    utilmDelay(40);
     dispdrvWriteReg8(0x26, 0x00); //GON=0, DTE=0, D=00
     // Power Off
     dispdrvWriteReg8(0x43, 0x00); // VCOMG=0
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg8(0x1B, 0x00); // GASENB=0, PON=0, DK=0, XDK=0,
     // VLCD_TRI=0, STB=0
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg8(0x1B, 0x08); // GASENB=0, PON=0, DK=1, XDK=0,
     // VLCD_TRI=0, STB=0
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg8(0x1C, 0x00); // AP=000
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg8(0x90, 0x00); // SAP=00000000
-    LL_mDelay(10);
+    utilmDelay(10);
     // Into STB mode
     dispdrvWriteReg8(0x1B, 0x09); // GASSENB=0, PON=0, DK=1, XDK=0,
     // VLCD_TRI=0, STB=1
-    LL_mDelay(10);
+    utilmDelay(10);
     // Stop Oscillation
     dispdrvWriteReg8(0x19, 0x48); // CADJ=0100, CUADJ=100, OSD_EN=0
 
@@ -142,7 +138,7 @@ void hx8347aWakeup(void)
 
     // Start Oscillation
     dispdrvWriteReg8(0x0019, 0x0049); // OSCADJ=100 010(FR:60Hz), OSD_EN=1
-    LL_mDelay(10);
+    utilmDelay(10);
 
     // Exit STB mode
     dispdrvWriteReg8(0x001B, 0x0008); // NIDSENB=0, PON=0, DK=1, XDK=0,
@@ -155,28 +151,28 @@ void hx8347aWakeup(void)
     dispdrvWriteReg8(0x1F, 0x03); // VRH=0011
     dispdrvWriteReg8(0x44, 0x20); // VCM=010 0000
     dispdrvWriteReg8(0x45, 0x0E); // VDV=0 1110
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg8(0x1C, 0x04); // AP=100
-    LL_mDelay(20);
+    utilmDelay(20);
     dispdrvWriteReg8(0x1B, 0x18); // NIDSENB=0, PON=1, DK=1, XDK=0,
-    LL_mDelay(40);
+    utilmDelay(40);
 
     // VLCD_TRI=0, STB=0
     dispdrvWriteReg8(0x1B, 0x10); // NIDSENB=0, PON=1, DK=0, XDK=0,
-    LL_mDelay(40);
+    utilmDelay(40);
 
     // VLCD_TRI=1, STB=0
     dispdrvWriteReg8(0x43, 0x80); // VCOMG=1
-    LL_mDelay(100);
+    utilmDelay(100);
 
     // Display ON Setting
     dispdrvWriteReg8(0x90, 0x7F); // SAP=01111111
-    LL_mDelay(40);
+    utilmDelay(40);
     dispdrvWriteReg8(0x26, 0x04); //GON=0, DTE=0, D=01
-    LL_mDelay(40);
+    utilmDelay(40);
     dispdrvWriteReg8(0x26, 0x24); //GON=1, DTE=0, D=01
     dispdrvWriteReg8(0x26, 0x2C); //GON=1, DTE=0, D=11
-    LL_mDelay(40);
+    utilmDelay(40);
     dispdrvWriteReg8(0x26, 0x3C); //GON=1, DTE=1, D=11
 
     SET(DISP_CS);

@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void s6d0164Init(void)
@@ -14,17 +10,17 @@ void s6d0164Init(void)
     dispdrvWriteReg16(0x0014, 0x4249);
 
     dispdrvWriteReg16(0x0010, 0x0800);
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg16(0x0011, 0x011A);
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg16(0x0011, 0x031A);
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg16(0x0011, 0x071A);
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg16(0x0011, 0x0F1A);
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg16(0x0011, 0x0F3A);
-    LL_mDelay(30);
+    utilmDelay(30);
 
     dispdrvWriteReg16(0x0001, 0x001C);
     dispdrvWriteReg16(0x0002, 0x0100);
@@ -60,7 +56,7 @@ void s6d0164Init(void)
 
     dispdrvWriteReg16(0x000F, 0x0B01);
     dispdrvWriteReg16(0x0007, 0x0016);
-    LL_mDelay(10);
+    utilmDelay(10);
     dispdrvWriteReg16(0x0007, 0x0017);
 
     SET(DISP_CS);
@@ -71,7 +67,7 @@ void s6d0164Sleep(void)
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x0010, 0x0A01);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
     SET(DISP_CS);
@@ -82,7 +78,7 @@ void s6d0164Wakeup(void)
     CLR(DISP_CS);
 
     dispdrvWriteReg16(0x0010, 0x0A00);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x0007, 0x1017);    // 65K color and display ON
 
     SET(DISP_CS);

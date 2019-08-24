@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void st7735Init(void)
@@ -11,7 +7,7 @@ void st7735Init(void)
     // Initial Sequence
     //************* Start Initial Sequence **********//
     dispdrvSelectReg8(0x11); //Exit Sleep
-    LL_mDelay(20);
+    utilmDelay(20);
 
     dispdrvSelectReg8(0x21); //Display Inversion On
 
@@ -102,7 +98,7 @@ void st7735Sleep(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x28);    // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x10);
 
     DISP_WAIT_BUSY();
@@ -114,7 +110,7 @@ void st7735Wakeup(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x11);    // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x29);
 
     DISP_WAIT_BUSY();

@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void ssd1289Init(void)
@@ -91,7 +87,7 @@ void ssd1289Sleep(void)
     dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
     dispdrvWriteReg16(0x0012, 0x0000);    // VREG1OUT voltage
     dispdrvWriteReg16(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
-    LL_mDelay(200);
+    utilmDelay(200);
     dispdrvWriteReg16(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
 
     DISP_WAIT_BUSY();
@@ -107,12 +103,12 @@ void ssd1289Wakeup(void)
     dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
     dispdrvWriteReg16(0x0012, 0x0000);    // VREG1OUT voltage
     dispdrvWriteReg16(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
-    LL_mDelay(200);
+    utilmDelay(200);
     dispdrvWriteReg16(0x0010, 0x17B0);    // SAP, BT[3:0], AP, DSTB, SLP, STB
     dispdrvWriteReg16(0x0011, 0x0037);    // DC1[2:0], DC0[2:0], VC[2:0]
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x0012, 0x013A);    // VREG1OUT voltage
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvWriteReg16(0x0013, 0x1600);    // VDV[4:0] for VCOM amplitude
     dispdrvWriteReg16(0x0029, 0x000C);    // VCM[4:0] for VCOMH
 

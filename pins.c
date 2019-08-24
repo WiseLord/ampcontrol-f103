@@ -11,18 +11,18 @@
 
 static void pinsInitButtons(void)
 {
-    LL_GPIO_InitTypeDef gpio;
+    LL_GPIO_InitTypeDef initDef;
 
-    gpio.Mode = LL_GPIO_MODE_INPUT;
-    gpio.Pull = LL_GPIO_PULL_UP;
+    initDef.Mode = LL_GPIO_MODE_INPUT;
+    initDef.Pull = LL_GPIO_PULL_UP;
 
-#ifdef _DISP_HI_BYTE
-    gpio.Pin = DISP_DATA_HI_Pin;
-    LL_GPIO_Init(DISP_DATA_HI_Port, &gpio);
+#if IS_GPIO_LO(DISP_DATA_LO)
+    initDef.Pin = DISP_DATA_LO_Pin;
+    LL_GPIO_Init(DISP_DATA_LO_Port, &initDef);
 #endif
-#ifdef _DISP_LO_BYTE
-    gpio.Pin = DISP_DATA_LO_Pin;
-    LL_GPIO_Init(DISP_DATA_LO_Port, &gpio);
+#if IS_GPIO_HI(DISP_DATA_HI)
+    gpio.Pin = DISP_DATA_HI_Pin;
+    LL_GPIO_Init(DISP_DATA_HI_Port, &initDef);
 #endif
 }
 

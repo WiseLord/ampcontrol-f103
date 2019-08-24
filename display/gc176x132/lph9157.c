@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void lph9157Init(void)
@@ -10,10 +6,10 @@ void lph9157Init(void)
 
     dispdrvSelectReg8(0x01);
     dispdrvSelectReg8(0x11);
-    LL_mDelay(20);
+    utilmDelay(20);
     dispdrvSelectReg8(0x3a);
     dispdrvSendData8(0x05);
-    LL_mDelay(20);
+    utilmDelay(20);
     dispdrvSelectReg8(0x36);
     dispdrvSendData8(0x40);
     dispdrvSelectReg8(0x29);

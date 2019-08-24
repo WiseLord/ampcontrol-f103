@@ -33,16 +33,6 @@ ifeq "$(DEBUG_KARADIO)" "YES"
   C_DEFS += -D_DEBUG_KARADIO
 endif
 
-DISP_HI_BYTE = NO
-DISP_LO_BYTE = YES
-
-ifeq "$(DISP_HI_BYTE)" "YES"
-  C_DEFS += -D_DISP_HI_BYTE
-endif
-ifeq "$(DISP_LO_BYTE)" "YES"
-  C_DEFS += -D_DISP_LO_BYTE
-endif
-
 C_SOURCES = main.c
 
 C_SOURCES += actions.c

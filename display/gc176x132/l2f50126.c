@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 static const uint8_t disctl[9] = {
@@ -48,7 +44,7 @@ static void inline l2f50126PulseCS(void)
 {
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-    LL_mDelay(1);
+    utilmDelay(1);
     CLR(DISP_CS);
 }
 */

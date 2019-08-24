@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void r61581Init(void)
@@ -14,7 +10,7 @@ void r61581Init(void)
     dispdrvSendData8(0x00); // Enable all
 
     dispdrvSelectReg8(0x28);  // Set display off
-    LL_mDelay(30);
+    utilmDelay(30);
 
     dispdrvSelectReg8(0xB3);  // Frame memory access and interface setting
     dispdrvSendData8(0x02); // WEMODE=1
@@ -87,10 +83,10 @@ void r61581Init(void)
     dispdrvSendData8(0x04);
 
     dispdrvSelectReg8(0x11);  // Exit sleep mode
-    LL_mDelay(150);
+    utilmDelay(150);
 
     dispdrvSelectReg8(0x29);  // Set display on
-    LL_mDelay(30);
+    utilmDelay(30);
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -137,7 +133,7 @@ void r61581Sleep(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x28);    // Display OFF
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x10);
 
     SET(DISP_CS);
@@ -148,7 +144,7 @@ void r61581Wakeup(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x11);    // Display ON
-    LL_mDelay(100);
+    utilmDelay(100);
     dispdrvSelectReg8(0x29);
 
     SET(DISP_CS);

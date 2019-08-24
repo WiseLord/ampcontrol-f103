@@ -1,7 +1,3 @@
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
-
-#include "../../pins.h"
 #include "../dispdrv.h"
 
 void ls020Init(void)
@@ -10,7 +6,7 @@ void ls020Init(void)
 
     dispdrvSendData16(0xFDFD);
     dispdrvSendData16(0xFDFD);
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvSendData16(0xEF00);
     dispdrvSendData16(0xEE04);
     dispdrvSendData16(0x1B04);
@@ -21,7 +17,7 @@ void ls020Init(void)
     dispdrvSendData16(0x7F3F);
     dispdrvSendData16(0xEE04);
     dispdrvSendData16(0x4306);
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvSendData16(0xEF90);
     dispdrvSendData16(0x0983);
     dispdrvSendData16(0x0800);
@@ -42,7 +38,7 @@ void ls020Init(void)
     dispdrvSendData16(0xE202);
     dispdrvSendData16(0xE276);
     dispdrvSendData16(0xE183);
-    LL_mDelay(50);
+    utilmDelay(50);
     dispdrvSendData16(0x8001);
     dispdrvSendData16(0xEF90);
     dispdrvSendData16(0x0000); // Mirror? 0x0020
