@@ -1,58 +1,39 @@
 #include "dispdrv.h"
 
 #include <stdbool.h>
-#include <stm32f1xx_ll_bus.h>
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_spi.h>
-#include <stm32f1xx_ll_utils.h>
-#include "../pins.h"
 
-#ifndef _DISP_SPI
 static volatile bool bus_requested = false;
-#endif
 static volatile int8_t brightness;
 static volatile uint8_t busData;
 
+#ifdef _STM32F1
 #define BUS_MODE_OUT        0x33333333  // CNF=0b00, MODE=0b11 => Output push-pull 50 MHz
 #define BUS_MODE_IN         0x88888888  // CNF=0b10, MODE=0b00 - Input pullup
-
-#ifdef _DISP_SPI
-static void dispdrvInitSPI()
-{
-    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_SPI2);
-
-    LL_SPI_InitTypeDef SPI_InitStruct;
-    SPI_InitStruct.Mode = LL_SPI_MODE_MASTER;
-    SPI_InitStruct.TransferDirection = LL_SPI_FULL_DUPLEX;
-    SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV2;
-    SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_LOW;
-    SPI_InitStruct.ClockPhase = LL_SPI_PHASE_1EDGE;
-    SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
-    SPI_InitStruct.DataWidth = LL_SPI_DATAWIDTH_8BIT;
-    SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
-    SPI_InitStruct.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
-    SPI_InitStruct.CRCPoly = 10;
-    LL_SPI_Init(SPI2, &SPI_InitStruct);
-
-    LL_SPI_Enable(SPI2);
-}
+#endif
+#ifdef _STM32F3
+#if IS_GPIO_LO(DISP_DATA_HI)
+#define BUS_MODE_OUT        0x55550000
+#define BUS_MODE_IN         0x00000000
+#else
+#define BUS_MODE_OUT        0x00005555
+#define BUS_MODE_IN         0x00000000
+#endif
 #endif
 
 __attribute__((always_inline))
 static inline void dispdrvSendByte(uint8_t data)
 {
 #ifdef _DISP_SPI
-    while (!LL_SPI_IsActiveFlag_TXE(SPI2));
-    LL_SPI_TransmitData8(SPI2, data);
+    spiSendByte(SPI_DISPLAY, data);
 #else
 #if IS_GPIO_LO(DISP_DATA_LO)
     DISP_DATA_LO_Port->BSRR = 0x00FF0000 | data;
 #elif IS_GPIO_HI(DISP_DATA_HI)
     DISP_DATA_HI_Port->BSRR = 0xFF000000 | (uint16_t)(data << 8);
 #endif
-    __ASM volatile ("nop");
+    __asm volatile ("nop");
     CLR(DISP_WR);
-    __ASM volatile ("nop");
+    __asm volatile ("nop");
     SET(DISP_WR);
 #endif
 }
@@ -74,11 +55,23 @@ static inline void dispdrvBusIn(void)
 {
 #if IS_GPIO_LO(DISP_DATA_LO)
     DISP_DATA_LO_Port->BSRR = 0x000000FF;   // Set HIGH level on all data lines
+#ifdef _STM32F1
     DISP_DATA_LO_Port->CRL = BUS_MODE_IN;
+#endif
+#ifdef _STM32F3
+    DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
+    DISP_DATA_LO_Port->MODER |= BUS_MODE_IN;
+#endif
 #endif
 #if IS_GPIO_HI(DISP_DATA_HI)
     DISP_DATA_HI_Port->BSRR = 0x0000FF00;   // Set HIGH level on all data lines
+#ifdef _STM32F1
     DISP_DATA_HI_Port->CRH = BUS_MODE_IN;
+#endif
+#ifdef _STM32F3
+    DISP_DATA_HI_Port->MODER &= 0x0000FFFF;
+    DISP_DATA_HI_Port->MODER |= BUS_MODE_IN;
+#endif
 #endif
 }
 
@@ -90,10 +83,22 @@ static inline void dispdrvBusOut(void)
         bus_requested = false;
     }
 #if IS_GPIO_LO(DISP_DATA_LO)
+#ifdef _STM32F1
     DISP_DATA_LO_Port->CRL = BUS_MODE_OUT;
 #endif
+#ifdef _STM32F3
+    DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
+    DISP_DATA_LO_Port->MODER |= BUS_MODE_OUT;
+#endif
+#endif
 #if IS_GPIO_HI(DISP_DATA_HI)
+#ifdef _STM32F1
     DISP_DATA_HI_Port->CRH = BUS_MODE_OUT;
+#endif
+#ifdef _STM32F3
+    DISP_DATA_HI_Port->MODER &= 0x0000FFFF;
+    DISP_DATA_HI_Port->MODER |= BUS_MODE_OUT;
+#endif
 #endif
 }
 
@@ -101,9 +106,19 @@ __attribute__((always_inline))
 static inline uint32_t dispDrvGetBusMode(void)
 {
 #if IS_GPIO_LO(DISP_DATA_LO)
+#ifdef _STM32F1
     return DISP_DATA_LO_Port->CRL;
+#endif
+#ifdef _STM32F3
+    return DISP_DATA_LO_Port->MODER & 0x0000FFFF;
+#endif
 #elif IS_GPIO_HI(DISP_DATA_HI)
+#ifdef _STM32F1
     return DISP_DATA_HI_Port->CRH;
+#endif
+#ifdef _STM32F3
+    return DISP_DATA_HI_Port->MODER & 0xFFFF0000;
+#endif
 #else
     return BUS_MODE_IN;
 #endif
@@ -171,7 +186,7 @@ void dispdrvReset(void)
 {
 #ifdef _DISP_SPI
     SET(DISP_SPI_DC);
-    dispdrvInitSPI();
+    spiInit(SPI_DISPLAY);
 #else
 #ifdef _DISP_READ_ENABLED
     SET(DISP_RD);

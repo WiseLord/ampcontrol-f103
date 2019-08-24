@@ -1,8 +1,6 @@
 #include "usart.h"
 
-#include <stm32f1xx_ll_bus.h>
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_usart.h>
+#include "hwlibs.h"
 
 #define TX_Pin LL_GPIO_PIN_9
 #define TX_GPIO_Port GPIOA
@@ -31,10 +29,16 @@ static void pinsInitUsart(USART_TypeDef *USARTx)
     GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+#ifdef _STM32F3
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
+#endif
     LL_GPIO_Init(gpio, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = rxPin;
+#ifdef _STM32F1
     GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
+#endif
     LL_GPIO_Init(gpio, &GPIO_InitStruct);
 }
 
@@ -70,7 +74,9 @@ void usartInit(void *usart, uint32_t baudRate)
     USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
 
     LL_USART_Init(USARTx, &USART_InitStruct);
-
+#ifdef _STM32F3
+    LL_USART_DisableIT_CTS(USARTx);
+#endif
     LL_USART_ConfigAsyncMode(USARTx);
 
     LL_USART_Enable(USARTx);

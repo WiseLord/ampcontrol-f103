@@ -1,10 +1,10 @@
 #include "utils.h"
 
+#include "hwlibs.h"
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-
-#include <stm32f1xx_ll_utils.h>
 
 static char strbuf[256];    // String buffer
 
