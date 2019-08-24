@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#define USART_DBG               USART1
+
 #include <stdint.h>
 
 void dbgInit(void);

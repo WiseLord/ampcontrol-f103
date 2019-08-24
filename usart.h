@@ -6,14 +6,11 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <stm32f1xx.h>
 
-#define USART_DBG               USART1
-#define USART_KARADIO           USART2
+void usartInit(void *usart, uint32_t baudRate);
 
-void usartInit(USART_TypeDef *USARTx, uint32_t baudRate);
-
-void usartSendChar(USART_TypeDef *USARTx, char ch);
+void usartSendChar(void *usart, char ch);
+void usartSendString(void *usart, char *str);
 
 #ifdef __cplusplus
 }
