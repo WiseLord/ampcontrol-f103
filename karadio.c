@@ -1,6 +1,7 @@
 #include "karadio.h"
 
-#include <stm32f1xx_ll_usart.h>
+#include "hwlibs.h"
+
 #include <string.h>
 
 #include "actions.h"

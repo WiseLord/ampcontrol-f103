@@ -1,7 +1,6 @@
 #include "eemul.h"
 
-#include <stm32f1xx.h>
-#include <stm32f1xx_ll_utils.h>
+#include "hwlibs.h"
 
 #include "settings.h"
 

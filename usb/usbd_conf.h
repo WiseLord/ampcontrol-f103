@@ -9,8 +9,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-#include <stm32f1xx.h>
-#include <stm32f1xx_hal_def.h>
+#include "../hwlibs.h"
 
 #define USBD_MAX_NUM_INTERFACES             1
 #define USBD_MAX_NUM_CONFIGURATION          1

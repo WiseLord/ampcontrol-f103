@@ -1,10 +1,6 @@
 #include "pins.h"
 
-#include <stm32f1xx_ll_bus.h>
-#include <stm32f1xx_ll_exti.h>
-#include <stm32f1xx_ll_i2c.h>
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_utils.h>
+#include "hwlibs.h"
 
 #include "i2c.h"
 #include "settings.h"

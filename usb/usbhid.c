@@ -3,7 +3,8 @@
 #include "usbd_desc.h"
 #include "usbd_amp.h"
 
-#include <stm32f1xx_ll_utils.h>
+#include "../hwlibs.h"
+
 #include <string.h>
 
 #define REPORT_ID_KEYBOARD      0x01

@@ -8,7 +8,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
-#include <stm32f1xx_ll_gpio.h>
+#include "hwlibs.h"
 
 typedef uint16_t MuteStby;
 enum {

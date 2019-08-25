@@ -1,7 +1,6 @@
 #include "timers.h"
 
-#include <stm32f1xx_ll_bus.h>
-#include <stm32f1xx_ll_tim.h>
+#include "hwlibs.h"
 
 static void TIM2_Init(void)
 {

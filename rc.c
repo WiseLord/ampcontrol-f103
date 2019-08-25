@@ -1,7 +1,6 @@
 #include "rc.h"
 
-#include <stm32f1xx_ll_gpio.h>
-#include <stm32f1xx_ll_tim.h>
+#include "hwlibs.h"
 
 #include "pins.h"
 #include "settings.h"

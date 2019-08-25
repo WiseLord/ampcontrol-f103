@@ -1,12 +1,8 @@
-#include "stm32f1xx.h"
-
 #include "usbd_def.h"
 #include "usbd_core.h"
 #include "usbd_amp.h"
 
-#include <stm32f1xx_hal_pcd.h>
-#include <stm32f1xx_ll_bus.h>
-#include <stm32f1xx_ll_utils.h>
+#include "../hwlibs.h"
 
 static PCD_HandleTypeDef hpcd_USB_FS;
 
