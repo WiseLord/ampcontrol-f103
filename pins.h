@@ -99,12 +99,6 @@ void pinsSetStby(bool value);
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
-// TFT serial (SPI 3 lines) wiring
-#define DISP_SPI_SCK_Port       GPIOB
-#define DISP_SPI_SCK_Pin        LL_GPIO_PIN_13
-#define DISP_SPI_DC             DISP_RS
-#define DISP_SPI_SDI            DISP_WR
-
 // Mute and Standby lines
 #define SWD_FORCED  // TODO: Return to SWD line when debug finished
 #ifdef SWD_FORCED

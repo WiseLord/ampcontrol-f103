@@ -5,9 +5,10 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include <stdint.h>
 
-void spiInit(void *spi);
+void spiInit(void *spi, bool read);
 
 void spiWaitBusy(void *spi);
 

@@ -2,12 +2,6 @@
 
 #include "hwlibs.h"
 
-#define TX_Pin LL_GPIO_PIN_9
-#define TX_GPIO_Port GPIOA
-
-#define RX_Pin LL_GPIO_PIN_10
-#define RX_GPIO_Port GPIOA
-
 static void pinsInitUsart(USART_TypeDef *USARTx)
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -47,10 +41,6 @@ void usartInit(void *usart, uint32_t baudRate)
 {
     USART_TypeDef *USARTx = (USART_TypeDef *)usart;
 
-    pinsInitUsart(USARTx);
-
-    LL_USART_InitTypeDef USART_InitStruct = {0};
-
     // Peripheral clock enable and interrupt init
     if (USARTx == USART1) {
         LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_USART1);
@@ -66,19 +56,25 @@ void usartInit(void *usart, uint32_t baudRate)
         NVIC_EnableIRQ(USART3_IRQn);
     }
 
+    pinsInitUsart(USARTx);
+
+    LL_USART_InitTypeDef USART_InitStruct = {0};
+
     USART_InitStruct.BaudRate = baudRate;
     USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
     USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
     USART_InitStruct.Parity = LL_USART_PARITY_NONE;
     USART_InitStruct.TransferDirection = LL_USART_DIRECTION_TX_RX;
     USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
+    USART_InitStruct.OverSampling = LL_USART_OVERSAMPLING_16;
 
     LL_USART_Init(USARTx, &USART_InitStruct);
 #ifdef _STM32F3
     LL_USART_DisableIT_CTS(USARTx);
+    LL_USART_DisableOverrunDetect(USARTx);
+    LL_USART_DisableDMADeactOnRxErr(USARTx);
 #endif
     LL_USART_ConfigAsyncMode(USARTx);
-
     LL_USART_Enable(USARTx);
 }
 
