@@ -784,9 +784,9 @@ static void actionHandleStby(int16_t value)
             tunerReadSettings();
 
             pinsSetStby(false);     // ON via relay
-            swTimSet(SW_TIM_INIT_HW, 500);
+            swTimSet(SW_TIM_INIT_HW, 600);
 
-            actionSetScreen(SCREEN_TIME, 800);
+            actionSetScreen(SCREEN_TIME, 500);
 
             ampStatus = AMP_STATUS_INIT;
         }

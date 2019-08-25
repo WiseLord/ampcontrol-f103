@@ -143,6 +143,10 @@ static bool rtcIsAlarmDay(AlarmDay days, int8_t wday)
 
 void rtcInit(void)
 {
+#ifdef _STM32F3
+    return;
+#endif
+
     switch (rtcPhase) {
     case RTC_INIT_DISABLED:
         // Power interface clock enable
