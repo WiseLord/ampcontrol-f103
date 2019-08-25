@@ -71,6 +71,7 @@ void SysTick_Handler(void)
 
 void RTC_IRQHandler(void)
 {
+#ifdef _STM32F1
     if (LL_RTC_IsEnabledIT_SEC(RTC) != 0) {
         // Clear the RTC Second interrupt
         LL_RTC_ClearFlag_SEC(RTC);
@@ -78,6 +79,7 @@ void RTC_IRQHandler(void)
         // Callback
         rtcIRQ();
     }
+#endif
 }
 
 void TIM2_IRQHandler(void)

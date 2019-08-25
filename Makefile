@@ -171,12 +171,15 @@ C_SOURCES += \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_spi.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_tim.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_usart.c \
-  drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_usb.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_utils.c \
   drivers/STM32_USB_Device_Library/Core/Src/usbd_core.c \
   drivers/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
   drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
   system/system_$(call lc, $(STM32_FAMILY))xx.c
+
+ifeq "$(STM32_FAMILY)" "STM32F1"
+  C_SOURCES += drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_usb.c
+endif
 
 C_INCLUDES += \
 -Idrivers/$(STM32_FAMILY)xx_HAL_Driver/Inc \

@@ -1,7 +1,9 @@
 .
 drivers/CMSIS/Device/ST/STM32F1xx/Include
+drivers/CMSIS/Device/ST/STM32F3xx/Include
 drivers/CMSIS/Include
 drivers/STM32F1xx_HAL_Driver/Inc
+drivers/STM32F3xx_HAL_Driver/Inc
 drivers/STM32_USB_Device_Library/Core/Inc
 display
 usb

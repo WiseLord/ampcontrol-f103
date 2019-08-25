@@ -120,7 +120,9 @@ static void rtcUpdate(RTC_type *rtc, RtcMode mode, int8_t value)
 
     rtcTime = rtcToSec(rtc);
 
+#ifdef _STM32F1
     LL_RTC_TIME_SetCounter(RTC, rtcTime);
+#endif
 }
 
 static bool rtcIsAlarmDay(AlarmDay days, int8_t wday)
@@ -146,7 +148,9 @@ void rtcInit(void)
         // Power interface clock enable
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
         // Backup interface clock enable
+#ifdef _STM32F1
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_BKP);
+#endif
         // Enable access to the backup domain
         LL_PWR_EnableBkUpAccess();
 
@@ -185,8 +189,10 @@ void rtcInit(void)
     }
 
     if (rtcPhase == RTC_INIT_READY) {
+#ifdef _STM32F1
         LL_RTC_EnableIT_SEC(RTC);
         NVIC_EnableIRQ (RTC_IRQn);
+#endif
         swTimSet(SW_TIM_RTC_INIT, SW_TIM_OFF);
     } else {
         swTimSet(SW_TIM_RTC_INIT, 500);
@@ -196,7 +202,9 @@ void rtcInit(void)
 void rtcSetCorrection(int16_t value)
 {
     if (LL_RTC_EnterInitMode(RTC) != ERROR) {
+#ifdef _STM32F1
         LL_RTC_CAL_SetCoarseDigital(BKP, (uint32_t)(64 - value));
+#endif
     }
     LL_RTC_ExitInitMode(RTC);
 }

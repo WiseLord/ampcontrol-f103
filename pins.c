@@ -26,7 +26,9 @@ static void pinsInitRc(void)
 {
     LL_EXTI_InitTypeDef exti;
 
+#ifdef _STM32F1
     LL_GPIO_AF_SetEXTISource(RC_AR_ExtiPort, RC_AR_ExtiLine);
+#endif
 
     exti.Line_0_31 = RC_ExtiLine;
     exti.LineCommand = ENABLE;
@@ -34,7 +36,9 @@ static void pinsInitRc(void)
     exti.Trigger = LL_EXTI_TRIGGER_RISING_FALLING;
     LL_EXTI_Init(&exti);
 
+#ifdef _STM32F1
     IN_F(RC);
+#endif
 }
 
 static void pinsInitDisplay(void)
@@ -59,10 +63,14 @@ void pinsInitMuteStby(MuteStby value)
 
     if (value == MUTESTBY_SWD) {
         // JTAG-DP Disabled and SW-DP Enabled
+#ifdef _STM32F1
         LL_GPIO_AF_Remap_SWJ_NOJTAG();
+#endif
     } else {
         // JTAG-DP Disabled and SW-DP Disabled
+#ifdef _STM32F1
         LL_GPIO_AF_DisableRemap_SWJ();
+#endif
     }
 }
 
@@ -86,7 +94,9 @@ static void pinsHwResetI2C(void)
     SET(SI470X_RST);    // End of reset
 
     LL_mDelay(1);
+#ifdef _STM32F1
     IN_F(SI470X_SDIO);  // SDIO = 1
+#endif
 }
 
 void pinsDeInitAmpI2c(void)
@@ -99,7 +109,9 @@ void pinsInitAmpI2c(void)
     pinsHwResetI2C();
     i2cInit(I2C_AMP, 100000);
 
+#ifdef _STM32F1
     LL_GPIO_AF_EnableRemap_I2C1();
+#endif
 
     LL_GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -114,9 +126,16 @@ void pinsInitAmpI2c(void)
 void pinsInit(void)
 {
     // Enable clock for all GPIO peripherials
+#ifdef _STM32F1
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
+#endif
+#ifdef _STM32F3
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
+#endif
 
     pinsInitButtons();
     pinsInitRc();

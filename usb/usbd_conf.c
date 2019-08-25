@@ -15,8 +15,10 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef *pcdHandle)
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USB);
 
         // Peripheral interrupt init
+#ifdef _STM32F1
         NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
         NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
+#endif
     }
 }
 
@@ -27,7 +29,9 @@ void HAL_PCD_MspDeInit(PCD_HandleTypeDef *pcdHandle)
         LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_USB);
 
         // Peripheral interrupt Deinit
+#ifdef _STM32F1
         NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
+#endif
     }
 }
 

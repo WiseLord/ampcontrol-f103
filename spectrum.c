@@ -90,17 +90,18 @@ static void spInitDMA(void)
 static void spInitADC(void)
 {
     // Configure ADC clock
+#ifdef _STM32F1
     LL_RCC_SetADCClockSource(RCC_CFGR_ADCPRE_DIV6);
-
-    // Enable GPIO Clock
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
+#endif
 
     // Configure NVIC to enable ADC1 interruptions
     NVIC_SetPriority(ADC1_IRQn, 0);
     NVIC_EnableIRQ(ADC1_IRQn);
 
     // Enable ADC clock (core clock)
+#ifdef _STM32F1
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC1);
+#endif
 
     // Configure GPIO in analog mode to be used as ADC input
     LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_0, LL_GPIO_MODE_ANALOG);
@@ -111,7 +112,9 @@ static void spInitADC(void)
         LL_ADC_SetDataAlignment(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
 
         // Set Set ADC sequencers scan mode
+#ifdef _STM32F1
         LL_ADC_SetSequencersScanMode(ADC1, LL_ADC_SEQ_SCAN_ENABLE);
+#endif
     }
 
     if (LL_ADC_IsEnabled(ADC1) == 0) {
@@ -134,17 +137,23 @@ static void spInitADC(void)
 
     if (LL_ADC_IsEnabled(ADC1) == 0) {
         /* Set ADC channels sampling time */
+#ifdef _STM32F1
         LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_0, LL_ADC_SAMPLINGTIME_71CYCLES_5);
         LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_1, LL_ADC_SAMPLINGTIME_71CYCLES_5);
+#endif
     }
 
     if (LL_ADC_IsEnabled(ADC1) == 0) {
         LL_ADC_Enable(ADC1);
 
+#ifdef _STM32F1
         while (!LL_ADC_IsEnabled(ADC1));
+#endif
 
         // Run ADC self calibration
+#ifdef _STM32F1
         LL_ADC_StartCalibration(ADC1);
+#endif
         while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0) {
         }
     }
@@ -266,6 +275,8 @@ void spGetADC(Spectrum *sp)
 void spConvertADC(void)
 {
     if (LL_ADC_IsEnabled(ADC1) == 1) {
+#ifdef _STM32F1
         LL_ADC_REG_StartConversionSWStart(ADC1);
+#endif
     }
 }

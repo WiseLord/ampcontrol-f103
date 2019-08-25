@@ -58,8 +58,10 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
 
     LL_I2C_InitTypeDef I2C_InitStruct;
     I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
+#ifdef _STM32F1
     I2C_InitStruct.ClockSpeed = ClockSpeed;
     I2C_InitStruct.DutyCycle = LL_I2C_DUTYCYCLE_16_9;
+#endif
     I2C_InitStruct.OwnAddress1 = 0;
     I2C_InitStruct.TypeAcknowledge = LL_I2C_ACK;
     I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
@@ -96,10 +98,12 @@ void i2cTransmit(void *i2c, bool stop)
     LL_I2C_GenerateStartCondition(i2c);
 
     ctx->timeout = I2C_TIMEOUT_SB_MS;
+#ifdef _STM32F1
     while (!LL_I2C_IsActiveFlag_SB(i2c)) {
         if (i2cWait(ctx) == false)
             return;
     }
+#endif
 
     LL_I2C_TransmitData8(i2c, ctx->addr | I2C_WRITE);
 
@@ -124,10 +128,12 @@ void i2cTransmit(void *i2c, bool stop)
 
     if (stop) {
         ctx->timeout = I2C_TIMEOUT_BTF_MS;
+#ifdef _STM32F1
         while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
             if (i2cWait(ctx) == false)
                 return;
         }
+#endif
         LL_I2C_GenerateStopCondition(i2c);
     }
 }
@@ -139,18 +145,24 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
         return;
 
     if (size == 2) {
+#ifdef _STM32F1
         LL_I2C_EnableBitPOS(i2c);
+#endif
     } else {
+#ifdef _STM32F1
         LL_I2C_DisableBitPOS(i2c);
+#endif
     }
 
     LL_I2C_GenerateStartCondition(i2c);
 
     ctx->timeout = I2C_TIMEOUT_SB_MS;
+#ifdef _STM32F1
     while (!LL_I2C_IsActiveFlag_SB(i2c)) {
         if (i2cWait(ctx) == false)
             return;
     }
+#endif
 
     LL_I2C_TransmitData8(i2c, ctx->addr | I2C_READ);
 
@@ -178,10 +190,12 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
         LL_I2C_AcknowledgeNextData(i2c, LL_I2C_NACK);
 
         ctx->timeout = I2C_TIMEOUT_BTF_MS;
+#ifdef _STM32F1
         while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
             if (i2cWait(ctx) == false)
                 return;
         }
+#endif
 
         LL_I2C_GenerateStopCondition(i2c);
 
@@ -194,18 +208,22 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
             /* Receive bytes from first byte until byte N-3 */
             if (size-- != 3) {
                 ctx->timeout = I2C_TIMEOUT_BTF_MS;
+#ifdef _STM32F1
                 while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
                     if (i2cWait(ctx) == false)
                         return;
                 }
+#endif
 
                 *buf++ = LL_I2C_ReceiveData8(i2c);
             } else {
                 ctx->timeout = I2C_TIMEOUT_BTF_MS;
+#ifdef _STM32F1
                 while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
                     if (i2cWait(ctx) == false)
                         return;
                 }
+#endif
 
                 LL_I2C_AcknowledgeNextData(i2c, LL_I2C_NACK);
 
@@ -233,5 +251,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
             return;
     }
     LL_I2C_AcknowledgeNextData(i2c, LL_I2C_ACK);
+#ifdef _STM32F1
     LL_I2C_DisableBitPOS(i2c);
+#endif
 }
