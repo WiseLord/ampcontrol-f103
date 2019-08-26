@@ -135,7 +135,12 @@ void EXTI9_5_IRQHandler()
     }
 }
 
+#ifdef _STM32F1
 void USB_LP_CAN1_RX0_IRQHandler(void)
+#endif
+#ifdef _STM32F3
+void USB_LP_CAN_RX0_IRQHandler(void)
+#endif
 {
     USBD_IRQ();
 }

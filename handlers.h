@@ -24,7 +24,12 @@ void TIM2_IRQHandler(void);
 void USART1_IRQHandler(void);
 void USART2_IRQHandler(void);
 void EXTI9_5_IRQHandler(void);
+#ifdef _STM32F1
 void USB_LP_CAN1_RX0_IRQHandler(void);
+#endif
+#ifdef _STM32F3
+void USB_LP_CAN_RX0_IRQHandler(void);
+#endif
 
 #ifdef __cplusplus
 }

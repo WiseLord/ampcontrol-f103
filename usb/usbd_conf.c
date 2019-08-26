@@ -14,10 +14,26 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef *pcdHandle)
         // Peripheral clock enable
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USB);
 
+#ifdef _STM32F3
+        LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+        GPIO_InitStruct.Pin = LL_GPIO_PIN_11 | LL_GPIO_PIN_12;
+        GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+        GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+        GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+        GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+        GPIO_InitStruct.Alternate = LL_GPIO_AF_14;
+        LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+#endif
+
         // Peripheral interrupt init
 #ifdef _STM32F1
         NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
         NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
+#endif
+#ifdef _STM32F3
+        NVIC_SetPriority(USB_LP_CAN_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+        NVIC_EnableIRQ(USB_LP_CAN_RX0_IRQn);
 #endif
     }
 }
@@ -31,6 +47,9 @@ void HAL_PCD_MspDeInit(PCD_HandleTypeDef *pcdHandle)
         // Peripheral interrupt Deinit
 #ifdef _STM32F1
         NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
+#endif
+#ifdef _STM32F3
+        NVIC_DisableIRQ(USB_LP_CAN_RX0_IRQn);
 #endif
     }
 }
