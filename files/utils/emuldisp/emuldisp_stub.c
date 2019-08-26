@@ -215,5 +215,11 @@ char dbgGetChar()
 
 void dbg(const char *str)
 {
-
+    (void)str;
 }
+
+void LL_mDelay(uint32_t delay)
+{
+    (void)delay;
+}
+
