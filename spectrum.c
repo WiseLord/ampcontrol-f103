@@ -8,12 +8,20 @@
 #include "mem.h"
 #include "settings.h"
 
-#define DMA_BUF_SIZE        (FFT_SIZE * 2)
+#define DMA_BUF_SIZE        (FFT_SIZE * SP_CHAN_END)
 
 static Spectrum spectrum;
 
-// Array with ADC data, interleaved L-R-L-R...
-static int16_t bufDMA[DMA_BUF_SIZE];
+typedef struct {
+    int16_t chan[SP_CHAN_END];
+} SpDataSet;
+
+typedef union {
+    SpDataSet dataSet[FFT_SIZE];
+    int16_t bufDMA[DMA_BUF_SIZE];
+} SpDMAData;
+
+static SpDMAData dmaData;
 
 static const uint16_t dbTable[N_DB] = {
     256,   262,   267,   273,   279,   285,   292,   298,
@@ -74,7 +82,7 @@ static void spInitDMA(void)
     LL_DMA_ConfigAddresses(DMA1,
                            LL_DMA_CHANNEL_1,
                            LL_ADC_DMA_GetRegAddr(ADC1, LL_ADC_DMA_REG_REGULAR_DATA),
-                           (uint32_t)&bufDMA,
+                           (uint32_t)&dmaData,
                            LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
 
     // Set DMA transfer size
@@ -268,8 +276,9 @@ Spectrum *spGet(void)
 
 void spGetADC(Spectrum *sp)
 {
-    spGetData((int16_t *)(bufDMA + 0), &sp->data[SP_CHAN_LEFT]);
-    spGetData((int16_t *)(bufDMA + 1), &sp->data[SP_CHAN_RIGHT]);
+    for (SpChan chan = SP_CHAN_LEFT; chan < SP_CHAN_BOTH; chan++) {
+        spGetData(&dmaData.dataSet->chan[chan], &sp->data[chan]);
+    }
 }
 
 void spConvertADC(void)
