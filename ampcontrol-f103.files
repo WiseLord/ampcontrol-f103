@@ -85,8 +85,6 @@ display/glcd.c
 display/glcd.h
 
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
-drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h
-drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xg.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 
@@ -196,8 +194,6 @@ gui/widget/textedit.c
 gui/widget/textedit.h
 
 system/startup_stm32f103xb.s
-system/startup_stm32f103xe.s
-system/startup_stm32f103xg.s
 system/startup_stm32f303xc.s
 system/stm32f103c8_flash.ld
 system/stm32f103xb_openocd.cfg
