@@ -195,7 +195,7 @@ gui/widget/textedit.h
 
 system/startup_stm32f103xb.s
 system/startup_stm32f303xc.s
-system/stm32f103c8_flash.ld
+system/stm32f103cb_flash.ld
 system/stm32f103xb_openocd.cfg
 system/stm32f1xx_hal_conf.h
 system/stm32f303cc_flash.ld

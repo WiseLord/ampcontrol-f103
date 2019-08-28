@@ -7,7 +7,12 @@ extern "C" {
 
 #include <stdint.h>
 
+#ifdef _STM32F1
 #define EE_PAGE_SIZE    1024
+#endif
+#ifdef _STM32F3
+#define EE_PAGE_SIZE    2048
+#endif
 
 enum {
     EE_PAGE_FM  = 123,
