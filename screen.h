@@ -12,14 +12,15 @@ extern "C" {
 
 typedef uint8_t ScreenMode;
 enum {
-    SCREEN_STANDBY = 0,
-
+    // Screens allowed to be default
+    SCREEN_SPECTRUM = 0,
     SCREEN_TIME,
-    SCREEN_SPECTRUM,
+    SCREEN_AUDIO_INPUT,
+
+    SCREEN_STANDBY,
 
     SCREEN_AUDIO_PARAM,
     SCREEN_AUDIO_FLAG,
-    SCREEN_AUDIO_INPUT,
 
     SCREEN_MENU,
 

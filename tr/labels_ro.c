@@ -117,6 +117,7 @@ const char *const labels_ro[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Luminozitate STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Luminozitate",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Rotire",
+//    [LABEL_MENU + MENU_DISPLAY_DEF]     = "Main screen",
 //    [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Palette",
 
     // NOTE: Keep in sync with cmd.h define list

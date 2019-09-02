@@ -117,6 +117,7 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яскравість STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Яскравість",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Розгорнути",
+//    [LABEL_MENU + MENU_DISPLAY_DEF]     = "Main screen",
     [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Палітра",
 
     // NOTE: Keep in sync with cmd.h define list

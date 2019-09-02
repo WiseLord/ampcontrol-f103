@@ -75,6 +75,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   PARAM_DISPLAY_BR_STBY},
     [MENU_DISPLAY_BR_WORK]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   PARAM_DISPLAY_BR_WORK},
     [MENU_DISPLAY_ROTATE]   = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL,     PARAM_DISPLAY_ROTATE},
+    [MENU_DISPLAY_DEF]      = {MENU_SETUP_DISPLAY,      MENU_TYPE_ENUM,     PARAM_DISPLAY_DEF},
     [MENU_DISPLAY_PALETTE]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_ENUM,     PARAM_DISPLAY_PALETTE},
 
     FOREACH_CMD(GENERATE_MENU_ITEM)
@@ -174,6 +175,9 @@ static int16_t menuGetValue(MenuIdx index)
         break;
     case MENU_DISPLAY_ROTATE:
         ret = glcdGetRotate();
+        break;
+    case MENU_DISPLAY_DEF:
+        ret = screenGet()->def;
         break;
     case MENU_DISPLAY_PALETTE:
         ret = paletteGetIndex();
@@ -276,6 +280,9 @@ static void menuStoreCurrentValue(void)
     case MENU_DISPLAY_ROTATE:
         glcdRotate((bool)menu.value);
         canvasClear();
+        break;
+    case MENU_DISPLAY_DEF:
+        screenGet()->def = (ScreenMode)menu.value;
         break;
     case MENU_DISPLAY_PALETTE:
         paletteSetIndex((PalIdx)menu.value);
@@ -419,6 +426,12 @@ static void menuValueChange(int8_t diff)
             menu.value = LCD_BR_MAX;
         if (menu.value < LCD_BR_MIN)
             menu.value = LCD_BR_MIN;
+        break;
+    case MENU_DISPLAY_DEF:
+        if (menu.value > SCREEN_STANDBY - 1)
+            menu.value = SCREEN_STANDBY - 1;
+        if (menu.value < SCREEN_SPECTRUM)
+            menu.value = SCREEN_SPECTRUM;
         break;
     case MENU_DISPLAY_PALETTE:
         if (menu.value > PAL_END - 1)
@@ -731,6 +744,19 @@ const char *menuGetValueStr(MenuIdx index)
         break;
     case MENU_SPECTURM_MODE:
         ret = labelsGet((Label)(LABEL_SPECTRUM_MODE + value));
+        break;
+    case MENU_DISPLAY_DEF:
+        switch ((ScreenMode)value) {
+            case SCREEN_TIME:
+            ret = labelsGet((Label)(LABEL_MENU + MENU_RC_TIME));
+            break;
+        case SCREEN_AUDIO_INPUT:
+            ret = labelsGet((Label)(LABEL_MENU + MENU_AUDIO_IN));
+            break;
+        default:
+            ret = labelsGet((Label)(LABEL_MENU + MENU_SETUP_SPECTRUM));
+            break;
+        }
         break;
     case MENU_DISPLAY_PALETTE:
         ret = labelsGet((Label)(LABEL_PAL_MODE + value));

@@ -136,6 +136,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "STBY brightness",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Brightness",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Rotate",
+    [LABEL_MENU + MENU_DISPLAY_DEF]     = "Main screen",
     [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Palette",
 
     // NOTE: Keep in sync with cmd.h define list

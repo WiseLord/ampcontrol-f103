@@ -10,6 +10,7 @@ extern "C" {
 #include "../menu.h"
 #include "../pins.h"
 #include "../rtc.h"
+#include "../screen.h"
 #include "../spectrum.h"
 #include "../tuner/tuner.h"
 

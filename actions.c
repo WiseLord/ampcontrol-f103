@@ -336,16 +336,8 @@ static void spModeChange(Spectrum *sp)
 
 static void scrDefChange(Screen *screen)
 {
-    switch (screen->def) {
-    case SCREEN_SPECTRUM:
-        screen->def = SCREEN_AUDIO_INPUT;
-        break;
-    case SCREEN_AUDIO_INPUT:
-        screen->def = SCREEN_TIME;
-        break;
-    default:
+    if (++screen->def >= SCREEN_STANDBY) {
         screen->def = SCREEN_SPECTRUM;
-        break;
     }
 }
 
@@ -704,7 +696,9 @@ static void actionRemapCommon(void)
 
     switch (action.type) {
     case ACTION_STANDBY:
-        if (FLAG_SWITCH == action.value) {
+        if (screen == SCREEN_MENU){
+            action.value = FLAG_ENTER;
+        } else if (FLAG_SWITCH == action.value) {
             action.value = (ampStatus ? FLAG_ENTER : FLAG_EXIT);
         }
         break;
