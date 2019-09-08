@@ -19,18 +19,30 @@ typedef struct {
     uint8_t timeout;
 } I2cContext;
 
+#if I2C1_BUF_SIZE
 static uint8_t i2c1Buf[I2C1_BUF_SIZE];
-static uint8_t i2c2Buf[I2C2_BUF_SIZE];
-
 static I2cContext i2cCtx1 = {LL_APB1_GRP1_PERIPH_I2C1, i2c1Buf, 0, 0, 0};
+#endif
+
+#if I2C2_BUF_SIZE
+static uint8_t i2c2Buf[I2C2_BUF_SIZE];
 static I2cContext i2cCtx2 = {LL_APB1_GRP1_PERIPH_I2C2, i2c2Buf, 0, 0, 0};
+#endif
 
 static I2cContext *getI2cCtx(I2C_TypeDef *I2Cx)
 {
     if (I2Cx == I2C1) {
+#if I2C1_BUF_SIZE
         return &i2cCtx1;
+#else
+        return NULL;
+#endif
     } else if (I2Cx == I2C2) {
+#if I2C2_BUF_SIZE
         return &i2cCtx2;
+#else
+        return NULL;
+#endif
     } else {
         return NULL;
     }
