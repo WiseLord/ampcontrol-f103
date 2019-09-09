@@ -7,6 +7,7 @@
 #include "fft.h"
 #include "mem.h"
 #include "settings.h"
+#include "utils.h"
 
 #define DMA_BUF_SIZE        (FFT_SIZE * SP_CHAN_END)
 
@@ -125,7 +126,7 @@ static void spInitADC(void)
     LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_1, LL_GPIO_PULL_NO);
 #endif
 
-    if ((LL_ADC_IsEnabled(ADC1) == 0)) {
+    if (!LL_ADC_IsEnabled(ADC1)) {
         // Set ADC conversion data alignment
         LL_ADC_SetDataAlignment(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
 
@@ -166,9 +167,7 @@ static void spInitADC(void)
 //        LL_ADC_SetChannelSingleDiff(ADC1, LL_ADC_CHANNEL_2, LL_ADC_SINGLE_ENDED); // bug in the function
         ADC1->DIFSEL &= ~ADC_DIFSEL_DIFSEL_2;
 #endif
-    }
 
-    if (LL_ADC_IsEnabled(ADC1) == 0) {
 #ifdef _STM32F1
         LL_ADC_Enable(ADC1);
         while (!LL_ADC_IsEnabled(ADC1));
@@ -182,6 +181,8 @@ static void spInitADC(void)
 
         LL_ADC_StartCalibration(ADC1, LL_ADC_SINGLE_ENDED);
         while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0);
+
+        utilmDelay(1);
 
         LL_ADC_Enable(ADC1);
         while (!LL_ADC_IsEnabled(ADC1));
