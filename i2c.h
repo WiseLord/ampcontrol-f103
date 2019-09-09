@@ -20,7 +20,7 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed);
 
 void i2cBegin(void *i2c, uint8_t addr);
 void i2cSend(void *i2c, uint8_t data);
-void i2cTransmit(void *i2c, bool stop);
+void i2cTransmit(void *i2c);
 void i2cReceive(void *i2c, uint8_t *buf, uint8_t size);
 
 #ifdef __cplusplus

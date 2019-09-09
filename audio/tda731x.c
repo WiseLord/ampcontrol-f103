@@ -40,7 +40,7 @@ static void tda731xSwitch(uint8_t input, int8_t gain, bool loudness)
     i2cSend(I2C_AMP, (uint8_t)(TDA731X_SW | input |
                                ((3 - gain) << 3) |
                                (loudness ? (1 << 2) : 0)));
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 const AudioApi *tda731xGetApi(void)
@@ -88,7 +88,7 @@ void tda731xSetTune(AudioTune tune, int8_t value)
     case AUDIO_TUNE_VOLUME:
         i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
         i2cSend(I2C_AMP, (uint8_t)(TDA731X_VOLUME | -value));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BALANCE:
     case AUDIO_TUNE_FRONTREAR:
@@ -97,17 +97,17 @@ void tda731xSetTune(AudioTune tune, int8_t value)
         i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_REAR_RIGHT | -spRearRight));
         i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_FRONT_LEFT | -spFrontLeft));
         i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_FRONT_RIGHT | -spFrontRight));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BASS:
         i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
         i2cSend(I2C_AMP, TDA731X_BASS | (uint8_t)(value > 0 ? 15 - value : 7 + value));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_TREBLE:
         i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
         i2cSend(I2C_AMP, TDA731X_TREBLE | (uint8_t)(value > 0 ? 15 - value : 7 + value));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_GAIN:
         tda731xSwitch(aPar->input, value, aPar->loudness);
@@ -133,7 +133,7 @@ void tda731xSetMute(bool value)
     } else {
         tda731xSetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME].value);
     }
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 void tda731xSetLoudness(bool value)

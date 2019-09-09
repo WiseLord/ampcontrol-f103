@@ -76,15 +76,15 @@ static void pt232xReset(void)
 {
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
     i2cSend(I2C_AMP, PT2322_CREAR_REGS);
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
     i2cSend(I2C_AMP, PT2322_INPUT_SW);
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 
     i2cBegin(I2C_AMP, PT2323_I2C_ADDR);
     i2cSend(I2C_AMP, PT2323_UNMUTE_ALL);
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 static void pt232xSetSndFunc(bool mute, bool effect3d, bool bypass)
@@ -103,7 +103,7 @@ static void pt232xSetSndFunc(bool mute, bool effect3d, bool bypass)
 
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
     i2cSend(I2C_AMP, sndFunc);
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 static void pt2322SetSpeakers(void)
@@ -135,7 +135,7 @@ static void pt2322SetSpeakers(void)
     i2cSend(I2C_AMP, PT2322_TRIM_RL | (uint8_t)(-spRearLeft));
     i2cSend(I2C_AMP, PT2322_TRIM_RR | (uint8_t)(-spRearRight));
     i2cSend(I2C_AMP, PT2322_TRIM_SB | (uint8_t)(-aPar->tune[AUDIO_TUNE_SUBWOOFER].value));
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 const AudioApi *pt232xGetApi(void)
@@ -168,7 +168,7 @@ void pt232xSetTune(AudioTune tune, int8_t value)
         i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
         i2cSend(I2C_AMP, PT2322_VOL_HI | (uint8_t)((-value) / 10));
         i2cSend(I2C_AMP, PT2322_VOL_LO | (uint8_t)((-value) % 10));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BASS:
     case AUDIO_TUNE_MIDDLE:
@@ -176,7 +176,7 @@ void pt232xSetTune(AudioTune tune, int8_t value)
         i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
         i2cSend(I2C_AMP, (uint8_t)(PT2322_BASS + ((tune - AUDIO_TUNE_BASS) << 4)) |
                 (uint8_t)(value > 0 ? 15 - value : 7 + value));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_FRONTREAR:
     case AUDIO_TUNE_BALANCE:
@@ -187,7 +187,7 @@ void pt232xSetTune(AudioTune tune, int8_t value)
     case AUDIO_TUNE_GAIN:
         i2cBegin(I2C_AMP, PT2323_I2C_ADDR);
         i2cSend(I2C_AMP, PT2323_MIX | (uint8_t)value);
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     default:
         break;
@@ -198,7 +198,7 @@ void pt232xSetInput(uint8_t value)
 {
     i2cBegin(I2C_AMP, PT2323_I2C_ADDR);
     i2cSend(I2C_AMP, PT2323_INPUT_SWITCH | (PT2323_INPUT_ST1 - value));
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 void pt232xSetMute(bool value)
@@ -220,5 +220,5 @@ void pt232xSetSurround(bool value)
 {
     i2cBegin(I2C_AMP, PT2323_I2C_ADDR);
     i2cSend(I2C_AMP, PT2323_ENH_SURR | value ? 0 : PT2323_ENH_SURR_OFF);
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }

@@ -118,7 +118,7 @@ void i2cSend(void *i2c, uint8_t data)
 }
 
 
-void i2cTransmit(void *i2c, bool stop)
+void i2cTransmit(void *i2c)
 {
     I2cContext *ctx = getI2cCtx(i2c);
     if (ctx == NULL)
@@ -154,14 +154,12 @@ void i2cTransmit(void *i2c, bool stop)
         LL_I2C_TransmitData8(i2c, ctx->buf[i]);
     }
 
-    if (stop) {
-        ctx->timeout = I2C_TIMEOUT_BTF_MS;
-        while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
-            if (i2cWait(ctx) == false)
-                return;
-        }
-        LL_I2C_GenerateStopCondition(i2c);
+    ctx->timeout = I2C_TIMEOUT_BTF_MS;
+    while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
+        if (i2cWait(ctx) == false)
+            return;
     }
+    LL_I2C_GenerateStopCondition(i2c);
 #endif
 
 #ifdef _STM32F3
@@ -182,15 +180,6 @@ void i2cTransmit(void *i2c, bool stop)
                 return;
         }
     }
-
-//    if (stop) {
-//        ctx->timeout = I2C_TIMEOUT_BTF_MS;
-//        while (!LL_I2C_IsActiveFlag_TC(i2c)) {
-//            if (i2cWait(ctx) == false)
-//                return;
-//        }
-//        LL_I2C_GenerateStopCondition(i2c);
-//    }
 
     LL_I2C_ClearFlag_STOP(I2C1);
 #endif

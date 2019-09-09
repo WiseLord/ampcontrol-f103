@@ -45,7 +45,7 @@ static void rda580xWriteReg(uint8_t reg)
     i2cSend(I2C_AMP, reg);
     i2cSend(I2C_AMP, *wrAddr++);
     i2cSend(I2C_AMP, *wrAddr++);
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 static void rda580xSetBit(uint8_t idx, uint8_t bit, uint8_t cond)

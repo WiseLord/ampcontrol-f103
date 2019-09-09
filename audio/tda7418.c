@@ -103,7 +103,7 @@ static void tda7418InputGain(uint8_t input, int8_t gain)
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7418_SOURCE_SELECT);
     i2cSend(I2C_AMP, (uint8_t)((gain << 3) | ((input + 1) & 0x03)));
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 static void tda7418SetSpeakers(void)
@@ -134,7 +134,7 @@ static void tda7418SetSpeakers(void)
     i2cSend(I2C_AMP, (uint8_t)(16 - spRearLeft));
     i2cSend(I2C_AMP, (uint8_t)(16 - spRearRight));
     i2cSend(I2C_AMP, (uint8_t)(16 - spFrontRight));
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 const AudioApi *tda7418GetApi(void)
@@ -165,25 +165,25 @@ void tda7418SetTune(AudioTune tune, int8_t value)
         i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7418_VOLUME);
         i2cSend(I2C_AMP, (uint8_t)(value > 0 ? value : 16 - value));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BASS:
         i2cSend(I2C_AMP, TDA7418_VOLUME);
         i2cBegin(I2C_AMP, TDA7439_BASS);
         i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | TDA7418_BASS_Q_1P25));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_MIDDLE:
         i2cSend(I2C_AMP, TDA7418_VOLUME);
         i2cBegin(I2C_AMP, TDA7439_MIDDLE);
         i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | TDA7418_MIDDLE_Q_0P50));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_TREBLE:
         i2cSend(I2C_AMP, TDA7418_VOLUME);
         i2cBegin(I2C_AMP, TDA7439_TREBLE);
         i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | TDA7418_TREBLE_CENTER_10K0));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_FRONTREAR:
         tda7418SetSpeakers();
@@ -195,7 +195,7 @@ void tda7418SetTune(AudioTune tune, int8_t value)
         i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7418_SUBWOOFER);
         i2cSend(I2C_AMP, (uint8_t)(value > 0 ? value : 16 - value));
-        i2cTransmit(I2C_AMP, true);
+        i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_GAIN:
         tda7418InputGain(aPar->input, value);
@@ -215,7 +215,7 @@ void tda7418SetMute(bool value)
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7418_SOFTMUTE);
     i2cSend(I2C_AMP, (uint8_t)(value ? TDA7418_SOFTMUTE_OFF : TDA7418_SOFTMUTE_ON));
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 void tda7418SetLoudness(bool value)
@@ -229,5 +229,5 @@ void tda7418SetLoudness(bool value)
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7418_LOUDNESS);
     i2cSend(I2C_AMP, loudness);
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }

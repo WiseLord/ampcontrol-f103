@@ -46,7 +46,7 @@ static void tea5767WriteI2C(uint8_t bytes)
     i2cBegin(I2C_AMP, TEA5767_I2C_ADDR);
     for (i = 0; i < bytes; i++)
         i2cSend(I2C_AMP, wrBuf[i]);
-    i2cTransmit(I2C_AMP, true);
+    i2cTransmit(I2C_AMP);
 }
 
 static void tea5767InitRegs(void)
