@@ -168,17 +168,14 @@ void i2cTransmit(void *i2c)
 
     uint8_t *pBuf    = (uint8_t *)ctx->buf;
 
+    ctx->timeout = I2C_TIMEOUT_STOP_MS;
     while (!LL_I2C_IsActiveFlag_STOP(i2c)) {
         if (LL_I2C_IsActiveFlag_TXIS(i2c)) {
             LL_I2C_TransmitData8(i2c, (*pBuf++));
-
             ctx->timeout = I2C_SEND_TIMEOUT_TXIS_MS;
         }
-
-        if (LL_SYSTICK_IsActiveCounterFlag()) {
-            if (i2cWait(ctx) == false)
-                return;
-        }
+        if (i2cWait(ctx) == false)
+            return;
     }
 
     LL_I2C_ClearFlag_STOP(I2C1);
