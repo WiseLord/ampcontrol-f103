@@ -4,13 +4,7 @@
 
 #include "hwlibs.h"
 
-#define I2C_TIMEOUT_TXE_MS          5
-#define I2C_TIMEOUT_RXE_MS          5
-#define I2C_TIMEOUT_SB_MS           5
-#define I2C_TIMEOUT_STOP_MS         5
-#define I2C_TIMEOUT_ADDR_MS         5
-#define I2C_TIMEOUT_BTF_MS          5
-#define I2C_SEND_TIMEOUT_TXIS_MS    5
+#define I2C_TIMEOUT_MS      2
 
 typedef struct {
     uint32_t pefBit;
@@ -83,7 +77,7 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
     I2C_InitStruct.DutyCycle = LL_I2C_DUTYCYCLE_16_9;
 #endif
 #ifdef _STM32F3
-    I2C_InitStruct.Timing = 0x10808DD3; // TODO: calculate from ClockSpeed
+    I2C_InitStruct.Timing = 0x2000090E; // TODO: calculate from ClockSpeed
     I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
     I2C_InitStruct.DigitalFilter = 0;
 #endif
@@ -93,7 +87,7 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
     LL_I2C_Init(i2c, &I2C_InitStruct);
 
 #ifdef _STM32F3
-    LL_I2C_SetOwnAddress2(I2C1, 0, LL_I2C_OWNADDRESS2_NOMASK);
+    LL_I2C_SetOwnAddress2(i2c, 0, LL_I2C_OWNADDRESS2_NOMASK);
 #endif
     return 0;
 }
@@ -127,7 +121,7 @@ void i2cTransmit(void *i2c)
 #ifdef _STM32F1
     LL_I2C_GenerateStartCondition(i2c);
 
-    ctx->timeout = I2C_TIMEOUT_SB_MS;
+    ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_SB(i2c)) {
         if (i2cWait(ctx) == false)
             return;
@@ -135,7 +129,7 @@ void i2cTransmit(void *i2c)
 
     LL_I2C_TransmitData8(i2c, ctx->addr | I2C_WRITE);
 
-    ctx->timeout = I2C_TIMEOUT_ADDR_MS;
+    ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_ADDR(i2c)) {
         if (i2cWait(ctx) == false) {
             LL_I2C_GenerateStopCondition(i2c);
@@ -146,7 +140,7 @@ void i2cTransmit(void *i2c)
     LL_I2C_ClearFlag_ADDR(i2c);
 
     for (uint8_t i = 0; i < ctx->bytes; i++) {
-        ctx->timeout = I2C_TIMEOUT_TXE_MS;
+        ctx->timeout = I2C_TIMEOUT_MS;
         while (!LL_I2C_IsActiveFlag_TXE(i2c)) {
             if (i2cWait(ctx) == false)
                 return;
@@ -154,7 +148,7 @@ void i2cTransmit(void *i2c)
         LL_I2C_TransmitData8(i2c, ctx->buf[i]);
     }
 
-    ctx->timeout = I2C_TIMEOUT_BTF_MS;
+    ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
         if (i2cWait(ctx) == false)
             return;
@@ -168,17 +162,17 @@ void i2cTransmit(void *i2c)
 
     uint8_t *pBuf    = (uint8_t *)ctx->buf;
 
-    ctx->timeout = I2C_TIMEOUT_STOP_MS;
+    ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_STOP(i2c)) {
         if (LL_I2C_IsActiveFlag_TXIS(i2c)) {
             LL_I2C_TransmitData8(i2c, (*pBuf++));
-            ctx->timeout = I2C_SEND_TIMEOUT_TXIS_MS;
+            ctx->timeout = I2C_TIMEOUT_MS;
         }
         if (i2cWait(ctx) == false)
             return;
     }
 
-    LL_I2C_ClearFlag_STOP(I2C1);
+    LL_I2C_ClearFlag_STOP(i2c);
 #endif
 }
 
@@ -197,7 +191,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
 
     LL_I2C_GenerateStartCondition(i2c);
 
-    ctx->timeout = I2C_TIMEOUT_SB_MS;
+    ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_SB(i2c)) {
         if (i2cWait(ctx) == false)
             return;
@@ -205,7 +199,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
 
     LL_I2C_TransmitData8(i2c, ctx->addr | I2C_READ);
 
-    ctx->timeout = I2C_TIMEOUT_ADDR_MS;
+    ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_ADDR(i2c)) {
         if (i2cWait(ctx) == false) {
             LL_I2C_GenerateStopCondition(i2c);
@@ -218,7 +212,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
         LL_I2C_ClearFlag_ADDR(i2c);
         LL_I2C_GenerateStopCondition(i2c);
 
-        ctx->timeout = I2C_TIMEOUT_RXE_MS;
+        ctx->timeout = I2C_TIMEOUT_MS;
         while (!LL_I2C_IsActiveFlag_RXNE(i2c)) {
             if (i2cWait(ctx) == false)
                 return;
@@ -228,7 +222,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
         LL_I2C_ClearFlag_ADDR(i2c);
         LL_I2C_AcknowledgeNextData(i2c, LL_I2C_NACK);
 
-        ctx->timeout = I2C_TIMEOUT_BTF_MS;
+        ctx->timeout = I2C_TIMEOUT_MS;
         while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
             if (i2cWait(ctx) == false)
                 return;
@@ -244,7 +238,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
         while (size) {
             /* Receive bytes from first byte until byte N-3 */
             if (size-- != 3) {
-                ctx->timeout = I2C_TIMEOUT_BTF_MS;
+                ctx->timeout = I2C_TIMEOUT_MS;
                 while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
                     if (i2cWait(ctx) == false)
                         return;
@@ -252,7 +246,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
 
                 *buf++ = LL_I2C_ReceiveData8(i2c);
             } else {
-                ctx->timeout = I2C_TIMEOUT_BTF_MS;
+                ctx->timeout = I2C_TIMEOUT_MS;
                 while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
                     if (i2cWait(ctx) == false)
                         return;
@@ -266,7 +260,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
 
                 *buf++ = LL_I2C_ReceiveData8(i2c);
 
-                ctx->timeout = I2C_TIMEOUT_RXE_MS;
+                ctx->timeout = I2C_TIMEOUT_MS;
                 while (!LL_I2C_IsActiveFlag_RXNE(i2c)) {
                     if (i2cWait(ctx) == false)
                         return;
@@ -278,7 +272,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
         }
     }
 
-    ctx->timeout = I2C_TIMEOUT_STOP_MS;
+    ctx->timeout = I2C_TIMEOUT_MS;
     while (LL_I2C_IsActiveFlag_STOP(i2c)) {
         if (i2cWait(ctx) == false)
             return;
@@ -287,4 +281,20 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
     LL_I2C_DisableBitPOS(i2c);
 #endif
 
+#ifdef _STM32F3
+    LL_I2C_HandleTransfer(i2c, ctx->addr, LL_I2C_ADDRSLAVE_7BIT, size, LL_I2C_MODE_AUTOEND,
+                          LL_I2C_GENERATE_START_READ);
+
+    ctx->timeout = I2C_TIMEOUT_MS;
+    while (!LL_I2C_IsActiveFlag_STOP(i2c)) {
+        if (LL_I2C_IsActiveFlag_RXNE(i2c)) {
+            *buf++ = LL_I2C_ReceiveData8(i2c);
+            ctx->timeout = I2C_TIMEOUT_MS;
+        }
+        if (i2cWait(ctx) == false)
+            return;
+    }
+
+    LL_I2C_ClearFlag_STOP(i2c);
+#endif
 }
