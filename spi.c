@@ -49,27 +49,22 @@ void spiInit(void *spi, bool read)
 
     pinsInitSpi(SPIx, read);
 
-    LL_SPI_InitTypeDef SPI_InitStruct;
-    SPI_InitStruct.TransferDirection = LL_SPI_FULL_DUPLEX;
-    SPI_InitStruct.Mode = LL_SPI_MODE_MASTER;
-    SPI_InitStruct.DataWidth = LL_SPI_DATAWIDTH_8BIT;
-    SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_LOW;
-    SPI_InitStruct.ClockPhase = LL_SPI_PHASE_1EDGE;
-    SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
+    LL_SPI_SetTransferDirection(SPIx, LL_SPI_FULL_DUPLEX);
+    LL_SPI_SetMode(SPIx, LL_SPI_MODE_MASTER);
+    LL_SPI_SetDataWidth(SPIx, LL_SPI_DATAWIDTH_8BIT);
+    LL_SPI_SetClockPolarity(SPIx, LL_SPI_POLARITY_LOW);
+    LL_SPI_SetClockPhase(SPIx, LL_SPI_PHASE_1EDGE);
+    LL_SPI_SetNSSMode(SPIx, LL_SPI_NSS_SOFT);
+
     if (SPIx == SPI1) {
-        SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV4;
+        LL_SPI_SetBaudRatePrescaler(SPIx, LL_SPI_BAUDRATEPRESCALER_DIV4);
     } else if (SPIx == SPI2) {
-        SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV2;
+        LL_SPI_SetBaudRatePrescaler(SPIx, LL_SPI_BAUDRATEPRESCALER_DIV2);
     }
-    SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
-    SPI_InitStruct.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
-#ifdef _STM32F1
-    SPI_InitStruct.CRCPoly = 10;
-#endif
-#ifdef _STM32F3
-    SPI_InitStruct.CRCPoly = 7;
-#endif
-    LL_SPI_Init(SPIx, &SPI_InitStruct);
+
+    LL_SPI_SetTransferBitOrder(SPIx, LL_SPI_MSB_FIRST);
+    LL_SPI_DisableCRC(SPIx);
+
 #ifdef _STM32F3
     LL_SPI_SetStandard(SPIx, LL_SPI_PROTOCOL_MOTOROLA);
     LL_SPI_DisableNSSPulseMgt(SPIx);
