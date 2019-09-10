@@ -24,21 +24,15 @@ static void pinsInitButtons(void)
 
 static void pinsInitRc(void)
 {
-    LL_EXTI_InitTypeDef exti;
-
 #ifdef _STM32F1
     LL_GPIO_AF_SetEXTISource(RC_AR_ExtiPort, RC_AR_ExtiLine);
-#endif
-
-    exti.Line_0_31 = RC_ExtiLine;
-    exti.LineCommand = ENABLE;
-    exti.Mode = LL_EXTI_MODE_IT;
-    exti.Trigger = LL_EXTI_TRIGGER_RISING_FALLING;
-    LL_EXTI_Init(&exti);
-
-#ifdef _STM32F1
     IN_F(RC);
 #endif
+
+    LL_EXTI_DisableEvent_0_31(RC_ExtiLine);
+    LL_EXTI_EnableIT_0_31(RC_ExtiLine);
+    LL_EXTI_EnableRisingTrig_0_31(RC_ExtiLine);
+    LL_EXTI_EnableFallingTrig_0_31(RC_ExtiLine);
 }
 
 static void pinsInitDisplay(void)
