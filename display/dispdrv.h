@@ -16,7 +16,7 @@ extern "C" {
 #define SPI_DISPLAY             SPI2
 #define DISP_WAIT_BUSY()        spiWaitBusy(SPI_DISPLAY)
 #else
-#define DISP_WAIT_BUSY();
+#define DISP_WAIT_BUSY()        (void)0
 #endif
 
 extern const DispDriver dispdrv;

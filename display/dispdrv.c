@@ -2,9 +2,9 @@
 
 #include <stdbool.h>
 
-static volatile bool bus_requested = false;
+static volatile bool busBusy;
 static volatile int8_t brightness;
-static volatile uint8_t busData;
+static volatile uint16_t busData;
 
 #ifdef _STM32F1
 #define BUS_MODE_OUT        0x33333333  // CNF=0b00, MODE=0b11 => Output push-pull 50 MHz
@@ -42,9 +42,9 @@ __attribute__((always_inline))
 static inline void dispdrvReadInput(void)
 {
 #if IS_GPIO_LO(DISP_DATA_LO)
-    busData = DISP_DATA_LO_Port->IDR & 0x00FF;
+    busData = DISP_DATA_LO_Port->IDR & 0xFFFF;
 #elif IS_GPIO_HI(DISP_DATA_HI)
-    busData = (DISP_DATA_HI_Port->IDR & 0xFF00) >> 8;
+    busData = DISP_DATA_HI_Port->IDR & 0xFFFF;
 #endif
 }
 
@@ -60,7 +60,6 @@ static inline void dispdrvBusIn(void)
 #endif
 #ifdef _STM32F3
     DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
-    DISP_DATA_LO_Port->MODER |= BUS_MODE_IN;
 #endif
 #endif
 #if IS_GPIO_HI(DISP_DATA_HI)
@@ -70,17 +69,17 @@ static inline void dispdrvBusIn(void)
 #endif
 #ifdef _STM32F3
     DISP_DATA_HI_Port->MODER &= 0x0000FFFF;
-    DISP_DATA_HI_Port->MODER |= BUS_MODE_IN;
 #endif
 #endif
+    busBusy = false;
 }
 
 __attribute__((always_inline))
 static inline void dispdrvBusOut(void)
 {
-    if (bus_requested) {
+    if (!busBusy) {
         dispdrvReadInput();
-        bus_requested = false;
+        busBusy = true;
     }
 #if IS_GPIO_LO(DISP_DATA_LO)
 #ifdef _STM32F1
@@ -99,28 +98,6 @@ static inline void dispdrvBusOut(void)
     DISP_DATA_HI_Port->MODER &= 0x0000FFFF;
     DISP_DATA_HI_Port->MODER |= BUS_MODE_OUT;
 #endif
-#endif
-}
-
-__attribute__((always_inline))
-static inline uint32_t dispDrvGetBusMode(void)
-{
-#if IS_GPIO_LO(DISP_DATA_LO)
-#ifdef _STM32F1
-    return DISP_DATA_LO_Port->CRL;
-#endif
-#ifdef _STM32F3
-    return DISP_DATA_LO_Port->MODER & 0x0000FFFF;
-#endif
-#elif IS_GPIO_HI(DISP_DATA_HI)
-#ifdef _STM32F1
-    return DISP_DATA_HI_Port->CRH;
-#endif
-#ifdef _STM32F3
-    return DISP_DATA_HI_Port->MODER & 0xFFFF0000;
-#endif
-#else
-    return BUS_MODE_IN;
 #endif
 }
 
@@ -232,20 +209,20 @@ void dispdrvSetBrightness(int8_t value)
 
 uint8_t dispdrvGetBus(void)
 {
-    return ~busData;
+    uint8_t ret;
+#if IS_GPIO_LO(DISP_DATA_LO)
+    ret = busData & 0xFF;
+#elif IS_GPIO_HI(DISP_DATA_HI)
+    ret = (busData >> 8 ) & 0xFF;
+#endif
+    return ~ret;
 }
 
 void dispdrvBusIRQ(void)
 {
-#if defined(_DISP_SPI)
-    dispdrvReadInput();
-#else
-    if (dispDrvGetBusMode() == BUS_MODE_OUT) {
-        bus_requested = true;               // Postpone read bus until in input mode
-    } else {
-        dispdrvReadInput();                 // Read bus immediately
+    if (!busBusy) {
+        dispdrvReadInput();
     }
-#endif
 }
 
 void dispdrvSendData8(uint8_t data)
