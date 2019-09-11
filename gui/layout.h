@@ -62,6 +62,18 @@ typedef struct {
 
 const Layout *layoutGet(void);
 
+// Modified fonts - full character set
+extern const tFont fontterminusmod18x3;
+extern const tFont fontterminusmod24x3;
+// Modified fonts - for digits only
+extern const tFont fontterminusdig30;
+extern const tFont fontterminusdig40;
+extern const tFont fontterminusdig58;
+extern const tFont fontterminusdig64;
+extern const tFont fontterminusdig80;
+extern const tFont fontterminusdig96;
+extern const tFont fontterminusdig120;
+
 #ifdef __cplusplus
 }
 #endif
