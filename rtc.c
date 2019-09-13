@@ -215,10 +215,10 @@ void rtcInit(void)
             LL_RCC_EnableRTC();
 
 #ifdef _STM32F1
-            LL_RTC_InitTypeDef rtc_initstruct = {32766, LL_RTC_CALIB_OUTPUT_NONE};
+            LL_RTC_InitTypeDef rtc_initstruct = {32765, LL_RTC_CALIB_OUTPUT_NONE};
 #endif
 #ifdef _STM32F3
-            LL_RTC_InitTypeDef rtc_initstruct = {LL_RTC_HOURFORMAT_24HOUR, 127, 255};
+            LL_RTC_InitTypeDef rtc_initstruct = {LL_RTC_HOURFORMAT_24HOUR, 0, 32765};
 #endif
 
             if (LL_RTC_DeInit(RTC) != SUCCESS) {
@@ -254,6 +254,12 @@ void rtcSetCorrection(int16_t value)
         LL_RTC_CAL_SetCoarseDigital(BKP, (uint32_t)(64 - value));
     }
     LL_RTC_ExitInitMode(RTC);
+#endif
+#ifdef _STM32F3
+    LL_RTC_DisableWriteProtection(RTC);
+    while(LL_RTC_IsActiveFlag_RECALP(RTC));
+    LL_RTC_CAL_SetMinus(RTC, (uint32_t)(64 - value));
+    LL_RTC_EnableWriteProtection(RTC);
 #endif
 }
 
