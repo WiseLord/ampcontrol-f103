@@ -62,18 +62,18 @@ SOURCES += \
     ../../../display/fonts/font-terminus-28b.c \
     ../../../display/fonts/font-terminus-32.c \
     ../../../display/fonts/font-terminus-32b.c \
-    ../../../display/fonts/font-terminus-dig-30.c \
-    ../../../display/fonts/font-terminus-dig-40.c \
-    ../../../display/fonts/font-terminus-dig-58.c \
-    ../../../display/fonts/font-terminus-dig-64.c \
-    ../../../display/fonts/font-terminus-dig-80.c \
-    ../../../display/fonts/font-terminus-dig-96.c \
-    ../../../display/fonts/font-terminus-dig-120.c \
-    ../../../display/fonts/font-terminus-mod-18x3.c \
-    ../../../display/fonts/font-terminus-mod-24x3.c \
     ../../../display/glcd.c \
     ../../../gui/canvas.c \
-    ../../../gui/icons/icons-amp-24.c \
+	../../../gui/fonts/font-terminus-dig-30.c \
+	../../../gui/fonts/font-terminus-dig-40.c \
+	../../../gui/fonts/font-terminus-dig-58.c \
+	../../../gui/fonts/font-terminus-dig-64.c \
+	../../../gui/fonts/font-terminus-dig-80.c \
+	../../../gui/fonts/font-terminus-dig-96.c \
+	../../../gui/fonts/font-terminus-dig-120.c \
+	../../../gui/fonts/font-terminus-mod-18x3.c \
+	../../../gui/fonts/font-terminus-mod-24x3.c \
+	../../../gui/icons/icons-amp-24.c \
     ../../../gui/icons/icons-amp-32.c \
     ../../../gui/icons/icons-amp-48.c \
     ../../../gui/icons/icons-amp-64.c \
