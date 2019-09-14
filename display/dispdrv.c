@@ -29,17 +29,19 @@ static inline void dispdrvSendByte(uint8_t data)
 }
 
 __attribute__((always_inline))
-static inline uint8_t  dispdrvReadInput(void)
+static inline uint8_t  dispdrvReadBus(void)
 {
-    uint8_t ret;
+    uint8_t ret = 0;
 
 #if defined(_DISP_16BIT)
     ret = (DISP_DATA_LO_Port->IDR & 0x00FF);
 #else
+#ifdef DISP_DATA_Port
 #if IS_GPIO_LO(DISP_DATA)
     ret = (DISP_DATA_Port->IDR & 0x00FF);
 #else
     ret = (DISP_DATA_Port->IDR & 0xFF00) >> 8;
+#endif
 #endif
 #endif
 
@@ -60,7 +62,7 @@ static inline void dispdrvBusIn(void)
     DISP_DATA_HI_Port->MODER &= 0x0000FFFF;
     DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
 #endif
-#else
+#elif defined(_DISP_8BIT)
 #if IS_GPIO_LO(DISP_DATA)
     DISP_DATA_Port->BSRR = 0x000000FF;   // Set HIGH level on all data lines
 #ifdef _STM32F1
@@ -87,7 +89,7 @@ __attribute__((always_inline))
 static inline void dispdrvBusOut(void)
 {
     if (!busBusy) {
-        busData = dispdrvReadInput();
+        busData = dispdrvReadBus();
         busBusy = true;
     }
 #if defined(_DISP_16BIT)
@@ -101,7 +103,7 @@ static inline void dispdrvBusOut(void)
     DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
     DISP_DATA_LO_Port->MODER |= 0x55550000;
 #endif
-#else
+#elif defined(_DISP_8BIT)
 #if IS_GPIO_LO(DISP_DATA)
 #ifdef _STM32F1
     DISP_DATA_Port->CRL = 0x33333333;
@@ -235,7 +237,7 @@ uint8_t dispdrvGetBus(void)
 void dispdrvBusIRQ(void)
 {
     if (!busBusy) {
-        busData = dispdrvReadInput();
+        busData = dispdrvReadBus();
     }
 }
 
@@ -300,7 +302,7 @@ static inline uint8_t dispdrvReadByte(void)
 
     CLR(DISP_RD);
     dispdrvReadDelay();
-    ret = dispdrvReadInput();
+    ret = dispdrvReadBus();
     SET(DISP_RD);
 
     return ret;
