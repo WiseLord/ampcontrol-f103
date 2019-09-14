@@ -12,14 +12,8 @@ static void pinsInitButtons(void)
     initDef.Mode = LL_GPIO_MODE_INPUT;
     initDef.Pull = LL_GPIO_PULL_UP;
 
-#if IS_GPIO_LO(DISP_DATA_LO)
-    initDef.Pin = DISP_DATA_LO_Pin;
-    LL_GPIO_Init(DISP_DATA_LO_Port, &initDef);
-#endif
-#if IS_GPIO_HI(DISP_DATA_HI)
-    gpio.Pin = DISP_DATA_HI_Pin;
-    LL_GPIO_Init(DISP_DATA_HI_Port, &initDef);
-#endif
+    initDef.Pin = DISP_DATA_Pin;
+    LL_GPIO_Init(DISP_DATA_Port, &initDef);
 }
 
 static void pinsInitRc(void)
@@ -37,15 +31,24 @@ static void pinsInitRc(void)
 
 static void pinsInitDisplay(void)
 {
-#if defined(_DISP_SPI) || defined (_DISP_8BIT)
-#ifdef _DISP_8BIT
-    OUT_INIT(DISP_WR,  LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+    LL_GPIO_InitTypeDef initDef;
+
+    initDef.Mode = LL_GPIO_MODE_OUTPUT;
+    initDef.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    initDef.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+#ifdef _STM32F3
+    initDef.Pull = LL_GPIO_PULL_NO;
 #endif
-    OUT_INIT(DISP_RS,  LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
-    OUT_INIT(DISP_CS,  LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
-    OUT_INIT(DISP_BCKL, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
-#else
-#error "Unsupported display wiring"
+
+    initDef.Pin = DISP_CS_Pin;
+    LL_GPIO_Init(DISP_CS_Port, &initDef);
+    initDef.Pin = DISP_BCKL_Pin;
+    LL_GPIO_Init(DISP_BCKL_Port, &initDef);
+    initDef.Pin = DISP_RS_Pin;
+    LL_GPIO_Init(DISP_RS_Port, &initDef);
+#ifndef _DISP_SPI
+    initDef.Pin = DISP_WR_Pin;
+    LL_GPIO_Init(DISP_WR_Port, &initDef);
 #endif
 }
 
