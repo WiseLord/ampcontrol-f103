@@ -1,8 +1,7 @@
 #include "debug.h"
 
-#include "usart.h"
-
 #include "hwlibs.h"
+#include "usart.h"
 
 static void dbgPutString(const char *str)
 {
@@ -14,13 +13,9 @@ static void dbgPutString(const char *str)
 void dbgInit()
 {
     usartInit(USART_DBG, 115200);
-    LL_USART_EnableIT_RXNE(USART_DBG);
-    usartSendChar(USART_DBG, '\r');
-}
+    usartSetRxIRQ(USART_DBG, true);
 
-char dbgGetChar()
-{
-    return LL_USART_ReceiveData8(USART_DBG);
+    usartSendChar(USART_DBG, '\r');
 }
 
 void dbg(const char *str)

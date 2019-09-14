@@ -9,8 +9,6 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-#include "../hwlibs.h"
-
 #define USBD_MAX_NUM_INTERFACES             1
 #define USBD_MAX_NUM_CONFIGURATION          1
 #define USBD_MAX_STR_DESC_SIZ               64
@@ -20,6 +18,8 @@ extern "C" {
 #define USBD_AMP_REPORT_DESC_SIZE           78
 
 #define DEVICE_FS           0
+
+#define UNUSED(X)           (void)X
 
 #define USBD_malloc         (uint32_t *)USBD_static_malloc
 #define USBD_free           USBD_static_free

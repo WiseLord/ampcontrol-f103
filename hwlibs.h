@@ -45,6 +45,9 @@ extern "C" {
 #include <stm32f3xx_ll_utils.h>
 #endif
 
+#define USART_DBG               USART1
+#define USART_KARADIO           USART2
+
 #ifdef __cplusplus
 }
 #endif

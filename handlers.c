@@ -98,7 +98,7 @@ void USART1_IRQHandler(void)
 {
     // Check RXNE flag value in SR register
     if (LL_USART_IsActiveFlag_RXNE(USART1) && LL_USART_IsEnabledIT_RXNE(USART1)) {
-        controlIRQ();
+        controlIRQ(LL_USART_ReceiveData8(USART1));
     } else {
         // Call Error function
     }
@@ -108,7 +108,7 @@ void USART2_IRQHandler(void)
 {
     // Check RXNE flag value in SR register
     if (LL_USART_IsActiveFlag_RXNE(USART2) && LL_USART_IsEnabledIT_RXNE(USART2)) {
-        karadioIRQ();
+        karadioIRQ(LL_USART_ReceiveData8(USART2));
     } else {
         // Call Error function
     }

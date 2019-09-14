@@ -78,6 +78,15 @@ void usartInit(void *usart, uint32_t baudRate)
     LL_USART_Enable(USARTx);
 }
 
+void usartSetRxIRQ(void *usart, bool enabled)
+{
+    if (enabled) {
+        LL_USART_EnableIT_RXNE(usart);
+    } else {
+        LL_USART_DisableIT_RXNE(usart);
+    }
+}
+
 void usartSendChar(void *usart, char ch)
 {
     USART_TypeDef *USARTx = (USART_TypeDef *)usart;

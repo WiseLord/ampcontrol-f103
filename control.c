@@ -5,7 +5,9 @@
 
 #include "audio/audio.h"
 #include "debug.h"
+#include "hwlibs.h"
 #include "ringbuf.h"
+#include "usart.h"
 #include "utils.h"
 
 #define CMDBUF_SIZE     64
@@ -82,10 +84,8 @@ void controlInit(void)
     ringBufInit(&cmdRb, cmdRbData, sizeof(cmdRbData));
 }
 
-void controlIRQ(void)
+void controlIRQ(char data)
 {
-    char data = dbgGetChar();
-
 #ifdef _DEBUG_KARADIO
     usartSendChar(USART_KARADIO, data);
 #endif

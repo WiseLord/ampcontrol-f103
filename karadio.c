@@ -1,17 +1,15 @@
 #include "karadio.h"
 
-#include "hwlibs.h"
-
 #include <string.h>
 
 #include "actions.h"
 #include "audio/audio.h"
+#include "debug.h"
+#include "hwlibs.h"
 #include "ringbuf.h"
 #include "usart.h"
 #include "usb/hidkeys.h"
 #include "utils.h"
-
-#include "debug.h"
 
 #define CMD_CLI         "cli"
 #define CMD_SYS         "sys"
@@ -77,15 +75,12 @@ static void karadioClearStatus()
 
 void karadioInit(void)
 {
-    NVIC_SetPriority(USART2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
-    NVIC_EnableIRQ(USART2_IRQn);
-
     karadioClearStatus();
 
     ringBufInit(&krRingBuf, krRbData, sizeof(krRbData));
 
     usartInit(USART_KARADIO, 115200);
-    LL_USART_EnableIT_RXNE(USART_KARADIO);
+    usartSetRxIRQ(USART_KARADIO, true);
 }
 
 void karadioSetEnabled(bool value)
@@ -204,10 +199,8 @@ void karadioGetData(void)
     }
 }
 
-void karadioIRQ()
+void karadioIRQ(char data)
 {
-    char data = LL_USART_ReceiveData8(USART_KARADIO);
-
 #ifdef _DEBUG_KARADIO
     usartSendChar(USART_DBG, data);
 #endif

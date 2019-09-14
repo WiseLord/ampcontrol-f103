@@ -5,12 +5,9 @@
 extern "C" {
 #endif
 
-#define USART_DBG               USART1
-
 #include <stdint.h>
 
 void dbgInit(void);
-char dbgGetChar(void);
 void dbg(const char *str);
 
 #ifdef __cplusplus

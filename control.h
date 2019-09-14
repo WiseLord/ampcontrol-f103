@@ -10,7 +10,7 @@ extern "C" {
 
 void controlInit(void);
 
-void controlIRQ(void);
+void controlIRQ(char data);
 
 void controlGetData(void);
 
