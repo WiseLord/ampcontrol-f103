@@ -43,43 +43,10 @@ void pinsSetStby(bool value);
 #define OUT(p)                  (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_OUTPUT))
 #define IN_F(p)                 (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_FLOATING))
 #define IN_P(p)                 (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_INPUT))
-#define ALT(p)                  (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_ALTERNATE))
+
 #define SET(p)                  (LL_GPIO_SetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
 #define CLR(p)                  (LL_GPIO_ResetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
 #define READ(p)                 (LL_GPIO_IsInputPinSet(CONCAT(p, _Port), CONCAT(p, _Pin)))
-
-#define SPEED(p, s)             (LL_GPIO_SetPinSpeed(CONCAT(p, _Port), CONCAT(p, _Pin), s))
-#define OTYPE(p, t)             (LL_GPIO_SetPinOutputType(CONCAT(p, _Port), CONCAT(p, _Pin), t))
-
-#define OUT_INIT(p, t, s)   \
-    do {                    \
-        OUT(p);             \
-        SPEED(p, s);        \
-        OTYPE(p, t);        \
-    } while (0);
-
-#define IN_U(p)             \
-    do {                    \
-        IN_P(p);            \
-        SET(p);             \
-    } while (0);
-
-#define IN_D(p)             \
-    do {                    \
-        IN_P(p);            \
-        CLR(p);             \
-    } while (0);
-
-#define ALT_INIT(p, t, s)  \
-    do {                    \
-        ALT(p);             \
-        SPEED(p, s);        \
-        OTYPE(p, t);        \
-    } while (0);
-
-
-// Periph macros
-#define I2C_AMP         I2C1
 
 // Remote control pins
 #define RC_Port                 GPIOA

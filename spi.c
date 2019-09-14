@@ -2,7 +2,7 @@
 
 #include "hwlibs.h"
 
-static void pinsInitSpi(SPI_TypeDef *SPIx, bool read)
+static void spiInitPins(SPI_TypeDef *SPIx, bool read)
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -47,7 +47,7 @@ void spiInit(void *spi, bool read)
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_SPI2);
     }
 
-    pinsInitSpi(SPIx, read);
+    spiInitPins(SPIx, read);
 
     LL_SPI_SetTransferDirection(SPIx, LL_SPI_FULL_DUPLEX);
     LL_SPI_SetMode(SPIx, LL_SPI_MODE_MASTER);

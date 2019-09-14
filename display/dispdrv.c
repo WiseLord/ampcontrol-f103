@@ -287,9 +287,8 @@ void dispdrvWriteReg16(uint16_t reg, uint16_t data)
     dispdrvSendWord(data);
 }
 
-#ifdef _DISP_READ_ENABLED
-
-static void dispdrvReadDelay(void)
+__attribute__((always_inline))
+static inline void dispdrvReadDelay(void)
 {
     volatile uint32_t ticks = 50;
     while (ticks--);
@@ -298,16 +297,17 @@ static void dispdrvReadDelay(void)
 __attribute__((always_inline))
 static inline uint8_t dispdrvReadByte(void)
 {
-    uint8_t ret;
+    uint8_t ret = 0;
 
+#ifdef DISP_RD_Port
     CLR(DISP_RD);
     dispdrvReadDelay();
     ret = dispdrvReadBus();
     SET(DISP_RD);
+#endif
 
     return ret;
 }
-
 
 uint16_t dispdrvReadData16(void)
 {
@@ -318,11 +318,13 @@ uint16_t dispdrvReadData16(void)
 #endif
 
 #if defined(_DISP_16BIT)
+#ifdef DISP_RD_Port
     CLR(DISP_RD);
     dispdrvReadDelay();
     ret |= DISP_DATA_HI_Port->IDR & 0xFF00;
     ret |= DISP_DATA_LO_Port->IDR & 0x00FF;
     SET(DISP_RD);
+#endif
 #elif defined(_DISP_8BIT)
     ret |= dispdrvReadByte();
     ret <<= 8;
@@ -350,8 +352,6 @@ void dispdrvReadReg(uint16_t reg, uint16_t *args, uint8_t nArgs)
 
     SET(DISP_CS);
 }
-
-#endif
 
 void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
 {

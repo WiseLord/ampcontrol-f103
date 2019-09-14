@@ -2,7 +2,7 @@
 
 #include "hwlibs.h"
 
-static void pinsInitUsart(USART_TypeDef *USARTx)
+static void usartInitPins(USART_TypeDef *USARTx)
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -56,7 +56,7 @@ void usartInit(void *usart, uint32_t baudRate)
         NVIC_EnableIRQ(USART3_IRQn);
     }
 
-    pinsInitUsart(USARTx);
+    usartInitPins(USARTx);
 
     LL_USART_InitTypeDef USART_InitStruct = {0};
 

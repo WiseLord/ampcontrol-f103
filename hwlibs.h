@@ -45,6 +45,8 @@ extern "C" {
 #include <stm32f3xx_ll_utils.h>
 #endif
 
+#define I2C_AMP                 I2C1
+
 #define USART_DBG               USART1
 #define USART_KARADIO           USART2
 

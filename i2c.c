@@ -7,7 +7,6 @@
 #define I2C_TIMEOUT_MS      2
 
 typedef struct {
-    uint32_t pefBit;
     uint8_t *buf;
     uint8_t bytes;
     uint8_t addr;
@@ -16,12 +15,12 @@ typedef struct {
 
 #if I2C1_BUF_SIZE
 static uint8_t i2c1Buf[I2C1_BUF_SIZE];
-static I2cContext i2cCtx1 = {LL_APB1_GRP1_PERIPH_I2C1, i2c1Buf, 0, 0, 0};
+static I2cContext i2cCtx1 = {i2c1Buf, 0, 0, 0};
 #endif
 
 #if I2C2_BUF_SIZE
 static uint8_t i2c2Buf[I2C2_BUF_SIZE];
-static I2cContext i2cCtx2 = {LL_APB1_GRP1_PERIPH_I2C2, i2c2Buf, 0, 0, 0};
+static I2cContext i2cCtx2 = {i2c2Buf, 0, 0, 0};
 #endif
 
 static I2cContext *getI2cCtx(I2C_TypeDef *I2Cx)
@@ -54,6 +53,37 @@ static bool i2cWait(I2cContext *ctx)
     return true;
 }
 
+static void i2cInitPins(I2C_TypeDef *I2Cx)
+{
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    GPIO_TypeDef *gpio = GPIOB;
+    uint32_t sclPin =  LL_GPIO_PIN_8;   // LL_GPIO_PIN_6
+    uint32_t sdaPin =  LL_GPIO_PIN_9;   // LL_GPIO_PIN_7
+
+    if (I2Cx == I2C1) {
+        if (sclPin == LL_GPIO_PIN_8 && sdaPin == LL_GPIO_PIN_9) {
+#ifdef _STM32F1
+            LL_GPIO_AF_EnableRemap_I2C1();
+#endif
+        }
+    } else if (I2Cx == I2C2) {
+        sclPin = LL_GPIO_PIN_10;
+        sdaPin = LL_GPIO_PIN_11;
+    }
+
+    GPIO_InitStruct.Pin = sclPin | sdaPin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+#ifdef _STM32F3
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+    GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
+#endif
+
+    LL_GPIO_Init(gpio, &GPIO_InitStruct);
+}
+
 uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
 {
     I2cContext *ctx = getI2cCtx(i2c);
@@ -61,7 +91,15 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
     if (ctx == NULL)
         return 1;
 
-    LL_APB1_GRP1_EnableClock(ctx->pefBit);
+    I2C_TypeDef *I2Cx = (I2C_TypeDef *)i2c;
+
+    if (I2Cx == I2C1) {
+        LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C1);
+    } else if (I2Cx == I2C2) {
+        LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C2);
+    }
+
+    i2cInitPins(I2Cx);
 
 #ifdef _STM32F3
     LL_I2C_EnableAutoEndMode(i2c);

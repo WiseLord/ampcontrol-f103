@@ -7,20 +7,20 @@
 
 static void pinsInitButtons(void)
 {
-    LL_GPIO_InitTypeDef initDef;
+    LL_GPIO_InitTypeDef GPIO_InitStructf;
 
-    initDef.Mode = LL_GPIO_MODE_INPUT;
-    initDef.Pull = LL_GPIO_PULL_UP;
+    GPIO_InitStructf.Mode = LL_GPIO_MODE_INPUT;
+    GPIO_InitStructf.Pull = LL_GPIO_PULL_UP;
 
-    initDef.Pin = DISP_DATA_Pin;
-    LL_GPIO_Init(DISP_DATA_Port, &initDef);
+    GPIO_InitStructf.Pin = DISP_DATA_Pin;
+    LL_GPIO_Init(DISP_DATA_Port, &GPIO_InitStructf);
 }
 
 static void pinsInitRc(void)
 {
 #ifdef _STM32F1
     LL_GPIO_AF_SetEXTISource(RC_AR_ExtiPort, RC_AR_ExtiLine);
-    IN_F(RC);
+    LL_GPIO_SetPinMode(RC_Port, RC_Pin, LL_GPIO_MODE_FLOATING);
 #endif
 
     LL_EXTI_DisableEvent_0_31(RC_ExtiLine);
@@ -31,23 +31,23 @@ static void pinsInitRc(void)
 
 static void pinsInitDisplay(void)
 {
-    LL_GPIO_InitTypeDef initDef;
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    initDef.Mode = LL_GPIO_MODE_OUTPUT;
-    initDef.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-    initDef.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 #ifdef _STM32F3
-    initDef.Pull = LL_GPIO_PULL_NO;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 #endif
 
-    initDef.Pin = DISP_CS_Pin;
-    LL_GPIO_Init(DISP_CS_Port, &initDef);
-    initDef.Pin = DISP_BCKL_Pin;
-    LL_GPIO_Init(DISP_BCKL_Port, &initDef);
-    initDef.Pin = DISP_RS_Pin;
-    LL_GPIO_Init(DISP_RS_Port, &initDef);
+    GPIO_InitStruct.Pin = DISP_CS_Pin;
+    LL_GPIO_Init(DISP_CS_Port, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = DISP_BCKL_Pin;
+    LL_GPIO_Init(DISP_BCKL_Port, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = DISP_RS_Pin;
+    LL_GPIO_Init(DISP_RS_Port, &GPIO_InitStruct);
 #ifndef _DISP_SPI
-    initDef.Pin = DISP_WR_Pin;
+    GPIO_InitStruct.Pin = DISP_WR_Pin;
     LL_GPIO_Init(DISP_WR_Port, &initDef);
 #endif
 }
@@ -69,14 +69,42 @@ void pinsInitMuteStby(MuteStby value)
         LL_GPIO_AF_DisableRemap_SWJ();
 #endif
     }
+
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+#ifdef _STM32F3
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+#endif
+
+    GPIO_InitStruct.Pin = MUTE_Pin;
+    LL_GPIO_Init(MUTE_Port, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = STBY_Pin;
+    LL_GPIO_Init(STBY_Port, &GPIO_InitStruct);
 }
 
 static void pinsHwResetI2C(void)
 {
-    OUT_INIT(SI470X_RST, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    OUT_INIT(SI470X_SCLK, LL_GPIO_OUTPUT_OPENDRAIN, LL_GPIO_SPEED_FREQ_HIGH);
-    OUT_INIT(SI470X_SDIO, LL_GPIO_OUTPUT_OPENDRAIN, LL_GPIO_SPEED_FREQ_HIGH);
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+#ifdef _STM32F3
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+#endif
+
+    GPIO_InitStruct.Pin = SI470X_RST_Pin;
+    LL_GPIO_Init(SI470X_RST_Port, &GPIO_InitStruct);
+
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+
+    GPIO_InitStruct.Pin = SI470X_SCLK_Pin;
+    LL_GPIO_Init(SI470X_SCLK_Port, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = SI470X_SDIO_Pin;
+    LL_GPIO_Init(SI470X_SDIO_Port, &GPIO_InitStruct);
 
     CLR(SI470X_RST);    // Start display and Si470x reset
 
@@ -105,23 +133,6 @@ void pinsInitAmpI2c(void)
 {
     pinsHwResetI2C();
     i2cInit(I2C_AMP, 100000);
-
-#ifdef _STM32F1
-    LL_GPIO_AF_EnableRemap_I2C1();
-#endif
-
-    LL_GPIO_InitTypeDef GPIO_InitStruct;
-
-    GPIO_InitStruct.Pin = AMP_I2C_SCK_Pin | AMP_I2C_SDA_Pin;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
-#ifdef _STM32F3
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-    GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
-#endif
-
-    LL_GPIO_Init(AMP_I2C_Port, &GPIO_InitStruct);
 }
 
 void pinsInit(void)
@@ -144,9 +155,6 @@ void pinsInit(void)
 
     MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
     pinsInitMuteStby(muteStby);
-
-    OUT_INIT(MUTE, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
-    OUT_INIT(STBY, LL_GPIO_OUTPUT_PUSHPULL, LL_GPIO_SPEED_FREQ_HIGH);
 }
 
 void pinsSetMute(bool value)
