@@ -4,12 +4,16 @@
 
 #include "audio/audio.h"
 #include "control.h"
+#include "hwlibs.h"
+#include "i2c.h"
 #include "karadio.h"
 #include "pins.h"
 #include "swtimers.h"
 #include "tuner/tuner.h"
 
 static AmpStatus ampStatus = AMP_STATUS_STBY;
+static uint8_t inputStatus = 0x00;
+static uint8_t pcf8574Addr = 0x4E;
 
 static void inputDisable(void)
 {
@@ -52,9 +56,25 @@ static void inputEnable(void)
     }
 }
 
+static void handleInputStatus(void)
+{
+    i2cBegin(I2C_AMP, pcf8574Addr);
+    i2cSend(I2C_AMP, inputStatus);
+    i2cTransmit(I2C_AMP);
+}
+
 static void inputSetPower(bool value)
 {
-    (void)value;            // TODO: handle in PCF8574
+    AudioProc *aProc = audioGet();
+    uint8_t input = aProc->par.input;
+
+    if (value) {
+        inputStatus = (uint8_t)(1 << input);
+    } else {
+        inputStatus = 0x00;
+    }
+
+    handleInputStatus();
 }
 
 AmpStatus ampGetStatus(void)
@@ -66,6 +86,10 @@ void ampInit(void)
 {
     pinsSetMute(true);
     pinsSetStby(true);
+
+    pinsInitAmpI2c();
+    inputSetPower(false);    // Power off                                                                                    input device
+    pinsDeInitAmpI2c();
 
     ampStatus = AMP_STATUS_STBY;
     controlReportAmpStatus();
