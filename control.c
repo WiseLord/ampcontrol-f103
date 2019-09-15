@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "amp.h"
 #include "audio/audio.h"
 #include "debug.h"
 #include "hwlibs.h"
@@ -107,7 +108,7 @@ void controlGetData(void)
 
 void controlReportAmpStatus(void)
 {
-    AmpStatus ampStatus = actionGetAmpStatus();
+    AmpStatus ampStatus = ampGetStatus();
 
     char *status = "UNKNOWN";
 

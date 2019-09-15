@@ -129,6 +129,7 @@ void audioInit(void)
     if (aProc.api->init) {
         aProc.api->init(&aProc.par);
     }
+    audioSetMute(true);
 }
 
 AudioProc *audioGet(void)
@@ -138,8 +139,6 @@ AudioProc *audioGet(void)
 
 void audioSetPower(bool value)
 {
-    audioSetMute(!value);
-
     if (!value) {
         audioSaveSettings();
     } else {

@@ -1,6 +1,7 @@
 #include "canvas.h"
 #include <string.h>
 
+#include "../amp.h"
 #include "../karadio.h"
 #include "../menu.h"
 #include "../rtc.h"
@@ -633,7 +634,7 @@ void canvasShowTuner(bool clear)
 
     const tFont *iconSet = lt->iconSet;
 
-    const tImage *icon = NULL;;
+    const tImage *icon = NULL;
     const uint8_t iconSpace = lt->tuner.iconSpace;
     const LayoutStripedBar *ltTunerBar = &lt->tuner.bar;
 
@@ -814,14 +815,15 @@ void canvasShowAudioInput(bool clear, Icon icon)
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
-    if (inType == IN_TUNER && !aProc->par.mute) {
-        canvasShowTuner(clear);
-        return;
-    }
-
-    if (inType == IN_KARADIO && !aProc->par.mute) {
-        canvasShowKaradio(clear);
-        return;
+    if (!aProc->par.mute || ampGetStatus() == AMP_STATUS_INPUT_SELECTED) {
+        switch (inType) {
+        case IN_TUNER:
+            canvasShowTuner(clear);
+            return;
+        case IN_KARADIO:
+            canvasShowKaradio(clear);
+            return;
+        }
     }
 
     const tFont *iconSet = lt->iconSet;

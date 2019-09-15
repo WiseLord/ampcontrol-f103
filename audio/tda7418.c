@@ -154,8 +154,6 @@ void tda7418Init(AudioParam *param)
     aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridToneBal;
     aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridSubwoofer;
     aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
-
-    tda7418SetMute(true);
 }
 
 void tda7418SetTune(AudioTune tune, int8_t value)

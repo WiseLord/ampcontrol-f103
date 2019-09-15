@@ -237,6 +237,8 @@ usb/usbhid.h
 
 actions.c
 actions.h
+amp.c
+amp.h
 cmd.h
 control.c
 control.h

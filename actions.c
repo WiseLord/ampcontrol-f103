@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 
+#include "amp.h"
 #include "audio/audio.h"
 #include "control.h"
 #include "gui/canvas.h"
@@ -31,14 +32,8 @@ static void actionRemapCommon(void);
 static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
-static void actionHandlePowerUp(void);
-static void actionHandleStby(int16_t value);
-static void actionHandleInitHw(void);
-
-static Action action = {ACTION_POWERUP, false, FLAG_ENTER, SCREEN_STANDBY, 0, ACTION_POWERUP};
+static Action action = {ACTION_INIT, false, FLAG_ENTER, SCREEN_STANDBY, 0, ACTION_INIT};
 static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, 0, ACTION_NONE};
-
-static AmpStatus ampStatus = AMP_STATUS_STBY;
 
 static void actionSet(ActionType type, int16_t value)
 {
@@ -345,10 +340,8 @@ static void actionGetTimers(void)
 {
     if (swTimGet(SW_TIM_DISPLAY) == 0) {
         actionSet(ACTION_DISP_EXPIRED, 0);
-    } else if (swTimGet(SW_TIM_INIT_HW) == 0) {
+    } else if (swTimGet(SW_TIM_AMP_INIT) == 0) {
         actionSet(ACTION_INIT_HW, 0);
-    } else if (swTimGet(SW_TIM_INIT_SW) == 0) {
-        actionSet(ACTION_INIT_SW, 0);
     } else if (swTimGet(SW_TIM_STBY_TIMER) == 0) {
         actionSet(ACTION_STANDBY, FLAG_ENTER);
     } else if (swTimGet(SW_TIM_SILENCE_TIMER) == 0) {
@@ -693,13 +686,24 @@ static void actionRemapCommon(void)
 {
     ScreenMode screen = screenGetMode();
     AudioProc *aProc = audioGet();
+    AmpStatus ampStatus = ampGetStatus();
 
     switch (action.type) {
     case ACTION_STANDBY:
-        if (screen == SCREEN_MENU){
+        if (screen == SCREEN_MENU) {
             action.value = FLAG_ENTER;
         } else if (FLAG_SWITCH == action.value) {
-            action.value = (ampStatus ? FLAG_ENTER : FLAG_EXIT);
+            switch (ampStatus) {
+            case AMP_STATUS_STBY:
+                action.value = FLAG_EXIT;
+                break;
+            case AMP_STATUS_ACTIVE:
+                action.value = FLAG_ENTER;
+                break;
+            default:
+                actionSet(ACTION_NONE, 0);
+                break;
+            }
         }
         break;
     case ACTION_OPEN_MENU:
@@ -757,96 +761,6 @@ static void actionRemapCommon(void)
          ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
-}
-
-static void actionHandlePowerUp()
-{
-    pinsSetMute(true);
-    pinsSetStby(true);
-
-    swTimSet(SW_TIM_RTC_INIT, 500);
-
-    ampStatus = AMP_STATUS_STBY;
-    controlReportAmpStatus();
-}
-
-static void actionHandleStby(int16_t value)
-{
-    if (value == FLAG_EXIT) {
-        if (!ampStatus) {
-            audioReadSettings();
-            tunerReadSettings();
-
-            pinsSetStby(false);     // ON via relay
-            swTimSet(SW_TIM_INIT_HW, 600);
-
-            actionSetScreen(SCREEN_TIME, 500);
-
-            ampStatus = AMP_STATUS_INIT;
-        }
-    } else {
-        screenSaveSettings();
-
-        audioSetMute(true);
-        audioSetPower(false);
-
-        tunerSetMute(true);
-        tunerSetPower(false);
-
-        karadioSetEnabled(false);
-
-        pinsDeInitAmpI2c();
-
-        pinsSetStby(true);      // OFF via relay
-
-        swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
-        swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
-        swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
-        swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
-        swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
-
-        actionDispExpired(SCREEN_STANDBY);
-
-        ampStatus = AMP_STATUS_STBY;
-    }
-    controlReportAmpStatus();
-}
-
-static void actionHandleInitHw(void)
-{
-    swTimSet(SW_TIM_INIT_HW, SW_TIM_OFF);
-
-    pinsInitAmpI2c();
-    pinsSetStby(false);
-
-    tunerInit();
-    audioInit();
-
-    swTimSet(SW_TIM_INPUT_POLL, 800);
-    swTimSet(SW_TIM_INIT_SW, 300);
-}
-
-static void actionHandleInitSw(void)
-{
-    AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
-    Tuner *tuner = tunerGet();
-
-    swTimSet(SW_TIM_INIT_SW, SW_TIM_OFF);
-
-    tunerSetPower(true);
-    tunerSetVolume(tuner->par.volume);
-    tunerSetMute(false);
-    tunerSetFreq(tuner->par.freq);
-
-    audioSetPower(true);
-    actionResetSilenceTimer();
-
-    karadioSetEnabled(inType == IN_KARADIO);
-
-    ampStatus = AMP_STATUS_ACTIVE;
-
-    controlReportAll();
 }
 
 static void actionDequeue(void)
@@ -939,20 +853,29 @@ void actionHandle(bool visible)
     action.timeout = 0;
 
     switch (action.type) {
-    case ACTION_POWERUP:
-        actionHandlePowerUp();
+    case ACTION_INIT:
+        ampInit();
+        swTimSet(SW_TIM_RTC_INIT, 500);
         break;
     case ACTION_STANDBY:
-        actionHandleStby(action.value);
+        if (action.value == FLAG_EXIT) {
+            ampExitStby();
+            actionSetScreen(SCREEN_TIME, 1000);
+        } else {
+            swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
+            swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
+            swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
+
+            ampEnterStby();
+            actionDispExpired(SCREEN_STANDBY);
+        }
         break;
     case ACTION_INIT_HW:
-        actionHandleInitHw();
+        ampInitHw();
+        actionResetSilenceTimer();
         break;
     case ACTION_INIT_RTC:
         rtcInit();
-        break;
-    case ACTION_INIT_SW:
-        actionHandleInitSw();
         break;
     case ACTION_DISP_EXPIRED:
         actionDispExpired(scrMode);
@@ -1034,13 +957,10 @@ void actionHandle(bool visible)
 
     case ACTION_AUDIO_INPUT:
         if (scrMode == SCREEN_AUDIO_INPUT) {
-            audioSetInput(actionGetNextAudioInput(aProc));
-            inType = aProc->par.inType[aProc->par.input];
+            ampSetInput(actionGetNextAudioInput(aProc));
             controlReportAudioInput();
             controlReportAudioTune(AUDIO_TUNE_GAIN);
         }
-
-        karadioSetEnabled(inType == IN_KARADIO);
 
         screenToClear();
         screen->iconHint = ICON_EMPTY;
@@ -1182,9 +1102,4 @@ void actionHandle(bool visible)
             swTimSet(SW_TIM_DISPLAY, action.timeout);
         }
     }
-}
-
-AmpStatus actionGetAmpStatus(void)
-{
-    return ampStatus;
 }

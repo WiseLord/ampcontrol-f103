@@ -58,8 +58,6 @@ void tda731xInit(AudioParam *param)
     aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridBalance;
     aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridBalance;
     aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
-
-    tda731xSetMute(true);
 }
 
 void tda731xSetTune(AudioTune tune, int8_t value)

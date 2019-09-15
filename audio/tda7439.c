@@ -56,8 +56,6 @@ void tda7439Init(AudioParam *param)
     aPar->tune[AUDIO_TUNE_PREAMP].grid  = &gridPreamp;
     aPar->tune[AUDIO_TUNE_BALANCE].grid = &gridBalance;
     aPar->tune[AUDIO_TUNE_GAIN].grid    = &gridGain;
-
-    tda7439SetMute(true);
 }
 
 void tda7439SetTune(AudioTune tune, int8_t value)

@@ -158,7 +158,6 @@ void pt232xInit(AudioParam *param)
     aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
 
     pt232xReset();
-    pt232xSetMute(true);
 }
 
 void pt232xSetTune(AudioTune tune, int8_t value)

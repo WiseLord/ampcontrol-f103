@@ -26,15 +26,6 @@ extern "C" {
 #define DIRECTION_UP    1
 #define DIRECTION_DOWN  -1
 
-typedef uint8_t AmpStatus;
-enum {
-    AMP_STATUS_STBY,
-    AMP_STATUS_INIT,
-    AMP_STATUS_ACTIVE,
-
-    AMP_STATUS_END
-};
-
 typedef uint8_t ActionType;
 enum {
     ACTION_NONE = 0,
@@ -44,9 +35,8 @@ enum {
     ACTION_ENCODER,
     ACTION_REMOTE,
 
-    ACTION_POWERUP,
+    ACTION_INIT,
     ACTION_INIT_HW,
-    ACTION_INIT_SW,
     ACTION_INIT_RTC,
     ACTION_STANDBY,
 
@@ -111,8 +101,6 @@ void actionQueue(ActionType type, int16_t value);
 
 void actionUserGet(void);
 void actionHandle(bool visible);
-
-AmpStatus actionGetAmpStatus(void);
 
 #ifdef __cplusplus
 }

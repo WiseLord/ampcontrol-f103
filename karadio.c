@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "actions.h"
+#include "amp.h"
 #include "audio/audio.h"
 #include "debug.h"
 #include "hwlibs.h"
@@ -179,7 +180,7 @@ static void karadioParseLine(char *line)
     } else if (strstr(line, AUTOSTART) == line) {
         AudioProc *aProc = audioGet();
         InputType inType = aProc->par.inType[aProc->par.input];
-        if ((actionGetAmpStatus() == AMP_STATUS_ACTIVE) && (inType == IN_KARADIO)) {
+        if ((ampGetStatus() == AMP_STATUS_ACTIVE) && (inType == IN_KARADIO)) {
             karadioSendCmd(CMD_CLI, CLI_PLAY);
         } else {
             karadioSendCmd(CMD_CLI, CLI_STOP);
