@@ -33,8 +33,6 @@ static const EE_Map eeMap[] = {
     [PARAM_AUDIO_IN5]       =   {0x15,  5},
     [PARAM_AUDIO_IN6]       =   {0x16,  6},
     [PARAM_AUDIO_IN7]       =   {0x17,  7},
-    [PARAM_AUDIO_IN8]       =   {0x0C,  8},
-    [PARAM_AUDIO_IN9]       =   {0x0D,  9},
 
     [PARAM_AUDIO_GAIN0]     =   {0x18,  0},
     [PARAM_AUDIO_GAIN1]     =   {0x19,  0},
@@ -44,8 +42,6 @@ static const EE_Map eeMap[] = {
     [PARAM_AUDIO_GAIN5]     =   {0x1D,  0},
     [PARAM_AUDIO_GAIN6]     =   {0x1E,  0},
     [PARAM_AUDIO_GAIN7]     =   {0x1F,  0},
-    [PARAM_AUDIO_GAIN8]     =   {0x0E,  0},
-    [PARAM_AUDIO_GAIN9]     =   {0x0F,  0},
 
     [PARAM_AUDIO_VOLUME]    =   {0x20,  0},
     [PARAM_AUDIO_BASS]      =   {0x21,  0},

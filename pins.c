@@ -48,7 +48,7 @@ static void pinsInitDisplay(void)
     LL_GPIO_Init(DISP_RS_Port, &GPIO_InitStruct);
 #ifndef _DISP_SPI
     GPIO_InitStruct.Pin = DISP_WR_Pin;
-    LL_GPIO_Init(DISP_WR_Port, &initDef);
+    LL_GPIO_Init(DISP_WR_Port, &GPIO_InitStruct);
 #endif
 }
 

@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MAX_INPUTS  10
+#define MAX_INPUTS  8
 
 #define FOREACH_AUDIO_IC(AUDIO_IC)  \
     AUDIO_IC(NO)                    \
