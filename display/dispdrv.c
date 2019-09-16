@@ -34,14 +34,10 @@ static inline uint8_t  dispdrvReadBus(void)
     uint8_t ret = 0;
 
 #if defined(_DISP_16BIT)
-    ret = (DISP_DATA_LO_Port->IDR & 0x00FF);
+    ret = READ_BYTE(DISP_DATA_LO);
 #else
 #ifdef DISP_DATA_Port
-#if IS_GPIO_LO(DISP_DATA)
-    ret = (DISP_DATA_Port->IDR & 0x00FF);
-#else
-    ret = (DISP_DATA_Port->IDR & 0xFF00) >> 8;
-#endif
+    ret = READ_BYTE(DISP_DATA);
 #endif
 #endif
 
@@ -321,8 +317,8 @@ uint16_t dispdrvReadData16(void)
 #ifdef DISP_RD_Port
     CLR(DISP_RD);
     dispdrvReadDelay();
-    ret |= DISP_DATA_HI_Port->IDR & 0xFF00;
-    ret |= DISP_DATA_LO_Port->IDR & 0x00FF;
+    ret |= READ_BYTE(DISP_DATA_HI) << 8;
+    ret |= READ_BYTE(DISP_DATA_LO);
     SET(DISP_RD);
 #endif
 #elif defined(_DISP_8BIT)
