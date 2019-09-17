@@ -10,25 +10,6 @@ extern "C" {
 
 #include "hwlibs.h"
 
-typedef uint16_t MuteStby;
-enum {
-    MUTESTBY_SWD = 0,
-    MUTESTBY_POS,
-    MUTESTBY_NEG,
-
-    MUTESTBY_END,
-};
-
-void pinsInit(void);
-
-void pinsDeInitAmpI2c(void);
-void pinsInitAmpI2c(void);
-
-void pinsInitMuteStby(MuteStby value);
-
-void pinsSetMute(bool value);
-void pinsSetStby(bool value);
-
 #ifdef _STM32F1
 #define IS_GPIO_HI(x)           ((x ## _Pin) & 0x00FF0000U)
 #define IS_GPIO_LO(x)           ((x ## _Pin) & 0x0000FF00U)
@@ -53,15 +34,8 @@ void pinsSetStby(bool value);
 #endif
 
 #define READ_BYTE(p)            (IS_GPIO_LO(p) ? (READ(p) & 0x00FF) : (READ(p) & 0xFF00) >> 8)
-
 #define WRITE_BYTE(p, data)     (CONCAT(p, _Port)->BSRR = (IS_GPIO_LO(p) ? (0x00FF0000U | (uint32_t)data) : (0xFF000000U | (uint32_t)(data << 8))))
 
-// Remote control pins
-#define RC_Port                 GPIOA
-#define RC_Pin                  LL_GPIO_PIN_8
-#define RC_ExtiLine             LL_EXTI_LINE_8
-#define RC_AR_ExtiPort          LL_GPIO_AF_EXTI_PORTA
-#define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
 
 // TFT LCD pins
 #define DISP_DATA_Port          GPIOB
@@ -77,6 +51,13 @@ void pinsSetStby(bool value);
 #define DISP_RS_Pin             LL_GPIO_PIN_14
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
+
+// Remote control pins
+#define RC_Port                 GPIOA
+#define RC_Pin                  LL_GPIO_PIN_8
+#define RC_ExtiLine             LL_EXTI_LINE_8
+#define RC_AR_ExtiPort          LL_GPIO_AF_EXTI_PORTA
+#define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
 
 // Mute and Standby lines
 #define SWD_FORCED  // TODO: Return to SWD line when debug finished
@@ -105,6 +86,25 @@ void pinsSetStby(bool value);
 // TODO: Use the same RST as display uses
 #define SI470X_RST_Port         GPIOA
 #define SI470X_RST_Pin          LL_GPIO_PIN_15
+
+typedef uint16_t MuteStby;
+enum {
+    MUTESTBY_SWD = 0,
+    MUTESTBY_POS,
+    MUTESTBY_NEG,
+
+    MUTESTBY_END,
+};
+
+void pinsInit(void);
+
+void pinsDeInitAmpI2c(void);
+void pinsInitAmpI2c(void);
+
+void pinsInitMuteStby(MuteStby value);
+
+void pinsSetMute(bool value);
+void pinsSetStby(bool value);
 
 #ifdef __cplusplus
 }
