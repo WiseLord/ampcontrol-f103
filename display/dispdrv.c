@@ -13,6 +13,7 @@ static inline void dispdrvSendByte(uint8_t data)
     spiSendByte(SPI_DISPLAY, data);
 #else
 #if defined(_DISP_16BIT)
+    WRITE_BYTE(DISP_DATA_HI, 0x00);
     WRITE_BYTE(DISP_DATA_LO, data);
 #elif defined(_DISP_8BIT)
     WRITE_BYTE(DISP_DATA, data);
@@ -236,11 +237,11 @@ void dispdrvBusIRQ(void)
 
 void dispdrvSendData8(uint8_t data)
 {
-#ifndef _DISP_SPI
+#ifdef _DISP_8BIT
     dispdrvBusOut();
 #endif
     dispdrvSendByte(data);
-#ifndef _DISP_SPI
+#ifdef _DISP_8BIT
     dispdrvBusIn();
 #endif
 }
