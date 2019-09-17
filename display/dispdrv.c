@@ -13,13 +13,9 @@ static inline void dispdrvSendByte(uint8_t data)
     spiSendByte(SPI_DISPLAY, data);
 #else
 #if defined(_DISP_16BIT)
-    DISP_DATA_LO_Port->BSRR = 0x00FF0000 | data;
+    WRITE_BYTE(DISP_DATA_LO, data);
 #elif defined(_DISP_8BIT)
-#if IS_GPIO_LO(DISP_DATA)
-    DISP_DATA_Port->BSRR = 0x00FF0000 | data;
-#elif IS_GPIO_HI(DISP_DATA)
-    DISP_DATA_Port->BSRR = 0xFF000000 | (uint16_t)(data << 8);
-#endif
+    WRITE_BYTE(DISP_DATA, data);
 #endif
     __asm volatile ("nop");
     CLR(DISP_WR);
@@ -48,8 +44,8 @@ __attribute__((always_inline))
 static inline void dispdrvBusIn(void)
 {
 #if defined(_DISP_16BIT)
-    DISP_DATA_HI_Port->BSRR = 0x0000FF00;   // Set HIGH level on all data lines
-    DISP_DATA_LO_Port->BSRR = 0x000000FF;   // Set HIGH level on all data lines
+    WRITE_BYTE(DISP_DATA_HI, 0xFF);         // Set HIGH level on all data lines
+    WRITE_BYTE(DISP_DATA_LO, 0xFF);
 #ifdef _STM32F1
     DISP_DATA_HI_Port->CRH = 0x88888888;
     DISP_DATA_LO_Port->CRL = 0x88888888;
@@ -59,17 +55,16 @@ static inline void dispdrvBusIn(void)
     DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
 #endif
 #elif defined(_DISP_8BIT)
+    WRITE_BYTE(DISP_DATA, 0xFF);            // Set HIGH level on all data lines
+
 #if IS_GPIO_LO(DISP_DATA)
-    DISP_DATA_Port->BSRR = 0x000000FF;   // Set HIGH level on all data lines
 #ifdef _STM32F1
     DISP_DATA_Port->CRL = 0x88888888;
 #endif
 #ifdef _STM32F3
     DISP_DATA_Port->MODER &= 0xFFFF0000;
 #endif
-#endif
-#if IS_GPIO_HI(DISP_DATA)
-    DISP_DATA_Port->BSRR = 0x0000FF00;   // Set HIGH level on all data lines
+#elif IS_GPIO_HI(DISP_DATA)
 #ifdef _STM32F1
     DISP_DATA_Port->CRH = 0x88888888;
 #endif
@@ -124,15 +119,17 @@ static inline void dispdrvBusOut(void)
 __attribute__((always_inline))
 static inline void dispdrvSendWord(uint16_t data)
 {
-#ifdef _DISP_16BIT
-    DISP_DATA_HI_Port->BSRR = 0xFF000000 | (data & 0xFF00);
-    DISP_DATA_LO_Port->BSRR = 0x00FF0000 | (data & 0x00FF);
-
-    CLR(DISP_WR);
-    SET(DISP_WR);
-#else
     uint8_t dataH = data >> 8;
     uint8_t dataL = data & 0xFF;
+#ifdef _DISP_16BIT
+    WRITE_BYTE(DISP_DATA_HI, dataH);
+    WRITE_BYTE(DISP_DATA_LO, dataL);
+
+    __asm volatile ("nop");
+    CLR(DISP_WR);
+    __asm volatile ("nop");
+    SET(DISP_WR);
+#else
 #ifndef _DISP_SPI
     dispdrvBusOut();
 #endif
