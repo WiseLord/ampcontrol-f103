@@ -1,7 +1,7 @@
 #include "settings.h"
 
 #include "audio/audiodefs.h"
-#include "display/dispdefs.h"
+#include "display/glcd.h"
 #include "eemul.h"
 #include "rc.h"
 #include "screen.h"

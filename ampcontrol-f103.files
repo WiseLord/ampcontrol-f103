@@ -69,7 +69,6 @@ display/gc480x320/ili9486.c
 display/gc480x320/r61581.c
 display/gc480x320/rm68140.c
 
-display/dispdefs.h
 display/dispdrv.c
 display/dispdrv.h
 display/glcd.c

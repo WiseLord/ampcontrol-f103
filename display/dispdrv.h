@@ -6,10 +6,10 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "dispdefs.h"
 
 #include "../pins.h"
 #include "../utils.h"
+#include "fonts.h"
 
 #ifdef _DISP_SPI
 #include "../spi.h"
@@ -18,6 +18,24 @@ extern "C" {
 #else
 #define DISP_WAIT_BUSY()        (void)0
 #endif
+
+#define LCD_ROTATE_0        0x00
+#define LCD_ROTATE_180      0x02
+
+#define LCD_BR_MIN          1
+#define LCD_BR_MAX          32
+
+typedef struct {
+    void (*init)(void);
+    void (*sleep)(void);
+    void (*wakeup)(void);
+    void (*setWindow)(int16_t x, int16_t y, int16_t w, int16_t h);
+    void (*rotate)(uint8_t rotate);
+    void (*shift)(int16_t value);
+
+    int16_t width;
+    int16_t height;
+} DispDriver;
 
 extern const DispDriver dispdrv;
 

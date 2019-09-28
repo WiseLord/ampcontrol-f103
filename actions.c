@@ -845,7 +845,6 @@ void actionHandle(bool visible)
     int8_t stNum = stationGetNum(tuner->status.freq);
 
     Canvas *canvas = canvasGet();
-    const Layout *lt = canvas->layout;
 
     Spectrum *sp = spGet();
 
@@ -1014,7 +1013,6 @@ void actionHandle(bool visible)
         break;
 
     case ACTION_TUNER_EDIT_NAME:
-        glcdSetFont(lt->textEdit.editFont);
         canvas->te.name = labelsGet(LABEL_TUNER_FM_STATION_NAME);
         textEditSet(&canvas->te, stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);
         action.prevScreen = SCREEN_AUDIO_INPUT;

@@ -1,9 +1,9 @@
 #include "stations.h"
 
-#include "tuner.h"
-#include "../display/glcd.h"
 #include "../eemul.h"
 #include "../mem.h"
+#include "tuner.h"
+
 #include <string.h>
 
 static Station *stFlash;

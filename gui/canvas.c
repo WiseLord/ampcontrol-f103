@@ -272,6 +272,36 @@ static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
     return (uint8_t)raw;
 }
 
+static uint16_t getRainbowColor(uint8_t value)
+{
+    uint16_t color = 0xFFFF;
+
+    if (value < 32) {           // Black => Blue
+        color = 0x0000;
+        color |= (value - 0);
+    } else if (value < 64) {    // Blue => Cyan
+        color = 0x003F;
+        color |= ((value - 32) << 6);
+    } else if (value < 96) {    // Cyan => Olive
+        color = 0x07E0;
+        color |= (95 - value);
+    } else if (value < 128) {   // Olive => Yellow
+        color = 0x07E0;
+        color |= ((value - 96) << 11);
+    } else if (value < 160) {   // Yellow => Red
+        color = 0xF800;
+        color |= ((159 - value) << 6);
+    } else if (value < 192) {   // Red => Purple
+        color = 0xF800;
+        color |= (value - 160);
+    } else if (value < 224) {   // Purple => White
+        color = 0xF83F;
+        color |= ((value - 160) << 6);
+    }
+
+    return color;
+}
+
 static void drawWaterfall(Spectrum *sp)
 {
     const Layout *lt = canvas.layout;
@@ -284,7 +314,7 @@ static void drawWaterfall(Spectrum *sp)
     for (uint8_t col = 0; col < SPECTRUM_SIZE; col++) {
         SpectrumColumn spCol;
         calcSpCol(sp, SP_CHAN_BOTH, 224, col, &spCol);
-        uint16_t color = glcdGetRainbowColor((uint8_t)spCol.showW);
+        uint16_t color = getRainbowColor((uint8_t)spCol.showW);
 
         int16_t posCurr = (col * lt->rect.h) / SPECTRUM_SIZE;
         int16_t posNext = ((col + 1) * lt->rect.h) / SPECTRUM_SIZE;

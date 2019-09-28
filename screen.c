@@ -1,6 +1,5 @@
 #include "screen.h"
 
-#include "display/dispdefs.h"
 #include "gui/canvas.h"
 #include "menu.h"
 #include "settings.h"
