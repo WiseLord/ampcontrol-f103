@@ -191,11 +191,11 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     // Draw menu value
     int16_t x = canvas.glcd->x;
     glcdSetXY(width - 2, y_pos + 2);
-    glcdSetFontAlign(FONT_ALIGN_RIGHT);
+    glcdSetFontAlign(GLCD_ALIGN_RIGHT);
 
     // Inverse value color if selected
-    uint16_t color = canvas.glcd->font.color;
-    uint16_t bgColor = canvas.glcd->font.bgColor;
+    uint16_t color = canvas.glcd->fontFg;
+    uint16_t bgColor = canvas.glcd->fontBg;
     if (active && menu->selected) {
         glcdSetFontColor(bgColor);
         glcdSetFontBgColor(color);
@@ -445,7 +445,7 @@ void canvasShowTime(bool clear)
 
         const char *wdayLabel = labelsGet((Label)(LABEL_SUNDAY + rtc->wday));
         glcdSetXY(lt->rect.w / 2, lt->time.wdY);
-        glcdSetFontAlign(FONT_ALIGN_CENTER);
+        glcdSetFontAlign(GLCD_ALIGN_CENTER);
         glcdWriteString(wdayLabel);
     }
 
@@ -476,7 +476,7 @@ void canvasShowMenu(bool clear)
     // Fill free space after header
     glcdDrawRect(canvas.glcd->x, canvas.glcd->y, lt->rect.w - canvas.glcd->x, fHh, canvas.pal->bg);
 
-    glcdDrawRect(0, dividerPos, lt->rect.w, 1, canvas.glcd->font.color);
+    glcdDrawRect(0, dividerPos, lt->rect.w, 1, canvas.glcd->fontFg);
 
     for (uint8_t idx = 0; idx < menu->listSize; idx++) {
         if (idx >= menu->dispOft && idx < items + menu->dispOft) {
@@ -537,7 +537,7 @@ void canvasShowTune(bool clear)
 
         // Value
         glcdSetXY(lt->rect.w, lt->tune.valY);
-        glcdSetFontAlign(FONT_ALIGN_RIGHT);
+        glcdSetFontAlign(GLCD_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
         glcdWriteString(utilMkStr("%3d", value * mStep / 8));
         prev.par.value = value;
@@ -691,7 +691,7 @@ void canvasShowTuner(bool clear)
 
         glcdSetFont(lt->tuner.stFont);
         glcdSetXY(lt->rect.w, lt->tune.valY);
-        glcdSetFontAlign(FONT_ALIGN_RIGHT);
+        glcdSetFontAlign(GLCD_ALIGN_RIGHT);
 
         // Station number
         int8_t stNum = stationGetNum(freq);

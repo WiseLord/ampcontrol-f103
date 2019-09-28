@@ -137,22 +137,22 @@ GlcdRect *glcdGetRect(void)
 
 void glcdSetFont(const tFont *font)
 {
-    glcd.font.tfont = font;
+    glcd.font = font;
 }
 
 void glcdSetFontColor(uint16_t color)
 {
-    glcd.font.color = color;
+    glcd.fontFg = color;
 }
 
 void glcdSetFontBgColor(uint16_t color)
 {
-    glcd.font.bgColor = color;
+    glcd.fontBg = color;
 }
 
 void glcdSetFontAlign(uint8_t align)
 {
-    glcd.font.align = align;
+    glcd.fontAlign = align;
 }
 
 int16_t glcdGetFontHeight(const tFont *font)
@@ -179,7 +179,7 @@ int16_t glcdFontSymbolPos(UChar code)
 {
     int16_t sPos = -1;
 
-    const tFont *font = glcd.font.tfont;
+    const tFont *font = glcd.font;
     for (int16_t i = 0; i < font->length; i++) {
         if (font->chars[i].code == code) {
             return i;
@@ -194,7 +194,7 @@ int16_t glcdFontSymbolPos(UChar code)
 
 UChar glcdFontSymbolCode(int16_t pos)
 {
-    const tFont *font = glcd.font.tfont;
+    const tFont *font = glcd.font;
 
     if (pos >= 0 && pos < font->length) {
         return font->chars[pos].code;
@@ -298,9 +298,9 @@ int16_t glcdWriteUChar(UChar code)
     if (pos < 0)
         return 0;
 
-    img = glcd.font.tfont->chars[pos].image;
+    img = glcd.font->chars[pos].image;
 
-    glcdDrawImage(img, glcd.font.color, glcd.font.bgColor);
+    glcdDrawImage(img, glcd.fontFg, glcd.fontBg);
 
     return img->width;
 }
@@ -316,9 +316,9 @@ uint16_t glcdWriteString(const char *string)
     const char *str = string;
     uint16_t ret = 0;
 
-    const tFont *font = glcd.font.tfont;
+    const tFont *font = glcd.font;
 
-    if (glcd.font.align != FONT_ALIGN_LEFT) {
+    if (glcd.fontAlign != GLCD_ALIGN_LEFT) {
         uint16_t strLength = 0;
         int16_t pos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
         int16_t sWidth = font->chars[pos].image->width;
@@ -336,14 +336,14 @@ uint16_t glcdWriteString(const char *string)
         if (glcd.strFramed)
             strLength += sWidth;
 
-        if (glcd.font.align == FONT_ALIGN_CENTER) {
+        if (glcd.fontAlign == GLCD_ALIGN_CENTER) {
             glcdSetX(glcd.x - strLength / 2);
-        } else if (glcd.font.align == FONT_ALIGN_RIGHT) {
+        } else if (glcd.fontAlign == GLCD_ALIGN_RIGHT) {
             glcdSetX(glcd.x - strLength);
         }
 
         // Reset align after string finished
-        glcd.font.align = FONT_ALIGN_LEFT;
+        glcd.fontAlign = GLCD_ALIGN_LEFT;
     }
 
     str = string;

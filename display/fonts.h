@@ -28,20 +28,6 @@ typedef struct {
     const tChar *chars;
 } tFont;
 
-typedef enum {
-    FONT_ALIGN_LEFT,
-    FONT_ALIGN_CENTER,
-    FONT_ALIGN_RIGHT
-} FontAlign;
-
-typedef struct {
-    const tFont *tfont;
-    uint16_t color;
-    uint16_t bgColor;
-
-    uint8_t align;
-} Font;
-
 // Originally exported fonts
 extern const tFont fontterminus12;
 extern const tFont fontterminus14;
