@@ -1,6 +1,10 @@
 #ifndef ICONS_H
 #define ICONS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #include "fonts.h"
@@ -66,5 +70,9 @@ extern const tFont iconsamp24;
 extern const tFont iconsamp32;
 extern const tFont iconsamp48;
 extern const tFont iconsamp64;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // ICONS_H

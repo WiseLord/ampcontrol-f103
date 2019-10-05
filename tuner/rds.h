@@ -1,6 +1,10 @@
 #ifndef RDS_H
 #define RDS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -34,5 +38,9 @@ bool rdsGetFlag(void);
 void rdsBufToBlock(uint8_t *buf, RdsBlock *block);
 void rdsDecode(RdsBlock *block);
 Rds *rdsGet(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // RDS_H

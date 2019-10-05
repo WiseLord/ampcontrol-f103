@@ -1,6 +1,10 @@
 #ifndef PALETTE_H
 #define PALETTE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 typedef struct {
@@ -27,5 +31,9 @@ enum {
 const Palette *paletteGet(PalIdx index);
 PalIdx paletteGetIndex(void);
 void paletteSetIndex(PalIdx index);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // PALETTE_H

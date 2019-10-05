@@ -1,6 +1,10 @@
 #ifndef KARADIO_H
 #define KARADIO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -33,5 +37,9 @@ void karadioSendMediaCmd(uint8_t cmd);
 
 void karadioGetData(void);
 void karadioIRQ(char data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // KARADIO_H
