@@ -133,6 +133,7 @@ static void karadioUpdateNumber(const char *str, size_t numLen)
     if (numLen > ST_NUM_SIZE)
         numLen = ST_NUM_SIZE;
     strncpy(krData.num, str, numLen);
+    krData.num[numLen] = '\0';
 }
 
 static void karadioUpdateName(const char *str)
