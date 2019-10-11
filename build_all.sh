@@ -18,9 +18,9 @@ compile_display()
 make clean
 
 # 160x128 color displays
+compile_display "ILI9163"   "8BIT SPI"
 compile_display "S6D0144"   "8BIT"
-compile_display "ILI9163"   "8BIT"
-compile_display "ST7735"    "8BIT"
+compile_display "ST7735"    "8BIT SPI"
 
 # 176x132 color displays
 compile_display "L2F50126"  "SPI"
