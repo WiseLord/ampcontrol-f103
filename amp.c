@@ -42,7 +42,6 @@ static void inputEnable(void)
 
     switch (aProc->par.inType[input]) {
     case IN_TUNER:
-        tunerInit();
         tunerSetPower(true);
         tunerSetVolume(tuner->par.volume);
         tunerSetMute(false);
@@ -135,12 +134,12 @@ void ampInitHw(void)
 
         audioInit();
         audioSetPower(true);
-        inputSetPower(true);
+        tunerInit();
 
-        ampStatus = AMP_STATUS_INPUT_SELECTED;
-        swTimSet(SW_TIM_AMP_INIT, 400);
+        ampStatus = AMP_STATUS_HW_READY;
+        swTimSet(SW_TIM_AMP_INIT, 500);
         break;
-    case AMP_STATUS_INPUT_SELECTED:
+    case AMP_STATUS_HW_READY:
         inputEnable();
 
         audioSetMute(false);
@@ -164,6 +163,6 @@ void ampSetInput(uint8_t value)
     audioSetInput(value);
     inputSetPower(true);
 
-    ampStatus = AMP_STATUS_INPUT_SELECTED;
+    ampStatus = AMP_STATUS_HW_READY;
     swTimSet(SW_TIM_AMP_INIT, 400);
 }
