@@ -98,8 +98,7 @@ enum {
 
 void pinsInit(void);
 
-void pinsDeInitAmpI2c(void);
-void pinsInitAmpI2c(void);
+void pinsHwResetI2c(void);
 
 void pinsInitMuteStby(MuteStby value);
 

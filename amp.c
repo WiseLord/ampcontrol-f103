@@ -87,9 +87,9 @@ void ampInit(void)
     pinsSetMute(true);
     pinsSetStby(true);
 
-    pinsInitAmpI2c();
+    i2cInit(I2C_AMP, 100000);
     inputSetPower(false);    // Power off                                                                                    input device
-    pinsDeInitAmpI2c();
+    i2cDeInit(I2C_AMP);
 
     ampStatus = AMP_STATUS_STBY;
     controlReportAmpStatus();
@@ -102,9 +102,9 @@ void ampExitStby(void)
 
     pinsSetStby(false);     // Power on amplifier
 
-    pinsInitAmpI2c();
+    i2cInit(I2C_AMP, 100000);
     inputSetPower(true);    // Power on input device
-    pinsDeInitAmpI2c();
+    i2cDeInit(I2C_AMP);
 
     ampStatus = AMP_STATUS_POWERED;
     swTimSet(SW_TIM_AMP_INIT, 600);
@@ -130,7 +130,8 @@ void ampInitHw(void)
 
     switch (ampStatus) {
     case AMP_STATUS_POWERED:
-        pinsInitAmpI2c();
+        pinsHwResetI2c();
+        i2cInit(I2C_AMP, 100000);
 
         audioInit();
         audioSetPower(true);

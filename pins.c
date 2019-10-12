@@ -85,7 +85,7 @@ void pinsInitMuteStby(MuteStby value)
     LL_GPIO_Init(STBY_Port, &GPIO_InitStruct);
 }
 
-static void pinsHwResetI2C(void)
+void pinsInitHwReset()
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -98,12 +98,20 @@ static void pinsHwResetI2C(void)
 
     GPIO_InitStruct.Pin = SI470X_RST_Pin;
     LL_GPIO_Init(SI470X_RST_Port, &GPIO_InitStruct);
+}
 
+void pinsHwResetI2c(void)
+{
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+#ifdef _STM32F3
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+#endif
 
-    GPIO_InitStruct.Pin = SI470X_SCLK_Pin;
-    LL_GPIO_Init(SI470X_SCLK_Port, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = SI470X_SDIO_Pin;
+    GPIO_InitStruct.Pin = SI470X_SCLK_Pin | SI470X_SDIO_Pin;
     LL_GPIO_Init(SI470X_SDIO_Port, &GPIO_InitStruct);
 
     CLR(SI470X_RST);    // Start display and Si470x reset
@@ -122,17 +130,6 @@ static void pinsHwResetI2C(void)
 #ifdef _STM32F1
     IN_F(SI470X_SDIO);  // SDIO = 1
 #endif
-}
-
-void pinsDeInitAmpI2c(void)
-{
-    LL_I2C_DeInit(I2C_AMP);
-}
-
-void pinsInitAmpI2c(void)
-{
-    pinsHwResetI2C();
-    i2cInit(I2C_AMP, 100000);
 }
 
 void pinsInit(void)
@@ -155,6 +152,7 @@ void pinsInit(void)
 
     MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
     pinsInitMuteStby(muteStby);
+    pinsInitHwReset();
 }
 
 void pinsSetMute(bool value)

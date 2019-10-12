@@ -130,6 +130,13 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
     return 0;
 }
 
+uint8_t i2cDeInit(void *i2c)
+{
+    LL_I2C_DeInit(i2c);
+
+    return 0;
+}
+
 void i2cBegin(void *i2c, uint8_t addr)
 {
     I2cContext *ctx = getI2cCtx(i2c);
