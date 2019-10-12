@@ -179,8 +179,6 @@ void audioSetTune(AudioTune tune, int8_t value)
     aProc.par.tune[tune].value = value;
     if (tune == AUDIO_TUNE_GAIN) {
         aProc.par.gain[aProc.par.input] = value;
-    } else if (tune == AUDIO_TUNE_VOLUME) {
-        aProc.par.mute = false;
     }
 
     if (aProc.api->setTune) {
@@ -194,6 +192,10 @@ void audioSetTune(AudioTune tune, int8_t value)
             break;
         }
         aProc.api->setTune(tune, value);
+    }
+
+    if (aProc.par.mute) {
+        audioSetMute(false);
     }
 }
 
