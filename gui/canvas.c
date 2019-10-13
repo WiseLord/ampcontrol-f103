@@ -79,6 +79,8 @@ void canvasInit(void)
     bool rotate = settingsRead(PARAM_DISPLAY_ROTATE);
     glcdRotate(rotate);
 
+    glcdDrawRect(0, 0, dispdrv.width, dispdrv.height, canvas.pal->bg);
+
     canvas.glcd->rect = canvas.layout->rect;
 
     menuGet()->dispSize = canvas.layout->menu.itemCnt;
@@ -95,13 +97,6 @@ void canvasClear(void)
 
     glcdDrawRect(0, 0, rect.w, rect.h, canvas.pal->bg);
     glcdShift(0);
-
-    const int16_t ft = canvas.glcd->drv->height / 100;
-
-    if (rect.x >= 2 * ft && rect.y >= 2 * ft) {
-        glcdDrawFrame(-ft, -ft, rect.w + 2 * ft, rect.h + 2 * ft, ft, canvas.pal->bg);
-        glcdDrawFrame(-2 * ft, -2 * ft, rect.w + 4 * ft, rect.h + 4 * ft, ft, canvas.pal->fg);
-    }
 
     glcdSetFontColor(canvas.pal->fg);
     glcdSetFontBgColor(canvas.pal->bg);

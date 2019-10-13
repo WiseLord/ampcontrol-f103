@@ -142,7 +142,8 @@ void screenShow(bool clear)
         if (screen.mode == SCREEN_TEXTEDIT) {
             rect = canvasGet()->layout->textEdit.rect;
             if (clear) {
-                glcdDrawFrame(rect.x - 1, rect.y - 1, rect.w + 2, rect.h + 2, 1, canvasGet()->pal->fg);
+                const int16_t th = canvasGet()->glcd->drv->height / 100;
+                glcdDrawFrame(rect.x - th, rect.y - th, rect.w + 2 * th, rect.h + 2 * th, th, canvasGet()->pal->fg);
             }
             glcdSetRect(&rect);
         }

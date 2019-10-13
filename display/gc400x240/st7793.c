@@ -11,7 +11,7 @@ void st7793Init(void)
     dispdrvWriteReg16(0x0008, 0x0808);
     dispdrvWriteReg16(0x0090, 0x8000);
     dispdrvWriteReg16(0x0400, 0xE200);
-    dispdrvWriteReg16(0x0401, 0x0001);
+    dispdrvWriteReg16(0x0401, 0x0003);
 
     //-------------End Display Control setting---------------------------------//
     //-------------Power Control Registers Initial ----------------------------//
@@ -78,6 +78,16 @@ void st7793Rotate(uint8_t rotate)
     SET(DISP_CS);
 }
 
+void st7793Shift(int16_t value)
+{
+    CLR(DISP_CS);
+
+    dispdrvWriteReg16(0x0404, (uint16_t)value);
+
+    DISP_WAIT_BUSY();
+    SET(DISP_CS);
+}
+
 void st7793Sleep(void)
 {
     CLR(DISP_CS);
@@ -129,4 +139,5 @@ const DispDriver dispdrv = {
     .wakeup = st7793Wakeup,
     .setWindow = st7793SetWindow,
     .rotate = st7793Rotate,
+//    .shift = st7793Shift,
 };

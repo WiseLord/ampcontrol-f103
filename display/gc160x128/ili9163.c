@@ -139,8 +139,8 @@ void ili9163SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 }
 
 const DispDriver dispdrv = {
-    .width = 160,
-    .height = 128,
+    .width = 162,
+    .height = 132,
     .sleep = ili9163Sleep,
     .wakeup = ili9163Wakeup,
     .init = ili9163Init,

@@ -138,8 +138,8 @@ void st7735SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 }
 
 const DispDriver dispdrv = {
-    .width = 160,
-    .height = 128,
+    .width = 162,
+    .height = 132,
     .init = st7735Init,
     .sleep = st7735Sleep,
     .wakeup = st7735Wakeup,
