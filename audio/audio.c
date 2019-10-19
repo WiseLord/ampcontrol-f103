@@ -193,10 +193,6 @@ void audioSetTune(AudioTune tune, int8_t value)
         }
         aProc.api->setTune(tune, value);
     }
-
-    if (aProc.par.mute) {
-        audioSetMute(false);
-    }
 }
 
 void audioChangeTune(AudioTune tune, int8_t diff)
@@ -209,6 +205,10 @@ void audioChangeTune(AudioTune tune, int8_t diff)
     value += diff;
 
     audioSetTune(tune, value);
+
+    if (aProc.par.mute) {
+        audioSetMute(false);
+    }
 }
 
 void audioSetInput(uint8_t value)

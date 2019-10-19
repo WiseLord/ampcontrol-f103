@@ -129,7 +129,7 @@ void tda731xSetMute(bool value)
         i2cSend(I2C_AMP, TDA731X_SP_FRONT_LEFT | TDA731X_MUTE);
         i2cSend(I2C_AMP, TDA731X_SP_FRONT_RIGHT | TDA731X_MUTE);
     } else {
-        tda731xSetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME].value);
+        tda731xSetTune(AUDIO_TUNE_BALANCE, aPar->tune[AUDIO_TUNE_VOLUME].value);
     }
     i2cTransmit(I2C_AMP);
 }
