@@ -13,6 +13,8 @@
 
 #define CMDBUF_SIZE     64
 
+#define REPORT_ENABLED
+
 static RingBuf cmdRb;
 static char cmdRbData[CMDBUF_SIZE];
 static LineParse cmdLp;
@@ -80,6 +82,13 @@ static void controlParseLine(char *line)
     }
 }
 
+static void sendReport(char *report)
+{
+#ifdef REPORT_ENABLED
+    dbg(report);
+#endif
+}
+
 void controlInit(void)
 {
     ringBufInit(&cmdRb, cmdRbData, sizeof(cmdRbData));
@@ -124,21 +133,21 @@ void controlReportAmpStatus(void)
         break;
     }
 
-    dbg(utilMkStr("##AMP.STATUS#: %s", status));
+    sendReport(utilMkStr("##AMP.STATUS#: %s", status));
 }
 
 void controlReportAudioInput(void)
 {
     AudioParam *par = &audioGet()->par;
 
-    dbg(utilMkStr("##AMP.AUDIO.INPUT#: %u", par->input));
+    sendReport(utilMkStr("##AMP.AUDIO.INPUT#: %u", par->input));
 }
 
 void controlReportAudioTune(AudioTune tune)
 {
     AudioParam *par = &audioGet()->par;
 
-    dbg(utilMkStr("##AMP.AUDIO.%s#: %d", CTRL_AUDIO_TUNE[tune], par->tune[tune].value));
+    sendReport(utilMkStr("##AMP.AUDIO.%s#: %d", CTRL_AUDIO_TUNE[tune], par->tune[tune].value));
 }
 
 void controlReportAudio(void)
