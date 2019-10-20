@@ -4,7 +4,7 @@
 
 #include "hwlibs.h"
 
-#define I2C_TIMEOUT_MS      2
+#define I2C_TIMEOUT_MS      1
 
 typedef struct {
     uint8_t *buf;
@@ -83,6 +83,21 @@ static void i2cInitPins(I2C_TypeDef *I2Cx)
 
     LL_GPIO_Init(gpio, &GPIO_InitStruct);
 }
+
+static void i2cDoStop(I2C_TypeDef *I2Cx)
+{
+    I2cContext *ctx = getI2cCtx(I2Cx);
+
+#ifdef _STM32F1
+    LL_I2C_GenerateStopCondition(I2Cx);
+    ctx->timeout = I2C_TIMEOUT_MS;
+    while (!LL_I2C_IsActiveFlag_STOP(I2Cx)) {
+        if (i2cWait(ctx) == false)
+            return;
+    }
+#endif
+}
+
 
 uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
 {
@@ -168,8 +183,10 @@ void i2cTransmit(void *i2c)
 
     ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_SB(i2c)) {
-        if (i2cWait(ctx) == false)
+        if (i2cWait(ctx) == false) {
+            i2cDoStop(i2c);
             return;
+        }
     }
 
     LL_I2C_TransmitData8(i2c, ctx->addr | I2C_WRITE);
@@ -177,7 +194,7 @@ void i2cTransmit(void *i2c)
     ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_ADDR(i2c)) {
         if (i2cWait(ctx) == false) {
-            LL_I2C_GenerateStopCondition(i2c);
+            i2cDoStop(i2c);
             return;
         }
     }
@@ -187,18 +204,22 @@ void i2cTransmit(void *i2c)
     for (uint8_t i = 0; i < ctx->bytes; i++) {
         ctx->timeout = I2C_TIMEOUT_MS;
         while (!LL_I2C_IsActiveFlag_TXE(i2c)) {
-            if (i2cWait(ctx) == false)
+            if (i2cWait(ctx) == false) {
+                i2cDoStop(i2c);
                 return;
+            }
         }
         LL_I2C_TransmitData8(i2c, ctx->buf[i]);
     }
 
     ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
-        if (i2cWait(ctx) == false)
+        if (i2cWait(ctx) == false) {
+            i2cDoStop(i2c);
             return;
+        }
     }
-    LL_I2C_GenerateStopCondition(i2c);
+    i2cDoStop(i2c);
 #endif
 
 #ifdef _STM32F3
@@ -213,8 +234,10 @@ void i2cTransmit(void *i2c)
             LL_I2C_TransmitData8(i2c, (*pBuf++));
             ctx->timeout = I2C_TIMEOUT_MS;
         }
-        if (i2cWait(ctx) == false)
+        if (i2cWait(ctx) == false) {
+            LL_I2C_ClearFlag_STOP(i2c);
             return;
+        }
     }
 
     LL_I2C_ClearFlag_STOP(i2c);
