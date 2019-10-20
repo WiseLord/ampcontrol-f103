@@ -4,7 +4,7 @@
 
 #include "hwlibs.h"
 
-#define I2C_TIMEOUT_MS      1
+#define I2C_TIMEOUT_MS      3
 
 typedef struct {
     uint8_t *buf;
@@ -342,8 +342,9 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
 
     ctx->timeout = I2C_TIMEOUT_MS;
     while (LL_I2C_IsActiveFlag_STOP(i2c)) {
-        if (i2cWait(ctx) == false)
+        if (i2cWait(ctx) == false) {
             return;
+        }
     }
     LL_I2C_AcknowledgeNextData(i2c, LL_I2C_ACK);
     LL_I2C_DisableBitPOS(i2c);
