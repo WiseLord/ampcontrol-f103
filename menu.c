@@ -2,6 +2,7 @@
 
 #include <string.h>
 
+#include "amp.h"
 #include "audio/audio.h"
 #include "gui/canvas.h"
 #include "input.h"
@@ -39,9 +40,12 @@ static const MenuItem menuItems[MENU_END] = {
 
     [MENU_SYSTEM_LANG]      = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     PARAM_SYSTEM_LANG},
     [MENU_SYSTEM_MUTESTBY]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     PARAM_SYSTEM_MUTESTBY},
+    [MENU_SYSTEM_I2C_EXT]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_PARENT,   PARAM_NULL},
     [MENU_SYSTEM_ENC_RES]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   PARAM_SYSTEM_ENC_RES},
     [MENU_SYSTEM_SIL_TIM]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   PARAM_SYSTEM_SIL_TIM},
     [MENU_SYSTEM_RTC_CORR]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   PARAM_SYSTEM_RTC_CORR},
+
+    [MENU_I2C_EXT_IN_STAT]  = {MENU_SYSTEM_I2C_EXT,     MENU_TYPE_ENUM,     PARAM_I2C_EXT_IN_STAT},
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IC},
     [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN0},
@@ -352,6 +356,13 @@ static void menuValueChange(int8_t diff)
             menu.value = -63;
         break;
 
+    case MENU_I2C_EXT_IN_STAT:
+        if (menu.value >= I2C_ADDR_END - 1)
+            menu.value = I2C_ADDR_END - 1;
+        if (menu.value < I2C_ADDR_DISABLED)
+            menu.value = I2C_ADDR_DISABLED;
+        break;
+
     case MENU_AUDIO_IC:
         if (menu.value > AUDIO_IC_END - 1)
             menu.value = AUDIO_IC_END - 1;
@@ -643,6 +654,7 @@ MenuIdx menuGetFirstChild(void)
     return menu.active;
 }
 
+__attribute__ ((noinline))
 const char *menuGetName(MenuIdx index)
 {
     char *name;
@@ -705,6 +717,16 @@ const char *menuGetValueStr(MenuIdx index)
         break;
     case MENU_SYSTEM_MUTESTBY:
         ret = labelsGet((Label)(LABEL_MUTESTBY + value));
+        break;
+
+    case MENU_I2C_EXT_IN_STAT:
+        if (value == I2C_ADDR_DISABLED) {
+            ret = labelsGet(LABEL_BOOL_OFF);
+        } else if (value <= PCF8574_0x4E) {
+            ret = utilMkStr("0x%02X", 0x40 + ((value - PCF8574_0x40) << 1));
+        } else if (value <= PCF8574A_0x7E) {
+            ret = utilMkStr("0x%02X", 0x70 + ((value - PCF8574A_0x70) << 1));
+        }
         break;
 
     case MENU_AUDIO_IC:

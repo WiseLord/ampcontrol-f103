@@ -1,5 +1,6 @@
 #include "settings.h"
 
+#include "amp.h"
 #include "audio/audiodefs.h"
 #include "display/glcd.h"
 #include "eemul.h"
@@ -12,6 +13,7 @@
 static uint8_t silenceTimer = 0;
 static int16_t rtcCorr = 0;
 static uint8_t muteStby = 0;
+static I2cAddrIdx pcf8574addrIdx = I2C_ADDR_DISABLED;
 
 #define GENERATE_EE_RC_MAP(CMD)  [PARAM_RC_ ## CMD] = {0x80 + RC_CMD_ ## CMD, (int16_t)EE_NOT_FOUND},
 
@@ -83,6 +85,8 @@ static const EE_Map eeMap[] = {
     [PARAM_SYSTEM_RTC_CORR] =   {0x73,  0},
     [PARAM_SYSTEM_ENC_RES]  =   {0x74,  4},
 
+    [PARAM_I2C_EXT_IN_STAT] =   {0x78,  I2C_ADDR_DISABLED},
+
     FOREACH_CMD(GENERATE_EE_RC_MAP)
 };
 
@@ -100,6 +104,8 @@ void settingsInit(void)
     settingsSet(PARAM_SYSTEM_MUTESTBY, settingsRead(PARAM_SYSTEM_MUTESTBY));
     settingsSet(PARAM_SYSTEM_SIL_TIM, settingsRead(PARAM_SYSTEM_SIL_TIM));
     settingsSet(PARAM_SYSTEM_RTC_CORR, settingsRead(PARAM_SYSTEM_RTC_CORR));
+
+    settingsSet(PARAM_I2C_EXT_IN_STAT, settingsRead(PARAM_I2C_EXT_IN_STAT));
 }
 
 int16_t settingsGet(Param param)
@@ -118,6 +124,7 @@ int16_t settingsGet(Param param)
     case PARAM_ALARM_DAYS:
         ret = (int16_t)alarm->days;
         break;
+
     case PARAM_SYSTEM_MUTESTBY:
         ret = muteStby;
         break;
@@ -127,6 +134,11 @@ int16_t settingsGet(Param param)
     case PARAM_SYSTEM_RTC_CORR:
         ret = rtcCorr;
         break;
+
+    case PARAM_I2C_EXT_IN_STAT:
+        ret = pcf8574addrIdx;
+        break;
+
     default:
         break;
     }
@@ -148,6 +160,7 @@ void settingsSet(Param param, int16_t value)
     case PARAM_ALARM_DAYS:
         alarm->days = (AlarmDay)value;
         break;
+
     case PARAM_SYSTEM_MUTESTBY:
         muteStby = (uint8_t)value;
         break;
@@ -157,6 +170,11 @@ void settingsSet(Param param, int16_t value)
     case PARAM_SYSTEM_RTC_CORR:
         rtcCorr = value;
         break;
+
+    case PARAM_I2C_EXT_IN_STAT:
+        pcf8574addrIdx = (I2cAddrIdx)value;
+        break;
+
     default:
         break;
     }

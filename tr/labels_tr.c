@@ -90,9 +90,12 @@ const char *const labels_tr[LABEL_END] = {
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Dil Seçeneği",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute & Stby",
+//    [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C expander",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Enkoder Çözünürlüğü",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Sessizlik Zamanlayıcısı",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Zaman Düzeltme",
+
+//    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Ses Giriş",

@@ -90,9 +90,12 @@ const char *const labels_ro[LABEL_END] = {
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Limba",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mut & Stby",
+//    [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C expander",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Rezolutie encoder",
 //    [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Silence timer",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Corectie timp",
+
+//    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Procesor sunet",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Intrare",

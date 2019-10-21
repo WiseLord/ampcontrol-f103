@@ -90,9 +90,12 @@ const char *const labels_fr[LABEL_END] = {
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Language",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Silence & pause",
+//    [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C expander",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Résolution encodeur",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Durée du silence",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Correction du temps",
+
+//    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Processeur audio",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Entrée",

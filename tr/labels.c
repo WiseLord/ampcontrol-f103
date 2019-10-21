@@ -86,7 +86,7 @@ static const char *const labels_default[LABEL_END] = {
 
     FOREACH_AUDIO_IC(GENERATE_AUDIO_IC_TEXT)
 
-    [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Off",
+    [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Disabled",
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekdays",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "All days",
 
@@ -109,9 +109,12 @@ static const char *const labels_default[LABEL_END] = {
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Language",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute & Stby",
+    [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C expander",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Encoder resolution",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Silence timer",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Time correction",
+
+    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Input",
@@ -192,7 +195,10 @@ const char *labelsGetLangName(Lang value)
 
 const char *labelsGet(Label value)
 {
-    const char *ret = labels_default[value];
+    const char *ret = "???";
+
+    if (labels_default[value])
+        ret = labels_default[value];
 
     switch (lang) {
     case LANG_BY:

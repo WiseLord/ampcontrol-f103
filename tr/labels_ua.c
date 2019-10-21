@@ -90,9 +90,12 @@ const char *const labels_ua [LABEL_END] = {
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Мова",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute і Stby",
+//    [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C expander",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Крок енкодера",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Таймер тиші",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Корекція часу",
+
+//    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аудіопроцесор",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Вхід",

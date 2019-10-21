@@ -8,12 +8,12 @@
 #include "i2c.h"
 #include "karadio.h"
 #include "pins.h"
+#include "settings.h"
 #include "swtimers.h"
 #include "tuner/tuner.h"
 
 static AmpStatus ampStatus = AMP_STATUS_STBY;
 static uint8_t inputStatus = 0x00;
-static uint8_t pcf8574Addr = 0x4E;
 
 static void inputDisable(void)
 {
@@ -57,7 +57,21 @@ static void inputEnable(void)
 
 static void handleInputStatus(void)
 {
-    i2cBegin(I2C_AMP, pcf8574Addr);
+    I2cAddrIdx i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_IN_STAT);
+
+    if (i2cAddrIdx == I2C_ADDR_DISABLED || i2cAddrIdx >= I2C_ADDR_END) {
+        return;
+    }
+
+    uint8_t i2cAddr = 0x40;
+
+    if (i2cAddrIdx <= PCF8574_0x4E) {
+        i2cAddr = 0x40 | (uint8_t)((i2cAddrIdx - PCF8574_0x40) << 1);
+    } else if (i2cAddrIdx <= PCF8574A_0x7E) {
+        i2cAddr = 0x70 | (uint8_t)((i2cAddrIdx - PCF8574A_0x70) << 1);
+    }
+
+    i2cBegin(I2C_AMP, i2cAddr);
     i2cSend(I2C_AMP, inputStatus);
     i2cTransmit(I2C_AMP);
 }
