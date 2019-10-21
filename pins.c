@@ -159,12 +159,6 @@ void pinsSetMute(bool value)
 {
     MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
 
-#ifdef SWD_FORCED
-    if (muteStby == MUTESTBY_SWD) {
-        muteStby = MUTESTBY_POS;
-    }
-#endif
-
     if (muteStby == MUTESTBY_POS) {
         if (value) {
             CLR(MUTE);
@@ -183,12 +177,6 @@ void pinsSetMute(bool value)
 void pinsSetStby(bool value)
 {
     MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
-
-#ifdef SWD_FORCED
-    if (muteStby == MUTESTBY_SWD) {
-        muteStby = MUTESTBY_POS;
-    }
-#endif
 
     // TODO: Remove MUTESTBY_SWD condition when debug finished
     if (muteStby == MUTESTBY_POS) {
