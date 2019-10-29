@@ -212,7 +212,7 @@ void tda7418SetMute(bool value)
 {
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7418_SOFTMUTE);
-    i2cSend(I2C_AMP, (uint8_t)(value ? TDA7418_SOFTMUTE_OFF : TDA7418_SOFTMUTE_ON));
+    i2cSend(I2C_AMP, (uint8_t)(value ? TDA7418_SOFTMUTE_ON : TDA7418_SOFTMUTE_OFF));
     i2cTransmit(I2C_AMP);
 }
 
