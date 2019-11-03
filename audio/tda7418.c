@@ -98,11 +98,16 @@ static const AudioApi tda7418Api = {
     .setLoudness = tda7418SetLoudness,
 };
 
+// TODO: make this adjustable
+static const uint8_t bassQ = TDA7418_BASS_Q_2P00;
+static const uint8_t middleQ = TDA7418_MIDDLE_Q_1P25;
+static const uint8_t trebleCF = TDA7418_TREBLE_CENTER_12K5;
+
 static void tda7418InputGain(uint8_t input, int8_t gain)
 {
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7418_SOURCE_SELECT);
-    i2cSend(I2C_AMP, (uint8_t)((gain << 3) | ((input + 1) & 0x03)));
+    i2cSend(I2C_AMP, (uint8_t) (gain << 3) | (input & 0x03) | TDA7418_DIFFIN_MODE );
     i2cTransmit(I2C_AMP);
 }
 
@@ -166,21 +171,21 @@ void tda7418SetTune(AudioTune tune, int8_t value)
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BASS:
-        i2cSend(I2C_AMP, TDA7418_VOLUME);
-        i2cBegin(I2C_AMP, TDA7439_BASS);
-        i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | TDA7418_BASS_Q_1P25));
+        i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
+        i2cSend(I2C_AMP, TDA7439_BASS);
+        i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | bassQ));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_MIDDLE:
-        i2cSend(I2C_AMP, TDA7418_VOLUME);
-        i2cBegin(I2C_AMP, TDA7439_MIDDLE);
-        i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | TDA7418_MIDDLE_Q_0P50));
+        i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
+        i2cSend(I2C_AMP, TDA7439_MIDDLE);
+        i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | middleQ));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_TREBLE:
-        i2cSend(I2C_AMP, TDA7418_VOLUME);
-        i2cBegin(I2C_AMP, TDA7439_TREBLE);
-        i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | TDA7418_TREBLE_CENTER_10K0));
+        i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
+        i2cSend(I2C_AMP, TDA7439_TREBLE);
+        i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | trebleCF));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_FRONTREAR:
