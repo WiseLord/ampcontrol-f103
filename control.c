@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "hwlibs.h"
 #include "ringbuf.h"
+#include "tuner/tuner.h"
 #include "usart.h"
 #include "utils.h"
 
@@ -158,8 +159,22 @@ void controlReportAudio(void)
     }
 }
 
-void controlReportAll()
+void controlReportTuner(bool force)
+{
+    TunerStatus *st = &tunerGet()->status;
+
+    static TunerStatus stOld;
+
+    if (force || stOld.freq != st->freq) {
+        sendReport(utilMkStr("##AMP.TUNER.FREQ#: %d", st->freq));
+    }
+
+    memcpy(&stOld, st, sizeof (stOld));
+}
+
+void controlReportAll(void)
 {
     controlReportAmpStatus();
     controlReportAudio();
+    controlReportTuner(true);
 }

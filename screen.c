@@ -1,5 +1,6 @@
 #include "screen.h"
 
+#include "control.h"
 #include "gui/canvas.h"
 #include "menu.h"
 #include "settings.h"
@@ -158,10 +159,9 @@ void screenShow(bool clear)
         }
 
         if (swTimGet(SW_TIM_INPUT_POLL) == 0) {
-            if (screen.mode == SCREEN_AUDIO_INPUT) {
-                if (inType == IN_TUNER) {
-                    tunerUpdateStatus();
-                }
+            if (inType == IN_TUNER) {
+                tunerUpdateStatus();
+                controlReportTuner(false);
             }
             swTimSet(SW_TIM_INPUT_POLL, 100);
         }

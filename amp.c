@@ -152,6 +152,7 @@ void ampInitHw(void)
 
         ampStatus = AMP_STATUS_HW_READY;
         swTimSet(SW_TIM_AMP_INIT, 500);
+        controlReportAll();
         break;
     case AMP_STATUS_HW_READY:
         inputEnable();
@@ -161,7 +162,6 @@ void ampInitHw(void)
         ampStatus = AMP_STATUS_ACTIVE;
 
         swTimSet(SW_TIM_INPUT_POLL, 100);
-        controlReportAll();
         break;
     }
 }
