@@ -176,14 +176,15 @@ void screenShow(bool clear)
 
 void screenPwm(void)
 {
-    static uint8_t br;
+    static int8_t br;
 
-    if (++br >= LCD_BR_MAX)
+    if (++br >= LCD_BR_MAX) {
         br = 0;
+    }
 
     if (br == screen.brightness) {
-        CLR(DISP_BCKL);
+        pinsSetBckl(false);
     } else if (br == 0) {
-        SET(DISP_BCKL);
+        pinsSetBckl(true);
     }
 }

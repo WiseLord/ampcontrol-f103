@@ -139,7 +139,16 @@ void EmulDisp::systick()
 void EmulDisp::drawscreen()
 {
     actionHandle(ACTION_VISIBLE);
-    screenShow(false);
+
+    static int8_t brOld;
+    int8_t br = screenGet()->brightness;
+
+    if (br != brOld) {
+        setBrightness(screenGet()->brightness);
+    }
+    screenShow(br != brOld);
+    brOld = br;
+
     actionUserGet();
 }
 

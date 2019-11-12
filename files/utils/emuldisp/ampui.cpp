@@ -49,7 +49,7 @@ extern "C" void dispdrvInit(void)
 
 extern "C" uint8_t dispdrvGetBus(void)
 {
-    return amp->bus;
+    return ~amp->bus;
 }
 
 extern "C" void dispdrvSetBrightness(int8_t value)

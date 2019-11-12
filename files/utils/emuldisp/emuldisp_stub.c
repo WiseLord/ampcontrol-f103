@@ -128,6 +128,11 @@ void pinsSetStby(bool value)
     (void)value;
 }
 
+void pinsSetBckl(bool value)
+{
+    (void)value;
+}
+
 bool pinsGetMuteStby(void)
 {
     return true;

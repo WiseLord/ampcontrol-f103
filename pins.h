@@ -104,6 +104,7 @@ void pinsInitMuteStby(MuteStby value);
 
 void pinsSetMute(bool value);
 void pinsSetStby(bool value);
+void pinsSetBckl(bool value);
 
 #ifdef __cplusplus
 }

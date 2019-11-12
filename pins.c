@@ -193,3 +193,12 @@ void pinsSetStby(bool value)
         }
     }
 }
+
+void pinsSetBckl(bool value)
+{
+    if (value) {
+        SET(DISP_BCKL);
+    } else {
+        CLR(DISP_BCKL);
+    }
+}
