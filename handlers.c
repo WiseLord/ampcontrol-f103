@@ -3,7 +3,6 @@
 #include "hwlibs.h"
 
 #include "control.h"
-#include "display/dispdrv.h"
 #include "input.h"
 #include "karadio.h"
 #include "pins.h"
@@ -88,7 +87,7 @@ void TIM2_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM2);
 
         // Callbacks
-        dispdrvPwm();
+        screenPwm();
         spConvertADC();
     }
 }

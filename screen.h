@@ -32,18 +32,11 @@ enum {
     SCREEN_END
 };
 
-typedef enum {
-    BR_STBY = 0,
-    BR_WORK,
-
-    BR_END
-} BrMode;
-
 typedef struct {
     ScreenMode mode;
     ScreenMode def;
     Icon iconHint;
-    int8_t br[BR_END];
+    int8_t brightness;
 } Screen;
 
 void screenReadSettings(void);
@@ -56,12 +49,12 @@ Screen *screenGet(void);
 void screenSetMode(ScreenMode value);
 ScreenMode screenGetMode(void);
 
-int8_t screenGetBrightness(BrMode mode);
-void screenSetBrightness(BrMode mode, int8_t value);
-void screenChangeBrighness(BrMode mode, int8_t diff);
+void screenSetBrightness(int8_t value);
 
 void screenToClear(void);
 void screenShow(bool clear);
+
+void screenPwm(void);
 
 #ifdef __cplusplus
 }

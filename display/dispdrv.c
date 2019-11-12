@@ -3,7 +3,6 @@
 #include <stdbool.h>
 
 static volatile bool busBusy;
-static volatile int8_t brightness;
 static volatile uint8_t busData;
 
 __attribute__((always_inline))
@@ -202,25 +201,6 @@ void dispdrvInit(void)
     dispdrv.init();
 
     SET(DISP_BCKL);
-}
-
-void dispdrvPwm(void)
-{
-    static uint8_t br;
-
-    if (++br >= LCD_BR_MAX)
-        br = 0;
-
-    if (br == brightness) {
-        CLR(DISP_BCKL);
-    } else if (br == 0) {
-        SET(DISP_BCKL);
-    }
-}
-
-void dispdrvSetBrightness(int8_t value)
-{
-    brightness = value;
 }
 
 uint8_t dispdrvGetBus(void)

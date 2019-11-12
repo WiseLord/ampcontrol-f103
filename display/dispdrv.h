@@ -42,8 +42,6 @@ extern const DispDriver dispdrv;
 void dispdrvReset(void);
 void dispdrvInit(void);
 
-void dispdrvPwm(void);
-void dispdrvSetBrightness(int8_t value);
 uint8_t dispdrvGetBus(void);
 
 void dispdrvSendData8(uint8_t data);

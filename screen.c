@@ -42,12 +42,10 @@ static bool screenCheckClear(void)
 
     if (screen.mode != scrPrev || clear) {
         // Handle standby/work brightness
-        if (screen.mode == SCREEN_STANDBY) {
-            screenChangeBrighness(BR_STBY, 0);
-        } else {
-            screenChangeBrighness(BR_WORK, 0);
-        }
+        screenSetBrightness((int8_t)settingsGet(screen.mode == SCREEN_STANDBY ?
+                                                PARAM_DISPLAY_BR_STBY : PARAM_DISPLAY_BR_WORK));
     }
+
 
     // Save current screen and screen parameter
     scrPrev = screen.mode;
@@ -57,14 +55,6 @@ static bool screenCheckClear(void)
 
 void screenReadSettings(void)
 {
-    for (BrMode brMode = BR_STBY; brMode < BR_END; brMode++) {
-        screen.br[brMode] = (int8_t)settingsRead((Param)(PARAM_DISPLAY_BR_STBY + brMode));
-        if (screen.br[brMode] < LCD_BR_MIN) {
-            screen.br[brMode] = LCD_BR_MIN;
-        } else if (screen.br[brMode] > LCD_BR_MAX) {
-            screen.br[brMode] = LCD_BR_MAX;
-        }
-    }
     screen.def = (ScreenMode)settingsRead(PARAM_DISPLAY_DEF);
 }
 
@@ -73,14 +63,12 @@ void screenSaveSettings(void)
     settingsStore(PARAM_DISPLAY_DEF, screen.def);
 }
 
-
 void screenInit(void)
 {
     labelsInit();
     canvasInit();
 
     screenReadSettings();
-    dispdrvSetBrightness(screen.br[BR_STBY]);
 }
 
 Screen *screenGet(void)
@@ -98,30 +86,9 @@ ScreenMode screenGetMode()
     return screen.mode;
 }
 
-int8_t screenGetBrightness(BrMode mode)
+void screenSetBrightness(int8_t value)
 {
-    return screen.br[mode];
-}
-
-void screenSetBrightness(BrMode mode, int8_t value)
-{
-    screen.br[mode] = value;
-
-    dispdrvSetBrightness(value);
-}
-
-void screenChangeBrighness(BrMode mode, int8_t diff)
-{
-    int8_t br = screenGetBrightness(mode);
-
-    br += diff;
-
-    if (br > LCD_BR_MAX)
-        br = LCD_BR_MAX;
-    if (br < LCD_BR_MIN)
-        br = LCD_BR_MIN;
-
-    screenSetBrightness(mode, br);
+    screen.brightness = value;
 }
 
 void screenToClear(void)
@@ -204,5 +171,19 @@ void screenShow(bool clear)
         break;
     default:
         break;
+    }
+}
+
+void screenPwm(void)
+{
+    static uint8_t br;
+
+    if (++br >= LCD_BR_MAX)
+        br = 0;
+
+    if (br == screen.brightness) {
+        CLR(DISP_BCKL);
+    } else if (br == 0) {
+        SET(DISP_BCKL);
     }
 }

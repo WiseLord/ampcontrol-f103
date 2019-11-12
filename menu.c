@@ -171,10 +171,6 @@ static int16_t menuGetValue(MenuIdx index)
         ret = sp->peaks;
         break;
 
-    case MENU_DISPLAY_BR_STBY:
-    case MENU_DISPLAY_BR_WORK:
-        ret = screenGetBrightness(BR_STBY + index - MENU_DISPLAY_BR_STBY);
-        break;
     case MENU_DISPLAY_ROTATE:
         ret = glcdGetRotate();
         break;
@@ -277,7 +273,7 @@ static void menuStoreCurrentValue(void)
 
     case MENU_DISPLAY_BR_STBY:
     case MENU_DISPLAY_BR_WORK:
-        screenSetBrightness(BR_STBY + menu.active - MENU_DISPLAY_BR_STBY, (int8_t)menu.value);
+        screenSetBrightness((int8_t)(menu.value));
         break;
     case MENU_DISPLAY_ROTATE:
         glcdRotate((bool)menu.value);
@@ -472,7 +468,7 @@ static void menuValueChange(int8_t diff)
     }
 
     if (menu.active == MENU_DISPLAY_BR_STBY || menu.active == MENU_DISPLAY_BR_WORK) {
-        dispdrvSetBrightness((int8_t)menu.value);
+        screenSetBrightness((int8_t)menu.value);
     }
 }
 
@@ -604,13 +600,18 @@ void menuSetActive(MenuIdx index)
 
         if (menu.selected) {
             menu.value = menuGetValue(menu.active);
-            if (index == MENU_DISPLAY_BR_STBY || index == MENU_DISPLAY_BR_WORK) {
-                dispdrvSetBrightness(screenGetBrightness(BR_STBY + index - MENU_DISPLAY_BR_STBY));
+            switch (index) {
+                case MENU_DISPLAY_BR_STBY:
+                screenSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_STBY));
+                break;
+            case MENU_DISPLAY_BR_WORK:
+                screenSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_WORK));
+                break;
             }
         } else {
             menuStoreCurrentValue();
             if (index == MENU_DISPLAY_BR_STBY || index == MENU_DISPLAY_BR_WORK) {
-                dispdrvSetBrightness(screenGetBrightness(BR_WORK));
+                screenSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_WORK));
             }
             menuUpdate(index);
         }

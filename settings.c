@@ -14,6 +14,8 @@ static uint8_t silenceTimer = 0;
 static int16_t rtcCorr = 0;
 static uint8_t muteStby = 0;
 static I2cAddrIdx pcf8574addrIdx = I2C_ADDR_DISABLED;
+static int8_t brStby = 3;
+static int8_t brWork = LCD_BR_MAX;
 
 #define GENERATE_EE_RC_MAP(CMD)  [PARAM_RC_ ## CMD] = {0x80 + RC_CMD_ ## CMD, (int16_t)EE_NOT_FOUND},
 
@@ -125,6 +127,13 @@ int16_t settingsGet(Param param)
         ret = (int16_t)alarm->days;
         break;
 
+    case PARAM_DISPLAY_BR_STBY:
+        ret = brStby;
+        break;
+    case PARAM_DISPLAY_BR_WORK:
+        ret = brWork;
+        break;
+
     case PARAM_SYSTEM_MUTESTBY:
         ret = muteStby;
         break;
@@ -159,6 +168,13 @@ void settingsSet(Param param, int16_t value)
         break;
     case PARAM_ALARM_DAYS:
         alarm->days = (AlarmDay)value;
+        break;
+
+    case PARAM_DISPLAY_BR_STBY:
+        brStby = (int8_t)value;
+        break;
+    case PARAM_DISPLAY_BR_WORK:
+        brWork = (int8_t)value;
         break;
 
     case PARAM_SYSTEM_MUTESTBY:
