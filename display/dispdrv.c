@@ -225,14 +225,11 @@ void dispdrvSetBrightness(int8_t value)
 
 uint8_t dispdrvGetBus(void)
 {
-    return ~busData;
-}
-
-void dispdrvBusIRQ(void)
-{
     if (!busBusy) {
         busData = dispdrvReadBus();
     }
+
+    return busData;
 }
 
 void dispdrvSendData8(uint8_t data)

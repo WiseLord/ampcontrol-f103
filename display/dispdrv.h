@@ -46,8 +46,6 @@ void dispdrvPwm(void);
 void dispdrvSetBrightness(int8_t value);
 uint8_t dispdrvGetBus(void);
 
-void dispdrvBusIRQ(void);
-
 void dispdrvSendData8(uint8_t data);
 void dispdrvSendData16(uint16_t data);
 

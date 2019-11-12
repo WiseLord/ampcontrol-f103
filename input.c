@@ -33,7 +33,7 @@ void inputPoll(void)
     static uint8_t encPrev = ENC_NO;
 
     // Current state
-    uint8_t btnNow = dispdrvGetBus();
+    uint8_t btnNow = ~dispdrvGetBus();
 
     // If encoder event has happened, inc/dec encoder counter
     if (encRes) {
