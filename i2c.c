@@ -84,6 +84,7 @@ static void i2cInitPins(I2C_TypeDef *I2Cx)
     LL_GPIO_Init(gpio, &GPIO_InitStruct);
 }
 
+#ifdef _STM32F1
 static void i2cDoStop(I2C_TypeDef *I2Cx)
 {
     I2cContext *ctx = getI2cCtx(I2Cx);
@@ -97,7 +98,7 @@ static void i2cDoStop(I2C_TypeDef *I2Cx)
     }
 #endif
 }
-
+#endif
 
 uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
 {
