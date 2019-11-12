@@ -1,6 +1,6 @@
 #include <QApplication>
 
-#include "amp.h"
+#include "ampui.h"
 
 int main(int argc, char *argv[])
 {

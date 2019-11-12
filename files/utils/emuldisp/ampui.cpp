@@ -1,4 +1,4 @@
-#include "amp.h"
+#include "ampui.h"
 
 #include "emuldisp.h"
 #include "emuldisp_stub.h"

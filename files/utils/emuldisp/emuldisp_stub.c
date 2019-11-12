@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "../../../audio/audiodefs.h"
-#include "../../../display/dispdefs.h"
 #include "../../../display/dispdrv.h"
 #include "../../../tuner/rds.h"
 #include "../../../tuner/stations.h"
@@ -221,5 +220,48 @@ void dbg(const char *str)
 void LL_mDelay(uint32_t delay)
 {
     (void)delay;
+}
+
+void pinsHwResetI2c(void)
+{
+}
+
+uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
+{
+    (void)i2c;
+    (void)ClockSpeed;
+
+    return 0;
+}
+
+uint8_t i2cDeInit(void *i2c)
+{
+    (void)i2c;
+
+    return 0;
+}
+
+void i2cBegin(void *i2c, uint8_t addr)
+{
+    (void)i2c;
+    (void)addr;
+}
+
+void i2cSend(void *i2c, uint8_t data)
+{
+    (void)i2c;
+    (void)data;
+}
+
+void i2cTransmit(void *i2c)
+{
+    (void)i2c;
+}
+
+void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
+{
+    (void)i2c;
+    (void)buf;
+    (void)size;
 }
 

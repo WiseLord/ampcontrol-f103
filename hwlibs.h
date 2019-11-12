@@ -45,10 +45,18 @@ extern "C" {
 #include <stm32f3xx_ll_utils.h>
 #endif
 
+#if defined(_STM32F1) || defined(_STM32F3)
+
 #define I2C_AMP                 I2C1
 
 #define USART_DBG               USART1
 #define USART_KARADIO           USART2
+
+#else
+
+#define I2C_AMP                 (void*)0
+
+#endif
 
 #ifdef __cplusplus
 }

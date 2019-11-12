@@ -2,7 +2,6 @@
 #include "emuldisp_stub.h"
 
 #include "../../../gui/canvas.h"
-#include "../../../display/dispdefs.h"
 #include "../../../input.h"
 #include "../../../screen.h"
 #include "../../../settings.h"

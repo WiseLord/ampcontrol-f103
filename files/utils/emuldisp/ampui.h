@@ -1,5 +1,5 @@
-#ifndef AMP_H
-#define AMP_H
+#ifndef AMPUI_H
+#define AMPUI_H
 
 #include "ui_amp.h"
 
@@ -56,4 +56,4 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent*);};
 
-#endif // AMP_H
+#endif // AMPUI_H

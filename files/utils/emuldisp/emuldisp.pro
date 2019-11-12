@@ -43,6 +43,7 @@ _DISP_480x320 {
 
 SOURCES += \
     ../../../actions.c \
+    ../../../amp.c \
     ../../../audio/audio.c \
 	../../../control.c \
     ../../../display/fonts/font-terminus-12.c \
@@ -98,7 +99,7 @@ SOURCES += \
     ../../../tuner/stations.c \
     ../../../tuner/tuner.c \
     ../../../utils.c \
-    amp.cpp \
+    ampui.cpp \
     emuldisp.cpp \
     emuldisp_stub.c \
     main.cpp \
@@ -107,6 +108,7 @@ SOURCES += \
 
 HEADERS += \
     ../../../actions.h \
+    ../../../amp.h \
     ../../../audio/audio.h \
     ../../../audio/audiodefs.h \
 	../../../control.h \
@@ -143,7 +145,7 @@ HEADERS += \
     ../../../usb/usbhid.h \
     ../../../usb/hidkeys.h \
     ../../../utils.h \
-    amp.h \
+    ampui.h \
     emuldisp.h \
     emuldisp_stub.h \
 
