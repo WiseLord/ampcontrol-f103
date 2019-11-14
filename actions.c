@@ -215,10 +215,12 @@ static void actionGetButtons(void)
 {
     CmdBtn cmdBtn = getBtnCmd();
 
-    if (cmdBtn & 0xFF00) {
-        actionSet(ACTION_BTN_LONG, cmdBtn >> 8);
-    } else if (cmdBtn & 0x00FF) {
-        actionSet(ACTION_BTN_SHORT, cmdBtn & 0xFF);
+    if (cmdBtn.btn) {
+        if (cmdBtn.flags & BTN_FLAG_LONG_PRESS) {
+            actionSet(ACTION_BTN_LONG, (int16_t)cmdBtn.btn);
+        } else {
+            actionSet(ACTION_BTN_SHORT, (int16_t)cmdBtn.btn);
+        }
     }
 }
 
