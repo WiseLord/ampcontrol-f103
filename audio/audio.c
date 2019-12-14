@@ -17,6 +17,10 @@
 #ifdef _TDA7418
 #include "tda7418.h"
 #endif
+#ifdef _TDA7719
+#include "tda7719.h"
+#endif
+
 
 static AudioProc aProc;
 
@@ -97,6 +101,12 @@ void audioReadSettings(void)
     case AUDIO_IC_TDA7418:
         aProc.api = tda7418GetApi();
         aProc.par.inCnt = TDA7418_IN_CNT;
+        break;
+#endif
+#ifdef _TDA7719
+    case AUDIO_IC_TDA7719:
+        aProc.api = tda7719GetApi();
+        aProc.par.inCnt = TDA7719_IN_CNT;
         break;
 #endif
     default:
