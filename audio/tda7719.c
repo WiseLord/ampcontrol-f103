@@ -94,7 +94,10 @@
 
 // 7: Loudness
 #define TDA7719_HIGH_BOOST_OFF      0x40
-#define TDA7719_LOUD_FREQ_MASK      0x30
+#define TDA7719_LOUD_FREQ_FLAT      0x00
+#define TDA7719_LOUD_FREQ_400HZ     0x10
+#define TDA7719_LOUD_FREQ_800HZ     0x20
+#define TDA7719_LOUD_FREQ_2400HZ    0x30
 #define TDA7719_LOUD_ATT_MASK       0x0F
 
 // 8: Volume / output gain
@@ -164,6 +167,7 @@ static const AudioApi tda7719Api = {
     .setInput = tda7719SetInput,
 
     .setMute = tda7719SetMute,
+    .setLoudness = tda7719SetLoudness,
 };
 
 static void tda7719Reset(void)
@@ -178,7 +182,7 @@ static void tda7719Reset(void)
     i2cSend(I2C_AMP, TDA7719_BYPASS_ANTI_ALIAS | TDA7719_FAST_CHARGE_OFF | TDA7719_SUB_DISABLE | TDA7719_MUTE_IIC_ONLY | TDA7719_SM_OFF);
     i2cSend(I2C_AMP, 0xFF);
     i2cSend(I2C_AMP, TDA7719_SPIKE_REJ_TIME_MASK | 0x07);
-    i2cSend(I2C_AMP, 0xFF);
+    i2cSend(I2C_AMP, TDA7719_HIGH_BOOST_OFF | TDA7719_LOUD_FREQ_800HZ);
     i2cSend(I2C_AMP, 0xFF);
     i2cSend(I2C_AMP, TDA7719_TREBLE_FREQ_10K0 | TDA7719_TREBLE_GAIN_MASK);
     i2cSend(I2C_AMP, TDA7719_MIDDLE_QFACT_0P5 | TDA7719_MIDDLE_GAIN_MASK);
@@ -191,6 +195,21 @@ static void tda7719Reset(void)
     i2cSend(I2C_AMP, 0x10);
     i2cSend(I2C_AMP, 0x10);
 
+    i2cTransmit(I2C_AMP);
+}
+
+static void tda7719SetInputGain(uint8_t input, int8_t gain)
+{
+    if (input >= TDA7719_IN_CNT) {
+        input = 0;
+    }
+
+    input = inCfg2[input];
+
+    i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
+    i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
+
+    i2cSend(I2C_AMP, TDA7719_INPUT_CFG2 | (gain ? TDA7719_INPUT_GAIN_3DB : 0) | TDA7719_INPUT_MD2 | input);
     i2cTransmit(I2C_AMP);
 }
 
@@ -276,6 +295,7 @@ void tda7719SetTune(AudioTune tune, int8_t value)
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_GAIN:
+        tda7719SetInputGain(aPar->input, value);
         break;
     default:
         break;
@@ -284,17 +304,7 @@ void tda7719SetTune(AudioTune tune, int8_t value)
 
 void tda7719SetInput(uint8_t value)
 {
-    if (value >= TDA7719_IN_CNT) {
-        value = 0;
-    }
-
-    uint8_t input = inCfg2[value];
-
-    i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
-    i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
-
-    i2cSend(I2C_AMP, TDA7719_INPUT_CFG2 | TDA7719_INPUT_GAIN_3DB | TDA7719_INPUT_MD2 | input);
-    i2cTransmit(I2C_AMP);
+    tda7719SetInputGain(value, aPar->tune[AUDIO_TUNE_GAIN].value);
 }
 
 void tda7719SetMute(bool value)
@@ -310,4 +320,12 @@ void tda7719SetMute(bool value)
     } else {
         tda7719SetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME].value);
     }
+}
+
+void tda7719SetLoudness(bool value)
+{
+    i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
+    i2cSend(I2C_AMP, TDA7719_LOUDNESS);
+    i2cSend(I2C_AMP, TDA7719_HIGH_BOOST_OFF | TDA7719_LOUD_FREQ_800HZ | (value ? 7 : 0));
+    i2cTransmit(I2C_AMP);
 }
