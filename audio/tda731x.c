@@ -122,16 +122,16 @@ void tda731xSetInput(uint8_t value)
 
 void tda731xSetMute(bool value)
 {
-    i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
     if (value) {
+        i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
         i2cSend(I2C_AMP, TDA731X_SP_REAR_LEFT | TDA731X_MUTE);
         i2cSend(I2C_AMP, TDA731X_SP_REAR_RIGHT | TDA731X_MUTE);
         i2cSend(I2C_AMP, TDA731X_SP_FRONT_LEFT | TDA731X_MUTE);
         i2cSend(I2C_AMP, TDA731X_SP_FRONT_RIGHT | TDA731X_MUTE);
+        i2cTransmit(I2C_AMP);
     } else {
         tda731xSetTune(AUDIO_TUNE_BALANCE, aPar->tune[AUDIO_TUNE_VOLUME].value);
     }
-    i2cTransmit(I2C_AMP);
 }
 
 void tda731xSetLoudness(bool value)
