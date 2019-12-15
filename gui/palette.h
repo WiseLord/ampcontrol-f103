@@ -7,14 +7,16 @@ extern "C" {
 
 #include <stdint.h>
 
+#include "../display/glcd.h"
+
 typedef struct {
-    uint16_t fg;
-    uint16_t bg;
-    uint16_t active;
-    uint16_t inactive;
-    uint16_t selected;
-    uint16_t spCol;
-    uint16_t spPeak;
+    color_t fg;
+    color_t bg;
+    color_t active;
+    color_t inactive;
+    color_t selected;
+    color_t spCol;
+    color_t spPeak;
 } Palette;
 
 typedef int8_t PalIdx;

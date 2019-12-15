@@ -25,6 +25,12 @@ extern "C" {
 #define LCD_BR_MIN          1
 #define LCD_BR_MAX          32
 
+#ifdef _SSD1322
+typedef uint8_t color_t;
+#else
+typedef uint16_t color_t;
+#endif
+
 typedef struct {
     void (*init)(void);
     void (*sleep)(void);
@@ -32,6 +38,10 @@ typedef struct {
     void (*setWindow)(int16_t x, int16_t y, int16_t w, int16_t h);
     void (*rotate)(uint8_t rotate);
     void (*shift)(int16_t value);
+
+    void *fb;
+    void (*update)(void);
+    void (*sendColor)(color_t data);
 
     int16_t width;
     int16_t height;
@@ -56,9 +66,9 @@ void dispdrvWriteReg16(uint16_t reg, uint16_t data);
 uint16_t dispdrvReadData16(void);
 void dispdrvReadReg(uint16_t reg, uint16_t *args, uint8_t nArgs);
 
-void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color);
-void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor,
+void dispdrvDrawPixel(int16_t x, int16_t y, color_t color);
+void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color);
+void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, color_t color, color_t bgColor,
                       int16_t xOft, int16_t yOft, int16_t w, int16_t h);
 
 #ifdef __cplusplus

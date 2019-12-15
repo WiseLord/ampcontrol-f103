@@ -165,13 +165,17 @@ static inline void dispdrvSendTriplet(uint16_t data)
 #endif
 
 __attribute__((always_inline))
-static inline void dispdrvSendColor(uint16_t data)
+static inline void dispdrvSendColor(color_t data)
 {
+    if (dispdrv.sendColor) {
+        dispdrv.sendColor(data);
+    } else {
 #ifdef _COLOR_24BIT
-    dispdrvSendTriplet(color);
+        dispdrvSendTriplet(color);
 #else
-    dispdrvSendWord(data);
+        dispdrvSendWord(data);
 #endif
+    }
 }
 
 void dispdrvReset(void)
@@ -199,8 +203,6 @@ void dispdrvInit(void)
     dispdrvReset();
 
     dispdrv.init();
-
-    SET(DISP_BCKL);
 }
 
 uint8_t dispdrvGetBus(void)
@@ -324,7 +326,7 @@ void dispdrvReadReg(uint16_t reg, uint16_t *args, uint8_t nArgs)
     SET(DISP_CS);
 }
 
-void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
+void dispdrvDrawPixel(int16_t x, int16_t y, color_t color)
 {
     CLR(DISP_CS);
 
@@ -336,7 +338,7 @@ void dispdrvDrawPixel(int16_t x, int16_t y, uint16_t color)
     SET(DISP_CS);
 }
 
-void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color)
 {
     CLR(DISP_CS);
 
@@ -350,7 +352,7 @@ void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
     SET(DISP_CS);
 }
 
-void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor,
+void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, color_t color, color_t bgColor,
                       int16_t xOft, int16_t yOft, int16_t w, int16_t h)
 {
     CLR(DISP_CS);
