@@ -688,7 +688,7 @@ static void actionRemapCommon(void)
 {
     ScreenMode screen = screenGetMode();
     AudioProc *aProc = audioGet();
-    AmpStatus ampStatus = ampGetStatus();
+    AmpStatus ampStatus = ampGet()->status;
 
     switch (action.type) {
     case ACTION_STANDBY:

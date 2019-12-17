@@ -43,7 +43,12 @@ enum {
     I2C_ADDR_END,
 };
 
-AmpStatus ampGetStatus(void);
+typedef struct {
+    AmpStatus status;
+    uint8_t inputStatus;
+} Amp;
+
+Amp *ampGet(void);
 
 void ampInit(void);
 void ampExitStby(void);

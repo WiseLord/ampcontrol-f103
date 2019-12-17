@@ -12,8 +12,7 @@
 #include "swtimers.h"
 #include "tuner/tuner.h"
 
-static AmpStatus ampStatus = AMP_STATUS_STBY;
-static uint8_t inputStatus = 0x00;
+static Amp amp = {AMP_STATUS_STBY, 0x00};
 
 static void inputDisable(void)
 {
@@ -72,7 +71,7 @@ static void handleInputStatus(void)
     }
 
     i2cBegin(I2C_AMP, i2cAddr);
-    i2cSend(I2C_AMP, inputStatus);
+    i2cSend(I2C_AMP, amp.inputStatus);
     i2cTransmit(I2C_AMP);
 }
 
@@ -82,17 +81,17 @@ static void inputSetPower(bool value)
     uint8_t input = aProc->par.input;
 
     if (value) {
-        inputStatus = (uint8_t)(1 << input);
+        amp.inputStatus = (uint8_t)(1 << input);
     } else {
-        inputStatus = 0x00;
+        amp.inputStatus = 0x00;
     }
 
     handleInputStatus();
 }
 
-AmpStatus ampGetStatus(void)
+Amp *ampGet(void)
 {
-    return ampStatus;
+    return &amp;
 }
 
 void ampInit(void)
@@ -101,10 +100,10 @@ void ampInit(void)
     pinsSetStby(true);
 
     i2cInit(I2C_AMP, 100000);
-    inputSetPower(false);    // Power off                                                                                    input device
+    inputSetPower(false);    // Power off input device
     i2cDeInit(I2C_AMP);
 
-    ampStatus = AMP_STATUS_STBY;
+    amp.status = AMP_STATUS_STBY;
     controlReportAmpStatus();
 }
 
@@ -119,7 +118,7 @@ void ampExitStby(void)
     inputSetPower(true);    // Power on input device
     i2cDeInit(I2C_AMP);
 
-    ampStatus = AMP_STATUS_POWERED;
+    amp.status = AMP_STATUS_POWERED;
     swTimSet(SW_TIM_AMP_INIT, 600);
 }
 
@@ -141,7 +140,7 @@ void ampInitHw(void)
 {
     swTimSet(SW_TIM_AMP_INIT, SW_TIM_OFF);
 
-    switch (ampStatus) {
+    switch (amp.status) {
     case AMP_STATUS_POWERED:
         pinsHwResetI2c();
         i2cInit(I2C_AMP, 100000);
@@ -150,7 +149,7 @@ void ampInitHw(void)
         audioSetPower(true);
         tunerInit();
 
-        ampStatus = AMP_STATUS_HW_READY;
+        amp.status = AMP_STATUS_HW_READY;
         swTimSet(SW_TIM_AMP_INIT, 500);
         controlReportAll();
         break;
@@ -159,7 +158,7 @@ void ampInitHw(void)
 
         audioSetMute(false);
 
-        ampStatus = AMP_STATUS_ACTIVE;
+        amp.status = AMP_STATUS_ACTIVE;
 
         swTimSet(SW_TIM_INPUT_POLL, 100);
         break;
@@ -177,6 +176,6 @@ void ampSetInput(uint8_t value)
     audioSetInput(value);
     inputSetPower(true);
 
-    ampStatus = AMP_STATUS_HW_READY;
+    amp.status = AMP_STATUS_HW_READY;
     swTimSet(SW_TIM_AMP_INIT, 400);
 }

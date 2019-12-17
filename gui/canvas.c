@@ -840,7 +840,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
-    if (!aProc->par.mute || ampGetStatus() == AMP_STATUS_HW_READY) {
+    if (!aProc->par.mute || ampGet()->status == AMP_STATUS_HW_READY) {
         switch (inType) {
         case IN_TUNER:
             canvasShowTuner(clear);

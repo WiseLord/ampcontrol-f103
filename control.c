@@ -118,7 +118,7 @@ void controlGetData(void)
 
 void controlReportAmpStatus(void)
 {
-    AmpStatus ampStatus = ampGetStatus();
+    AmpStatus ampStatus = ampGet()->status;
 
     char *status = "UNKNOWN";
 
