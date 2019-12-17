@@ -2,10 +2,10 @@
 
 #include "hwlibs.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "fft.h"
-#include "mem.h"
 #include "settings.h"
 #include "utils.h"
 
@@ -244,7 +244,7 @@ static void spGetData(int16_t *dma, SpData *chan)
 {
     int32_t dcOft = 0;
 
-    FftSample *sp = mem_malloc(sizeof (FftSample) * FFT_SIZE);
+    FftSample *sp = malloc(sizeof (FftSample) * FFT_SIZE);
 
     for (int16_t i = 0; i < FFT_SIZE; i++) {
         sp[i].fr = dma[2 * i];
@@ -275,7 +275,7 @@ static void spGetData(int16_t *dma, SpData *chan)
     }
     chan->avg = (uint8_t)(total / SPECTRUM_SIZE);
 
-    mem_free(sp);
+    free(sp);
 }
 
 static void spReadSettings(void)

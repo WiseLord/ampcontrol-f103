@@ -1,7 +1,7 @@
 #include "glcd.h"
 
+#include <stdlib.h>
 #include <string.h>
-#include "../mem.h"
 
 static Glcd glcd;
 
@@ -217,7 +217,7 @@ void glcdDrawImage(const tImage *img, color_t color, color_t bgColor)
         return;
     }
 
-    uint8_t *unRleData = mem_malloc(4096);
+    uint8_t *unRleData = malloc((size_t)(img->width * ((img->height + 7) / 8)));
     tImage *imgUnRle = glcdUnRleImg(img, unRleData);
 
     GlcdRect *rect = &glcd.rect;
@@ -256,7 +256,7 @@ void glcdDrawImage(const tImage *img, color_t color, color_t bgColor)
     dispdrvDrawImage(imgUnRle, x, y, color, bgColor,
                      xOft, yOft, w, h);
 
-    mem_free(unRleData);
+    free(unRleData);
 }
 
 uint16_t glcdStrToUStr(const char *str, UChar *ustr)

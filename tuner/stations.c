@@ -1,10 +1,10 @@
 #include "stations.h"
 
-#include "../eemul.h"
-#include "../mem.h"
-#include "tuner.h"
-
+#include <stdlib.h>
 #include <string.h>
+
+#include "../eemul.h"
+#include "tuner.h"
 
 static Station *stFlash;
 
@@ -91,7 +91,7 @@ void stationStore(uint16_t freq, char *name)
     uint16_t num = 0;
     bool saved = false;
 
-    Station *stRam = mem_malloc(sizeof(Station) * STATION_COUNT);
+    Station *stRam = malloc(sizeof(Station) * STATION_COUNT);
 
     while (num < STATION_COUNT) {
         uint16_t stFreq = stFlash[idx].freq;
@@ -137,7 +137,7 @@ void stationStore(uint16_t freq, char *name)
     eeErasePages(EE_PAGE_FM, 1);
     eeWritePage(EE_PAGE_FM, stRam, (uint16_t)((num) * sizeof(Station)));
 
-    mem_free(stRam);
+    free(stRam);
 }
 
 void stationRemove(uint16_t freq)
@@ -146,7 +146,7 @@ void stationRemove(uint16_t freq)
     uint16_t num = 0;
     bool deleted = false;
 
-    Station *stRam = mem_malloc(sizeof(Station) * STATION_COUNT);
+    Station *stRam = malloc(sizeof(Station) * STATION_COUNT);
 
     while (idx < STATION_COUNT) {
         uint16_t stFreq = stFlash[idx].freq;
@@ -173,5 +173,5 @@ void stationRemove(uint16_t freq)
     eeErasePages(EE_PAGE_FM, 1);
     eeWritePage(EE_PAGE_FM, stRam, (uint16_t)((num) * sizeof(Station)));
 
-    mem_free(stRam);
+    free(stRam);
 }
