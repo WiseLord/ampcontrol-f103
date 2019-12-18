@@ -83,7 +83,6 @@ SOURCES += \
     ../../../gui/widget/stripedbar.c \
     ../../../gui/widget/textedit.c \
     ../../../input.c \
-    ../../../mem.c \
     ../../../menu.c \
 	../../../ringbuf.c \
     ../../../screen.c \
@@ -126,7 +125,6 @@ HEADERS += \
     ../../../gui/widget/stripedbar.h \
     ../../../gui/widget/textedit.h \
     ../../../karadio.h \
-    ../../../mem.h \
     ../../../menu.h \
     ../../../pins.h \
     ../../../rc.h \
