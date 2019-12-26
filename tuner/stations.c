@@ -154,6 +154,7 @@ void stationRemove(uint16_t freq)
         if (stFreq == 0x0000 || stFreq == 0xFFFF) {
             if (!deleted) {
                 // Not found station to delete
+                free(stRam);
                 return;
             }
             break;

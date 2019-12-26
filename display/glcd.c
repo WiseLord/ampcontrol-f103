@@ -246,7 +246,8 @@ void glcdDrawImage(const tImage *img, color_t color, color_t bgColor)
         h = rect->h - y;
     }
 
-    if (w < 0 || h < 0) {
+    if (w <= 0 || h <= 0) {
+        free(unRleData);
         return;
     }
 
