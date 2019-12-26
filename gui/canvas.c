@@ -364,7 +364,6 @@ static void drawRds(Rds *rds)
                  lt->tuner.bar.barW - nameLen, lt->tuner.nameFont->chars[0].image->height,
                  canvas.pal->bg);
 
-
     glcdSetFont(lt->rds.textFont);
     glcdSetXY(0, lt->rect.h / 2 + lt->tuner.nameFont->chars[0].image->height);
     glcdWriteString(rds->text);
