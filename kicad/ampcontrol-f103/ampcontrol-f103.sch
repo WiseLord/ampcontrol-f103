@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:ampcontrol-f103-cache
-EELAYER 29 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -204,10 +203,6 @@ Wire Wire Line
 	3250 6900 3550 6900
 Wire Wire Line
 	3250 7000 3550 7000
-Text Label 3250 6900 0    50   ~ 0
-MUTE
-Text Label 3250 7000 0    50   ~ 0
-STBY
 Wire Wire Line
 	3550 6400 3250 6400
 Text Label 3250 6400 0    50   ~ 0
@@ -1243,14 +1238,6 @@ SCL
 Text Label 5150 6500 2    50   ~ 0
 SDA
 Wire Wire Line
-	4850 6600 5050 6600
-Wire Wire Line
-	4850 6700 5050 6700
-Text Label 5050 6600 2    50   ~ 0
-RX3
-Text Label 5050 6700 2    50   ~ 0
-TX3
-Wire Wire Line
 	8700 5350 8700 5450
 Wire Wire Line
 	8700 5850 8700 5950
@@ -1515,51 +1502,6 @@ BTN_5
 Wire Wire Line
 	3450 1400 3650 1400
 $Comp
-L Connector_Generic:Conn_01x03 J7
-U 1 1 5DD7E4BF
-P 2300 3850
-F 0 "J7" H 2300 4050 50  0000 C CNN
-F 1 "RC" V 2400 3850 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 2300 3850 50  0001 C CNN
-F 3 "~" H 2300 3850 50  0001 C CNN
-	1    2300 3850
-	-1   0    0    -1  
-$EndComp
-$Comp
-L power:+3V3 #PWR016
-U 1 1 5DD7E66F
-P 2600 3650
-F 0 "#PWR016" H 2600 3500 50  0001 C CNN
-F 1 "+3V3" H 2615 3823 50  0000 C CNN
-F 2 "" H 2600 3650 50  0001 C CNN
-F 3 "" H 2600 3650 50  0001 C CNN
-	1    2600 3650
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2600 3650 2600 3850
-Wire Wire Line
-	2600 3850 2500 3850
-$Comp
-L power:GNDD #PWR017
-U 1 1 5DD9A47F
-P 2600 4050
-F 0 "#PWR017" H 2600 3800 50  0001 C CNN
-F 1 "GNDD" H 2604 3895 50  0000 C CNN
-F 2 "" H 2600 4050 50  0001 C CNN
-F 3 "" H 2600 4050 50  0001 C CNN
-	1    2600 4050
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2600 4050 2600 3950
-Wire Wire Line
-	2600 3950 2500 3950
-Wire Wire Line
-	2500 3750 2900 3750
-Text Label 2900 3750 2    50   ~ 0
-IR
-$Comp
 L power:PWR_FLAG #FLG01
 U 1 1 5DE0D5C5
 P 3700 3600
@@ -1695,25 +1637,10 @@ Wire Wire Line
 	1450 3700 1150 3700
 Wire Wire Line
 	1450 4000 1150 4000
-Text Label 1200 3800 2    50   ~ 0
-MUTE
 Wire Wire Line
 	950  3800 1200 3800
-Text Label 1200 3900 2    50   ~ 0
-STBY
 Wire Wire Line
 	950  3900 1200 3900
-$Comp
-L Connector_Generic:Conn_01x04 J2
-U 1 1 5D6B946E
-P 750 3800
-F 0 "J2" H 750 4000 50  0000 C CNN
-F 1 "MUTE_STBY" V 850 3750 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 750 3800 50  0001 C CNN
-F 3 "~" H 750 3800 50  0001 C CNN
-	1    750  3800
-	-1   0    0    -1  
-$EndComp
 Wire Wire Line
 	950  6850 1300 6850
 Wire Wire Line
@@ -1838,14 +1765,6 @@ Wire Wire Line
 	1600 5050 1750 5050
 Text Label 1750 5050 2    50   ~ 0
 TX2
-Wire Wire Line
-	2350 5150 2500 5150
-Text Label 2500 5150 2    50   ~ 0
-RX3
-Wire Wire Line
-	2350 5050 2500 5050
-Text Label 2500 5050 2    50   ~ 0
-TX3
 $Comp
 L power:+5V #PWR043
 U 1 1 5D3E2AA0
@@ -2019,17 +1938,6 @@ F 3 "~" H 1400 5150 50  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_01x03 J6
-U 1 1 5C758977
-P 2150 5150
-F 0 "J6" H 2150 5350 50  0000 C CNN
-F 1 "UART3" V 2250 5150 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 2150 5150 50  0001 C CNN
-F 3 "~" H 2150 5150 50  0001 C CNN
-	1    2150 5150
-	-1   0    0    -1  
-$EndComp
-$Comp
 L power:GNDD #PWR06
 U 1 1 5C758F61
 P 1050 5350
@@ -2051,17 +1959,6 @@ F 3 "" H 1700 5350 50  0001 C CNN
 	1    1700 5350
 	1    0    0    -1  
 $EndComp
-$Comp
-L power:GNDD #PWR013
-U 1 1 5C7E0BB5
-P 2450 5350
-F 0 "#PWR013" H 2450 5100 50  0001 C CNN
-F 1 "GNDD" H 2454 5195 50  0000 C CNN
-F 2 "" H 2450 5350 50  0001 C CNN
-F 3 "" H 2450 5350 50  0001 C CNN
-	1    2450 5350
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	950  5250 1050 5250
 Wire Wire Line
@@ -2070,10 +1967,6 @@ Wire Wire Line
 	1600 5250 1700 5250
 Wire Wire Line
 	1700 5250 1700 5350
-Wire Wire Line
-	2350 5250 2450 5250
-Wire Wire Line
-	2450 5250 2450 5350
 Wire Wire Line
 	9750 1700 9750 2200
 Wire Wire Line
@@ -2354,4 +2247,110 @@ Wire Wire Line
 	10750 5700 10300 5700
 Wire Wire Line
 	10300 5700 10300 5750
+$Comp
+L Connector_Generic:Conn_01x04 J2
+U 1 1 5D6B946E
+P 750 3800
+F 0 "J2" H 750 4000 50  0000 C CNN
+F 1 "SWD" V 850 3750 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 750 3800 50  0001 C CNN
+F 3 "~" H 750 3800 50  0001 C CNN
+	1    750  3800
+	-1   0    0    -1  
+$EndComp
+Text Label 3250 6900 0    50   ~ 0
+SWDIO
+Text Label 3250 7000 0    50   ~ 0
+SWCLK
+Text Label 1200 3800 2    50   ~ 0
+SWDIO
+Text Label 1200 3900 2    50   ~ 0
+SWCLK
+$Comp
+L Connector_Generic:Conn_01x03 J7
+U 1 1 5DD7E4BF
+P 2300 5150
+F 0 "J7" H 2300 5350 50  0000 C CNN
+F 1 "RC" V 2400 5150 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 2300 5150 50  0001 C CNN
+F 3 "~" H 2300 5150 50  0001 C CNN
+	1    2300 5150
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR016
+U 1 1 5DD7E66F
+P 2600 4950
+F 0 "#PWR016" H 2600 4800 50  0001 C CNN
+F 1 "+3V3" H 2615 5123 50  0000 C CNN
+F 2 "" H 2600 4950 50  0001 C CNN
+F 3 "" H 2600 4950 50  0001 C CNN
+	1    2600 4950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2600 4950 2600 5150
+Wire Wire Line
+	2600 5150 2500 5150
+$Comp
+L power:GNDD #PWR017
+U 1 1 5DD9A47F
+P 2600 5350
+F 0 "#PWR017" H 2600 5100 50  0001 C CNN
+F 1 "GNDD" H 2604 5195 50  0000 C CNN
+F 2 "" H 2600 5350 50  0001 C CNN
+F 3 "" H 2600 5350 50  0001 C CNN
+	1    2600 5350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2600 5350 2600 5250
+Wire Wire Line
+	2600 5250 2500 5250
+Wire Wire Line
+	2500 5050 2900 5050
+Text Label 2900 5050 2    50   ~ 0
+IR
+Wire Wire Line
+	2500 3800 2700 3800
+Text Label 2700 3800 2    50   ~ 0
+MUTE
+Wire Wire Line
+	2500 3700 2700 3700
+Text Label 2700 3700 2    50   ~ 0
+STBY
+$Comp
+L Connector_Generic:Conn_01x03 J6
+U 1 1 5C758977
+P 2300 3800
+F 0 "J6" H 2300 4000 50  0000 C CNN
+F 1 "STBY_MUTE" V 2400 3800 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 2300 3800 50  0001 C CNN
+F 3 "~" H 2300 3800 50  0001 C CNN
+	1    2300 3800
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GNDD #PWR013
+U 1 1 5C7E0BB5
+P 2600 4000
+F 0 "#PWR013" H 2600 3750 50  0001 C CNN
+F 1 "GNDD" H 2604 3845 50  0000 C CNN
+F 2 "" H 2600 4000 50  0001 C CNN
+F 3 "" H 2600 4000 50  0001 C CNN
+	1    2600 4000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2500 3900 2600 3900
+Wire Wire Line
+	2600 3900 2600 4000
+Wire Wire Line
+	4850 6600 5100 6600
+Wire Wire Line
+	4850 6700 5100 6700
+Text Label 5100 6600 2    50   ~ 0
+MUTE
+Text Label 5100 6700 2    50   ~ 0
+STBY
 $EndSCHEMATC
