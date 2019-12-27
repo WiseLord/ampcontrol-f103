@@ -146,9 +146,8 @@ void pinsInitAmpI2c(void)
 {
 }
 
-void pinsInitMuteStby(MuteStby value)
+void pinsInitMuteStby()
 {
-    (void)value;
 }
 
 Spectrum *spGet(void)
