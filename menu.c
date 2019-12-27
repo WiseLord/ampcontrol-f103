@@ -208,9 +208,6 @@ static void menuStoreCurrentValue(void)
     case MENU_SYSTEM_LANG:
         labelsSetLang((Lang)(menu.value));
         break;
-    case MENU_SYSTEM_MUTESTBY:
-        pinsInitMuteStby((MuteStby)menu.value);
-        break;
     case MENU_SYSTEM_ENC_RES:
         inputSetEncRes((int8_t)menu.value);
         break;
@@ -301,6 +298,10 @@ static void menuStoreCurrentValue(void)
         settingsStore(param, menu.value);
     }
 
+    if (menu.active == MENU_SYSTEM_MUTESTBY) {
+        pinsSetMute(true);
+        pinsSetStby(true);
+    }
 }
 
 static void menuValueChange(int8_t diff)
@@ -330,8 +331,8 @@ static void menuValueChange(int8_t diff)
     case MENU_SYSTEM_MUTESTBY:
         if (menu.value > MUTESTBY_END - 1)
             menu.value = MUTESTBY_END - 1;
-        if (menu.value < MUTESTBY_SWD)
-            menu.value = MUTESTBY_SWD;
+        if (menu.value < MUTESTBY_POS)
+            menu.value = MUTESTBY_POS;
         break;
     case MENU_SYSTEM_ENC_RES:
         if (menu.value > ENC_RES_MAX)
@@ -601,7 +602,7 @@ void menuSetActive(MenuIdx index)
         if (menu.selected) {
             menu.value = menuGetValue(menu.active);
             switch (index) {
-                case MENU_DISPLAY_BR_STBY:
+            case MENU_DISPLAY_BR_STBY:
                 screenSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_STBY));
                 break;
             case MENU_DISPLAY_BR_WORK:
@@ -768,7 +769,7 @@ const char *menuGetValueStr(MenuIdx index)
         break;
     case MENU_DISPLAY_DEF:
         switch ((ScreenMode)value) {
-            case SCREEN_TIME:
+        case SCREEN_TIME:
             ret = labelsGet((Label)(LABEL_MENU + MENU_RC_TIME));
             break;
         case SCREEN_AUDIO_INPUT:

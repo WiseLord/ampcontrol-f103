@@ -71,7 +71,6 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Jours de semaine",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "Tous les jours",
 
-    [LABEL_MUTESTBY + MUTESTBY_SWD] = "SWD",
     [LABEL_MUTESTBY + MUTESTBY_POS] = "Activation 1",
     [LABEL_MUTESTBY + MUTESTBY_NEG] = "Activation 0",
 

@@ -60,18 +60,10 @@ extern "C" {
 #define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
 
 // Mute and Standby lines
-#define SWD_FORCED  // TODO: Return to SWD line when debug finished
-#ifdef SWD_FORCED
 #define MUTE_Port               GPIOB
 #define MUTE_Pin                LL_GPIO_PIN_11
 #define STBY_Port               GPIOB
 #define STBY_Pin                LL_GPIO_PIN_10
-#else
-#define MUTE_Port               GPIOA
-#define MUTE_Pin                LL_GPIO_PIN_13
-#define STBY_Port               GPIOA
-#define STBY_Pin                LL_GPIO_PIN_14
-#endif
 
 // Main I2C bus
 #define AMP_I2C_Port            GPIOB
@@ -89,8 +81,7 @@ extern "C" {
 
 typedef uint16_t MuteStby;
 enum {
-    MUTESTBY_SWD = 0,
-    MUTESTBY_POS,
+    MUTESTBY_POS = 0,
     MUTESTBY_NEG,
 
     MUTESTBY_END,
@@ -100,7 +91,7 @@ void pinsInit(void);
 
 void pinsHwResetI2c(void);
 
-void pinsInitMuteStby(MuteStby value);
+void pinsInitMuteStby(void);
 
 void pinsSetMute(bool value);
 void pinsSetStby(bool value);

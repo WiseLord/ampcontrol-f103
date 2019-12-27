@@ -71,7 +71,6 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Будні",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "Усі дні",
 
-//    [LABEL_MUTESTBY + MUTESTBY_SWD] = "SWD",
     [LABEL_MUTESTBY + MUTESTBY_POS] = "Актив. 1",
     [LABEL_MUTESTBY + MUTESTBY_NEG] = "Актив. 0",
 

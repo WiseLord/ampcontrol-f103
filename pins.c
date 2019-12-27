@@ -52,24 +52,8 @@ static void pinsInitDisplay(void)
 #endif
 }
 
-void pinsInitMuteStby(MuteStby value)
+void pinsInitMuteStby(void)
 {
-#ifdef SWD_FORCED
-    value = MUTESTBY_SWD;
-#endif
-
-    if (value == MUTESTBY_SWD) {
-        // JTAG-DP Disabled and SW-DP Enabled
-#ifdef _STM32F1
-        LL_GPIO_AF_Remap_SWJ_NOJTAG();
-#endif
-    } else {
-        // JTAG-DP Disabled and SW-DP Disabled
-#ifdef _STM32F1
-        LL_GPIO_AF_DisableRemap_SWJ();
-#endif
-    }
-
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
@@ -150,8 +134,13 @@ void pinsInit(void)
     pinsInitRc();
     pinsInitDisplay();
 
-    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
-    pinsInitMuteStby(muteStby);
+#ifdef _STM32F1
+    // JTAG-DP Disabled and SW-DP Enabled
+    LL_GPIO_AF_Remap_SWJ_NOJTAG();
+#endif
+
+    pinsInitMuteStby();
+
     pinsInitHwReset();
 }
 

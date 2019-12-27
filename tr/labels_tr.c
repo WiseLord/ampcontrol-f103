@@ -67,7 +67,6 @@ const char *const labels_tr[LABEL_END] = {
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Yok",
 
-    [LABEL_MUTESTBY + MUTESTBY_SWD] = "Çıkış Pinleri Pasif",
     [LABEL_MUTESTBY + MUTESTBY_POS] = "Mute & Stby Aktif 1",
     [LABEL_MUTESTBY + MUTESTBY_NEG] = "Mute & Stby Aktif 0",
 

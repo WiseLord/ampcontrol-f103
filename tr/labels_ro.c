@@ -71,7 +71,6 @@ const char *const labels_ro[LABEL_END] = {
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekend",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "7/7",
 
-//    [LABEL_MUTESTBY + MUTESTBY_SWD] = "SWD",
     [LABEL_MUTESTBY + MUTESTBY_POS] = "Activ 1",
     [LABEL_MUTESTBY + MUTESTBY_NEG] = "Activ 0",
 
