@@ -123,6 +123,8 @@ void glcdDrawPixel(int16_t x, int16_t y, color_t color);
 
 void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color);
 
+void glcdDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr);
+
 void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, color_t color);
 
 void glcdDrawFrame(int16_t x, int16_t y, int16_t w, int16_t h, int16_t t, color_t color);

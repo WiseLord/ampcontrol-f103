@@ -352,6 +352,23 @@ void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color)
     SET(DISP_CS);
 }
 
+void dispdrvDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr)
+{
+    CLR(DISP_CS);
+
+    dispdrv.setWindow(x, y, w, h);
+
+    for (int32_t i = 0; i < w; i++) {
+        color_t *color = gr;
+        for (int32_t j = 0; j < h; j++) {
+            dispdrvSendColor(*color++);
+        }
+    }
+
+    DISP_WAIT_BUSY();
+    SET(DISP_CS);
+}
+
 void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, color_t color, color_t bgColor,
                       int16_t xOft, int16_t yOft, int16_t w, int16_t h)
 {
