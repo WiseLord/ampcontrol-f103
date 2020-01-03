@@ -76,6 +76,7 @@ static const EE_Map eeMap[] = {
 
     [PARAM_SPECTRUM_MODE]   =   {0x50,  SP_MODE_STEREO},
     [PARAM_SPECTRUM_PEAKS]  =   {0x51,  true},
+    [PARAM_SPECTRUM_GRAD]   =   {0x52,  false},
 
     [PARAM_ALARM_HOUR]      =   {0x60,  7},
     [PARAM_ALARM_MINUTE]    =   {0x61,  30},

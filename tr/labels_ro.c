@@ -115,6 +115,7 @@ const char *const labels_ro[LABEL_END] = {
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Afisare",
     [LABEL_MENU + MENU_SPECTRUM_PEAKS]  = "Nivel maxim",
+//    [LABEL_MENU + MENU_SPECTRUM_GRAD]   = "Gradient",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Luminozitate STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Luminozitate",

@@ -73,6 +73,7 @@ static const MenuItem menuItems[MENU_END] = {
 
     [MENU_SPECTURM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM,     PARAM_SPECTRUM_MODE},
     [MENU_SPECTRUM_PEAKS]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_BOOL,     PARAM_SPECTRUM_PEAKS},
+    [MENU_SPECTRUM_GRAD]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_BOOL,     PARAM_SPECTRUM_GRAD},
 
     [MENU_DISPLAY_BR_STBY]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   PARAM_DISPLAY_BR_STBY},
     [MENU_DISPLAY_BR_WORK]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_NUMBER,   PARAM_DISPLAY_BR_WORK},
@@ -170,6 +171,9 @@ static int16_t menuGetValue(MenuIdx index)
     case MENU_SPECTRUM_PEAKS:
         ret = sp->peaks;
         break;
+    case MENU_SPECTRUM_GRAD:
+        ret = sp->grad;
+        break;
 
     case MENU_DISPLAY_ROTATE:
         ret = glcdGetRotate();
@@ -265,7 +269,10 @@ static void menuStoreCurrentValue(void)
         sp->mode = (SpMode)(menu.value);
         break;
     case MENU_SPECTRUM_PEAKS:
-        sp->peaks = (uint8_t)(menu.value);
+        sp->peaks = (bool)(menu.value);
+        break;
+    case MENU_SPECTRUM_GRAD:
+        sp->grad = (bool)(menu.value);
         break;
 
     case MENU_DISPLAY_BR_STBY:

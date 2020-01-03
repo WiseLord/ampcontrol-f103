@@ -40,6 +40,7 @@ typedef struct {
     SpData data[SP_CHAN_END];
     SpMode mode;
     bool peaks;
+    bool grad;
     int16_t wtfX;  // waterfall X position
     bool ready;
     bool redraw;

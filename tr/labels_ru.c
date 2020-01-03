@@ -115,6 +115,7 @@ const char *const labels_ru[LABEL_END] = {
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Режим экрана",
     [LABEL_MENU + MENU_SPECTRUM_PEAKS]  = "Пиковый уровень",
+    [LABEL_MENU + MENU_SPECTRUM_GRAD]   = "Градиент",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яркость STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Яркость",

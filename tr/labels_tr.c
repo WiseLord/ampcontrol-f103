@@ -115,6 +115,7 @@ const char *const labels_tr[LABEL_END] = {
 
     [LABEL_MENU + MENU_SPECTURM_MODE]   = "Spectrum Tipi",
 //    [LABEL_MENU + MENU_SPECTURM_PEAKS]  = "Peak level",
+//    [LABEL_MENU + MENU_SPECTRUM_GRAD]   = "Gradient",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Bekleme Parlaklığı",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Genel Parlaklık",

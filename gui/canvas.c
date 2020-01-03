@@ -1,4 +1,6 @@
 #include "canvas.h"
+
+#include <stdlib.h>
 #include <string.h>
 
 #include "../amp.h"
@@ -321,6 +323,32 @@ static void drawWaterfall(Spectrum *sp)
     }
 }
 
+static void calcGradient(Spectrum *sp, int16_t height, color_t *grad)
+{
+    Canvas *canvas = canvasGet();
+
+    color_t colorB = canvas->pal->spColB;
+    color_t colorG = canvas->pal->spColG;
+
+    color_t rB = (colorB & 0xF800) >> 11;
+    color_t gB = (colorB & 0x07E0) >> 5;
+    color_t bB = (colorB & 0x001F) >> 0;
+
+    color_t rG = (colorG & 0xF800) >> 11;
+    color_t gG = (colorG & 0x07E0) >> 5;
+    color_t bG = (colorG & 0x001F) >> 0;
+
+    for (int16_t i = 0; i < height; i++) {
+        if (sp->grad) {
+            grad[i] = (color_t)(((rB + (rG - rB) * i / (height - 1)) << 11) |
+                                ((gB + (gG - gB) * i / (height - 1)) << 5) |
+                                ((bB + (bG - bB) * i / (height - 1)) << 0));
+        } else {
+            grad[i] = colorB;
+        }
+    }
+}
+
 static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect)
 {
     const int16_t step = (rect->w  + 1) / SPECTRUM_SIZE + 1;    // Step of columns
@@ -334,9 +362,21 @@ static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect)
 
     const int16_t y = rect->y;
 
+    static color_t *grad = NULL;
+
     if (sp->redraw) {
         memset(&spDrawData, 0, sizeof (SpDrawData));
         memset(sp->data, 0, sizeof (SpData) * SP_CHAN_END);
+
+        if (grad != NULL) {
+            free(grad);
+            grad = NULL;
+        }
+    }
+
+    if (grad == NULL) {
+        grad = malloc((size_t)height * sizeof (color_t));
+        calcGradient(sp, height, grad);
     }
 
     for (uint8_t col = 0; col < num; col++) {
@@ -348,7 +388,7 @@ static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect)
             spCol.peakW = 0;
         }
         GlcdRect rect = {x, y, colW, height};
-        spectrumColumnDraw(&spCol, &rect, sp->redraw);
+        spectrumColumnDraw(&spCol, &rect, sp->redraw, grad);
     }
 }
 
@@ -677,7 +717,7 @@ void canvasShowTuner(bool clear)
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
 
-        glcdWriteString(utilMkStr("FM %3d.%02d", freq/100, freq%100));
+        glcdWriteString(utilMkStr("FM %3d.%02d", freq / 100, freq % 100));
 
         // Scale
         StripedBar bar = {(int16_t)freq, freqMin, freqMax};

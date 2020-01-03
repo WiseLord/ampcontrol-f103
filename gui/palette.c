@@ -9,8 +9,9 @@ static const Palette palette[PAL_END] = {
         .active = LCD_COLOR_AQUA,
         .inactive = LCD_COLOR_NERO,
         .selected = LCD_COLOR_ECLIPSE,
-        .spCol = RGB_CONV(0xB0FFFF),
-        .spPeak = LCD_COLOR_WHITE,
+        .spColB = RGB_CONV(0x00FFFF),
+        .spColG = RGB_CONV(0xFFFFFF),
+        .spPeak = RGB_CONV(0x00FFFF),
     },
     [PAL_AQUA] = {
         .fg = RGB_CONV(0xB0FFFF),
@@ -18,8 +19,9 @@ static const Palette palette[PAL_END] = {
         .active = LCD_COLOR_AQUA,
         .inactive = LCD_COLOR_NERO,
         .selected = LCD_COLOR_ECLIPSE,
-        .spCol = LCD_COLOR_ELECTRIC_BLUE,
-        .spPeak = LCD_COLOR_WITCH_HAZE,
+        .spColB = RGB_CONV(0x40FFB0),
+        .spColG = RGB_CONV(0xB0FFFF),
+        .spPeak = RGB_CONV(0xFFFF80),
     },
     [PAL_FIRE] = {
         .fg = RGB_CONV(0xFFFFC0),
@@ -27,8 +29,9 @@ static const Palette palette[PAL_END] = {
         .active = LCD_COLOR_AQUA,
         .inactive = LCD_COLOR_NERO,
         .selected = LCD_COLOR_ECLIPSE,
-        .spCol = RGB_CONV(0xFF8040),
-        .spPeak = LCD_COLOR_DARK_ORANGE,
+        .spColB = RGB_CONV(0xFFFF00),
+        .spColG = RGB_CONV(0xFF0000),
+        .spPeak = RGB_CONV(0xFF8000),
     },
 };
 
