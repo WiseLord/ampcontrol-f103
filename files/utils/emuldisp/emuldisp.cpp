@@ -39,7 +39,8 @@ void EmulDisp::init()
     tunerReadSettings();
 
     spGet()->mode = (SpMode)settingsRead(PARAM_SPECTRUM_MODE);
-    spGet()->peaks = (uint8_t)settingsRead(PARAM_SPECTRUM_PEAKS);
+    spGet()->peaks = (bool)settingsRead(PARAM_SPECTRUM_PEAKS);
+    spGet()->grad = (bool)settingsRead(PARAM_SPECTRUM_GRAD);
 
     stationsInit();
 
@@ -75,6 +76,13 @@ void EmulDisp::drawRectangle(int16_t x, int16_t y, int16_t w, int16_t h, uint16_
 
     painter.fillRect(rect, qcolor);
     update(rect);
+}
+
+void EmulDisp::drawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *gradient)
+{
+    for (int16_t i = 0; i < h; i++) {
+        drawRectangle(x, y + i, w, 1, gradient[i]);
+    }
 }
 
 void EmulDisp::drawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor)

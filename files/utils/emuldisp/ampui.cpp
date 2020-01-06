@@ -32,6 +32,12 @@ extern "C" void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint
     disp->drawRectangle(x, y, w, h, color);
 }
 
+extern "C" void dispdrvDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *gradient)
+{
+    disp->drawVertGrad(x, y, w, h, gradient);
+}
+
+
 extern "C" void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, uint16_t color, uint16_t bgColor,
                                  int16_t xOft, int16_t yOft, int16_t w, int16_t h)
 {
