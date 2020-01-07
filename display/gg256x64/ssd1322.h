@@ -53,6 +53,4 @@
 
 void ssd1322Init(void);
 
-void ssd1322Draw(void);
-
 #endif // SSD1322_H

@@ -40,8 +40,8 @@ typedef struct {
     void (*shift)(int16_t value);
 
     void *fb;
-    void (*update)(void);
-    void (*sendColor)(color_t data);
+    void (*fbSync)(void);
+    void (*fbSetPixel)(int16_t x, int16_t y, color_t data);
 
     int16_t width;
     int16_t height;

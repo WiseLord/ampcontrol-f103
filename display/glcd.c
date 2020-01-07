@@ -122,10 +122,10 @@ void glcdShift(int16_t pos)
     }
 }
 
-void glcdUpdate(void)
+void glcdFbSync(void)
 {
-    if (glcd.drv->update) {
-        glcd.drv->update();
+    if (glcd.drv->fbSync) {
+        glcd.drv->fbSync();
     }
 }
 

@@ -5,6 +5,51 @@
 static volatile bool busBusy;
 static volatile uint8_t busData;
 
+#ifdef _DISP_FB
+
+typedef struct {
+    int16_t xMin;
+    int16_t yMin;
+    int16_t xMax;
+    int16_t yMax;
+    int16_t x;
+    int16_t y;
+} FbArea;
+
+static FbArea fbArea;
+
+__attribute__((always_inline))
+static inline void fbSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    fbArea.xMin = x;
+    fbArea.yMin = y;
+    fbArea.xMax = x + w;
+    fbArea.yMax = y + h;
+    fbArea.x = x;
+    fbArea.y = y;
+}
+
+__attribute__((always_inline))
+static inline void fbSetPixel(int16_t x, int16_t y, color_t color)
+{
+    if (dispdrv.fbSetPixel) {
+        dispdrv.fbSetPixel(x, y, color);
+    }
+}
+
+__attribute__((always_inline))
+static inline void fbShiftPos()
+{
+    if (++fbArea.y >= fbArea.yMax) {
+        fbArea.y = fbArea.yMin;
+        if (++fbArea.x >= fbArea.xMax) {
+            fbArea.x = fbArea.xMin;
+        }
+    }
+}
+
+#endif // _DISP_FB
+
 __attribute__((always_inline))
 static inline void dispdrvSendByte(uint8_t data)
 {
@@ -167,15 +212,16 @@ static inline void dispdrvSendTriplet(uint16_t data)
 __attribute__((always_inline))
 static inline void dispdrvSendColor(color_t data)
 {
-    if (dispdrv.sendColor) {
-        dispdrv.sendColor(data);
-    } else {
-#ifdef _COLOR_24BIT
-        dispdrvSendTriplet(color);
+#ifdef _DISP_FB
+    fbSetPixel(fbArea.x, fbArea.y, data);
+    fbShiftPos();
 #else
-        dispdrvSendWord(data);
+#ifdef _COLOR_24BIT
+    dispdrvSendTriplet(color);
+#else
+    dispdrvSendWord(data);
 #endif
-    }
+#endif
 }
 
 void dispdrvReset(void)
@@ -326,8 +372,23 @@ void dispdrvReadReg(uint16_t reg, uint16_t *args, uint8_t nArgs)
     SET(DISP_CS);
 }
 
+__attribute__((always_inline))
+static inline void dispdrvSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+#ifdef _DISP_FB
+    fbSetWindow(x, y, w, h);
+#else
+    if (dispdrv.setWindow) {
+        dispdrv.setWindow(x, y, w, h);
+    }
+#endif
+}
+
 void dispdrvDrawPixel(int16_t x, int16_t y, color_t color)
 {
+#ifdef _DISP_FB
+    fbSetPixel(x, y, color);
+#else
     CLR(DISP_CS);
 
     dispdrv.setWindow(x, y, 1, 1);
@@ -336,27 +397,34 @@ void dispdrvDrawPixel(int16_t x, int16_t y, color_t color)
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
+#endif
 }
 
 void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color)
 {
+#ifndef _DISP_FB
     CLR(DISP_CS);
+#endif
 
-    dispdrv.setWindow(x, y, w, h);
+    dispdrvSetWindow(x, y, w, h);
 
     for (int32_t i = 0; i < w * h; i++) {
         dispdrvSendColor(color);
     }
 
+#ifndef _DISP_FB
     DISP_WAIT_BUSY();
     SET(DISP_CS);
+#endif
 }
 
 void dispdrvDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr)
 {
+#ifndef _DISP_FB
     CLR(DISP_CS);
+#endif
 
-    dispdrv.setWindow(x, y, w, h);
+    dispdrvSetWindow(x, y, w, h);
 
     for (int32_t i = 0; i < w; i++) {
         color_t *color = gr;
@@ -365,16 +433,20 @@ void dispdrvDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr
         }
     }
 
+#ifndef _DISP_FB
     DISP_WAIT_BUSY();
     SET(DISP_CS);
+#endif
 }
 
 void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, color_t color, color_t bgColor,
                       int16_t xOft, int16_t yOft, int16_t w, int16_t h)
 {
+#ifndef _DISP_FB
     CLR(DISP_CS);
+#endif
 
-    dispdrv.setWindow(x, y, w, h);
+    dispdrvSetWindow(x, y, w, h);
 
     for (int16_t i = 0; i < w; i++) {
         for (int16_t j = 0; j < h; j++) {
@@ -385,6 +457,8 @@ void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, color_t color, color_t 
         }
     }
 
+#ifndef _DISP_FB
     DISP_WAIT_BUSY();
     SET(DISP_CS);
+#endif
 }

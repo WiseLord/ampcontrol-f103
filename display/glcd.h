@@ -30,8 +30,8 @@ typedef struct {
     GlcdRect rect;
     int16_t x;
     int16_t y;
-    uint16_t fontFg;
-    uint16_t fontBg;
+    color_t fontFg;
+    color_t fontBg;
     uint8_t fontAlign;
     bool rotate;
     bool strFramed;
@@ -91,7 +91,7 @@ bool glcdGetRotate(void);
 void glcdRotate(uint8_t rotate);
 void glcdShift(int16_t pos);
 
-void glcdUpdate(void);
+void glcdFbSync(void);
 
 void glcdSetRect(const GlcdRect *rect);
 GlcdRect *glcdGetRect(void);
