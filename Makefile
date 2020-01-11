@@ -1,4 +1,6 @@
-PROJECT = ampcontrol_f103
+PROJECT = ampcontrol
+
+STM32_MCU = F103CB
 
 DISPLAY = ILI9341
 DISPVAR = SPI
@@ -7,17 +9,32 @@ APROC_LIST = TDA7439 TDA731X PT232X TDA7418 TDA7719
 TUNER_LIST = RDA580X SI470X TEA5767
 FEATURE_LIST =
 
-STM32_FAMILY = STM32F1
-STM32_GROUP  = $(STM32_FAMILY)03xB
-STM32_DEV    = $(STM32_FAMILY)03CB
-
 #DEBUG_FPS = YES
 #DEBUG_KARADIO = YES
+
+DEBUG = 1
+OPT = -Os
+
 
 # Lowercase argument
 lc = $(shell echo $1 | tr '[:upper:]' '[:lower:]')
 
-TARGET = $(call lc, $(PROJECT)_$(DISPLAY)_$(DISPVAR))
+ifeq "$(STM32_MCU)" "F103CB"
+  STM32_FAMILY = STM32F1
+  STM32_GROUP  = $(STM32_FAMILY)03xB
+endif
+ifeq "$(STM32_MCU)" "F303CC"
+  STM32_FAMILY = STM32F3
+  STM32_GROUP  = $(STM32_FAMILY)03xC
+endif
+ifeq "$(STM32_MCU)" "F303CB"
+  STM32_FAMILY = STM32F3
+  STM32_GROUP  = $(STM32_FAMILY)03xC
+endif
+
+STM32_DEV    = STM32$(STM32_MCU)
+
+TARGET = $(call lc, $(PROJECT)_$(STM32_MCU)_$(DISPLAY)_$(DISPVAR))
 
 C_DEFS = -DUSE_FULL_LL_DRIVER -D$(STM32_GROUP) -D_$(STM32_FAMILY)
 
@@ -194,16 +211,24 @@ ASM_SOURCES += \
 # Build directory
 BUILD_DIR = build
 
-DEBUG = 1
+ifeq "$(STM32_FAMILY)" "STM32F1"
+  CPU = -mcpu=cortex-m3
+  FPU =
+  FLOAT-ABI =
+endif
+
+ifeq "$(STM32_FAMILY)" "STM32F3"
+  CPU = -mcpu=cortex-m4
+  FPU = -mfpu=fpv4-sp-d16
+  FLOAT-ABI = -mfloat-abi=hard
+endif
 
 # Compiler
-FPU =
-FLOAT-ABI =
-MCU = -mcpu=cortex-m3 -mthumb $(FPU) $(FLOAT-ABI)
-OPT = -Os -fshort-enums -ffunction-sections -fdata-sections -ffreestanding
+MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
+OPT_FLAGS = $(OPT) -fshort-enums -ffunction-sections -fdata-sections -ffreestanding
 WARN = -Wall -Werror
-CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) $(WARN)
-ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) $(WARN)
+CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT_FLAGS) $(WARN)
+ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT_FLAGS) $(WARN)
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
 endif
@@ -236,7 +261,7 @@ vpath %.s $(sort $(dir $(ASM_SOURCES)))
 ELF = $(BUILD_DIR)/$(TARGET).elf
 BIN = flash/$(TARGET).bin
 
-EE_BACKUP = backup/$(PROJECT)_eeprom.bin
+EE_BACKUP = backup/$(PROJECT)_$(STM32_MCU)_eeprom.bin
 
 all: $(BIN) size
 
