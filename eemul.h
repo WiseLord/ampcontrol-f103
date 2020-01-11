@@ -7,20 +7,28 @@ extern "C" {
 
 #include <stdint.h>
 
-#ifdef _STM32F1
+#ifdef _F103CB
 #define EE_PAGE_SIZE    1024
+#define EE_PAGE_COUNT   128
 #endif
-#ifdef _STM32F3
+
+#ifdef _F303CC
 #define EE_PAGE_SIZE    2048
+#define EE_PAGE_COUNT   64
+#endif
+
+#ifdef _F303CB
+#define EE_PAGE_SIZE    2048
+#define EE_PAGE_COUNT   128
 #endif
 
 enum {
-    EE_PAGE_FM  = 123,
+    EE_PAGE_FM  = EE_PAGE_COUNT - 5,
 
-    EE_PAGE_0   = 124,
-    EE_PAGE_1   = 126,
+    EE_PAGE_0   = EE_PAGE_COUNT - 4,
+    EE_PAGE_1   = EE_PAGE_COUNT - 2,
 
-    EE_PAGE_END = 128,
+    EE_PAGE_END = EE_PAGE_COUNT,
 };
 
 void eeInit(void);
