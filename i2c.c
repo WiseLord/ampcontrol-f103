@@ -63,7 +63,7 @@ static void i2cInitPins(I2C_TypeDef *I2Cx)
 
     if (I2Cx == I2C1) {
         if (sclPin == LL_GPIO_PIN_8 && sdaPin == LL_GPIO_PIN_9) {
-#ifdef _STM32F1
+#ifdef STM32F1
             LL_GPIO_AF_EnableRemap_I2C1();
 #endif
         }
@@ -76,7 +76,7 @@ static void i2cInitPins(I2C_TypeDef *I2Cx)
     GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
-#ifdef _STM32F3
+#ifdef STM32F3
     GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
     GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
 #endif
@@ -84,12 +84,12 @@ static void i2cInitPins(I2C_TypeDef *I2Cx)
     LL_GPIO_Init(gpio, &GPIO_InitStruct);
 }
 
-#ifdef _STM32F1
+#ifdef STM32F1
 static void i2cDoStop(I2C_TypeDef *I2Cx)
 {
     I2cContext *ctx = getI2cCtx(I2Cx);
 
-#ifdef _STM32F1
+#ifdef STM32F1
     LL_I2C_GenerateStopCondition(I2Cx);
     ctx->timeout = I2C_TIMEOUT_MS;
     while (!LL_I2C_IsActiveFlag_STOP(I2Cx)) {
@@ -117,7 +117,7 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
 
     i2cInitPins(I2Cx);
 
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_I2C_EnableAutoEndMode(i2c);
 #endif
     LL_I2C_DisableOwnAddress2(i2c);
@@ -126,11 +126,11 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
 
     LL_I2C_InitTypeDef I2C_InitStruct;
     I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-#ifdef _STM32F1
+#ifdef STM32F1
     I2C_InitStruct.ClockSpeed = ClockSpeed;
     I2C_InitStruct.DutyCycle = LL_I2C_DUTYCYCLE_16_9;
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     I2C_InitStruct.Timing = 0x2000090E; // TODO: calculate from ClockSpeed
     I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
     I2C_InitStruct.DigitalFilter = 0;
@@ -140,7 +140,7 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
     I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
     LL_I2C_Init(i2c, &I2C_InitStruct);
 
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_I2C_SetOwnAddress2(i2c, 0, LL_I2C_OWNADDRESS2_NOMASK);
 #endif
     return 0;
@@ -179,7 +179,7 @@ void i2cTransmit(void *i2c)
     if (ctx == NULL)
         return;
 
-#ifdef _STM32F1
+#ifdef STM32F1
     LL_I2C_GenerateStartCondition(i2c);
 
     ctx->timeout = I2C_TIMEOUT_MS;
@@ -223,7 +223,7 @@ void i2cTransmit(void *i2c)
     i2cDoStop(i2c);
 #endif
 
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_I2C_HandleTransfer(i2c, ctx->addr, LL_I2C_ADDRSLAVE_7BIT, ctx->bytes,
                           LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE);
 
@@ -251,7 +251,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
     if (ctx == NULL)
         return;
 
-#ifdef _STM32F1
+#ifdef STM32F1
     if (size == 2) {
         LL_I2C_EnableBitPOS(i2c);
     } else {
@@ -351,7 +351,7 @@ void i2cReceive(void *i2c, uint8_t *buf, uint8_t size)
     LL_I2C_DisableBitPOS(i2c);
 #endif
 
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_I2C_HandleTransfer(i2c, ctx->addr, LL_I2C_ADDRSLAVE_7BIT, size, LL_I2C_MODE_AUTOEND,
                           LL_I2C_GENERATE_START_READ);
 

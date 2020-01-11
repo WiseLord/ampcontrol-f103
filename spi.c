@@ -22,7 +22,7 @@ static void spiInitPins(SPI_TypeDef *SPIx, bool read)
     GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-#ifdef _STM32F3
+#ifdef STM32F3
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     GPIO_InitStruct.Alternate = LL_GPIO_AF_5;
 #endif
@@ -30,7 +30,7 @@ static void spiInitPins(SPI_TypeDef *SPIx, bool read)
 
     if (read) {
         GPIO_InitStruct.Pin = misoPin;
-#ifdef _STM32F1
+#ifdef STM32F1
         GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
 #endif
         LL_GPIO_Init(gpio, &GPIO_InitStruct);
@@ -65,7 +65,7 @@ void spiInit(void *spi, bool read)
     LL_SPI_SetTransferBitOrder(SPIx, LL_SPI_MSB_FIRST);
     LL_SPI_DisableCRC(SPIx);
 
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_SPI_SetStandard(SPIx, LL_SPI_PROTOCOL_MOTOROLA);
     LL_SPI_DisableNSSPulseMgt(SPIx);
 #endif

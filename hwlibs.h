@@ -5,7 +5,8 @@
 extern "C" {
 #endif
 
-#ifdef _STM32F1
+#if defined(STM32F103xB)
+
 #include <stm32f1xx_hal_def.h>
 #include <stm32f1xx_hal_pcd.h>
 #include <stm32f1xx_ll_adc.h>
@@ -23,9 +24,9 @@ extern "C" {
 #include <stm32f1xx_ll_tim.h>
 #include <stm32f1xx_ll_usart.h>
 #include <stm32f1xx_ll_utils.h>
-#endif
 
-#ifdef _STM32F3
+#elif defined (STM32F303xC)
+
 #include <stm32f3xx_hal_def.h>
 #include <stm32f3xx_hal_pcd.h>
 #include <stm32f3xx_ll_adc.h>
@@ -43,20 +44,13 @@ extern "C" {
 #include <stm32f3xx_ll_tim.h>
 #include <stm32f3xx_ll_usart.h>
 #include <stm32f3xx_ll_utils.h>
-#endif
 
-#if defined(_STM32F1) || defined(_STM32F3)
+#endif
 
 #define I2C_AMP                 I2C1
 
 #define USART_DBG               USART1
 #define USART_KARADIO           USART2
-
-#else
-
-#define I2C_AMP                 (void*)0
-
-#endif
 
 #ifdef __cplusplus
 }

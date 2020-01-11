@@ -66,7 +66,7 @@ static uint32_t rtcToSec(RTC_type *rtc)
 
 static void getRtc(RTC_type *rtc)
 {
-#ifdef _STM32F3
+#ifdef STM32F3
     // TODO: Do it once a second in the interrupt handler
     RTC_type rtc_temp;
     rtc_temp.hour = (int8_t)__LL_RTC_CONVERT_BCD2BIN(LL_RTC_TIME_GetHour(RTC));
@@ -131,12 +131,12 @@ static void rtcUpdate(RTC_type *rtc, RtcMode mode, int8_t value)
 
     *time = value;
 
-#ifdef _STM32F1
+#ifdef STM32F1
     rtcTime = rtcToSec(rtc);
 
     LL_RTC_TIME_SetCounter(RTC, rtcTime);
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     if (mode < RTC_NOEDIT) {
         LL_RTC_DisableWriteProtection(RTC);
         LL_RTC_EnterInitMode(RTC);
@@ -189,7 +189,7 @@ void rtcInit(void)
         // Power interface clock enable
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
         // Backup interface clock enable
-#ifdef _STM32F1
+#ifdef STM32F1
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_BKP);
 #endif
         // Enable access to the backup domain
@@ -201,7 +201,7 @@ void rtcInit(void)
             // Backup domain reset
             LL_RCC_ForceBackupDomainReset();
             LL_RCC_ReleaseBackupDomainReset();
-#ifdef _STM32F3
+#ifdef STM32F3
             LL_RCC_LSE_SetDriveCapability(LL_RCC_LSEDRIVE_LOW);
 #endif
             LL_RCC_LSE_Enable();
@@ -214,10 +214,10 @@ void rtcInit(void)
             LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
             LL_RCC_EnableRTC();
 
-#ifdef _STM32F1
+#ifdef STM32F1
             LL_RTC_InitTypeDef rtc_initstruct = {32765, LL_RTC_CALIB_OUTPUT_NONE};
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
             LL_RTC_InitTypeDef rtc_initstruct = {LL_RTC_HOURFORMAT_24HOUR, 0, 32765};
 #endif
 
@@ -237,7 +237,7 @@ void rtcInit(void)
     }
 
     if (rtcPhase == RTC_INIT_READY) {
-#ifdef _STM32F1
+#ifdef STM32F1
         LL_RTC_EnableIT_SEC(RTC);
         NVIC_EnableIRQ (RTC_IRQn);
 #endif
@@ -249,13 +249,13 @@ void rtcInit(void)
 
 void rtcSetCorrection(int16_t value)
 {
-#ifdef _STM32F1
+#ifdef STM32F1
     if (LL_RTC_EnterInitMode(RTC) != ERROR) {
         LL_RTC_CAL_SetCoarseDigital(BKP, (uint32_t)(64 - value));
     }
     LL_RTC_ExitInitMode(RTC);
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_RTC_DisableWriteProtection(RTC);
     while(LL_RTC_IsActiveFlag_RECALP(RTC));
     LL_RTC_CAL_SetMinus(RTC, (uint32_t)(64 - value));

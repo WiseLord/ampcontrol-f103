@@ -99,10 +99,10 @@ static void spInitDMA(void)
 static void spInitADC(void)
 {
     // Configure ADC clock
-#ifdef _STM32F1
+#ifdef STM32F1
     LL_RCC_SetADCClockSource(LL_RCC_ADC_CLKSRC_PCLK2_DIV_6);
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_RCC_SetADCClockSource(LL_RCC_ADC12_CLKSRC_PLL_DIV_6);
 #endif
 
@@ -111,17 +111,17 @@ static void spInitADC(void)
     NVIC_EnableIRQ(ADC1_IRQn);
 
     // Enable ADC clock (core clock)
-#ifdef _STM32F1
+#ifdef STM32F1
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC1);
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_ADC12);
 #endif
 
     // Configure GPIO in analog mode to be used as ADC input
     LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_0, LL_GPIO_MODE_ANALOG);
     LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_1, LL_GPIO_MODE_ANALOG);
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_0, LL_GPIO_PULL_NO);
     LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_1, LL_GPIO_PULL_NO);
 #endif
@@ -131,7 +131,7 @@ static void spInitADC(void)
         LL_ADC_SetDataAlignment(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
 
         // Set Set ADC sequencers scan mode
-#ifdef _STM32F1
+#ifdef STM32F1
         LL_ADC_SetSequencersScanMode(ADC1, LL_ADC_SEQ_SCAN_ENABLE);
 #endif
 
@@ -147,14 +147,14 @@ static void spInitADC(void)
         // Set ADC group regular sequencer length and scan direction
         LL_ADC_REG_SetSequencerLength(ADC1, LL_ADC_REG_SEQ_SCAN_ENABLE_2RANKS);
 
-#ifdef _STM32F1
+#ifdef STM32F1
         LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_0);
         LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_0, LL_ADC_SAMPLINGTIME_71CYCLES_5);
 
         LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_2, LL_ADC_CHANNEL_1);
         LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_1, LL_ADC_SAMPLINGTIME_71CYCLES_5);
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
         LL_ADC_REG_SetOverrun(ADC1, LL_ADC_REG_OVR_DATA_OVERWRITTEN);
 
         LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_1);
@@ -168,14 +168,14 @@ static void spInitADC(void)
         ADC1->DIFSEL &= ~ADC_DIFSEL_DIFSEL_2;
 #endif
 
-#ifdef _STM32F1
+#ifdef STM32F1
         LL_ADC_Enable(ADC1);
         while (!LL_ADC_IsEnabled(ADC1));
 
         LL_ADC_StartCalibration(ADC1);
         while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0);
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
         LL_ADC_EnableInternalRegulator(ADC1);
         while (!LL_ADC_IsInternalRegulatorEnabled(ADC1));
 
@@ -308,10 +308,10 @@ void spGetADC(Spectrum *sp)
 void spConvertADC(void)
 {
     if (LL_ADC_IsEnabled(ADC1) == 1) {
-#ifdef _STM32F1
+#ifdef STM32F1
         LL_ADC_REG_StartConversionSWStart(ADC1);
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
         LL_ADC_REG_StartConversion(ADC1);
 #endif
     }

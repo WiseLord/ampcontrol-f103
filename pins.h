@@ -10,11 +10,11 @@ extern "C" {
 
 #include "hwlibs.h"
 
-#ifdef _STM32F1
+#ifdef STM32F1
 #define IS_GPIO_HI(x)           ((x ## _Pin) & 0x00FF0000U)
 #define IS_GPIO_LO(x)           ((x ## _Pin) & 0x0000FF00U)
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
 #define IS_GPIO_HI(x)           ((x ## _Pin) & 0x0000FF00U)
 #define IS_GPIO_LO(x)           ((x ## _Pin) & 0x000000FFU)
 #endif
@@ -27,7 +27,7 @@ extern "C" {
 
 #define SET(p)                  (LL_GPIO_SetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
 #define CLR(p)                  (LL_GPIO_ResetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
-#ifdef _STM32F1
+#ifdef STM32F1
 #define READ(p)                 (LL_GPIO_ReadInputPort(CONCAT(p, _Port)) & (CONCAT(p, _Pin) >> GPIO_PIN_MASK_POS) & 0x0000FFFFU)
 #else
 #define READ(p)                 (LL_GPIO_ReadInputPort(CONCAT(p, _Port)) & (CONCAT(p, _Pin)) & 0x0000FFFFU)

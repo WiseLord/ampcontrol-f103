@@ -18,7 +18,7 @@ static void pinsInitButtons(void)
 
 static void pinsInitRc(void)
 {
-#ifdef _STM32F1
+#ifdef STM32F1
     LL_GPIO_AF_SetEXTISource(RC_AR_ExtiPort, RC_AR_ExtiLine);
     LL_GPIO_SetPinMode(RC_Port, RC_Pin, LL_GPIO_MODE_FLOATING);
 #endif
@@ -36,7 +36,7 @@ static void pinsInitDisplay(void)
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-#ifdef _STM32F3
+#ifdef STM32F3
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 #endif
 
@@ -59,7 +59,7 @@ void pinsInitMuteStby(void)
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-#ifdef _STM32F3
+#ifdef STM32F3
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 #endif
 
@@ -76,7 +76,7 @@ void pinsInitHwReset()
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-#ifdef _STM32F3
+#ifdef STM32F3
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 #endif
 
@@ -91,7 +91,7 @@ void pinsHwResetI2c(void)
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
-#ifdef _STM32F3
+#ifdef STM32F3
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 #endif
 
@@ -111,7 +111,7 @@ void pinsHwResetI2c(void)
     SET(SI470X_RST);    // End of reset
 
     LL_mDelay(1);
-#ifdef _STM32F1
+#ifdef STM32F1
     IN_F(SI470X_SDIO);  // SDIO = 1
 #endif
 }
@@ -119,12 +119,12 @@ void pinsHwResetI2c(void)
 void pinsInit(void)
 {
     // Enable clock for all GPIO peripherials
-#ifdef _STM32F1
+#ifdef STM32F1
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
     LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
     LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
@@ -134,7 +134,7 @@ void pinsInit(void)
     pinsInitRc();
     pinsInitDisplay();
 
-#ifdef _STM32F1
+#ifdef STM32F1
     // JTAG-DP Disabled and SW-DP Enabled
     LL_GPIO_AF_Remap_SWJ_NOJTAG();
 #endif

@@ -32,11 +32,9 @@ ifeq "$(STM32_MCU)" "F303CB"
   STM32_GROUP  = $(STM32_FAMILY)03xC
 endif
 
-STM32_DEV    = STM32$(STM32_MCU)
-
 TARGET = $(call lc, $(PROJECT)_$(STM32_MCU)_$(DISPLAY)_$(DISPVAR))
 
-C_DEFS = -DUSE_FULL_LL_DRIVER -D$(STM32_GROUP) -D_$(STM32_MCU) -D_$(STM32_FAMILY)
+C_DEFS = -DUSE_FULL_LL_DRIVER -D$(STM32_GROUP) -D_$(STM32_MCU)
 
 ifneq (,$(filter $(DISPLAY), \
   DISP24BIT    \
@@ -235,7 +233,7 @@ endif
 # Dependency information
 CFLAGS += -MMD -MP -MT $(BUILD_DIR)/$(*F).o -MF $(BUILD_DIR)/$(*D)/$(*F).d
 
-LDSCRIPT = system/$(call lc, $(STM32_DEV))_flash.ld
+LDSCRIPT = system/$(call lc, STM32$(STM32_MCU))_flash.ld
 LIBS = -lc -lm -lnosys
 LIBDIR =
 LDFLAGS = $(MCU) -specs=nosys.specs -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections

@@ -91,11 +91,11 @@ static inline void dispdrvBusIn(void)
 #if defined(_DISP_16BIT)
     WRITE_BYTE(DISP_DATA_HI, 0xFF);         // Set HIGH level on all data lines
     WRITE_BYTE(DISP_DATA_LO, 0xFF);
-#ifdef _STM32F1
+#ifdef STM32F1
     DISP_DATA_HI_Port->CRH = 0x88888888;
     DISP_DATA_LO_Port->CRL = 0x88888888;
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     DISP_DATA_HI_Port->MODER &= 0x0000FFFF;
     DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
 #endif
@@ -103,17 +103,17 @@ static inline void dispdrvBusIn(void)
     WRITE_BYTE(DISP_DATA, 0xFF);            // Set HIGH level on all data lines
 
 #if IS_GPIO_LO(DISP_DATA)
-#ifdef _STM32F1
+#ifdef STM32F1
     DISP_DATA_Port->CRL = 0x88888888;
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     DISP_DATA_Port->MODER &= 0xFFFF0000;
 #endif
 #elif IS_GPIO_HI(DISP_DATA)
-#ifdef _STM32F1
+#ifdef STM32F1
     DISP_DATA_Port->CRH = 0x88888888;
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     DISP_DATA_Port->MODER &= 0x0000FFFF;
 #endif
 #endif
@@ -129,11 +129,11 @@ static inline void dispdrvBusOut(void)
         busBusy = true;
     }
 #if defined(_DISP_16BIT)
-#ifdef _STM32F1
+#ifdef STM32F1
     DISP_DATA_HI_Port->CRH = 0x33333333;
     DISP_DATA_LO_Port->CRL = 0x33333333;
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     DISP_DATA_HI_Port->MODER &= 0x0000FFFF;
     DISP_DATA_HI_Port->MODER |= 0x55550000;
     DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
@@ -141,19 +141,19 @@ static inline void dispdrvBusOut(void)
 #endif
 #elif defined(_DISP_8BIT)
 #if IS_GPIO_LO(DISP_DATA)
-#ifdef _STM32F1
+#ifdef STM32F1
     DISP_DATA_Port->CRL = 0x33333333;
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     DISP_DATA_Port->MODER &= 0xFFFF0000;
     DISP_DATA_Port->MODER |= 0x00005555;
 #endif
 #endif
 #if IS_GPIO_HI(DISP_DATA)
-#ifdef _STM32F1
+#ifdef STM32F1
     DISP_DATA_Port->CRH = 0x33333333;
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
     DISP_DATA_Port->MODER &= 0x0000FFFF;
     DISP_DATA_Port->MODER |= 0x55550000;
 #endif

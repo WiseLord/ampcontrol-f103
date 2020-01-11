@@ -67,7 +67,7 @@ void SysTick_Handler(void)
     sysTimer++;
 }
 
-#ifdef _STM32F1
+#ifdef STM32F1
 void RTC_IRQHandler(void)
 {
     if (LL_RTC_IsEnabledIT_SEC(RTC) != 0) {
@@ -133,10 +133,10 @@ void EXTI9_5_IRQHandler()
     }
 }
 
-#ifdef _STM32F1
+#ifdef STM32F1
 void USB_LP_CAN1_RX0_IRQHandler(void)
 #endif
-#ifdef _STM32F3
+#ifdef STM32F3
 void USB_LP_CAN_RX0_IRQHandler(void)
 #endif
 {
