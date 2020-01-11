@@ -193,6 +193,7 @@ system/startup_stm32f303xc.s
 system/stm32f103cb_flash.ld
 system/stm32f103xb_openocd.cfg
 system/stm32f1xx_hal_conf.h
+system/stm32f303cb_flash.ld
 system/stm32f303cc_flash.ld
 system/stm32f303xc_openocd.cfg
 system/stm32f3xx_hal_conf.h
