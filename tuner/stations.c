@@ -6,6 +6,9 @@
 #include "../eemul.h"
 #include "tuner.h"
 
+#define STATION_COUNT       (int8_t)(EE_PAGE_SIZE / sizeof(Station))
+#define EE_PAGE_FM          (EE_PAGE_COUNT - EE_PAGE_STEP * 2 - 1)
+
 static Station *stFlash;
 
 void stationsInit()

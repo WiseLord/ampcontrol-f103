@@ -6,7 +6,6 @@ extern "C" {
 #endif
 
 #define STATION_NOT_FOUND       -1
-#define STATION_COUNT           32
 
 #include <stdint.h>
 

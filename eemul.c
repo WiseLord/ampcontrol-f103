@@ -4,10 +4,11 @@
 
 #include "settings.h"
 
+#define EE_PAGE_0           (EE_PAGE_COUNT - EE_PAGE_STEP * 2)
+#define EE_PAGE_1           (EE_PAGE_COUNT - EE_PAGE_STEP * 1)
+
 #define REC_SIZE            4
 #define RECS_ON_PAGE        (EE_PAGE_SIZE / REC_SIZE)
-
-#define EE_PAGE_STEP        (EE_PAGE_1 - EE_PAGE_0)
 
 #define EE_CELLS_NUM        (RECS_ON_PAGE * (EE_PAGE_STEP))
 

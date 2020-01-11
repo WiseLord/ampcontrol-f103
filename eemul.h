@@ -9,27 +9,21 @@ extern "C" {
 
 #ifdef _F103CB
 #define EE_PAGE_SIZE    1024
+#define EE_PAGE_STEP    2
 #define EE_PAGE_COUNT   128
 #endif
 
 #ifdef _F303CC
 #define EE_PAGE_SIZE    2048
+#define EE_PAGE_STEP    2
 #define EE_PAGE_COUNT   64
 #endif
 
 #ifdef _F303CB
 #define EE_PAGE_SIZE    2048
+#define EE_PAGE_STEP    2
 #define EE_PAGE_COUNT   128
 #endif
-
-enum {
-    EE_PAGE_FM  = EE_PAGE_COUNT - 5,
-
-    EE_PAGE_0   = EE_PAGE_COUNT - 4,
-    EE_PAGE_1   = EE_PAGE_COUNT - 2,
-
-    EE_PAGE_END = EE_PAGE_COUNT,
-};
 
 void eeInit(void);
 
