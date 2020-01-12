@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../actions.h"
+#include "../amp.h"
 #include "../karadio.h"
 #include "../menu.h"
 #include "../rtc.h"

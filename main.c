@@ -1,6 +1,6 @@
 #include "hwlibs.h"
 
-#include "actions.h"
+#include "amp.h"
 #include "control.h"
 #include "debug.h"
 #include "handlers.h"

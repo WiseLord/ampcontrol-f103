@@ -1,7 +1,7 @@
 Makefile
 .astylerc
-actions.c
-actions.h
+amp.c
+amp.h
 build_all.sh
 
 audio/audio.c

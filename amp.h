@@ -1,5 +1,5 @@
-#ifndef ACTIONS_H
-#define ACTIONS_H
+#ifndef AMP_H
+#define AMP_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -122,4 +122,4 @@ void ampActionHandle(bool visible);
 }
 #endif
 
-#endif // ACTIONS_H
+#endif // AMP_H

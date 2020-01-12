@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "actions.h"
+#include "amp.h"
 #include "audio/audiodefs.h"
 
 void controlInit(void);
