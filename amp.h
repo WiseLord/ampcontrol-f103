@@ -17,9 +17,6 @@ extern "C" {
 #define FLAG_NEXT       -1
 #define FLAG_PREV       -2
 
-#define ACTION_HIDDEN   false
-#define ACTION_VISIBLE  true
-
 #define DIRECTION_UP    1
 #define DIRECTION_DOWN  -1
 
@@ -85,10 +82,9 @@ enum {
 
 typedef struct {
     ActionType type;
-    bool visible;
-    int16_t value;
-
     ScreenMode screen;
+
+    int16_t value;
     int16_t timeout;
 
     ScreenMode prevScreen;
@@ -116,7 +112,7 @@ void ampActionQueue(ActionType type, int16_t value);
 
 void ampActionGet(void);
 
-void ampActionHandle(bool visible);
+void ampActionHandle(void);
 
 #ifdef __cplusplus
 }

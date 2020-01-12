@@ -108,7 +108,7 @@ int main(void)
 #endif
 
     while (1) {
-        ampActionHandle(ACTION_VISIBLE);
+        ampActionHandle();
         controlGetData();
         karadioGetData();
         screenShow(false);

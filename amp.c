@@ -36,7 +36,6 @@ static void actionRemapEncoder(void);
 static Action action = {
     .type = ACTION_INIT,
     .screen = SCREEN_STANDBY,
-    .visible = false,
     .value = FLAG_ENTER,
 };
 
@@ -980,7 +979,7 @@ void ampActionGet(void)
 }
 
 
-void ampActionHandle(bool visible)
+void ampActionHandle(void)
 {
     Screen *screen = screenGet();
     ScreenMode scrMode = screen->mode;
@@ -994,7 +993,6 @@ void ampActionHandle(bool visible)
 
     Spectrum *sp = spGet();
 
-    action.visible = visible;
     action.timeout = 0;
 
     switch (action.type) {
@@ -1240,11 +1238,10 @@ void ampActionHandle(bool visible)
         }
     }
 
-    if (action.visible) {
-        screenSetMode(action.screen);
-        if (action.timeout > 0) {
-            swTimSet(SW_TIM_DISPLAY, action.timeout);
-        }
+    screenSetMode(action.screen);
+
+    if (action.timeout > 0) {
+        swTimSet(SW_TIM_DISPLAY, action.timeout);
     }
 
     actionSet(ACTION_NONE, 0);
