@@ -96,7 +96,7 @@ void screenToClear(void)
     scrToClear = true;
 }
 
-void screenShow(bool clear)
+void screenShow(void)
 {
     GlcdRect rect = canvasGet()->layout->rect;
     Spectrum *spectrum = spGet();
@@ -105,16 +105,14 @@ void screenShow(bool clear)
 
     glcdSetRect(&rect);
 
-    if (!clear) {
-        clear = screenCheckClear();
-        if (screen.mode == SCREEN_TEXTEDIT) {
-            rect = canvasGet()->layout->textEdit.rect;
-            if (clear) {
-                const int16_t th = canvasGet()->glcd->drv->height / 100;
-                glcdDrawFrame(rect.x - th, rect.y - th, rect.w + 2 * th, rect.h + 2 * th, th, canvasGet()->pal->fg);
-            }
-            glcdSetRect(&rect);
+    bool clear = screenCheckClear();
+    if (screen.mode == SCREEN_TEXTEDIT) {
+        rect = canvasGet()->layout->textEdit.rect;
+        if (clear) {
+            const int16_t th = canvasGet()->glcd->drv->height / 100;
+            glcdDrawFrame(rect.x - th, rect.y - th, rect.w + 2 * th, rect.h + 2 * th, th, canvasGet()->pal->fg);
         }
+        glcdSetRect(&rect);
     }
 
     if (screen.mode != SCREEN_STANDBY) {

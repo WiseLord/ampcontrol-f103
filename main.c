@@ -111,7 +111,7 @@ int main(void)
         ampActionHandle();
         controlGetData();
         karadioGetData();
-        screenShow(false);
+        screenShow();
         ampActionGet();
 #ifdef _DEBUG_FPS
         int32_t cnt = getSysTimer();

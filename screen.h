@@ -52,7 +52,7 @@ ScreenMode screenGetMode(void);
 void screenSetBrightness(int8_t value);
 
 void screenToClear(void);
-void screenShow(bool clear);
+void screenShow(void);
 
 void screenPwm(void);
 
