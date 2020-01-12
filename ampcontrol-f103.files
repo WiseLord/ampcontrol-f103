@@ -188,6 +188,8 @@ gui/widget/stripedbar.h
 gui/widget/textedit.c
 gui/widget/textedit.h
 
+i2cexp.c
+i2cexp.h
 system/startup_stm32f103xb.s
 system/startup_stm32f303xc.s
 system/stm32f103cb_flash.ld

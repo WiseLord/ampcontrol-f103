@@ -4,6 +4,7 @@
 #include "audio/audiodefs.h"
 #include "display/glcd.h"
 #include "eemul.h"
+#include "i2cexp.h"
 #include "rc.h"
 #include "screen.h"
 #include "spectrum.h"

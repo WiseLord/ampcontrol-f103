@@ -5,6 +5,7 @@
 #include "amp.h"
 #include "audio/audio.h"
 #include "gui/canvas.h"
+#include "i2cexp.h"
 #include "input.h"
 #include "rc.h"
 #include "screen.h"
@@ -731,10 +732,8 @@ const char *menuGetValueStr(MenuIdx index)
     case MENU_I2C_EXT_IN_STAT:
         if (value == I2C_ADDR_DISABLED) {
             ret = labelsGet(LABEL_BOOL_OFF);
-        } else if (value <= PCF8574_0x4E) {
-            ret = utilMkStr("0x%02X", 0x40 + ((value - PCF8574_0x40) << 1));
-        } else if (value <= PCF8574A_0x7E) {
-            ret = utilMkStr("0x%02X", 0x70 + ((value - PCF8574A_0x70) << 1));
+        } else {
+            ret = utilMkStr("0x%02X", i2cexpGetAddr((uint8_t)value));
         }
         break;
 

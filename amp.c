@@ -6,6 +6,7 @@
 #include "control.h"
 #include "hwlibs.h"
 #include "i2c.h"
+#include "i2cexp.h"
 #include "karadio.h"
 #include "pins.h"
 #include "settings.h"
@@ -54,27 +55,6 @@ static void inputEnable(void)
     }
 }
 
-static void handleInputStatus(void)
-{
-    I2cAddrIdx i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_IN_STAT);
-
-    if (i2cAddrIdx == I2C_ADDR_DISABLED || i2cAddrIdx >= I2C_ADDR_END) {
-        return;
-    }
-
-    uint8_t i2cAddr = 0x40;
-
-    if (i2cAddrIdx <= PCF8574_0x4E) {
-        i2cAddr = 0x40 | (uint8_t)((i2cAddrIdx - PCF8574_0x40) << 1);
-    } else if (i2cAddrIdx <= PCF8574A_0x7E) {
-        i2cAddr = 0x70 | (uint8_t)((i2cAddrIdx - PCF8574A_0x70) << 1);
-    }
-
-    i2cBegin(I2C_AMP, i2cAddr);
-    i2cSend(I2C_AMP, amp.inputStatus);
-    i2cTransmit(I2C_AMP);
-}
-
 static void inputSetPower(bool value)
 {
     AudioProc *aProc = audioGet();
@@ -86,7 +66,8 @@ static void inputSetPower(bool value)
         amp.inputStatus = 0x00;
     }
 
-    handleInputStatus();
+    I2cAddrIdx i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_IN_STAT);
+    i2cexpSend(i2cAddrIdx, amp.inputStatus);
 }
 
 Amp *ampGet(void)

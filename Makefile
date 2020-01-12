@@ -63,6 +63,7 @@ C_SOURCES += i2c.c
 C_SOURCES += input.c
 C_SOURCES += karadio.c
 C_SOURCES += menu.c
+C_SOURCES += i2cexp.c
 C_SOURCES += pins.c
 C_SOURCES += rc.c
 C_SOURCES += ringbuf.c
