@@ -108,11 +108,11 @@ int main(void)
 #endif
 
     while (1) {
-        actionHandle(ACTION_VISIBLE);
+        ampActionHandle(ACTION_VISIBLE);
         controlGetData();
         karadioGetData();
         screenShow(false);
-        actionUserGet();
+        ampActionGet();
 #ifdef _DEBUG_FPS
         int32_t cnt = getSysTimer();
         fpsCnt = (cnt == fpsCnt) ? 1000 : 1000 / (cnt - fpsCnt);

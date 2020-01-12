@@ -33,7 +33,6 @@ static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
 static Action action = {ACTION_INIT, false, FLAG_ENTER, SCREEN_STANDBY, 0, ACTION_INIT};
-static Action qaction = {ACTION_NONE, false, 0, SCREEN_STANDBY, 0, ACTION_NONE};
 
 static void actionSet(ActionType type, int16_t value)
 {
@@ -765,27 +764,13 @@ static void actionRemapCommon(void)
     }
 }
 
-static void actionDequeue(void)
+void ampActionQueue(ActionType type, int16_t value)
 {
-    action.type = qaction.type;
-    action.value = qaction.value;
-
-    qaction.type = ACTION_NONE;
-    qaction.value = 0;
+    actionSet(type, value);
 }
 
-void actionQueue(ActionType type, int16_t value)
+void ampActionGet(void)
 {
-    qaction.type = type;
-    qaction.value = value;
-}
-
-void actionUserGet(void)
-{
-    actionSet(ACTION_NONE, 0);
-
-    actionDequeue();
-
     if (ACTION_NONE == action.type) {
         actionGetButtons();
     }
@@ -836,7 +821,7 @@ void actionUserGet(void)
 }
 
 
-void actionHandle(bool visible)
+void ampActionHandle(bool visible)
 {
     Screen *screen = screenGet();
     ScreenMode scrMode = screen->mode;
@@ -1102,4 +1087,6 @@ void actionHandle(bool visible)
             swTimSet(SW_TIM_DISPLAY, action.timeout);
         }
     }
+
+    actionSet(ACTION_NONE, 0);
 }

@@ -97,10 +97,11 @@ typedef struct {
     ScreenMode prevScreen;
 } Action;
 
-void actionQueue(ActionType type, int16_t value);
+void ampActionQueue(ActionType type, int16_t value);
 
-void actionUserGet(void);
-void actionHandle(bool visible);
+void ampActionGet(void);
+
+void ampActionHandle(bool visible);
 
 #ifdef __cplusplus
 }

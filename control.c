@@ -64,11 +64,11 @@ static void controlParseAmp(char *line)
     if (isEndOfLine(line)) {
         //
     } else if (strstr(line, CTRL_ON) == line) {
-        actionQueue(ACTION_STANDBY, FLAG_EXIT);
+        ampActionQueue(ACTION_STANDBY, FLAG_EXIT);
     } else if (strstr(line, CTRL_OFF) == line) {
-        actionQueue(ACTION_STANDBY, FLAG_ENTER);
+        ampActionQueue(ACTION_STANDBY, FLAG_ENTER);
     } else if (strstr(line, CTRL_TOGGLE) == line) {
-        actionQueue(ACTION_STANDBY, FLAG_SWITCH);
+        ampActionQueue(ACTION_STANDBY, FLAG_SWITCH);
     } else if (strstr(line, CTRL_STATUS) == line) {
         controlParseAmpStatus(line + strlen(CTRL_STATUS));
     } else if (strstr(line, CTRL_INPUT) == line) {
