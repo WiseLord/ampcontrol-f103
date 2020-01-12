@@ -2,7 +2,6 @@
 
 #include <string.h>
 
-#include "amp.h"
 #include "audio/audio.h"
 #include "gui/canvas.h"
 #include "i2cexp.h"

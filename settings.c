@@ -1,6 +1,5 @@
 #include "settings.h"
 
-#include "amp.h"
 #include "audio/audiodefs.h"
 #include "display/glcd.h"
 #include "eemul.h"

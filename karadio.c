@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "actions.h"
-#include "amp.h"
 #include "audio/audio.h"
 #include "debug.h"
 #include "hwlibs.h"

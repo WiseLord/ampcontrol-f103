@@ -10,9 +10,6 @@ extern "C" {
 
 #include "screen.h"
 
-#define FLAG_OFF        0
-#define FLAG_ON         1
-
 #define FLAG_EXIT       0
 #define FLAG_ENTER      1
 #define FLAG_SWITCH     2
@@ -96,6 +93,24 @@ typedef struct {
 
     ScreenMode prevScreen;
 } Action;
+
+typedef uint8_t AmpStatus;
+enum {
+    AMP_STATUS_STBY,
+    AMP_STATUS_POWERED,
+    AMP_STATUS_INIT,
+    AMP_STATUS_HW_READY,
+    AMP_STATUS_ACTIVE,
+
+    AMP_STATUS_END
+};
+
+typedef struct {
+    AmpStatus status;
+    uint8_t inputStatus;
+} Amp;
+
+Amp *ampGet(void);
 
 void ampActionQueue(ActionType type, int16_t value);
 

@@ -2,10 +2,11 @@
 
 #include <stddef.h>
 
-#include "amp.h"
 #include "audio/audio.h"
 #include "control.h"
 #include "gui/canvas.h"
+#include "i2c.h"
+#include "i2cexp.h"
 #include "input.h"
 #include "karadio.h"
 #include "menu.h"
@@ -32,7 +33,17 @@ static void actionRemapCommon(void);
 static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
-static Action action = {ACTION_INIT, false, FLAG_ENTER, SCREEN_STANDBY, 0, ACTION_INIT};
+static Action action = {
+    .type = ACTION_INIT,
+    .screen = SCREEN_STANDBY,
+    .visible = false,
+    .value = FLAG_ENTER,
+};
+
+static Amp amp = {
+    .status = AMP_STATUS_STBY,
+    .inputStatus = 0x00
+};
 
 static void actionSet(ActionType type, int16_t value)
 {
@@ -92,6 +103,149 @@ static void actionResetSilenceTimer(void)
         swTimSet(SW_TIM_SILENCE_TIMER, 1000 * 60 * silenceTimer + 999);
     }
 }
+
+
+static void inputDisable(void)
+{
+    AudioProc *aProc = audioGet();
+    uint8_t input = aProc->par.input;
+
+    switch (aProc->par.inType[input]) {
+    case IN_TUNER:
+        tunerSetPower(false);
+        break;
+    case IN_KARADIO:
+        karadioSetEnabled(false);
+        break;
+    default:
+        break;
+    }
+
+    // TODO: Power off current input device
+}
+
+static void inputEnable(void)
+{
+    Tuner *tuner = tunerGet();
+    AudioProc *aProc = audioGet();
+    uint8_t input = aProc->par.input;
+
+    switch (aProc->par.inType[input]) {
+    case IN_TUNER:
+        tunerSetPower(true);
+        tunerSetVolume(tuner->par.volume);
+        tunerSetMute(false);
+        tunerSetFreq(tuner->par.freq);
+        break;
+    case IN_KARADIO:
+        karadioSetEnabled(true);
+        break;
+    default:
+        break;
+    }
+}
+
+static void inputSetPower(bool value)
+{
+    AudioProc *aProc = audioGet();
+    uint8_t input = aProc->par.input;
+
+    if (value) {
+        amp.inputStatus = (uint8_t)(1 << input);
+    } else {
+        amp.inputStatus = 0x00;
+    }
+
+    I2cAddrIdx i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_IN_STAT);
+    i2cexpSend(i2cAddrIdx, amp.inputStatus);
+}
+
+void ampInit(void)
+{
+    pinsSetMute(true);
+    pinsSetStby(true);
+
+    i2cInit(I2C_AMP, 100000);
+    inputSetPower(false);    // Power off input device
+    i2cDeInit(I2C_AMP);
+
+    amp.status = AMP_STATUS_STBY;
+    controlReportAmpStatus();
+}
+
+void ampExitStby(void)
+{
+    audioReadSettings();
+    tunerReadSettings();
+
+    pinsSetStby(false);     // Power on amplifier
+
+    i2cInit(I2C_AMP, 100000);
+    inputSetPower(true);    // Power on input device
+    i2cDeInit(I2C_AMP);
+
+    amp.status = AMP_STATUS_POWERED;
+    swTimSet(SW_TIM_AMP_INIT, 600);
+}
+
+void ampEnterStby(void)
+{
+    swTimSet(SW_TIM_AMP_INIT, SW_TIM_OFF);
+
+    screenSaveSettings();
+
+    audioSetMute(true);
+    audioSetPower(false);
+
+    inputDisable();
+
+    ampInit();
+}
+
+void ampInitHw(void)
+{
+    swTimSet(SW_TIM_AMP_INIT, SW_TIM_OFF);
+
+    switch (amp.status) {
+    case AMP_STATUS_POWERED:
+        pinsHwResetI2c();
+        i2cInit(I2C_AMP, 100000);
+
+        audioInit();
+        audioSetPower(true);
+        tunerInit();
+
+        amp.status = AMP_STATUS_HW_READY;
+        swTimSet(SW_TIM_AMP_INIT, 500);
+        controlReportAll();
+        break;
+    case AMP_STATUS_HW_READY:
+        inputEnable();
+
+        audioSetMute(false);
+
+        amp.status = AMP_STATUS_ACTIVE;
+
+        swTimSet(SW_TIM_INPUT_POLL, 100);
+        break;
+    }
+}
+
+void ampSetInput(uint8_t value)
+{
+    swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
+
+    audioSetMute(true);
+
+    inputDisable();
+    inputSetPower(false);
+    audioSetInput(value);
+    inputSetPower(true);
+
+    amp.status = AMP_STATUS_HW_READY;
+    swTimSet(SW_TIM_AMP_INIT, 400);
+}
+
 
 static void actionNavigateMenu(RcCmd cmd)
 {
@@ -762,6 +916,11 @@ static void actionRemapCommon(void)
          ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
+}
+
+Amp *ampGet(void)
+{
+    return &amp;
 }
 
 void ampActionQueue(ActionType type, int16_t value)

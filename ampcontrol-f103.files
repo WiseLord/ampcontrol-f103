@@ -1,5 +1,7 @@
 Makefile
 .astylerc
+actions.c
+actions.h
 build_all.sh
 
 audio/audio.c
@@ -239,10 +241,6 @@ usb/usbd_desc.h
 usb/usbhid.c
 usb/usbhid.h
 
-actions.c
-actions.h
-amp.c
-amp.h
 cmd.h
 control.c
 control.h
