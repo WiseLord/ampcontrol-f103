@@ -10,7 +10,7 @@ extern "C" {
 
 #include "gui/icons.h"
 
-typedef uint8_t ScreenMode;
+typedef uint8_t ScrMode;
 enum {
     // Screens allowed to be default
     SCREEN_SPECTRUM = 0,
@@ -33,8 +33,8 @@ enum {
 };
 
 typedef struct {
-    ScreenMode mode;
-    ScreenMode def;
+    ScrMode mode;
+    ScrMode def;
     Icon iconHint;
     int8_t brightness;
 } Screen;
@@ -46,8 +46,7 @@ void screenInit(void);
 
 Screen *screenGet(void);
 
-void screenSetMode(ScreenMode value);
-ScreenMode screenGetMode(void);
+void screenSetMode(ScrMode value);
 
 void screenSetBrightness(int8_t value);
 

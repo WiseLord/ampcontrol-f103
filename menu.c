@@ -284,7 +284,7 @@ static void menuStoreCurrentValue(void)
         canvasClear();
         break;
     case MENU_DISPLAY_DEF:
-        screenGet()->def = (ScreenMode)menu.value;
+        screenGet()->def = (ScrMode)menu.value;
         break;
     case MENU_DISPLAY_PALETTE:
         paletteSetIndex((PalIdx)menu.value);
@@ -773,7 +773,7 @@ const char *menuGetValueStr(MenuIdx index)
         ret = labelsGet((Label)(LABEL_SPECTRUM_MODE + value));
         break;
     case MENU_DISPLAY_DEF:
-        switch ((ScreenMode)value) {
+        switch ((ScrMode)value) {
         case SCREEN_TIME:
             ret = labelsGet((Label)(LABEL_MENU + MENU_RC_TIME));
             break;

@@ -82,12 +82,12 @@ enum {
 
 typedef struct {
     ActionType type;
-    ScreenMode screen;
+    ScrMode screen;
 
     int16_t value;
     int16_t timeout;
 
-    ScreenMode prevScreen;
+    ScrMode prevScreen;
 } Action;
 
 typedef uint8_t AmpStatus;

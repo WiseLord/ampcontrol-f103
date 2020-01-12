@@ -18,7 +18,7 @@ static bool screenCheckClear(void)
 {
     bool clear = false;
 
-    static ScreenMode scrPrev = SCREEN_END;
+    static ScrMode scrPrev = SCREEN_END;
 
     if (scrToClear) {
         clear = true;
@@ -55,7 +55,7 @@ static bool screenCheckClear(void)
 
 void screenReadSettings(void)
 {
-    screen.def = (ScreenMode)settingsRead(PARAM_DISPLAY_DEF);
+    screen.def = (ScrMode)settingsRead(PARAM_DISPLAY_DEF);
 }
 
 void screenSaveSettings(void)
@@ -76,14 +76,9 @@ Screen *screenGet(void)
     return &screen;
 }
 
-void screenSetMode(ScreenMode value)
+void screenSetMode(ScrMode value)
 {
     screen.mode = value;
-}
-
-ScreenMode screenGetMode()
-{
-    return screen.mode;
 }
 
 void screenSetBrightness(int8_t value)

@@ -50,18 +50,18 @@ static void actionSet(ActionType type, int16_t value)
     action.value = value;
 }
 
-static void actionSetScreen(ScreenMode screen, int16_t timeout)
+static void actionSetScreen(ScrMode screen, int16_t timeout)
 {
     action.screen = screen;
     action.timeout = timeout;
 }
 
-static void actionDispExpired(ScreenMode scrMode)
+static void actionDispExpired(ScrMode scrMode)
 {
     AudioProc *aProc = audioGet();
 
     Screen *screen = screenGet();
-    ScreenMode scrDef = screen->def;
+    ScrMode scrDef = screen->def;
 
     int32_t timer;
 
@@ -387,7 +387,7 @@ static void actionGetEncoder(void)
 
 static bool isRemoteCmdRepeatable(RcCmd cmd)
 {
-    ScreenMode screen = screenGetMode();
+    ScrMode scrMode = screenGet()->mode;
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
@@ -397,14 +397,14 @@ static bool isRemoteCmdRepeatable(RcCmd cmd)
         return true;
     case RC_CMD_NAV_UP:
     case RC_CMD_NAV_DOWN:
-        switch (screen) {
+        switch (scrMode) {
         case SCREEN_AUDIO_PARAM:
             return true;
         }
         break;
     case RC_CMD_NAV_LEFT:
     case RC_CMD_NAV_RIGHT:
-        switch (screen) {
+        switch (scrMode) {
         case SCREEN_AUDIO_INPUT:
             if (inType == IN_TUNER) {
                 return true;
@@ -539,7 +539,7 @@ static void actionRemapBtnShort(void)
 
 static void actionRemapBtnLong(void)
 {
-    ScreenMode screen = screenGetMode();
+    ScrMode scrMode = screenGet()->mode;
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
@@ -552,7 +552,7 @@ static void actionRemapBtnLong(void)
     case BTN_D2:
         switch (inType) {
         case IN_TUNER:
-            if (screen == SCREEN_TEXTEDIT) {
+            if (scrMode == SCREEN_TEXTEDIT) {
                 action.type = ACTION_TUNER_DEL_STATION;
             } else {
                 action.type = ACTION_TUNER_EDIT_NAME;
@@ -583,7 +583,7 @@ static void actionRemapBtnLong(void)
         }
         break;
     case BTN_D5:
-        switch (screen) {
+        switch (scrMode) {
         case SCREEN_TEXTEDIT:
             action.type = ACTION_OPEN_MENU;
             break;
@@ -606,7 +606,7 @@ static void actionRemapBtnLong(void)
 static void actionRemapRemote(void)
 {
     Screen *screen = screenGet();
-    ScreenMode scrMode = screen->mode;
+    ScrMode scrMode = screen->mode;
 
     AudioProc *aProc = audioGet();
 
@@ -778,9 +778,9 @@ static void actionRemapRemote(void)
 
 static void actionRemapNavigate(void)
 {
-    ScreenMode screen = screenGetMode();
+    ScrMode scrMode = screenGet()->mode;
 
-    switch (screen) {
+    switch (scrMode) {
     case SCREEN_MENU:
         actionNavigateMenu((RcCmd)action.value);
         break;
@@ -795,15 +795,15 @@ static void actionRemapNavigate(void)
 
 static void actionRemapEncoder(void)
 {
-    ScreenMode screen = screenGetMode();
+    ScrMode scrMode = screenGet()->mode;
     AudioProc *aProc = audioGet();
 
-    if (SCREEN_STANDBY == screen)
+    if (SCREEN_STANDBY == scrMode)
         return;
 
     int16_t encCnt = action.value;
 
-    switch (screen) {
+    switch (scrMode) {
     case SCREEN_TIME:
         if (rtcGetMode() == RTC_NOEDIT) {
             actionSet(ACTION_AUDIO_PARAM_CHANGE, encCnt);
@@ -824,7 +824,7 @@ static void actionRemapEncoder(void)
 
     if (ACTION_AUDIO_PARAM_CHANGE == action.type) {
         screenSetMode(SCREEN_AUDIO_PARAM);
-        switch (screen) {
+        switch (scrMode) {
         case SCREEN_SPECTRUM:
         case SCREEN_AUDIO_FLAG:
         case SCREEN_AUDIO_INPUT:
@@ -838,13 +838,13 @@ static void actionRemapEncoder(void)
 
 static void actionRemapCommon(void)
 {
-    ScreenMode screen = screenGetMode();
+    ScrMode scrMode = screenGet()->mode;
     AudioProc *aProc = audioGet();
     AmpStatus ampStatus = ampGet()->status;
 
     switch (action.type) {
     case ACTION_STANDBY:
-        if (screen == SCREEN_MENU) {
+        if (scrMode == SCREEN_MENU) {
             action.value = FLAG_ENTER;
         } else if (FLAG_SWITCH == action.value) {
             switch (ampStatus) {
@@ -861,7 +861,7 @@ static void actionRemapCommon(void)
         }
         break;
     case ACTION_OPEN_MENU:
-        switch (screen) {
+        switch (scrMode) {
         case SCREEN_TEXTEDIT:
             action.type = ACTION_TEXTEDIT_APPLY;
             break;
@@ -899,7 +899,7 @@ static void actionRemapCommon(void)
         break;
     }
 
-    if (SCREEN_STANDBY == screen &&
+    if (SCREEN_STANDBY == scrMode &&
         (ACTION_STANDBY != action.type &&
          ACTION_REMOTE != action.type &&
          ACTION_INIT_RTC != action.type &&
@@ -907,7 +907,7 @@ static void actionRemapCommon(void)
         actionSet(ACTION_NONE, 0);
     }
 
-    if (SCREEN_MENU == screen &&
+    if (SCREEN_MENU == scrMode &&
         (ACTION_STANDBY != action.type &&
          ACTION_NAVIGATE != action.type &&
          ACTION_MENU_CHANGE != action.type &&
@@ -942,9 +942,9 @@ void ampActionGet(void)
     }
 
     if (ACTION_NONE == action.type) {
-        ScreenMode screen = screenGetMode();
+        ScrMode scrMode = screenGet()->mode;
 
-        if (screen == SCREEN_STANDBY && rtcCheckAlarm()) {
+        if (scrMode == SCREEN_STANDBY && rtcCheckAlarm()) {
             actionSet(ACTION_STANDBY, FLAG_EXIT);
         }
     }
@@ -982,7 +982,7 @@ void ampActionGet(void)
 void ampActionHandle(void)
 {
     Screen *screen = screenGet();
-    ScreenMode scrMode = screen->mode;
+    ScrMode scrMode = screen->mode;
 
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
