@@ -608,7 +608,12 @@ void HAL_PCDEx_SetConnectionState(PCD_HandleTypeDef *hpcd, uint8_t state)
     }
 }
 
-void USBD_IRQ()
+#ifdef STM32F1
+void USB_LP_CAN1_RX0_IRQHandler(void)
+#endif
+#ifdef STM32F3
+void USB_LP_CAN_RX0_IRQHandler(void)
+#endif
 {
     HAL_PCD_IRQHandler(&hpcd_USB_FS);
 }

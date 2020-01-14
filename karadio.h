@@ -17,8 +17,6 @@ extern "C" {
 #define ST_NAME_SIZE            40
 #define ST_META_SIZE            64
 
-#define USART_KARADIO           USART2
-
 typedef struct {
     char num[ST_NUM_SIZE];
     char name[ST_NAME_SIZE];

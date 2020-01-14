@@ -200,11 +200,17 @@ void karadioGetData(void)
     }
 }
 
-void karadioIRQ(char data)
+void USART_KARADIO_HANDLER(void)
 {
+    // Check RXNE flag value in SR register
+    if (LL_USART_IsActiveFlag_RXNE(USART_KARADIO) && LL_USART_IsEnabledIT_RXNE(USART_KARADIO)) {
+        char data = LL_USART_ReceiveData8(USART_KARADIO);
 #ifdef _DEBUG_KARADIO
     usartSendChar(USART_DBG, data);
 #endif
 
     ringBufPushChar(&krRingBuf, data);
+    } else {
+        // Call Error function
+    }
 }

@@ -257,16 +257,24 @@ void rtcSetCorrection(int16_t value)
 #endif
 #ifdef STM32F3
     LL_RTC_DisableWriteProtection(RTC);
-    while(LL_RTC_IsActiveFlag_RECALP(RTC));
+    while (LL_RTC_IsActiveFlag_RECALP(RTC));
     LL_RTC_CAL_SetMinus(RTC, (uint32_t)(64 - value));
     LL_RTC_EnableWriteProtection(RTC);
 #endif
 }
 
-void rtcIRQ(void)
+#ifdef STM32F1
+void RTC_IRQHandler(void)
 {
-    rtcTime = LL_RTC_TIME_Get(RTC) + 1;
+    if (LL_RTC_IsEnabledIT_SEC(RTC) != 0) {
+        // Clear the RTC Second interrupt
+        LL_RTC_ClearFlag_SEC(RTC);
+
+        // Callback
+        rtcTime = LL_RTC_TIME_Get(RTC) + 1;
+    }
 }
+#endif
 
 void rtcGetTime(RTC_type *rtc)
 {

@@ -94,13 +94,18 @@ void controlInit(void)
     ringBufInit(&cmdRb, cmdRbData, sizeof(cmdRbData));
 }
 
-void controlIRQ(char data)
+void USART_DBG_HANDLER(void)
 {
+    // Check RXNE flag value in SR register
+    if (LL_USART_IsActiveFlag_RXNE(USART_DBG) && LL_USART_IsEnabledIT_RXNE(USART_DBG)) {
+        char data = LL_USART_ReceiveData8(USART_DBG);
 #ifdef _DEBUG_KARADIO
-    usartSendChar(USART_KARADIO, data);
+        usartSendChar(USART_KARADIO, data);
 #endif
-
-    ringBufPushChar(&cmdRb, data);
+        ringBufPushChar(&cmdRb, data);
+    } else {
+        // Call Error function
+    }
 }
 
 void controlGetData(void)

@@ -250,8 +250,6 @@ eemul.c
 eemul.h
 fft.c
 fft.h
-handlers.c
-handlers.h
 hwlibs.h
 i2c.c
 i2c.h

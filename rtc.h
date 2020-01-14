@@ -51,8 +51,6 @@ typedef struct {
 void rtcInit(void);
 void rtcSetCorrection(int16_t value);
 
-void rtcIRQ(void);
-
 void rtcGetTime(RTC_type *rtc);
 void rtcSetTime(RtcMode mode, int8_t value);
 void rtcChangeTime(RtcMode mode, int8_t diff);

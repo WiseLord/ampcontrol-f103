@@ -14,6 +14,10 @@ void timerInit(void *tim, uint32_t prescaler, uint32_t reload)
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM3);
         NVIC_SetPriority(TIM3_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
         NVIC_EnableIRQ(TIM3_IRQn);
+    } else if (TIMx == TIM4) {
+        LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM4);
+        NVIC_SetPriority(TIM4_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+        NVIC_EnableIRQ(TIM4_IRQn);
     }
 
     LL_TIM_SetPrescaler(tim, prescaler);
@@ -33,5 +37,4 @@ void timerInit(void *tim, uint32_t prescaler, uint32_t reload)
 void timersInit(void)
 {
     timerInit(TIM2, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
-    timerInit(TIM3, 71, 65535); // 1MHz timer for remote control handling
 }

@@ -25,7 +25,6 @@ enum {
 };
 
 void swTimInit(void);
-void swTimUpdate(void);
 
 void swTimSet(SwTimer timer, int32_t value);
 int32_t swTimGet(SwTimer timer);

@@ -27,8 +27,6 @@ extern "C" {
 void *USBD_static_malloc(uint32_t size);
 void USBD_static_free(void *p);
 
-void USBD_IRQ(void);
-
 #define USBD_UsrLog(...)
 #define USBD_ErrLog(...)
 #define USBD_DbgLog(...)

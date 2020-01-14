@@ -4,6 +4,7 @@
 
 #include "pins.h"
 #include "settings.h"
+#include "timers.h"
 
 static uint16_t rcCode[RC_CMD_END]; // Array with rc commands
 
@@ -297,14 +298,16 @@ void rcInit(void)
         rcCode[cmd] = (uint16_t)settingsRead(PARAM_RC_STBY_SWITCH + cmd);
     }
 
+    timerInit(TIM_RC, 71, 65535); // 1MHz timer for remote control handling
+
     NVIC_SetPriority(EXTI9_5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
     NVIC_EnableIRQ(EXTI9_5_IRQn);
 }
 
-void rcIRQ()
+static void rcIRQ(void)
 {
     static uint32_t timCntOld = 0;
-    uint32_t timCnt = LL_TIM_GetCounter(TIM3);
+    uint32_t timCnt = LL_TIM_GetCounter(TIM_RC);
     uint16_t delay = (uint16_t)(timCnt - timCntOld);
     timCntOld = timCnt;
 
@@ -314,12 +317,28 @@ void rcIRQ()
     rcDecodeRC56(rc, delay);
 }
 
-void rcOvfIRQ(void)
+void EXTI_RC_HANDLER()
 {
-    if (ovfCnt <= 1000)
-        ovfCnt++;
+    if (LL_EXTI_IsActiveFlag_0_31(RC_ExtiLine) != RESET) {
+        // Clear RC line interrupt
+        LL_EXTI_ClearFlag_0_31(RC_ExtiLine);
+
+        // Callback
+        rcIRQ();
+    }
 }
 
+void TIM_RC_HANDLER(void)
+{
+    if (LL_TIM_IsActiveFlag_UPDATE(TIM_RC)) {
+        // Clear the update interrupt flag
+        LL_TIM_ClearFlag_UPDATE(TIM_RC);
+
+        if (ovfCnt <= 1000) {
+            ovfCnt++;
+        }
+    }
+}
 
 RcData rcRead(bool clear)
 {

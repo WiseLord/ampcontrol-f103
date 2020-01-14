@@ -1,5 +1,5 @@
-#ifndef PCF8574_H
-#define PCF8574_H
+#ifndef I2CEXP_H
+#define I2CEXP_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,4 +40,4 @@ void i2cexpSend(I2cAddrIdx idx, uint8_t data);
 }
 #endif
 
-#endif // PCF8574_H
+#endif // I2CEXP_H

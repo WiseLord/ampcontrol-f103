@@ -7,6 +7,12 @@ extern "C" {
 
 #include <stdint.h>
 
+#ifdef _F103C8
+#define EE_PAGE_SIZE    1024
+#define EE_PAGE_STEP    2
+#define EE_PAGE_COUNT   64
+#endif
+
 #ifdef _F103CB
 #define EE_PAGE_SIZE    1024
 #define EE_PAGE_STEP    2

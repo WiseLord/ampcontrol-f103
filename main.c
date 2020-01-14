@@ -3,7 +3,6 @@
 #include "amp.h"
 #include "control.h"
 #include "debug.h"
-#include "handlers.h"
 #include "input.h"
 #include "karadio.h"
 #include "pins.h"

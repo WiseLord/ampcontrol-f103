@@ -57,7 +57,6 @@ C_SOURCES += control.c
 C_SOURCES += debug.c
 C_SOURCES += eemul.c
 C_SOURCES += fft.c
-C_SOURCES += handlers.c
 C_SOURCES += i2c.c
 C_SOURCES += input.c
 C_SOURCES += karadio.c

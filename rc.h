@@ -39,8 +39,6 @@ enum {
 };
 
 void rcInit(void);
-void rcIRQ(void);
-void rcOvfIRQ(void);
 
 RcData rcRead(bool clear);
 

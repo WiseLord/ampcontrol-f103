@@ -50,7 +50,21 @@ extern "C" {
 #define I2C_AMP                 I2C1
 
 #define USART_DBG               USART1
+#define USART_DBG_HANDLER       USART1_IRQHandler
+
 #define USART_KARADIO           USART2
+#define USART_KARADIO_HANDLER   USART2_IRQHandler
+
+#define TIM_SPECTRUM            TIM2
+#define TIM_SPECTRUM_HANDLER    TIM2_IRQHandler
+
+#define EXTI_RC_HANDLER         EXTI9_5_IRQHandler
+
+#define TIM_RC                  TIM3
+#define TIM_RC_HANDLER          TIM3_IRQHandler
+
+#define TIM_INPUT               TIM4
+#define TIM_INPUT_HANDLER       TIM4_IRQHandler
 
 #ifdef __cplusplus
 }

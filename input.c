@@ -2,6 +2,7 @@
 
 #include "display/dispdrv.h"
 #include "settings.h"
+#include "timers.h"
 
 static volatile int8_t encCnt;
 static volatile CmdBtn cmdBuf;
@@ -10,6 +11,8 @@ static int8_t encRes = 0;
 
 void inputInit(void)
 {
+    timerInit(TIM_INPUT, 199, 359);  // 1kHz polling
+
     encRes = (int8_t)settingsRead(PARAM_SYSTEM_ENC_RES);
 }
 
@@ -23,7 +26,7 @@ int8_t inputGetEncRes(void)
     return encRes;
 }
 
-void inputPoll(void)
+static void inputHandle(void)
 {
     // Antibounce counter
     static int16_t btnCnt = 0;
@@ -74,6 +77,16 @@ void inputPoll(void)
         btnCnt = 0;
     }
     btnPrev = btnNow;
+}
+
+void TIM_INPUT_HANDLER(void)
+{
+    if (LL_TIM_IsActiveFlag_UPDATE(TIM_INPUT)) {
+        // Clear the update interrupt flag
+        LL_TIM_ClearFlag_UPDATE(TIM_INPUT);
+
+        inputHandle();
+    }
 }
 
 int8_t getEncoder(void)

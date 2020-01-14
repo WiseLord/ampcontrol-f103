@@ -1246,3 +1246,15 @@ void ampActionHandle(void)
 
     actionSet(ACTION_NONE, 0);
 }
+
+void TIM_SPECTRUM_HANDLER(void)
+{
+    if (LL_TIM_IsActiveFlag_UPDATE(TIM_SPECTRUM)) {
+        // Clear the update interrupt flag
+        LL_TIM_ClearFlag_UPDATE(TIM_SPECTRUM);
+
+        // Callbacks
+        screenPwm();
+        spConvertADC();
+    }
+}
