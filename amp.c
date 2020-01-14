@@ -305,31 +305,17 @@ static void actionNavigateTextEdit(RcCmd cmd)
 
 static void actionNavigateCommon(RcCmd cmd)
 {
-    AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
-    Screen *screen = screenGet();
-
     switch (cmd) {
     case RC_CMD_NAV_OK:
         action.type = ACTION_OPEN_MENU;
         break;
     case RC_CMD_NAV_BACK:
-        switch (inType) {
-        case IN_PC:
-            screen->iconHint = ICON_PLAY_PAUSE;
-            actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
-            break;
-        default:
-            actionSet(ACTION_DISP_EXPIRED, 0);
-            break;
-        }
+        actionSet(ACTION_DISP_EXPIRED, 0);
         break;
     case RC_CMD_NAV_RIGHT:
-        screen->iconHint = ICON_FFWD;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFWD);
         break;
     case RC_CMD_NAV_LEFT:
-        screen->iconHint = ICON_REWIND;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
         break;
     case RC_CMD_NAV_UP:
@@ -747,19 +733,15 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_STOP:
-        screen->iconHint = ICON_STOP;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_STOP);
         break;
     case RC_CMD_PLAY_PAUSE:
-        screen->iconHint = ICON_PLAY_PAUSE;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
         break;
     case RC_CMD_REW:
-        screen->iconHint = ICON_REWIND;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
         break;
     case RC_CMD_FWD:
-        screen->iconHint = ICON_FFWD;
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFWD);
         break;
     case RC_CMD_TIMER:
@@ -1031,16 +1013,37 @@ void ampActionHandle(void)
         break;
 
     case ACTION_MEDIA:
+        switch (action.value) {
+
+        case HIDMEDIAKEY_PREV_TRACK:
+            screen->iconHint = ICON_PREV_TRACK;
+            break;
+        case HIDMEDIAKEY_NEXT_TRACK:
+            screen->iconHint = ICON_NEXT_TRACK;
+            break;
+        case HIDMEDIAKEY_STOP:
+            screen->iconHint = ICON_STOP;
+            break;
+        case HIDMEDIAKEY_PLAY:
+            screen->iconHint = ICON_PLAY_PAUSE;
+            break;
+        case HIDMEDIAKEY_PAUSE:
+            break;
+        case HIDMEDIAKEY_REWIND:
+            screen->iconHint = ICON_REWIND;
+            break;
+        case HIDMEDIAKEY_FFWD:
+            screen->iconHint = ICON_FFWD;
+            break;
+        }
         switch (inType) {
         case IN_TUNER:
             switch (action.value) {
             case HIDMEDIAKEY_PREV_TRACK:
                 tunerMove(TUNER_DIR_DOWN);
-                screen->iconHint = ICON_PREV_TRACK;
                 break;
             case HIDMEDIAKEY_NEXT_TRACK:
                 tunerMove(TUNER_DIR_UP);
-                screen->iconHint = ICON_NEXT_TRACK;
                 break;
             case HIDMEDIAKEY_REWIND:
                 tunerSeek(TUNER_DIR_DOWN);
@@ -1058,6 +1061,9 @@ void ampActionHandle(void)
         case IN_KARADIO:
             karadioSendMediaCmd((HidKey)action.value);
             actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
+            break;
+        default:
+            screen->iconHint = ICON_EMPTY;
             break;
         }
         break;
