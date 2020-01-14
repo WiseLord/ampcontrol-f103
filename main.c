@@ -102,21 +102,11 @@ int main(void)
     LL_SYSTICK_EnableIT();
     timersInit();
 
-#ifdef _DEBUG_FPS
-    int32_t fpsCnt = 0;
-#endif
-
     while (1) {
         ampActionHandle();
         controlGetData();
         karadioGetData();
         screenShow();
         ampActionGet();
-#ifdef _DEBUG_FPS
-        int32_t cnt = getSysTimer();
-        fpsCnt = (cnt == fpsCnt) ? 1000 : 1000 / (cnt - fpsCnt);
-        dbg(utilMkStr("FPS: %d", fpsCnt));
-        fpsCnt = cnt;
-#endif
     }
 }
