@@ -191,18 +191,6 @@ static void spInitADC(void)
 }
 
 
-static void spApplyHammWindow(FftSample *sp)
-{
-    for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
-
-        // Use Hamm coefficients 0.53836 and 0.46164 scaled by SIN_SCALE = 2^15
-        uint16_t ht = (uint16_t)(35281 - ((30253 * fft_cos(i * (N_HANN / FFT_SIZE))) >> 15));
-
-        sp[i].fr = (ht * sp[i].fr) >> 16;
-        sp[FFT_SIZE - 1 - i].fr = (ht * sp[FFT_SIZE - 1 - i].fr) >> 16;
-    }
-}
-
 static inline uint8_t spGetDb(uint16_t value, uint8_t min, uint8_t max)
 {
     uint8_t mid = (min + max) / 2;
@@ -258,7 +246,7 @@ static void spGetData(int16_t *dma, SpData *chan)
         sp[i].fi = 0;
     }
 
-    spApplyHammWindow(sp);
+    fft_hamm_window(sp);
     fft_rev_bin(sp);
     fft_radix4(sp);
 

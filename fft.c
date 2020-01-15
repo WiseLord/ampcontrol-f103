@@ -1,6 +1,7 @@
 #include "fft.h"
 
 #define N_WAVE      1024
+#define N_HANN      1024
 
 static const int16_t sinTable[N_WAVE / 4 + 1] = {
     0,      201,    402,    603,    804,    1005,   1206,   1406,
@@ -85,6 +86,18 @@ void fft_rev_bin(FftSample *sp)
         tr = sp[m].fr;
         sp[m].fr = sp[mr].fr;
         sp[mr].fr = tr;
+    }
+}
+
+void fft_hamm_window(FftSample *sp)
+{
+    for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
+
+        // Use Hamm coefficients 0.53836 and 0.46164 scaled by SIN_SCALE = 2^15
+        uint16_t ht = (uint16_t)(35281 - ((30253 * fft_cos(i * (N_HANN / FFT_SIZE))) >> 15));
+
+        sp[i].fr = (ht * sp[i].fr) >> 16;
+        sp[FFT_SIZE - 1 - i].fr = (ht * sp[FFT_SIZE - 1 - i].fr) >> 16;
     }
 }
 

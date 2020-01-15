@@ -27,7 +27,6 @@ enum {
 };
 
 #define SPECTRUM_SIZE   128
-#define N_HANN          1024
 #define N_DB            256
 
 typedef struct {

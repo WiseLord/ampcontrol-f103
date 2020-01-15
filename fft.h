@@ -19,6 +19,7 @@ int16_t fft_sin(int16_t phi);
 int16_t fft_cos(int16_t phi);
 
 void fft_rev_bin(FftSample *sp);
+void fft_hamm_window(FftSample *sp);
 void fft_radix4(FftSample *sp);
 
 #ifdef __cplusplus
