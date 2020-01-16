@@ -245,10 +245,8 @@ SZ = $(PREFIX)size
 OPENOCD := openocd
 OPENOCD_CFG := system/$(call lc, $(STM32_GROUP))_openocd.cfg
 
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES)))
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
-vpath %.s $(sort $(dir $(ASM_SOURCES)))
+OBJECTS = $(addprefix $(BUILD_DIR)/,$(C_SOURCES:.c=.o))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(ASM_SOURCES:.s=.o))
 
 ELF = $(BUILD_DIR)/$(TARGET).elf
 BIN = flash/$(TARGET).bin
@@ -278,10 +276,6 @@ $(BUILD_DIR)/%.o: %.s Makefile
 
 clean:
 	@rm -rf $(BUILD_DIR)
-
-clean_disp:
-	@rm -f $(patsubst %.c,$(BUILD_DIR)/%.o, $(notdir $(wildcard display/gc*/*.c)))
-	@rm -f $(BUILD_DIR)/dispdrv.o $(BUILD_DIR)/layout.o $(BUILD_DIR)/pins.o
 
 .PHONY: flash
 flash: $(BIN)
