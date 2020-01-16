@@ -33,7 +33,7 @@ endif
 
 TARGET = $(call lc, $(PROJECT)_$(STM32_MCU)_$(DISPLAY)_$(DISPVAR))
 
-C_DEFS = -DUSE_FULL_LL_DRIVER -D$(STM32_GROUP) -D_$(STM32_MCU)
+C_DEFS += -DUSE_FULL_LL_DRIVER -D$(STM32_GROUP) -D_$(STM32_MCU)
 
 ifneq (,$(filter $(DISPLAY), \
   DISP24BIT    \
@@ -45,7 +45,7 @@ ifeq "$(DEBUG_KARADIO)" "YES"
   C_DEFS += -D_DEBUG_KARADIO
 endif
 
-C_SOURCES = main.c
+C_SOURCES += main.c
 
 C_SOURCES += amp.c
 C_SOURCES += control.c
@@ -138,7 +138,6 @@ C_SOURCES += display/dispdrv.c
 C_SOURCES += display/glcd.c
 C_DEFS += -D_$(DISPLAY)
 C_DEFS += -D_DISP_$(DISPVAR)
-C_DEFS += -D_DISP_$(DISPSIZE)
 
 C_SOURCES += gui/canvas.c
 C_SOURCES += gui/lt$(DISPSIZE).c
@@ -202,6 +201,7 @@ ASM_SOURCES += \
 
 # Build directory
 BUILD_DIR = build
+OBJ_DIR = $(BUILD_DIR)/obj
 
 ifeq "$(STM32_FAMILY)" "STM32F1"
   CPU = -mcpu=cortex-m3
@@ -219,13 +219,16 @@ endif
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 OPT_FLAGS = $(OPT) -fshort-enums -ffunction-sections -fdata-sections -ffreestanding
 WARN = -Wall -Werror
+
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT_FLAGS) $(WARN)
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT_FLAGS) $(WARN)
+
 ifeq ($(DEBUG), 1)
-CFLAGS += -g -gdwarf-2
+  CFLAGS += -g -gdwarf-2
 endif
+
 # Dependency information
-CFLAGS += -MMD -MP -MT $(BUILD_DIR)/$(*F).o -MF $(BUILD_DIR)/$(*D)/$(*F).d
+CFLAGS += -MMD -MP -MT $(OBJ_DIR)/$(*F).o -MF $(OBJ_DIR)/$(*D)/$(*F).d
 
 LDSCRIPT = system/$(call lc, STM32$(STM32_MCU))_flash.ld
 LIBS = -lc -lm -lnosys
@@ -245,8 +248,8 @@ SZ = $(PREFIX)size
 OPENOCD := openocd
 OPENOCD_CFG := system/$(call lc, $(STM32_GROUP))_openocd.cfg
 
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(C_SOURCES:.c=.o))
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(ASM_SOURCES:.s=.o))
+OBJECTS = $(addprefix $(OBJ_DIR)/,$(C_SOURCES:.c=.o))
+OBJECTS += $(addprefix $(OBJ_DIR)/,$(ASM_SOURCES:.s=.o))
 
 ELF = $(BUILD_DIR)/$(TARGET).elf
 BIN = flash/$(TARGET).bin
@@ -266,11 +269,11 @@ $(ELF): $(OBJECTS)
 size: $(ELF)
 	$(SZ) $(ELF)
 
-$(BUILD_DIR)/%.o: %.c Makefile
+$(OBJ_DIR)/%.o: %.c Makefile
 	@mkdir -p $(dir $@)
 	$(CC) -c $(CFLAGS) $(C_DEFS) -o $@ $<
 
-$(BUILD_DIR)/%.o: %.s Makefile
+$(OBJ_DIR)/%.o: %.s Makefile
 	@mkdir -p $(dir $@)
 	$(AS) -c $(CFLAGS) $(AS_DEFS) -o $@ $<
 
