@@ -310,7 +310,7 @@ static void actionNavigateCommon(RcCmd cmd)
         action.type = ACTION_OPEN_MENU;
         break;
     case RC_CMD_NAV_BACK:
-        actionSet(ACTION_DISP_EXPIRED, 0);
+        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
         break;
     case RC_CMD_NAV_RIGHT:
         actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFWD);
@@ -476,6 +476,39 @@ static void scrDefChange(Screen *screen)
     }
 }
 
+static void sendMediaKey(HidMediaKey key)
+{
+    AudioProc *aProc = audioGet();
+    InputType inType = aProc->par.inType[aProc->par.input];
+
+    switch (inType) {
+    case IN_TUNER:
+        switch (key) {
+        case HIDMEDIAKEY_PREV_TRACK:
+            tunerMove(TUNER_DIR_DOWN);
+            break;
+        case HIDMEDIAKEY_NEXT_TRACK:
+            tunerMove(TUNER_DIR_UP);
+            break;
+        case HIDMEDIAKEY_REWIND:
+            tunerSeek(TUNER_DIR_DOWN);
+            break;
+        case HIDMEDIAKEY_FFWD:
+            tunerSeek(TUNER_DIR_UP);
+            break;
+        }
+        break;
+    case IN_PC:
+        usbHidSendMediaKey(key);
+        break;
+    case IN_KARADIO:
+        karadioSendMediaCmd(key);
+        break;
+    default:
+        break;
+    }
+}
+
 static void actionGetTimers(void)
 {
     if (swTimGet(SW_TIM_DISPLAY) == 0) {
@@ -483,6 +516,7 @@ static void actionGetTimers(void)
     } else if (swTimGet(SW_TIM_AMP_INIT) == 0) {
         actionSet(ACTION_INIT_HW, 0);
     } else if (swTimGet(SW_TIM_STBY_TIMER) == 0) {
+        sendMediaKey(HIDMEDIAKEY_STOP);
         actionSet(ACTION_STANDBY, FLAG_ENTER);
     } else if (swTimGet(SW_TIM_SILENCE_TIMER) == 0) {
         actionSet(ACTION_STANDBY, FLAG_ENTER);
@@ -1036,31 +1070,14 @@ void ampActionHandle(void)
             screen->iconHint = ICON_FFWD;
             break;
         }
+
+        sendMediaKey((HidMediaKey)action.value);
+
         switch (inType) {
         case IN_TUNER:
-            switch (action.value) {
-            case HIDMEDIAKEY_PREV_TRACK:
-                tunerMove(TUNER_DIR_DOWN);
-                break;
-            case HIDMEDIAKEY_NEXT_TRACK:
-                tunerMove(TUNER_DIR_UP);
-                break;
-            case HIDMEDIAKEY_REWIND:
-                tunerSeek(TUNER_DIR_DOWN);
-                break;
-            case HIDMEDIAKEY_FFWD:
-                tunerSeek(TUNER_DIR_UP);
-                break;
-            }
-            actionSetScreen(SCREEN_AUDIO_INPUT, 3000);
-            break;
         case IN_PC:
-            usbHidSendMediaKey((HidKey)action.value);
-            actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
-            break;
         case IN_KARADIO:
-            karadioSendMediaCmd((HidKey)action.value);
-            actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
+            actionSetScreen(SCREEN_AUDIO_INPUT, 800);
             break;
         default:
             screen->iconHint = ICON_EMPTY;
