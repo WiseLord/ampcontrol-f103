@@ -59,7 +59,7 @@ void audioReadSettings(void)
     aProc.par.effect3d = settingsRead(PARAM_AUDIO_EFFECT3D);
     aProc.par.bypass = settingsRead(PARAM_AUDIO_BYPASS);
 
-    aProc.par.input = (uint8_t)settingsRead(PARAM_AUDIO_INPUT);
+    aProc.par.input = (int8_t)settingsRead(PARAM_AUDIO_INPUT);
 
     for (Param par = PARAM_AUDIO_VOLUME; par <= PARAM_AUDIO_PREAMP; par++) {
         aProc.par.tune[par - PARAM_AUDIO_VOLUME].value = (int8_t)settingsRead(par);

@@ -101,9 +101,9 @@ void glcdInit(Glcd **value)
     *value = &glcd;
 }
 
-bool glcdGetRotate(void)
+Glcd *glcdGet(void)
 {
-    return glcd.rotate;
+    return &glcd;
 }
 
 void glcdRotate(uint8_t rotate)

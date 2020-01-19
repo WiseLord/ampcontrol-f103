@@ -118,76 +118,20 @@ static int16_t menuGetValue(MenuIdx index)
 
 static void menuStoreCurrentValue(void)
 {
-    AudioProc *aProc = audioGet();
-    Tuner *tuner = tunerGet();
-    TunerParam *tPar = &tuner->par;
-    Spectrum *sp = spGet();
+    if (menu.active < MENU_END) {
+        Param param = menuItems[menu.active].param;
+        settingsSet(param, menu.value);
+        settingsStore(param, menu.value);
+    }
 
     switch (menu.active) {
-    case MENU_SYSTEM_LANG:
-        labelsSetLang((Lang)(menu.value));
-        break;
-    case MENU_SYSTEM_ENC_RES:
-        inputSetEncRes((int8_t)menu.value);
+    case MENU_SYSTEM_MUTESTBY:
+        ampPinMute(true);
+        ampPinStby(true);
         break;
     case MENU_SYSTEM_RTC_CORR:
         rtcSetCorrection(menu.value);
         break;
-
-    case MENU_AUDIO_IC:
-        aProc->par.ic = (AudioIC)(menu.value);
-        break;
-    case MENU_AUDIO_IN_0:
-    case MENU_AUDIO_IN_1:
-    case MENU_AUDIO_IN_2:
-    case MENU_AUDIO_IN_3:
-    case MENU_AUDIO_IN_4:
-    case MENU_AUDIO_IN_5:
-    case MENU_AUDIO_IN_6:
-    case MENU_AUDIO_IN_7:
-        aProc->par.inType[menu.active - MENU_AUDIO_IN_0] = (InputType)menu.value;
-        break;
-
-    case MENU_TUNER_IC:
-        tPar->ic = (TunerIC)menu.value;
-        break;
-    case MENU_TUNER_BAND:
-        tPar->band = (TunerBand)menu.value;
-        break;
-    case MENU_TUNER_STEP:
-        tPar->step = (TunerStep)menu.value;
-        break;
-    case MENU_TUNER_DEEMPH:
-        tPar->deemph = (TunerDeemph)menu.value;
-        break;
-    case MENU_TUNER_MODE:
-        tPar->mode = (TunerMode)menu.value;
-        break;
-
-    case MENU_TUNER_FMONO:
-        tPar->forcedMono = (bool)menu.value;
-        break;
-    case MENU_TUNER_RDS:
-        tPar->rds = (bool)menu.value;
-        break;
-    case MENU_TUNER_BASS:
-        tPar->bassBoost = (bool)menu.value;
-        break;
-
-    case MENU_TUNER_VOLUME:
-        tPar->volume = (int8_t)(menu.value);
-        break;
-
-    case MENU_SPECTRUM_MODE:
-        sp->mode = (SpMode)(menu.value);
-        break;
-    case MENU_SPECTRUM_PEAKS:
-        sp->peaks = (bool)(menu.value);
-        break;
-    case MENU_SPECTRUM_GRAD:
-        sp->grad = (bool)(menu.value);
-        break;
-
     case MENU_DISPLAY_BR_STBY:
     case MENU_DISPLAY_BR_WORK:
         screenSetBrightness((int8_t)(menu.value));
@@ -196,31 +140,11 @@ static void menuStoreCurrentValue(void)
         glcdRotate((bool)menu.value);
         canvasClear();
         break;
-    case MENU_DISPLAY_DEF:
-        screenGet()->def = (ScrMode)menu.value;
-        break;
     case MENU_DISPLAY_PALETTE:
-        paletteSetIndex((PalIdx)menu.value);
         canvasGet()->pal = paletteGet((PalIdx)menu.value);
         break;
-
     default:
         break;
-    }
-
-    if (menu.active >= MENU_RC_STBY_SWITCH && menu.active < MENU_RC_STBY_SWITCH + RC_CMD_END) {
-        rcSaveCode((uint16_t)(menu.active - MENU_RC_STBY_SWITCH), (uint16_t)menu.value);
-    }
-
-    if (menu.active < MENU_END) {
-        Param param = menuItems[menu.active].param;
-        settingsSet(param, menu.value);
-        settingsStore(param, menu.value);
-    }
-
-    if (menu.active == MENU_SYSTEM_MUTESTBY) {
-        ampPinMute(true);
-        ampPinStby(true);
     }
 }
 

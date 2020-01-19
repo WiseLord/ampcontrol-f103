@@ -87,7 +87,8 @@ typedef int32_t UChar;
 
 void glcdInit(Glcd **value);
 
-bool glcdGetRotate(void);
+Glcd *glcdGet(void);
+
 void glcdRotate(uint8_t rotate);
 void glcdShift(int16_t pos);
 

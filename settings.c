@@ -118,9 +118,7 @@ int16_t settingsGet(Param param)
 
     AudioProc *aProc = audioGet();
     Tuner *tuner = tunerGet();
-    TunerParam *tPar = &tuner->par;
     Spectrum *sp = spGet();
-
     Alarm *alarm = rtcGetAlarm(0);
 
     switch (param) {
@@ -141,31 +139,31 @@ int16_t settingsGet(Param param)
         break;
 
     case PARAM_TUNER_IC:
-        ret = (int16_t)(tPar->ic);
+        ret = (int16_t)(tuner->par.ic);
         break;
     case PARAM_TUNER_BAND:
-        ret = (int16_t)(tPar->band);
+        ret = (int16_t)(tuner->par.band);
         break;
     case PARAM_TUNER_STEP:
-        ret = (int16_t)(tPar->step);
+        ret = (int16_t)(tuner->par.step);
         break;
     case PARAM_TUNER_DEEMPH:
-        ret = (int16_t)(tPar->deemph);
+        ret = (int16_t)(tuner->par.deemph);
         break;
     case PARAM_TUNER_MODE:
-        ret = (int16_t)(tPar->mode);
+        ret = (int16_t)(tuner->par.mode);
         break;
     case PARAM_TUNER_FMONO:
-        ret = tPar->forcedMono;
+        ret = tuner->par.forcedMono;
         break;
     case PARAM_TUNER_RDS:
-        ret = tPar->rds;
+        ret = tuner->par.rds;
         break;
     case PARAM_TUNER_BASS:
-        ret = tPar->bassBoost;
+        ret = tuner->par.bassBoost;
         break;
     case PARAM_TUNER_VOLUME:
-        ret = tPar->volume;
+        ret = tuner->par.volume;
         break;
 
     case PARAM_DISPLAY_BR_STBY:
@@ -175,7 +173,7 @@ int16_t settingsGet(Param param)
         ret = brWork;
         break;
     case PARAM_DISPLAY_ROTATE:
-        ret = glcdGetRotate();
+        ret = glcdGet()->rotate;
         break;
     case PARAM_DISPLAY_DEF:
         ret = screenGet()->def;
@@ -237,9 +235,82 @@ int16_t settingsGet(Param param)
 
 void settingsSet(Param param, int16_t value)
 {
+    AudioProc *aProc = audioGet();
+    Tuner *tuner = tunerGet();
+    Spectrum *sp = spGet();
     Alarm *alarm = rtcGetAlarm(0);
 
     switch (param) {
+
+    case PARAM_AUDIO_IC:
+        aProc->par.ic = (AudioIC)(value);
+        break;
+
+    case PARAM_AUDIO_IN0:
+    case PARAM_AUDIO_IN1:
+    case PARAM_AUDIO_IN2:
+    case PARAM_AUDIO_IN3:
+    case PARAM_AUDIO_IN4:
+    case PARAM_AUDIO_IN5:
+    case PARAM_AUDIO_IN6:
+    case PARAM_AUDIO_IN7:
+        aProc->par.inType[param - PARAM_AUDIO_IN0] = (InputType)value;
+        break;
+
+    case PARAM_TUNER_IC:
+        tuner->par.ic = (TunerIC)value;
+        break;
+    case PARAM_TUNER_BAND:
+        tuner->par.band = (TunerBand)value;
+        break;
+    case PARAM_TUNER_STEP:
+        tuner->par.step = (TunerStep)value;
+        break;
+    case PARAM_TUNER_DEEMPH:
+        tuner->par.deemph = (TunerDeemph)value;
+        break;
+    case PARAM_TUNER_MODE:
+        tuner->par.mode = (TunerMode)value;
+        break;
+    case PARAM_TUNER_FMONO:
+        tuner->par.forcedMono = (bool)value;
+        break;
+    case PARAM_TUNER_RDS:
+        tuner->par.rds = (bool)value;
+        break;
+    case PARAM_TUNER_BASS:
+        tuner->par.bassBoost = (bool)value;
+        break;
+    case PARAM_TUNER_VOLUME:
+        tuner->par.volume = (int8_t)(value);
+        break;
+
+    case PARAM_DISPLAY_BR_STBY:
+        brStby = (int8_t)value;
+        break;
+    case PARAM_DISPLAY_BR_WORK:
+        brWork = (int8_t)value;
+        break;
+    case PARAM_DISPLAY_ROTATE:
+        glcdGet()->rotate = (bool)value;
+        break;
+    case PARAM_DISPLAY_DEF:
+        screenGet()->def = (ScrMode)value;
+        break;
+
+    case PARAM_SPECTRUM_MODE:
+        sp->mode = (SpMode)(value);
+        break;
+    case PARAM_SPECTRUM_PEAKS:
+        sp->peaks = (bool)(value);
+        break;
+    case PARAM_SPECTRUM_GRAD:
+        sp->grad = (bool)(value);
+        break;
+    case PARAM_DISPLAY_PALETTE:
+        paletteSetIndex((PalIdx)value);
+        break;
+
     case PARAM_ALARM_HOUR:
         alarm->hour = (int8_t)value;
         break;
@@ -250,15 +321,14 @@ void settingsSet(Param param, int16_t value)
         alarm->days = (AlarmDay)value;
         break;
 
-    case PARAM_DISPLAY_BR_STBY:
-        brStby = (int8_t)value;
+    case PARAM_SYSTEM_LANG:
+        labelsSetLang((Lang)(value));
         break;
-    case PARAM_DISPLAY_BR_WORK:
-        brWork = (int8_t)value;
-        break;
-
     case PARAM_SYSTEM_MUTESTBY:
         muteStby = (uint8_t)value;
+        break;
+    case PARAM_SYSTEM_ENC_RES:
+        inputSetEncRes((int8_t)value);
         break;
     case PARAM_SYSTEM_SIL_TIM:
         silenceTimer = (uint8_t)value;
@@ -273,6 +343,10 @@ void settingsSet(Param param, int16_t value)
 
     default:
         break;
+    }
+
+    if (param >= PARAM_RC_STBY_SWITCH && param < PARAM_RC_STBY_SWITCH + RC_CMD_END) {
+        rcSaveCode((uint16_t)(param - PARAM_RC_STBY_SWITCH), (uint16_t)value);
     }
 }
 
