@@ -47,6 +47,8 @@ extern "C" {
 
 #endif
 
+#define EXTI_RC_HANDLER         EXTI9_5_IRQHandler
+
 #define I2C_AMP                 I2C1
 
 #define USART_DBG               USART1
@@ -57,8 +59,6 @@ extern "C" {
 
 #define TIM_SPECTRUM            TIM2
 #define TIM_SPECTRUM_HANDLER    TIM2_IRQHandler
-
-#define EXTI_RC_HANDLER         EXTI9_5_IRQHandler
 
 #define TIM_RC                  TIM3
 #define TIM_RC_HANDLER          TIM3_IRQHandler

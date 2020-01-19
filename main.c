@@ -114,7 +114,6 @@ int main(void)
 
     swTimInit();
     LL_SYSTICK_EnableIT();
-    timersInit();
 
     ampInit();
 

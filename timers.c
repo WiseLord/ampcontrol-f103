@@ -33,8 +33,3 @@ void timerInit(void *tim, uint32_t prescaler, uint32_t reload)
     LL_TIM_EnableCounter(tim);
     LL_TIM_EnableIT_UPDATE(tim);
 }
-
-void timersInit(void)
-{
-    timerInit(TIM2, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
-}

@@ -8,7 +8,6 @@ extern "C" {
 #include <stdint.h>
 
 void timerInit(void *tim, uint32_t prescaler, uint32_t reload);
-void timersInit(void);
 
 #ifdef __cplusplus
 }

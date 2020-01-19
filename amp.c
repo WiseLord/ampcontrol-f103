@@ -16,6 +16,7 @@
 #include "settings.h"
 #include "spectrum.h"
 #include "swtimers.h"
+#include "timers.h"
 #include "tr/labels.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
@@ -994,6 +995,8 @@ void ampInitMuteStby(void)
 
 void ampInit(void)
 {
+    timerInit(TIM_SPECTRUM, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
+
     i2cInit(I2C_AMP, 100000);
     inputSetPower(false);    // Power off input device
     i2cDeInit(I2C_AMP);
