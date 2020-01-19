@@ -996,6 +996,7 @@ void ampInitMuteStby(void)
 void ampInit(void)
 {
     timerInit(TIM_SPECTRUM, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
+    swTimInit();
 
     i2cInit(I2C_AMP, 100000);
     inputSetPower(false);    // Power off input device

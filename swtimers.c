@@ -1,5 +1,7 @@
 #include "swtimers.h"
 
+#include "hwlibs.h"
+
 static int32_t swTimers[SW_TIM_END];
 
 static void swTimUpdate(void)
@@ -18,6 +20,8 @@ void SysTick_Handler(void)
 
 void swTimInit(void)
 {
+    LL_SYSTICK_EnableIT();
+
     for (uint8_t i = 0; i < SW_TIM_END; i++) {
         swTimers[i] = SW_TIM_OFF;
     }

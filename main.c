@@ -25,10 +25,9 @@ static void NVIC_Init(void)
     NVIC_SetPriority(SVCall_IRQn, 0);
     NVIC_SetPriority(DebugMonitor_IRQn, 0);
     NVIC_SetPriority(PendSV_IRQn, 0);
-    NVIC_SetPriority(SysTick_IRQn, 0);
 }
 
-static void SystemClock_Config(void)
+void SystemClock_Config(void)
 {
     LL_FLASH_SetLatency(LL_FLASH_LATENCY_2);
 
@@ -57,6 +56,7 @@ static void SystemClock_Config(void)
     LL_Init1msTick(72000000);
     LL_SYSTICK_SetClkSource(LL_SYSTICK_CLKSOURCE_HCLK);
     LL_SetSystemCoreClock(72000000);
+
     // SysTick_IRQn interrupt configuration
     NVIC_SetPriority(SysTick_IRQn, 0);
 }
@@ -66,6 +66,7 @@ static void sysInit(void)
     // System
     NVIC_Init();
     SystemClock_Config();
+
     LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
     // Enable clock for all GPIO peripherials
@@ -84,6 +85,13 @@ static void sysInit(void)
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_AFIO);
 #endif
 
+#ifdef STM32F3
+    LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_SYSCLK);
+    LL_RCC_SetUSARTClockSource(LL_RCC_USART2_CLKSOURCE_SYSCLK);
+    LL_RCC_SetUSARTClockSource(LL_RCC_USART3_CLKSOURCE_SYSCLK);
+    LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_SYSCLK);
+#endif
+
 #ifdef STM32F1
     // JTAG-DP Disabled and SW-DP Enabled
     LL_GPIO_AF_Remap_SWJ_NOJTAG();
@@ -99,6 +107,8 @@ int main(void)
 
     pinsInit();
 
+    rtcInit();
+
     dbgInit();
 
     usbHidInit();
@@ -107,13 +117,9 @@ int main(void)
 
     inputInit();
     rcInit();
-    rtcInit();
 
     controlInit();
     karadioInit();
-
-    swTimInit();
-    LL_SYSTICK_EnableIT();
 
     ampInit();
 
