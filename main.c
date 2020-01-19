@@ -16,22 +16,9 @@
 #include "usb/usbhid.h"
 #include "utils.h"
 
-#ifndef NVIC_PRIORITYGROUP_0
-#define NVIC_PRIORITYGROUP_0    ((uint32_t)0x00000007)
-#define NVIC_PRIORITYGROUP_1    ((uint32_t)0x00000006)
-#define NVIC_PRIORITYGROUP_2    ((uint32_t)0x00000005)
-#define NVIC_PRIORITYGROUP_3    ((uint32_t)0x00000004)
-#define NVIC_PRIORITYGROUP_4    ((uint32_t)0x00000003)
-#endif
-
-static void LL_Init(void)
+static void NVIC_Init(void)
 {
-#ifdef STM32F1
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_AFIO);
-#endif
-    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-
-    NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+    NVIC_SetPriorityGrouping(3);
 
     // System interrupt init
     NVIC_SetPriority(MemoryManagement_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
@@ -76,13 +63,42 @@ static void SystemClock_Config(void)
     NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
 }
 
-int main(void)
+static void sysInit(void)
 {
     // System
-    LL_Init();
+    NVIC_Init();
     SystemClock_Config();
+    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+
+    // Enable clock for all GPIO peripherials
+#ifdef STM32F1
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
+#endif
+#ifdef STM32F3
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
+#endif
+
+#ifdef STM32F1
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_AFIO);
+#endif
+
+#ifdef STM32F1
+    // JTAG-DP Disabled and SW-DP Enabled
+    LL_GPIO_AF_Remap_SWJ_NOJTAG();
+#endif
+}
+
+int main(void)
+{
+    sysInit();
 
     settingsInit();
+    ampInitMuteStby();
+
     pinsInit();
 
     dbgInit();
@@ -102,11 +118,13 @@ int main(void)
     LL_SYSTICK_EnableIT();
     timersInit();
 
+    ampInit();
+
     while (1) {
-        ampActionHandle();
         controlGetData();
         karadioGetData();
-        screenShow();
         ampActionGet();
+        ampActionHandle();
+        screenShow();
     }
 }

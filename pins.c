@@ -52,23 +52,6 @@ static void pinsInitDisplay(void)
 #endif
 }
 
-void pinsInitMuteStby(void)
-{
-    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-#ifdef STM32F3
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-#endif
-
-    GPIO_InitStruct.Pin = MUTE_Pin;
-    LL_GPIO_Init(MUTE_Port, &GPIO_InitStruct);
-    GPIO_InitStruct.Pin = STBY_Pin;
-    LL_GPIO_Init(STBY_Port, &GPIO_InitStruct);
-}
-
 void pinsInitHwReset()
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -118,69 +101,11 @@ void pinsHwResetI2c(void)
 
 void pinsInit(void)
 {
-    // Enable clock for all GPIO peripherials
-#ifdef STM32F1
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
-    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
-#endif
-#ifdef STM32F3
-    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
-    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
-    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
-#endif
-
     pinsInitButtons();
     pinsInitRc();
     pinsInitDisplay();
 
-#ifdef STM32F1
-    // JTAG-DP Disabled and SW-DP Enabled
-    LL_GPIO_AF_Remap_SWJ_NOJTAG();
-#endif
-
-    pinsInitMuteStby();
-
     pinsInitHwReset();
-}
-
-void pinsSetMute(bool value)
-{
-    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
-
-    if (muteStby == MUTESTBY_POS) {
-        if (value) {
-            CLR(MUTE);
-        } else {
-            SET(MUTE);
-        }
-    } else if (muteStby == MUTESTBY_NEG) {
-        if (value) {
-            SET(MUTE);
-        } else {
-            CLR(MUTE);
-        }
-    }
-}
-
-void pinsSetStby(bool value)
-{
-    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
-
-    // TODO: Remove MUTESTBY_SWD condition when debug finished
-    if (muteStby == MUTESTBY_POS) {
-        if (value) {
-            CLR(STBY);
-        } else {
-            SET(STBY);
-        }
-    } else if (muteStby == MUTESTBY_NEG) {
-        if (value) {
-            SET(STBY);
-        } else {
-            CLR(STBY);
-        }
-    }
 }
 
 void pinsSetBckl(bool value)

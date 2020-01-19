@@ -2,6 +2,7 @@
 
 #include <string.h>
 
+#include "amp.h"
 #include "audio/audio.h"
 #include "gui/canvas.h"
 #include "i2cexp.h"
@@ -306,8 +307,8 @@ static void menuStoreCurrentValue(void)
     }
 
     if (menu.active == MENU_SYSTEM_MUTESTBY) {
-        pinsSetMute(true);
-        pinsSetStby(true);
+        ampPinMute(true);
+        ampPinStby(true);
     }
 }
 

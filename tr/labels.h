@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
+#include "../amp.h"
 #include "../audio/audio.h"
 #include "../gui/palette.h"
 #include "../menu.h"
-#include "../pins.h"
 #include "../rtc.h"
 #include "../screen.h"
 #include "../spectrum.h"

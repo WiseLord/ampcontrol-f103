@@ -79,22 +79,10 @@ extern "C" {
 #define SI470X_RST_Port         GPIOA
 #define SI470X_RST_Pin          LL_GPIO_PIN_15
 
-typedef uint16_t MuteStby;
-enum {
-    MUTESTBY_POS = 0,
-    MUTESTBY_NEG,
-
-    MUTESTBY_END,
-};
-
 void pinsInit(void);
 
 void pinsHwResetI2c(void);
 
-void pinsInitMuteStby(void);
-
-void pinsSetMute(bool value);
-void pinsSetStby(bool value);
 void pinsSetBckl(bool value);
 
 #ifdef __cplusplus

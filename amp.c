@@ -34,7 +34,7 @@ static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
 static Action action = {
-    .type = ACTION_INIT,
+    .type = ACTION_STANDBY,
     .screen = SCREEN_STANDBY,
     .value = FLAG_ENTER,
 };
@@ -103,11 +103,10 @@ static void actionResetSilenceTimer(void)
     }
 }
 
-
 static void inputDisable(void)
 {
     AudioProc *aProc = audioGet();
-    uint8_t input = aProc->par.input;
+    int8_t input = aProc->par.input;
 
     switch (aProc->par.inType[input]) {
     case IN_TUNER:
@@ -127,7 +126,7 @@ static void inputEnable(void)
 {
     Tuner *tuner = tunerGet();
     AudioProc *aProc = audioGet();
-    uint8_t input = aProc->par.input;
+    int8_t input = aProc->par.input;
 
     switch (aProc->par.inType[input]) {
     case IN_TUNER:
@@ -147,7 +146,7 @@ static void inputEnable(void)
 static void inputSetPower(bool value)
 {
     AudioProc *aProc = audioGet();
-    uint8_t input = aProc->par.input;
+    int8_t input = aProc->par.input;
 
     if (value) {
         amp.inputStatus = (uint8_t)(1 << input);
@@ -159,25 +158,12 @@ static void inputSetPower(bool value)
     i2cexpSend(i2cAddrIdx, amp.inputStatus);
 }
 
-void ampInit(void)
-{
-    pinsSetMute(true);
-    pinsSetStby(true);
-
-    i2cInit(I2C_AMP, 100000);
-    inputSetPower(false);    // Power off input device
-    i2cDeInit(I2C_AMP);
-
-    amp.status = AMP_STATUS_STBY;
-    controlReportAmpStatus();
-}
-
 void ampExitStby(void)
 {
     audioReadSettings();
     tunerReadSettings();
 
-    pinsSetStby(false);     // Power on amplifier
+    ampPinStby(false);     // Power on amplifier
 
     i2cInit(I2C_AMP, 100000);
     inputSetPower(true);    // Power on input device
@@ -194,12 +180,19 @@ void ampEnterStby(void)
     screenSaveSettings();
 
     audioSetMute(true);
-    pinsSetMute(true);
+    ampPinMute(true);
     audioSetPower(false);
 
     inputDisable();
 
-    ampInit();
+    ampPinStby(true);
+
+    i2cInit(I2C_AMP, 100000);
+    inputSetPower(false);    // Power off input device
+    i2cDeInit(I2C_AMP);
+
+    amp.status = AMP_STATUS_STBY;
+    controlReportAmpStatus();
 }
 
 void ampInitHw(void)
@@ -222,7 +215,7 @@ void ampInitHw(void)
     case AMP_STATUS_HW_READY:
         inputEnable();
 
-        pinsSetMute(false);
+        ampPinMute(false);
         audioSetMute(false);
 
         amp.status = AMP_STATUS_ACTIVE;
@@ -232,12 +225,12 @@ void ampInitHw(void)
     }
 }
 
-static void ampSetInput(uint8_t value)
+static void ampSetInput(int8_t value)
 {
     swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
 
     audioSetMute(true);
-    pinsSetMute(true);
+    ampPinMute(true);
 
     inputDisable();
     inputSetPower(false);
@@ -341,15 +334,20 @@ static void actionNextAudioParam(AudioProc *aProc)
     } while (aProc->par.tune[aProc->tune].grid == NULL && aProc->tune != AUDIO_TUNE_VOLUME);
 }
 
-static uint8_t actionGetNextAudioInput(AudioProc *aProc)
+static int8_t actionGetNextAudioInput(int8_t diff)
 {
-    uint8_t ret = aProc->par.input + 1;
+    AudioProc *aProc = audioGet();
 
-    if (ret >= aProc->par.inCnt) {
+    int8_t ret = aProc->par.input + diff;
+    int8_t inCnt = aProc->par.inCnt;
+
+    if (ret < 0) {
+        ret = inCnt - 1;
+    } else if (ret >= inCnt) {
         ret = 0;
     }
 
-    return  ret;
+    return ret;
 }
 
 static void actionGetButtons(void)
@@ -936,6 +934,76 @@ static void actionRemapCommon(void)
     }
 }
 
+void ampPinMute(bool value)
+{
+    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
+
+    if (muteStby == MUTESTBY_POS) {
+        if (value) {
+            CLR(MUTE);
+        } else {
+            SET(MUTE);
+        }
+    } else if (muteStby == MUTESTBY_NEG) {
+        if (value) {
+            SET(MUTE);
+        } else {
+            CLR(MUTE);
+        }
+    }
+}
+
+void ampPinStby(bool value)
+{
+    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
+
+    if (muteStby == MUTESTBY_POS) {
+        if (value) {
+            CLR(STBY);
+        } else {
+            SET(STBY);
+        }
+    } else if (muteStby == MUTESTBY_NEG) {
+        if (value) {
+            SET(STBY);
+        } else {
+            CLR(STBY);
+        }
+    }
+}
+
+void ampInitMuteStby(void)
+{
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+#ifdef STM32F3
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+#endif
+
+    GPIO_InitStruct.Pin = MUTE_Pin;
+    LL_GPIO_Init(MUTE_Port, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = STBY_Pin;
+    LL_GPIO_Init(STBY_Port, &GPIO_InitStruct);
+
+    ampPinMute(true);
+    ampPinStby(true);
+}
+
+void ampInit(void)
+{
+    i2cInit(I2C_AMP, 100000);
+    inputSetPower(false);    // Power off input device
+    i2cDeInit(I2C_AMP);
+
+    swTimSet(SW_TIM_RTC_INIT, 500);
+
+    amp.status = AMP_STATUS_STBY;
+    controlReportAmpStatus();
+}
+
 Amp *ampGet(void)
 {
     return &amp;
@@ -1015,10 +1083,6 @@ void ampActionHandle(void)
     action.timeout = 0;
 
     switch (action.type) {
-    case ACTION_INIT:
-        ampInit();
-        swTimSet(SW_TIM_RTC_INIT, 500);
-        break;
     case ACTION_STANDBY:
         if (action.value == FLAG_EXIT) {
             ampExitStby();
@@ -1126,7 +1190,7 @@ void ampActionHandle(void)
 
     case ACTION_AUDIO_INPUT:
         if (scrMode == SCREEN_AUDIO_INPUT) {
-            ampSetInput(actionGetNextAudioInput(aProc));
+            ampSetInput(actionGetNextAudioInput((int8_t)action.value));
             controlReportAudioInput();
             controlReportAudioTune(AUDIO_TUNE_GAIN);
         }
