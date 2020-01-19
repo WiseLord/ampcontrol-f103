@@ -34,7 +34,7 @@ static const AudioApi tda731xApi = {
     .setLoudness = tda731xSetLoudness,
 };
 
-static void tda731xSwitch(uint8_t input, int8_t gain, bool loudness)
+static void tda731xSwitch(int8_t input, int8_t gain, bool loudness)
 {
     i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
     i2cSend(I2C_AMP, (uint8_t)(TDA731X_SW | input |
@@ -115,7 +115,7 @@ void tda731xSetTune(AudioTune tune, int8_t value)
     }
 }
 
-void tda731xSetInput(uint8_t value)
+void tda731xSetInput(int8_t value)
 {
     tda731xSwitch(value, aPar->tune[AUDIO_TUNE_GAIN].value, aPar->loudness);
 }

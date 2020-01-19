@@ -108,7 +108,7 @@ void tda7439SetTune(AudioTune tune, int8_t value)
     }
 }
 
-void tda7439SetInput(uint8_t value)
+void tda7439SetInput(int8_t value)
 {
     i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7439_INPUT_SELECT);

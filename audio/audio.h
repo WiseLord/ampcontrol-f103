@@ -29,7 +29,7 @@ void audioSetPower(bool value);
 void audioSetTune(AudioTune tune, int8_t value);
 void audioChangeTune(AudioTune tune, int8_t diff);
 
-void audioSetInput(uint8_t value);
+void audioSetInput(int8_t value);
 void audioSetMute(bool value);
 void audioSetLoudness(bool value);
 void audioSetSurround(bool value);

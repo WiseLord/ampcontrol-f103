@@ -194,6 +194,7 @@ void ampEnterStby(void)
     screenSaveSettings();
 
     audioSetMute(true);
+    pinsSetMute(true);
     audioSetPower(false);
 
     inputDisable();
@@ -221,6 +222,7 @@ void ampInitHw(void)
     case AMP_STATUS_HW_READY:
         inputEnable();
 
+        pinsSetMute(false);
         audioSetMute(false);
 
         amp.status = AMP_STATUS_ACTIVE;
@@ -230,11 +232,12 @@ void ampInitHw(void)
     }
 }
 
-void ampSetInput(uint8_t value)
+static void ampSetInput(uint8_t value)
 {
     swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
 
     audioSetMute(true);
+    pinsSetMute(true);
 
     inputDisable();
     inputSetPower(false);
@@ -532,7 +535,7 @@ static void actionRemapBtnShort(void)
         actionSet(ACTION_STANDBY, FLAG_SWITCH);
         break;
     case BTN_D1:
-        actionSet(ACTION_AUDIO_INPUT, FLAG_NEXT);
+        actionSet(ACTION_AUDIO_INPUT, +1);
         break;
     case BTN_D2:
         actionSet(ACTION_NAVIGATE, RC_CMD_NAV_BACK);
@@ -688,7 +691,7 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_IN_NEXT:
-        actionSet(ACTION_AUDIO_INPUT, FLAG_NEXT);
+        actionSet(ACTION_AUDIO_INPUT, +1);
         break;
 
     case RC_CMD_NAV_OK:
@@ -1105,9 +1108,9 @@ void ampActionHandle(void)
         break;
     case ACTION_RTC_CHANGE:
         if (action.value < 0) {
-            rtcChangeTime(rtcGetMode(), DIRECTION_DOWN);
+            rtcChangeTime(rtcGetMode(), -1);
         } else if (action.value > 0) {
-            rtcChangeTime(rtcGetMode(), DIRECTION_UP);
+            rtcChangeTime(rtcGetMode(), +1);
         }
         actionSetScreen(scrMode, 5000);
         break;

@@ -92,8 +92,8 @@ typedef struct {
 
     InputType inType[MAX_INPUTS];
     int8_t gain[MAX_INPUTS];
-    uint8_t input;
-    uint8_t inCnt;
+    int8_t input;
+    int8_t inCnt;
 
     bool mute;
     bool loudness;
@@ -106,7 +106,7 @@ typedef struct {
     void (*init)(AudioParam *param);
 
     void (*setTune)(AudioTune tune, int8_t value);
-    void (*setInput)(uint8_t value);
+    void (*setInput)(int8_t value);
 
     void (*setMute)(bool value);
     void (*setLoudness)(bool value);

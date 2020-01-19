@@ -193,10 +193,10 @@ void pt232xSetTune(AudioTune tune, int8_t value)
     }
 }
 
-void pt232xSetInput(uint8_t value)
+void pt232xSetInput(int8_t value)
 {
     i2cBegin(I2C_AMP, PT2323_I2C_ADDR);
-    i2cSend(I2C_AMP, PT2323_INPUT_SWITCH | (PT2323_INPUT_ST1 - value));
+    i2cSend(I2C_AMP, (uint8_t)(PT2323_INPUT_SWITCH | (PT2323_INPUT_ST1 - value)));
     i2cTransmit(I2C_AMP);
 }
 

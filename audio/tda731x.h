@@ -17,7 +17,7 @@ const AudioApi *tda731xGetApi(void);
 void tda731xInit(AudioParam *param);
 
 void tda731xSetTune(AudioTune tune, int8_t value);
-void tda731xSetInput(uint8_t value);
+void tda731xSetInput(int8_t value);
 void tda731xSetMute(bool value);
 void tda731xSetLoudness(bool value);
 

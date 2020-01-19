@@ -14,12 +14,6 @@ extern "C" {
 #define FLAG_ENTER      1
 #define FLAG_SWITCH     2
 
-#define FLAG_NEXT       -1
-#define FLAG_PREV       -2
-
-#define DIRECTION_UP    1
-#define DIRECTION_DOWN  -1
-
 typedef uint8_t ActionType;
 enum {
     ACTION_NONE = 0,

@@ -103,7 +103,7 @@ static const uint8_t bassQ = TDA7418_BASS_Q_2P00;
 static const uint8_t middleQ = TDA7418_MIDDLE_Q_1P25;
 static const uint8_t trebleCF = TDA7418_TREBLE_CENTER_12K5;
 
-static void tda7418InputGain(uint8_t input, int8_t gain)
+static void tda7418InputGain(int8_t input, int8_t gain)
 {
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7418_SOURCE_SELECT);
@@ -208,7 +208,7 @@ void tda7418SetTune(AudioTune tune, int8_t value)
     }
 }
 
-void tda7418SetInput(uint8_t value)
+void tda7418SetInput(int8_t value)
 {
     tda7418InputGain(value, aPar->tune[AUDIO_TUNE_GAIN].value);
 }

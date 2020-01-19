@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "../settings.h"
-#include "../pins.h"
 
 #ifdef _TDA7439
 #include "tda7439.h"
@@ -221,7 +220,7 @@ void audioChangeTune(AudioTune tune, int8_t diff)
     }
 }
 
-void audioSetInput(uint8_t value)
+void audioSetInput(int8_t value)
 {
     if (value >= aProc.par.inCnt)
         value = 0;
@@ -239,8 +238,6 @@ void audioSetInput(uint8_t value)
 void audioSetMute(bool value)
 {
     aProc.par.mute = value;
-
-    pinsSetMute(value);
 
     if (aProc.api->setMute) {
         aProc.api->setMute(value);
