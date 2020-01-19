@@ -166,12 +166,50 @@ static void inputSetPower(bool value)
     }
 }
 
-void ampExitStby(void)
+void ampPinMute(bool value)
+{
+    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
+
+    if (muteStby == MUTESTBY_POS) {
+        if (value) {
+            CLR(MUTE);
+        } else {
+            SET(MUTE);
+        }
+    } else if (muteStby == MUTESTBY_NEG) {
+        if (value) {
+            SET(MUTE);
+        } else {
+            CLR(MUTE);
+        }
+    }
+}
+
+void ampPinStby(bool value)
+{
+    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
+
+    if (muteStby == MUTESTBY_POS) {
+        if (value) {
+            CLR(STBY);
+        } else {
+            SET(STBY);
+        }
+    } else if (muteStby == MUTESTBY_NEG) {
+        if (value) {
+            SET(STBY);
+        } else {
+            CLR(STBY);
+        }
+    }
+}
+
+static void ampExitStby(void)
 {
     audioReadSettings();
     tunerReadSettings();
 
-    ampPinStby(false);     // Power on amplifier
+    ampPinStby(false);      // Power on amplifier
 
     inputSetPower(true);    // Power on input device
 
@@ -179,7 +217,7 @@ void ampExitStby(void)
     swTimSet(SW_TIM_AMP_INIT, 600);
 }
 
-void ampEnterStby(void)
+static void ampEnterStby(void)
 {
     swTimSet(SW_TIM_AMP_INIT, SW_TIM_OFF);
 
@@ -193,7 +231,7 @@ void ampEnterStby(void)
 
     ampPinStby(true);
 
-    inputSetPower(false);    // Power off input device
+    inputSetPower(false);   // Power off input device
 
     amp.status = AMP_STATUS_STBY;
     controlReportAmpStatus();
@@ -472,13 +510,6 @@ static void spModeChange(Spectrum *sp)
     }
     screenToClear();
     settingsStore(PARAM_SPECTRUM_MODE, sp->mode);
-}
-
-static void scrDefChange(Screen *screen)
-{
-    if (++screen->def >= SCREEN_STANDBY) {
-        screen->def = SCREEN_SPECTRUM;
-    }
 }
 
 static void sendMediaKey(HidMediaKey key)
@@ -861,14 +892,13 @@ static void actionRemapCommon(void)
 {
     ScrMode scrMode = screenGet()->mode;
     AudioProc *aProc = audioGet();
-    AmpStatus ampStatus = ampGet()->status;
 
     switch (action.type) {
     case ACTION_STANDBY:
         if (scrMode == SCREEN_MENU) {
             action.value = FLAG_ENTER;
         } else if (FLAG_SWITCH == action.value) {
-            switch (ampStatus) {
+            switch (amp.status) {
             case AMP_STATUS_STBY:
                 action.value = FLAG_EXIT;
                 break;
@@ -935,44 +965,6 @@ static void actionRemapCommon(void)
          ACTION_MENU_SELECT != action.type &&
          ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
-    }
-}
-
-void ampPinMute(bool value)
-{
-    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
-
-    if (muteStby == MUTESTBY_POS) {
-        if (value) {
-            CLR(MUTE);
-        } else {
-            SET(MUTE);
-        }
-    } else if (muteStby == MUTESTBY_NEG) {
-        if (value) {
-            SET(MUTE);
-        } else {
-            CLR(MUTE);
-        }
-    }
-}
-
-void ampPinStby(bool value)
-{
-    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
-
-    if (muteStby == MUTESTBY_POS) {
-        if (value) {
-            CLR(STBY);
-        } else {
-            SET(STBY);
-        }
-    } else if (muteStby == MUTESTBY_NEG) {
-        if (value) {
-            SET(STBY);
-        } else {
-            CLR(STBY);
-        }
     }
 }
 
@@ -1088,6 +1080,13 @@ void ampActionHandle(void)
     action.timeout = 0;
 
     switch (action.type) {
+    case ACTION_INIT_HW:
+        ampInitHw();
+        actionResetSilenceTimer();
+        break;
+    case ACTION_INIT_RTC:
+        rtcInit();
+        break;
     case ACTION_STANDBY:
         if (action.value == FLAG_EXIT) {
             ampExitStby();
@@ -1100,13 +1099,6 @@ void ampActionHandle(void)
             ampEnterStby();
             actionDispExpired(SCREEN_STANDBY);
         }
-        break;
-    case ACTION_INIT_HW:
-        ampInitHw();
-        actionResetSilenceTimer();
-        break;
-    case ACTION_INIT_RTC:
-        rtcInit();
         break;
     case ACTION_DISP_EXPIRED:
         actionDispExpired(scrMode);
@@ -1311,7 +1303,7 @@ void ampActionHandle(void)
     case ACTION_SCR_DEF:
         rtcSetMode(RTC_NOEDIT);
         if (scrMode == screen->def) {
-            scrDefChange(screen);
+            screenChangeDef();
         }
         actionSetScreen(screen->def, 3000);
         break;

@@ -81,6 +81,13 @@ void screenSetMode(ScrMode value)
     screen.mode = value;
 }
 
+void screenChangeDef(void)
+{
+    if (++screen.def >= SCREEN_STANDBY) {
+        screen.def = SCREEN_SPECTRUM;
+    }
+}
+
 void screenSetBrightness(int8_t value)
 {
     screen.brightness = value;
