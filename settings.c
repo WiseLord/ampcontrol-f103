@@ -4,6 +4,7 @@
 #include "display/glcd.h"
 #include "eemul.h"
 #include "i2cexp.h"
+#include "input.h"
 #include "rc.h"
 #include "screen.h"
 #include "spectrum.h"
@@ -115,9 +116,84 @@ int16_t settingsGet(Param param)
 {
     int16_t ret = 0;
 
+    AudioProc *aProc = audioGet();
+    Tuner *tuner = tunerGet();
+    TunerParam *tPar = &tuner->par;
+    Spectrum *sp = spGet();
+
     Alarm *alarm = rtcGetAlarm(0);
 
     switch (param) {
+
+    case PARAM_AUDIO_IC:
+        ret = (int16_t)aProc->par.ic;
+        break;
+
+    case PARAM_AUDIO_IN0:
+    case PARAM_AUDIO_IN1:
+    case PARAM_AUDIO_IN2:
+    case PARAM_AUDIO_IN3:
+    case PARAM_AUDIO_IN4:
+    case PARAM_AUDIO_IN5:
+    case PARAM_AUDIO_IN6:
+    case PARAM_AUDIO_IN7:
+        ret = aProc->par.inType[param - PARAM_AUDIO_IN0];
+        break;
+
+    case PARAM_TUNER_IC:
+        ret = (int16_t)(tPar->ic);
+        break;
+    case PARAM_TUNER_BAND:
+        ret = (int16_t)(tPar->band);
+        break;
+    case PARAM_TUNER_STEP:
+        ret = (int16_t)(tPar->step);
+        break;
+    case PARAM_TUNER_DEEMPH:
+        ret = (int16_t)(tPar->deemph);
+        break;
+    case PARAM_TUNER_MODE:
+        ret = (int16_t)(tPar->mode);
+        break;
+    case PARAM_TUNER_FMONO:
+        ret = tPar->forcedMono;
+        break;
+    case PARAM_TUNER_RDS:
+        ret = tPar->rds;
+        break;
+    case PARAM_TUNER_BASS:
+        ret = tPar->bassBoost;
+        break;
+    case PARAM_TUNER_VOLUME:
+        ret = tPar->volume;
+        break;
+
+    case PARAM_DISPLAY_BR_STBY:
+        ret = brStby;
+        break;
+    case PARAM_DISPLAY_BR_WORK:
+        ret = brWork;
+        break;
+    case PARAM_DISPLAY_ROTATE:
+        ret = glcdGetRotate();
+        break;
+    case PARAM_DISPLAY_DEF:
+        ret = screenGet()->def;
+        break;
+    case PARAM_DISPLAY_PALETTE:
+        ret = paletteGetIndex();
+        break;
+
+    case PARAM_SPECTRUM_MODE:
+        ret = sp->mode;
+        break;
+    case PARAM_SPECTRUM_PEAKS:
+        ret = sp->peaks;
+        break;
+    case PARAM_SPECTRUM_GRAD:
+        ret = sp->grad;
+        break;
+
     case PARAM_ALARM_HOUR:
         ret = alarm->hour;
         break;
@@ -128,13 +204,9 @@ int16_t settingsGet(Param param)
         ret = (int16_t)alarm->days;
         break;
 
-    case PARAM_DISPLAY_BR_STBY:
-        ret = brStby;
+    case PARAM_SYSTEM_LANG:
+        ret = (int16_t)(labelsGetLang());
         break;
-    case PARAM_DISPLAY_BR_WORK:
-        ret = brWork;
-        break;
-
     case PARAM_SYSTEM_MUTESTBY:
         ret = muteStby;
         break;
@@ -149,8 +221,15 @@ int16_t settingsGet(Param param)
         ret = pcf8574addrIdx;
         break;
 
+    case PARAM_SYSTEM_ENC_RES:
+        ret = inputGetEncRes();
+        break;
     default:
         break;
+    }
+
+    if (param >= PARAM_RC_STBY_SWITCH && param < PARAM_RC_STBY_SWITCH + RC_CMD_END) {
+        ret = (int16_t)rcGetCode(param - PARAM_RC_STBY_SWITCH);
     }
 
     return  ret;

@@ -113,7 +113,7 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_MENU + MENU_ALARM_MINUTE]    = "Минута",
     [LABEL_MENU + MENU_ALARM_DAYS]      = "Дни",
 
-    [LABEL_MENU + MENU_SPECTURM_MODE]   = "Режим экрана",
+    [LABEL_MENU + MENU_SPECTRUM_MODE]   = "Режим экрана",
     [LABEL_MENU + MENU_SPECTRUM_PEAKS]  = "Пиковый уровень",
     [LABEL_MENU + MENU_SPECTRUM_GRAD]   = "Градиент",
 

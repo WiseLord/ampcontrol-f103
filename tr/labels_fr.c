@@ -113,7 +113,7 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_MENU + MENU_ALARM_MINUTE]    = "Minutes",
     [LABEL_MENU + MENU_ALARM_DAYS]      = "Jours",
 
-    [LABEL_MENU + MENU_SPECTURM_MODE]   = "Mode écran",
+    [LABEL_MENU + MENU_SPECTRUM_MODE]   = "Mode écran",
 //    [LABEL_MENU + MENU_SPECTURM_PEAKS]  = "Peak level",
 //    [LABEL_MENU + MENU_SPECTRUM_GRAD]   = "Gradient",
 

@@ -113,7 +113,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_ALARM_MINUTE]    = "Dakika",
     [LABEL_MENU + MENU_ALARM_DAYS]      = "Günler",
 
-    [LABEL_MENU + MENU_SPECTURM_MODE]   = "Spectrum Tipi",
+    [LABEL_MENU + MENU_SPECTRUM_MODE]   = "Spectrum Tipi",
 //    [LABEL_MENU + MENU_SPECTURM_PEAKS]  = "Peak level",
 //    [LABEL_MENU + MENU_SPECTRUM_GRAD]   = "Gradient",
 

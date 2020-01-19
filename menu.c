@@ -72,7 +72,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_ALARM_MINUTE]     = {MENU_SETUP_ALARM,        MENU_TYPE_NUMBER,   PARAM_ALARM_MINUTE},
     [MENU_ALARM_DAYS]       = {MENU_SETUP_ALARM,        MENU_TYPE_ENUM,     PARAM_ALARM_DAYS},
 
-    [MENU_SPECTURM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM,     PARAM_SPECTRUM_MODE},
+    [MENU_SPECTRUM_MODE]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_ENUM,     PARAM_SPECTRUM_MODE},
     [MENU_SPECTRUM_PEAKS]   = {MENU_SETUP_SPECTRUM,     MENU_TYPE_BOOL,     PARAM_SPECTRUM_PEAKS},
     [MENU_SPECTRUM_GRAD]    = {MENU_SETUP_SPECTRUM,     MENU_TYPE_BOOL,     PARAM_SPECTRUM_GRAD},
 
@@ -110,94 +110,8 @@ static void menuMove(int8_t diff)
 static int16_t menuGetValue(MenuIdx index)
 {
     int16_t ret = 0;
-    AudioProc *aProc = audioGet();
-    Tuner *tuner = tunerGet();
-    TunerParam *tPar = &tuner->par;
-    Spectrum *sp = spGet();
 
-    switch (index) {
-    case MENU_SYSTEM_LANG:
-        ret = (int16_t)(labelsGetLang());
-        break;
-
-    case MENU_AUDIO_IC:
-        ret = (int16_t)aProc->par.ic;
-        break;
-    case MENU_AUDIO_IN_0:
-    case MENU_AUDIO_IN_1:
-    case MENU_AUDIO_IN_2:
-    case MENU_AUDIO_IN_3:
-    case MENU_AUDIO_IN_4:
-    case MENU_AUDIO_IN_5:
-    case MENU_AUDIO_IN_6:
-    case MENU_AUDIO_IN_7:
-    case MENU_AUDIO_IN_8:
-    case MENU_AUDIO_IN_9:
-        ret = aProc->par.inType[index - MENU_AUDIO_IN_0];
-        break;
-
-    case MENU_TUNER_IC:
-        ret = (int16_t)(tPar->ic);
-        break;
-    case MENU_TUNER_BAND:
-        ret = (int16_t)(tPar->band);
-        break;
-    case MENU_TUNER_STEP:
-        ret = (int16_t)(tPar->step);
-        break;
-    case MENU_TUNER_DEEMPH:
-        ret = (int16_t)(tPar->deemph);
-        break;
-    case MENU_TUNER_MODE:
-        ret = (int16_t)(tPar->mode);
-        break;
-
-    case MENU_TUNER_FMONO:
-        ret = tPar->forcedMono;
-        break;
-    case MENU_TUNER_RDS:
-        ret = tPar->rds;
-        break;
-    case MENU_TUNER_BASS:
-        ret = tPar->bassBoost;
-        break;
-
-    case MENU_TUNER_VOLUME:
-        ret = tPar->volume;
-        break;
-
-    case MENU_SPECTURM_MODE:
-        ret = sp->mode;
-        break;
-    case MENU_SPECTRUM_PEAKS:
-        ret = sp->peaks;
-        break;
-    case MENU_SPECTRUM_GRAD:
-        ret = sp->grad;
-        break;
-
-    case MENU_DISPLAY_ROTATE:
-        ret = glcdGetRotate();
-        break;
-    case MENU_DISPLAY_DEF:
-        ret = screenGet()->def;
-        break;
-    case MENU_DISPLAY_PALETTE:
-        ret = paletteGetIndex();
-        break;
-
-    case MENU_SYSTEM_ENC_RES:
-        ret = inputGetEncRes();
-        break;
-
-    default:
-        ret = settingsGet(menuItems[index].param);
-        break;
-    }
-
-    if (index >= MENU_RC_STBY_SWITCH && index < MENU_RC_STBY_SWITCH + RC_CMD_END) {
-        ret = (int16_t)rcGetCode(index - MENU_RC_STBY_SWITCH);
-    }
+    ret = settingsGet(menuItems[index].param);
 
     return ret;
 }
@@ -231,8 +145,6 @@ static void menuStoreCurrentValue(void)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
-    case MENU_AUDIO_IN_8:
-    case MENU_AUDIO_IN_9:
         aProc->par.inType[menu.active - MENU_AUDIO_IN_0] = (InputType)menu.value;
         break;
 
@@ -266,7 +178,7 @@ static void menuStoreCurrentValue(void)
         tPar->volume = (int8_t)(menu.value);
         break;
 
-    case MENU_SPECTURM_MODE:
+    case MENU_SPECTRUM_MODE:
         sp->mode = (SpMode)(menu.value);
         break;
     case MENU_SPECTRUM_PEAKS:
@@ -382,8 +294,6 @@ static void menuValueChange(int8_t diff)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
-    case MENU_AUDIO_IN_8:
-    case MENU_AUDIO_IN_9:
         if (menu.value > IN_END - 1)
             menu.value = IN_END - 1;
         if (menu.value < IN_TUNER)
@@ -427,7 +337,7 @@ static void menuValueChange(int8_t diff)
             menu.value = TUNER_VOLUME_MIN;
         break;
 
-    case MENU_SPECTURM_MODE:
+    case MENU_SPECTRUM_MODE:
         if (menu.value > SP_MODE_END - 1)
             menu.value = SP_MODE_END - 1;
         if (menu.value < SP_MODE_STEREO)
@@ -498,8 +408,6 @@ static bool menuIsValid(MenuIdx index)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
-    case MENU_AUDIO_IN_8:
-    case MENU_AUDIO_IN_9:
         // Limit Audio inputs
         if (index - MENU_AUDIO_IN_0 >= aProc->par.inCnt) {
             return false;
@@ -748,8 +656,6 @@ const char *menuGetValueStr(MenuIdx index)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
-    case MENU_AUDIO_IN_8:
-    case MENU_AUDIO_IN_9:
         ret = labelsGet((Label)(LABEL_IN_TUNER + value));
         break;
     case MENU_TUNER_IC:
@@ -770,7 +676,7 @@ const char *menuGetValueStr(MenuIdx index)
     case MENU_ALARM_DAYS:
         ret = labelsGet((Label)(LABEL_ALARM_DAY + value));
         break;
-    case MENU_SPECTURM_MODE:
+    case MENU_SPECTRUM_MODE:
         ret = labelsGet((Label)(LABEL_SPECTRUM_MODE + value));
         break;
     case MENU_DISPLAY_DEF:
