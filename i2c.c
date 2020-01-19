@@ -148,9 +148,15 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
 
 uint8_t i2cDeInit(void *i2c)
 {
+    LL_I2C_Disable(i2c);
     LL_I2C_DeInit(i2c);
 
     return 0;
+}
+
+bool i2cIsEnabled(void *i2c)
+{
+    return (bool)(LL_I2C_IsEnabled(i2c));
 }
 
 void i2cBegin(void *i2c, uint8_t addr)

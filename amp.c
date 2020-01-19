@@ -156,7 +156,14 @@ static void inputSetPower(bool value)
     }
 
     I2cAddrIdx i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_IN_STAT);
-    i2cexpSend(i2cAddrIdx, amp.inputStatus);
+
+    if (!i2cIsEnabled(I2C_AMP)) {
+        i2cInit(I2C_AMP, 100000);
+        i2cexpSend(i2cAddrIdx, amp.inputStatus);
+        i2cDeInit(I2C_AMP);
+    } else {
+        i2cexpSend(i2cAddrIdx, amp.inputStatus);
+    }
 }
 
 void ampExitStby(void)
@@ -166,9 +173,7 @@ void ampExitStby(void)
 
     ampPinStby(false);     // Power on amplifier
 
-    i2cInit(I2C_AMP, 100000);
     inputSetPower(true);    // Power on input device
-    i2cDeInit(I2C_AMP);
 
     amp.status = AMP_STATUS_POWERED;
     swTimSet(SW_TIM_AMP_INIT, 600);
@@ -188,9 +193,7 @@ void ampEnterStby(void)
 
     ampPinStby(true);
 
-    i2cInit(I2C_AMP, 100000);
     inputSetPower(false);    // Power off input device
-    i2cDeInit(I2C_AMP);
 
     amp.status = AMP_STATUS_STBY;
     controlReportAmpStatus();
@@ -998,9 +1001,7 @@ void ampInit(void)
     timerInit(TIM_SPECTRUM, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
     swTimInit();
 
-    i2cInit(I2C_AMP, 100000);
     inputSetPower(false);    // Power off input device
-    i2cDeInit(I2C_AMP);
 
     swTimSet(SW_TIM_RTC_INIT, 500);
 

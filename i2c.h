@@ -18,6 +18,7 @@ extern "C" {
 
 uint8_t i2cInit(void *i2c, uint32_t ClockSpeed);
 uint8_t i2cDeInit(void *i2c);
+bool i2cIsEnabled(void *i2c);
 
 void i2cBegin(void *i2c, uint8_t addr);
 void i2cSend(void *i2c, uint8_t data);
