@@ -300,7 +300,7 @@ void rcInit(void)
 
     timerInit(TIM_RC, 71, 65535); // 1MHz timer for remote control handling
 
-    NVIC_SetPriority(EXTI9_5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+    NVIC_SetPriority(EXTI9_5_IRQn, 0);
     NVIC_EnableIRQ(EXTI9_5_IRQn);
 }
 

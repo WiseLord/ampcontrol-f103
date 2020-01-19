@@ -28,11 +28,11 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef *pcdHandle)
 
         // Peripheral interrupt init
 #ifdef STM32F1
-        NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+        NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, 0);
         NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
 #endif
 #ifdef STM32F3
-        NVIC_SetPriority(USB_LP_CAN_RX0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+        NVIC_SetPriority(USB_LP_CAN_RX0_IRQn, 0);
         NVIC_EnableIRQ(USB_LP_CAN_RX0_IRQn);
 #endif
     }

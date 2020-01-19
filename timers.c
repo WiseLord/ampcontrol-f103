@@ -8,15 +8,15 @@ void timerInit(void *tim, uint32_t prescaler, uint32_t reload)
 
     if (TIMx == TIM2) {
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2);
-        NVIC_SetPriority(TIM2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+        NVIC_SetPriority(TIM2_IRQn, 0);
         NVIC_EnableIRQ(TIM2_IRQn);
     } else if (TIMx == TIM3) {
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM3);
-        NVIC_SetPriority(TIM3_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+        NVIC_SetPriority(TIM3_IRQn, 0);
         NVIC_EnableIRQ(TIM3_IRQn);
     } else if (TIMx == TIM4) {
         LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM4);
-        NVIC_SetPriority(TIM4_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
+        NVIC_SetPriority(TIM4_IRQn, 0);
         NVIC_EnableIRQ(TIM4_IRQn);
     }
 
