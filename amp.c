@@ -247,6 +247,8 @@ void ampInitHw(void)
         i2cInit(I2C_AMP, 100000);
 
         audioInit();
+        audioReset();
+        audioSetMute(true);
         audioSetPower(true);
         tunerInit();
 

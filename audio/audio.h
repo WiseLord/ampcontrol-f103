@@ -22,6 +22,8 @@ void audioReadSettings(void);
 void audioSaveSettings(void);
 
 void audioInit(void);
+void audioReset(void);
+
 AudioProc *audioGet(void);
 
 void audioSetPower(bool value);

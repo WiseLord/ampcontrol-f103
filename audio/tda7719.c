@@ -151,7 +151,6 @@
 
 #define TDA7719_INPUT_CFG           TDA7719_INPUT_CFG2
 
-
 static const int8_t inCfg2[TDA7719_IN_CNT] = { 0, 4, 1, 2, 5, 6 };
 
 static const AudioGrid gridVolume  = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step
@@ -161,7 +160,8 @@ static const AudioGrid gridGain    = {  0,  1, (uint8_t)(3.00 * 8)}; // 0..3dB w
 static AudioParam *aPar;
 
 static const AudioApi tda7719Api = {
-    .init = tda7719Init,
+    .initParam = tda7719InitParam,
+    .reset = tda7719Reset,
 
     .setTune = tda7719SetTune,
     .setInput = tda7719SetInput,
@@ -170,7 +170,41 @@ static const AudioApi tda7719Api = {
     .setLoudness = tda7719SetLoudness,
 };
 
-static void tda7719Reset(void)
+static void tda7719SetInputGain(int8_t input, int8_t gain)
+{
+    if (input >= TDA7719_IN_CNT) {
+        input = 0;
+    }
+
+    input = inCfg2[input];
+
+    i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
+    i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
+
+    i2cSend(I2C_AMP, (uint8_t)(TDA7719_INPUT_CFG2 | (gain ? TDA7719_INPUT_GAIN_3DB : 0) | TDA7719_INPUT_MD2 | input));
+    i2cTransmit(I2C_AMP);
+}
+
+const AudioApi *tda7719GetApi(void)
+{
+    return &tda7719Api;
+}
+
+void tda7719InitParam(AudioParam *param)
+{
+    aPar = param;
+
+    aPar->tune[AUDIO_TUNE_VOLUME].grid      = &gridVolume;
+    aPar->tune[AUDIO_TUNE_BASS].grid        = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_MIDDLE].grid      = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_TREBLE].grid      = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_PREAMP].grid      = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_BALANCE].grid     = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_FRONTREAR].grid   = &gridToneBal;
+    aPar->tune[AUDIO_TUNE_GAIN].grid        = &gridGain;
+}
+
+void tda7719Reset(void)
 {
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
@@ -196,42 +230,6 @@ static void tda7719Reset(void)
     i2cSend(I2C_AMP, 0x10);
 
     i2cTransmit(I2C_AMP);
-}
-
-static void tda7719SetInputGain(int8_t input, int8_t gain)
-{
-    if (input >= TDA7719_IN_CNT) {
-        input = 0;
-    }
-
-    input = inCfg2[input];
-
-    i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
-    i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
-
-    i2cSend(I2C_AMP, (uint8_t)(TDA7719_INPUT_CFG2 | (gain ? TDA7719_INPUT_GAIN_3DB : 0) | TDA7719_INPUT_MD2 | input));
-    i2cTransmit(I2C_AMP);
-}
-
-const AudioApi *tda7719GetApi(void)
-{
-    return &tda7719Api;
-}
-
-void tda7719Init(AudioParam *param)
-{
-    aPar = param;
-
-    aPar->tune[AUDIO_TUNE_VOLUME].grid      = &gridVolume;
-    aPar->tune[AUDIO_TUNE_BASS].grid        = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_MIDDLE].grid      = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_TREBLE].grid      = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_PREAMP].grid      = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_BALANCE].grid     = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_FRONTREAR].grid   = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_GAIN].grid        = &gridGain;
-
-    tda7719Reset();
 }
 
 void tda7719SetTune(AudioTune tune, int8_t value)

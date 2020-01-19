@@ -30,7 +30,7 @@ static const AudioGrid gridTestCenterSub    = {-15,  0, (uint8_t)(1.00 * 8)}; //
 static const AudioGrid gridTestPreamp       = {-47,  0, (uint8_t)(1.00 * 8)}; // -47..0dB with 1dB step
 static const AudioGrid gridTestGain         = {  0, 15, (uint8_t)(2.00 * 8)}; // 0..30dB with 2dB step
 
-static void audioTestInit(AudioParam *aPar)
+static void audioTestInitParam(AudioParam *aPar)
 {
     aPar->tune[AUDIO_TUNE_VOLUME].grid    = &gridTestVolume;
     aPar->tune[AUDIO_TUNE_BASS].grid      = &gridTestTone;
@@ -45,7 +45,7 @@ static void audioTestInit(AudioParam *aPar)
 }
 
 static const AudioApi audioTestApi = {
-    .init = audioTestInit,
+    .initParam = audioTestInitParam,
 };
 
 void audioReadSettings(void)
@@ -113,6 +113,8 @@ void audioReadSettings(void)
         aProc.par.inCnt = MAX_INPUTS;
         break;
     }
+
+    audioInit();
 }
 
 void audioSaveSettings(void)
@@ -135,10 +137,16 @@ void audioSaveSettings(void)
 
 void audioInit(void)
 {
-    if (aProc.api->init) {
-        aProc.api->init(&aProc.par);
+    if (aProc.api->initParam) {
+        aProc.api->initParam(&aProc.par);
     }
-    audioSetMute(true);
+}
+
+void audioReset(void)
+{
+    if (aProc.api->reset) {
+        aProc.api->reset();
+    }
 }
 
 AudioProc *audioGet(void)

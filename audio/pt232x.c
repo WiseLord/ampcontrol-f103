@@ -61,7 +61,8 @@ static const AudioGrid gridGain       = {  0,  1, (uint8_t)(6.00 * 8)}; // 0..6d
 static AudioParam *aPar;
 
 static const AudioApi pt232xApi = {
-    .init = pt232xInit,
+    .initParam = pt232xInitParam,
+    .reset = pt232xReset,
 
     .setTune = pt232xSetTune,
     .setInput = pt232xSetInput,
@@ -71,21 +72,6 @@ static const AudioApi pt232xApi = {
     .setEffect3d = pt232xSetEffect3D,
     .setBypass = pt232xSetBypass,
 };
-
-static void pt232xReset(void)
-{
-    i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
-    i2cSend(I2C_AMP, PT2322_CREAR_REGS);
-    i2cTransmit(I2C_AMP);
-
-    i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
-    i2cSend(I2C_AMP, PT2322_INPUT_SW);
-    i2cTransmit(I2C_AMP);
-
-    i2cBegin(I2C_AMP, PT2323_I2C_ADDR);
-    i2cSend(I2C_AMP, PT2323_UNMUTE_ALL);
-    i2cTransmit(I2C_AMP);
-}
 
 static void pt232xSetSndFunc(bool mute, bool effect3d, bool bypass)
 {
@@ -143,7 +129,7 @@ const AudioApi *pt232xGetApi(void)
     return &pt232xApi;
 }
 
-void pt232xInit(AudioParam *param)
+void pt232xInitParam(AudioParam *param)
 {
     aPar = param;
 
@@ -156,8 +142,21 @@ void pt232xInit(AudioParam *param)
     aPar->tune[AUDIO_TUNE_CENTER].grid    = &gridCenterSub;
     aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridCenterSub;
     aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
+}
 
-    pt232xReset();
+void pt232xReset(void)
+{
+    i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
+    i2cSend(I2C_AMP, PT2322_CREAR_REGS);
+    i2cTransmit(I2C_AMP);
+
+    i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
+    i2cSend(I2C_AMP, PT2322_INPUT_SW);
+    i2cTransmit(I2C_AMP);
+
+    i2cBegin(I2C_AMP, PT2323_I2C_ADDR);
+    i2cSend(I2C_AMP, PT2323_UNMUTE_ALL);
+    i2cTransmit(I2C_AMP);
 }
 
 void pt232xSetTune(AudioTune tune, int8_t value)

@@ -14,7 +14,8 @@
 
 const AudioApi *tda7719GetApi(void);
 
-void tda7719Init(AudioParam *param);
+void tda7719InitParam(AudioParam *param);
+void tda7719Reset(void);
 
 void tda7719SetTune(AudioTune tune, int8_t value);
 void tda7719SetInput(int8_t value);

@@ -103,7 +103,8 @@ typedef struct {
 } AudioParam;
 
 typedef struct {
-    void (*init)(AudioParam *param);
+    void (*initParam)(AudioParam *param);
+    void (*reset)(void);
 
     void (*setTune)(AudioTune tune, int8_t value);
     void (*setInput)(int8_t value);

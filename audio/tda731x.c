@@ -25,7 +25,7 @@ static const AudioGrid gridGain    = {  0,  3, (uint8_t)(3.75 * 8)}; // 0..11.25
 static AudioParam *aPar;
 
 static const AudioApi tda731xApi = {
-    .init = tda731xInit,
+    .initParam = tda731xInitParam,
 
     .setTune = tda731xSetTune,
     .setInput = tda731xSetInput,
@@ -48,7 +48,7 @@ const AudioApi *tda731xGetApi(void)
     return &tda731xApi;
 }
 
-void tda731xInit(AudioParam *param)
+void tda731xInitParam(AudioParam *param)
 {
     aPar = param;
 
