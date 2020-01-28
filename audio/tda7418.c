@@ -10,10 +10,10 @@
 #define TDA7418_SOURCE_SELECT       0x00
 #define TDA7418_LOUDNESS            0x01
 #define TDA7418_VOLUME              0x02
-#define TDA7439_TREBLE              0x03
-#define TDA7439_MIDDLE              0x04
-#define TDA7439_BASS                0x05
-#define TDA7439_MID_BASS_FC_SELECT  0x06
+#define TDA7418_TREBLE              0x03
+#define TDA7418_MIDDLE              0x04
+#define TDA7418_BASS                0x05
+#define TDA7418_MID_BASS_FC_SELECT  0x06
 #define TDA7418_SP_FRONT_LEFT       0x07
 #define TDA7418_SP_REAR_LEFT        0x08
 #define TDA7418_SP_REAR_RIGHT       0x09
@@ -44,22 +44,22 @@
 
 // Treble bits
 #define TDA7418_TREBLE_CENTER_10K0  0x80
-#define TDA7418_TREBLE_CENTER_12K5  0x82
-#define TDA7418_TREBLE_CENTER_15K0  0x84
-#define TDA7418_TREBLE_CENTER_17K5  0x86
+#define TDA7418_TREBLE_CENTER_12K5  0xA0
+#define TDA7418_TREBLE_CENTER_15K0  0xC0
+#define TDA7418_TREBLE_CENTER_17K5  0xE0
 
 // Middle bits
 #define TDA7418_MIDDLE_Q_0P50       0x00
-#define TDA7418_MIDDLE_Q_0P75       0x02
-#define TDA7418_MIDDLE_Q_1P10       0x04
-#define TDA7418_MIDDLE_Q_1P25       0x06
+#define TDA7418_MIDDLE_Q_0P75       0x20
+#define TDA7418_MIDDLE_Q_1P10       0x40
+#define TDA7418_MIDDLE_Q_1P25       0x60
 #define TDA7418_MIDDLE_SOFTSTEP_OFF 0x80
 
 // Bass bits
 #define TDA7418_BASS_Q_1P00         0x00
-#define TDA7418_BASS_Q_1P25         0x02
-#define TDA7418_BASS_Q_1P50         0x04
-#define TDA7418_BASS_Q_2P00         0x06
+#define TDA7418_BASS_Q_1P25         0x20
+#define TDA7418_BASS_Q_1P50         0x40
+#define TDA7418_BASS_Q_2P00         0x60
 #define TDA7418_BASS_SOFTSTEP_OFF   0x80
 
 // Middle/bass FC select
@@ -172,19 +172,19 @@ void tda7418SetTune(AudioTune tune, int8_t value)
         break;
     case AUDIO_TUNE_BASS:
         i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
-        i2cSend(I2C_AMP, TDA7439_BASS);
+        i2cSend(I2C_AMP, TDA7418_BASS);
         i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | bassQ));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_MIDDLE:
         i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
-        i2cSend(I2C_AMP, TDA7439_MIDDLE);
+        i2cSend(I2C_AMP, TDA7418_MIDDLE);
         i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | middleQ));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_TREBLE:
         i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
-        i2cSend(I2C_AMP, TDA7439_TREBLE);
+        i2cSend(I2C_AMP, TDA7418_TREBLE);
         i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | trebleCF));
         i2cTransmit(I2C_AMP);
         break;
