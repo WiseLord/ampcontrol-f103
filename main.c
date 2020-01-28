@@ -52,6 +52,14 @@ void SystemClock_Config(void)
     LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_2);
     LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
 
+    // Configure ADC clock
+#ifdef STM32F1
+    LL_RCC_SetADCClockSource(LL_RCC_ADC_CLKSRC_PCLK2_DIV_8);
+#endif
+#ifdef STM32F3
+    LL_RCC_SetADCClockSource(LL_RCC_ADC12_CLKSRC_PLL_DIV_8);
+#endif
+
     // Configure SysTick
     LL_Init1msTick(72000000);
     LL_SYSTICK_SetClkSource(LL_SYSTICK_CLKSOURCE_HCLK);

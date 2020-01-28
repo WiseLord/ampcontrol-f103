@@ -191,8 +191,8 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdSetFontAlign(GLCD_ALIGN_RIGHT);
 
     // Inverse value color if selected
-    uint16_t color = canvas.glcd->fontFg;
-    uint16_t bgColor = canvas.glcd->fontBg;
+    color_t color = canvas.glcd->fontFg;
+    color_t bgColor = canvas.glcd->fontBg;
     if (active && menu->selected) {
         glcdSetFontColor(bgColor);
         glcdSetFontBgColor(color);

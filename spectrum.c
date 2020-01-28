@@ -98,14 +98,6 @@ static void spInitDMA(void)
 
 static void spInitADC(void)
 {
-    // Configure ADC clock
-#ifdef STM32F1
-    LL_RCC_SetADCClockSource(LL_RCC_ADC_CLKSRC_PCLK2_DIV_6);
-#endif
-#ifdef STM32F3
-    LL_RCC_SetADCClockSource(LL_RCC_ADC12_CLKSRC_PLL_DIV_6);
-#endif
-
     // Configure NVIC to enable ADC1 interruptions
     NVIC_SetPriority(ADC1_IRQn, 0);
     NVIC_EnableIRQ(ADC1_IRQn);
