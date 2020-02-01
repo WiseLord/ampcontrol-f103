@@ -15,10 +15,6 @@
 #include "timers.h"
 #include "utils.h"
 
-#ifdef _ENABLE_USB
-#include "usb/usbhid.h"
-#endif
-
 static void NVIC_Init(void)
 {
     // System interrupt init
@@ -122,9 +118,6 @@ int main(void)
 
     dbgInit();
 
-#ifdef _ENABLE_USB
-    usbHidInit();
-#endif
     screenInit();
     spInit();
 

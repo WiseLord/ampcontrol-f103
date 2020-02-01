@@ -79,6 +79,12 @@ extern "C" {
 #define SI470X_RST_Port         GPIOA
 #define SI470X_RST_Pin          LL_GPIO_PIN_15
 
+// USB pins
+#define USB_DM_Port             GPIOA
+#define USB_DM_Pin              LL_GPIO_PIN_11
+#define USB_DP_Port             GPIOA
+#define USB_DP_Pin              LL_GPIO_PIN_12
+
 void pinsInit(void);
 
 void pinsHwResetI2c(void);

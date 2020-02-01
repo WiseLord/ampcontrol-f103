@@ -1004,6 +1004,10 @@ void ampInit(void)
 
     swTimSet(SW_TIM_RTC_INIT, 500);
 
+#ifdef _ENABLE_USB
+    usbHidInit();
+#endif
+
     amp.status = AMP_STATUS_STBY;
     controlReportAmpStatus();
 }
