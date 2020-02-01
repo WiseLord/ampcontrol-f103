@@ -20,8 +20,11 @@
 #include "tr/labels.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
-#include "usb/usbhid.h"
 #include "usb/hidkeys.h"
+
+#ifdef _ENABLE_USB
+#include "usb/usbhid.h"
+#endif
 
 static void actionGetButtons(void);
 static void actionGetEncoder(void);
@@ -537,7 +540,9 @@ static void sendMediaKey(HidMediaKey key)
         }
         break;
     case IN_PC:
+#ifdef _ENABLE_USB
         usbHidSendMediaKey(key);
+#endif
         break;
     case IN_KARADIO:
         karadioSendMediaCmd(key);

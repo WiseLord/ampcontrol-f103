@@ -13,8 +13,11 @@
 #include "spectrum.h"
 #include "swtimers.h"
 #include "timers.h"
-#include "usb/usbhid.h"
 #include "utils.h"
+
+#ifdef _ENABLE_USB
+#include "usb/usbhid.h"
+#endif
 
 static void NVIC_Init(void)
 {
@@ -119,7 +122,9 @@ int main(void)
 
     dbgInit();
 
+#ifdef _ENABLE_USB
     usbHidInit();
+#endif
     screenInit();
     spInit();
 

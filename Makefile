@@ -10,6 +10,7 @@ TUNER_LIST = RDA580X SI470X TEA5767
 FEATURE_LIST =
 
 #DEBUG_KARADIO = YES
+ENABLE_USB = YES
 
 DEBUG = 1
 OPT = -Os
@@ -158,29 +159,16 @@ C_SOURCES += tuner/stations.c
 C_SOURCES += tuner/tuner.c
 C_DEFS += $(addprefix -D_, $(TUNER_LIST))
 
-# USB source files
-C_SOURCES += \
-  usb/usbd_amp.c \
-  usb/usbd_conf.c \
-  usb/usbd_desc.c \
-  usb/usbhid.c
-
 C_INCLUDES += \
-  -Idisplay \
-  -Iusb
+  -Idisplay
 
 C_SOURCES += \
-  drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_hal_pcd.c \
-  drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_hal_pcd_ex.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_gpio.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_i2c.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_rcc.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_rtc.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_usart.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_utils.c \
-  drivers/STM32_USB_Device_Library/Core/Src/usbd_core.c \
-  drivers/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
-  drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
   system/system_$(call lc, $(STM32_FAMILY))xx.c
 
 ifeq "$(STM32_FAMILY)" "STM32F1"
@@ -188,11 +176,31 @@ ifeq "$(STM32_FAMILY)" "STM32F1"
 endif
 
 C_INCLUDES += \
--Idrivers/$(STM32_FAMILY)xx_HAL_Driver/Inc \
-  -Idrivers/STM32_USB_Device_Library/Core/Inc \
+  -Idrivers/$(STM32_FAMILY)xx_HAL_Driver/Inc \
   -Idrivers/CMSIS/Device/ST/$(STM32_FAMILY)xx/Include \
   -Idrivers/CMSIS/Include \
   -Isystem
+
+ifeq "$(ENABLE_USB)" "YES"
+  C_SOURCES += \
+    drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_hal_pcd.c \
+    drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_hal_pcd_ex.c \
+    drivers/STM32_USB_Device_Library/Core/Src/usbd_core.c \
+    drivers/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
+    drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
+
+  C_SOURCES += \
+    usb/usbd_amp.c \
+    usb/usbd_conf.c \
+    usb/usbd_desc.c \
+    usb/usbhid.c
+
+  C_INCLUDES += \
+    -Idrivers/STM32_USB_Device_Library/Core/Inc \
+    -Iusb
+
+  C_DEFS += -D_ENABLE_USB
+endif
 
 AS_DEFS +=
 
