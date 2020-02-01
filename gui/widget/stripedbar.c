@@ -26,7 +26,7 @@ void stripedBarDraw(StripedBar *bar, LayoutStripedBar *lt, bool clear)
     }
 
     for (uint16_t i = 0; i < sc; i++) {
-        uint16_t color = canvas->pal->fg;
+        color_t color = canvas->pal->fg;
 
         if (min + max) { // Non-symmetric scale
             if (i >= value) {

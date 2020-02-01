@@ -269,9 +269,9 @@ static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
     return (uint8_t)raw;
 }
 
-static uint16_t getRainbowColor(uint8_t value)
+static color_t getRainbowColor(uint8_t value)
 {
-    uint16_t color = 0xFFFF;
+    color_t color = 0xFFFF;
 
     if (value < 32) {           // Black => Blue
         color = 0x0000;
@@ -311,7 +311,7 @@ static void drawWaterfall(Spectrum *sp)
     for (uint8_t col = 0; col < SPECTRUM_SIZE; col++) {
         SpectrumColumn spCol;
         calcSpCol(sp, SP_CHAN_BOTH, 224, col, &spCol);
-        uint16_t color = getRainbowColor((uint8_t)spCol.showW);
+        color_t color = getRainbowColor((uint8_t)spCol.showW);
 
         int16_t posCurr = (col * lt->rect.h) / SPECTRUM_SIZE;
         int16_t posNext = ((col + 1) * lt->rect.h) / SPECTRUM_SIZE;

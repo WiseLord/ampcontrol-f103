@@ -9,6 +9,7 @@ extern "C" {
 
 #include "../pins.h"
 #include "../utils.h"
+#include "colors.h"
 #include "fonts.h"
 
 #ifdef _DISP_SPI
@@ -24,12 +25,6 @@ extern "C" {
 
 #define LCD_BR_MIN          1
 #define LCD_BR_MAX          32
-
-#ifdef _SSD1322
-typedef uint8_t color_t;
-#else
-typedef uint16_t color_t;
-#endif
 
 typedef struct {
     void (*init)(void);
