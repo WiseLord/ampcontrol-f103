@@ -82,8 +82,8 @@ void pinsResetUSB()
     CLR(USB_DM);
     CLR(USB_DP);
     LL_mDelay(20);
-    IN_F(USB_DM);
-    IN_F(USB_DP);
+    IN(USB_DM);
+    IN(USB_DP);
 }
 
 void pinsHwResetI2c(void)
@@ -106,16 +106,15 @@ void pinsHwResetI2c(void)
 
     LL_mDelay(1);       // Select 2-wire interface:
     CLR(SI470X_SDIO);   // SDIO = 0
-    IN_P(SI470X_SCLK);  // SCLK = 1
+    IN(SI470X_SCLK);  // SCLK = 1
 
     LL_mDelay(5);       // Reset
 
     SET(SI470X_RST);    // End of reset
 
     LL_mDelay(1);
-#ifdef STM32F1
-    IN_F(SI470X_SDIO);  // SDIO = 1
-#endif
+
+    IN(SI470X_SDIO);  // SDIO = 1
 }
 
 void pinsInit(void)
