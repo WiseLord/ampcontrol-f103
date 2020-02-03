@@ -1215,6 +1215,7 @@ void ampActionHandle(void)
 
     case ACTION_AUDIO_MUTE:
         audioSetMute(action.value);
+        ampPinMute(action.value);
         if (aProc->tune != AUDIO_FLAG_MUTE) {
             screenToClear();
         }
