@@ -75,7 +75,7 @@ Text Label 8600 3650 0    50   ~ 0
 WR
 Text Label 8600 3350 0    50   ~ 0
 CS
-Text Label 8900 5450 0    50   ~ 0
+Text Label 9200 5450 0    50   ~ 0
 NRST
 Text Label 8600 3850 0    50   ~ 0
 BCKL
@@ -1248,7 +1248,7 @@ Connection ~ 8700 5950
 Wire Wire Line
 	8700 5950 8700 6050
 Wire Wire Line
-	8700 5450 9100 5450
+	8700 5450 9550 5450
 Text Label 9350 2100 0    50   ~ 0
 SDA
 Text Label 9350 2000 0    50   ~ 0
@@ -1719,7 +1719,7 @@ $EndComp
 Wire Wire Line
 	8600 3450 8850 3450
 Text Label 8600 3450 0    50   ~ 0
-NRST
+RST
 Wire Wire Line
 	4550 1450 4550 1500
 Wire Wire Line
@@ -2057,12 +2057,12 @@ $EndComp
 $Comp
 L Connector_Generic:Conn_01x06 J19
 U 1 1 5C9416D3
-P 10950 2150
-F 0 "J19" H 10950 2450 50  0000 C CNN
-F 1 "Arduino_Analog" V 11050 2100 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Vertical" H 10950 2150 50  0001 C CNN
-F 3 "~" H 10950 2150 50  0001 C CNN
-	1    10950 2150
+P 10950 1700
+F 0 "J19" H 10950 2000 50  0000 C CNN
+F 1 "Arduino_Analog" V 11050 1650 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Vertical" H 10950 1700 50  0001 C CNN
+F 3 "~" H 10950 1700 50  0001 C CNN
+	1    10950 1700
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -2088,48 +2088,32 @@ F 3 "~" H 10950 5800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10750 1950 10500 1950
-Text Label 10500 1950 0    50   ~ 0
+	10750 1500 10500 1500
+Text Label 10500 1500 0    50   ~ 0
 RD
 Wire Wire Line
-	10750 2050 10500 2050
-Text Label 10500 2050 0    50   ~ 0
+	10750 1600 10500 1600
+Text Label 10500 1600 0    50   ~ 0
 WR
 Wire Wire Line
-	10750 2150 10500 2150
-Text Label 10500 2150 0    50   ~ 0
+	10750 1700 10500 1700
+Text Label 10500 1700 0    50   ~ 0
 RS
 Wire Wire Line
-	10500 2250 10750 2250
-Text Label 10500 2250 0    50   ~ 0
+	10500 1800 10750 1800
+Text Label 10500 1800 0    50   ~ 0
 CS
 Wire Wire Line
-	10750 2350 10500 2350
-Text Label 10500 2350 0    50   ~ 0
-NRST
+	10750 1900 10500 1900
+Text Label 10500 1900 0    50   ~ 0
+RST
 Wire Wire Line
-	10750 2450 10500 2450
-Text Label 10500 2450 0    50   ~ 0
+	10750 2000 10500 2000
+Text Label 10500 2000 0    50   ~ 0
 BCKL
 NoConn ~ 10750 2700
 NoConn ~ 10750 2800
-NoConn ~ 10750 2900
 NoConn ~ 10750 3400
-$Comp
-L power:+3V3 #PWR048
-U 1 1 5CAA18DB
-P 10600 2750
-F 0 "#PWR048" H 10600 2600 50  0001 C CNN
-F 1 "+3V3" H 10615 2923 50  0000 C CNN
-F 2 "" H 10600 2750 50  0001 C CNN
-F 3 "" H 10600 2750 50  0001 C CNN
-	1    10600 2750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	10750 3000 10600 3000
-Wire Wire Line
-	10600 3000 10600 2750
 $Comp
 L power:+5V #PWR046
 U 1 1 5CABB371
@@ -2353,4 +2337,56 @@ Text Label 5100 6600 2    50   ~ 0
 MUTE
 Text Label 5100 6700 2    50   ~ 0
 STBY
+$Comp
+L Device:R R24
+U 1 1 5E3B5B38
+P 9700 5450
+F 0 "R24" H 9750 5500 50  0000 L CNN
+F 1 "0" H 9750 5400 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 9630 5450 50  0001 C CNN
+F 3 "~" H 9700 5450 50  0001 C CNN
+	1    9700 5450
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	9850 5450 10050 5450
+Text Label 10050 5450 2    50   ~ 0
+RST
+Wire Wire Line
+	10750 3000 10600 3000
+Wire Wire Line
+	10600 3000 10600 2750
+$Comp
+L power:+3V3 #PWR048
+U 1 1 5CAA18DB
+P 10600 2750
+F 0 "#PWR048" H 10600 2600 50  0001 C CNN
+F 1 "+3V3" H 10615 2923 50  0000 C CNN
+F 2 "" H 10600 2750 50  0001 C CNN
+F 3 "" H 10600 2750 50  0001 C CNN
+	1    10600 2750
+	1    0    0    -1  
+$EndComp
+NoConn ~ 10750 2900
+$Comp
+L Device:R R25
+U 1 1 5E4BA951
+P 9700 5800
+F 0 "R25" H 9750 5850 50  0000 L CNN
+F 1 "0" H 9750 5750 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 9630 5800 50  0001 C CNN
+F 3 "~" H 9700 5800 50  0001 C CNN
+	1    9700 5800
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	9850 5800 10050 5800
+Text Label 10050 5800 2    50   ~ 0
+RST
+Wire Wire Line
+	9550 5800 9200 5800
+Text Label 9200 5800 0    50   ~ 0
+HW_RST
+Text Notes 9350 6100 0    50   ~ 0
+R24: installed\nR25: not installed
 $EndSCHEMATC
