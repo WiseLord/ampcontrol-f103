@@ -214,20 +214,26 @@ static void ampMute(bool value)
     if (value) {
         swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
     } else {
-        amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
         audioSetTune(AUDIO_TUNE_VOLUME, aProc->par.tune[AUDIO_TUNE_VOLUME].grid->min);
         swTimSet(SW_TIM_SOFT_VOLUME, 25);
     }
 
     ampPinMute(value);
     audioSetMute(value);
+
+    if (value) {
+        aProc->par.tune[AUDIO_TUNE_VOLUME].value = amp.volume;
+    }
 }
 
 static void ampExitStby(void)
 {
+    AudioProc *aProc = audioGet();
+
     audioReadSettings();
     tunerReadSettings();
 
+    amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
     ampPinStby(false);      // Power on amplifier
 
     inputSetPower(true);    // Power on input device
@@ -269,11 +275,9 @@ void ampInitHw(void)
         audioInit();
         audioReset();
 
-        amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
         aProc->par.tune[AUDIO_TUNE_VOLUME].value = aProc->par.tune[AUDIO_TUNE_VOLUME].grid->min;
         audioSetPower(true);
         ampMute(true);
-        aProc->par.tune[AUDIO_TUNE_VOLUME].value = amp.volume;
 
         tunerInit();
 
@@ -1019,6 +1023,9 @@ void ampInitMuteStby(void)
 
 void ampInit(void)
 {
+    AudioProc *aProc = audioGet();
+    amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
+
     timerInit(TIM_SPECTRUM, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
     swTimInit();
 
@@ -1231,6 +1238,9 @@ void ampActionHandle(void)
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
         audioChangeTune(aProc->tune, (int8_t)(action.value));
+        if (aProc->tune == AUDIO_TUNE_VOLUME) {
+            amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
+        }
         if (aProc->par.mute) {
             ampMute(false);
         }
