@@ -222,10 +222,6 @@ void audioChangeTune(AudioTune tune, int8_t diff)
     value += diff;
 
     audioSetTune(tune, value);
-
-    if (aProc.par.mute) {
-        audioSetMute(false);
-    }
 }
 
 void audioSetInput(int8_t value)

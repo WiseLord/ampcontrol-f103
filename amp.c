@@ -207,6 +207,22 @@ void ampPinStby(bool value)
     }
 }
 
+static void ampMute(bool value)
+{
+    AudioProc *aProc = audioGet();
+
+    if (value) {
+        swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
+    } else {
+        amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
+        audioSetTune(AUDIO_TUNE_VOLUME, aProc->par.tune[AUDIO_TUNE_VOLUME].grid->min);
+        swTimSet(SW_TIM_SOFT_VOLUME, 25);
+    }
+
+    ampPinMute(value);
+    audioSetMute(value);
+}
+
 static void ampExitStby(void)
 {
     audioReadSettings();
@@ -226,8 +242,7 @@ static void ampEnterStby(void)
 
     screenSaveSettings();
 
-    audioSetMute(true);
-    ampPinMute(true);
+    ampMute(true);
     audioSetPower(false);
 
     inputDisable();
@@ -242,6 +257,8 @@ static void ampEnterStby(void)
 
 void ampInitHw(void)
 {
+    AudioProc *aProc = audioGet();
+
     swTimSet(SW_TIM_AMP_INIT, SW_TIM_OFF);
 
     switch (amp.status) {
@@ -251,8 +268,13 @@ void ampInitHw(void)
 
         audioInit();
         audioReset();
-        audioSetMute(true);
+
+        amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
+        aProc->par.tune[AUDIO_TUNE_VOLUME].value = aProc->par.tune[AUDIO_TUNE_VOLUME].grid->min;
         audioSetPower(true);
+        ampMute(true);
+        aProc->par.tune[AUDIO_TUNE_VOLUME].value = amp.volume;
+
         tunerInit();
 
         amp.status = AMP_STATUS_HW_READY;
@@ -262,8 +284,7 @@ void ampInitHw(void)
     case AMP_STATUS_HW_READY:
         inputEnable();
 
-        ampPinMute(false);
-        audioSetMute(false);
+        ampMute(false);
 
         amp.status = AMP_STATUS_ACTIVE;
 
@@ -276,8 +297,7 @@ static void ampSetInput(int8_t value)
 {
     swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
 
-    audioSetMute(true);
-    ampPinMute(true);
+    ampMute(true);
 
     inputDisable();
     inputSetPower(false);
@@ -565,6 +585,8 @@ static void actionGetTimers(void)
         actionSet(ACTION_STANDBY, FLAG_ENTER);
     } else if (swTimGet(SW_TIM_RTC_INIT) == 0) {
         actionSet(ACTION_INIT_RTC, 0);
+    } else if (swTimGet(SW_TIM_SOFT_VOLUME) == 0) {
+        actionSet(ACTION_RESTORE_VOLUME, amp.volume);
     }
 }
 
@@ -1209,13 +1231,16 @@ void ampActionHandle(void)
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
         audioChangeTune(aProc->tune, (int8_t)(action.value));
+        if (aProc->par.mute) {
+            ampMute(false);
+        }
         actionSetScreen(SCREEN_AUDIO_PARAM, 3000);
         controlReportAudioTune(aProc->tune);
+        swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
         break;
 
     case ACTION_AUDIO_MUTE:
-        audioSetMute(action.value);
-        ampPinMute(action.value);
+        ampMute(action.value);
         if (aProc->tune != AUDIO_FLAG_MUTE) {
             screenToClear();
         }
@@ -1253,6 +1278,15 @@ void ampActionHandle(void)
         }
         aProc->tune = AUDIO_FLAG_BYPASS;
         actionSetScreen(SCREEN_AUDIO_FLAG, 3000);
+        break;
+
+    case ACTION_RESTORE_VOLUME:
+        if (aProc->par.tune[AUDIO_TUNE_VOLUME].value < action.value) {
+            audioChangeTune(AUDIO_TUNE_VOLUME, +1);
+            swTimSet(SW_TIM_SOFT_VOLUME, 25);
+        } else {
+            swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
+        }
         break;
 
     case ACTION_TUNER_EDIT_NAME:

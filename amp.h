@@ -54,6 +54,8 @@ enum {
     ACTION_AUDIO_EFFECT3D,
     ACTION_AUDIO_BYPASS,
 
+    ACTION_RESTORE_VOLUME,
+
     ACTION_TUNER_EDIT_NAME,
     ACTION_TUNER_DEL_STATION,
 
@@ -97,6 +99,7 @@ enum {
 typedef struct {
     AmpStatus status;
     uint8_t inputStatus;
+    int8_t volume;
 } Amp;
 
 typedef uint16_t MuteStby;
