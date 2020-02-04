@@ -101,6 +101,9 @@ void settingsInit(void)
     audioReadSettings();
     tunerReadSettings();
 
+    settingsSet(PARAM_DISPLAY_BR_STBY, settingsRead(PARAM_DISPLAY_BR_STBY));
+    settingsSet(PARAM_DISPLAY_BR_WORK, settingsRead(PARAM_DISPLAY_BR_WORK));
+
     settingsSet(PARAM_ALARM_HOUR, settingsRead(PARAM_ALARM_HOUR));
     settingsSet(PARAM_ALARM_MINUTE, settingsRead(PARAM_ALARM_MINUTE));
     settingsSet(PARAM_ALARM_DAYS, settingsRead(PARAM_ALARM_DAYS));
