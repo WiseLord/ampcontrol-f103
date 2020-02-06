@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd src/
+
 MAKEOPTS="-j4 -s"
 
 STM32_MCU_LIST="F103CB F303CC F303CB"
