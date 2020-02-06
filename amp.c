@@ -282,8 +282,9 @@ void ampInitHw(void)
         tunerInit();
 
         amp.status = AMP_STATUS_HW_READY;
-        swTimSet(SW_TIM_AMP_INIT, 500);
         controlReportAll();
+
+        swTimSet(SW_TIM_AMP_INIT, 500);
         break;
     case AMP_STATUS_HW_READY:
         inputEnable();
@@ -1038,7 +1039,7 @@ void ampInit(void)
 #endif
 
     amp.status = AMP_STATUS_STBY;
-    controlReportAmpStatus();
+//    controlReportAmpStatus();
 }
 
 Amp *ampGet(void)

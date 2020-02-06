@@ -28,6 +28,9 @@ static const char *CTRL_ON      = ".on";
 static const char *CTRL_OFF     = ".off";
 static const char *CTRL_TOGGLE  = ".togggle";
 
+static const char *CTRL_PREV    = ".prev";
+static const char *CTRL_NEXT    = ".next";
+
 #define GENERATE_AUDIO_TUNE_TEXT(TUNE)  # TUNE,
 
 static const char *const CTRL_AUDIO_TUNE[] = {
@@ -55,6 +58,10 @@ static void controlParseAmpInput(char *line)
 {
     if (isEndOfLine(line)) {
         controlReportAudioInput();
+    } else if (strstr(line, CTRL_PREV) == line) {
+        ampActionQueue(ACTION_AUDIO_INPUT, -1);
+    } else if (strstr(line, CTRL_NEXT) == line) {
+        ampActionQueue(ACTION_AUDIO_INPUT, +1);
     }
 }
 
@@ -130,9 +137,7 @@ void controlReportAmpStatus(void)
     case AMP_STATUS_STBY:
         status = "STANDBY";
         break;
-    case AMP_STATUS_INIT:
-        status = "INIT";
-        break;
+    case AMP_STATUS_HW_READY:
     case AMP_STATUS_ACTIVE:
         status = "ACTIVE";
         break;
@@ -178,7 +183,6 @@ void controlReportTuner(bool force)
 
 void controlReportAll(void)
 {
-    controlReportAmpStatus();
     controlReportAudio();
     controlReportTuner(true);
 }
