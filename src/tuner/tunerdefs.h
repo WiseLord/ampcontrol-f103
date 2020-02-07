@@ -23,11 +23,12 @@ extern "C" {
 
 #define GENERATE_TUNER_IC(IC) TUNER_IC_ ## IC,
 
-typedef enum {
+typedef uint8_t TunerIC;
+enum {
     FOREACH_TUNER_IC(GENERATE_TUNER_IC)
 
     TUNER_IC_END
-} TunerIC;
+};
 
 typedef uint16_t TunerFlag;
 enum {
@@ -43,37 +44,41 @@ enum {
     TUNER_FLAG_RDS_READY    = 0x0100, // RDS is ready
 };
 
-typedef enum {
+typedef uint8_t TunerBand;
+enum {
     TUNER_BAND_FM_US_EUROPE,  // 87..108 MHz
     TUNER_BAND_FM_JAPAN,      // 76..97 MHz
     TUNER_BAND_FM_WORLDWIDE,  // 79..108 MHz
     TUNER_BAND_FM_EASTEUROPE, // 65..76 MHz
 
     TUNER_BAND_END,
-} TunerBand;
+};
 
-typedef enum {
+typedef uint8_t TunerStep;
+enum {
     TUNER_STEP_50K,
     TUNER_STEP_100K,
     TUNER_STEP_200K,
 
     TUNER_STEP_END,
-} TunerStep;
+};
 
-typedef enum {
+typedef uint8_t TunerDeemph;
+enum {
     TUNER_DEEMPH_50u,
     TUNER_DEEMPH_75u,
 
     TUNER_DEEMPH_END,
-} TunerDeemph;
+};
 
-typedef enum {
+typedef uint8_t TunerMode;
+enum {
     TUNER_MODE_GRID,
     TUNER_MODE_STATIONS,
     TUNER_MODE_SCAN,
 
     TUNER_MODE_END,
-} TunerMode;
+};
 
 typedef struct {
     TunerIC ic;

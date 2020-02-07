@@ -14,7 +14,8 @@ extern "C" {
 #include "../spectrum.h"
 #include "../tuner/tuner.h"
 
-typedef enum {
+typedef uint8_t Lang;
+enum {
     LANG_DEFAULT = 0,
 
     LANG_BY,
@@ -25,7 +26,7 @@ typedef enum {
     LANG_UA,
 
     LANG_END
-} Lang;
+};
 
 typedef enum {
     LABEL_SUNDAY,

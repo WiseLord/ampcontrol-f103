@@ -113,8 +113,6 @@ void audioReadSettings(void)
         aProc.par.inCnt = MAX_INPUTS;
         break;
     }
-
-    audioInit();
 }
 
 void audioSaveSettings(void)
@@ -135,7 +133,7 @@ void audioSaveSettings(void)
     }
 }
 
-void audioInit(void)
+void audioInitParam(void)
 {
     if (aProc.api->initParam) {
         aProc.api->initParam(&aProc.par);

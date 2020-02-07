@@ -127,7 +127,22 @@ int16_t settingsGet(Param param)
     switch (param) {
 
     case PARAM_AUDIO_IC:
-        ret = (int16_t)aProc->par.ic;
+        ret = aProc->par.ic;
+        break;
+    case PARAM_AUDIO_INPUT:
+        ret = aProc->par.input;
+        break;
+    case PARAM_AUDIO_LOUDNESS:
+        ret = aProc->par.loudness;
+        break;
+    case PARAM_AUDIO_SURROUND:
+        ret = aProc->par.surround;
+        break;
+    case PARAM_AUDIO_EFFECT3D:
+        ret = aProc->par.effect3d;
+        break;
+    case PARAM_AUDIO_BYPASS:
+        ret = aProc->par.bypass;
         break;
 
     case PARAM_AUDIO_IN0:
@@ -141,20 +156,43 @@ int16_t settingsGet(Param param)
         ret = aProc->par.inType[param - PARAM_AUDIO_IN0];
         break;
 
+    case PARAM_AUDIO_GAIN0:
+    case PARAM_AUDIO_GAIN1:
+    case PARAM_AUDIO_GAIN2:
+    case PARAM_AUDIO_GAIN3:
+    case PARAM_AUDIO_GAIN4:
+    case PARAM_AUDIO_GAIN5:
+    case PARAM_AUDIO_GAIN6:
+    case PARAM_AUDIO_GAIN7:
+        ret = aProc->par.gain[param - PARAM_AUDIO_GAIN0];
+        break;
+
+    case PARAM_AUDIO_VOLUME:
+    case PARAM_AUDIO_BASS:
+    case PARAM_AUDIO_MIDDLE:
+    case PARAM_AUDIO_TREBLE:
+    case PARAM_AUDIO_FRONTREAR:
+    case PARAM_AUDIO_BALANCE:
+    case PARAM_AUDIO_CENTER:
+    case PARAM_AUDIO_SUBWOOFER:
+    case PARAM_AUDIO_PREAMP:
+        ret = aProc->par.tune[param - AUDIO_TUNE_VOLUME].value;
+        break;
+
     case PARAM_TUNER_IC:
-        ret = (int16_t)(tuner->par.ic);
+        ret = tuner->par.ic;
         break;
     case PARAM_TUNER_BAND:
-        ret = (int16_t)(tuner->par.band);
+        ret = tuner->par.band;
         break;
     case PARAM_TUNER_STEP:
-        ret = (int16_t)(tuner->par.step);
+        ret = tuner->par.step;
         break;
     case PARAM_TUNER_DEEMPH:
-        ret = (int16_t)(tuner->par.deemph);
+        ret = tuner->par.deemph;
         break;
     case PARAM_TUNER_MODE:
-        ret = (int16_t)(tuner->par.mode);
+        ret = tuner->par.mode;
         break;
     case PARAM_TUNER_FMONO:
         ret = tuner->par.forcedMono;
@@ -167,6 +205,9 @@ int16_t settingsGet(Param param)
         break;
     case PARAM_TUNER_VOLUME:
         ret = tuner->par.volume;
+        break;
+    case PARAM_TUNER_FREQ:
+        ret = (int16_t)tuner->par.freq;
         break;
 
     case PARAM_DISPLAY_BR_STBY:
@@ -202,14 +243,17 @@ int16_t settingsGet(Param param)
         ret = alarm->min;
         break;
     case PARAM_ALARM_DAYS:
-        ret = (int16_t)alarm->days;
+        ret = alarm->days;
         break;
 
     case PARAM_SYSTEM_LANG:
-        ret = (int16_t)(labelsGetLang());
+        ret = labelsGetLang();
         break;
     case PARAM_SYSTEM_MUTESTBY:
         ret = muteStby;
+        break;
+    case PARAM_SYSTEM_ENC_RES:
+        ret = inputGetEncRes();
         break;
     case PARAM_SYSTEM_SIL_TIM:
         ret = silenceTimer;
@@ -222,9 +266,6 @@ int16_t settingsGet(Param param)
         ret = pcf8574addrIdx;
         break;
 
-    case PARAM_SYSTEM_ENC_RES:
-        ret = inputGetEncRes();
-        break;
     default:
         break;
     }
@@ -248,6 +289,21 @@ void settingsSet(Param param, int16_t value)
     case PARAM_AUDIO_IC:
         aProc->par.ic = (AudioIC)(value);
         break;
+    case PARAM_AUDIO_INPUT:
+        aProc->par.input = (int8_t)value;
+        break;
+    case PARAM_AUDIO_LOUDNESS:
+        aProc->par.loudness = (int8_t)value;
+        break;
+    case PARAM_AUDIO_SURROUND:
+        aProc->par.surround = (int8_t)value;
+        break;
+    case PARAM_AUDIO_EFFECT3D:
+        aProc->par.effect3d = (int8_t)value;
+        break;
+    case PARAM_AUDIO_BYPASS:
+        aProc->par.bypass = (int8_t)value;
+        break;
 
     case PARAM_AUDIO_IN0:
     case PARAM_AUDIO_IN1:
@@ -258,6 +314,29 @@ void settingsSet(Param param, int16_t value)
     case PARAM_AUDIO_IN6:
     case PARAM_AUDIO_IN7:
         aProc->par.inType[param - PARAM_AUDIO_IN0] = (InputType)value;
+        break;
+
+    case PARAM_AUDIO_GAIN0:
+    case PARAM_AUDIO_GAIN1:
+    case PARAM_AUDIO_GAIN2:
+    case PARAM_AUDIO_GAIN3:
+    case PARAM_AUDIO_GAIN4:
+    case PARAM_AUDIO_GAIN5:
+    case PARAM_AUDIO_GAIN6:
+    case PARAM_AUDIO_GAIN7:
+        aProc->par.gain[param - PARAM_AUDIO_GAIN0] = (int8_t)value;
+        break;
+
+    case PARAM_AUDIO_VOLUME:
+    case PARAM_AUDIO_BASS:
+    case PARAM_AUDIO_MIDDLE:
+    case PARAM_AUDIO_TREBLE:
+    case PARAM_AUDIO_FRONTREAR:
+    case PARAM_AUDIO_BALANCE:
+    case PARAM_AUDIO_CENTER:
+    case PARAM_AUDIO_SUBWOOFER:
+    case PARAM_AUDIO_PREAMP:
+        aProc->par.tune[param - AUDIO_TUNE_VOLUME].value = (int8_t)value;
         break;
 
     case PARAM_TUNER_IC:
@@ -285,7 +364,10 @@ void settingsSet(Param param, int16_t value)
         tuner->par.bassBoost = (bool)value;
         break;
     case PARAM_TUNER_VOLUME:
-        tuner->par.volume = (int8_t)(value);
+        tuner->par.volume = (int8_t)value;
+        break;
+    case PARAM_TUNER_FREQ:
+        tuner->par.freq = (uint16_t)value;
         break;
 
     case PARAM_DISPLAY_BR_STBY:
@@ -300,18 +382,18 @@ void settingsSet(Param param, int16_t value)
     case PARAM_DISPLAY_DEF:
         screenGet()->def = (ScrMode)value;
         break;
-
-    case PARAM_SPECTRUM_MODE:
-        sp->mode = (SpMode)(value);
-        break;
-    case PARAM_SPECTRUM_PEAKS:
-        sp->peaks = (bool)(value);
-        break;
-    case PARAM_SPECTRUM_GRAD:
-        sp->grad = (bool)(value);
-        break;
     case PARAM_DISPLAY_PALETTE:
         paletteSetIndex((PalIdx)value);
+        break;
+
+    case PARAM_SPECTRUM_MODE:
+        sp->mode = (SpMode)value;
+        break;
+    case PARAM_SPECTRUM_PEAKS:
+        sp->peaks = (bool)value;
+        break;
+    case PARAM_SPECTRUM_GRAD:
+        sp->grad = (bool)value;
         break;
 
     case PARAM_ALARM_HOUR:
@@ -325,7 +407,7 @@ void settingsSet(Param param, int16_t value)
         break;
 
     case PARAM_SYSTEM_LANG:
-        labelsSetLang((Lang)(value));
+        labelsSetLang((Lang)value);
         break;
     case PARAM_SYSTEM_MUTESTBY:
         muteStby = (uint8_t)value;

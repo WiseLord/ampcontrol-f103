@@ -36,11 +36,12 @@ extern "C" {
 
 #define GENERATE_AUDIO_TUNE(TUNE)    AUDIO_TUNE_ ## TUNE,
 
-typedef enum {
+typedef uint8_t AudioIC;
+enum {
     FOREACH_AUDIO_IC(GENERATE_AUDIO_IC)
 
     AUDIO_IC_END
-} AudioIC;
+};
 
 typedef uint8_t AudioTune;
 enum {

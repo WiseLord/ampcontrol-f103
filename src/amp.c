@@ -272,7 +272,7 @@ void ampInitHw(void)
         pinsHwResetI2c();
         i2cInit(I2C_AMP, 100000);
 
-        audioInit();
+        audioInitParam();
         audioReset();
 
         aProc->par.tune[AUDIO_TUNE_VOLUME].value = aProc->par.tune[AUDIO_TUNE_VOLUME].grid->min;
