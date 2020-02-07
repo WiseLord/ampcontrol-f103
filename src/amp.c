@@ -38,7 +38,7 @@ static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
 static Action action = {
-    .type = ACTION_STANDBY,
+    .type = ACTION_NONE,
     .screen = SCREEN_STANDBY,
     .value = FLAG_ENTER,
 };

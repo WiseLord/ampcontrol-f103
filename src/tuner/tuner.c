@@ -48,25 +48,9 @@ void tunerReadSettings(void)
     // Read stored parameters
     memset(&tuner, 0, sizeof(tuner));
 
-    tuner.par.ic = (TunerIC)(settingsRead(PARAM_TUNER_IC));
-
-    tuner.par.band = (TunerBand)(settingsRead(PARAM_TUNER_BAND));
-    tuner.par.step = (TunerStep)(settingsRead(PARAM_TUNER_STEP));
-    tuner.par.deemph = (TunerDeemph)(settingsRead(PARAM_TUNER_DEEMPH));
-    tuner.par.mode = (TunerMode)(settingsRead(PARAM_TUNER_MODE));
-
-    tuner.par.forcedMono = settingsRead(PARAM_TUNER_FMONO);
-    tuner.par.rds = settingsRead(PARAM_TUNER_RDS);
-    tuner.par.bassBoost = settingsRead(PARAM_TUNER_BASS);
-
-    tuner.par.volume = settingsRead(PARAM_TUNER_VOLUME) & 0x0F;
-
-    tuner.par.freq = (uint16_t)settingsRead(PARAM_TUNER_FREQ);
-    tuner.status.freq = tuner.par.freq;
-
-    tuner.par.fMin = 8700;
-    tuner.par.fMax = 10800;
-    tuner.par.fStep = 10;
+    for (Param par = PARAM_TUNER_BEGIN; par < PARAM_TUNER_END; par++) {
+        settingsSet(par, settingsRead(par));
+    }
 
     // API initialization
     tuner.api = &tunerTestApi;

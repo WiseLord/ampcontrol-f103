@@ -98,21 +98,9 @@ void settingsInit(void)
 {
     eeInit();
 
-    audioReadSettings();
-    tunerReadSettings();
-
-    settingsSet(PARAM_DISPLAY_BR_STBY, settingsRead(PARAM_DISPLAY_BR_STBY));
-    settingsSet(PARAM_DISPLAY_BR_WORK, settingsRead(PARAM_DISPLAY_BR_WORK));
-
-    settingsSet(PARAM_ALARM_HOUR, settingsRead(PARAM_ALARM_HOUR));
-    settingsSet(PARAM_ALARM_MINUTE, settingsRead(PARAM_ALARM_MINUTE));
-    settingsSet(PARAM_ALARM_DAYS, settingsRead(PARAM_ALARM_DAYS));
-
-    settingsSet(PARAM_SYSTEM_MUTESTBY, settingsRead(PARAM_SYSTEM_MUTESTBY));
-    settingsSet(PARAM_SYSTEM_SIL_TIM, settingsRead(PARAM_SYSTEM_SIL_TIM));
-    settingsSet(PARAM_SYSTEM_RTC_CORR, settingsRead(PARAM_SYSTEM_RTC_CORR));
-
-    settingsSet(PARAM_I2C_EXT_IN_STAT, settingsRead(PARAM_I2C_EXT_IN_STAT));
+    for (Param par = PARAM_NULL + 1; par < PARAM_END; par++) {
+        settingsSet(par, settingsRead(par));
+    }
 }
 
 int16_t settingsGet(Param param)
@@ -176,7 +164,7 @@ int16_t settingsGet(Param param)
     case PARAM_AUDIO_CENTER:
     case PARAM_AUDIO_SUBWOOFER:
     case PARAM_AUDIO_PREAMP:
-        ret = aProc->par.tune[param - AUDIO_TUNE_VOLUME].value;
+        ret = aProc->par.tune[param - PARAM_AUDIO_VOLUME].value;
         break;
 
     case PARAM_TUNER_IC:
@@ -336,7 +324,7 @@ void settingsSet(Param param, int16_t value)
     case PARAM_AUDIO_CENTER:
     case PARAM_AUDIO_SUBWOOFER:
     case PARAM_AUDIO_PREAMP:
-        aProc->par.tune[param - AUDIO_TUNE_VOLUME].value = (int8_t)value;
+        aProc->par.tune[param - PARAM_AUDIO_VOLUME].value = (int8_t)value;
         break;
 
     case PARAM_TUNER_IC:

@@ -53,27 +53,9 @@ void audioReadSettings(void)
     // Read stored parameters
     memset(&aProc, 0, sizeof(aProc));
 
-    aProc.par.ic = (AudioIC)(settingsRead(PARAM_AUDIO_IC));
-    aProc.par.loudness = settingsRead(PARAM_AUDIO_LOUDNESS);
-    aProc.par.surround = settingsRead(PARAM_AUDIO_SURROUND);
-    aProc.par.effect3d = settingsRead(PARAM_AUDIO_EFFECT3D);
-    aProc.par.bypass = settingsRead(PARAM_AUDIO_BYPASS);
-
-    aProc.par.input = (int8_t)settingsRead(PARAM_AUDIO_INPUT);
-
-    for (Param par = PARAM_AUDIO_VOLUME; par <= PARAM_AUDIO_PREAMP; par++) {
-        aProc.par.tune[par - PARAM_AUDIO_VOLUME].value = (int8_t)settingsRead(par);
+    for (Param par = PARAM_AUDIO_BEGIN; par < PARAM_AUDIO_END; par++) {
+        settingsSet(par, settingsRead(par));
     }
-
-    for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN_LAST; par++) {
-        aProc.par.gain[par - PARAM_AUDIO_GAIN0] = (int8_t)settingsRead(par);
-    }
-
-    for (Param par = PARAM_AUDIO_IN0; par <= PARAM_AUDIO_IN_LAST; par++) {
-        aProc.par.inType[par - PARAM_AUDIO_IN0] = (InputType)settingsRead(par);
-    }
-
-    aProc.par.tune[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
 
     // API initialization
     switch (aProc.par.ic) {

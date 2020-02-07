@@ -55,11 +55,12 @@ static bool screenCheckClear(void)
 
 void screenReadSettings(void)
 {
-    screen.def = (ScrMode)settingsRead(PARAM_DISPLAY_DEF);
+    screen.def = (ScrMode)settingsGet(PARAM_DISPLAY_DEF);
 }
 
 void screenSaveSettings(void)
 {
+    settingsSet(PARAM_DISPLAY_DEF, screen.def);
     settingsStore(PARAM_DISPLAY_DEF, screen.def);
 }
 

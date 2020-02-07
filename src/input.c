@@ -13,7 +13,7 @@ void inputInit(void)
 {
     timerInit(TIM_INPUT, 199, 359);  // 1kHz polling
 
-    encRes = (int8_t)settingsRead(PARAM_SYSTEM_ENC_RES);
+    encRes = (int8_t)settingsGet(PARAM_SYSTEM_ENC_RES);
 }
 
 void inputSetEncRes(int8_t value)

@@ -294,10 +294,6 @@ static void rcDecodeRC56 (bool rc, uint16_t delay)
 
 void rcInit(void)
 {
-    for (RcCmd cmd = 0; cmd < RC_CMD_END; cmd++) {
-        rcCode[cmd] = (uint16_t)settingsRead(PARAM_RC_STBY_SWITCH + cmd);
-    }
-
     timerInit(TIM_RC, 71, 65535); // 1MHz timer for remote control handling
 
     NVIC_SetPriority(EXTI9_5_IRQn, 0);

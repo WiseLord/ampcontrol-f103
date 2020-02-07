@@ -260,9 +260,9 @@ static void spGetData(int16_t *dma, SpData *chan)
 
 static void spReadSettings(void)
 {
-    spectrum.mode = (SpMode)settingsRead(PARAM_SPECTRUM_MODE);
-    spectrum.peaks = (uint8_t)settingsRead(PARAM_SPECTRUM_PEAKS);
-    spectrum.grad = (uint8_t)settingsRead(PARAM_SPECTRUM_GRAD);
+    spectrum.mode = (SpMode)settingsGet(PARAM_SPECTRUM_MODE);
+    spectrum.peaks = (uint8_t)settingsGet(PARAM_SPECTRUM_PEAKS);
+    spectrum.grad = (uint8_t)settingsGet(PARAM_SPECTRUM_GRAD);
 }
 
 void spInit(void)

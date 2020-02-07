@@ -22,7 +22,11 @@ typedef uint8_t Param;
 enum {
     PARAM_NULL = 0,
 
-    PARAM_AUDIO_IC,
+    //----------------------------------------------------------------
+
+    PARAM_AUDIO_BEGIN,
+
+    PARAM_AUDIO_IC = PARAM_AUDIO_BEGIN,
     PARAM_AUDIO_INPUT,
     PARAM_AUDIO_LOUDNESS,
     PARAM_AUDIO_SURROUND,
@@ -59,7 +63,13 @@ enum {
     PARAM_AUDIO_SUBWOOFER,
     PARAM_AUDIO_PREAMP,
 
-    PARAM_TUNER_IC,
+    PARAM_AUDIO_END,
+
+    //----------------------------------------------------------------
+
+    PARAM_TUNER_BEGIN = PARAM_AUDIO_END,
+
+    PARAM_TUNER_IC = PARAM_TUNER_BEGIN,
     PARAM_TUNER_BAND,
     PARAM_TUNER_STEP,
     PARAM_TUNER_DEEMPH,
@@ -70,7 +80,13 @@ enum {
     PARAM_TUNER_VOLUME,
     PARAM_TUNER_FREQ,
 
-    PARAM_DISPLAY_BR_STBY,
+    PARAM_TUNER_END,
+
+    //----------------------------------------------------------------
+
+    PARAM_DISPLAY_BEGIN = PARAM_TUNER_END,
+
+    PARAM_DISPLAY_BR_STBY = PARAM_DISPLAY_BEGIN,
     PARAM_DISPLAY_BR_WORK,
     PARAM_DISPLAY_ROTATE,
     PARAM_DISPLAY_DEF,
@@ -98,6 +114,7 @@ enum {
 };
 
 void settingsInit(void);
+
 int16_t settingsGet(Param param);
 void settingsSet(Param param, int16_t value);
 
