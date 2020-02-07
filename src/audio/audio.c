@@ -23,12 +23,12 @@
 
 static AudioProc aProc;
 
-static const AudioGrid gridTestVolume       = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step
-static const AudioGrid gridTestTone         = { -7,  7, (uint8_t)(2.00 * 8)}; // -14..14dB with 2dB step
-static const AudioGrid gridTestBalance      = { -7,  7, (uint8_t)(1.00 * 8)}; // -7..7dB with 1dB step
-static const AudioGrid gridTestCenterSub    = {-15,  0, (uint8_t)(1.00 * 8)}; // -15..0dB with 1dB step
-static const AudioGrid gridTestPreamp       = {-47,  0, (uint8_t)(1.00 * 8)}; // -47..0dB with 1dB step
-static const AudioGrid gridTestGain         = {  0, 15, (uint8_t)(2.00 * 8)}; // 0..30dB with 2dB step
+static const AudioGrid gridTestVolume       = {-79,  0, (int8_t)(1.00 * STEP_MULT)}; // -79..0dB with 1dB step
+static const AudioGrid gridTestTone         = { -7,  7, (int8_t)(2.00 * STEP_MULT)}; // -14..14dB with 2dB step
+static const AudioGrid gridTestBalance      = { -7,  7, (int8_t)(1.00 * STEP_MULT)}; // -7..7dB with 1dB step
+static const AudioGrid gridTestCenterSub    = {-15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
+static const AudioGrid gridTestPreamp       = {-47,  0, (int8_t)(1.00 * STEP_MULT)}; // -47..0dB with 1dB step
+static const AudioGrid gridTestGain         = {  0, 15, (int8_t)(2.00 * STEP_MULT)}; // 0..30dB with 2dB step
 
 static void audioTestInitParam(AudioParam *aPar)
 {

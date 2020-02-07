@@ -10,8 +10,6 @@ extern "C" {
 
 #include "audiodefs.h"
 
-#define STEP_MULT   8
-
 typedef struct {
     const AudioApi *api;
     AudioParam par;

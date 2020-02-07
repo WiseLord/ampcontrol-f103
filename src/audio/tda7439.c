@@ -21,11 +21,11 @@
 // I2C autoincrement flag
 #define TDA7439_AUTO_INC            0x10
 
-static const AudioGrid gridVolume  = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step
-static const AudioGrid gridTone    = { -7,  7, (uint8_t)(2.00 * 8)}; // -14..14dB with 2dB step
-static const AudioGrid gridBalance = {-15, 15, (uint8_t)(1.00 * 8)}; // -15..15dB with 1dB step
-static const AudioGrid gridPreamp  = {-47,  0, (uint8_t)(1.00 * 8)}; // -47..0dB with 1dB step
-static const AudioGrid gridGain    = {  0, 15, (uint8_t)(2.00 * 8)}; // 0..30dB with 2dB step
+static const AudioGrid gridVolume  = {-79,  0, (int8_t)(1.00 * STEP_MULT)}; // -79..0dB with 1dB step
+static const AudioGrid gridTone    = { -7,  7, (int8_t)(2.00 * STEP_MULT)}; // -14..14dB with 2dB step
+static const AudioGrid gridBalance = {-15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
+static const AudioGrid gridPreamp  = {-47,  0, (int8_t)(1.00 * STEP_MULT)}; // -47..0dB with 1dB step
+static const AudioGrid gridGain    = {  0, 15, (int8_t)(2.00 * STEP_MULT)}; // 0..30dB with 2dB step
 
 static AudioParam *aPar;
 

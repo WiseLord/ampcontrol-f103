@@ -153,9 +153,9 @@
 
 static const int8_t inCfg2[TDA7719_IN_CNT] = { 0, 4, 1, 2, 5, 6 };
 
-static const AudioGrid gridVolume  = {-79,  0, (uint8_t)(1.00 * 8)}; // -79..0dB with 1dB step
-static const AudioGrid gridToneBal = {-15, 15, (uint8_t)(1.00 * 8)}; // -15..15dB with 1dB step
-static const AudioGrid gridGain    = {  0,  1, (uint8_t)(3.00 * 8)}; // 0..3dB with 3dB step
+static const AudioGrid gridVolume  = {-79,  0, (int8_t)(1.00 * STEP_MULT)}; // -79..0dB with 1dB step
+static const AudioGrid gridToneBal = {-15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
+static const AudioGrid gridGain    = {  0,  1, (int8_t)(3.00 * STEP_MULT)}; // 0..3dB with 3dB step
 
 static AudioParam *aPar;
 

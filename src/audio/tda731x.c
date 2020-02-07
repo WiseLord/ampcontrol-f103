@@ -17,10 +17,10 @@
 #define TDA731X_BASS                0x60
 #define TDA731X_TREBLE              0x70
 
-static const AudioGrid gridVolume  = {-63,  0, (uint8_t)(1.25 * 8)}; // -78.75..0dB with 1.25dB step
-static const AudioGrid gridTone    = { -7,  7, (uint8_t)(2.00 * 8)}; // -14..14dB with 2dB step
-static const AudioGrid gridBalance = {-15, 15, (uint8_t)(1.25 * 8)}; // -18.75..18.75dB with 1.25dB step
-static const AudioGrid gridGain    = {  0,  3, (uint8_t)(3.75 * 8)}; // 0..11.25dB with 3.75dB step
+static const AudioGrid gridVolume  = {-63,  0, (int8_t)(1.25 * STEP_MULT)}; // -78.75..0dB with 1.25dB step
+static const AudioGrid gridTone    = { -7,  7, (int8_t)(2.00 * STEP_MULT)}; // -14..14dB with 2dB step
+static const AudioGrid gridBalance = {-15, 15, (int8_t)(1.25 * STEP_MULT)}; // -18.75..18.75dB with 1.25dB step
+static const AudioGrid gridGain    = {  0,  3, (int8_t)(3.75 * STEP_MULT)}; // 0..11.25dB with 3.75dB step
 
 static AudioParam *aPar;
 

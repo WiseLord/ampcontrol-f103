@@ -573,7 +573,7 @@ void canvasShowTune(bool clear)
         glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(GLCD_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
-        glcdWriteString(utilMkStr("%3d", value * mStep / 8));
+        glcdWriteString(utilMkStr("%3d", value * mStep / STEP_MULT));
         prev.par.value = value;
     }
 

@@ -75,10 +75,12 @@ enum {
     IN_END
 };
 
+#define STEP_MULT   8
+
 typedef struct {
     int8_t min;     // Minimum in steps
     int8_t max;     // Maximum in steps
-    uint8_t mStep;   // Step multiplied by STEP_MULT (to handle 1.25 and so on)
+    int8_t mStep;   // Step multiplied by STEP_MULT (to handle 1.25 and so on)
 } AudioGrid;
 
 typedef struct {
