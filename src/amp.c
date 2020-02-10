@@ -160,12 +160,14 @@ static void inputSetPower(bool value)
 
     I2cAddrIdx i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_IN_STAT);
 
-    if (!i2cIsEnabled(I2C_AMP)) {
-        i2cInit(I2C_AMP, 100000);
-        i2cexpSend(i2cAddrIdx, amp.inputStatus);
-        i2cDeInit(I2C_AMP);
-    } else {
-        i2cexpSend(i2cAddrIdx, amp.inputStatus);
+    if (i2cAddrIdx != I2C_ADDR_DISABLED) {
+        if (!i2cIsEnabled(I2C_AMP)) {
+            i2cInit(I2C_AMP, 100000);
+            i2cexpSend(i2cAddrIdx, amp.inputStatus);
+            i2cDeInit(I2C_AMP);
+        } else {
+            i2cexpSend(i2cAddrIdx, amp.inputStatus);
+        }
     }
 }
 

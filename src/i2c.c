@@ -58,8 +58,8 @@ static void i2cInitPins(I2C_TypeDef *I2Cx)
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     GPIO_TypeDef *gpio = GPIOB;
-    uint32_t sclPin =  LL_GPIO_PIN_8;   // LL_GPIO_PIN_6
-    uint32_t sdaPin =  LL_GPIO_PIN_9;   // LL_GPIO_PIN_7
+    uint32_t sclPin =  LL_I2C1_SCL_PIN;
+    uint32_t sdaPin =  LL_I2C1_SDA_PIN;
 
     if (I2Cx == I2C1) {
         if (sclPin == LL_GPIO_PIN_8 && sdaPin == LL_GPIO_PIN_9) {
