@@ -14,7 +14,7 @@ extern "C" {
 #define I2C_WRITE       0
 #define I2C_READ        1
 
-#define I2C1_BUF_SIZE   160
+#define I2C1_BUF_SIZE   32
 #define I2C2_BUF_SIZE   0
 
 typedef struct {
