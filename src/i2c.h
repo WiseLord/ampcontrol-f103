@@ -10,6 +10,7 @@ extern "C" {
 
 #define I2C_NOACK       0
 #define I2C_ACK         1
+
 #define I2C_WRITE       0
 #define I2C_READ        1
 
@@ -18,8 +19,12 @@ extern "C" {
 
 typedef struct {
     uint8_t *txBuf;
+    uint8_t *rxBuf;
+    int16_t txIdx;
+    int16_t rxIdx;
     int16_t bytes;
     uint8_t addr;
+    uint8_t direction;
     uint8_t timeout;
 } I2cContext;
 
@@ -33,6 +38,8 @@ void i2cBegin(void *i2c, uint8_t addr);
 void i2cSend(void *i2c, uint8_t data);
 void i2cTransmit(void *i2c);
 void i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes);
+
+void i2cSlaveTransmitReceive(void *i2c, uint8_t *rxBuf, int16_t bytes);
 
 #ifdef __cplusplus
 }

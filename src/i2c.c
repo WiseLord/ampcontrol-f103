@@ -51,6 +51,32 @@ static void i2cInitPins(I2C_TypeDef *I2Cx)
     LL_GPIO_Init(gpio, &GPIO_InitStruct);
 }
 
+__attribute__((always_inline))
+static inline void i2cEnableInterrupts(I2C_TypeDef *I2Cx)
+{
+#ifdef STM32F1
+    // Enable Events interrupts (SB, ADDR, ADD10, STOPF, BTF)
+    SET_BIT(I2Cx->CR2, I2C_CR2_ITEVTEN);
+    // Enable Error interrupts (BERR, ARLO, AF, OVR)
+    SET_BIT(I2Cx->CR2, I2C_CR2_ITERREN);
+    // Enable Buffer interrupts (RXNE, TXE)
+    SET_BIT(I2Cx->CR2, I2C_CR2_ITBUFEN);
+#endif
+}
+
+__attribute__((always_inline))
+static inline void i2cDisableInterrupts(I2C_TypeDef *I2Cx)
+{
+#ifdef STM32F1
+    // Enable Events interrupts (SB, ADDR, ADD10, STOPF, BTF)
+    CLEAR_BIT(I2Cx->CR2, I2C_CR2_ITEVTEN);
+    // Enable Error interrupts (BERR, ARLO, AF, OVR)
+    CLEAR_BIT(I2Cx->CR2, I2C_CR2_ITERREN);
+    // Enable Buffer interrupts (RXNE, TXE)
+    CLEAR_BIT(I2Cx->CR2, I2C_CR2_ITBUFEN);
+#endif
+}
+
 static bool i2cWait(I2cContext *ctx)
 {
     if (LL_SYSTICK_IsActiveCounterFlag()) {
@@ -66,6 +92,8 @@ static bool i2cWait(I2cContext *ctx)
 static void i2cDoStop(I2C_TypeDef *I2Cx)
 {
     I2cContext *ctx = i2cGetCtx(I2Cx);
+
+    i2cDisableInterrupts(I2Cx);
 
     LL_I2C_GenerateStopCondition(I2Cx);
     ctx->timeout = I2C_TIMEOUT_MS;
@@ -187,7 +215,6 @@ void i2cSend(void *i2c, uint8_t data)
     ctx->txBuf[ctx->bytes++] = data;
 }
 
-
 void i2cTransmit(void *i2c)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
@@ -196,47 +223,36 @@ void i2cTransmit(void *i2c)
     }
 
 #ifdef STM32F1
-    LL_I2C_GenerateStartCondition(i2c);
+    I2C_TypeDef *I2Cx = (I2C_TypeDef *)i2c;
 
+    i2cEnableInterrupts(I2Cx);
+
+    // Set the I2C direction to Transmission
+    ctx->direction = I2C_WRITE;
+
+    // Clear address last bit (write mode)
+    ctx->addr &= ~I2C_OAR1_ADD0;
+
+    // Generate a START or RESTART condition
+    SET_BIT(I2Cx->CR1, I2C_CR1_START);
+
+    // Wait for START condition sent
     ctx->timeout = I2C_TIMEOUT_MS;
-    while (!LL_I2C_IsActiveFlag_SB(i2c)) {
+    while (READ_BIT(I2Cx->CR1, I2C_CR1_START) == I2C_CR1_START) {
+        if (i2cWait(ctx) == false) {
+            i2cDisableInterrupts(I2Cx);
+            return;
+        }
+    }
+
+    // Wait until BUSY flag is reset: a STOP has been generated
+    ctx->timeout = I2C_TIMEOUT_MS;
+    while (READ_BIT(I2Cx->SR2, I2C_SR2_BUSY) == I2C_SR2_BUSY) {
         if (i2cWait(ctx) == false) {
             i2cDoStop(i2c);
             return;
         }
     }
-
-    LL_I2C_TransmitData8(i2c, ctx->addr | I2C_WRITE);
-
-    ctx->timeout = I2C_TIMEOUT_MS;
-    while (!LL_I2C_IsActiveFlag_ADDR(i2c)) {
-        if (i2cWait(ctx) == false) {
-            i2cDoStop(i2c);
-            return;
-        }
-    }
-
-    LL_I2C_ClearFlag_ADDR(i2c);
-
-    for (uint8_t i = 0; i < ctx->bytes; i++) {
-        ctx->timeout = I2C_TIMEOUT_MS;
-        while (!LL_I2C_IsActiveFlag_TXE(i2c)) {
-            if (i2cWait(ctx) == false) {
-                i2cDoStop(i2c);
-                return;
-            }
-        }
-        LL_I2C_TransmitData8(i2c, ctx->txBuf[i]);
-    }
-
-    ctx->timeout = I2C_TIMEOUT_MS;
-    while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
-        if (i2cWait(ctx) == false) {
-            i2cDoStop(i2c);
-            return;
-        }
-    }
-    i2cDoStop(i2c);
 #endif
 
 #ifdef STM32F3
@@ -264,107 +280,46 @@ void i2cTransmit(void *i2c)
 void i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
-    if (ctx == NULL)
+    if (ctx == NULL) {
         return;
+    }
+
+    ctx->rxBuf = rxBuf;
+    ctx->bytes = bytes;
 
 #ifdef STM32F1
-    if (bytes == 2) {
-        LL_I2C_EnableBitPOS(i2c);
-    } else {
-        LL_I2C_DisableBitPOS(i2c);
-    }
+    I2C_TypeDef *I2Cx = (I2C_TypeDef *)i2c;
 
-    LL_I2C_GenerateStartCondition(i2c);
+    i2cEnableInterrupts(I2Cx);
 
-    ctx->timeout = I2C_TIMEOUT_MS;
-    while (!LL_I2C_IsActiveFlag_SB(i2c)) {
-        if (i2cWait(ctx) == false)
-            return;
-    }
+    // Set the I2C direction to Reception
+    ctx->direction = I2C_READ;
 
-    LL_I2C_TransmitData8(i2c, ctx->addr | I2C_READ);
+    // Set address last bit (read mode)
+    ctx->addr |= I2C_OAR1_ADD0;
 
-    ctx->timeout = I2C_TIMEOUT_MS;
-    while (!LL_I2C_IsActiveFlag_ADDR(i2c)) {
+    // Generate a START or RESTART condition
+    SET_BIT(I2Cx->CR1, I2C_CR1_START);
+
+    // Wait for START condition sent
+    ctx->timeout = 3;//I2C_TIMEOUT_MS;
+    while (READ_BIT(I2Cx->CR1, I2C_CR1_START) == I2C_CR1_START) {
         if (i2cWait(ctx) == false) {
-            LL_I2C_GenerateStopCondition(i2c);
+            i2cDisableInterrupts(I2Cx);
             return;
         }
     }
 
-    if (bytes == 1) {
-        LL_I2C_AcknowledgeNextData(i2c, LL_I2C_NACK);
-        LL_I2C_ClearFlag_ADDR(i2c);
-        LL_I2C_GenerateStopCondition(i2c);
-
-        ctx->timeout = I2C_TIMEOUT_MS;
-        while (!LL_I2C_IsActiveFlag_RXNE(i2c)) {
-            if (i2cWait(ctx) == false)
-                return;
-        }
-        *rxBuf++ = LL_I2C_ReceiveData8(i2c);
-    } else if (bytes == 2) {
-        LL_I2C_ClearFlag_ADDR(i2c);
-        LL_I2C_AcknowledgeNextData(i2c, LL_I2C_NACK);
-
-        ctx->timeout = I2C_TIMEOUT_MS;
-        while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
-            if (i2cWait(ctx) == false)
-                return;
-        }
-
-        LL_I2C_GenerateStopCondition(i2c);
-
-        *rxBuf++ = LL_I2C_ReceiveData8(i2c);
-        *rxBuf++ = LL_I2C_ReceiveData8(i2c);
-    } else {
-        LL_I2C_ClearFlag_ADDR(i2c);
-
-        while (bytes) {
-            /* Receive bytes from first byte until byte N-3 */
-            if (bytes-- != 3) {
-                ctx->timeout = I2C_TIMEOUT_MS;
-                while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
-                    if (i2cWait(ctx) == false)
-                        return;
-                }
-
-                *rxBuf++ = LL_I2C_ReceiveData8(i2c);
-            } else {
-                ctx->timeout = I2C_TIMEOUT_MS;
-                while (!LL_I2C_IsActiveFlag_BTF(i2c)) {
-                    if (i2cWait(ctx) == false)
-                        return;
-                }
-
-                LL_I2C_AcknowledgeNextData(i2c, LL_I2C_NACK);
-
-                *rxBuf++ = LL_I2C_ReceiveData8(i2c);
-
-                LL_I2C_GenerateStopCondition(i2c);
-
-                *rxBuf++ = LL_I2C_ReceiveData8(i2c);
-
-                ctx->timeout = I2C_TIMEOUT_MS;
-                while (!LL_I2C_IsActiveFlag_RXNE(i2c)) {
-                    if (i2cWait(ctx) == false)
-                        return;
-                }
-                *rxBuf++ = LL_I2C_ReceiveData8(i2c);
-
-                bytes = 0;
-            }
-        }
-    }
-
+    // Wait until BUSY flag is reset: a STOP has been generated
     ctx->timeout = I2C_TIMEOUT_MS;
-    while (LL_I2C_IsActiveFlag_STOP(i2c)) {
+    while (READ_BIT(I2Cx->SR2, I2C_SR2_BUSY) == I2C_SR2_BUSY) {
         if (i2cWait(ctx) == false) {
+            i2cDoStop(i2c);
             return;
         }
     }
-    LL_I2C_AcknowledgeNextData(i2c, LL_I2C_ACK);
-    LL_I2C_DisableBitPOS(i2c);
+    // Prepare the generation of a ACKnowledge to be ready for another reception
+    SET_BIT(I2Cx->CR1, I2C_CR1_ACK);
 #endif
 
 #ifdef STM32F3
@@ -384,3 +339,201 @@ void i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
     LL_I2C_ClearFlag_STOP(i2c);
 #endif
 }
+
+
+void i2cSlaveTransmitReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
+{
+    I2cContext *ctx = i2cGetCtx(i2c);
+    if (ctx == NULL) {
+        return;
+    }
+
+    ctx->rxBuf = rxBuf;
+    ctx->bytes = bytes;
+
+    i2cEnableInterrupts(i2c);
+}
+
+#ifdef STM32F1
+void I2C_EV_IRQHandler(I2C_TypeDef *I2Cx)
+{
+    I2cContext *ctx = i2cGetCtx(I2Cx);
+
+    uint32_t SR1 = I2Cx->SR1;
+    uint32_t SR2 = I2Cx->SR2;
+
+    // If slave mode
+    if (READ_BIT(SR2, I2C_SR2_MSL) != I2C_SR2_MSL) {
+        // When Address matched flag (EV1)
+        if (READ_BIT(SR1, I2C_SR1_ADDR) == I2C_SR1_ADDR) {
+            // Initialize transmit/receive counters for next data transfer
+            ctx->txIdx = 0;
+            ctx->rxIdx = 0;
+            SR1 = 0;
+            SR2 = 0;
+        }
+        // When Transmit data register empty flag (EV3)
+        if (READ_BIT(SR1, I2C_SR1_TXE) == I2C_SR1_TXE) {
+            // Write data in data register
+            I2Cx->DR = ctx->txBuf[ctx->txIdx++];
+            SR1 = 0;
+            SR2 = 0;
+        }
+        // When Receive data register not empty flag (EV2)
+        if (READ_BIT(SR1, I2C_SR1_RXNE) == I2C_SR1_RXNE) {
+            // Read data from data register
+            ctx->rxBuf[ctx->rxIdx++] = (uint8_t)I2Cx->DR;
+            SR1 = 0;
+            SR2 = 0;
+
+        }
+        // When Stop detection flag (EV4)
+        if (READ_BIT(SR1, I2C_SR1_STOPF) == I2C_SR1_STOPF) {
+            // Enable I2C peripheral
+            SET_BIT(I2Cx->CR1, I2C_CR1_PE);
+            SR1 = 0;
+            SR2 = 0;
+        }
+    }
+    // End slave mode
+
+    // When Start condition is generated (EV5)
+    if (READ_BIT(SR1, I2C_SR1_SB) == I2C_SR1_SB) {
+        // Set the slave address for transmssion or for reception
+        I2Cx->DR = ctx->addr;
+        SR1 = 0;
+        SR2 = 0;
+    }
+
+    // If master mode
+    if (READ_BIT(SR2, I2C_SR2_MSL) == I2C_SR2_MSL) {
+        // When Address is fully set flag (EV6)
+        if (READ_BIT(SR1, I2C_SR1_ADDR) == I2C_SR1_ADDR) {
+            // Write the first data in case the Master is Transmitter
+            if (ctx->direction == I2C_WRITE) {
+                // Initialize the Transmit counter
+                ctx->txIdx = 0;
+                // Write the first data in the data register
+                I2Cx->DR = ctx->txBuf[ctx->txIdx++];
+                // Decrement the number of bytes to be written
+                ctx->bytes--;
+
+                // With last byte sent, disable the Buffer interrupts
+                if (ctx->bytes == 0) {
+                    CLEAR_BIT(I2Cx->CR2, I2C_CR2_ITBUFEN);
+                }
+            } else {
+                // Initialize Receive counter
+                ctx->rxIdx = 0;
+                // At this stage, ADDR is cleared because both SR1 and SR2 were read
+                // EV6_1: Single byte reception
+                if (ctx->bytes == 1) {
+                    // Clear ACKnowledge
+                    CLEAR_BIT(I2Cx->CR1, I2C_CR1_ACK);
+                    // Program the STOP
+                    SET_BIT(I2Cx->CR1, I2C_CR1_STOP);
+                }
+            }
+            SR1 = 0;
+            SR2 = 0;
+        }
+
+        // Master transmits the remaining data
+        // When Transmit data register empty but but transfer is not finished yet
+        if (READ_BIT(SR1, I2C_SR1_BTF | I2C_SR1_TXE) == I2C_SR1_TXE) {
+            /* If there is still data to write */
+            if (ctx->bytes != 0) {
+                /* Write the data in DR register */
+                I2Cx->DR = ctx->txBuf[ctx->txIdx++];
+                /* Decrment the number of data to be written */
+                ctx->bytes--;
+                /* If  no data remains to write, disable the BUF IT in order
+                to not have again a TxE interrupt. */
+                if (ctx->bytes == 0) {
+                    /* Disable the BUF IT */
+                    CLEAR_BIT(I2Cx->CR2, I2C_CR2_ITBUFEN);
+                }
+            }
+            SR1 = 0;
+            SR2 = 0;
+        }
+
+        // If both BTF and TXE are set (EV8_2), program the STOP (tranferring last byte)
+        if (READ_BIT(SR1, I2C_SR1_BTF | I2C_SR1_TXE) == (I2C_SR1_BTF | I2C_SR1_TXE)) {
+            // Program the STOP
+            SET_BIT(I2Cx->CR1, I2C_CR1_STOP);
+            // Disable EVT IT In order to not have a BTF IT again
+            CLEAR_BIT(I2Cx->CR2, I2C_CR2_ITEVTEN);
+            SR1 = 0;
+            SR2 = 0;
+        }
+        // When Receive data register not empty flag
+        if (READ_BIT(SR1, I2C_SR1_RXNE) == I2C_SR1_RXNE) {
+            // Read data from data register
+            ctx->rxBuf[ctx->rxIdx++] = (uint8_t)I2Cx->DR;
+            // Decrement the number of bytes to be read
+            ctx->bytes--;
+            // EV7_1: Last byte reception
+            if (ctx->bytes == 1) {
+                // Clear ACKnowledge
+                CLEAR_BIT(I2Cx->CR1, I2C_CR1_ACK);
+                // Program the STOP
+                SET_BIT(I2Cx->CR1, I2C_CR1_STOP);
+            }
+            SR1 = 0;
+            SR2 = 0;
+        }
+    }
+    // End master mode
+}
+
+void I2C1_EV_IRQHandler(void)
+{
+    I2C_EV_IRQHandler(I2C1);
+}
+
+void I2C2_EV_IRQHandler(void)
+{
+    I2C_EV_IRQHandler(I2C2);
+}
+
+
+void I2C_ER_IRQHandler(I2C_TypeDef *I2Cx)
+{
+    uint32_t SR1 = I2Cx->SR1;
+
+    // When an acknowledge failure is received after a byte transmission
+    if (READ_BIT(SR1, I2C_SR1_AF) == I2C_SR1_AF) {
+        CLEAR_BIT(I2Cx->SR1, I2C_SR1_AF);
+        SR1 = 0;
+    }
+
+    // When arbitration lost
+    if (READ_BIT(SR1, I2C_SR1_ARLO) == I2C_SR1_ARLO) {
+        CLEAR_BIT(I2Cx->SR1, I2C_SR1_ARLO);
+        SR1 = 0;
+    }
+
+    // When a misplaced Start or Stop condition is detected
+    if (READ_BIT(SR1, I2C_SR1_BERR) == I2C_SR1_BERR) {
+        CLEAR_BIT(I2Cx->SR1, I2C_SR1_BERR);
+        SR1 = 0;
+    }
+
+    // When an overrun/underrun error occurs (Clock Stretching Disabled)
+    if (READ_BIT(SR1, I2C_SR1_OVR) == I2C_SR1_OVR) {
+        CLEAR_BIT(I2Cx->SR1, I2C_SR1_OVR);
+        SR1 = 0;
+    }
+}
+
+void I2C1_ER_IRQHandler(void)
+{
+    I2C_ER_IRQHandler(I2C1);
+}
+
+void I2C2_ER_IRQHandler(void)
+{
+    I2C_ER_IRQHandler(I2C2);
+}
+#endif
