@@ -389,6 +389,10 @@ void I2C_EV_IRQHandler(I2C_TypeDef *I2Cx)
         }
         // When Stop detection flag (EV4)
         if (READ_BIT(SR1, I2C_SR1_STOPF) == I2C_SR1_STOPF) {
+            // Slave finishes to receive data - master STOP
+            if (ctx->slave_rx_cb) {
+                ctx->slave_rx_cb();
+            }
             // Enable I2C peripheral
             SET_BIT(I2Cx->CR1, I2C_CR1_PE);
             SR1 = 0;
@@ -500,10 +504,18 @@ void I2C2_EV_IRQHandler(void)
 
 void I2C_ER_IRQHandler(I2C_TypeDef *I2Cx)
 {
+    I2cContext *ctx = i2cGetCtx(I2Cx);
+
     uint32_t SR1 = I2Cx->SR1;
+    uint32_t SR2 = I2Cx->SR2;
 
     // When an acknowledge failure is received after a byte transmission
     if (READ_BIT(SR1, I2C_SR1_AF) == I2C_SR1_AF) {
+        if (READ_BIT(SR2, I2C_SR2_TRA) == I2C_SR2_TRA) {
+            if (ctx->slave_tx_cb) {
+                ctx->slave_tx_cb();
+            }
+        }
         CLEAR_BIT(I2Cx->SR1, I2C_SR1_AF);
         SR1 = 0;
     }

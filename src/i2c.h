@@ -18,6 +18,8 @@ extern "C" {
 #define I2C2_BUF_SIZE   0
 
 typedef struct {
+    void (*slave_rx_cb)(void);
+    void (*slave_tx_cb)(void);
     uint8_t *txBuf;
     uint8_t *rxBuf;
     int16_t txIdx;
