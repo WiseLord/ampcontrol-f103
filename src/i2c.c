@@ -6,6 +6,19 @@
 
 #define I2C_TIMEOUT_MS      3
 
+typedef struct {
+    void (*rxCb)(void);
+    void (*txCb)(void);
+    uint8_t *txBuf;
+    uint8_t *rxBuf;
+    int16_t txIdx;
+    int16_t rxIdx;
+    int16_t bytes;
+    uint8_t addr;
+    uint8_t direction;
+    uint8_t timeout;
+} I2cContext;
+
 #if I2C1_BUF_SIZE
 static uint8_t i2c1Buf[I2C1_BUF_SIZE];
 static I2cContext i2cCtx1 = {
@@ -19,6 +32,21 @@ static I2cContext i2cCtx2 = {
     .txBuf = i2c2Buf,
 };
 #endif
+
+static I2cContext *i2cGetCtx(void *i2c)
+{
+#if I2C1_BUF_SIZE
+    if (i2c == I2C1) {
+        return &i2cCtx1;
+    }
+#endif
+#if I2C2_BUF_SIZE
+    if (i2c == I2C2) {
+        return &i2cCtx2;
+    }
+#endif
+    return NULL;
+}
 
 static void i2cInitPins(I2C_TypeDef *I2Cx)
 {
@@ -105,21 +133,6 @@ static void i2cDoStop(I2C_TypeDef *I2Cx)
 }
 #endif
 
-I2cContext *i2cGetCtx(void *i2c)
-{
-#if I2C1_BUF_SIZE
-    if (i2c == I2C1) {
-        return &i2cCtx1;
-    }
-#endif
-#if I2C2_BUF_SIZE
-    if (i2c == I2C2) {
-        return &i2cCtx2;
-    }
-#endif
-    return NULL;
-}
-
 uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
@@ -193,6 +206,21 @@ bool i2cIsEnabled(void *i2c)
 {
     return (bool)(LL_I2C_IsEnabled(i2c));
 }
+
+void i2cSetRxCb(void *i2c, void (*cb)(void))
+{
+    I2cContext *ctx = i2cGetCtx(i2c);
+
+    ctx->rxCb = cb;
+}
+
+void i2cSetTxCb(void *i2c, void (*cb)(void))
+{
+    I2cContext *ctx = i2cGetCtx(i2c);
+
+    ctx->txCb = cb;
+}
+
 
 void i2cBegin(void *i2c, uint8_t addr)
 {
@@ -390,8 +418,8 @@ void I2C_EV_IRQHandler(I2C_TypeDef *I2Cx)
         // When Stop detection flag (EV4)
         if (READ_BIT(SR1, I2C_SR1_STOPF) == I2C_SR1_STOPF) {
             // Slave finishes to receive data - master STOP
-            if (ctx->slave_rx_cb) {
-                ctx->slave_rx_cb();
+            if (ctx->rxCb) {
+                ctx->rxCb();
             }
             // Enable I2C peripheral
             SET_BIT(I2Cx->CR1, I2C_CR1_PE);
@@ -512,8 +540,8 @@ void I2C_ER_IRQHandler(I2C_TypeDef *I2Cx)
     // When an acknowledge failure is received after a byte transmission
     if (READ_BIT(SR1, I2C_SR1_AF) == I2C_SR1_AF) {
         if (READ_BIT(SR2, I2C_SR2_TRA) == I2C_SR2_TRA) {
-            if (ctx->slave_tx_cb) {
-                ctx->slave_tx_cb();
+            if (ctx->txCb) {
+                ctx->txCb();
             }
         }
         CLEAR_BIT(I2Cx->SR1, I2C_SR1_AF);
