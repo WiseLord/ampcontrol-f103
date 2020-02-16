@@ -163,7 +163,7 @@ void controlReportAudioTune(AudioTune tune)
 void controlReportAudio(void)
 {
     controlReportAudioInput();
-    for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END; tune++) {
+    for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END - 1; tune++) {
         controlReportAudioTune(tune);
     }
 }
@@ -184,5 +184,4 @@ void controlReportTuner(bool force)
 void controlReportAll(void)
 {
     controlReportAudio();
-    controlReportTuner(true);
 }
