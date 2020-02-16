@@ -1194,6 +1194,7 @@ void ampActionHandle(void)
         case IN_TUNER:
         case IN_PC:
         case IN_KARADIO:
+        case IN_BLUETOOTH:
             actionSetScreen(SCREEN_AUDIO_INPUT, 800);
             break;
         default:
