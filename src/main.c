@@ -1,6 +1,7 @@
 #include "hwlibs.h"
 
 #include "amp.h"
+#include "bt.h"
 #include "control.h"
 #include "debug.h"
 #include "input.h"
@@ -132,6 +133,7 @@ int main(void)
     while (1) {
         controlGetData();
         karadioGetData();
+        btReleaseKey();
         ampActionGet();
         ampActionHandle();
         screenShow();

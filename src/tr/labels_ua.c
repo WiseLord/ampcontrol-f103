@@ -95,6 +95,7 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Корекція часу",
 
 //    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
+//    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аудіопроцесор",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Вхід",

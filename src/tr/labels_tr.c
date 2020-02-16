@@ -95,6 +95,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Zaman Düzeltme",
 
 //    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
+//    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Ses Giriş",

@@ -114,6 +114,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Time correction",
 
     [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
+    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Input",

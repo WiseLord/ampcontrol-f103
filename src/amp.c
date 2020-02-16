@@ -284,6 +284,8 @@ void ampInitHw(void)
 
         tunerInit();
 
+        btInit();
+
         amp.status = AMP_STATUS_HW_READY;
         controlReportAll();
 

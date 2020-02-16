@@ -1,20 +1,61 @@
 #include "bt.h"
 
+#include "hwlibs.h"
+
 #include "debug.h"
+#include "i2c.h"
+#include "i2cexp.h"
+#include "settings.h"
+#include "swtimers.h"
+
+#define PCF8574_RELEASED    0x00
+
+//#define PCF8574_VOL_MINUS   (1 << 7)
+//#define PCF8574_VOL_PLUS    (1 << 6)
+#define PCF8574_NEXT_TRACK  (1 << 5)
+#define PCF8574_PREV_TRACK  (1 << 4)
+//#define PCF8574_POWER       (1 << 3)
+#define PCF8574_PLAY_PAUSE  (1 << 2)
+//#define PCF8574_LED1        (1 << 1)
+//#define PCF8574_LED0        (1 << 0)
+
+static I2cAddrIdx i2cAddrIdx = I2C_ADDR_DISABLED;
+
+static void btStartKeyTimer(void)
+{
+    swTimSet(SW_TIM_BT_KEY, 200);
+}
 
 static void btPlay()
 {
     dbg("AT+CB");
+    i2cexpSend(i2cAddrIdx, PCF8574_PLAY_PAUSE);
+    btStartKeyTimer();
 }
 
 static void btPrevTrack()
 {
     dbg("AT+CD");
+
+    i2cexpSend(i2cAddrIdx, PCF8574_PREV_TRACK);
+    btStartKeyTimer();
 }
 
 static void btNextTrack()
 {
     dbg("AT+CC");
+
+    i2cexpSend(i2cAddrIdx, PCF8574_NEXT_TRACK);
+    btStartKeyTimer();
+}
+
+void btInit()
+{
+    i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_BT);
+
+    if (i2cAddrIdx != I2C_ADDR_DISABLED) {
+        i2cexpSend(i2cAddrIdx, PCF8574_RELEASED);
+    }
 }
 
 void btSendMediaKey(HidMediaKey cmd)
@@ -31,5 +72,13 @@ void btSendMediaKey(HidMediaKey cmd)
         break;
     default:
         break;
+    }
+}
+
+void btReleaseKey()
+{
+    if (swTimGet(SW_TIM_BT_KEY) == 0) {
+        i2cexpSend(i2cAddrIdx, PCF8574_RELEASED);
+        swTimSet(SW_TIM_BT_KEY, SW_TIM_OFF);
     }
 }

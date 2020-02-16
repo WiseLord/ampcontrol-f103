@@ -47,6 +47,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SYSTEM_RTC_CORR]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   PARAM_SYSTEM_RTC_CORR},
 
     [MENU_I2C_EXT_IN_STAT]  = {MENU_SYSTEM_I2C_EXT,     MENU_TYPE_ENUM,     PARAM_I2C_EXT_IN_STAT},
+    [MENU_I2C_EXT_BT]       = {MENU_SYSTEM_I2C_EXT,     MENU_TYPE_ENUM,     PARAM_I2C_EXT_BT},
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IC},
     [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN0},
@@ -198,6 +199,7 @@ static void menuValueChange(int8_t diff)
         break;
 
     case MENU_I2C_EXT_IN_STAT:
+    case MENU_I2C_EXT_BT:
         if (menu.value >= I2C_ADDR_END - 1)
             menu.value = I2C_ADDR_END - 1;
         if (menu.value < I2C_ADDR_DISABLED)
@@ -562,6 +564,7 @@ const char *menuGetValueStr(MenuIdx index)
         break;
 
     case MENU_I2C_EXT_IN_STAT:
+    case MENU_I2C_EXT_BT:
         if (value == I2C_ADDR_DISABLED) {
             ret = labelsGet(LABEL_BOOL_OFF);
         } else {

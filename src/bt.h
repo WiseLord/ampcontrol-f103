@@ -9,7 +9,11 @@ extern "C" {
 
 #include "hidkeys.h"
 
+void btInit(void);
+
 void btSendMediaKey(HidMediaKey cmd);
+
+void btReleaseKey(void);
 
 #ifdef __cplusplus
 }

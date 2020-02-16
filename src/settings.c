@@ -14,7 +14,8 @@
 static uint8_t silenceTimer = 0;
 static int16_t rtcCorr = 0;
 static uint8_t muteStby = 0;
-static I2cAddrIdx pcf8574addrIdx = I2C_ADDR_DISABLED;
+static I2cAddrIdx i2cExtInIdx = I2C_ADDR_DISABLED;
+static I2cAddrIdx i2cBtIdx = I2C_ADDR_DISABLED;
 static int8_t brStby = 3;
 static int8_t brWork = LCD_BR_MAX;
 
@@ -90,6 +91,7 @@ static const EE_Map eeMap[] = {
     [PARAM_SYSTEM_ENC_RES]  =   {0x74,  4},
 
     [PARAM_I2C_EXT_IN_STAT] =   {0x78,  I2C_ADDR_DISABLED},
+    [PARAM_I2C_EXT_BT]      =   {0x79,  I2C_ADDR_DISABLED},
 
     FOREACH_CMD(GENERATE_EE_RC_MAP)
 };
@@ -251,7 +253,10 @@ int16_t settingsGet(Param param)
         break;
 
     case PARAM_I2C_EXT_IN_STAT:
-        ret = pcf8574addrIdx;
+        ret = i2cExtInIdx;
+        break;
+    case PARAM_I2C_EXT_BT:
+        ret = i2cBtIdx;
         break;
 
     default:
@@ -411,7 +416,10 @@ void settingsSet(Param param, int16_t value)
         break;
 
     case PARAM_I2C_EXT_IN_STAT:
-        pcf8574addrIdx = (I2cAddrIdx)value;
+        i2cExtInIdx = (I2cAddrIdx)value;
+        break;
+    case PARAM_I2C_EXT_BT:
+        i2cBtIdx = (I2cAddrIdx)value;
         break;
 
     default:

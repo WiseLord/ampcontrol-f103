@@ -95,6 +95,7 @@ const char *const labels_ro[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Corectie timp",
 
 //    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
+//    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Procesor sunet",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Intrare",
