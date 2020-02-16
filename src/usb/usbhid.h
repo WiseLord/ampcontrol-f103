@@ -5,8 +5,9 @@
 extern "C" {
 #endif
 
+#include "../hidkeys.h"
+
 #include <stdint.h>
-#include "hidkeys.h"
 
 #define KBD_KEYS     2
 

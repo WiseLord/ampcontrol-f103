@@ -8,6 +8,8 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "hidkeys.h"
+
 #define KARADIO_FLAG_NAME       0x01
 #define KARADIO_FLAG_META       0x02
 
@@ -31,7 +33,7 @@ void karadioSetEnabled(bool value);
 KaRadioData *karadioGet(void);
 
 void karadioUpdateStatus(void);
-void karadioSendMediaCmd(uint8_t cmd);
+void karadioSendMediaKey(HidMediaKey cmd);
 
 void karadioGetData(void);
 void karadioIRQ(char data);

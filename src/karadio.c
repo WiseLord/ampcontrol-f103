@@ -8,7 +8,6 @@
 #include "hwlibs.h"
 #include "ringbuf.h"
 #include "usart.h"
-#include "usb/hidkeys.h"
 #include "utils.h"
 
 #define CMD_CLI         "cli"
@@ -107,7 +106,7 @@ void karadioUpdateStatus(void)
     karadioSendCmd(CMD_CLI, CLI_INFO);
 }
 
-void karadioSendMediaCmd(uint8_t cmd)
+void karadioSendMediaKey(HidMediaKey cmd)
 {
     switch (cmd) {
     case HIDMEDIAKEY_STOP:

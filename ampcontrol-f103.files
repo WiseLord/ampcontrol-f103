@@ -181,6 +181,7 @@ src/gui/widget/stripedbar.c
 src/gui/widget/stripedbar.h
 src/gui/widget/textedit.c
 src/gui/widget/textedit.h
+src/hidkeys.h
 src/hwlibs.h
 src/i2c.c
 src/i2cexp.c
@@ -251,7 +252,6 @@ src/tuner/tunerdefs.h
 src/tuner/tuner.h
 src/usart.c
 src/usart.h
-src/usb/hidkeys.h
 src/usb/stm32f1xx_hal_conf.h
 src/usb/usbd_amp.c
 src/usb/usbd_amp.h

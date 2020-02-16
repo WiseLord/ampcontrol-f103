@@ -5,6 +5,7 @@
 #include "audio/audio.h"
 #include "control.h"
 #include "gui/canvas.h"
+#include "hidkeys.h"
 #include "i2c.h"
 #include "i2cexp.h"
 #include "input.h"
@@ -20,7 +21,6 @@
 #include "tr/labels.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
-#include "usb/hidkeys.h"
 
 #ifdef _ENABLE_USB
 #include "usb/usbhid.h"
@@ -544,6 +544,26 @@ static void spModeChange(Spectrum *sp)
     settingsStore(PARAM_SPECTRUM_MODE, sp->mode);
 }
 
+static void tunerSendMediaKey(HidMediaKey key)
+{
+    switch (key) {
+    case HIDMEDIAKEY_PREV_TRACK:
+        tunerMove(TUNER_DIR_DOWN);
+        break;
+    case HIDMEDIAKEY_NEXT_TRACK:
+        tunerMove(TUNER_DIR_UP);
+        break;
+    case HIDMEDIAKEY_REWIND:
+        tunerSeek(TUNER_DIR_DOWN);
+        break;
+    case HIDMEDIAKEY_FFWD:
+        tunerSeek(TUNER_DIR_UP);
+        break;
+    default:
+        break;
+    }
+}
+
 static void sendMediaKey(HidMediaKey key)
 {
     AudioProc *aProc = audioGet();
@@ -551,28 +571,14 @@ static void sendMediaKey(HidMediaKey key)
 
     switch (inType) {
     case IN_TUNER:
-        switch (key) {
-        case HIDMEDIAKEY_PREV_TRACK:
-            tunerMove(TUNER_DIR_DOWN);
-            break;
-        case HIDMEDIAKEY_NEXT_TRACK:
-            tunerMove(TUNER_DIR_UP);
-            break;
-        case HIDMEDIAKEY_REWIND:
-            tunerSeek(TUNER_DIR_DOWN);
-            break;
-        case HIDMEDIAKEY_FFWD:
-            tunerSeek(TUNER_DIR_UP);
-            break;
-        }
-        break;
+        tunerSendMediaKey(key);
     case IN_PC:
 #ifdef _ENABLE_USB
         usbHidSendMediaKey(key);
 #endif
         break;
     case IN_KARADIO:
-        karadioSendMediaCmd(key);
+        karadioSendMediaKey(key);
         break;
     default:
         break;
