@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 #include "audio/audio.h"
+#include "bt.h"
 #include "control.h"
 #include "gui/canvas.h"
 #include "hidkeys.h"
@@ -579,6 +580,9 @@ static void sendMediaKey(HidMediaKey key)
         break;
     case IN_KARADIO:
         karadioSendMediaKey(key);
+        break;
+    case IN_BLUETOOTH:
+        btSendMediaKey(key);
         break;
     default:
         break;

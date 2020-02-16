@@ -14,6 +14,8 @@ src/audio/tda7439.c
 src/audio/tda7439.h
 src/audio/tda7719.c
 src/audio/tda7719.h
+src/bt.c
+src/bt.h
 src/cmd.h
 src/control.c
 src/control.h
