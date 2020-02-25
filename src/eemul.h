@@ -19,13 +19,13 @@ extern "C" {
 #define EE_PAGE_COUNT   128
 #endif
 
-#ifdef _F303CC
+#ifdef _F303CB
 #define EE_PAGE_SIZE    2048
-#define EE_PAGE_STEP    2
+#define EE_PAGE_STEP    1
 #define EE_PAGE_COUNT   64
 #endif
 
-#ifdef _F303CB
+#ifdef _F303CC
 #define EE_PAGE_SIZE    2048
 #define EE_PAGE_STEP    2
 #define EE_PAGE_COUNT   128
