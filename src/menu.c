@@ -364,12 +364,6 @@ static bool menuIsValid(MenuIdx index)
         break;
     }
 
-    if (aProc->par.ic == AUDIO_IC_NO) {
-        if (index >= MENU_AUDIO_IN_0 && index <= MENU_AUDIO_IN_LAST) {
-            return false;
-        }
-    }
-
     if (tuner->par.ic == TUNER_IC_NO) {
         if (index >= MENU_TUNER_BAND && index <= MENU_TUNER_VOLUME) {
             return false;

@@ -521,12 +521,17 @@ void canvasShowMenu(bool clear)
 
 void canvasShowTune(bool clear)
 {
-    const Layout *lt = canvas.layout;
+    AudioProc *aProc = audioGet();
 
+    if (NULL == aProc->api) {
+        canvasShowSpectrum(clear);
+        return;
+    }
+
+    const Layout *lt = canvas.layout;
     const tFont *iconSet = lt->iconSet;
 
     Spectrum *sp = spGet();
-    AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
     const char *label = labelsGet(LABEL_IN_TUNER + inType);
@@ -593,9 +598,14 @@ void canvasShowTune(bool clear)
 
 void canvasShowAudioFlag(bool clear)
 {
-    const Layout *lt = canvas.layout;
-
     AudioProc *aProc = audioGet();
+
+    if (NULL == aProc->api) {
+        canvasShowSpectrum(clear);
+        return;
+    }
+
+    const Layout *lt = canvas.layout;
     const tFont *iconSet = lt->iconSet;
     Label label;
     Icon icon;
@@ -890,6 +900,15 @@ void canvasShowAudioInput(bool clear, Icon icon)
         case IN_KARADIO:
             canvasShowKaradio(clear);
             return;
+        case IN_BLUETOOTH:
+        case IN_PC:
+            break;
+        default:
+            if (NULL == aProc->api) {
+                canvasShowSpectrum(clear);
+                return;
+            }
+            break;
         }
     }
 

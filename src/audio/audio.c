@@ -90,9 +90,12 @@ void audioReadSettings(void)
         aProc.par.inCnt = TDA7719_IN_CNT;
         break;
 #endif
-    default:
+    case AUDIO_IC_TEST:
         aProc.api = &audioTestApi;
         aProc.par.inCnt = MAX_INPUTS;
+        break;
+    default:
+        aProc.par.inCnt = 1;
         break;
     }
 }
@@ -117,14 +120,14 @@ void audioSaveSettings(void)
 
 void audioInitParam(void)
 {
-    if (aProc.api->initParam) {
+    if (aProc.api && aProc.api->initParam) {
         aProc.api->initParam(&aProc.par);
     }
 }
 
 void audioReset(void)
 {
-    if (aProc.api->reset) {
+    if (aProc.api && aProc.api->reset) {
         aProc.api->reset();
     }
 }
@@ -151,7 +154,7 @@ void audioSetPower(bool value)
         }
     }
 
-    if (aProc.api->setPower) {
+    if (aProc.api && aProc.api->setPower) {
         aProc.api->setPower(value);
     }
 }
@@ -178,7 +181,7 @@ void audioSetTune(AudioTune tune, int8_t value)
         aProc.par.gain[aProc.par.input] = value;
     }
 
-    if (aProc.api->setTune) {
+    if (aProc.api && aProc.api->setTune) {
         switch (tune) {
         case AUDIO_TUNE_BASS:
         case AUDIO_TUNE_MIDDLE:
@@ -212,7 +215,7 @@ void audioSetInput(int8_t value)
     aProc.par.input = value;
     aProc.par.tune[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];
 
-    if (aProc.api->setInput) {
+    if (aProc.api && aProc.api->setInput) {
         aProc.api->setInput(value);
     }
 
@@ -223,7 +226,7 @@ void audioSetMute(bool value)
 {
     aProc.par.mute = value;
 
-    if (aProc.api->setMute) {
+    if (aProc.api && aProc.api->setMute) {
         aProc.api->setMute(value);
     }
 }
@@ -232,7 +235,7 @@ void audioSetLoudness(bool value)
 {
     aProc.par.loudness = value;
 
-    if (aProc.api->setLoudness) {
+    if (aProc.api && aProc.api->setLoudness) {
         aProc.api->setLoudness(value);
     }
 }
@@ -241,7 +244,7 @@ void audioSetSurround(bool value)
 {
     aProc.par.surround = value;
 
-    if (aProc.api->setSurround) {
+    if (aProc.api && aProc.api->setSurround) {
         aProc.api->setSurround(value);
     }
 }
@@ -250,7 +253,7 @@ void audioSetEffect3D(bool value)
 {
     aProc.par.effect3d = value;
 
-    if (aProc.api->setEffect3d) {
+    if (aProc.api && aProc.api->setEffect3d) {
         aProc.api->setEffect3d(value);
     }
 }
@@ -259,7 +262,7 @@ void audioSetBypass(bool value)
 {
     aProc.par.bypass = value;
 
-    if (aProc.api->setBypass) {
+    if (aProc.api && aProc.api->setBypass) {
         aProc.api->setBypass(value);
     } else {
         audioSetTune(AUDIO_TUNE_BASS, aProc.par.tune[AUDIO_TUNE_BASS].value);
