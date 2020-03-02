@@ -53,10 +53,6 @@ const char *const labels_fr[LABEL_END] = {
 //    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50us",
 //    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75us",
 
-    [LABEL_TUNER_MODE + TUNER_MODE_GRID]        = "Grille",
-    [LABEL_TUNER_MODE + TUNER_MODE_STATIONS]    = "Stations",
-    [LABEL_TUNER_MODE + TUNER_MODE_SCAN]        = "Recherche",
-
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stéréo",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Mélangé",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Cascade",
@@ -104,7 +100,7 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_BAND]      = "Bande",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Saut du scan",
     [LABEL_MENU + MENU_TUNER_DEEMPH]    = "De-emphasis",
-    [LABEL_MENU + MENU_TUNER_MODE]      = "Mode de contrôle",
+//    [LABEL_MENU + MENU_TUNER_STA_MODE]  = "Stations mode",
     [LABEL_MENU + MENU_TUNER_FMONO]     = "Forcer mode mono",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Activation RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Réhausse des basses",

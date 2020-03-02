@@ -71,21 +71,13 @@ enum {
     TUNER_DEEMPH_END,
 };
 
-typedef uint8_t TunerMode;
-enum {
-    TUNER_MODE_GRID,
-    TUNER_MODE_STATIONS,
-    TUNER_MODE_SCAN,
-
-    TUNER_MODE_END,
-};
-
 typedef struct {
     TunerIC ic;
     TunerBand band;
     TunerStep step;
     TunerDeemph deemph;
-    TunerMode mode;
+
+    bool stationMode;
 
     bool mute;
     bool bassBoost;

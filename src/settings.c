@@ -63,7 +63,7 @@ static const EE_Map eeMap[] = {
     [PARAM_TUNER_BAND]      =   {0x31,  TUNER_BAND_FM_US_EUROPE},
     [PARAM_TUNER_STEP]      =   {0x32,  TUNER_STEP_100K},
     [PARAM_TUNER_DEEMPH]    =   {0x33,  TUNER_DEEMPH_50u},
-    [PARAM_TUNER_MODE]      =   {0x34,  TUNER_MODE_GRID},
+    [PARAM_TUNER_STA_MODE]  =   {0x34,  true},
     [PARAM_TUNER_FMONO]     =   {0x35,  false},
     [PARAM_TUNER_RDS]       =   {0x36,  true},
     [PARAM_TUNER_BASS]      =   {0x37,  false},
@@ -181,8 +181,8 @@ int16_t settingsGet(Param param)
     case PARAM_TUNER_DEEMPH:
         ret = tuner->par.deemph;
         break;
-    case PARAM_TUNER_MODE:
-        ret = tuner->par.mode;
+    case PARAM_TUNER_STA_MODE:
+        ret = tuner->par.stationMode;
         break;
     case PARAM_TUNER_FMONO:
         ret = tuner->par.forcedMono;
@@ -344,8 +344,8 @@ void settingsSet(Param param, int16_t value)
     case PARAM_TUNER_DEEMPH:
         tuner->par.deemph = (TunerDeemph)value;
         break;
-    case PARAM_TUNER_MODE:
-        tuner->par.mode = (TunerMode)value;
+    case PARAM_TUNER_STA_MODE:
+        tuner->par.stationMode = (bool)value;
         break;
     case PARAM_TUNER_FMONO:
         tuner->par.forcedMono = (bool)value;

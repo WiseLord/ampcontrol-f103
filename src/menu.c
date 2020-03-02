@@ -63,7 +63,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_TUNER_BAND]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     PARAM_TUNER_BAND},
     [MENU_TUNER_STEP]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     PARAM_TUNER_STEP},
     [MENU_TUNER_DEEMPH]     = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     PARAM_TUNER_DEEMPH},
-    [MENU_TUNER_MODE]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     PARAM_TUNER_MODE},
+    [MENU_TUNER_STA_MODE]   = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     PARAM_TUNER_STA_MODE},
     [MENU_TUNER_FMONO]      = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     PARAM_TUNER_FMONO},
     [MENU_TUNER_RDS]        = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     PARAM_TUNER_RDS},
     [MENU_TUNER_BASS]       = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     PARAM_TUNER_BASS},
@@ -249,12 +249,6 @@ static void menuValueChange(int8_t diff)
             menu.value = TUNER_DEEMPH_END - 1;
         if (menu.value < TUNER_DEEMPH_50u)
             menu.value = TUNER_DEEMPH_50u;
-        break;
-    case MENU_TUNER_MODE:
-        if (menu.value > TUNER_MODE_END - 1)
-            menu.value = TUNER_MODE_END - 1;
-        if (menu.value < TUNER_MODE_GRID)
-            menu.value = TUNER_MODE_GRID;
         break;
     case MENU_TUNER_VOLUME:
         if (menu.value > TUNER_VOLUME_MAX)
@@ -596,9 +590,6 @@ const char *menuGetValueStr(MenuIdx index)
         break;
     case MENU_TUNER_DEEMPH:
         ret = labelsGet((Label)(LABEL_TUNER_DEEMPH + value));
-        break;
-    case MENU_TUNER_MODE:
-        ret = labelsGet((Label)(LABEL_TUNER_MODE + value));
         break;
     case MENU_ALARM_DAYS:
         ret = labelsGet((Label)(LABEL_ALARM_DAY + value));

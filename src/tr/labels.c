@@ -72,10 +72,6 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50us",
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75us",
 
-    [LABEL_TUNER_MODE + TUNER_MODE_GRID]        = "Grid",
-    [LABEL_TUNER_MODE + TUNER_MODE_STATIONS]    = "Stations",
-    [LABEL_TUNER_MODE + TUNER_MODE_SCAN]        = "Scan",
-
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stereo",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Mixed",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Waterfall",
@@ -123,7 +119,7 @@ static const char *const labels_default[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_BAND]      = "Band",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Scan step",
     [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Deemphasys",
-    [LABEL_MENU + MENU_TUNER_MODE]      = "Control mode",
+    [LABEL_MENU + MENU_TUNER_STA_MODE]  = "Stations mode",
     [LABEL_MENU + MENU_TUNER_FMONO]     = "Force mono",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Enable RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass boost",

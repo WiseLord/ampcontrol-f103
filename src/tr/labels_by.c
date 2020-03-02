@@ -53,10 +53,6 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50мкс",
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75мкс",
 
-    [LABEL_TUNER_MODE + TUNER_MODE_GRID]        = "Сетка",
-    [LABEL_TUNER_MODE + TUNER_MODE_STATIONS]    = "Станцыі",
-    [LABEL_TUNER_MODE + TUNER_MODE_SCAN]        = "Пошук",
-
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Стэрэа",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Змешаны",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Вадаспад",
@@ -104,7 +100,7 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_BAND]      = "Дыяпазон",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Крок",
     [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Прадскажэнне",
-    [LABEL_MENU + MENU_TUNER_MODE]      = "Рэжым наладжвання",
+    [LABEL_MENU + MENU_TUNER_STA_MODE]  = "Рэжым станцый",
     [LABEL_MENU + MENU_TUNER_FMONO]     = "Мона прымусова",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Уключыць RDS",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Узмацніць НЧ",

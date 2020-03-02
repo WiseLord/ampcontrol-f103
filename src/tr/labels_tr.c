@@ -53,10 +53,6 @@ const char *const labels_tr[LABEL_END] = {
 //    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50us",
 //    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75us",
 
-    [LABEL_TUNER_MODE + TUNER_MODE_GRID]        = "Izgara",
-    [LABEL_TUNER_MODE + TUNER_MODE_STATIONS]    = "İstasyonlar",
-    [LABEL_TUNER_MODE + TUNER_MODE_SCAN]        = "Tarama",
-
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stereo",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Karışık",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Renk Şelalesi",
@@ -104,7 +100,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_BAND]      = "Bant Modeli",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Tarama Adımı",
     [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Vurgulama",
-    [LABEL_MENU + MENU_TUNER_MODE]      = "Kontrol modu",
+//    [LABEL_MENU + MENU_TUNER_STA_MODE]  = "Stations mode",
     [LABEL_MENU + MENU_TUNER_FMONO]     = "Mono Ses",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Rds Bilgi Gösterimi",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass Kuvetlendirme",

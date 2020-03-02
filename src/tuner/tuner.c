@@ -211,22 +211,14 @@ void tunerStep(int8_t direction)
 
 void tunerMove(int8_t direction)
 {
-    switch (tuner.par.mode) {
-    case TUNER_MODE_GRID:
-        tunerStep(direction);
-        break;
-    case TUNER_MODE_STATIONS:
+    if (tuner.par.stationMode) {
         if (stationGetCount() > 0) {
             stationSeek(direction);
         } else {
             tunerStep(direction);
         }
-        break;
-    case TUNER_MODE_SCAN:
-        tunerSeek(direction);
-        break;
-    default:
-        break;
+    } else {
+        tunerStep(direction);
     }
 }
 
