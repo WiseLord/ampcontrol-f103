@@ -19,6 +19,7 @@ void stationsInit()
 void stationSeek(int8_t direction)
 {
     const uint16_t freq = tunerGet()->status.freq;
+    uint16_t lastFreq = freq;
 
     for (int8_t i = 0; i < STATION_COUNT; i++) {
         uint16_t stFreq = stFlash[i].freq;
@@ -33,11 +34,16 @@ void stationSeek(int8_t direction)
             stationZap(i);
         } else {
             if (stFreq < freq) {
+                lastFreq = stFreq;
                 continue;
             }
             stationZap(i - 1);
         }
         break;
+    }
+
+    if (lastFreq != freq) {
+        tunerSetFreq(lastFreq);
     }
 }
 
