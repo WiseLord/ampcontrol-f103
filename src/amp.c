@@ -229,7 +229,7 @@ static void ampMute(bool value)
     }
 }
 
-static void ampExitStby(void)
+static void ampReadSettings(void)
 {
     AudioProc *aProc = audioGet();
 
@@ -237,6 +237,12 @@ static void ampExitStby(void)
     tunerReadSettings();
 
     amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
+}
+
+static void ampExitStby(void)
+{
+    ampReadSettings();
+
     ampPinStby(false);      // Power on amplifier
 
     inputSetPower(true);    // Power on input device
@@ -1039,8 +1045,7 @@ void ampInitMuteStby(void)
 
 void ampInit(void)
 {
-    AudioProc *aProc = audioGet();
-    amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
+    ampReadSettings();
 
     timerInit(TIM_SPECTRUM, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
     swTimInit();
