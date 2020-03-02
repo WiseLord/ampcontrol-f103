@@ -575,6 +575,7 @@ static void sendMediaKey(HidMediaKey key)
     switch (inType) {
     case IN_TUNER:
         tunerSendMediaKey(key);
+        break;
     case IN_PC:
 #ifdef _ENABLE_USB
         usbHidSendMediaKey(key);
