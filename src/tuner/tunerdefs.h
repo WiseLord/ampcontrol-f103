@@ -92,7 +92,6 @@ typedef struct {
     bool forcedMono;
     bool rds;
 
-    uint16_t freq;
     uint16_t fMin;
     uint16_t fMax;
     uint8_t fStep;

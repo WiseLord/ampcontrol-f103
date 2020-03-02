@@ -197,7 +197,7 @@ int16_t settingsGet(Param param)
         ret = tuner->par.volume;
         break;
     case PARAM_TUNER_FREQ:
-        ret = (int16_t)tuner->par.freq;
+        ret = (int16_t)tuner->status.freq;
         break;
 
     case PARAM_DISPLAY_BR_STBY:
@@ -360,7 +360,7 @@ void settingsSet(Param param, int16_t value)
         tuner->par.volume = (int8_t)value;
         break;
     case PARAM_TUNER_FREQ:
-        tuner->par.freq = (uint16_t)value;
+        tuner->status.freq = (uint16_t)value;
         break;
 
     case PARAM_DISPLAY_BR_STBY:

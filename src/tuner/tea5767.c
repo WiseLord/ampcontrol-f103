@@ -170,8 +170,6 @@ void tea5767Init(TunerParam *param, TunerStatus *status)
 
 void tea5767SetFreq(uint16_t value)
 {
-    tPar->freq = value;
-
     // Exit seek mode
     wrBuf[0] &= ~TEA5767_SM;
 
@@ -263,7 +261,6 @@ void tea5767UpdateStatus()
     if (wrBuf[0] & TEA5767_SM) {
         if (tStatus->flags & TUNER_FLAG_READY) {
             tea5767SetFreq(tStatus->freq);
-            tPar->freq = tStatus->freq;
         } else {
             if (wrBuf[2] & TEA5767_SUD) {
                 tStatus->flags |= TUNER_FLAG_SEEKUP;
@@ -273,7 +270,7 @@ void tea5767UpdateStatus()
         }
     } else {
         if (tStatus->flags & TUNER_FLAG_READY) {
-            tea5767HandleHiLoFreq(tPar->freq);
+            tea5767HandleHiLoFreq(tStatus->freq);
         }
     }
 }

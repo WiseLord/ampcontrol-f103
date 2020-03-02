@@ -138,7 +138,7 @@ static void inputEnable(void)
         tunerSetPower(true);
         tunerSetVolume(tuner->par.volume);
         tunerSetMute(false);
-        tunerSetFreq(tuner->par.freq);
+        tunerSetFreq(tuner->status.freq);
         break;
     case IN_KARADIO:
         karadioSetEnabled(true);

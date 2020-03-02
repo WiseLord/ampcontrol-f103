@@ -20,7 +20,6 @@ static Tuner tuner;
 
 static void tunerTestUpdateStatus(void)
 {
-    tuner.status.freq = tuner.par.freq;
     tuner.status.rssi = 10;
 
     switch (tuner.par.step) {
@@ -124,8 +123,7 @@ void tunerSetFreq(uint16_t value)
         value = freqMax;
     }
 
-    tuner.par.freq = value;
-    tuner.status.freq = tuner.par.freq;
+    tuner.status.freq = value;
 
     if (tuner.api->setFreq) {
         tuner.api->setFreq(value);
