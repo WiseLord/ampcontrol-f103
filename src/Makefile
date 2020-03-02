@@ -35,6 +35,7 @@ endif
 TARGET = $(call lc, $(PROJECT)_$(STM32_MCU)_$(DISPLAY)_$(DISPVAR))
 
 C_DEFS += -DUSE_FULL_LL_DRIVER -D$(STM32_GROUP) -D_$(STM32_MCU)
+C_DEFS += -DI2C1_BUF_SIZE=16 -D I2C2_BUF_SIZE=0
 
 ifneq (,$(filter $(DISPLAY), \
   DISP24BIT    \
