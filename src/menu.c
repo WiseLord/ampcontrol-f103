@@ -337,6 +337,7 @@ static bool menuIsValid(MenuIdx index)
         switch (tuner->par.ic) {
         case TUNER_IC_RDA5807:
         case TUNER_IC_SI4703:
+        case TUNER_IC_TEST:
             break;
         default:
             return false;
@@ -345,6 +346,7 @@ static bool menuIsValid(MenuIdx index)
     case MENU_TUNER_BASS:
         switch (tuner->par.ic) {
         case TUNER_IC_RDA5807:
+        case TUNER_IC_TEST:
             break;
         default:
             return false;
@@ -354,6 +356,7 @@ static bool menuIsValid(MenuIdx index)
         switch (tuner->par.ic) {
         case TUNER_IC_RDA5807:
         case TUNER_IC_SI4703:
+        case TUNER_IC_TEST:
             break;
         default:
             return false;

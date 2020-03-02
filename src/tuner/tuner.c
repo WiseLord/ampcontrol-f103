@@ -18,27 +18,54 @@
 
 static Tuner tuner;
 
-static void tunerTestUpdateStatus(void)
+void tunerTestInit(TunerParam *tPar, TunerStatus *status)
 {
-    tuner.status.rssi = 10;
-
-    switch (tuner.par.step) {
-    case TUNER_STEP_50K:
-        tuner.par.fStep = 5;
+    switch (tPar->band) {
+    case TUNER_BAND_FM_JAPAN:
+        tPar->fMin = 7600;
+        tPar->fMax = 9100;
         break;
-    case TUNER_STEP_200K:
-        tuner.par.fStep = 20;
+    case TUNER_BAND_FM_WORLDWIDE:
+        tPar->fMin = 7600;
+        tPar->fMax = 10800;
+        break;
+    case TUNER_BAND_FM_EASTEUROPE:
+        tPar->fMin = 6500;
+        tPar->fMax = 7600;
         break;
     default:
-        tuner.par.fStep = 10;
+        tPar->fMin = 8700;
+        tPar->fMax = 10800;
         break;
     }
+
+    switch (tPar->step) {
+    case TUNER_STEP_50K:
+        tPar->fStep = 5;
+        break;
+    case TUNER_STEP_200K:
+        tPar->fStep = 20;
+        break;
+    default:
+        tPar->fStep = 10;
+        break;
+    }
+
+    status->rssi = 10;
+    status->flags = TUNER_FLAG_STEREO | TUNER_FLAG_RDS_READY;
+}
+
+void tunerTestSetFreq(uint16_t value)
+{
+    tuner.status.freq = value;
 }
 
 static const TunerApi tunerTestApi = {
+    .init = tunerTestInit,
+    .setFreq = tunerTestSetFreq,
     .seek = tunerStep,
-    .updateStatus = tunerTestUpdateStatus,
 };
+
 
 void tunerReadSettings(void)
 {
@@ -52,7 +79,6 @@ void tunerReadSettings(void)
     }
 
     // API initialization
-    tuner.api = &tunerTestApi;
     switch (tuner.par.ic) {
 #ifdef _RDA580X
     case TUNER_IC_RDA5807:
@@ -69,7 +95,11 @@ void tunerReadSettings(void)
         tuner.api = tea5767GetApi();
         break;
 #endif
+    case TUNER_IC_TEST:
+        tuner.api = &tunerTestApi;
+        break;
     default:
+        tuner.api = NULL;
         break;
     }
 }
@@ -87,7 +117,7 @@ void tunerInit(void)
 {
     rdsReset();
 
-    if (tuner.api->init) {
+    if (tuner.api && tuner.api->init) {
         tuner.api->init(&tuner.par, &tuner.status);
     }
 }
@@ -105,7 +135,7 @@ void tunerSetPower(bool value)
         tunerSaveSettings();
     }
 
-    if (tuner.api->setPower) {
+    if (tuner.api && tuner.api->setPower) {
         tuner.api->setPower(value);
     }
 }
@@ -123,9 +153,8 @@ void tunerSetFreq(uint16_t value)
         value = freqMax;
     }
 
-    tuner.status.freq = value;
-
-    if (tuner.api->setFreq) {
+    if (tuner.api && tuner.api->setFreq) {
+        tuner.status.freq = value;
         tuner.api->setFreq(value);
     }
 }
@@ -134,7 +163,7 @@ void tunerSetMute(bool value)
 {
     tuner.par.mute = value;
 
-    if (tuner.api->setMute) {
+    if (tuner.api && tuner.api->setMute) {
         tuner.api->setMute(value);
     }
 }
@@ -143,7 +172,7 @@ void tunerSetBassBoost(bool value)
 {
     tuner.par.bassBoost = value;
 
-    if (tuner.api->setBassBoost) {
+    if (tuner.api && tuner.api->setBassBoost) {
         tuner.api->setBassBoost(value);
     }
 }
@@ -152,7 +181,7 @@ void tunerSetForcedMono(bool value)
 {
     tuner.par.forcedMono = value;
 
-    if (tuner.api->setForcedMono) {
+    if (tuner.api && tuner.api->setForcedMono) {
         tuner.api->setForcedMono(value);
     }
 }
@@ -163,7 +192,7 @@ void tunerSetRds(bool value)
 
     tuner.par.rds = value;
 
-    if (tuner.api->setRds) {
+    if (tuner.api && tuner.api->setRds) {
         tuner.api->setRds(value);
     }
 }
@@ -172,7 +201,7 @@ void tunerSetVolume(int8_t value)
 {
     tuner.par.volume = value;
 
-    if (tuner.api->setVolume) {
+    if (tuner.api && tuner.api->setVolume) {
         tuner.api->setVolume(value);
     }
 }
@@ -181,7 +210,7 @@ void tunerSeek(int8_t direction)
 {
     rdsReset();
 
-    if (tuner.api->seek) {
+    if (tuner.api && tuner.api->seek) {
         tuner.api->seek(direction);
     }
 }
@@ -226,7 +255,7 @@ void tunerUpdateStatus(void)
 {
     tuner.status.flags = TUNER_FLAG_INIT;
 
-    if (tuner.api->updateStatus) {
+    if (tuner.api && tuner.api->updateStatus) {
         tuner.api->updateStatus();
     }
 }

@@ -1195,6 +1195,9 @@ void ampActionHandle(void)
 
         switch (inType) {
         case IN_TUNER:
+            if (NULL == tuner->api) {
+                screen->iconHint = ICON_EMPTY;
+            }
         case IN_PC:
         case IN_KARADIO:
         case IN_BLUETOOTH:

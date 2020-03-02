@@ -882,8 +882,11 @@ void canvasShowAudioInput(bool clear, Icon icon)
     if (!aProc->par.mute || ampGet()->status == AMP_STATUS_HW_READY) {
         switch (inType) {
         case IN_TUNER:
-            canvasShowTuner(clear);
-            return;
+            if (NULL != tunerGet()->api) {
+                canvasShowTuner(clear);
+                return;
+            }
+            break;
         case IN_KARADIO:
             canvasShowKaradio(clear);
             return;
