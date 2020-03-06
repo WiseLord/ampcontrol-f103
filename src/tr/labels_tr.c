@@ -57,9 +57,9 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Karışık",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Renk Şelalesi",
 
-//    [LABEL_PAL_MODE + PAL_SNOW]         = "Snow",
-//    [LABEL_PAL_MODE + PAL_AQUA]         = "Aqua",
-//    [LABEL_PAL_MODE + PAL_FIRE]         = "Fire",
+    [LABEL_PAL_MODE + PAL_SNOW]         = "Kar Teması",
+    [LABEL_PAL_MODE + PAL_AQUA]         = "Su Teması",
+    [LABEL_PAL_MODE + PAL_FIRE]         = "Ateş Teması",
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Yok",
 
@@ -85,13 +85,13 @@ const char *const labels_tr[LABEL_END] = {
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Dil Seçeneği",
     [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute & Stby",
-//    [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C expander",
+    [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C Genişletici",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Enkoder Çözünürlüğü",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Sessizlik Zamanlayıcısı",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Zaman Düzeltme",
 
-//    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
-//    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",
+    [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
+    [LABEL_MENU + MENU_AUDIO_IN]        = "Ses Giriş",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Ses Giriş",
@@ -100,7 +100,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_BAND]      = "Bant Modeli",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Tarama Adımı",
     [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Vurgulama",
-//    [LABEL_MENU + MENU_TUNER_STA_MODE]  = "Stations mode",
+    [LABEL_MENU + MENU_TUNER_STA_MODE]  = "Kontrol modu",
     [LABEL_MENU + MENU_TUNER_FMONO]     = "Mono Ses",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Rds Bilgi Gösterimi",
     [LABEL_MENU + MENU_TUNER_BASS]      = "Bass Kuvetlendirme",
@@ -111,14 +111,14 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_ALARM_DAYS]      = "Günler",
 
     [LABEL_MENU + MENU_SPECTRUM_MODE]   = "Spectrum Tipi",
-//    [LABEL_MENU + MENU_SPECTURM_PEAKS]  = "Peak level",
-//    [LABEL_MENU + MENU_SPECTRUM_GRAD]   = "Gradient",
+    [LABEL_MENU + MENU_SPECTRUM_PEAKS]  = "Tepe Seviyesi",
+    [LABEL_MENU + MENU_SPECTRUM_GRAD]   = "Eğim",
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Bekleme Parlaklığı",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Genel Parlaklık",
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Ekran Döndürme",
-//    [LABEL_MENU + MENU_DISPLAY_DEF]     = "Main screen",
-//    [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Palette",
+    [LABEL_MENU + MENU_DISPLAY_DEF]     = "Ana Ekran",
+    [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Tema Renkleri",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Bekleme Butonu",
@@ -152,6 +152,6 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_RC_REW]          = "Geri Sar",
     [LABEL_MENU + MENU_RC_FWD]          = "İleri Sar",
     [LABEL_MENU + MENU_RC_TIMER]        = "Kapatma Saati",
-//    [LABEL_MENU + MENU_RC_SP_MODE]      = "Spectrum mode",
-//    [LABEL_MENU + MENU_RC_SCR_DEF]      = "Default screen",
+    [LABEL_MENU + MENU_RC_SP_MODE]      = "Spektrum modu",
+    [LABEL_MENU + MENU_RC_SCR_DEF]      = "Varsayılan ekran",
 };
