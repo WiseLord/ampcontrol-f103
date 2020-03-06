@@ -5,6 +5,7 @@
 #include "audio/audio.h"
 #include "bt.h"
 #include "control.h"
+#include "debug.h"
 #include "gui/canvas.h"
 #include "hidkeys.h"
 #include "i2c.h"
@@ -31,12 +32,17 @@ static void actionGetButtons(void);
 static void actionGetEncoder(void);
 static void actionGetRemote(void);
 static void actionGetTimers(void);
+
 static void actionRemapBtnShort(void);
 static void actionRemapBtnLong(void);
 static void actionRemapRemote(void);
 static void actionRemapCommon(void);
 static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
+
+static void ampActionGet(void);
+static void ampActionRemap(void);
+static void ampActionHandle(void);
 
 static Action action = {
     .type = ACTION_NONE,
@@ -1045,6 +1051,22 @@ void ampInitMuteStby(void)
 
 void ampInit(void)
 {
+    dbgInit();
+
+    settingsInit();
+    ampInitMuteStby();
+    pinsInit();
+    rtcInit();
+
+    screenInit();
+    spInit();
+
+    inputInit();
+    rcInit();
+
+    controlInit();
+    karadioInit();
+
     ampReadSettings();
 
     timerInit(TIM_SPECTRUM, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
@@ -1059,7 +1081,21 @@ void ampInit(void)
 #endif
 
     amp.status = AMP_STATUS_STBY;
-//    controlReportAmpStatus();
+}
+
+void ampRun(void)
+{
+    while (1) {
+        controlGetData();
+        karadioGetData();
+        btReleaseKey();
+
+        ampActionGet();
+        ampActionRemap();
+        ampActionHandle();
+
+        screenShow();
+    }
 }
 
 Amp *ampGet(void)
@@ -1072,7 +1108,7 @@ void ampActionQueue(ActionType type, int16_t value)
     actionSet(type, value);
 }
 
-void ampActionGet(void)
+static void ampActionGet(void)
 {
     if (ACTION_NONE == action.type) {
         actionGetButtons();
@@ -1097,6 +1133,9 @@ void ampActionGet(void)
     if (ACTION_NONE == action.type) {
         actionGetTimers();
     }
+}
+
+static void ampActionRemap(void) {
 
     switch (action.type) {
     case ACTION_BTN_SHORT:
@@ -1124,7 +1163,7 @@ void ampActionGet(void)
 }
 
 
-void ampActionHandle(void)
+static void ampActionHandle(void)
 {
     Screen *screen = screenGet();
     ScrMode scrMode = screen->mode;

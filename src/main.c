@@ -110,32 +110,8 @@ int main(void)
 {
     sysInit();
 
-    settingsInit();
-    ampInitMuteStby();
-
-    pinsInit();
-
-    rtcInit();
-
-    dbgInit();
-
-    screenInit();
-    spInit();
-
-    inputInit();
-    rcInit();
-
-    controlInit();
-    karadioInit();
-
     ampInit();
+    ampRun();
 
-    while (1) {
-        controlGetData();
-        karadioGetData();
-        btReleaseKey();
-        ampActionGet();
-        ampActionHandle();
-        screenShow();
-    }
+    return 0;
 }

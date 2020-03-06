@@ -115,14 +115,11 @@ void ampPinStby(bool value);
 void ampInitMuteStby(void);
 
 void ampInit(void);
+void ampRun(void);
 
 Amp *ampGet(void);
 
 void ampActionQueue(ActionType type, int16_t value);
-
-void ampActionGet(void);
-
-void ampActionHandle(void);
 
 #ifdef __cplusplus
 }

@@ -227,7 +227,7 @@ endif
 
 # Compiler
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
-OPT_FLAGS = $(OPT) -fshort-enums -ffunction-sections -fdata-sections -ffreestanding
+OPT_FLAGS = $(OPT) -fshort-enums -ffunction-sections -fdata-sections
 WARN = -Wall -Werror
 
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT_FLAGS) $(WARN) -flto
