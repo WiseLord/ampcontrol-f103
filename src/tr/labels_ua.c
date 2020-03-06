@@ -35,7 +35,7 @@ const char *const labels_ua [LABEL_END] = {
 //    [LABEL_IN_KARADIO]      = "KaRadio",
 
     [LABEL_BOOL_OFF]        = "ВИМКН",
-    [LABEL_BOOL_ON]         = "ВКЛ",
+    [LABEL_BOOL_ON]         = "УВІМК",
 
     [LABEL_TUNER_FM_STATION_NAME]   = "Ім'я FM станції",
 
@@ -99,7 +99,7 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_TUNER_IC]        = "Чіп тюнера",
     [LABEL_MENU + MENU_TUNER_BAND]      = "Діапазон",
     [LABEL_MENU + MENU_TUNER_STEP]      = "Крок",
-    [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Предвикривлення",
+    [LABEL_MENU + MENU_TUNER_DEEMPH]    = "Передвикривлення",
     [LABEL_MENU + MENU_TUNER_STA_MODE]  = "Режим станції",
     [LABEL_MENU + MENU_TUNER_FMONO]     = "Форсувати моно",
     [LABEL_MENU + MENU_TUNER_RDS]       = "Увімкнути RDS",
@@ -116,7 +116,7 @@ const char *const labels_ua [LABEL_END] = {
 
     [LABEL_MENU + MENU_DISPLAY_BR_STBY] = "Яскравість STBY",
     [LABEL_MENU + MENU_DISPLAY_BR_WORK] = "Яскравість",
-    [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Розгорнути",
+    [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Повернути",
     [LABEL_MENU + MENU_DISPLAY_DEF]     = "Головний екран",
     [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Палітра",
 
@@ -132,9 +132,9 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_RC_IN_NEXT]      = "Наступний ВХ",
     [LABEL_MENU + MENU_RC_NAV_OK]       = "ОК",
     [LABEL_MENU + MENU_RC_NAV_BACK]     = "Назад",
-    [LABEL_MENU + MENU_RC_NAV_RIGHT]    = "Вправо",
+    [LABEL_MENU + MENU_RC_NAV_RIGHT]    = "Направо",
     [LABEL_MENU + MENU_RC_NAV_UP]       = "Вгору",
-    [LABEL_MENU + MENU_RC_NAV_LEFT]     = "Ліво",
+    [LABEL_MENU + MENU_RC_NAV_LEFT]     = "Наліво",
     [LABEL_MENU + MENU_RC_NAV_DOWN]     = "Вниз",
     [LABEL_MENU + MENU_RC_BASS_UP]      = "НЧ +",
     [LABEL_MENU + MENU_RC_BASS_DOWN]    = "НЧ -",
