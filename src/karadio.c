@@ -27,7 +27,7 @@
 
 #define TRYING          "Trying "
 #define IP              "ip:"
-#define AUTOSTART       "autostart:"
+#define AUTOSTART       "I2S Speed:"
 
 #define SYS_BOOT        "boot"
 #define WIFI_DISCON     "discon"
