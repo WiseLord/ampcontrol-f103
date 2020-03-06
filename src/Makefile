@@ -230,8 +230,8 @@ MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 OPT_FLAGS = $(OPT) -fshort-enums -ffunction-sections -fdata-sections -ffreestanding
 WARN = -Wall -Werror
 
-CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT_FLAGS) $(WARN)
-ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT_FLAGS) $(WARN)
+CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT_FLAGS) $(WARN) -flto
+ASFLAGS = $(MCU) $(AS_DEFS) $(OPT_FLAGS) $(WARN)
 
 ifeq ($(DEBUG), 1)
   CFLAGS += -g -gdwarf-2
@@ -258,8 +258,9 @@ SZ = $(PREFIX)size
 OPENOCD := openocd
 OPENOCD_CFG := system/$(call lc, $(STM32_GROUP))_openocd.cfg
 
-OBJECTS = $(addprefix $(OBJ_DIR)/,$(C_SOURCES:.c=.o))
+# .s files should be first in linking process to handle -flto properly
 OBJECTS += $(addprefix $(OBJ_DIR)/,$(ASM_SOURCES:.s=.o))
+OBJECTS += $(addprefix $(OBJ_DIR)/,$(C_SOURCES:.c=.o))
 
 ELF = $(BUILD_DIR)/$(TARGET).elf
 BIN = flash/$(TARGET).bin
@@ -285,7 +286,7 @@ $(OBJ_DIR)/%.o: %.c Makefile
 
 $(OBJ_DIR)/%.o: %.s Makefile
 	@mkdir -p $(dir $@)
-	$(AS) -c $(CFLAGS) $(AS_DEFS) -o $@ $<
+	$(AS) -c $(ASFLAGS) $(AS_DEFS) -o $@ $<
 
 clean:
 	@rm -rf $(BUILD_DIR)
