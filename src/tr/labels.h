@@ -14,10 +14,13 @@ extern "C" {
 #include "../spectrum.h"
 #include "../tuner/tuner.h"
 
+#define GENERATE_MENU_RC_TEXT(CMD)  [LABEL_MENU + MENU_RC_ ## CMD] = # CMD,
+#define GENERATE_AUDIO_IC_TEXT(IC)  [LABEL_AUDIO_IC + AUDIO_IC_ ## IC] = # IC,
+#define GENERATE_TUNER_IC_TEXT(IC)  [LABEL_TUNER_IC + TUNER_IC_ ## IC] = # IC,
+
 typedef uint8_t Lang;
 enum {
-    LANG_DEFAULT = 0,
-
+    LANG_EN,
     LANG_BY,
     LANG_FR,
     LANG_RO,
@@ -25,7 +28,9 @@ enum {
     LANG_TR,
     LANG_UA,
 
-    LANG_END
+    LANG_END,
+
+    LANG_DEFAULT = LANG_EN,
 };
 
 typedef enum {
@@ -101,6 +106,7 @@ typedef enum {
     LABEL_END = LABEL_MENU_END,
 } Label;
 
+extern const char *const labels_en[LABEL_END];
 extern const char *const labels_by[LABEL_END];
 extern const char *const labels_fr[LABEL_END];
 extern const char *const labels_ru[LABEL_END];

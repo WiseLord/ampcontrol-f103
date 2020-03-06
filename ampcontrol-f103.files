@@ -228,10 +228,11 @@ src/system/system_stm32f1xx.c
 src/system/system_stm32f3xx.c
 src/timers.c
 src/timers.h
-src/tr/labels_by.c
 src/tr/labels.c
-src/tr/labels_fr.c
 src/tr/labels.h
+src/tr/labels_by.c
+src/tr/labels_en.c
+src/tr/labels_fr.c
 src/tr/labels_ro.c
 src/tr/labels_ru.c
 src/tr/labels_tr.c
