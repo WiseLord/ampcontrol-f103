@@ -16,15 +16,15 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_FRONTREAR]       = "Ön/Arka Denge",
     [LABEL_BALANCE]         = "Sağ/Sol Denge",
     [LABEL_CENTER]          = "Merkez",
-//    [LABEL_SUBWOOFER]       = "Subwoofer",
+    [LABEL_SUBWOOFER]       = "Subwoofer",
     [LABEL_PREAMP]          = "Kazanç",
 
     [LABEL_IN_TUNER]        = "Radio",
     [LABEL_IN_PC]           = "Bilgisayar",
     [LABEL_IN_TV]           = "TV Seti",
-//    [LABEL_IN_BLUETOOTH]    = "Bluetooth",
+    [LABEL_IN_BLUETOOTH]    = "Bluetooth",
     [LABEL_IN_DVD]          = "DVD Seti",
-//    [LABEL_IN_USB]          = "USB",
+    [LABEL_IN_USB]          = "USB",
     [LABEL_IN_MICROPHONE]   = "Mikrofon",
     [LABEL_IN_GUITAR]       = "Gitar",
     [LABEL_IN_TURNTABLES]   = "Plak Çalar",
@@ -32,7 +32,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_IN_PROJECTOR]    = "Projeksiyon",
     [LABEL_IN_SATELLITE]    = "Uydu Alıcısı",
     [LABEL_IN_MIXER]        = "Mikser",
-//    [LABEL_IN_KARADIO]      = "KaRadio",
+    [LABEL_IN_KARADIO]      = "KaRadio",
 
     [LABEL_BOOL_OFF]        = "Kapalı",
     [LABEL_BOOL_ON]         = "Açık",
@@ -42,16 +42,16 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_TUNER_IC + TUNER_IC_NO]      = "Yok",
 
     [LABEL_TUNER_BAND + TUNER_BAND_FM_US_EUROPE]    = "ABD/Avrupa FM",
-//    [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Japan FM",
+    [LABEL_TUNER_BAND + TUNER_BAND_FM_JAPAN]        = "Japan FM",
     [LABEL_TUNER_BAND + TUNER_BAND_FM_WORLDWIDE]    = "Dünya Çapında FM",
     [LABEL_TUNER_BAND + TUNER_BAND_FM_EASTEUROPE]   = "Doğu Avrupa FM",
 
-//    [LABEL_TUNER_STEP + TUNER_STEP_50K]     = "50kHz",
-//    [LABEL_TUNER_STEP + TUNER_STEP_100K]    = "100kHz",
-//    [LABEL_TUNER_STEP + TUNER_STEP_200K]    = "200kHz",
+    [LABEL_TUNER_STEP + TUNER_STEP_50K]     = "50kHz",
+    [LABEL_TUNER_STEP + TUNER_STEP_100K]    = "100kHz",
+    [LABEL_TUNER_STEP + TUNER_STEP_200K]    = "200kHz",
 
-//    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50us",
-//    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75us",
+    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_50u] = "50us",
+    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75us",
 
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stereo",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Karışık",
@@ -89,6 +89,9 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Enkoder Çözünürlüğü",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Sessizlik Zamanlayıcısı",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Zaman Düzeltme",
+
+    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Giriş Durumu",
+    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth Kontrolü",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Ses Giriş",
