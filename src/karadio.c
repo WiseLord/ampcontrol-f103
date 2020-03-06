@@ -35,7 +35,6 @@
 #define KARADIO_RB_SIZE 128
 
 static KaRadioData krData;
-static bool kEnabled = false;
 
 static RingBuf krRingBuf;
 static char krRbData[KARADIO_RB_SIZE];
@@ -85,15 +84,11 @@ void karadioInit(void)
 void karadioSetEnabled(bool value)
 {
     if (value) {
-        if (!kEnabled) {
-            karadioSendCmd(CMD_SYS, SYS_BOOT);
-        }
+        karadioSendCmd(CMD_CLI, CLI_PLAY);
     } else {
-        karadioSendCmd(CMD_WIFI, WIFI_DISCON);
+        karadioSendCmd(CMD_CLI, CLI_STOP);
         karadioClearStatus();
     }
-
-    kEnabled = value;
 }
 
 KaRadioData *karadioGet(void)
