@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "audio/audio.h"
 #include "debug.h"
@@ -26,7 +27,7 @@ static const char *CTRL_INPUT   = ".input";
 
 static const char *CTRL_ON      = ".on";
 static const char *CTRL_OFF     = ".off";
-static const char *CTRL_TOGGLE  = ".togggle";
+static const char *CTRL_SWITCH  = ".switch";
 
 static const char *CTRL_PREV    = ".prev";
 static const char *CTRL_NEXT    = ".next";
@@ -39,12 +40,7 @@ static const char *const CTRL_AUDIO_TUNE[] = {
 
 static bool isEndOfLine(const char *line)
 {
-    if (*line == '\0') {
-        return true;
-    } else if (*line == '\r' || *line == '\n') {
-        return true;
-    }
-    return false;
+    return (*line < ' ');
 }
 
 static void controlParseAmpStatus(char *line)
@@ -54,14 +50,32 @@ static void controlParseAmpStatus(char *line)
     }
 }
 
+static bool controlParseNumber(char **line, int16_t *number)
+{
+    char *end;
+    int16_t value = (int16_t)strtol(*line, &end, 10);
+    if (*line != end) {
+        *number = value;
+        *line = end;
+        return true;
+    }
+
+    return false;
+}
+
 static void controlParseAmpInput(char *line)
 {
     if (isEndOfLine(line)) {
         controlReportAudioInput();
     } else if (strstr(line, CTRL_PREV) == line) {
-        ampActionQueue(ACTION_AUDIO_INPUT, -1);
+        ampActionQueue(ACTION_AUDIO_INPUT_CHANGE, -1);
     } else if (strstr(line, CTRL_NEXT) == line) {
-        ampActionQueue(ACTION_AUDIO_INPUT, +1);
+        ampActionQueue(ACTION_AUDIO_INPUT_CHANGE, +1);
+    } else if (' ' == *line) {
+        int16_t input;
+        if (controlParseNumber(&line, &input)) {
+            ampActionQueue(ACTION_AUDIO_INPUT_SET, input);
+        }
     }
 }
 
@@ -73,7 +87,7 @@ static void controlParseAmp(char *line)
         ampActionQueue(ACTION_STANDBY, FLAG_EXIT);
     } else if (strstr(line, CTRL_OFF) == line) {
         ampActionQueue(ACTION_STANDBY, FLAG_ENTER);
-    } else if (strstr(line, CTRL_TOGGLE) == line) {
+    } else if (strstr(line, CTRL_SWITCH) == line) {
         ampActionQueue(ACTION_STANDBY, FLAG_SWITCH);
     } else if (strstr(line, CTRL_STATUS) == line) {
         controlParseAmpStatus(line + strlen(CTRL_STATUS));

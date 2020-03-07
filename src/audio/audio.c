@@ -209,8 +209,9 @@ void audioChangeTune(AudioTune tune, int8_t diff)
 
 void audioSetInput(int8_t value)
 {
-    if (value >= aProc.par.inCnt)
+    if (value >= aProc.par.inCnt) {
         value = 0;
+    }
 
     aProc.par.input = value;
     aProc.par.tune[AUDIO_TUNE_GAIN].value = aProc.par.gain[aProc.par.input];

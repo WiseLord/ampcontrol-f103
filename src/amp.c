@@ -439,6 +439,19 @@ static int8_t actionGetNextAudioInput(int8_t diff)
     return ret;
 }
 
+static void actionSetInput(int8_t value)
+{
+    ampSetInput(value);
+    controlReportAudioInput();
+    controlReportAudioTune(AUDIO_TUNE_GAIN);
+}
+static void actionPostSetInput(Screen *screen)
+{
+    screenToClear();
+    screen->iconHint = ICON_EMPTY;
+    actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
+}
+
 static void actionGetButtons(void)
 {
     CmdBtn cmdBtn = getBtnCmd();
@@ -629,7 +642,7 @@ static void actionRemapBtnShort(void)
         actionSet(ACTION_STANDBY, FLAG_SWITCH);
         break;
     case BTN_D1:
-        actionSet(ACTION_AUDIO_INPUT, +1);
+        actionSet(ACTION_AUDIO_INPUT_CHANGE, +1);
         break;
     case BTN_D2:
         actionSet(ACTION_NAVIGATE, RC_CMD_NAV_BACK);
@@ -785,7 +798,7 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_IN_NEXT:
-        actionSet(ACTION_AUDIO_INPUT, +1);
+        actionSet(ACTION_AUDIO_INPUT_CHANGE, +1);
         break;
 
     case RC_CMD_NAV_OK:
@@ -1289,16 +1302,15 @@ static void ampActionHandle(void)
         actionSetScreen(scrMode, 5000);
         break;
 
-    case ACTION_AUDIO_INPUT:
+    case ACTION_AUDIO_INPUT_CHANGE:
         if (scrMode == SCREEN_AUDIO_INPUT) {
-            ampSetInput(actionGetNextAudioInput((int8_t)action.value));
-            controlReportAudioInput();
-            controlReportAudioTune(AUDIO_TUNE_GAIN);
+            actionSetInput(actionGetNextAudioInput((int8_t)action.value));
         }
-
-        screenToClear();
-        screen->iconHint = ICON_EMPTY;
-        actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
+        actionPostSetInput(screen);
+        break;
+    case ACTION_AUDIO_INPUT_SET:
+        actionSetInput((int8_t)action.value);
+        actionPostSetInput(screen);
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
         audioChangeTune(aProc->tune, (int8_t)(action.value));
