@@ -445,6 +445,7 @@ static void actionSetInput(int8_t value)
     controlReportAudioInput();
     controlReportAudioTune(AUDIO_TUNE_GAIN);
 }
+
 static void actionPostSetInput(Screen *screen)
 {
     screenToClear();
@@ -738,8 +739,6 @@ static void actionRemapRemote(void)
     Screen *screen = screenGet();
     ScrMode scrMode = screen->mode;
 
-    AudioProc *aProc = audioGet();
-
     if (scrMode == SCREEN_MENU) {
         Menu *menu = menuGet();
         if ((menu->parent == MENU_SETUP_RC) && (menu->selected)) {
@@ -811,51 +810,27 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_BASS_UP:
-        screenSetMode(SCREEN_AUDIO_PARAM);
-        if (aProc->tune != AUDIO_TUNE_BASS) {
-            screenToClear();
-        }
-        aProc->tune = AUDIO_TUNE_BASS;
+        ampSelectTune(AUDIO_TUNE_BASS);
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_BASS_DOWN:
-        screenSetMode(SCREEN_AUDIO_PARAM);
-        if (aProc->tune != AUDIO_TUNE_BASS) {
-            screenToClear();
-        }
-        aProc->tune = AUDIO_TUNE_BASS;
+        ampSelectTune(AUDIO_TUNE_BASS);
         actionSet(ACTION_ENCODER, -1);
         break;
     case RC_CMD_MIDDLE_UP:
-        screenSetMode(SCREEN_AUDIO_PARAM);
-        if (aProc->tune != AUDIO_TUNE_MIDDLE) {
-            screenToClear();
-        }
-        aProc->tune = AUDIO_TUNE_MIDDLE;
+        ampSelectTune(AUDIO_TUNE_MIDDLE);
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_MIDDLE_DOWN:
-        screenSetMode(SCREEN_AUDIO_PARAM);
-        if (aProc->tune != AUDIO_TUNE_MIDDLE) {
-            screenToClear();
-        }
-        aProc->tune = AUDIO_TUNE_MIDDLE;
+        ampSelectTune(AUDIO_TUNE_MIDDLE);
         actionSet(ACTION_ENCODER, -1);
         break;
     case RC_CMD_TREBLE_UP:
-        screenSetMode(SCREEN_AUDIO_PARAM);
-        if (aProc->tune != AUDIO_TUNE_TREBLE) {
-            screenToClear();
-        }
-        aProc->tune = AUDIO_TUNE_TREBLE;
+        ampSelectTune(AUDIO_TUNE_TREBLE);
         actionSet(ACTION_ENCODER, +1);
         break;
     case RC_CMD_TREBLE_DOWN:
-        screenSetMode(SCREEN_AUDIO_PARAM);
-        if (aProc->tune != AUDIO_TUNE_TREBLE) {
-            screenToClear();
-        }
-        aProc->tune = AUDIO_TUNE_TREBLE;
+        ampSelectTune(AUDIO_TUNE_TREBLE);
         actionSet(ACTION_ENCODER, -1);
         break;
 
@@ -1060,6 +1035,16 @@ void ampInitMuteStby(void)
 
     ampPinMute(true);
     ampPinStby(true);
+}
+
+void ampSelectTune(AudioTune tune)
+{
+    screenSetMode(SCREEN_AUDIO_PARAM);
+    AudioProc *aProc = audioGet();
+    if (aProc->tune != tune) {
+        screenToClear();
+        aProc->tune = tune;
+    }
 }
 
 void ampInit(void)

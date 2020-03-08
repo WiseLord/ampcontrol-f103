@@ -17,6 +17,7 @@ void controlGetData(void);
 void controlReportAmpStatus(void);
 void controlReportAudioInput(void);
 void controlReportAudioTune(AudioTune tune);
+void controlReportAudio(void);
 
 void controlReportTuner(bool force);
 void controlReportAll(void);

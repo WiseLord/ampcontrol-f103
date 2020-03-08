@@ -8,6 +8,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "audio/audiodefs.h"
 #include "screen.h"
 
 #define FLAG_EXIT       0
@@ -114,6 +115,8 @@ enum {
 void ampPinMute(bool value);
 void ampPinStby(bool value);
 void ampInitMuteStby(void);
+
+void ampSelectTune(AudioTune tune);
 
 void ampInit(void);
 void ampRun(void);

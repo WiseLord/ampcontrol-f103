@@ -24,6 +24,10 @@ static const char *CTRL_AMP     = "amp";
 
 static const char *CTRL_STATUS  = ".status";
 static const char *CTRL_INPUT   = ".input";
+static const char *CTRL_VOLUME  = ".volume";
+static const char *CTRL_BASS    = ".bass";
+static const char *CTRL_MIDDLE  = ".middle";
+static const char *CTRL_TREBLE  = ".treble";
 
 static const char *CTRL_ON      = ".on";
 static const char *CTRL_OFF     = ".off";
@@ -31,6 +35,9 @@ static const char *CTRL_SWITCH  = ".switch";
 
 static const char *CTRL_PREV    = ".prev";
 static const char *CTRL_NEXT    = ".next";
+
+static const char *CTRL_DEC     = ".dec";
+static const char *CTRL_INC     = ".inc";
 
 #define GENERATE_AUDIO_TUNE_TEXT(TUNE)  # TUNE,
 
@@ -72,27 +79,73 @@ static void controlParseAmpInput(char *line)
     } else if (strstr(line, CTRL_NEXT) == line) {
         ampActionQueue(ACTION_AUDIO_INPUT_CHANGE, +1);
     } else if (' ' == *line) {
-        int16_t input;
-        if (controlParseNumber(&line, &input)) {
-            ampActionQueue(ACTION_AUDIO_INPUT_SET, input);
+        int16_t val;
+        if (controlParseNumber(&line, &val)) {
+            ampActionQueue(ACTION_AUDIO_INPUT_SET, val);
         }
+    }
+}
+
+static void controlParseAmpTune(char *line, AudioTune tune)
+{
+    for (AudioTune t = AUDIO_TUNE_VOLUME; t < AUDIO_TUNE_END - 1; t++) {
+        if (t == tune) {
+            ampSelectTune(tune);
+            if (isEndOfLine(line)) {
+                controlReportAudioTune(tune);
+            } else if (strstr(line, CTRL_DEC) == line) {
+                ampActionQueue(ACTION_AUDIO_PARAM_CHANGE, -1);
+            } else if (strstr(line, CTRL_INC) == line) {
+                ampActionQueue(ACTION_AUDIO_PARAM_CHANGE, +1);
+            } else if (' ' == *line) {
+                int16_t val;
+                if (controlParseNumber(&line, &val)) {
+//                    ampActionQueue(ACTION_AUDIO_PARAM_SET, value);
+                }
+            }
+        }
+    }
+
+    if (strstr(line, ".volume") == line) {
+
     }
 }
 
 static void controlParseAmp(char *line)
 {
+    AmpStatus ampStatus = ampGet()->status;
+
+    if (ampStatus != AMP_STATUS_ACTIVE) {
+        if (strstr(line, CTRL_SWITCH) == line) {
+            ampActionQueue(ACTION_STANDBY, FLAG_SWITCH);
+        } else if (strstr(line, CTRL_ON) == line) {
+            ampActionQueue(ACTION_STANDBY, FLAG_EXIT);
+        } else {
+            controlReportAmpStatus();
+            return;
+        }
+    }
+
     if (isEndOfLine(line)) {
         //
+    } else if (strstr(line, CTRL_SWITCH) == line) {
+        ampActionQueue(ACTION_STANDBY, FLAG_SWITCH);
     } else if (strstr(line, CTRL_ON) == line) {
         ampActionQueue(ACTION_STANDBY, FLAG_EXIT);
     } else if (strstr(line, CTRL_OFF) == line) {
         ampActionQueue(ACTION_STANDBY, FLAG_ENTER);
-    } else if (strstr(line, CTRL_SWITCH) == line) {
-        ampActionQueue(ACTION_STANDBY, FLAG_SWITCH);
     } else if (strstr(line, CTRL_STATUS) == line) {
         controlParseAmpStatus(line + strlen(CTRL_STATUS));
     } else if (strstr(line, CTRL_INPUT) == line) {
         controlParseAmpInput(line + strlen(CTRL_INPUT));
+    } else if (strstr(line, CTRL_VOLUME) == line) {
+        controlParseAmpTune(line + strlen(CTRL_VOLUME), AUDIO_TUNE_VOLUME);
+    } else if (strstr(line, CTRL_BASS) == line) {
+        controlParseAmpTune(line + strlen(CTRL_BASS), AUDIO_TUNE_BASS);
+    } else if (strstr(line, CTRL_MIDDLE) == line) {
+        controlParseAmpTune(line + strlen(CTRL_MIDDLE), AUDIO_TUNE_MIDDLE);
+    } else if (strstr(line, CTRL_TREBLE) == line) {
+        controlParseAmpTune(line + strlen(CTRL_TREBLE), AUDIO_TUNE_TREBLE);
     }
 }
 
@@ -176,7 +229,6 @@ void controlReportAudioTune(AudioTune tune)
 
 void controlReportAudio(void)
 {
-    controlReportAudioInput();
     for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END - 1; tune++) {
         controlReportAudioTune(tune);
     }
@@ -197,5 +249,7 @@ void controlReportTuner(bool force)
 
 void controlReportAll(void)
 {
+    controlReportAmpStatus();
+    controlReportAudioInput();
     controlReportAudio();
 }
