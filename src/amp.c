@@ -214,6 +214,15 @@ void ampPinStby(bool value)
             CLR(STBY);
         }
     }
+
+#ifdef STM32F1
+    // Enable SWD interface in standby mode
+    if (value) {
+        LL_GPIO_AF_Remap_SWJ_NOJTAG();
+    } else {
+        LL_GPIO_AF_DisableRemap_SWJ();
+    }
+#endif
 }
 
 static void ampMute(bool value)
@@ -1133,8 +1142,8 @@ static void ampActionGet(void)
     }
 }
 
-static void ampActionRemap(void) {
-
+static void ampActionRemap(void)
+{
     switch (action.type) {
     case ACTION_BTN_SHORT:
         actionRemapBtnShort();
