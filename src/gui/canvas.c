@@ -390,6 +390,11 @@ static void drawSpectrum(Spectrum *sp, SpChan chan, GlcdRect *rect)
         GlcdRect rect = {x, y, colW, height};
         spectrumColumnDraw(&spCol, &rect, sp->redraw, grad);
     }
+
+    if (chan != SP_CHAN_LEFT) {
+        sp->redraw = false;
+        sp->ready = false;
+    }
 }
 
 static void drawRds(Rds *rds)
@@ -591,9 +596,6 @@ void canvasShowTune(bool clear)
     rect.h /= 2;
     rect.y = rect.h;
     drawSpectrum(sp, SP_CHAN_BOTH, &rect);
-
-    sp->redraw = false;
-    sp->ready = false;
 }
 
 void canvasShowAudioFlag(bool clear)
@@ -660,9 +662,6 @@ void canvasShowAudioFlag(bool clear)
     rect.h /= 2;
     rect.y = rect.h;
     drawSpectrum(sp, SP_CHAN_BOTH, &rect);
-
-    sp->redraw = false;
-    sp->ready = false;
 }
 
 void canvasShowSpectrum(bool clear)
@@ -693,9 +692,6 @@ void canvasShowSpectrum(bool clear)
     default:
         break;
     }
-
-    sp->redraw = false;
-    sp->ready = false;
 }
 
 void canvasShowTuner(bool clear)
@@ -803,9 +799,6 @@ void canvasShowTuner(bool clear)
     rect.h /= 2;
     rect.y = rect.h;
     drawSpectrum(sp, SP_CHAN_BOTH, &rect);
-
-    sp->redraw = false;
-    sp->ready = false;
 }
 
 void canvasShowKaradio(bool clear)
@@ -877,9 +870,6 @@ void canvasShowKaradio(bool clear)
     rect.y = yPos;
     rect.h = rect.h - rect.y;
     drawSpectrum(sp, SP_CHAN_BOTH, &rect);
-
-    sp->redraw = false;
-    sp->ready = false;
 }
 
 void canvasShowAudioInput(bool clear, Icon icon)
@@ -951,9 +941,6 @@ void canvasShowAudioInput(bool clear, Icon icon)
     drawSpectrum(sp, SP_CHAN_LEFT, &rect);
     rect.y += rect.h;
     drawSpectrum(sp, SP_CHAN_RIGHT, &rect);
-
-    sp->redraw = false;
-    sp->ready = false;
 }
 
 void canvasShowTextEdit(bool clear)
@@ -1020,7 +1007,4 @@ void canvasShowTimer(bool clear, int32_t value)
     rect.h /= 2;
     rect.y = rect.h;
     drawSpectrum(sp, SP_CHAN_BOTH, &rect);
-
-    sp->redraw = false;
-    sp->ready = false;
 }
