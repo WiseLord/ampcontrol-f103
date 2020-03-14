@@ -9,6 +9,7 @@
 #include "../rtc.h"
 #include "../settings.h"
 #include "../spectrum.h"
+#include "../swtimers.h"
 #include "../tr/labels.h"
 #include "../tuner/rds.h"
 #include "../tuner/stations.h"
@@ -349,12 +350,29 @@ static void calcGradient(Spectrum *sp, int16_t height, color_t *grad)
     }
 }
 
+static bool checkSpectrumReady(void)
+{
+    if (swTimGet(SW_TIM_SP_CONVERT) == 0) {
+        swTimSet(SW_TIM_SP_CONVERT, 20);
+        return true;
+    }
+
+    return false;
+}
+
 static void drawSpectrum(SpChan chan, GlcdRect *rect)
 {
     Spectrum *sp = spGet();
 
-    if (!sp->ready) {
+    if (!checkSpectrumReady() && chan != SP_CHAN_RIGHT) {
         return;
+    }
+
+    if (chan == SP_CHAN_LEFT || chan == SP_CHAN_BOTH) {
+        spGetADC(SP_CHAN_LEFT, sp->data[SP_CHAN_LEFT].raw, SPECTRUM_SIZE);
+    }
+    if (chan == SP_CHAN_RIGHT || chan == SP_CHAN_BOTH) {
+        spGetADC(SP_CHAN_RIGHT, sp->data[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE);
     }
 
     const int16_t step = (rect->w  + 1) / SPECTRUM_SIZE + 1;    // Step of columns
@@ -399,7 +417,6 @@ static void drawSpectrum(SpChan chan, GlcdRect *rect)
 
     if (chan != SP_CHAN_LEFT) {
         sp->redraw = false;
-        sp->ready = false;
     }
 }
 
@@ -779,11 +796,8 @@ void canvasShowTuner(bool clear)
     }
 
     rdsReset();
-    // Spectrum
-    if (!sp->ready) {
-        return;
-    }
 
+    // Spectrum
     GlcdRect rect = canvas.glcd->rect;
     rect.h /= 2;
     rect.y = rect.h;
