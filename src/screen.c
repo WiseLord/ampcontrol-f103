@@ -122,7 +122,9 @@ void screenShow(void)
         // Get new spectrum data
         if (swTimGet(SW_TIM_SP_CONVERT) <= 0) {
             swTimSet(SW_TIM_SP_CONVERT, 20);
-            spGetADC(spectrum);
+
+            spGetADC(SP_CHAN_LEFT, spectrum->data[SP_CHAN_LEFT].raw, SPECTRUM_SIZE);
+            spGetADC(SP_CHAN_RIGHT, spectrum->data[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE);
             spectrum->ready = true;
         }
 

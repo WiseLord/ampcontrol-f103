@@ -197,12 +197,12 @@ static inline uint8_t spGetDb(uint16_t value, uint8_t min, uint8_t max)
     }
 }
 
-static void spCplx2dB(FftSample *sp, uint8_t *out)
+static void spCplx2dB(FftSample *sp, uint8_t *out, size_t size)
 {
     uint8_t db;
     uint8_t *po = out;
 
-    memset(po, 0, SPECTRUM_SIZE);
+    memset(po, 0, size);
 
     for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
         uint16_t calc = (uint16_t)((sp[i].fr * sp[i].fr + sp[i].fi * sp[i].fi) >> 15);
@@ -219,35 +219,33 @@ static void spCplx2dB(FftSample *sp, uint8_t *out)
             ((i < 384) && (i & 0x07) == 0x07) ||
             ((i & 0x0F) == 0x0F)) {
             po++;
+
+            if (--size == 0) {
+                break;
+            }
         }
     }
 }
 
-static void spGetData(int16_t *dma, SpData *chan)
+static void spDoFft(int16_t *dma, FftSample *smpl)
 {
     int32_t dcOft = 0;
 
-    FftSample *sp = malloc(sizeof (FftSample) * FFT_SIZE);
-
     for (int16_t i = 0; i < FFT_SIZE; i++) {
-        sp[i].fr = dma[2 * i];
-        dcOft += sp[i].fr;
+        smpl[i].fr = dma[2 * i];
+        dcOft += smpl[i].fr;
     }
     dcOft /= FFT_SIZE;
 
     for (int16_t i = 0; i < FFT_SIZE; i++) {
-        sp[i].fr -= dcOft;
-        sp[i].fr >>= 2; // Use only 10 most significant bits for FFT
-        sp[i].fi = 0;
+        smpl[i].fr -= dcOft;
+        smpl[i].fr >>= 2; // Use only 10 most significant bits for FFT
+        smpl[i].fi = 0;
     }
 
-    fft_hamm_window(sp);
-    fft_rev_bin(sp);
-    fft_radix4(sp);
-
-    spCplx2dB(sp, chan->raw);
-
-    free(sp);
+    fft_hamm_window(smpl);
+    fft_rev_bin(smpl);
+    fft_radix4(smpl);
 }
 
 static void spReadSettings(void)
@@ -270,11 +268,16 @@ Spectrum *spGet(void)
     return &spectrum;
 }
 
-void spGetADC(Spectrum *sp)
+void spGetADC(SpChan chan, uint8_t *out, size_t size)
 {
-    for (SpChan chan = SP_CHAN_LEFT; chan < SP_CHAN_BOTH; chan++) {
-        spGetData(&dmaData.dataSet->chan[chan], &sp->data[chan]);
-    }
+    int16_t *dma = &dmaData.dataSet->chan[chan];
+
+    FftSample *smpl = malloc(sizeof (FftSample) * FFT_SIZE);
+
+    spDoFft(dma, smpl);
+    spCplx2dB(smpl, out, size);
+
+    free(smpl);
 }
 
 void spConvertADC(void)

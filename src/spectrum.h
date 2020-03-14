@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 typedef uint8_t SpChan;
@@ -46,7 +47,7 @@ typedef struct {
 void spInit(void);
 Spectrum *spGet(void);
 
-void spGetADC(Spectrum *sp);
+void spGetADC(SpChan chan, uint8_t *out, size_t size);
 
 void spConvertADC(void);
 
