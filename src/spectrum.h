@@ -9,6 +9,8 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
+#include "fft.h"
+
 typedef uint8_t SpChan;
 enum {
     SP_CHAN_LEFT = 0,
@@ -36,10 +38,15 @@ typedef struct {
     int16_t wtfX;  // waterfall X position
 } Spectrum;
 
+// Callback to convert FFT data
+typedef void (*fftGet)(FftSample *sp, uint8_t *out, size_t size);
+
 void spInit(void);
 Spectrum *spGet(void);
 
-void spGetADC(SpChan chan, uint8_t *out, size_t size);
+uint8_t spGetDb(uint16_t value, uint8_t min, uint8_t max);
+
+void spGetADC(SpChan chan, uint8_t *out, size_t size, fftGet fn);
 
 void spConvertADC(void);
 

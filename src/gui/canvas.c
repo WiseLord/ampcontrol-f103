@@ -29,8 +29,6 @@ typedef union {
     } par;
 } DrawData;
 
-static DrawData prev;
-
 typedef union {
     struct {
         uint8_t show[SP_CHAN_END];   // Value to show
@@ -49,12 +47,19 @@ typedef struct {
     uint8_t raw[SPECTRUM_SIZE];
 } SpData;
 
-static Canvas canvas;
 
+static void drawMenuItem(uint8_t idx, const tFont *fontItem);
+static uint8_t calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol);
+static void drawWaterfall(Spectrum *sp);
+static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect);
+static void drawRds(Rds *rds);
+
+
+static Canvas canvas;
 static SpDrawData spDrawData;
 static SpData spData[SP_CHAN_END];
+static DrawData prev;
 
-const Layout *layoutGet(void);
 
 static const tImage *glcdFindIcon(Icon code, const tFont *iFont)
 {
@@ -113,13 +118,6 @@ void canvasClear(void)
 
     memset(&prev, 0, sizeof(prev));
 }
-
-static void drawMenuItem(uint8_t idx, const tFont *fontItem);
-static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
-                         SpectrumColumn *spCol);
-static void drawWaterfall(Spectrum *sp);
-static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect);
-static void drawRds(Rds *rds);
 
 static void drawTmSpacer(char spacer, bool clear)
 {
@@ -216,8 +214,7 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas.pal->bg);
 }
 
-static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
-                         SpectrumColumn *spCol)
+static uint8_t calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol)
 {
     int16_t raw;
 
@@ -318,7 +315,7 @@ static void drawWaterfall(Spectrum *sp)
 
     for (uint8_t col = 0; col < SPECTRUM_SIZE; col++) {
         SpectrumColumn spCol;
-        calcSpCol(sp, SP_CHAN_BOTH, 224, col, &spCol);
+        calcSpCol(SP_CHAN_BOTH, 224, col, &spCol);
         color_t color = getRainbowColor((uint8_t)spCol.showW);
 
         int16_t posCurr = (col * lt->rect.h) / SPECTRUM_SIZE;
@@ -367,6 +364,36 @@ static bool checkSpectrumReady(void)
     return false;
 }
 
+static void fftGet128(FftSample *sp, uint8_t *out, size_t size)
+{
+    uint8_t db;
+    uint8_t *po = out;
+
+    memset(po, 0, size);
+
+    for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
+        uint16_t calc = (uint16_t)((sp[i].fr * sp[i].fr + sp[i].fi * sp[i].fi) >> 15);
+
+        db = spGetDb(calc, 0, N_DB - 1);
+
+        if (*po < db) {
+            *po = db;
+        }
+
+        if ((i < 48) ||
+            ((i < 96) && (i & 0x01) == 0x01) ||
+            ((i < 192) && (i & 0x03) == 0x03) ||
+            ((i < 384) && (i & 0x07) == 0x07) ||
+            ((i & 0x0F) == 0x0F)) {
+            po++;
+
+            if (--size == 0) {
+                break;
+            }
+        }
+    }
+}
+
 static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
 {
     Spectrum *sp = spGet();
@@ -376,10 +403,10 @@ static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
     }
 
     if (chan == SP_CHAN_LEFT || chan == SP_CHAN_BOTH) {
-        spGetADC(SP_CHAN_LEFT, spData[SP_CHAN_LEFT].raw, SPECTRUM_SIZE);
+        spGetADC(SP_CHAN_LEFT, spData[SP_CHAN_LEFT].raw, SPECTRUM_SIZE, fftGet128);
     }
     if (chan == SP_CHAN_RIGHT || chan == SP_CHAN_BOTH) {
-        spGetADC(SP_CHAN_RIGHT, spData[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE);
+        spGetADC(SP_CHAN_RIGHT, spData[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE, fftGet128);
     }
 
     const int16_t step = (rect->w  + 1) / SPECTRUM_SIZE + 1;    // Step of columns
@@ -414,7 +441,7 @@ static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
         int16_t x = oft + col * step;
 
         SpectrumColumn spCol;
-        calcSpCol(sp, chan, height, col, &spCol);
+        calcSpCol(chan, height, col, &spCol);
         if (!sp->peaks) {
             spCol.peakW = 0;
         }
@@ -680,8 +707,6 @@ void canvasShowAudioFlag(bool clear)
 
 void canvasShowSpectrum(bool clear)
 {
-    (void)clear;
-
     Spectrum *sp = spGet();
     GlcdRect rect = canvas.glcd->rect;
 

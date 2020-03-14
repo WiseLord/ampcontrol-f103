@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "fft.h"
 #include "settings.h"
 #include "utils.h"
 
@@ -185,48 +184,6 @@ static void spInitADC(void)
     }
 }
 
-
-static inline uint8_t spGetDb(uint16_t value, uint8_t min, uint8_t max)
-{
-    uint8_t mid = (min + max) / 2;
-
-    if (dbTable[mid] < value) {
-        return mid == min ? mid : spGetDb(value, mid, max);
-    } else {
-        return mid == max ? mid : spGetDb(value, min, mid);
-    }
-}
-
-static void spCplx2dB(FftSample *sp, uint8_t *out, size_t size)
-{
-    uint8_t db;
-    uint8_t *po = out;
-
-    memset(po, 0, size);
-
-    for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
-        uint16_t calc = (uint16_t)((sp[i].fr * sp[i].fr + sp[i].fi * sp[i].fi) >> 15);
-
-        db = spGetDb(calc, 0, N_DB - 1);
-
-        if (*po < db) {
-            *po = db;
-        }
-
-        if ((i < 48) ||
-            ((i < 96) && (i & 0x01) == 0x01) ||
-            ((i < 192) && (i & 0x03) == 0x03) ||
-            ((i < 384) && (i & 0x07) == 0x07) ||
-            ((i & 0x0F) == 0x0F)) {
-            po++;
-
-            if (--size == 0) {
-                break;
-            }
-        }
-    }
-}
-
 static void spDoFft(int16_t *dma, FftSample *smpl)
 {
     int32_t dcOft = 0;
@@ -268,14 +225,28 @@ Spectrum *spGet(void)
     return &spectrum;
 }
 
-void spGetADC(SpChan chan, uint8_t *out, size_t size)
+uint8_t spGetDb(uint16_t value, uint8_t min, uint8_t max)
+{
+    uint8_t mid = (min + max) / 2;
+
+    if (dbTable[mid] < value) {
+        return mid == min ? mid : spGetDb(value, mid, max);
+    } else {
+        return mid == max ? mid : spGetDb(value, min, mid);
+    }
+}
+
+void spGetADC(SpChan chan, uint8_t *out, size_t size, fftGet fn)
 {
     int16_t *dma = &dmaData.dataSet->chan[chan];
 
     FftSample *smpl = malloc(sizeof (FftSample) * FFT_SIZE);
 
     spDoFft(dma, smpl);
-    spCplx2dB(smpl, out, size);
+
+    if (NULL != fn) {
+        fn(smpl, out, size);
+    }
 
     free(smpl);
 }
