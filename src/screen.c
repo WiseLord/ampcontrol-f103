@@ -132,7 +132,6 @@ void screenShow(void)
     if (clear) {
         canvasClear();
         spectrum->wtfX = 0;
-        spectrum->redraw = true;
     }
 
     switch (screen.mode) {

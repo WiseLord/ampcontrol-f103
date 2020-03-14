@@ -40,7 +40,6 @@ typedef struct {
     bool peaks;
     bool grad;
     int16_t wtfX;  // waterfall X position
-    bool redraw;
 } Spectrum;
 
 void spInit(void);

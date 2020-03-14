@@ -111,7 +111,7 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem);
 static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
                          SpectrumColumn *spCol);
 static void drawWaterfall(Spectrum *sp);
-static void drawSpectrum(SpChan chan, GlcdRect *rect);
+static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect);
 static void drawRds(Rds *rds);
 
 static void drawTmSpacer(char spacer, bool clear)
@@ -360,11 +360,11 @@ static bool checkSpectrumReady(void)
     return false;
 }
 
-static void drawSpectrum(SpChan chan, GlcdRect *rect)
+static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
 {
     Spectrum *sp = spGet();
 
-    if (!checkSpectrumReady() && chan != SP_CHAN_RIGHT) {
+    if (check && !checkSpectrumReady()) {
         return;
     }
 
@@ -388,7 +388,7 @@ static void drawSpectrum(SpChan chan, GlcdRect *rect)
 
     static color_t *grad = NULL;
 
-    if (sp->redraw) {
+    if (clear) {
         memset(&spDrawData, 0, sizeof (SpDrawData));
         memset(sp->data, 0, sizeof (SpData) * SP_CHAN_END);
 
@@ -412,11 +412,7 @@ static void drawSpectrum(SpChan chan, GlcdRect *rect)
             spCol.peakW = 0;
         }
         GlcdRect rect = {x, y, colW, height};
-        spectrumColumnDraw(&spCol, &rect, sp->redraw, grad);
-    }
-
-    if (chan != SP_CHAN_LEFT) {
-        sp->redraw = false;
+        spectrumColumnDraw(&spCol, &rect, clear, grad);
     }
 }
 
@@ -612,7 +608,7 @@ void canvasShowTune(bool clear)
     GlcdRect rect = canvas.glcd->rect;
     rect.h /= 2;
     rect.y = rect.h;
-    drawSpectrum(SP_CHAN_BOTH, &rect);
+    drawSpectrum(clear, true, SP_CHAN_BOTH, &rect);
 }
 
 void canvasShowAudioFlag(bool clear)
@@ -672,7 +668,7 @@ void canvasShowAudioFlag(bool clear)
     GlcdRect rect = canvas.glcd->rect;
     rect.h /= 2;
     rect.y = rect.h;
-    drawSpectrum(SP_CHAN_BOTH, &rect);
+    drawSpectrum(clear, true, SP_CHAN_BOTH, &rect);
 }
 
 void canvasShowSpectrum(bool clear)
@@ -685,12 +681,12 @@ void canvasShowSpectrum(bool clear)
     switch (sp->mode) {
     case SP_MODE_STEREO:
         rect.h /= 2;
-        drawSpectrum(SP_CHAN_LEFT, &rect);
+        drawSpectrum(clear, true, SP_CHAN_LEFT, &rect);
         rect.y = rect.h;
-        drawSpectrum(SP_CHAN_RIGHT, &rect);
+        drawSpectrum(clear, false, SP_CHAN_RIGHT, &rect);
         break;
     case SP_MODE_MIXED:
-        drawSpectrum(SP_CHAN_BOTH, &rect);
+        drawSpectrum(clear, true, SP_CHAN_BOTH, &rect);
         break;
     case SP_MODE_WATERFALL:
         drawWaterfall(sp);
@@ -705,7 +701,6 @@ void canvasShowTuner(bool clear)
     const Layout *lt = canvas.layout;
 
     Tuner *tuner = tunerGet();
-    Spectrum *sp = spGet();
     Rds *rds = rdsGet();
 
     const tFont *iconSet = lt->iconSet;
@@ -787,7 +782,7 @@ void canvasShowTuner(bool clear)
         // Clear RDS/Spectrum area
         GlcdRect rect = canvas.glcd->rect;
         glcdDrawRect(0, rect.h / 2, rect.w, rect.h / 2, canvas.pal->bg);
-        sp->redraw = true;
+        clear = true;
     }
 
     if (rdsFlag) {
@@ -801,7 +796,7 @@ void canvasShowTuner(bool clear)
     GlcdRect rect = canvas.glcd->rect;
     rect.h /= 2;
     rect.y = rect.h;
-    drawSpectrum(SP_CHAN_BOTH, &rect);
+    drawSpectrum(clear, true, SP_CHAN_BOTH, &rect);
 }
 
 void canvasShowKaradio(bool clear)
@@ -867,7 +862,7 @@ void canvasShowKaradio(bool clear)
     GlcdRect rect = canvas.glcd->rect;
     rect.y = yPos;
     rect.h = rect.h - rect.y;
-    drawSpectrum(SP_CHAN_BOTH, &rect);
+    drawSpectrum(clear, true, SP_CHAN_BOTH, &rect);
 }
 
 void canvasShowAudioInput(bool clear, Icon icon)
@@ -931,9 +926,9 @@ void canvasShowAudioInput(bool clear, Icon icon)
     GlcdRect rect = canvas.glcd->rect;
     rect.y = lt->lblFont->chars[0].image->height;
     rect.h = (rect.h - rect.y) / 2;
-    drawSpectrum(SP_CHAN_LEFT, &rect);
+    drawSpectrum(clear, true, SP_CHAN_LEFT, &rect);
     rect.y += rect.h;
-    drawSpectrum(SP_CHAN_RIGHT, &rect);
+    drawSpectrum(clear, false, SP_CHAN_RIGHT, &rect);
 }
 
 void canvasShowTextEdit(bool clear)
@@ -993,5 +988,5 @@ void canvasShowTimer(bool clear, int32_t value)
     GlcdRect rect = canvas.glcd->rect;
     rect.h /= 2;
     rect.y = rect.h;
-    drawSpectrum(SP_CHAN_BOTH, &rect);
+    drawSpectrum(clear, true, SP_CHAN_BOTH, &rect);
 }
