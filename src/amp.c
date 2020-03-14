@@ -1318,6 +1318,12 @@ static void ampActionHandle(void)
         controlReportAudioTune(aProc->tune);
         swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
         break;
+    case ACTION_AUDIO_PARAM_SET:
+        audioSetTune(aProc->tune, (int8_t)action.value);
+        actionSetScreen(SCREEN_AUDIO_PARAM, 3000);
+        controlReportAudioTune(aProc->tune);
+        swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
+        break;
 
     case ACTION_AUDIO_MUTE:
         ampMute(action.value);

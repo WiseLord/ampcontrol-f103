@@ -8,6 +8,17 @@ an answer on user actions or control commands
 
 **amp.on**                      - Power on  
   ##AMP.STATUS#: ACTIVE  
+  ##AMP.AUDIO.IC#: TDA7439  
+  ##AMP.AUDIO.INPUT#: 0  
+  ##AMP.AUDIO.VOLUME#: -50  
+  ##AMP.AUDIO.BASS#: 3  
+  ##AMP.AUDIO.MIDDLE#: 1  
+  ##AMP.AUDIO.TREBLE#: 2  
+  ##AMP.AUDIO.FRONTREAR#: 0  
+  ##AMP.AUDIO.BALANCE#: 0  
+  ##AMP.AUDIO.CENTER#: 0  
+  ##AMP.AUDIO.SUBWOOFER#: 0  
+  ##AMP.AUDIO.PREAMP#: 0  
 
 **amp.off**                     - Power off  
   ##AMP.STATUS#: STANDBY  
@@ -21,8 +32,9 @@ an answer on user actions or control commands
 Commands above work always. Commands below work only in ACTIVE status
 
 
-## 2. Audio input control
+## 2. Audio control
 
+### Inputs
 
 **amp.input**                   - Show current input  
  ##AMP.AUDIO.INPUT#: 2  
@@ -39,50 +51,16 @@ Commands above work always. Commands below work only in ACTIVE status
   ##AMP.AUDIO.INPUT#: 2  
   ##AMP.AUDIO.GAIN#: 0  
 
-  
-## 3. Audio parameters control 
-
-
-### Volume:
+### Volume, bass, middle. treble:
 
 **amp.volume**                  - Show volume level  
   ##AMP.AUDIO.VOLUME#: -53  
 
-**amp.volume.inc**              - Increase volume level  
-  ##AMP.AUDIO.VOLUME#: -52  
-
-**amp.volume.dec**              - Decrease volume level  
-  ##AMP.AUDIO.VOLUME#: -53  
-
-### Bass:
-
-**amp.bass**                    - Show bass level  
-  ##AMP.AUDIO.BASS#: 3  
-
 **amp.bass.inc**                - Increase bass level  
   ##AMP.AUDIO.BASS#: 4  
-
-**amp.bass.dec**                - Decrease bass level  
-  ##AMP.AUDIO.BASS#: 3  
-
-### Middle:
-
-**amp.middle**                  - Show freq level  
-  ##AMP.AUDIO.MIDDLE#: 0  
-
-**amp.middle.inc**              - Increase middle level  
-  ##AMP.AUDIO.MIDDLE#: 1  
 
 **amp.middle.dec**              - Decrease middle level  
   ##AMP.AUDIO.MIDDLE#: 0  
 
-### Treble:
-
-**amp.treble**                  - Show treble level  
-  ##AMP.AUDIO.TREBLE#: 0  
-
-**amp.treble.inc**              - Increase treble level  
-  ##AMP.AUDIO.TREBLE#: 1  
-
-**amp.treble.dec**              - Decrease treble level  
-  ##AMP.AUDIO.TREBLE#: 0  
+**amp.treble 3**              - Decrease treble level  
+  ##AMP.AUDIO.TREBLE#: 3  

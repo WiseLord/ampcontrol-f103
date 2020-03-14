@@ -118,6 +118,7 @@ void labelsSetLang(Lang value);
 Lang labelsGetLang(void);
 const char *labelsGetLangName(Lang value);
 
+const char *labelsGetDefault(Label value);
 const char *labelsGet(Label value);
 
 void labelsInit(void);

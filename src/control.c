@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "hwlibs.h"
 #include "ringbuf.h"
+#include "tr/labels.h"
 #include "tuner/tuner.h"
 #include "usart.h"
 #include "utils.h"
@@ -23,6 +24,7 @@ static LineParse cmdLp;
 static const char *CTRL_AMP     = "amp";
 
 static const char *CTRL_STATUS  = ".status";
+static const char *CTRL_APROC   = ".aproc";
 static const char *CTRL_INPUT   = ".input";
 static const char *CTRL_VOLUME  = ".volume";
 static const char *CTRL_BASS    = ".bass";
@@ -70,6 +72,13 @@ static bool controlParseNumber(char **line, int16_t *number)
     return false;
 }
 
+static void controlParseAmpAproc(char *line)
+{
+    if (isEndOfLine(line)) {
+        controlReportAudioIc();
+    }
+}
+
 static void controlParseAmpInput(char *line)
 {
     if (isEndOfLine(line)) {
@@ -100,7 +109,7 @@ static void controlParseAmpTune(char *line, AudioTune tune)
             } else if (' ' == *line) {
                 int16_t val;
                 if (controlParseNumber(&line, &val)) {
-//                    ampActionQueue(ACTION_AUDIO_PARAM_SET, value);
+                    ampActionQueue(ACTION_AUDIO_PARAM_SET, val);
                 }
             }
         }
@@ -136,6 +145,8 @@ static void controlParseAmp(char *line)
         ampActionQueue(ACTION_STANDBY, FLAG_ENTER);
     } else if (strstr(line, CTRL_STATUS) == line) {
         controlParseAmpStatus(line + strlen(CTRL_STATUS));
+    } else if (strstr(line, CTRL_APROC) == line) {
+        controlParseAmpAproc(line + strlen(CTRL_APROC));
     } else if (strstr(line, CTRL_INPUT) == line) {
         controlParseAmpInput(line + strlen(CTRL_INPUT));
     } else if (strstr(line, CTRL_VOLUME) == line) {
@@ -213,6 +224,13 @@ void controlReportAmpStatus(void)
     sendReport(utilMkStr("##AMP.STATUS#: %s", status));
 }
 
+void controlReportAudioIc(void)
+{
+    AudioParam *par = &audioGet()->par;
+
+    sendReport(utilMkStr("##AMP.AUDIO.IC#: %s", labelsGetDefault(LABEL_AUDIO_IC + par->ic)));
+}
+
 void controlReportAudioInput(void)
 {
     AudioParam *par = &audioGet()->par;
@@ -250,6 +268,7 @@ void controlReportTuner(bool force)
 void controlReportAll(void)
 {
     controlReportAmpStatus();
+    controlReportAudioIc();
     controlReportAudioInput();
     controlReportAudio();
 }

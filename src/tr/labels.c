@@ -35,14 +35,21 @@ const char *labelsGetLangName(Lang value)
     return langMap[value].lang;
 }
 
+const char *labelsGetDefault(Label value)
+{
+    if (langMap[LANG_DEFAULT].labels[value]) {
+        return langMap[LANG_DEFAULT].labels[value];
+    } else {
+        return "???";
+    }
+}
+
 const char *labelsGet(Label value)
 {
     if (langMap[lang].labels[value]) {
         return langMap[lang].labels[value];
-    } else if (langMap[LANG_DEFAULT].labels[value]) {
-        return langMap[LANG_DEFAULT].labels[value];
     } else {
-        return "???";
+        return labelsGetDefault(value);
     }
 }
 

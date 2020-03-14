@@ -15,6 +15,7 @@ void controlIRQ(char data);
 void controlGetData(void);
 
 void controlReportAmpStatus(void);
+void controlReportAudioIc(void);
 void controlReportAudioInput(void);
 void controlReportAudioTune(AudioTune tune);
 void controlReportAudio(void);
