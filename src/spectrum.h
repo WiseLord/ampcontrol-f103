@@ -31,8 +31,6 @@ enum {
 
 typedef struct {
     uint8_t raw[SPECTRUM_SIZE];
-    uint8_t avg;
-    uint8_t max;
 } SpData;
 
 typedef struct {
@@ -51,6 +49,8 @@ Spectrum *spGet(void);
 void spGetADC(Spectrum *sp);
 
 void spConvertADC(void);
+
+bool spCheckSignal(void);
 
 #ifdef __cplusplus
 }

@@ -160,6 +160,9 @@ static void spInitADC(void)
         ADC1->DIFSEL &= ~ADC_DIFSEL_DIFSEL_2;
 #endif
 
+        LL_ADC_SetAnalogWDThresholds(ADC1, 0, 2047 + 512);
+        LL_ADC_SetAnalogWDMonitChannels(ADC1, LL_ADC_AWD_ALL_CHANNELS_REG);
+
 #ifdef STM32F1
         LL_ADC_Enable(ADC1);
         while (!LL_ADC_IsEnabled(ADC1));
@@ -244,17 +247,6 @@ static void spGetData(int16_t *dma, SpData *chan)
 
     spCplx2dB(sp, chan->raw);
 
-    int16_t total = 0;
-    chan->max = 0;
-    for (int16_t i = 0; i < SPECTRUM_SIZE; i++) {
-        uint8_t raw = chan->raw[i];
-        total += raw;
-        if (chan->max < raw) {
-            chan->max = raw;
-        }
-    }
-    chan->avg = (uint8_t)(total / SPECTRUM_SIZE);
-
     free(sp);
 }
 
@@ -295,4 +287,13 @@ void spConvertADC(void)
         LL_ADC_REG_StartConversion(ADC1);
 #endif
     }
+}
+
+bool spCheckSignal()
+{
+    bool ret = LL_ADC_IsActiveFlag_AWD1(ADC1);
+
+    LL_ADC_ClearFlag_AWD1(ADC1);
+
+    return ret;
 }

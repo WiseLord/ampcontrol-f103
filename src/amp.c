@@ -1458,9 +1458,7 @@ static void ampActionHandle(void)
 
     // Reset silence timer on signal
     if (scrMode != SCREEN_STANDBY) {
-        Spectrum *spectrum = spGet();
-        if (spectrum->data[SP_CHAN_LEFT].max > 128 ||
-            spectrum->data[SP_CHAN_RIGHT].max > 128) {
+        if (spCheckSignal()) {
             actionResetSilenceTimer();
         }
     }
