@@ -11,9 +11,9 @@ extern "C" {
 #include "audio/audiodefs.h"
 #include "screen.h"
 
-#define FLAG_EXIT       0
-#define FLAG_ENTER      1
-#define FLAG_SWITCH     2
+#define FLAG_EXIT           0
+#define FLAG_ENTER          1
+#define FLAG_SWITCH         2
 
 typedef uint8_t ActionType;
 enum {

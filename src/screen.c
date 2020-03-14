@@ -1,5 +1,6 @@
 #include "screen.h"
 
+#include "amp.h"
 #include "control.h"
 #include "gui/canvas.h"
 #include "menu.h"
@@ -120,7 +121,7 @@ void screenShow(void)
 
     if (screen.mode != SCREEN_STANDBY) {
         // Get new spectrum data
-        if (swTimGet(SW_TIM_SP_CONVERT) <= 0) {
+        if (swTimGet(SW_TIM_SP_CONVERT) == 0) {
             swTimSet(SW_TIM_SP_CONVERT, 20);
 
             spGetADC(SP_CHAN_LEFT, spectrum->data[SP_CHAN_LEFT].raw, SPECTRUM_SIZE);
