@@ -15,6 +15,8 @@
 #include "../tuner/stations.h"
 #include "../utils.h"
 
+#define SPECTRUM_SIZE   128
+
 typedef union {
     RTC_type rtc;
     struct {
@@ -43,9 +45,14 @@ typedef struct {
     SpCol col[SPECTRUM_SIZE];
 } SpDrawData;
 
+typedef struct {
+    uint8_t raw[SPECTRUM_SIZE];
+} SpData;
+
 static Canvas canvas;
 
 static SpDrawData spDrawData;
+static SpData spData[SP_CHAN_END];
 
 const Layout *layoutGet(void);
 
@@ -217,8 +224,8 @@ static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
     SpCol *spDrawCol = &spDrawData.col[col];
 
     if (chan == SP_CHAN_BOTH) {
-        uint8_t rawL = sp->data[SP_CHAN_LEFT].raw[col];
-        uint8_t rawR = sp->data[SP_CHAN_RIGHT].raw[col];
+        uint8_t rawL = spData[SP_CHAN_LEFT].raw[col];
+        uint8_t rawR = spData[SP_CHAN_RIGHT].raw[col];
         if (rawL > rawR) {
             raw = rawL;
         } else {
@@ -226,7 +233,7 @@ static uint8_t calcSpCol(Spectrum *sp, int16_t chan, int16_t scale, uint8_t col,
         }
         *spCol = spDrawCol->col;
     } else {
-        raw = sp->data[chan].raw[col];
+        raw = spData[chan].raw[col];
         spCol->showW = spDrawCol->show[chan];
         spCol->prevW = spDrawCol->prev[chan];
         spCol->peakW = spDrawCol->peak[chan];
@@ -369,10 +376,10 @@ static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
     }
 
     if (chan == SP_CHAN_LEFT || chan == SP_CHAN_BOTH) {
-        spGetADC(SP_CHAN_LEFT, sp->data[SP_CHAN_LEFT].raw, SPECTRUM_SIZE);
+        spGetADC(SP_CHAN_LEFT, spData[SP_CHAN_LEFT].raw, SPECTRUM_SIZE);
     }
     if (chan == SP_CHAN_RIGHT || chan == SP_CHAN_BOTH) {
-        spGetADC(SP_CHAN_RIGHT, sp->data[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE);
+        spGetADC(SP_CHAN_RIGHT, spData[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE);
     }
 
     const int16_t step = (rect->w  + 1) / SPECTRUM_SIZE + 1;    // Step of columns
@@ -390,7 +397,7 @@ static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
 
     if (clear) {
         memset(&spDrawData, 0, sizeof (SpDrawData));
-        memset(sp->data, 0, sizeof (SpData) * SP_CHAN_END);
+        memset(spData, 0, sizeof (SpData) * SP_CHAN_END);
 
         if (grad != NULL) {
             free(grad);

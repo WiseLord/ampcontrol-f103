@@ -27,15 +27,9 @@ enum {
     SP_MODE_END
 };
 
-#define SPECTRUM_SIZE   128
 #define N_DB            256
 
 typedef struct {
-    uint8_t raw[SPECTRUM_SIZE];
-} SpData;
-
-typedef struct {
-    SpData data[SP_CHAN_END];
     SpMode mode;
     bool peaks;
     bool grad;
