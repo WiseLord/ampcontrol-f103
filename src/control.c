@@ -24,12 +24,16 @@ static LineParse cmdLp;
 static const char *CTRL_AMP     = "amp";
 
 static const char *CTRL_STATUS  = ".status";
-static const char *CTRL_APROC   = ".aproc";
+
+static const char *CTRL_AUDIO   = ".audio";
 static const char *CTRL_INPUT   = ".input";
 static const char *CTRL_VOLUME  = ".volume";
 static const char *CTRL_BASS    = ".bass";
 static const char *CTRL_MIDDLE  = ".middle";
 static const char *CTRL_TREBLE  = ".treble";
+
+static const char *CTRL_TUNER  = ".tuner";
+static const char *CTRL_FREQ   = ".freq";
 
 static const char *CTRL_ON      = ".on";
 static const char *CTRL_OFF     = ".off";
@@ -72,7 +76,7 @@ static bool controlParseNumber(char **line, int16_t *number)
     return false;
 }
 
-static void controlParseAmpAproc(char *line)
+static void controlParseAmpAudio(char *line)
 {
     if (isEndOfLine(line)) {
         controlReportAudioIc();
@@ -120,6 +124,28 @@ static void controlParseAmpTune(char *line, AudioTune tune)
     }
 }
 
+static void controlParseAmpTunerFreq(char *line)
+{
+    if (isEndOfLine(line)) {
+        controlReportTunerFreq(true);
+    } else if (' ' == *line) {
+        int16_t val;
+        if (controlParseNumber(&line, &val)) {
+            ampActionQueue(ACTION_TUNER_SET_FREQ, val);
+        }
+    }
+}
+
+static void controlParseAmpTuner(char *line)
+{
+    if (isEndOfLine(line)) {
+        controlReportTunerIc();
+    } else if (strstr(line, CTRL_FREQ) == line) {
+        controlParseAmpTunerFreq(line + strlen(CTRL_FREQ));
+    }
+}
+
+
 static void controlParseAmp(char *line)
 {
     AmpStatus ampStatus = ampGet()->status;
@@ -145,8 +171,9 @@ static void controlParseAmp(char *line)
         ampActionQueue(ACTION_STANDBY, FLAG_ENTER);
     } else if (strstr(line, CTRL_STATUS) == line) {
         controlParseAmpStatus(line + strlen(CTRL_STATUS));
-    } else if (strstr(line, CTRL_APROC) == line) {
-        controlParseAmpAproc(line + strlen(CTRL_APROC));
+
+    } else if (strstr(line, CTRL_AUDIO) == line) {
+        controlParseAmpAudio(line + strlen(CTRL_AUDIO));
     } else if (strstr(line, CTRL_INPUT) == line) {
         controlParseAmpInput(line + strlen(CTRL_INPUT));
     } else if (strstr(line, CTRL_VOLUME) == line) {
@@ -157,6 +184,9 @@ static void controlParseAmp(char *line)
         controlParseAmpTune(line + strlen(CTRL_MIDDLE), AUDIO_TUNE_MIDDLE);
     } else if (strstr(line, CTRL_TREBLE) == line) {
         controlParseAmpTune(line + strlen(CTRL_TREBLE), AUDIO_TUNE_TREBLE);
+
+    } else if (strstr(line, CTRL_TUNER) == line) {
+        controlParseAmpTuner(line + strlen(CTRL_TUNER));
     }
 }
 
@@ -245,14 +275,21 @@ void controlReportAudioTune(AudioTune tune)
     sendReport(utilMkStr("##AMP.AUDIO.%s#: %d", CTRL_AUDIO_TUNE[tune], par->tune[tune].value));
 }
 
-void controlReportAudio(void)
+void controlReportAudioTunes(void)
 {
     for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END - 1; tune++) {
         controlReportAudioTune(tune);
     }
 }
 
-void controlReportTuner(bool force)
+void controlReportTunerIc(void)
+{
+    TunerParam *par = &tunerGet()->par;
+
+    sendReport(utilMkStr("##AMP.TUNER.IC#: %s", labelsGetDefault(LABEL_TUNER_IC + par->ic)));
+}
+
+void controlReportTunerFreq(bool force)
 {
     TunerStatus *st = &tunerGet()->status;
 
@@ -268,7 +305,11 @@ void controlReportTuner(bool force)
 void controlReportAll(void)
 {
     controlReportAmpStatus();
+
     controlReportAudioIc();
     controlReportAudioInput();
-    controlReportAudio();
+    controlReportAudioTunes();
+
+    controlReportTunerIc();
+    controlReportTunerFreq(true);
 }

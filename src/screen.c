@@ -129,7 +129,7 @@ void screenShow(void)
         if (swTimGet(SW_TIM_INPUT_POLL) == 0) {
             if (inType == IN_TUNER) {
                 tunerUpdateStatus();
-                controlReportTuner(false);
+                controlReportTunerFreq(false);
             }
             swTimSet(SW_TIM_INPUT_POLL, 100);
         }

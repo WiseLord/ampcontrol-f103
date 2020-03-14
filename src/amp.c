@@ -1088,6 +1088,7 @@ void ampInit(void)
 #endif
 
     amp.status = AMP_STATUS_STBY;
+    controlReportAmpStatus();
 }
 
 void ampRun(void)
@@ -1372,6 +1373,13 @@ static void ampActionHandle(void)
             swTimSet(SW_TIM_SOFT_VOLUME, 25);
         } else {
             swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
+        }
+        break;
+
+    case ACTION_TUNER_SET_FREQ:
+        if (inType == IN_TUNER) {
+            tunerSetFreq((uint16_t)action.value);
+            actionSetScreen(SCREEN_AUDIO_INPUT, 2000);
         }
         break;
 

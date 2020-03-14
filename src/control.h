@@ -18,9 +18,11 @@ void controlReportAmpStatus(void);
 void controlReportAudioIc(void);
 void controlReportAudioInput(void);
 void controlReportAudioTune(AudioTune tune);
-void controlReportAudio(void);
+void controlReportAudioTunes(void);
 
-void controlReportTuner(bool force);
+void controlReportTunerIc(void);
+
+void controlReportTunerFreq(bool force);
 void controlReportAll(void);
 
 #ifdef __cplusplus

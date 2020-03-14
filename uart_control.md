@@ -34,6 +34,9 @@ Commands above work always. Commands below work only in ACTIVE status
 
 ## 2. Audio control
 
+**amp.audio**                   - Show selected audioproc name  
+  ##AMP.AUDIO.IC#: TDA7439  
+
 ### Inputs
 
 **amp.input**                   - Show current input  
@@ -62,5 +65,16 @@ Commands above work always. Commands below work only in ACTIVE status
 **amp.middle.dec**              - Decrease middle level  
   ##AMP.AUDIO.MIDDLE#: 0  
 
-**amp.treble 3**              - Decrease treble level  
+**amp.treble 3**                - Decrease treble level  
   ##AMP.AUDIO.TREBLE#: 3  
+
+## 3. Tuner control
+
+**amp.tuner**                   - Show selected tuner name  
+  ##AMP.TUNER.IC#: RDA5807  
+
+**amp.tuner.freq**              - Show tuned frequency  
+  ##AMP.TUNER.FREQ#: 9950  
+
+**amp.tuner.freq 9980**         - Tune frequency  
+  ##AMP.TUNER.FREQ#: 9980  
