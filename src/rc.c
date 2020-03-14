@@ -111,15 +111,11 @@ static void rcDecodeNecSam (bool rc, uint16_t delay)
             }
 
             if (seq.bit == 32) {
-                if ((uint8_t)(~seq.ncmd) == seq.cmd) {
+                if (0xFF == (seq.ncmd ^ seq.cmd)) {
                     ovfCnt = 0;
                     // Ready new data
                     rcData.type = seq.type;
-                    if ((uint8_t)(~seq.haddr) == seq.laddr) {
-                        rcData.addr = seq.laddr;
-                    } else {
-                        rcData.addr = seq.addr;
-                    }
+                    rcData.addr = seq.addr;
                     rcData.cmd = seq.cmd;
 
                     rcData.ready = 1;
