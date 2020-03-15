@@ -40,7 +40,7 @@ typedef struct {
 
 typedef int32_t UChar;
 
-void glcdInit(Glcd **value);
+void glcdInit(void);
 
 Glcd *glcdGet(void);
 

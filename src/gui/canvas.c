@@ -83,8 +83,9 @@ static const tImage *glcdFindIcon(Icon code, const tFont *iFont)
 
 void canvasInit(void)
 {
-    glcdInit(&canvas.glcd);
+    glcdInit();
 
+    canvas.glcd = glcdGet();
     canvas.layout = layoutGet();
 
     PalIdx palIdx = (PalIdx)settingsGet(PARAM_DISPLAY_PALETTE);

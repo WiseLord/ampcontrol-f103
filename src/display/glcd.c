@@ -89,16 +89,16 @@ static UChar findSymbolCode(const char **string)
     return BLOCK_CHAR;
 }
 
-void glcdInit(Glcd **value)
+void glcdInit(void)
 {
     dispdrvInit();
+
     glcd.drv = &dispdrv;
+
     glcd.rect.x = 0;
     glcd.rect.y = 0;
     glcd.rect.w = dispdrv.width;
     glcd.rect.h = dispdrv.height;
-
-    *value = &glcd;
 }
 
 Glcd *glcdGet(void)
