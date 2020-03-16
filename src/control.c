@@ -22,7 +22,14 @@ static RingBuf cmdRb;
 static char cmdRbData[CMDBUF_SIZE];
 static LineParse cmdLp;
 
-static const char *BT201_QM     = "QM";
+static const char *BT201_MOUNT      = "MU";
+static const char *BT201_ADD_USB    = "+01";
+static const char *BT201_DEL_USB    = "+02";
+static const char *BT201_ADD_SD     = "+03";
+static const char *BT201_DEL_SD     = "+04";
+
+static const char *BT201_SEL    = "QM";
+static const char *BT201_NO     = "+00";
 static const char *BT201_BT     = "+01";
 static const char *BT201_USB    = "+02";
 static const char *BT201_SD     = "+03";
@@ -62,7 +69,20 @@ static bool isEndOfLine(const char *line)
     return (*line < ' ');
 }
 
-static void controlParseBt201Qm(char *line)
+static void controlParseBt201Mount(char *line)
+{
+    if (strstr(line, BT201_ADD_USB) == line) {
+        btAddInput(BT_IN_USB);
+    } else if (strstr(line, BT201_DEL_USB) == line) {
+        btDelInput(BT_IN_USB);
+    } else if (strstr(line, BT201_ADD_SD) == line) {
+        btAddInput(BT_IN_SDCARD);
+    } else if (strstr(line, BT201_DEL_SD) == line) {
+        btDelInput(BT_IN_SDCARD);
+    }
+}
+
+static void controlParseBt201Select(char *line)
 {
     if (strstr(line, BT201_BT) == line) {
         btSetInput(BT_IN_BLUETOOTH);
@@ -70,6 +90,10 @@ static void controlParseBt201Qm(char *line)
         btSetInput(BT_IN_USB);
     } else if (strstr(line, BT201_SD) == line) {
         btSetInput(BT_IN_SDCARD);
+    } else if (strstr(line, BT201_NO) == line) {
+        btDelInput(BT_IN_USB);
+        btDelInput(BT_IN_SDCARD);
+        btSetInput(BT_IN_BLUETOOTH);
     }
 }
 
@@ -211,8 +235,10 @@ static void controlParseLine(char *line)
 {
     if (strstr(line, CTRL_AMP) == line) {
         controlParseAmp(line + strlen(CTRL_AMP));
-    } else if (strstr(line, BT201_QM) == line) {
-        controlParseBt201Qm(line + strlen(BT201_QM));
+    } else if (strstr(line, BT201_SEL) == line) {
+        controlParseBt201Select(line + strlen(BT201_SEL));
+    } else if (strstr(line, BT201_MOUNT) == line) {
+        controlParseBt201Mount(line + strlen(BT201_MOUNT));
     }
 }
 

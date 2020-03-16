@@ -21,6 +21,7 @@
 
 static I2cAddrIdx i2cAddrIdx = I2C_ADDR_DISABLED;
 
+static BtInput btInputs = BT_IN_BLUETOOTH;
 static BtInput btInput = BT_IN_BLUETOOTH;
 
 static void btStartKeyTimer(void)
@@ -90,7 +91,27 @@ BtInput btGetInput(void)
     return btInput;
 }
 
+void btAddInput(BtInput value)
+{
+    btInputs |= value;
+}
+
+void btDelInput(BtInput value)
+{
+    btInputs &= ~value;
+    if (btInput & value) {
+        if (btInputs & BT_IN_USB) {
+            btInput = BT_IN_USB;
+        } else if (btInputs & BT_IN_SDCARD) {
+            btInput = BT_IN_SDCARD;
+        } else {
+            btInput = BT_IN_BLUETOOTH;
+        }
+    }
+}
+
 void btSetInput(BtInput value)
 {
+    btInputs |= value;
     btInput = value;
 }
