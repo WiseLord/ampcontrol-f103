@@ -21,6 +21,8 @@
 
 static I2cAddrIdx i2cAddrIdx = I2C_ADDR_DISABLED;
 
+static BtInput btInput = BT_IN_BLUETOOTH;
+
 static void btStartKeyTimer(void)
 {
     swTimSet(SW_TIM_BT_KEY, 200);
@@ -33,7 +35,7 @@ static void btPlay()
     btStartKeyTimer();
 }
 
-static void btPrevTrack()
+static void btPrevTrack(void)
 {
     dbg("AT+CD");
 
@@ -41,7 +43,7 @@ static void btPrevTrack()
     btStartKeyTimer();
 }
 
-static void btNextTrack()
+static void btNextTrack(void)
 {
     dbg("AT+CC");
 
@@ -49,7 +51,7 @@ static void btNextTrack()
     btStartKeyTimer();
 }
 
-void btInit()
+void btInit(void)
 {
     i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_BT);
 
@@ -75,10 +77,20 @@ void btSendMediaKey(HidMediaKey cmd)
     }
 }
 
-void btReleaseKey()
+void btReleaseKey(void)
 {
     if (swTimGet(SW_TIM_BT_KEY) == 0) {
         i2cexpSend(i2cAddrIdx, PCF8574_RELEASED);
         swTimSet(SW_TIM_BT_KEY, SW_TIM_OFF);
     }
+}
+
+BtInput btGetInput(void)
+{
+    return btInput;
+}
+
+void btSetInput(BtInput value)
+{
+    btInput = value;
 }

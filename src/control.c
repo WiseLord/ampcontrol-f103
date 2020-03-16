@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "audio/audio.h"
+#include "bt.h"
 #include "debug.h"
 #include "hwlibs.h"
 #include "ringbuf.h"
@@ -20,6 +21,11 @@
 static RingBuf cmdRb;
 static char cmdRbData[CMDBUF_SIZE];
 static LineParse cmdLp;
+
+static const char *BT201_QM     = "QM";
+static const char *BT201_BT     = "+01";
+static const char *BT201_USB    = "+02";
+static const char *BT201_SD     = "+03";
 
 static const char *CTRL_AMP     = "amp";
 
@@ -54,6 +60,17 @@ static const char *const CTRL_AUDIO_TUNE[] = {
 static bool isEndOfLine(const char *line)
 {
     return (*line < ' ');
+}
+
+static void controlParseBt201Qm(char *line)
+{
+    if (strstr(line, BT201_BT) == line) {
+        btSetInput(BT_IN_BLUETOOTH);
+    } else if (strstr(line, BT201_USB) == line) {
+        btSetInput(BT_IN_USB);
+    } else if (strstr(line, BT201_SD) == line) {
+        btSetInput(BT_IN_SDCARD);
+    }
 }
 
 static void controlParseAmpStatus(char *line)
@@ -194,6 +211,8 @@ static void controlParseLine(char *line)
 {
     if (strstr(line, CTRL_AMP) == line) {
         controlParseAmp(line + strlen(CTRL_AMP));
+    } else if (strstr(line, BT201_QM) == line) {
+        controlParseBt201Qm(line + strlen(BT201_QM));
     }
 }
 
