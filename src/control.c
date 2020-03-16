@@ -14,7 +14,7 @@
 #include "usart.h"
 #include "utils.h"
 
-#define CMDBUF_SIZE     64
+#define CMDBUF_SIZE     128
 
 #define REPORT_ENABLED
 
@@ -232,11 +232,11 @@ void USART_DBG_HANDLER(void)
 {
     // Check RXNE flag value in SR register
     if (LL_USART_IsActiveFlag_RXNE(USART_DBG) && LL_USART_IsEnabledIT_RXNE(USART_DBG)) {
-        char data = LL_USART_ReceiveData8(USART_DBG);
+        char ch = LL_USART_ReceiveData8(USART_DBG);
 #ifdef _DEBUG_KARADIO
-        usartSendChar(USART_KARADIO, data);
+        usartSendChar(USART_KARADIO, ch);
 #endif
-        ringBufPushChar(&cmdRb, data);
+        ringBufPushChar(&cmdRb, ch);
     } else {
         // Call Error function
     }
@@ -244,12 +244,13 @@ void USART_DBG_HANDLER(void)
 
 void controlGetData(void)
 {
-    uint16_t size = ringBufGetSize(&cmdRb);
-
-    for (uint16_t i = 0; i < size; i++) {
+    while (ringBufGetSize(&cmdRb) > 0) {
         char ch = ringBufPopChar(&cmdRb);
-        if (utilReadChar(&cmdLp, ch)) {
-            controlParseLine(cmdLp.line);
+        usartSendChar(USART_KARADIO, ch);
+        if (!utilReadChar(&cmdLp, ch)) {
+            if (cmdLp.line[0] != '\0') {
+                controlParseLine(cmdLp.line);
+            }
         }
     }
 }

@@ -27,22 +27,16 @@ char *utilMkStr(const char *fmt, ...)
 
 bool utilReadChar(LineParse *lp, char ch)
 {
-    switch (ch) {
-    case '\n':
-    case '\r':
-        if (lp->idx == 0) {
-            break;
-        }
-        lp->line[lp->idx] = 0;
+    if (ch < ' ') {
+        lp->line[lp->idx] = '\0';
         lp->idx = 0;
         return true;
-    default:
+    } else {
         lp->line[lp->idx++] = ch;
         if (lp->idx >= LINE_SIZE) {
-            lp->line[--lp->idx] = 0;
+            lp->line[--lp->idx] = '\0';
+            lp->idx = 0;
         }
-        break;
+        return false;
     }
-
-    return false;
 }
