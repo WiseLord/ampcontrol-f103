@@ -5,5 +5,5 @@ src/drivers/CMSIS/Include
 src/drivers/STM32F1xx_HAL_Driver/Inc
 src/drivers/STM32F3xx_HAL_Driver/Inc
 src/drivers/STM32_USB_Device_Library/Core/Inc
-src/display
+src/display/fonts
 src/usb

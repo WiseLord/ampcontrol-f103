@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../eemul.h"
+#include "eemul.h"
 #include "tuner.h"
 
 #define STATION_COUNT       (int8_t)(EE_PAGE_SIZE / sizeof(Station))

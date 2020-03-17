@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "../hidkeys.h"
+#include "hidkeys.h"
 
 #include <stdint.h>
 

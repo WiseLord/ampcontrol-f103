@@ -7,7 +7,7 @@ extern "C" {
 
 #include <stdint.h>
 
-#include "../display/glcd.h"
+#include "display/glcd.h"
 
 typedef struct {
     color_t fg;

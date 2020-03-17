@@ -5,14 +5,14 @@
 extern "C" {
 #endif
 
-#include "../amp.h"
-#include "../audio/audio.h"
-#include "../gui/palette.h"
-#include "../menu.h"
-#include "../rtc.h"
-#include "../screen.h"
-#include "../spectrum.h"
-#include "../tuner/tuner.h"
+#include "amp.h"
+#include "audio/audio.h"
+#include "gui/palette.h"
+#include "menu.h"
+#include "rtc.h"
+#include "screen.h"
+#include "spectrum.h"
+#include "tuner/tuner.h"
 
 #define GENERATE_MENU_RC_TEXT(CMD)  [LABEL_MENU + MENU_RC_ ## CMD] = # CMD,
 #define GENERATE_AUDIO_IC_TEXT(IC)  [LABEL_AUDIO_IC + AUDIO_IC_ ## IC] = # IC,

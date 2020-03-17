@@ -2,8 +2,8 @@
 
 #include <string.h>
 
-#include "../settings.h"
 #include "rds.h"
+#include "settings.h"
 #include "stations.h"
 
 #ifdef _RDA580X

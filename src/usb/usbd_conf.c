@@ -2,7 +2,7 @@
 #include "usbd_core.h"
 #include "usbd_amp.h"
 
-#include "../hwlibs.h"
+#include "hwlibs.h"
 
 static PCD_HandleTypeDef hpcd_USB_FS;
 

@@ -1,10 +1,9 @@
 #include "si470x.h"
-
 #include "si470x_regs.h"
-#include "rds.h"
 
-#include "../i2c.h"
-#include "../pins.h"
+#include "hwlibs.h"
+#include "i2c.h"
+#include "rds.h"
 
 #define SI470X_I2C_ADDR             0x20
 

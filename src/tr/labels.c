@@ -1,7 +1,7 @@
 #include "labels.h"
 
-#include "../rc.h"
-#include "../settings.h"
+#include "rc.h"
+#include "settings.h"
 
 static Lang lang = LANG_END;
 

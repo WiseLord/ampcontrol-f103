@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "../settings.h"
+#include "settings.h"
 
 #ifdef _TDA7439
 #include "tda7439.h"

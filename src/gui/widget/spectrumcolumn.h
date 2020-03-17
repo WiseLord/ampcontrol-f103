@@ -7,7 +7,8 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "../../display/glcd.h"
+
+#include "display/glcd.h"
 
 typedef struct {
     int16_t showW;

@@ -7,13 +7,13 @@ extern "C" {
 
 #include <stdint.h>
 
-#include "../pins.h"
-#include "../utils.h"
 #include "colors.h"
 #include "fonts.h"
+#include "pins.h"
+#include "utils.h"
 
 #ifdef _DISP_SPI
-#include "../spi.h"
+#include "spi.h"
 #define SPI_DISPLAY             SPI2
 #define DISP_WAIT_BUSY()        spiWaitBusy(SPI_DISPLAY)
 #else

@@ -7,7 +7,8 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "../../display/glcd.h"
+
+#include "display/glcd.h"
 
 #define TE_STR_LEN      64
 #define TE_USTR_LEN     32

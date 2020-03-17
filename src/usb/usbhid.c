@@ -3,7 +3,7 @@
 #include "usbd_desc.h"
 #include "usbd_amp.h"
 
-#include "../hwlibs.h"
+#include "hwlibs.h"
 
 #include <string.h>
 

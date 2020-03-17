@@ -1,8 +1,8 @@
 #include "tea5767.h"
-
 #include "tea5767_regs.h"
-#include "../i2c.h"
-#include "../pins.h"
+
+#include "hwlibs.h"
+#include "i2c.h"
 
 #define TEA5767_I2C_ADDR        0xC0
 

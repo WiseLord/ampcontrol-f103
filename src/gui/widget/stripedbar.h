@@ -7,7 +7,6 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "../../display/glcd.h"
 
 typedef const struct {
     int16_t sc;                 // Count of bar lines

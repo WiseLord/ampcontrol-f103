@@ -162,7 +162,8 @@ C_SOURCES += tuner/tuner.c
 C_DEFS += $(addprefix -D_, $(TUNER_LIST))
 
 C_INCLUDES += \
-  -Idisplay
+  -Idisplay/fonts \
+  -I.
 
 C_SOURCES += \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_gpio.c \
@@ -172,10 +173,6 @@ C_SOURCES += \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_usart.c \
   drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_utils.c \
   system/system_$(call lc, $(STM32_FAMILY))xx.c
-
-ifeq "$(STM32_FAMILY)" "STM32F1"
-  C_SOURCES += drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_usb.c
-endif
 
 C_INCLUDES += \
   -Idrivers/$(STM32_FAMILY)xx_HAL_Driver/Inc \
@@ -190,6 +187,10 @@ ifeq "$(ENABLE_USB)" "YES"
     drivers/STM32_USB_Device_Library/Core/Src/usbd_core.c \
     drivers/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
     drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
+
+  ifeq "$(STM32_FAMILY)" "STM32F1"
+    C_SOURCES += drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_usb.c
+  endif
 
   C_SOURCES += \
     usb/usbd_amp.c \
@@ -242,10 +243,12 @@ endif
 CFLAGS += -MMD -MP -MT $(OBJ_DIR)/$(*F).o -MF $(OBJ_DIR)/$(*D)/$(*F).d
 
 LDSCRIPT = system/$(call lc, STM32$(STM32_MCU))_flash.ld
-LIBS = -lc -lm -lnosys
-LIBDIR =
-LDFLAGS = $(MCU) -specs=nosys.specs -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
-#LDFLAGS = $(WARN) -mmcu=$(MCU) -Wl,--gc-sections -Wl,--relax
+#LIBDIR =
+#LIBS = -lc -lm -lnosys
+LDFLAGS += $(MCU) -specs=nosys.specs -specs=nano.specs -T$(LDSCRIPT)
+LDFLAGS += $(LIBDIR) $(LIBS)
+LDFLAGS += -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+#LDFLAGS += $(WARN) -Wl,--relax
 
 # Main definitions
 PREFIX = arm-none-eabi-

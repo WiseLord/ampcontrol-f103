@@ -41,7 +41,7 @@ src/display/fonts/font-terminus-28b.c
 src/display/fonts/font-terminus-28.c
 src/display/fonts/font-terminus-32b.c
 src/display/fonts/font-terminus-32.c
-src/display/fonts.h
+src/display/fonts/fonts.h
 src/display/gc130x130/ssd1283a.c
 src/display/gc160x128/ili9163.c
 src/display/gc160x128/s6d0144.c

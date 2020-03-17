@@ -1,7 +1,7 @@
 #include "tda7719.h"
 
-#include "../i2c.h"
-#include "../pins.h"
+#include "hwlibs.h"
+#include "i2c.h"
 
 // I2C address
 #define TDA7719_I2C_ADDR            0x88

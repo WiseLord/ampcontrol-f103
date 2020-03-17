@@ -4,6 +4,7 @@
 #include "control.h"
 #include "gui/canvas.h"
 #include "menu.h"
+#include "pins.h"
 #include "settings.h"
 #include "swtimers.h"
 #include "tr/labels.h"

@@ -1,7 +1,7 @@
 #include "tda7439.h"
 
-#include "../i2c.h"
-#include "../pins.h"
+#include "hwlibs.h"
+#include "i2c.h"
 
 // I2C address
 #define TDA7439_I2C_ADDR            0x88
@@ -112,7 +112,7 @@ void tda7439SetInput(int8_t value)
 {
     i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7439_INPUT_SELECT);
-    i2cSend(I2C_AMP, TDA7439_IN_CNT - 1 - aPar->input);
+    i2cSend(I2C_AMP, (uint8_t)(TDA7439_IN_CNT - 1 - value));
     i2cTransmit(I2C_AMP);
 }
 

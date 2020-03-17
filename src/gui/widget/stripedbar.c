@@ -1,6 +1,6 @@
 #include "stripedbar.h"
 
-#include "../canvas.h"
+#include "gui/canvas.h"
 
 void stripedBarDraw(StripedBar *bar, LayoutStripedBar *lt, bool clear)
 {

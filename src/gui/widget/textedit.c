@@ -1,7 +1,8 @@
 #include "textedit.h"
-#include "../canvas.h"
 
 #include <string.h>
+
+#include "gui/canvas.h"
 
 void textEditSet(TextEdit *te, char *text, uint8_t maxLen, uint8_t maxSymbols)
 {

@@ -1,6 +1,6 @@
 #include "spectrumcolumn.h"
 
-#include "../canvas.h"
+#include "gui/canvas.h"
 
 void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, color_t *grad)
 {

@@ -3,18 +3,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../amp.h"
-#include "../bt.h"
-#include "../karadio.h"
-#include "../menu.h"
-#include "../rtc.h"
-#include "../settings.h"
-#include "../spectrum.h"
-#include "../swtimers.h"
-#include "../tr/labels.h"
-#include "../tuner/rds.h"
-#include "../tuner/stations.h"
-#include "../utils.h"
+#include "amp.h"
+#include "bt.h"
+#include "karadio.h"
+#include "menu.h"
+#include "rtc.h"
+#include "settings.h"
+#include "spectrum.h"
+#include "swtimers.h"
+#include "tr/labels.h"
+#include "tuner/rds.h"
+#include "tuner/stations.h"
+#include "utils.h"
 
 #define SPECTRUM_SIZE   128
 
