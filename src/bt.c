@@ -14,7 +14,7 @@
 //#define PCF8574_VOL_PLUS    (1 << 6)
 #define PCF8574_NEXT_TRACK  (1 << 5)
 #define PCF8574_PREV_TRACK  (1 << 4)
-//#define PCF8574_POWER       (1 << 3)
+#define PCF8574_NEXT_INPUT  (1 << 3)
 #define PCF8574_PLAY_PAUSE  (1 << 2)
 //#define PCF8574_LED1        (1 << 1)
 //#define PCF8574_LED0        (1 << 0)
@@ -119,4 +119,6 @@ void btSetInput(BtInput value)
 void btNextInput()
 {
     dbg("AT+CM00");
+    i2cexpSend(i2cAddrIdx, PCF8574_NEXT_INPUT);
+    btStartKeyTimer();
 }
