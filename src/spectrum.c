@@ -159,8 +159,15 @@ static void spInitADC(void)
         ADC1->DIFSEL &= ~ADC_DIFSEL_DIFSEL_2;
 #endif
 
+#ifdef STM32F1
         LL_ADC_SetAnalogWDThresholds(ADC1, 0, 2047 + 512);
         LL_ADC_SetAnalogWDMonitChannels(ADC1, LL_ADC_AWD_ALL_CHANNELS_REG);
+#endif
+
+#ifdef STM32F3
+        LL_ADC_SetAnalogWDThresholds(ADC1, LL_ADC_AWD1, 0, 2047 + 512);
+        LL_ADC_SetAnalogWDMonitChannels(ADC1, LL_ADC_AWD1, LL_ADC_AWD_ALL_CHANNELS_REG);
+#endif
 
 #ifdef STM32F1
         LL_ADC_Enable(ADC1);
