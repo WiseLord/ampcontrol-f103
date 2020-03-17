@@ -704,6 +704,9 @@ static void actionRemapBtnLong(void)
                 action.type = ACTION_TUNER_EDIT_NAME;
             }
             break;
+        case IN_BLUETOOTH:
+            action.type = ACTION_BT_INPUT_CHANGE;
+            break;
         default:
             break;
         }
@@ -886,6 +889,9 @@ static void actionRemapRemote(void)
         break;
     case RC_CMD_SCR_DEF:
         actionSet(ACTION_SCR_DEF, 0);
+        break;
+    case RC_CMD_BT_IN_NEXT:
+        actionSet(ACTION_BT_INPUT_CHANGE, +1);
         break;
     default:
         break;
@@ -1376,6 +1382,11 @@ static void ampActionHandle(void)
         } else {
             swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
         }
+        break;
+
+    case ACTION_BT_INPUT_CHANGE:
+        btNextInput();
+        actionPostSetInput(screen);
         break;
 
     case ACTION_TUNER_SET_FREQ:

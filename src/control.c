@@ -91,9 +91,7 @@ static void controlParseBt201Select(char *line)
     } else if (strstr(line, BT201_SD) == line) {
         btSetInput(BT_IN_SDCARD);
     } else if (strstr(line, BT201_NO) == line) {
-        btDelInput(BT_IN_USB);
-        btDelInput(BT_IN_SDCARD);
-        btSetInput(BT_IN_BLUETOOTH);
+        btDelInput(BT_IN_USB | BT_IN_SDCARD);
     }
 }
 

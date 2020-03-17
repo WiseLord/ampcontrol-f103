@@ -48,6 +48,7 @@ extern "C" {
     CMD(TIMER)              \
     CMD(SP_MODE)            \
     CMD(SCR_DEF)            \
+    CMD(BT_IN_NEXT)         \
 
 #ifdef __cplusplus
 }

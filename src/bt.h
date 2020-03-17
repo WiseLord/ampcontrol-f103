@@ -27,6 +27,8 @@ void btAddInput(BtInput value);
 void btDelInput(BtInput value);
 void btSetInput(BtInput value);
 
+void btNextInput(void);
+
 #ifdef __cplusplus
 }
 #endif

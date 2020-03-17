@@ -115,3 +115,8 @@ void btSetInput(BtInput value)
     btInputs |= value;
     btInput = value;
 }
+
+void btNextInput()
+{
+    dbg("AT+CM00");
+}

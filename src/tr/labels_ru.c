@@ -154,4 +154,5 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_MENU + MENU_RC_TIMER]        = "Таймер",
     [LABEL_MENU + MENU_RC_SP_MODE]      = "Режим спектра",
     [LABEL_MENU + MENU_RC_SCR_DEF]      = "Главный экран",
+    [LABEL_MENU + MENU_RC_BT_IN_NEXT]   = "След. BT вход",
 };

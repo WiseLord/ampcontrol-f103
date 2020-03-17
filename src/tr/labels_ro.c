@@ -154,4 +154,5 @@ const char *const labels_ro[LABEL_END] = {
     [LABEL_MENU + MENU_RC_TIMER]        = "Temporizator",
     [LABEL_MENU + MENU_RC_SP_MODE]      = "Mod Spectrograma",
     [LABEL_MENU + MENU_RC_SCR_DEF]      = "Ecran implicit",
+//    [LABEL_MENU + MENU_RC_BT_IN_NEXT]   = "Next BT input",
 };
