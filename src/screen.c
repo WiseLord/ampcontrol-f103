@@ -104,7 +104,6 @@ void screenToClear(void)
 void screenShow(void)
 {
     GlcdRect rect = canvasGet()->layout->rect;
-    Spectrum *spectrum = spGet();
     AudioProc *aProc = audioGet();
     InputType inType = aProc->par.inType[aProc->par.input];
 
@@ -132,7 +131,6 @@ void screenShow(void)
 
     if (clear) {
         canvasClear();
-        spectrum->wtfX = 0;
     }
 
     switch (screen.mode) {

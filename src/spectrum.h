@@ -35,7 +35,6 @@ typedef struct {
     SpMode mode;
     bool peaks;
     bool grad;
-    int16_t wtfX;  // waterfall X position
 } Spectrum;
 
 // Callback to convert FFT data

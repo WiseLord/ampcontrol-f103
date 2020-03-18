@@ -20,6 +20,7 @@
 
 typedef union {
     RTC_type rtc;
+    int16_t wtfX;
     struct {
         uint16_t freq;
         int16_t value;
@@ -51,9 +52,11 @@ typedef struct {
 
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
 static uint8_t calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol);
-static void drawWaterfall(Spectrum *sp);
+static void drawWaterfall(bool clear);
 static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect);
 static void drawRds(Rds *rds);
+static bool checkSpectrumReady(void);
+static void fftGet128(FftSample *sp, uint8_t *out, size_t size);
 
 
 static Canvas canvas;
@@ -306,14 +309,20 @@ static color_t getRainbowColor(uint8_t value)
     return color;
 }
 
-static void drawWaterfall(Spectrum *sp)
+static void drawWaterfall(bool clear)
 {
+    if (!checkSpectrumReady()) {
+        return;
+    }
+    spGetADC(SP_CHAN_LEFT, spData[SP_CHAN_LEFT].raw, SPECTRUM_SIZE, fftGet128);
+    spGetADC(SP_CHAN_RIGHT, spData[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE, fftGet128);
+
     const Layout *lt = canvas.layout;
 
-    if (++sp->wtfX >= lt->rect.w) {
-        sp->wtfX = 0;
+    if (clear || ++prev.wtfX >= lt->rect.w) {
+        prev.wtfX = 0;
     }
-    glcdShift((sp->wtfX + 1) % lt->rect.w);
+    glcdShift((prev.wtfX + 1) % lt->rect.w);
 
     for (uint8_t col = 0; col < SPECTRUM_SIZE; col++) {
         SpectrumColumn spCol;
@@ -325,7 +334,7 @@ static void drawWaterfall(Spectrum *sp)
 
         int16_t wfH = (posNext - posCurr);
         if (wfH) {
-            glcdDrawRect(sp->wtfX, lt->rect.h - posCurr - wfH, 1, wfH, color);
+            glcdDrawRect(prev.wtfX, lt->rect.h - posCurr - wfH, 1, wfH, color);
         }
     }
 }
@@ -398,8 +407,6 @@ static void fftGet128(FftSample *sp, uint8_t *out, size_t size)
 
 static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
 {
-    Spectrum *sp = spGet();
-
     if (check && !checkSpectrumReady()) {
         return;
     }
@@ -433,6 +440,8 @@ static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
             grad = NULL;
         }
     }
+
+    Spectrum *sp = spGet();
 
     if (grad == NULL) {
         grad = malloc((size_t)height * sizeof (color_t));
@@ -723,7 +732,7 @@ void canvasShowSpectrum(bool clear)
         drawSpectrum(clear, true, SP_CHAN_BOTH, &rect);
         break;
     case SP_MODE_WATERFALL:
-        drawWaterfall(sp);
+        drawWaterfall(clear);
         break;
     default:
         break;
