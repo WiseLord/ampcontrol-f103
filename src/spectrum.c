@@ -160,13 +160,19 @@ static void spInitADC(void)
 #endif
 
 #ifdef STM32F1
-        LL_ADC_SetAnalogWDThresholds(ADC1, 0, 2047 + 512);
         LL_ADC_SetAnalogWDMonitChannels(ADC1, LL_ADC_AWD_ALL_CHANNELS_REG);
+        LL_ADC_SetAnalogWDThresholds(ADC1, LL_ADC_AWD_THRESHOLD_LOW, 2047 - 512);
+        LL_ADC_SetAnalogWDThresholds(ADC1, LL_ADC_AWD_THRESHOLD_HIGH, 2047 + 512);
 #endif
 
 #ifdef STM32F3
-        LL_ADC_SetAnalogWDThresholds(ADC1, LL_ADC_AWD1, 0, 2047 + 512);
         LL_ADC_SetAnalogWDMonitChannels(ADC1, LL_ADC_AWD1, LL_ADC_AWD_ALL_CHANNELS_REG);
+        LL_ADC_SetAnalogWDThresholds(ADC1, LL_ADC_AWD1, LL_ADC_AWD_THRESHOLD_LOW, 2047 - 512);
+        LL_ADC_SetAnalogWDThresholds(ADC1, LL_ADC_AWD1, LL_ADC_AWD_THRESHOLD_HIGH, 2047 + 512);
+#endif
+
+#ifdef STM32F3
+        LL_ADC_SetResolution(ADC2, LL_ADC_RESOLUTION_12B);
 #endif
 
 #ifdef STM32F1
