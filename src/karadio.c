@@ -129,15 +129,28 @@ static void karadioUpdateNumber(const char *str, size_t numLen)
     krData.num[numLen] = '\0';
 }
 
+static void trimEnd(char *string)
+{
+    size_t len = strlen(string);
+
+    // Remove possible service symbols and spaces at the end
+    while (len > 0 && (string[len - 1] <= ' ')) {
+        string[len - 1] = '\0';
+        len--;
+    }
+}
+
 static void karadioUpdateName(const char *str)
 {
     strncpy(krData.name, str, ST_NAME_SIZE);
+    trimEnd(krData.name);
     krData.flags |= KARADIO_FLAG_NAME;
 }
 
 static void karadioUpdateMeta(const char *str)
 {
     strncpy(krData.meta, str, ST_META_SIZE);
+    trimEnd(krData.meta);
     krData.flags |= KARADIO_FLAG_META;
 }
 
