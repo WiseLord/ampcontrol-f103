@@ -14,7 +14,7 @@
 #include "usart.h"
 #include "utils.h"
 
-#define CMDBUF_SIZE     128
+#define CMDBUF_SIZE     256
 
 #define REPORT_ENABLED
 
@@ -22,17 +22,19 @@ static RingBuf cmdRb;
 static char cmdRbData[CMDBUF_SIZE];
 static LineParse cmdLp;
 
-static const char *BT201_MOUNT      = "MU";
-static const char *BT201_ADD_USB    = "+01";
-static const char *BT201_DEL_USB    = "+02";
-static const char *BT201_ADD_SD     = "+03";
-static const char *BT201_DEL_SD     = "+04";
+static const char *BT201_MOUNT      = "MU+";
+static const char *BT201_ADD_USB    = "01";
+static const char *BT201_DEL_USB    = "02";
+static const char *BT201_ADD_SD     = "03";
+static const char *BT201_DEL_SD     = "04";
 
-static const char *BT201_SEL    = "QM";
-static const char *BT201_NO     = "+00";
-static const char *BT201_BT     = "+01";
-static const char *BT201_USB    = "+02";
-static const char *BT201_SD     = "+03";
+static const char *BT201_SEL        = "QM+";
+static const char *BT201_NO         = "00";
+static const char *BT201_BT         = "01";
+static const char *BT201_USB        = "02";
+static const char *BT201_SD         = "03";
+
+static const char *BT201_SONG_NAME  = "MF+";
 
 static const char *CTRL_AMP     = "amp";
 
@@ -93,6 +95,34 @@ static void controlParseBt201Select(char *line)
     } else if (strstr(line, BT201_NO) == line) {
         btDelInput(BT_IN_USB | BT_IN_SDCARD);
     }
+}
+
+static void utf16To8(uint16_t *ustr, char *str, int16_t size)
+{
+    for (int16_t i = 0; i < size; i++) {
+        uint16_t ucs = ustr[i];
+
+        if (ucs <= 0x007F) {
+            *str++ = (char)(((ucs >> 0) & 0x7F) | 0x00);
+        } else if (ucs <= 0x7FF) {
+            *str++ = (char)(((ucs >> 6) & 0x1F) | 0xC0);
+            *str++ = (char)(((ucs >> 0) & 0x3F) | 0x80);
+        } else {
+            *str++ = (char)(((ucs >> 12) & 0x0F) | 0xE0);
+            *str++ = (char)(((ucs >> 6) & 0x1F) | 0xC0);
+            *str++ = (char)(((ucs >> 0) & 0x3F) | 0x80);
+        }
+    }
+    *str = 0;
+}
+
+static void controlParseBt201SongName(char *line, int16_t size)
+{
+    char *buffer = btGetSongName();
+
+    utf16To8((uint16_t *)line, buffer, size / 2);
+
+    return;
 }
 
 static void controlParseAmpStatus(char *line)
@@ -229,14 +259,19 @@ static void controlParseAmp(char *line)
     }
 }
 
-static void controlParseLine(char *line)
+static void controlParseLine(LineParse *lp)
 {
+    char *line = lp->line;
+
     if (strstr(line, CTRL_AMP) == line) {
         controlParseAmp(line + strlen(CTRL_AMP));
     } else if (strstr(line, BT201_SEL) == line) {
         controlParseBt201Select(line + strlen(BT201_SEL));
     } else if (strstr(line, BT201_MOUNT) == line) {
         controlParseBt201Mount(line + strlen(BT201_MOUNT));
+    } else if (strstr(line, BT201_SONG_NAME) == line) {
+        controlParseBt201SongName(line + strlen(BT201_SONG_NAME),
+                                  lp->size - (int16_t)strlen(BT201_SONG_NAME));
     }
 }
 
@@ -270,10 +305,9 @@ void controlGetData(void)
 {
     while (ringBufGetSize(&cmdRb) > 0) {
         char ch = ringBufPopChar(&cmdRb);
-        usartSendChar(USART_KARADIO, ch);
-        if (!utilReadChar(&cmdLp, ch)) {
+        if (utilReadChar(&cmdLp, ch)) {
             if (cmdLp.line[0] != '\0') {
-                controlParseLine(cmdLp.line);
+                controlParseLine(&cmdLp);
             }
         }
     }

@@ -9,6 +9,8 @@ extern "C" {
 
 #include "hidkeys.h"
 
+#define SONG_NAME_SIZE  128
+
 typedef uint8_t BtInput;
 enum {
     BT_IN_BLUETOOTH = (1 << 0),
@@ -28,6 +30,8 @@ void btDelInput(BtInput value);
 void btSetInput(BtInput value);
 
 void btNextInput(void);
+
+char *btGetSongName(void);
 
 #ifdef __cplusplus
 }

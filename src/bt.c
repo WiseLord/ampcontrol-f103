@@ -24,6 +24,8 @@ static I2cAddrIdx i2cAddrIdx = I2C_ADDR_DISABLED;
 static BtInput btInputs = BT_IN_BLUETOOTH;
 static BtInput btInput = BT_IN_BLUETOOTH;
 
+static char songName[SONG_NAME_SIZE];
+
 static void btStartKeyTimer(void)
 {
     swTimSet(SW_TIM_BT_KEY, 200);
@@ -101,11 +103,11 @@ void btDelInput(BtInput value)
     btInputs &= ~value;
     if (btInput & value) {
         if (btInputs & BT_IN_USB) {
-            btInput = BT_IN_USB;
+            btSetInput(BT_IN_USB);
         } else if (btInputs & BT_IN_SDCARD) {
-            btInput = BT_IN_SDCARD;
+            btSetInput(BT_IN_SDCARD);
         } else {
-            btInput = BT_IN_BLUETOOTH;
+            btSetInput(BT_IN_BLUETOOTH);
         }
     }
 }
@@ -114,6 +116,8 @@ void btSetInput(BtInput value)
 {
     btInputs |= value;
     btInput = value;
+
+    songName[0] = 0;
 }
 
 void btNextInput()
@@ -121,4 +125,9 @@ void btNextInput()
     dbg("AT+CM00");
     i2cexpSend(i2cAddrIdx, PCF8574_NEXT_INPUT);
     btStartKeyTimer();
+}
+
+char *btGetSongName(void)
+{
+    return songName;
 }

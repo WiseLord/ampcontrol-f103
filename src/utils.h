@@ -13,14 +13,15 @@ extern "C" {
 
 typedef struct {
     char line[LINE_SIZE];
-    int32_t idx;
+    int16_t idx;
+    int16_t size;
 } LineParse;
 
 void utilmDelay(uint32_t delay);
 
 char *utilMkStr(const char *fmt, ...);
 
-bool utilReadChar(LineParse *lp, char data);
+bool utilReadChar(LineParse *lp, char ch);
 
 #ifdef __cplusplus
 }

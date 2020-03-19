@@ -25,18 +25,24 @@ char *utilMkStr(const char *fmt, ...)
     return buffer;
 }
 
+// TRUE if end of line
 bool utilReadChar(LineParse *lp, char ch)
 {
-    if (ch < ' ') {
+    if (lp->idx == 0) {
+        lp->size = 0;
+    }
+
+    if (lp->idx + 2 >= LINE_SIZE) {
+        lp->line[lp->idx + 1] = ch;
+        lp->idx = 0;
+        return true;
+    } else if (ch == '\n') {
         lp->line[lp->idx] = '\0';
         lp->idx = 0;
         return true;
     } else {
         lp->line[lp->idx++] = ch;
-        if (lp->idx >= LINE_SIZE) {
-            lp->line[--lp->idx] = '\0';
-            lp->idx = 0;
-        }
+        lp->size++;
         return false;
     }
 }

@@ -899,7 +899,7 @@ void canvasShowKaradio(bool clear)
                      canvas.pal->bg);
     }
 
-    yPos += lt->tuner.nameFont->chars[0].image->height;
+    yPos += lt->rds.textFont->chars[0].image->height;
 
     // Spectrum
     GlcdRect rect = canvas.glcd->rect;
@@ -977,9 +977,23 @@ void canvasShowAudioInput(bool clear, Icon icon)
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
     }
 
+    int16_t yPos = lt->lblFont->chars[0].image->height;
+
+    if (inType == IN_BLUETOOTH) {
+        glcdSetFont(lt->rds.textFont);
+        glcdSetXY(0, yPos);
+        uint16_t nameLen = glcdWriteString(btGetSongName());
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                     lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height,
+                     canvas.pal->bg);
+
+        yPos += lt->rds.textFont->chars[0].image->height;
+
+    }
+
     // Spectrum
     GlcdRect rect = canvas.glcd->rect;
-    rect.y = lt->lblFont->chars[0].image->height;
+    rect.y = yPos;
     rect.h = (rect.h - rect.y) / 2;
     drawSpectrum(clear, true, SP_CHAN_LEFT, &rect);
     rect.y += rect.h;
