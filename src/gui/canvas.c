@@ -927,18 +927,6 @@ void canvasShowAudioInput(bool clear, Icon icon)
             canvasShowKaradio(clear);
             return;
         case IN_BLUETOOTH:
-            switch (btGetInput()) {
-            case BT_IN_USB:
-                icon = ICON_USB;
-                break;
-            case BT_IN_SDCARD:
-                icon = ICON_CASSETTE;
-                break;
-            default:
-                icon = ICON_BLUETOOTH;
-                break;
-            }
-            break;
         case IN_PC:
             break;
         default:
@@ -954,7 +942,21 @@ void canvasShowAudioInput(bool clear, Icon icon)
     const char *label = labelsGet(LABEL_IN_TUNER + inType);
 
     if (icon == ICON_EMPTY) {
-        icon = (ICON_TUNER + inType);
+        if (inType == IN_BLUETOOTH) {
+            switch (btGetInput()) {
+            case BT_IN_USB:
+                icon = ICON_USB;
+                break;
+            case BT_IN_SDCARD:
+                icon = ICON_CASSETTE;
+                break;
+            default:
+                icon = ICON_BLUETOOTH;
+                break;
+            }
+        } else {
+            icon = (ICON_TUNER + inType);
+        }
     }
 
     if (aProc->par.mute) {
