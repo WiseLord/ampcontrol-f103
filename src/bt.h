@@ -9,7 +9,8 @@ extern "C" {
 
 #include "hidkeys.h"
 
-#define SONG_NAME_SIZE  128
+#define SONG_NAME_SIZE          128
+#define BT_FLAG_NAME_CHANGED    0x01
 
 typedef uint8_t BtInput;
 enum {
@@ -18,7 +19,13 @@ enum {
     BT_IN_SDCARD    = (1 << 2),
 };
 
+typedef struct {
+    char songName[SONG_NAME_SIZE];
+    uint16_t flags;
+} BTCtx;
+
 void btInit(void);
+BTCtx *btCtxGet(void);
 
 void btSendMediaKey(HidMediaKey cmd);
 
@@ -32,6 +39,12 @@ void btSetInput(BtInput value);
 void btNextInput(void);
 
 char *btGetSongName(void);
+
+void bt201ParseMount(char *line);
+void bt201ParseInput(char *line);
+void bt201ParseSongName(char *line, int16_t size);
+
+uint16_t btGetFlags(void);
 
 #ifdef __cplusplus
 }

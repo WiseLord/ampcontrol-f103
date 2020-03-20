@@ -1388,7 +1388,8 @@ static void ampActionHandle(void)
 
     case ACTION_BT_INPUT_CHANGE:
         btNextInput();
-        actionPostSetInput(screen);
+        screen->iconHint = ICON_EMPTY;
+        actionSetScreen(SCREEN_AUDIO_INPUT, 5000);
         break;
 
     case ACTION_TUNER_SET_FREQ:
