@@ -215,13 +215,15 @@ void ampPinStby(bool value)
         }
     }
 
-#ifdef STM32F1
+#if defined(STM32F1) & 0
     // Enable SWD interface in standby mode
     if (value) {
         LL_GPIO_AF_Remap_SWJ_NOJTAG();
     } else {
         LL_GPIO_AF_DisableRemap_SWJ();
     }
+#else
+    LL_GPIO_AF_Remap_SWJ_NOJTAG();
 #endif
 }
 
