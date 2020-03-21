@@ -5,9 +5,8 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
 #include <stdbool.h>
-#include <stddef.h>
+#include <stdint.h>
 
 #define LINE_SIZE       128
 
@@ -22,6 +21,8 @@ void utilmDelay(uint32_t delay);
 char *utilMkStr(const char *fmt, ...);
 
 bool utilReadChar(LineParse *lp, char ch);
+
+bool utilIsPrefix(const char *line, const char *prefix);
 
 #ifdef __cplusplus
 }

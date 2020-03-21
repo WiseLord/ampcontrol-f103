@@ -12,7 +12,7 @@ void usartInit(void *usart, uint32_t baudRate);
 void usartSetRxIRQ(void *usart, bool enabled);
 
 void usartSendChar(void *usart, char ch);
-void usartSendString(void *usart, char *str);
+void usartSendString(void *usart, const char *str);
 
 #ifdef __cplusplus
 }

@@ -1,14 +1,11 @@
 #include "bt.h"
 
-#include <string.h>
-
-#include "hwlibs.h"
-
 #include "debug.h"
 #include "i2c.h"
 #include "i2cexp.h"
 #include "settings.h"
 #include "swtimers.h"
+#include "utils.h"
 
 #define PCF8574_RELEASED    0x00
 
@@ -27,16 +24,6 @@ static BtInput btInputs = BT_IN_BLUETOOTH;
 static BtInput btInput = BT_IN_BLUETOOTH;
 
 static BTCtx btCtx;
-
-static const char *BT201_ADD_USB    = "01";
-static const char *BT201_DEL_USB    = "02";
-static const char *BT201_ADD_SD     = "03";
-static const char *BT201_DEL_SD     = "04";
-
-static const char *BT201_NO         = "00";
-static const char *BT201_BT         = "01";
-static const char *BT201_USB        = "02";
-static const char *BT201_SD         = "03";
 
 static void btStartKeyTimer(void)
 {
@@ -174,32 +161,35 @@ char *btGetSongName(void)
 
 void bt201ParseMount(char *line)
 {
-    if (strstr(line, BT201_ADD_USB) == line) {
+    // Follows "MU+"
+    if (utilIsPrefix(line, "01")) {
         btAddInput(BT_IN_USB);
-    } else if (strstr(line, BT201_DEL_USB) == line) {
+    } else if (utilIsPrefix(line, "02")) {
         btDelInput(BT_IN_USB);
-    } else if (strstr(line, BT201_ADD_SD) == line) {
+    } else if (utilIsPrefix(line, "03")) {
         btAddInput(BT_IN_SDCARD);
-    } else if (strstr(line, BT201_DEL_SD) == line) {
+    } else if (utilIsPrefix(line, "04")) {
         btDelInput(BT_IN_SDCARD);
     }
 }
 
 void bt201ParseInput(char *line)
 {
-    if (strstr(line, BT201_BT) == line) {
+    // Follows "QM+"
+    if (utilIsPrefix(line, "01")) {
         btSetInput(BT_IN_BLUETOOTH);
-    } else if (strstr(line, BT201_USB) == line) {
+    } else if (utilIsPrefix(line, "02")) {
         btSetInput(BT_IN_USB);
-    } else if (strstr(line, BT201_SD) == line) {
+    } else if (utilIsPrefix(line, "03")) {
         btSetInput(BT_IN_SDCARD);
-    } else if (strstr(line, BT201_NO) == line) {
+    } else if (utilIsPrefix(line, "00")) {
         btDelInput(BT_IN_USB | BT_IN_SDCARD);
     }
 }
 
 void bt201ParseSongName(char *line, int16_t size)
 {
+    // Follows "MF+"
     char *buffer = btCtx.songName;
 
     utf16To8(line, buffer, size / 2);

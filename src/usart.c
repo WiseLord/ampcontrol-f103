@@ -98,7 +98,7 @@ void usartSendChar(void *usart, char ch)
     LL_USART_TransmitData8(USARTx, ch);
 }
 
-void usartSendString(void *usart, char *str)
+void usartSendString(void *usart, const char *str)
 {
     USART_TypeDef *USARTx = (USART_TypeDef *)usart;
 

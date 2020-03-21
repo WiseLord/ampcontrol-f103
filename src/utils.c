@@ -46,3 +46,24 @@ bool utilReadChar(LineParse *lp, char ch)
         return false;
     }
 }
+
+bool utilIsPrefix(const char *line, const char *prefix)
+{
+    char p;
+    char l = '\0';
+
+    bool ret = true;
+
+    while (line && (p = *prefix++) && (l = *line++)) {
+        if (p != l) {
+            ret = false;
+            break;
+        }
+    }
+
+    if (!l) {
+        ret = false;
+    }
+
+    return ret;
+}

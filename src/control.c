@@ -22,34 +22,6 @@ static RingBuf cmdRb;
 static char cmdRbData[CMDBUF_SIZE];
 static LineParse cmdLp;
 
-static const char *CTRL_AMP     = "amp";
-
-static const char *BT201_INPUT  = "QM+";
-static const char *BT201_MOUNT  = "MU+";
-static const char *BT201_SONG   = "MF+";
-
-static const char *CTRL_STATUS  = ".status";
-
-static const char *CTRL_AUDIO   = ".audio";
-static const char *CTRL_INPUT   = ".input";
-static const char *CTRL_VOLUME  = ".volume";
-static const char *CTRL_BASS    = ".bass";
-static const char *CTRL_MIDDLE  = ".middle";
-static const char *CTRL_TREBLE  = ".treble";
-
-static const char *CTRL_TUNER  = ".tuner";
-static const char *CTRL_FREQ   = ".freq";
-
-static const char *CTRL_ON      = ".on";
-static const char *CTRL_OFF     = ".off";
-static const char *CTRL_SWITCH  = ".switch";
-
-static const char *CTRL_PREV    = ".prev";
-static const char *CTRL_NEXT    = ".next";
-
-static const char *CTRL_DEC     = ".dec";
-static const char *CTRL_INC     = ".inc";
-
 #define GENERATE_AUDIO_TUNE_TEXT(TUNE)  # TUNE,
 
 static const char *const CTRL_AUDIO_TUNE[] = {
@@ -90,11 +62,12 @@ static void controlParseAmpAudio(char *line)
 
 static void controlParseAmpInput(char *line)
 {
+    // Follows "amp.input"
     if (isEndOfLine(line)) {
         controlReportAudioInput();
-    } else if (strstr(line, CTRL_PREV) == line) {
+    } else if (utilIsPrefix(line, ".prev")) {
         ampActionQueue(ACTION_AUDIO_INPUT_CHANGE, -1);
-    } else if (strstr(line, CTRL_NEXT) == line) {
+    } else if (utilIsPrefix(line, ".next")) {
         ampActionQueue(ACTION_AUDIO_INPUT_CHANGE, +1);
     } else if (' ' == *line) {
         int16_t val;
@@ -111,9 +84,9 @@ static void controlParseAmpTune(char *line, AudioTune tune)
             ampSelectTune(tune);
             if (isEndOfLine(line)) {
                 controlReportAudioTune(tune);
-            } else if (strstr(line, CTRL_DEC) == line) {
+            } else if (utilIsPrefix(line, ".dec")) {
                 ampActionQueue(ACTION_AUDIO_PARAM_CHANGE, -1);
-            } else if (strstr(line, CTRL_INC) == line) {
+            } else if (utilIsPrefix(line, ".inc")) {
                 ampActionQueue(ACTION_AUDIO_PARAM_CHANGE, +1);
             } else if (' ' == *line) {
                 int16_t val;
@@ -124,7 +97,7 @@ static void controlParseAmpTune(char *line, AudioTune tune)
         }
     }
 
-    if (strstr(line, ".volume") == line) {
+    if (utilIsPrefix(line, ".volume")) {
 
     }
 }
@@ -143,22 +116,22 @@ static void controlParseAmpTunerFreq(char *line)
 
 static void controlParseAmpTuner(char *line)
 {
+    // Follows "amp.tuner"
     if (isEndOfLine(line)) {
         controlReportTunerIc();
-    } else if (strstr(line, CTRL_FREQ) == line) {
-        controlParseAmpTunerFreq(line + strlen(CTRL_FREQ));
+    } else if (utilIsPrefix(line, ".freq")) {
+        controlParseAmpTunerFreq(line + strlen(".freq"));
     }
 }
 
 
 static void controlParseAmp(char *line)
 {
+    // Follows "amp"
     AmpStatus ampStatus = ampGet()->status;
 
     if (ampStatus != AMP_STATUS_ACTIVE) {
-        if (strstr(line, CTRL_SWITCH) == line) {
-            ampActionQueue(ACTION_STANDBY, FLAG_SWITCH);
-        } else if (strstr(line, CTRL_ON) == line) {
+        if (utilIsPrefix(line, ".switch") || utilIsPrefix(line, ".on")) {
             ampActionQueue(ACTION_STANDBY, FLAG_EXIT);
         } else {
             controlReportAmpStatus();
@@ -168,30 +141,30 @@ static void controlParseAmp(char *line)
 
     if (isEndOfLine(line)) {
         //
-    } else if (strstr(line, CTRL_SWITCH) == line) {
+    } else if (utilIsPrefix(line, ".switch")) {
         ampActionQueue(ACTION_STANDBY, FLAG_SWITCH);
-    } else if (strstr(line, CTRL_ON) == line) {
+    } else if (utilIsPrefix(line, ".on")) {
         ampActionQueue(ACTION_STANDBY, FLAG_EXIT);
-    } else if (strstr(line, CTRL_OFF) == line) {
+    } else if (utilIsPrefix(line, ".off")) {
         ampActionQueue(ACTION_STANDBY, FLAG_ENTER);
-    } else if (strstr(line, CTRL_STATUS) == line) {
-        controlParseAmpStatus(line + strlen(CTRL_STATUS));
+    } else if (utilIsPrefix(line, ".status")) {
+        controlParseAmpStatus(line + strlen(".status"));
 
-    } else if (strstr(line, CTRL_AUDIO) == line) {
-        controlParseAmpAudio(line + strlen(CTRL_AUDIO));
-    } else if (strstr(line, CTRL_INPUT) == line) {
-        controlParseAmpInput(line + strlen(CTRL_INPUT));
-    } else if (strstr(line, CTRL_VOLUME) == line) {
-        controlParseAmpTune(line + strlen(CTRL_VOLUME), AUDIO_TUNE_VOLUME);
-    } else if (strstr(line, CTRL_BASS) == line) {
-        controlParseAmpTune(line + strlen(CTRL_BASS), AUDIO_TUNE_BASS);
-    } else if (strstr(line, CTRL_MIDDLE) == line) {
-        controlParseAmpTune(line + strlen(CTRL_MIDDLE), AUDIO_TUNE_MIDDLE);
-    } else if (strstr(line, CTRL_TREBLE) == line) {
-        controlParseAmpTune(line + strlen(CTRL_TREBLE), AUDIO_TUNE_TREBLE);
+    } else if (utilIsPrefix(line, ".audio")) {
+        controlParseAmpAudio(line + strlen(".audio"));
+    } else if (utilIsPrefix(line, ".input")) {
+        controlParseAmpInput(line + strlen(".input"));
+    } else if (utilIsPrefix(line, ".volume")) {
+        controlParseAmpTune(line + strlen(".volume"), AUDIO_TUNE_VOLUME);
+    } else if (utilIsPrefix(line, ".bass")) {
+        controlParseAmpTune(line + strlen(".bass"), AUDIO_TUNE_BASS);
+    } else if (utilIsPrefix(line, ".middle")) {
+        controlParseAmpTune(line + strlen(".middle"), AUDIO_TUNE_MIDDLE);
+    } else if (utilIsPrefix(line, ".treble")) {
+        controlParseAmpTune(line + strlen(".treble"), AUDIO_TUNE_TREBLE);
 
-    } else if (strstr(line, CTRL_TUNER) == line) {
-        controlParseAmpTuner(line + strlen(CTRL_TUNER));
+    } else if (utilIsPrefix(line, ".tuner")) {
+        controlParseAmpTuner(line + strlen(".tuner"));
     }
 }
 
@@ -199,15 +172,18 @@ static void controlParseLine(LineParse *lp)
 {
     char *line = lp->line;
 
-    if (strstr(line, CTRL_AMP) == line) {
-        controlParseAmp(line + strlen(CTRL_AMP));
-    } else if (strstr(line, BT201_INPUT) == line) {
-        bt201ParseInput(line + strlen(BT201_INPUT));
-    } else if (strstr(line, BT201_MOUNT) == line) {
-        bt201ParseMount(line + strlen(BT201_MOUNT));
-    } else if (strstr(line, BT201_SONG) == line) {
-        bt201ParseSongName(line + strlen(BT201_SONG),
-                           lp->size - (int16_t)strlen(BT201_SONG));
+    if (utilIsPrefix(line, "amp")) {
+        // Amp control
+        controlParseAmp(line + strlen("amp"));
+    } else {
+        // BT201 control
+        if (utilIsPrefix(line, "QM+")) {
+            bt201ParseInput(line + strlen("QM+"));
+        } else if (utilIsPrefix(line, "MU+")) {
+            bt201ParseMount(line + strlen("MU+"));
+        } else if (utilIsPrefix(line, "MF+")) {
+            bt201ParseSongName(line + strlen("MF+"), lp->size - (int16_t)strlen("MF+"));
+        }
     }
 }
 
