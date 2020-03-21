@@ -23,6 +23,7 @@ char *utilMkStr(const char *fmt, ...);
 bool utilReadChar(LineParse *lp, char ch);
 
 bool utilIsPrefix(const char *line, const char *prefix);
+void utilTrimLineEnd(char *line);
 
 #ifdef __cplusplus
 }

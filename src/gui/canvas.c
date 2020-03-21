@@ -858,7 +858,7 @@ void canvasShowKaradio(bool clear)
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
     }
 
-    KaRadioData *krData = karadioGet();
+    KaRadio *krData = karadioGet();
     uint16_t nameLen;
 
     if (clear || (krData->flags & KARADIO_FLAG_NAME)) {

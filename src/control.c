@@ -18,9 +18,9 @@
 
 #define REPORT_ENABLED
 
-static RingBuf cmdRb;
-static char cmdRbData[CMDBUF_SIZE];
-static LineParse cmdLp;
+static RingBuf rbuf;
+static char rbData[CMDBUF_SIZE];
+static LineParse lp;
 
 #define GENERATE_AUDIO_TUNE_TEXT(TUNE)  # TUNE,
 
@@ -196,7 +196,7 @@ static void sendReport(char *report)
 
 void controlInit(void)
 {
-    ringBufInit(&cmdRb, cmdRbData, sizeof(cmdRbData));
+    ringBufInit(&rbuf, rbData, sizeof(rbData));
 }
 
 void USART_DBG_HANDLER(void)
@@ -204,10 +204,7 @@ void USART_DBG_HANDLER(void)
     // Check RXNE flag value in SR register
     if (LL_USART_IsActiveFlag_RXNE(USART_DBG) && LL_USART_IsEnabledIT_RXNE(USART_DBG)) {
         char ch = LL_USART_ReceiveData8(USART_DBG);
-#ifdef _DEBUG_KARADIO
-        usartSendChar(USART_KARADIO, ch);
-#endif
-        ringBufPushChar(&cmdRb, ch);
+        ringBufPushChar(&rbuf, ch);
     } else {
         // Call Error function
     }
@@ -215,11 +212,11 @@ void USART_DBG_HANDLER(void)
 
 void controlGetData(void)
 {
-    while (ringBufGetSize(&cmdRb) > 0) {
-        char ch = ringBufPopChar(&cmdRb);
-        if (utilReadChar(&cmdLp, ch)) {
-            if (cmdLp.line[0] != '\0') {
-                controlParseLine(&cmdLp);
+    while (ringBufGetSize(&rbuf) > 0) {
+        char ch = ringBufPopChar(&rbuf);
+        if (utilReadChar(&lp, ch)) {
+            if (lp.line[0] != '\0') {
+                controlParseLine(&lp);
             }
         }
     }

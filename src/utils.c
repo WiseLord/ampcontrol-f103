@@ -67,3 +67,14 @@ bool utilIsPrefix(const char *line, const char *prefix)
 
     return ret;
 }
+
+void utilTrimLineEnd(char *line)
+{
+    size_t len = strlen(line);
+
+    // Remove possible service symbols and spaces at the end
+    while (len > 0 && (line[len - 1] <= ' ')) {
+        line[len - 1] = '\0';
+        len--;
+    }
+}

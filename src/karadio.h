@@ -24,15 +24,13 @@ typedef struct {
     char name[ST_NAME_SIZE];
     char meta[ST_META_SIZE];
     uint16_t flags;
-} KaRadioData;
+} KaRadio;
 
 void karadioInit(void);
+KaRadio *karadioGet(void);
 
 void karadioSetEnabled(bool value);
 
-KaRadioData *karadioGet(void);
-
-void karadioUpdateStatus(void);
 void karadioSendMediaKey(HidMediaKey cmd);
 
 void karadioGetData(void);
