@@ -54,21 +54,20 @@ static void btNextTrack(void)
     btStartKeyTimer();
 }
 
-
 static void utf16To8(char *ustr, char *str, int16_t size)
 {
     for (int16_t i = 0; i < size; i++) {
         uint16_t ucs = (uint16_t)((ustr[2 * i]) | (ustr[2 * i + 1] << 8));
 
         if (ucs <= 0x007F) {
-            *str++ = (char)(((ucs >> 0) & 0x7F) | 0x00);
+            *str++ = 0x00 | (char)((ucs >> 0)  & 0x7F);
         } else if (ucs <= 0x7FF) {
-            *str++ = (char)(((ucs >> 6) & 0x1F) | 0xC0);
-            *str++ = (char)(((ucs >> 0) & 0x3F) | 0x80);
+            *str++ = 0xC0 | (char)((ucs >> 6)  & 0x1F);
+            *str++ = 0x80 | (char)((ucs >> 0)  & 0x3F);
         } else {
-            *str++ = (char)(((ucs >> 12) & 0x0F) | 0xE0);
-            *str++ = (char)(((ucs >> 6) & 0x1F) | 0xC0);
-            *str++ = (char)(((ucs >> 0) & 0x3F) | 0x80);
+            *str++ = 0xE0 | (char)((ucs >> 12) & 0x0F);
+            *str++ = 0x80 | (char)((ucs >> 6)  & 0x3F);
+            *str++ = 0x80 | (char)((ucs >> 0)  & 0x3F);
         }
     }
     *str = 0;
