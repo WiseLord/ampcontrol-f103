@@ -4,6 +4,7 @@
 #include "i2c.h"
 #include "i2cexp.h"
 #include "settings.h"
+#include "string.h"
 #include "swtimers.h"
 #include "utils.h"
 
@@ -193,6 +194,16 @@ void bt201ParseSongName(char *line, int16_t size)
     char *buffer = btCtx.songName;
 
     utf16To8(line, buffer, size / 2);
+
+    // Remove extension
+    size_t dotPos = strlen(buffer) - 4;
+    // 3 chars (mp3, wav, wma, aac, ape)
+    buffer[dotPos] = '\0';
+    if (buffer[dotPos - 1] == '.') {
+        // 4 chars (flac)
+        buffer[dotPos - 1] = '\0';
+    }
+
     btCtx.flags |= BT_FLAG_NAME_CHANGED;
 
     // Query current mode
