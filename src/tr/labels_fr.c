@@ -54,6 +54,8 @@ const char *const labels_fr[LABEL_END] = {
 //    [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75us",
 
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stéréo",
+//    [LABEL_SPECTRUM_MODE + SP_MODE_MIRROR]      = "Mirror",
+//    [LABEL_SPECTRUM_MODE + SP_MODE_ANTIMIRROR]  = "Antimirror",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Mélangé",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Cascade",
 

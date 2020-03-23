@@ -2,7 +2,7 @@
 
 #include "gui/canvas.h"
 
-void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, color_t *grad)
+void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, bool mirror, color_t *grad)
 {
     Canvas *canvas = canvasGet();
 
@@ -16,8 +16,6 @@ void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, color_t
     int16_t p = col->peakW;
 
     const Palette *pal = canvas->pal;
-
-    y += rect->h;
 
     if (s == 0) {
         s = 1;
@@ -33,33 +31,34 @@ void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, color_t
     }
 
     // Full redraw the column
-    if (clear) {
+    if (0 || clear) {
         if (NULL != grad) {
-            glcdDrawVertGrad(x, y - s, w, s, grad);
+            glcdDrawVertGrad(x, mirror ? y : y + h - s, w, s, &grad[mirror ? 0 : h - s]);
         } else {
-            glcdDrawRect(x, y - s, w, s, pal->spColB);
+            glcdDrawRect(x, mirror ? y : y + h - s, w, s, pal->spColB);
         }
+        glcdDrawRect(x, mirror ? y + s : y, w, h - s, pal->bg);
     } else {
 
         // Draw part of changed column
         if (s > os) {
             if (NULL != grad) {
-                glcdDrawVertGrad(x, y - s, w, s - os, &grad[rect->h - s]);
+                glcdDrawVertGrad(x, mirror ? y + os : y + h - s, w, s - os, &grad[mirror ? os : h - s]);
             } else {
-                glcdDrawRect(x, y - s, w, s - os, pal->spColB);
+                glcdDrawRect(x, mirror ? y + os : y + h - s, w, s - os, pal->spColB);
             }
         } else if (s < os) {
-            glcdDrawRect(x, y - os, w, os - s, pal->bg);
+            glcdDrawRect(x, mirror ? y + s : y + h - os, w, os - s, pal->bg);
         }
 
         // Clear old peak
         if (p >= s) {
-            glcdDrawRect(x, y - p - 1, w, 1, pal->bg);
+            glcdDrawRect(x, mirror ? y + p : y + h - p - 1, w, 1, pal->bg);
         }
     }
 
     // Draw new peak
     if (p > s) {
-        glcdDrawRect(x, y - p, w, 1, pal->spPeak);
+        glcdDrawRect(x, mirror ? y + p - 1: y + h - p, w, 1, pal->spPeak);
     }
 }

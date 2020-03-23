@@ -53,7 +53,7 @@ typedef struct {
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
 static uint8_t calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol);
 static void drawWaterfall(bool clear);
-static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect);
+static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdRect *rect);
 static void drawSpectrumMode(bool clear, GlcdRect rect);
 static void drawRds(Rds *rds);
 static bool checkSpectrumReady(void);
@@ -340,12 +340,10 @@ static void drawWaterfall(bool clear)
     }
 }
 
-static void calcGradient(Spectrum *sp, int16_t height, color_t *grad)
+static void calcGradient(Spectrum *sp, int16_t height, bool mirror, color_t *grad)
 {
-    Canvas *canvas = canvasGet();
-
-    color_t colorB = canvas->pal->spColB;
-    color_t colorG = canvas->pal->spColG;
+    color_t colorB = mirror ? canvas.pal->spColG : canvas.pal->spColB;
+    color_t colorG = mirror ? canvas.pal->spColB : canvas.pal->spColG;
 
     color_t rB = (colorB & 0xF800) >> 11;
     color_t gB = (colorB & 0x07E0) >> 5;
@@ -406,7 +404,7 @@ static void fftGet128(FftSample *sp, uint8_t *out, size_t size)
     }
 }
 
-static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
+static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdRect *rect)
 {
     if (check && !checkSpectrumReady()) {
         return;
@@ -430,24 +428,15 @@ static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
 
     const int16_t y = rect->y;
 
-    static color_t *grad = NULL;
-
     if (clear) {
         memset(&spDrawData, 0, sizeof (SpDrawData));
         memset(spData, 0, sizeof (SpData) * SP_CHAN_END);
-
-        if (grad != NULL) {
-            free(grad);
-            grad = NULL;
-        }
     }
 
     Spectrum *sp = spGet();
 
-    if (grad == NULL) {
-        grad = malloc((size_t)height * sizeof (color_t));
-        calcGradient(sp, height, grad);
-    }
+    color_t *grad = malloc((size_t)height * sizeof (color_t));
+    calcGradient(sp, height, mirror, grad);
 
     for (uint8_t col = 0; col < num; col++) {
         int16_t x = oft + col * step;
@@ -458,8 +447,10 @@ static void drawSpectrum(bool clear, bool check, SpChan chan, GlcdRect *rect)
             spCol.peakW = 0;
         }
         GlcdRect rect = {x, y, colW, height};
-        spectrumColumnDraw(&spCol, &rect, clear, grad);
+        spectrumColumnDraw(&spCol, &rect, clear, mirror, grad);
     }
+
+    free(grad);
 }
 
 static void drawRds(Rds *rds)
@@ -725,13 +716,18 @@ static void drawSpectrumMode(bool clear, GlcdRect rect)
 {
     Spectrum *sp = spGet();
 
-    if (sp->mode == SP_MODE_STEREO) {
+    switch (sp->mode) {
+    case SP_MODE_STEREO:
+    case SP_MODE_MIRROR:
+    case SP_MODE_ANTIMIRROR:
         rect.h = rect.h / 2;
-        drawSpectrum(clear, true, SP_CHAN_LEFT, &rect);
+        drawSpectrum(clear, true, sp->mode == SP_MODE_ANTIMIRROR, SP_CHAN_LEFT, &rect);
         rect.y += rect.h;
-        drawSpectrum(clear, false, SP_CHAN_RIGHT, &rect);
-    } else {
-        drawSpectrum(clear, true, SP_CHAN_BOTH, &rect);
+        drawSpectrum(clear, false, sp->mode == SP_MODE_MIRROR, SP_CHAN_RIGHT, &rect);
+        break;
+    default:
+        drawSpectrum(clear, true, false, SP_CHAN_BOTH, &rect);
+        break;
     }
 }
 
@@ -741,6 +737,8 @@ void canvasShowSpectrum(bool clear)
 
     switch (sp->mode) {
     case SP_MODE_STEREO:
+    case SP_MODE_MIRROR:
+    case SP_MODE_ANTIMIRROR:
     case SP_MODE_MIXED:
         drawSpectrumMode(clear, canvas.glcd->rect);
         break;

@@ -54,6 +54,8 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_TUNER_DEEMPH + TUNER_DEEMPH_75u] = "75мкс",
 
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Стерео",
+    [LABEL_SPECTRUM_MODE + SP_MODE_MIRROR]      = "Люстерко",
+//    [LABEL_SPECTRUM_MODE + SP_MODE_ANTIMIRROR]  = "Antimirror",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Суміщення",
     [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Водоспад",
 
