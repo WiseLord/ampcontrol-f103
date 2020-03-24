@@ -24,6 +24,10 @@ enum {
     SW_TIM_SOFT_VOLUME,
     SW_TIM_BT_KEY,
 
+    SW_TIM_DEC_END,
+
+    SW_TIM_SYSTEM,
+
     SW_TIM_END,
 };
 

@@ -1,12 +1,13 @@
 #include "stripedbar.h"
 
-#include "gui/canvas.h"
+#include "display/glcd.h"
+#include "gui/palette.h"
 
 void stripedBarDraw(StripedBar *bar, LayoutStripedBar *lt, bool clear)
 {
     (void)clear;
 
-    Canvas *canvas = canvasGet();
+    const Palette *pal = paletteGet(paletteGetIndex());
 
     const int16_t sc = lt->sc;         // Scale count
     const uint8_t sw = lt->sw;         // Scale width
@@ -26,23 +27,23 @@ void stripedBarDraw(StripedBar *bar, LayoutStripedBar *lt, bool clear)
     }
 
     for (uint16_t i = 0; i < sc; i++) {
-        color_t color = canvas->pal->fg;
+        color_t color = pal->fg;
 
         if (min + max) { // Non-symmetric scale
             if (i >= value) {
-                color = canvas->pal->bg;
+                color = pal->bg;
             }
         } else { // Symmetric scale
             if ((value > 0 && i >= value + (sc / 2)) ||
                 (value >= 0 && i < (sc / 2 - 1)) ||
                 (value < 0 && i < value + (sc / 2)) ||
                 (value <= 0 && i > (sc / 2))) {
-                color = canvas->pal->bg;
+                color = pal->bg;
             }
         }
 
         glcdDrawRect(i * (width / sc), barPos, sw, barHalf, color);
-        glcdDrawRect(i * (width / sc), barPos + barHalf, sw, barMiddle, canvas->pal->fg);
+        glcdDrawRect(i * (width / sc), barPos + barHalf, sw, barMiddle, pal->fg);
         glcdDrawRect(i * (width / sc), barPos + barHalf + barMiddle, sw, barHalf, color);
     }
 }

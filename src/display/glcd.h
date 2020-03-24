@@ -19,11 +19,12 @@ typedef struct {
     int16_t h;
 } GlcdRect;
 
-typedef enum {
+typedef uint8_t GlcdAlign;
+enum {
     GLCD_ALIGN_LEFT,
     GLCD_ALIGN_CENTER,
     GLCD_ALIGN_RIGHT
-} GlcdAlign;
+};
 
 typedef struct {
     const DispDriver *drv;
@@ -33,7 +34,7 @@ typedef struct {
     int16_t y;
     color_t fontFg;
     color_t fontBg;
-    uint8_t fontAlign;
+    GlcdAlign fontAlign;
     bool rotate;
     bool strFramed;
 } Glcd;
@@ -55,7 +56,7 @@ GlcdRect *glcdGetRect(void);
 void glcdSetFont(const tFont *font);
 void glcdSetFontColor(color_t color);
 void glcdSetFontBgColor(color_t color);
-void glcdSetFontAlign(uint8_t align);
+void glcdSetFontAlign(GlcdAlign align);
 int16_t glcdGetFontHeight(const tFont *font);
 
 void glcdSetXY(int16_t x, int16_t y);

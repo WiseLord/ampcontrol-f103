@@ -7,8 +7,8 @@
 #define I2C_TIMEOUT_MS      3
 
 typedef struct {
-    void (*rxCb)(void);
-    void (*txCb)(void);
+    I2cRxFn rxCb;
+    I2cTxFn txCb;
     uint8_t *txBuf;
     uint8_t *rxBuf;
     int16_t txIdx;
@@ -207,14 +207,14 @@ bool i2cIsEnabled(void *i2c)
     return (bool)(LL_I2C_IsEnabled(i2c));
 }
 
-void i2cSetRxCb(void *i2c, void (*cb)(void))
+void i2cSetRxCb(void *i2c, I2cRxFn cb)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
 
     ctx->rxCb = cb;
 }
 
-void i2cSetTxCb(void *i2c, void (*cb)(void))
+void i2cSetTxCb(void *i2c, I2cTxFn cb)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
 
@@ -419,7 +419,7 @@ void I2C_EV_IRQHandler(I2C_TypeDef *I2Cx)
         if (READ_BIT(SR1, I2C_SR1_STOPF) == I2C_SR1_STOPF) {
             // Slave finishes to receive data - master STOP
             if (ctx->rxCb) {
-                ctx->rxCb();
+                ctx->rxCb(ctx->rxIdx);
             }
             // Enable I2C peripheral
             SET_BIT(I2Cx->CR1, I2C_CR1_PE);
@@ -541,7 +541,7 @@ void I2C_ER_IRQHandler(I2C_TypeDef *I2Cx)
     if (READ_BIT(SR1, I2C_SR1_AF) == I2C_SR1_AF) {
         if (READ_BIT(SR2, I2C_SR2_TRA) == I2C_SR2_TRA) {
             if (ctx->txCb) {
-                ctx->txCb();
+                ctx->txCb(ctx->txIdx);
             }
         }
         CLEAR_BIT(I2Cx->SR1, I2C_SR1_AF);

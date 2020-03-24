@@ -51,7 +51,7 @@ typedef struct {
 
 
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
-static uint8_t calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol);
+static void calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol);
 static void drawWaterfall(bool clear);
 static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdRect *rect);
 static void drawSpectrumMode(bool clear, GlcdRect rect);
@@ -220,7 +220,7 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas.pal->bg);
 }
 
-static uint8_t calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol)
+static void calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol)
 {
     int16_t raw;
 
@@ -276,8 +276,6 @@ static uint8_t calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColum
         spDrawCol->peak[chan] = (uint8_t)spCol->peakW;
         spDrawCol->fall[chan] = (uint8_t)spCol->fallW;
     }
-
-    return (uint8_t)raw;
 }
 
 static color_t getRainbowColor(uint8_t value)
@@ -435,8 +433,12 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
 
     Spectrum *sp = spGet();
 
-    color_t *grad = malloc((size_t)height * sizeof (color_t));
-    calcGradient(sp, height, mirror, grad);
+    color_t *grad = NULL;
+
+    if (sp->grad) {
+        grad = malloc((size_t)height * sizeof (color_t));
+        calcGradient(sp, height, mirror, grad);
+    }
 
     for (uint8_t col = 0; col < num; col++) {
         int16_t x = oft + col * step;
@@ -740,7 +742,7 @@ void canvasShowSpectrum(bool clear)
     case SP_MODE_MIRROR:
     case SP_MODE_ANTIMIRROR:
     case SP_MODE_MIXED:
-        drawSpectrumMode(clear, canvas.glcd->rect);
+        drawSpectrumMode(clear, glcdGet()->rect);
         break;
     case SP_MODE_WATERFALL:
         drawWaterfall(clear);
@@ -1068,7 +1070,7 @@ void canvasShowTimer(bool clear, int32_t value)
 
     prev.rtc = rtc;
 
-    int16_t yPos = lt->time.hmsFont->chars[0].image->height;
+    int16_t yPos = lt->time.hmsY + lt->time.hmsFont->chars[0].image->height;
 
     // Spectrum
     GlcdRect rect = canvas.glcd->rect;

@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "gui/canvas.h"
+#include "gui/palette.h"
 
 void textEditSet(TextEdit *te, char *text, uint8_t maxLen, uint8_t maxSymbols)
 {
@@ -59,10 +59,8 @@ void textEditDelChar(TextEdit *te)
 
 void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear)
 {
-    Canvas *canvas = canvasGet();
-
-    Glcd *glcd = canvas->glcd;
-    const Palette *pal = canvas->pal;
+    Glcd *glcd = glcdGet();
+    const Palette *pal = paletteGet(paletteGetIndex());
 
     const tFont *editFont = lt->editFont;
     const int16_t feh = editFont->chars[0].image->height;

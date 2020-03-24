@@ -1,11 +1,11 @@
 #include "spectrumcolumn.h"
 
-#include "gui/canvas.h"
+#include <stddef.h>
+
+#include "gui/palette.h"
 
 void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, bool mirror, color_t *grad)
 {
-    Canvas *canvas = canvasGet();
-
     int16_t x = rect->x;
     int16_t y = rect->y;
     int16_t w = rect->w;
@@ -15,7 +15,7 @@ void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, bool mi
     int16_t os = col->prevW;
     int16_t p = col->peakW;
 
-    const Palette *pal = canvas->pal;
+    const Palette *pal = paletteGet(paletteGetIndex());
 
     if (s == 0) {
         s = 1;

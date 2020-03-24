@@ -158,7 +158,7 @@ void glcdSetFontBgColor(color_t color)
     glcd.fontBg = color;
 }
 
-void glcdSetFontAlign(uint8_t align)
+void glcdSetFontAlign(GlcdAlign align)
 {
     glcd.fontAlign = align;
 }
@@ -336,8 +336,9 @@ uint16_t glcdWriteString(const char *string)
         int16_t pos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
         int16_t sWidth = font->chars[pos].image->width;
 
-        if (glcd.strFramed)
+        if (glcd.strFramed) {
             strLength += sWidth;
+        }
         while (*str) {
             code = findSymbolCode(&str);
             pos = glcdFontSymbolPos(code);
@@ -346,8 +347,9 @@ uint16_t glcdWriteString(const char *string)
                 strLength += sWidth;
             }
         }
-        if (glcd.strFramed)
+        if (glcd.strFramed) {
             strLength += sWidth;
+        }
 
         if (glcd.fontAlign == GLCD_ALIGN_CENTER) {
             glcdSetX(glcd.x - strLength / 2);
@@ -361,17 +363,20 @@ uint16_t glcdWriteString(const char *string)
 
     str = string;
 
-    if (glcd.strFramed)
+    if (glcd.strFramed) {
         ret += glcdWriteUChar(LETTER_SPACE_CHAR);
+    }
     while (*str) {
         code = findSymbolCode(&str);
 
         ret += glcdWriteUChar(code);
-        if (*str)
+        if (*str) {
             ret += glcdWriteUChar(LETTER_SPACE_CHAR);
+        }
     }
-    if (glcd.strFramed)
+    if (glcd.strFramed) {
         ret += glcdWriteUChar(LETTER_SPACE_CHAR);
+    }
 
     return ret;
 }
