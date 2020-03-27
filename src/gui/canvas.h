@@ -28,7 +28,7 @@ void canvasShowTune(bool clear);
 void canvasShowAudioFlag(bool clear);
 void canvasShowSpectrum(bool clear);
 void canvasShowTuner(bool clear);
-void canvasShowKaradio(bool clear);
+void canvasShowKaradio(bool clear, Icon icon);
 void canvasShowAudioInput(bool clear, Icon icon);
 void canvasShowTextEdit(bool clear);
 void canvasShowTimer(bool clear, int32_t value);

@@ -855,16 +855,18 @@ void canvasShowTuner(bool clear)
     drawSpectrumMode(clear, rect);
 }
 
-void canvasShowKaradio(bool clear)
+void canvasShowKaradio(bool clear, Icon icon)
 {
     const Layout *lt = canvas.layout;
 
     const tFont *iconSet = lt->iconSet;
     const char *label = labelsGet(LABEL_IN_KARADIO);
 
-    Icon icon = ICON_KARADIO;
+    if (icon == ICON_EMPTY) {
+        icon = ICON_KARADIO;
+    }
 
-    if (clear) {
+    if (clear || icon != prev.par.icon) {
         // Icon
         glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
@@ -937,7 +939,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
             }
             break;
         case IN_KARADIO:
-            canvasShowKaradio(clear);
+            canvasShowKaradio(clear, icon);
             return;
         case IN_BLUETOOTH:
         case IN_PC:
