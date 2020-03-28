@@ -90,12 +90,16 @@ static int8_t usbHidOutEventFS(uint8_t event_idx, uint8_t state)
 static void usbHidSend(void *data, uint16_t size)
 {
     uint8_t status;
+    uint8_t timeoutMs = 25;
     do {
         status = USBD_AMP_SendReport(&hUsbDeviceFS, (uint8_t *)data, size);
         if (status == USBD_FAIL) {
             // ERROR
         }
-    } while (status == USBD_BUSY);
+        if (LL_SYSTICK_IsActiveCounterFlag()) {
+            timeoutMs--;
+        }
+    } while (status == USBD_BUSY && timeoutMs != 0);
 }
 
 void usbHidInit(void)
