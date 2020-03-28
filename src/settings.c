@@ -30,6 +30,7 @@ static const EE_Map eeMap[] = {
     [PARAM_AUDIO_SURROUND]  =   {0x04,  false},
     [PARAM_AUDIO_EFFECT3D]  =   {0x05,  false},
     [PARAM_AUDIO_BYPASS]    =   {0x06,  false},
+    [PARAM_AUDIO_SHOWDB]    =   {0x07,  true},
 
     [PARAM_AUDIO_IN0]       =   {0x10,  IN_TUNER},
     [PARAM_AUDIO_IN1]       =   {0x11,  IN_KARADIO},
@@ -133,6 +134,9 @@ int16_t settingsGet(Param param)
         break;
     case PARAM_AUDIO_BYPASS:
         ret = aProc->par.bypass;
+        break;
+    case PARAM_AUDIO_SHOWDB:
+        ret = aProc->par.showDb;
         break;
 
     case PARAM_AUDIO_IN0:
@@ -286,16 +290,19 @@ void settingsSet(Param param, int16_t value)
         aProc->par.input = (int8_t)value;
         break;
     case PARAM_AUDIO_LOUDNESS:
-        aProc->par.loudness = (int8_t)value;
+        aProc->par.loudness = (bool)value;
         break;
     case PARAM_AUDIO_SURROUND:
-        aProc->par.surround = (int8_t)value;
+        aProc->par.surround = (bool)value;
         break;
     case PARAM_AUDIO_EFFECT3D:
-        aProc->par.effect3d = (int8_t)value;
+        aProc->par.effect3d = (bool)value;
         break;
     case PARAM_AUDIO_BYPASS:
-        aProc->par.bypass = (int8_t)value;
+        aProc->par.bypass = (bool)value;
+        break;
+    case PARAM_AUDIO_SHOWDB:
+        aProc->par.showDb = (bool)value;
         break;
 
     case PARAM_AUDIO_IN0:

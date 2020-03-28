@@ -636,11 +636,21 @@ void canvasShowTune(bool clear)
         StripedBar bar = {value, min, max};
         stripedBarDraw(&bar, &lt->tune.bar, clear);
 
+       int16_t showValue = value;
+
+       if (aProc->par.showDb) {
+           showValue = value * mStep / STEP_MULT;
+       } else {
+           if (min + max != 0) {
+               showValue -= min;
+           }
+       }
+
         // Value
         glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(GLCD_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
-        glcdWriteString(utilMkStr("%3d", value * mStep / STEP_MULT));
+        glcdWriteString(utilMkStr("%3d", showValue));
         prev.par.value = value;
     }
 

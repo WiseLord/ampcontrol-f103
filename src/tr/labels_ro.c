@@ -96,6 +96,7 @@ const char *const labels_ro[LABEL_END] = {
 //    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Procesor sunet",
+//    [LABEL_MENU + MENU_AUDIO_SHOWDB]    = "Show in dB",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Intrare",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Procesor radio",

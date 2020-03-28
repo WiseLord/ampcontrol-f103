@@ -103,6 +103,8 @@ typedef struct {
     bool surround;
     bool effect3d;
     bool bypass;
+
+    bool showDb;
 } AudioParam;
 
 typedef struct {

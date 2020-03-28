@@ -96,6 +96,7 @@ const char *const labels_en[LABEL_END] = {
     [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
+    [LABEL_MENU + MENU_AUDIO_SHOWDB]    = "Show in dB",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Input",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner IC",
