@@ -886,8 +886,9 @@ void canvasShowKaradio(bool clear, Icon icon)
     KaRadio *krData = karadioGet();
     uint16_t nameLen;
 
-    if (clear || (krData->flags & KARADIO_FLAG_NAME)) {
-        // Label
+    // Label + number
+    if (clear || (krData->flags & KARADIO_FLAG_NUMBER)) {
+        krData->flags &= ~KARADIO_FLAG_NUMBER;
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
@@ -901,8 +902,8 @@ void canvasShowKaradio(bool clear, Icon icon)
 
     int16_t yPos = lt->lblFont->chars[0].image->height;
 
+    // Name
     if (clear || (krData->flags & KARADIO_FLAG_NAME)) {
-
         krData->flags &= ~KARADIO_FLAG_NAME;
         glcdSetFont(lt->rds.psFont);
         glcdSetXY(0, yPos);
@@ -914,6 +915,7 @@ void canvasShowKaradio(bool clear, Icon icon)
 
     yPos += lt->rds.psFont->chars[0].image->height;
 
+    // Meta
     if (clear || (krData->flags & KARADIO_FLAG_META)) {
         krData->flags &= ~KARADIO_FLAG_META;
         glcdSetFont(lt->rds.textFont);

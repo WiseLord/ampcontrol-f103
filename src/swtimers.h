@@ -23,6 +23,7 @@ enum {
     SW_TIM_RTC_INIT,
     SW_TIM_SOFT_VOLUME,
     SW_TIM_BT_KEY,
+    SW_TIM_DIGIT_INPUT,
 
     SW_TIM_DEC_END,
 

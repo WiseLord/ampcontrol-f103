@@ -1,5 +1,6 @@
 #include "karadio.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "amp.h"
@@ -17,6 +18,11 @@ static KaRadio kaRadio;
 static RingBuf rbuf;
 static char rbData[KARADIO_RB_SIZE];
 static LineParse lp;
+
+static void karadioResetData(void);
+static void karadioUpdateNumber(const char *str, size_t numLen);
+static void karadioUpdateName(const char *str);
+static void karadioUpdateMeta(const char *str);
 
 static void karadioSendCmdCli(const char *cmd)
 {
@@ -39,6 +45,33 @@ KaRadio *karadioGet(void)
 void karadioSetEnabled(bool value)
 {
     karadioSendCmdCli(value ? "start" : "stop");
+}
+
+void karadioPlayStation(int16_t num)
+{
+    usartSendString(USART_KARADIO, utilMkStr("\ncli.play(\"%d\")\n", num));
+}
+
+void kaRadioSendDigit(uint8_t dig)
+{
+    if (kaRadio.station < 0) {
+        kaRadio.station = dig;
+    } else {
+        kaRadio.station = kaRadio.station * 10 + dig;
+    }
+
+    kaRadio.station %= 1000;
+
+    karadioUpdateNumber(utilMkStr("%d", kaRadio.station), 4);
+
+    dbg(utilMkStr("digit %d, station %d", dig, kaRadio.station));
+}
+
+void kaRadioFinishDigitInput(void)
+{
+    dbg("finish digit");
+    karadioPlayStation(kaRadio.station);
+    kaRadio.station = -1;
 }
 
 void karadioSendMediaKey(HidMediaKey cmd)
@@ -66,8 +99,9 @@ static void karadioUpdateNumber(const char *str, size_t numLen)
     if (numLen > ST_NUM_SIZE) {
         numLen = ST_NUM_SIZE;
     }
+    memset(kaRadio.num, 0, ST_NUM_SIZE);
     strncpy(kaRadio.num, str, numLen);
-    kaRadio.num[numLen] = '\0';
+    kaRadio.flags |= KARADIO_FLAG_NUMBER;
 }
 
 static void karadioUpdateName(const char *str)

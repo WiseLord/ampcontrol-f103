@@ -648,6 +648,8 @@ static void actionGetTimers(void)
         actionSet(ACTION_INIT_RTC, 0);
     } else if (swTimGet(SW_TIM_SOFT_VOLUME) == 0) {
         actionSet(ACTION_RESTORE_VOLUME, amp.volume);
+    } else if (swTimGet(SW_TIM_DIGIT_INPUT) == 0) {
+        actionSet(ACTION_FINISH_DIGIT_INPUT, 0);
     }
 }
 
@@ -811,7 +813,7 @@ static void actionRemapRemote(void)
     case RC_CMD_DIG_7:
     case RC_CMD_DIG_8:
     case RC_CMD_DIG_9:
-        actionSet(ACTION_DIGIT, action.value - RC_CMD_DIG_0);
+        actionSet(ACTION_DIGIT_INPUT, action.value - RC_CMD_DIG_0);
         break;
 
     case RC_CMD_IN_NEXT:
@@ -1219,10 +1221,22 @@ static void ampActionHandle(void)
     case ACTION_DISP_EXPIRED:
         actionDispExpired(scrMode);
         break;
-    case ACTION_DIGIT:
+
+    case ACTION_DIGIT_INPUT:
         if (scrMode == SCREEN_TIME) {
             rtcEditTime(rtcGetMode(), (int8_t)(action.value));
             actionSetScreen(SCREEN_TIME, 5000);
+        } else if (inType == IN_KARADIO) {
+            swTimSet(SW_TIM_DIGIT_INPUT, 1000);
+            kaRadioSendDigit((uint8_t)action.value);
+            actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
+        }
+        break;
+    case  ACTION_FINISH_DIGIT_INPUT:
+        swTimSet(SW_TIM_DIGIT_INPUT, SW_TIM_OFF);
+        if (inType == IN_KARADIO) {
+            kaRadioFinishDigitInput();
+            actionSetScreen(SCREEN_AUDIO_INPUT, 1000);
         }
         break;
 
