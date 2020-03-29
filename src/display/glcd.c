@@ -132,10 +132,7 @@ void glcdFbSync(void)
 
 void glcdSetRect(const GlcdRect *rect)
 {
-    glcd.rect.x = rect->x;
-    glcd.rect.y = rect->y;
-    glcd.rect.w = rect->w;
-    glcd.rect.h = rect->h;
+    glcd.rect = *rect;
 }
 
 GlcdRect *glcdGetRect(void)

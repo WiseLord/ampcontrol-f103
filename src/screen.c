@@ -111,12 +111,13 @@ void screenShow(void)
 
     bool clear = screenCheckClear();
     if (screen.mode == SCREEN_TEXTEDIT) {
-        rect = canvasGet()->layout->textEdit.rect;
+        GlcdRect teRect = canvasGet()->layout->textEdit.rect;
         if (clear) {
             const int16_t th = canvasGet()->glcd->drv->height / 100;
-            glcdDrawFrame(rect.x - th, rect.y - th, rect.w + 2 * th, rect.h + 2 * th, th, canvasGet()->pal->fg);
+            glcdDrawFrame(teRect.x - rect.x - th, teRect.y - rect.y - th, teRect.w + 2 * th, teRect.h + 2 * th,
+                          th, canvasGet()->pal->fg);
         }
-        glcdSetRect(&rect);
+        glcdSetRect(&teRect);
     }
 
     if (screen.mode != SCREEN_STANDBY) {
