@@ -19,7 +19,6 @@ static RingBuf rbuf;
 static char rbData[KARADIO_RB_SIZE];
 static LineParse lp;
 
-static void karadioResetData(void);
 static void karadioUpdateNumber(const char *str, size_t numLen);
 static void karadioUpdateName(const char *str);
 static void karadioUpdateMeta(const char *str);
