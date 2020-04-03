@@ -71,10 +71,12 @@ void glcdDrawImage(const tImage *img, color_t color, color_t bgColor);
 uint16_t glcdStrToUStr(const char *str, UChar *ustr);
 void glcdUStrToStr(const UChar *ustr, char *str);
 int16_t glcdWriteUChar(UChar code);
+int16_t glcdCalcUCharLen(UChar code);
 
 void glcdSetStringFramed(bool framed);
 
-uint16_t glcdWriteString(const char *string);
+int16_t glcdWriteString(const char *string);
+int16_t glcdCalcStringLen(const char *string);
 
 void glcdDrawPixel(int16_t x, int16_t y, color_t color);
 
