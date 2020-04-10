@@ -1,16 +1,16 @@
-{"Name":"Euroradio (SoftRock)","URL":"stream.euroradio.fm","File":"/euroradio1","Port":"8000","ovol":"0"}
-{"Name":"Euroradio (Толькі BY)","URL":"stream.euroradio.fm","File":"/euroradio4","Port":"8000","ovol":"0"}
-{"Name":"Euroradio (Alternative)","URL":"stream.euroradio.fm","File":"/euroradio3","Port":"8000","ovol":"0"}
-{"Name":"Радыё Рацыя 99.2 (Разговорный жанр)","URL":"air.racyja.com","File":"/racja256","Port":"8000","ovol":"0"}
+{"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
+{"Name":"Euroradio FM - SoftRock","URL":"stream1.euroradio.fm","File":"/euroradio3","Port":"8000","ovol":"0"}
+{"Name":"Euroradio FM - Толькі BY","URL":"stream1.euroradio.fm","File":"/euroradio4","Port":"8000","ovol":"0"}
+{"Name":"Euroradio FM - Alternative","URL":"stream1.euroradio.fm","File":"/euroradio1","Port":"8000","ovol":"0"}
+{"Name":"Альфа Радио 107.9","URL":"listen.alpha.by","File":"/","Port":"8009","ovol":"0"}
+{"Name":"Мелодии века 96.2","URL":"93.84.112.253","File":"/MV128","Port":"8010","ovol":"0"}
+{"Name":"Радио UNISTAR 99.5 (Hot AC)","URL":"stream.hoster.by","File":"/unistar/unistar-256/icecast.audio","Port":"80","ovol":"0"}
+{"Name":"Беларусь 102.0","URL":"video.tvr.by","File":"/belfm","Port":"8000","ovol":"0"}
+{"Name":"Канал Культура 1125","URL":"video.tvr.by","File":"/culture","Port":"8000","ovol":"0"}
+{"Name":"Радио Мир 107.1","URL":"217.23.126.106","File":"/radio2.mir","Port":"8002","ovol":"0"}
+{"Name":"Радыё Рацыя 99.2","URL":"air.racyja.com","File":"/racja256","Port":"8000","ovol":"0"}
 {"Name":"Юмор FM 93.7","URL":"live.humorfm.by","File":"/veseloe","Port":"8000","ovol":"0"}
-{"Name":"Radio Stalica 105.1","URL":"video.tvr.by","File":"/stolica","Port":"8000","ovol":"0"}
-{"Name":"","URL":"","File":"/","Port":"80","ovol":"0"}
-{"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
-{"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
-{"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
-{"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
-{"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
-{"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
+{"Name":"Радыё Сталіца 105.1","URL":"video.tvr.by","File":"/stolica","Port":"8000","ovol":"0"}
 {"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
 {"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
 {"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
@@ -49,8 +49,8 @@
 {"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
 {"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
 {"Name":"VOA Learning English (США)","URL":"voa-91.akacast.akamaistream.net","File":"/7/913/314276/v1/ibb.akacast.akamaistream.net/voa-91.m3u","Port":"80","ovol":"0"}
-{"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
-{"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
+{"Name":"BBC World Service UK","URL":"bbcmedia.ic.llnwd.net","File":"/stream/bbcwssc_mp1_ws-eieuk","Port":"80","ovol":"0"}
+{"Name":"BBC Radio 4 Extra (Юмор)","URL":"bbcmedia.ic.llnwd.net","File":"/stream/bbcmedia_radio4extra_mf_p","Port":"80","ovol":"0"}
 {"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
 {"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
 {"Name":"","URL":"","File":"","Port":"0","ovol":"0"}
