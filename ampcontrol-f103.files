@@ -67,6 +67,7 @@ src/display/gc320x240/ssd2119.c
 src/display/gc400x240/ili9327.c
 src/display/gc400x240/s6d04d1.c
 src/display/gc400x240/st7793.c
+src/display/gc480x320/hx8357c.c
 src/display/gc480x320/ili9481.c
 src/display/gc480x320/ili9486.c
 src/display/gc480x320/r61581.c

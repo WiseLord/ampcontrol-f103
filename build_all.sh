@@ -59,6 +59,7 @@ do
   compile_display ${STM32_MCU} "ST7793"    "8BIT"
 
   # 480x320 color displays
+  compile_display ${STM32_MCU} "HX8357C"   "8BIT"
   compile_display ${STM32_MCU} "ILI9481"   "8BIT"
   compile_display ${STM32_MCU} "ILI9486"   "8BIT"
   compile_display ${STM32_MCU} "R61581"    "8BIT"
