@@ -1,7 +1,12 @@
-Commands to control the device via UART
-Lines starting with '##' are the output from the device,
-an answer on user actions or control commands
+# UART control description
 
+Commands to control the device via uart are shown below.
+
+Lines starting with '##' are the output from the device,
+an answer on user actions or control commands.
+
+The commands set is under development and will be extended
+in the future.
 
 ## 1. Power control
 
