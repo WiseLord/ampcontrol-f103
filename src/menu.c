@@ -143,7 +143,8 @@ static void menuStoreCurrentValue(void)
         canvasClear();
         break;
     case MENU_DISPLAY_PALETTE:
-        canvasGet()->pal = paletteGet((PalIdx)menu.value);
+        paletteSetIndex((PalIdx)menu.value);
+        canvasGet()->pal = paletteGet();
         break;
     default:
         break;

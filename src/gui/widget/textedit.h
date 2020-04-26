@@ -34,7 +34,7 @@ void textEditChange(TextEdit *te, int8_t value);
 void textEditAddChar(TextEdit *te);
 void textEditDelChar(TextEdit *te);
 
-void textEditDraw(TextEdit *te, LayoutTextEdit *lt, bool clear);
+void textEditDraw(bool clear, TextEdit *te, LayoutTextEdit *lt);
 
 #ifdef __cplusplus
 }

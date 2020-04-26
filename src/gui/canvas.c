@@ -95,7 +95,7 @@ void canvasInit(void)
 
     PalIdx palIdx = (PalIdx)settingsGet(PARAM_DISPLAY_PALETTE);
     paletteSetIndex(palIdx);
-    canvas.pal = paletteGet(palIdx);
+    canvas.pal = paletteGet();
 
     bool rotate = settingsGet(PARAM_DISPLAY_ROTATE);
     glcdRotate(rotate);
@@ -449,7 +449,7 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
             spCol.peakW = 0;
         }
         GlcdRect rect = {x, y, colW, height};
-        spectrumColumnDraw(&spCol, &rect, clear, mirror, grad);
+        spectrumColumnDraw(clear, &spCol, &rect, mirror, grad);
     }
 
     free(grad);
@@ -634,7 +634,7 @@ void canvasShowTune(bool clear)
     if (clear || value != prev.par.value) {
         // Bar
         StripedBar bar = {value, min, max};
-        stripedBarDraw(&bar, &lt->tune.bar, clear);
+        stripedBarDraw(clear, &bar, &lt->tune.bar);
 
        int16_t showValue = value;
 
@@ -794,7 +794,7 @@ void canvasShowTuner(bool clear)
 
         // Scale
         StripedBar bar = {(int16_t)freq, freqMin, freqMax};
-        stripedBarDraw(&bar, ltTunerBar, clear);
+        stripedBarDraw(clear, &bar, ltTunerBar);
 
         glcdSetFont(lt->tuner.stFont);
         glcdSetXY(lt->rect.w, lt->tune.valY);
@@ -1037,7 +1037,7 @@ void canvasShowTextEdit(bool clear)
 
     TextEdit *te = &canvas.te;
 
-    textEditDraw(te, &lt->textEdit, clear);
+    textEditDraw(clear, te, &lt->textEdit);
 }
 
 void canvasShowTimer(bool clear, int32_t value)

@@ -17,7 +17,7 @@ typedef struct {
     int16_t fallW;
 } SpectrumColumn;
 
-void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, bool mirror, color_t *grad);
+void spectrumColumnDraw(bool clear, SpectrumColumn *col, GlcdRect *rect, bool mirror, color_t *grad);
 
 #ifdef __cplusplus
 }

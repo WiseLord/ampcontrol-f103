@@ -4,7 +4,7 @@
 
 #include "gui/palette.h"
 
-void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, bool mirror, color_t *grad)
+void spectrumColumnDraw(bool clear, SpectrumColumn *col, GlcdRect *rect, bool mirror, color_t *grad)
 {
     int16_t x = rect->x;
     int16_t y = rect->y;
@@ -15,7 +15,7 @@ void spectrumColumnDraw(SpectrumColumn *col, GlcdRect *rect, bool clear, bool mi
     int16_t os = col->prevW;
     int16_t p = col->peakW;
 
-    const Palette *pal = paletteGet(paletteGetIndex());
+    const Palette *pal = paletteGet();
 
     if (s == 0) {
         s = 1;

@@ -23,7 +23,7 @@ typedef struct {
     int16_t max;
 } StripedBar;
 
-void stripedBarDraw(StripedBar *bar, LayoutStripedBar *lt, bool clear);
+void stripedBarDraw(bool clear, StripedBar *bar, LayoutStripedBar *lt);
 
 #ifdef __cplusplus
 }
