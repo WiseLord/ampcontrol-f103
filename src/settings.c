@@ -6,7 +6,6 @@
 #include "i2cexp.h"
 #include "input.h"
 #include "rc.h"
-#include "screen.h"
 #include "spectrum.h"
 #include "tr/labels.h"
 #include "tuner/tunerdefs.h"
@@ -214,7 +213,7 @@ int16_t settingsGet(Param param)
         ret = glcdGet()->rotate;
         break;
     case PARAM_DISPLAY_DEF:
-        ret = screenGet()->def;
+        ret = ampGet()->defScreen;
         break;
     case PARAM_DISPLAY_PALETTE:
         ret = paletteGetIndex();
@@ -380,7 +379,7 @@ void settingsSet(Param param, int16_t value)
         glcdGet()->rotate = (bool)value;
         break;
     case PARAM_DISPLAY_DEF:
-        screenGet()->def = (ScrMode)value;
+        ampGet()->defScreen = (ScreenType)value;
         break;
     case PARAM_DISPLAY_PALETTE:
         paletteSetIndex((PalIdx)value);

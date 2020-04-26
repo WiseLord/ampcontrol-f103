@@ -1,4 +1,5 @@
 src/.astylerc
+src/action.h
 src/amp.c
 src/amp.h
 src/audio/audio.c
@@ -16,7 +17,6 @@ src/audio/tda7719.c
 src/audio/tda7719.h
 src/bt.c
 src/bt.h
-src/cmd.h
 src/control.c
 src/control.h
 src/debug.c
@@ -206,8 +206,6 @@ src/ringbuf.c
 src/ringbuf.h
 src/rtc.c
 src/rtc.h
-src/screen.c
-src/screen.h
 src/settings.c
 src/settings.h
 src/spectrum.c

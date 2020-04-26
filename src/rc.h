@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "cmd.h"
+#include "action.h"
 
 #define GENERATE_RC_CMD(RC)    RC_CMD_ ## RC,
 

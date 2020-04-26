@@ -8,7 +8,6 @@
 #include "i2cexp.h"
 #include "input.h"
 #include "rc.h"
-#include "screen.h"
 #include "settings.h"
 #include "spectrum.h"
 #include "tr/labels.h"
@@ -136,7 +135,7 @@ static void menuStoreCurrentValue(void)
         break;
     case MENU_DISPLAY_BR_STBY:
     case MENU_DISPLAY_BR_WORK:
-        screenSetBrightness((int8_t)(menu.value));
+        ampSetBrightness((int8_t)(menu.value));
         break;
     case MENU_DISPLAY_ROTATE:
         glcdRotate((bool)menu.value);
@@ -309,7 +308,7 @@ static void menuValueChange(int8_t diff)
     }
 
     if (menu.active == MENU_DISPLAY_BR_STBY || menu.active == MENU_DISPLAY_BR_WORK) {
-        screenSetBrightness((int8_t)menu.value);
+        ampSetBrightness((int8_t)menu.value);
     }
 }
 
@@ -438,16 +437,16 @@ void menuSetActive(MenuIdx index)
             menu.value = menuGetValue(menu.active);
             switch (index) {
             case MENU_DISPLAY_BR_STBY:
-                screenSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_STBY));
+                ampSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_STBY));
                 break;
             case MENU_DISPLAY_BR_WORK:
-                screenSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_WORK));
+                ampSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_WORK));
                 break;
             }
         } else {
             menuStoreCurrentValue();
             if (index == MENU_DISPLAY_BR_STBY || index == MENU_DISPLAY_BR_WORK) {
-                screenSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_WORK));
+                ampSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_WORK));
             }
             menuUpdate(index);
         }
@@ -597,7 +596,7 @@ const char *menuGetValueStr(MenuIdx index)
         ret = labelsGet((Label)(LABEL_SPECTRUM_MODE + value));
         break;
     case MENU_DISPLAY_DEF:
-        switch ((ScrMode)value) {
+        switch ((ScreenType)value) {
         case SCREEN_TIME:
             ret = labelsGet((Label)(LABEL_MENU + MENU_RC_TIME));
             break;

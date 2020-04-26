@@ -6,7 +6,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "cmd.h"
+
+#include "action.h"
 
 #define EE_EMPTY        (uint16_t)0xFFFF
 #define EE_NOT_FOUND    (uint16_t)0x8000

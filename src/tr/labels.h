@@ -10,7 +10,6 @@ extern "C" {
 #include "gui/palette.h"
 #include "menu.h"
 #include "rtc.h"
-#include "screen.h"
 #include "spectrum.h"
 #include "tuner/tuner.h"
 
