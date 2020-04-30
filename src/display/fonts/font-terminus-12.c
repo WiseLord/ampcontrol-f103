@@ -380,22 +380,22 @@ static const tImage fontterminus12_0x30 = { image_data_fontterminus12_0x30, 5, 1
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminus12_0x31[7] = {
-    // ∙∙∙
-    // ∙∙∙
-    // ∙█∙
-    // ██∙
-    // ∙█∙
-    // ∙█∙
-    // ∙█∙
-    // ∙█∙
-    // ∙█∙
-    // ███
-    // ∙∙∙
-    // ∙∙∙
-    0xfa, 0x08, 0xfc, 0x00, 0x02, 0x03, 0x02
+static const uint8_t image_data_fontterminus12_0x31[11] = {
+    // ∙∙∙∙∙
+    // ∙∙∙∙∙
+    // ∙∙█∙∙
+    // ∙██∙∙
+    // ∙∙█∙∙
+    // ∙∙█∙∙
+    // ∙∙█∙∙
+    // ∙∙█∙∙
+    // ∙∙█∙∙
+    // ∙███∙
+    // ∙∙∙∙∙
+    // ∙∙∙∙∙
+    0xfd, 0x00, 0x08, 0xfc, 0x03, 0x00, 0xfc, 0x02, 0x03, 0x02, 0x00
 };
-static const tImage fontterminus12_0x31 = { image_data_fontterminus12_0x31, 3, 12, 7, yes};
+static const tImage fontterminus12_0x31 = { image_data_fontterminus12_0x31, 5, 12, 11, yes};
 #endif
 
 #if (0x0 == 0x0)
