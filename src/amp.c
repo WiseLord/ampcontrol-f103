@@ -285,30 +285,31 @@ void ampPinStby(bool value)
 static void ampMute(bool value)
 {
     AudioProc *aProc = audioGet();
+    AudioTuneItem *volItem = &aProc->par.tune[AUDIO_TUNE_VOLUME];
 
     if (value) {
         swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
     } else {
-        audioSetTune(AUDIO_TUNE_VOLUME, aProc->par.tune[AUDIO_TUNE_VOLUME].grid->min);
-        swTimSet(SW_TIM_SOFT_VOLUME, 25);
+        audioSetTune(AUDIO_TUNE_VOLUME, volItem->grid->min);
+        swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_ON);
     }
 
     ampPinMute(value);
     audioSetMute(value);
-
-    if (value) {
-        aProc->par.tune[AUDIO_TUNE_VOLUME].value = amp.volume;
-    }
 }
 
 static void ampReadSettings(void)
 {
     AudioProc *aProc = audioGet();
+    AudioTuneItem *volItem = &aProc->par.tune[AUDIO_TUNE_VOLUME];
 
     audioReadSettings();
-    tunerReadSettings();
+    audioInitParam();
 
-    amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
+    amp.volume = volItem->value;
+    volItem->value = volItem->grid->min;
+
+    tunerReadSettings();
 }
 
 static void ampExitStby(void)
@@ -337,6 +338,12 @@ static void ampEnterStby(void)
     settingsStore(PARAM_DISPLAY_DEF, amp.defScreen);
 
     ampMute(true);
+
+    // Restore volume value before saving
+    AudioProc *aProc = audioGet();
+    AudioTuneItem *volItem = &aProc->par.tune[AUDIO_TUNE_VOLUME];
+    volItem->value = amp.volume;
+
     audioSetPower(false);
 
     inputDisable();
@@ -351,8 +358,6 @@ static void ampEnterStby(void)
 
 void ampInitHw(void)
 {
-    AudioProc *aProc = audioGet();
-
     swTimSet(SW_TIM_AMP_INIT, SW_TIM_OFF);
 
     switch (amp.status) {
@@ -360,10 +365,8 @@ void ampInitHw(void)
         pinsHwResetI2c();
         i2cInit(I2C_AMP, 100000);
 
-        audioInitParam();
         audioReset();
 
-        aProc->par.tune[AUDIO_TUNE_VOLUME].value = aProc->par.tune[AUDIO_TUNE_VOLUME].grid->min;
         audioSetPower(true);
         ampMute(true);
 
