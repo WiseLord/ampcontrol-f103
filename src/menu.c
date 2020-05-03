@@ -541,7 +541,7 @@ const char *menuGetValueStr(MenuIdx index)
         if ((uint16_t)value == EE_NOT_FOUND) {
             ret = noVal;
         } else {
-            ret = utilMkStr("%04d", (uint16_t)value);
+            ret = utilMkStr("0x%04X", (uint16_t)value);
         }
         return ret;
     }
