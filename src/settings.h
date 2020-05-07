@@ -8,16 +8,9 @@ extern "C" {
 #include <stdint.h>
 
 #include "action.h"
-
-#define EE_EMPTY        (uint16_t)0xFFFF
-#define EE_NOT_FOUND    (uint16_t)0x8000
+#include "eemul.h"
 
 #define GENERATE_PARAM_RC(CMD)  PARAM_RC_ ## CMD,
-
-typedef struct {
-    uint16_t cell;  // EE cell
-    int16_t def;    // Default value
-} EE_Map;
 
 typedef uint8_t Param;
 enum {
@@ -124,7 +117,7 @@ void settingsSet(Param param, int16_t value);
 int16_t settingsRead(Param param);
 void settingsStore(Param param, int16_t value);
 
-const EE_Map *eeMapGet(void);
+const EE_Cell *eeMapGet(void);
 
 #ifdef __cplusplus
 }

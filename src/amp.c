@@ -531,7 +531,7 @@ static void actionPostSetInput(void)
 
 static void actionGetButtons(void)
 {
-    CmdBtn cmdBtn = getBtnCmd();
+    CmdBtn cmdBtn = inputGetBtnCmd();
 
     if (cmdBtn.btn) {
         if (cmdBtn.flags & BTN_FLAG_LONG_PRESS) {
@@ -544,7 +544,7 @@ static void actionGetButtons(void)
 
 static void actionGetEncoder(void)
 {
-    int8_t encVal = getEncoder();
+    int8_t encVal = inputGetEncoder();
 
     if (encVal) {
         actionSet(ACTION_ENCODER, encVal);

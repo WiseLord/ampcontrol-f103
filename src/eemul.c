@@ -2,8 +2,6 @@
 
 #include "hwlibs.h"
 
-#include "settings.h"
-
 #define EE_PAGE_0           (EE_PAGE_COUNT - EE_PAGE_STEP * 2)
 #define EE_PAGE_1           (EE_PAGE_COUNT - EE_PAGE_STEP * 1)
 
@@ -14,7 +12,6 @@
 
 #define PAGE_ADDR(page)     (FLASH_BASE + EE_PAGE_SIZE * (page))
 
-static uint16_t currPage;
 #define copyPage            ((currPage == EE_PAGE_0) ? EE_PAGE_1 : EE_PAGE_0)
 
 #define OFT(x)              (PAGE_ADDR(currPage) + REC_SIZE * x)
@@ -29,6 +26,10 @@ static uint16_t currPage;
 
 #define HEAD_ERASED         ((uint32_t)0xFFFF)
 #define HEAD_VALID          ((uint32_t)0x0000)
+
+static uint16_t currPage;
+static const EE_Cell *eeMap;
+static uint16_t eeMapSize;
 
 __attribute__((always_inline))
 static inline void eeUnlock(void)
@@ -88,9 +89,7 @@ static void eeCopyPage(uint16_t addr, uint16_t data)
     eeUnlock();
     SET_BIT(FLASH->CR, FLASH_CR_PG);
 
-    const EE_Map *eeMap = eeMapGet();
-
-    for (uint16_t i = 0; i < PARAM_END; i++) {
+    for (uint16_t i = 0; i < eeMapSize; i++) {
         uint16_t cell = eeMap[i].cell;
         uint16_t last = eeFindLastCell(cell, EE_CELLS_NUM - 1);
         if (last != EE_NOT_FOUND) {
@@ -137,8 +136,11 @@ static void eeSwapPage(void)
     eeFormatPage(currPage);
 }
 
-void eeInit()
+void eeInit(const EE_Cell *map, uint16_t mapSize)
 {
+    eeMap = map;
+    eeMapSize = mapSize;
+
     LL_mDelay(1);
 
     uint16_t head0 = *(uint16_t *)(FLASH_BASE + EE_PAGE_SIZE * EE_PAGE_0);

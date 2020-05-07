@@ -7,6 +7,9 @@ extern "C" {
 
 #include <stdint.h>
 
+#define EE_EMPTY        (uint16_t)0xFFFF
+#define EE_NOT_FOUND    (uint16_t)0x8000
+
 #ifdef _F103C8
 #define EE_PAGE_SIZE    1024
 #define EE_PAGE_STEP    2
@@ -31,7 +34,12 @@ extern "C" {
 #define EE_PAGE_COUNT   128
 #endif
 
-void eeInit(void);
+typedef struct {
+    uint16_t cell;
+    int16_t value;
+} EE_Cell;
+
+void eeInit(const EE_Cell *map, uint16_t mapSize);
 
 void *eeGetPageAddr(uint16_t page);
 void eeErasePages(uint16_t page, uint16_t count);

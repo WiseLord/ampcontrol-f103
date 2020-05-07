@@ -17,6 +17,7 @@ extern "C" {
 #define BTN_D3                  0x0008
 #define BTN_D4                  0x0010
 #define BTN_D5                  0x0020
+#define BTN_ALL                 (BTN_D0 | BTN_D1 | BTN_D2 | BTN_D3 | BTN_D4 | BTN_D5)
 
 #define ENC_A                   0x0040
 #define ENC_B                   0x0080
@@ -38,13 +39,18 @@ typedef struct {
     uint16_t flags;
 } CmdBtn;
 
+typedef struct {
+    uint16_t btn;
+    uint16_t flags;
+    int8_t encCnt;
+    int8_t encRes;
+} Input;
+
 void inputInit(void);
+Input *inputGet(void);
 
-void inputSetEncRes(int8_t value);
-int8_t inputGetEncRes(void);
-
-int8_t getEncoder(void);
-CmdBtn getBtnCmd(void);
+int8_t inputGetEncoder(void);
+CmdBtn inputGetBtnCmd(void);
 
 #ifdef __cplusplus
 }

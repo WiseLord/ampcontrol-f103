@@ -33,7 +33,7 @@ typedef struct {
     RtcMode etm;
 } RTC_type;
 
-typedef uint8_t AlarmDay;
+typedef int8_t AlarmDay;
 enum {
     ALARM_DAY_OFF = 0,
     ALARM_DAY_WEEKDAYS,
@@ -42,13 +42,23 @@ enum {
     ALARM_DAY_END
 };
 
+typedef uint8_t AlarmMode;
+enum {
+    ALARM_HOUR,
+    ALARM_MIN,
+    ALARM_DAYS,
+};
+
 typedef struct {
     int8_t hour;
     int8_t min;
     AlarmDay days;
 } Alarm;
 
+typedef void (*RtcCb)(void);
+
 void rtcInit(void);
+void rtcSetCb(RtcCb cb);
 void rtcSetCorrection(int16_t value);
 
 void rtcGetTime(RTC_type *rtc);
@@ -56,12 +66,16 @@ void rtcSetTime(RtcMode mode, int8_t value);
 void rtcChangeTime(RtcMode mode, int8_t diff);
 void rtcEditTime(RtcMode mode, int8_t value);
 
+void rtcSetRaw(uint32_t value);
+uint32_t rtcGetRaw(void);
+
 RtcMode rtcGetMode(void);
 void rtcSetMode(RtcMode mode);
 void rtcChangeMode(int8_t diff);
 
 Alarm *rtcGetAlarm(uint8_t index);
 bool rtcCheckAlarm(void);
+void rtcChangeAlarm(AlarmMode alarmMode,  int8_t diff);
 
 #ifdef __cplusplus
 }
