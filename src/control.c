@@ -1,8 +1,9 @@
 #include "control.h"
 
 #include <stdbool.h>
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "audio/audio.h"
 #include "bt.h"
@@ -238,28 +239,36 @@ void controlReportAmpStatus(void)
         break;
     }
 
-    sendReport(utilMkStr("##AMP.STATUS#: %s", status));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "##AMP.STATUS#: %s", status);
+    sendReport(buf);
 }
 
 void controlReportAudioIc(void)
 {
     AudioParam *par = &audioGet()->par;
 
-    sendReport(utilMkStr("##AMP.AUDIO.IC#: %s", labelsGetDefault(LABEL_AUDIO_IC + par->ic)));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "##AMP.AUDIO.IC#: %s", labelsGetDefault(LABEL_AUDIO_IC + par->ic));
+    sendReport(buf);
 }
 
 void controlReportAudioInput(void)
 {
     AudioParam *par = &audioGet()->par;
 
-    sendReport(utilMkStr("##AMP.AUDIO.INPUT#: %u", par->input));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "##AMP.AUDIO.INPUT#: %u", par->input);
+    sendReport(buf);
 }
 
 void controlReportAudioTune(AudioTune tune)
 {
     AudioParam *par = &audioGet()->par;
 
-    sendReport(utilMkStr("##AMP.AUDIO.%s#: %d", CTRL_AUDIO_TUNE[tune], par->tune[tune].value));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "##AMP.AUDIO.%s#: %d", CTRL_AUDIO_TUNE[tune], par->tune[tune].value);
+    sendReport(buf);
 }
 
 void controlReportAudioTunes(void)
@@ -273,7 +282,9 @@ void controlReportTunerIc(void)
 {
     TunerParam *par = &tunerGet()->par;
 
-    sendReport(utilMkStr("##AMP.TUNER.IC#: %s", labelsGetDefault(LABEL_TUNER_IC + par->ic)));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "##AMP.TUNER.IC#: %s", labelsGetDefault(LABEL_TUNER_IC + par->ic));
+    sendReport(buf);
 }
 
 void controlReportTunerFreq(bool force)
@@ -283,7 +294,9 @@ void controlReportTunerFreq(bool force)
     static TunerStatus stOld;
 
     if (force || stOld.freq != st->freq) {
-        sendReport(utilMkStr("##AMP.TUNER.FREQ#: %d", st->freq));
+        char buf[32];
+        snprintf(buf, sizeof(buf), "##AMP.TUNER.FREQ#: %d", st->freq);
+        sendReport(buf);
     }
 
     memcpy(&stOld, st, sizeof (stOld));

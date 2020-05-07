@@ -5,8 +5,9 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #include "action.h"
 
@@ -114,8 +115,8 @@ bool menuIsTop(void);
 
 MenuIdx menuGetFirstChild(void);
 
-const char *menuGetName(MenuIdx index);
-const char *menuGetValueStr(MenuIdx index);
+void menuGetName(MenuIdx index, char *str, size_t len);
+void menuGetValueStr(MenuIdx index, char *str, size_t len);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,6 @@
 #include "menu.h"
 
+#include <stdio.h>
 #include <string.h>
 
 #include "amp.h"
@@ -490,35 +491,31 @@ MenuIdx menuGetFirstChild(void)
     return menu.active;
 }
 
-__attribute__ ((noinline))
-const char *menuGetName(MenuIdx index)
+void menuGetName(MenuIdx index, char *str, size_t len)
 {
-    char *name;
-
     if (index >= MENU_AUDIO_IN_0 && index <= MENU_AUDIO_IN_LAST) {
-        name = utilMkStr("%s %d",
-                         labelsGet((Label)(LABEL_MENU + MENU_AUDIO_IN)),
-                         index - MENU_AUDIO_IN);
+        snprintf(str, len, "%s %d",
+                 labelsGet((Label)(LABEL_MENU + MENU_AUDIO_IN)),
+                 index - MENU_AUDIO_IN);
     } else if (index >= MENU_RC_DIG_0 && index <= MENU_RC_DIG_9) {
-        name = utilMkStr("%s %d",
-                         labelsGet((Label)(LABEL_MENU + MENU_RC_DIG)),
-                         index - MENU_RC_DIG);
+        snprintf(str, len, "%s %d",
+                 labelsGet((Label)(LABEL_MENU + MENU_RC_DIG)),
+                 index - MENU_RC_DIG);
     } else {
-        name = utilMkStr("%s",
-                         labelsGet((Label)(LABEL_MENU + (index - MENU_NULL))));
+        snprintf(str, len, "%s",
+                 labelsGet((Label)(LABEL_MENU + (index - MENU_NULL))));
     }
-
-    return name;
 }
 
-const char *menuGetValueStr(MenuIdx index)
+void menuGetValueStr(MenuIdx index, char *str, size_t len)
 {
     const char *ret = ">";
     static const char *noVal = "--";
 
     // Parent menu type
     if (menuItems[index].type == MENU_TYPE_PARENT) {
-        return (index == MENU_NULL) ? "" : ret;
+        snprintf(str, len, "%s", index == MENU_NULL ? "" : ret);
+        return;
     }
 
     int16_t value = menuGetValue(index);
@@ -529,21 +526,21 @@ const char *menuGetValueStr(MenuIdx index)
     // Bool menu type
     if (menuItems[index].type == MENU_TYPE_BOOL) {
         ret = labelsGet((Label)(LABEL_BOOL_OFF + value));
-        return ret;
+        return;
     }
 
     if (menuItems[index].type == MENU_TYPE_NUMBER) {
-        ret = utilMkStr("%5d", value);
-        return ret;
+        snprintf(str, len,"%5d", value);
+        return;
     }
 
     if (menuItems[index].type == MENU_TYPE_RC) {
         if ((uint16_t)value == EE_NOT_FOUND) {
-            ret = noVal;
+            snprintf(str, len, "%s", noVal);
         } else {
-            ret = utilMkStr("0x%04X", (uint16_t)value);
+            snprintf(str, len, "0x%04X", (uint16_t)value);
         }
-        return ret;
+        return;
     }
 
     // Enum menu types
@@ -560,7 +557,8 @@ const char *menuGetValueStr(MenuIdx index)
         if (value == I2C_ADDR_DISABLED) {
             ret = labelsGet(LABEL_BOOL_OFF);
         } else {
-            ret = utilMkStr("0x%02X", i2cexpGetAddr((uint8_t)value));
+            snprintf(str, len, "0x%02X", i2cexpGetAddr((uint8_t)value));
+            return;
         }
         break;
 
@@ -616,5 +614,5 @@ const char *menuGetValueStr(MenuIdx index)
         break;
     }
 
-    return ret;
+    snprintf(str, len, "%s", ret);
 }

@@ -1,5 +1,6 @@
 #include "canvas.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -154,14 +155,15 @@ static void drawTm(RTC_type *rtc, RtcMode tm, bool clear)
             glcdWriteString("20");
             glcdWriteUChar(LETTER_SPACE_CHAR);
         }
+        char buf[8] = "--";
         if (time >= 0) {
-            glcdWriteString(utilMkStr("%02d", time));
-        } else {
-            glcdWriteString("--");
+            snprintf(buf, sizeof(buf), "%02d", time);
         }
+        glcdWriteString(buf);
         glcdWriteUChar(LETTER_SPACE_CHAR);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetFontBgColor(canvas.pal->bg);
+
     }
 }
 
@@ -195,7 +197,9 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
         glcdWriteString("< ");
     }
 
-    glcdWriteString(menuGetName(menuIdx));
+    char buf[64];
+    menuGetName(menuIdx, buf, sizeof(buf));
+    glcdWriteString(buf);
 
     // Draw menu value
     int16_t x = canvas.glcd->x;
@@ -210,7 +214,8 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
         glcdSetFontBgColor(color);
     }
     glcdSetStringFramed(true);
-    uint16_t strLen = glcdWriteString(menuGetValueStr(menuIdx));
+    menuGetValueStr(menuIdx, buf, sizeof(buf));
+    uint16_t strLen = glcdWriteString(buf);
     glcdSetStringFramed(false);
 
     glcdSetFontColor(color);
@@ -564,12 +569,15 @@ void canvasShowMenu(bool clear)
     const int16_t dividerPos = (lt->rect.h - (fIh + 4) * items + fHh) / 2;
 
     // Show header
-    const char *parentName = menuGetName(menu->parent);
     glcdSetFont(lt->menu.headFont);
     glcdSetFontColor(canvas.pal->fg);
 
     glcdSetXY(2, 0);
-    glcdWriteString(parentName);
+
+    char buf[64];
+    menuGetName(menu->parent, buf, sizeof(buf));
+    glcdWriteString(buf);
+
     // Fill free space after header
     glcdDrawRect(canvas.glcd->x, canvas.glcd->y, lt->rect.w - canvas.glcd->x, fHh, canvas.pal->bg);
 
@@ -650,7 +658,9 @@ void canvasShowTune(bool clear)
         glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(GLCD_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
-        glcdWriteString(utilMkStr("%3d", showValue));
+        char buf[8];
+        snprintf(buf, sizeof(buf), "%3d", showValue);
+        glcdWriteString(buf);
         prev.par.value = value;
     }
 
@@ -790,7 +800,9 @@ void canvasShowTuner(bool clear)
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
 
-        glcdWriteString(utilMkStr("FM %3d.%02d", freq / 100, freq % 100));
+        char buf[10];
+        snprintf(buf, sizeof(buf), "FM %3d.%02d", freq / 100, freq % 100);
+        glcdWriteString(buf);
 
         // Scale
         StripedBar bar = {(int16_t)freq, freqMin, freqMax};
@@ -803,10 +815,11 @@ void canvasShowTuner(bool clear)
         // Station number
         int8_t stNum = stationGetNum(freq);
         if (stNum >= 0) {
-            glcdWriteString(utilMkStr("%2d", stNum));
+            snprintf(buf, sizeof(buf), "%02d", stNum);
         } else {
-            glcdWriteString("--");
+            snprintf(buf, sizeof(buf), "--");
         }
+        glcdWriteString(buf);
 
         // Station name
         glcdSetFont(lt->tuner.nameFont);

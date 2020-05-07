@@ -1,5 +1,6 @@
 #include "karadio.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -25,7 +26,9 @@ static void karadioUpdateMeta(const char *str);
 
 static void karadioSendCmdCli(const char *cmd)
 {
-    usartSendString(USART_KARADIO, utilMkStr("\ncli.%s\n", cmd));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "\ncli.%s\n", cmd);
+    usartSendString(USART_KARADIO, buf);
 }
 
 void karadioInit(void)
@@ -48,7 +51,9 @@ void karadioSetEnabled(bool value)
 
 void karadioPlayStation(int16_t num)
 {
-    usartSendString(USART_KARADIO, utilMkStr("\ncli.play(\"%d\")\n", num));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "\ncli.play(\"%d\")\n", num);
+    usartSendString(USART_KARADIO, buf);
 }
 
 void kaRadioSendDigit(uint8_t dig)
@@ -61,14 +66,13 @@ void kaRadioSendDigit(uint8_t dig)
 
     kaRadio.station %= 1000;
 
-    karadioUpdateNumber(utilMkStr("%d", kaRadio.station), 4);
-
-    dbg(utilMkStr("digit %d, station %d", dig, kaRadio.station));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "%d", kaRadio.station);
+    karadioUpdateNumber(buf, 4);
 }
 
 void kaRadioFinishDigitInput(void)
 {
-    dbg("finish digit");
     karadioPlayStation(kaRadio.station);
     kaRadio.station = -1;
 }
@@ -144,7 +148,9 @@ static void karadioParseApTrying(char *line)
     if (cm != apName) {
         *cm = '\0';
     }
-    karadioUpdateName(utilMkStr("AP: %s", line));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "AP: %s", line);
+    karadioUpdateName(buf);
     karadioUpdateMeta(cm + 1);
 }
 
@@ -156,7 +162,9 @@ static void karadioParseIP(char *line)
     if (cm != ip) {
         *cm = '\0';
     }
-    karadioUpdateMeta(utilMkStr("IP: %s", line));
+    char buf[32];
+    snprintf(buf, sizeof(buf), "IP: %s", line);
+    karadioUpdateMeta(buf);
 }
 
 static void karadinOnBootComplete()

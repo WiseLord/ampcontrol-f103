@@ -6,23 +6,27 @@
 #include <stdio.h>
 #include <string.h>
 
-static char strbuf[256];    // String buffer
-
-void utilmDelay(uint32_t delay)
+void utilInitSysCounter(void)
 {
-    LL_mDelay(delay);
+    if (!(CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA_Msk)) {
+        CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    }
+    DWT->CYCCNT = 0;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 }
 
-char *utilMkStr(const char *fmt, ...)
+void utilmDelay(uint32_t ms)
 {
-    char *buffer = strbuf;
+    LL_mDelay(ms);
+}
 
-    va_list args;
-    va_start(args, fmt);
-    vsprintf(buffer, fmt, args);
-    va_end (args);
+void utiluDelay(uint32_t us)
+{
+    uint32_t tickNow = DWT->CYCCNT;
+    uint32_t ticksInMhz = SystemCoreClock / 1000000;
+    uint32_t ticksWait = us * ticksInMhz;
 
-    return buffer;
+    while (DWT->CYCCNT - tickNow < ticksWait);
 }
 
 // TRUE if end of line

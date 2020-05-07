@@ -16,9 +16,10 @@ typedef struct {
     int16_t size;
 } LineParse;
 
-void utilmDelay(uint32_t delay);
+void utilInitSysCounter(void);
 
-char *utilMkStr(const char *fmt, ...);
+void utilmDelay(uint32_t ms);
+void utiluDelay(uint32_t us);
 
 bool utilReadChar(LineParse *lp, char ch);
 
