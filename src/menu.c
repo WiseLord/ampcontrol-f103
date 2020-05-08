@@ -526,6 +526,7 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
     // Bool menu type
     if (menuItems[index].type == MENU_TYPE_BOOL) {
         ret = labelsGet((Label)(LABEL_BOOL_OFF + value));
+        snprintf(str, len, "%s", ret);
         return;
     }
 
@@ -537,10 +538,11 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
     if (menuItems[index].type == MENU_TYPE_RC) {
         if ((uint16_t)value == EE_NOT_FOUND) {
             snprintf(str, len, "%s", noVal);
+            return;
         } else {
             snprintf(str, len, "0x%04X", (uint16_t)value);
+            return;
         }
-        return;
     }
 
     // Enum menu types
