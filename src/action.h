@@ -119,32 +119,6 @@ enum {
     ACTION_TYPE_END
 };
 
-typedef uint8_t SyncType;
-enum {
-    SYNC_NONE = 0,
-
-    SYNC_ACTION,
-    SYNC_DISPLAY,
-    SYNC_REPORT,
-
-    SYNC_END
-};
-
-typedef struct {
-    int16_t value;
-    ActionType type;
-} SyncAction;
-
-typedef union {
-    uint8_t data[8];
-    struct {
-        SyncType type;
-        union {
-            SyncAction action;
-        };
-    };
-} AmpSync;
-
 #ifdef __cplusplus
 }
 #endif

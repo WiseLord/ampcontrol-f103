@@ -170,9 +170,11 @@ static void karadioParseIP(char *line)
 static void karadinOnBootComplete()
 {
     // Follows "I2S Speed:"
+    Amp *amp = ampGet();
     AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
-    if ((ampGet()->status == AMP_STATUS_ACTIVE) && (inType == IN_KARADIO)) {
+    InputType inType = amp->inType[aProc->par.input];
+
+    if ((amp->status == AMP_STATUS_ACTIVE) && (inType == IN_KARADIO)) {
         karadioSendCmdCli("start");
     } else {
         karadioSendCmdCli("stop");

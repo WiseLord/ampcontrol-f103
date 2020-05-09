@@ -176,7 +176,7 @@ static void inputDisable(void)
     AudioProc *aProc = audioGet();
     int8_t input = aProc->par.input;
 
-    switch (aProc->par.inType[input]) {
+    switch (amp.inType[input]) {
     case IN_TUNER:
         tunerSetPower(false);
         break;
@@ -196,7 +196,7 @@ static void inputEnable(void)
     AudioProc *aProc = audioGet();
     int8_t input = aProc->par.input;
 
-    switch (aProc->par.inType[input]) {
+    switch (amp.inType[input]) {
     case IN_TUNER:
         tunerSetPower(true);
         tunerSetVolume(tuner->par.volume);
@@ -555,7 +555,7 @@ static bool isRemoteCmdRepeatable(RcCmd cmd)
 {
     ScreenType scrMode = ampGet()->screen;
     AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
+    InputType inType = amp.inType[aProc->par.input];
 
     switch (cmd) {
     case RC_CMD_VOL_UP:
@@ -672,7 +672,7 @@ static void tunerSendMediaKey(HidMediaKey key)
 static void sendMediaKey(HidMediaKey key)
 {
     AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
+    InputType inType = amp.inType[aProc->par.input];
 
     switch (inType) {
     case IN_TUNER:
@@ -750,7 +750,7 @@ static void actionRemapBtnLong(void)
 {
     ScreenType scrMode = ampGet()->screen;
     AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
+    InputType inType = amp.inType[aProc->par.input];
 
     switch (action.value) {
     case BTN_D0:
@@ -1252,7 +1252,7 @@ static void ampActionHandle(void)
     ScreenType scrMode = amp.screen;
 
     AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
+    InputType inType = amp.inType[aProc->par.input];
     Tuner *tuner = tunerGet();
     int8_t stNum = stationGetNum(tuner->status.freq);
 
@@ -1567,7 +1567,7 @@ void ampScreenShow(void)
 {
     GlcdRect rect = canvasGet()->layout->rect;
     AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
+    InputType inType = amp.inType[aProc->par.input];
 
     glcdSetRect(&rect);
 

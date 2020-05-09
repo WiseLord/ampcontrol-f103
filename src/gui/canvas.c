@@ -593,6 +593,7 @@ void canvasShowMenu(bool clear)
 void canvasShowTune(bool clear)
 {
     AudioProc *aProc = audioGet();
+    Amp *amp = ampGet();
 
     if (NULL == aProc->api) {
         canvasShowSpectrum(clear);
@@ -602,7 +603,7 @@ void canvasShowTune(bool clear)
     const Layout *lt = canvas.layout;
     const tFont *iconSet = lt->iconSet;
 
-    InputType inType = aProc->par.inType[aProc->par.input];
+    InputType inType = amp->inType[aProc->par.input];
 
     const char *label = labelsGet(LABEL_IN_TUNER + inType);
     Icon icon = (ICON_TUNER + inType);
@@ -646,7 +647,7 @@ void canvasShowTune(bool clear)
 
        int16_t showValue = value;
 
-       if (aProc->par.showDb) {
+       if (amp->showDb) {
            showValue = value * mStep / STEP_MULT;
        } else {
            if (min + max != 0) {
@@ -953,7 +954,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
     const Layout *lt = canvas.layout;
 
     AudioProc *aProc = audioGet();
-    InputType inType = aProc->par.inType[aProc->par.input];
+    InputType inType = ampGet()->inType[aProc->par.input];
 
     if (!aProc->par.mute || ampGet()->status == AMP_STATUS_HW_READY) {
         switch (inType) {

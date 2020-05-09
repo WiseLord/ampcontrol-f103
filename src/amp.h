@@ -38,6 +38,26 @@ enum {
     AMP_STATUS_END
 };
 
+typedef uint8_t InputType;
+enum {
+    IN_TUNER = 0,
+    IN_PC,
+    IN_TV,
+    IN_BLUETOOTH,
+    IN_DVD,
+    IN_USB,
+    IN_MICROPHONE,
+    IN_GUITAR,
+    IN_TURNTABLES,
+    IN_SDCARD,
+    IN_PROJECTOR,
+    IN_SATELLITE,
+    IN_MIXER,
+    IN_KARADIO,
+
+    IN_END
+};
+
 typedef struct {
     AmpStatus status;
     ScreenType screen;
@@ -48,8 +68,10 @@ typedef struct {
     Icon iconHint;
     int8_t brightness;
 
+    InputType inType[MAX_INPUTS];
     uint8_t inputStatus;
     int8_t volume;
+    bool showDb;
 } Amp;
 
 typedef uint16_t MuteStby;

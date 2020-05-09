@@ -56,32 +56,12 @@ enum {
     AUDIO_FLAG_BYPASS,
 };
 
-typedef uint8_t InputType;
-enum {
-    IN_TUNER = 0,
-    IN_PC,
-    IN_TV,
-    IN_BLUETOOTH,
-    IN_DVD,
-    IN_USB,
-    IN_MICROPHONE,
-    IN_GUITAR,
-    IN_TURNTABLES,
-    IN_SDCARD,
-    IN_PROJECTOR,
-    IN_SATELLITE,
-    IN_MIXER,
-    IN_KARADIO,
-
-    IN_END
-};
-
 #define STEP_MULT   8
 
 typedef struct {
     int8_t min;     // Minimum in steps
     int8_t max;     // Maximum in steps
-    int8_t mStep;   // Step multiplied by STEP_MULT (to handle 1.25 and so on)
+    int8_t mStep;   // Step multiplied by STEP_MULT (to handle 1.25dB real step)
 } AudioGrid;
 
 typedef struct {
@@ -93,7 +73,6 @@ typedef struct {
     AudioIC ic;
     AudioTuneItem tune[AUDIO_TUNE_END];
 
-    InputType inType[MAX_INPUTS];
     int8_t gain[MAX_INPUTS];
     int8_t input;
     int8_t inCnt;
@@ -103,8 +82,6 @@ typedef struct {
     bool surround;
     bool effect3d;
     bool bypass;
-
-    bool showDb;
 } AudioParam;
 
 typedef struct {

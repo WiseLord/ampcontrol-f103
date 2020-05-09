@@ -113,6 +113,7 @@ int16_t settingsGet(Param param)
     Tuner *tuner = tunerGet();
     Spectrum *sp = spGet();
     Alarm *alarm = rtcGetAlarm(0);
+    Amp *amp = ampGet();
 
     switch (param) {
 
@@ -135,7 +136,7 @@ int16_t settingsGet(Param param)
         ret = aProc->par.bypass;
         break;
     case PARAM_AUDIO_SHOWDB:
-        ret = aProc->par.showDb;
+        ret = amp->showDb;
         break;
 
     case PARAM_AUDIO_IN0:
@@ -146,7 +147,7 @@ int16_t settingsGet(Param param)
     case PARAM_AUDIO_IN5:
     case PARAM_AUDIO_IN6:
     case PARAM_AUDIO_IN7:
-        ret = aProc->par.inType[param - PARAM_AUDIO_IN0];
+        ret = amp->inType[param - PARAM_AUDIO_IN0];
         break;
 
     case PARAM_AUDIO_GAIN0:
@@ -279,6 +280,7 @@ void settingsSet(Param param, int16_t value)
     Tuner *tuner = tunerGet();
     Spectrum *sp = spGet();
     Alarm *alarm = rtcGetAlarm(0);
+    Amp *amp = ampGet();
 
     switch (param) {
 
@@ -301,7 +303,7 @@ void settingsSet(Param param, int16_t value)
         aProc->par.bypass = (bool)value;
         break;
     case PARAM_AUDIO_SHOWDB:
-        aProc->par.showDb = (bool)value;
+        amp->showDb = (bool)value;
         break;
 
     case PARAM_AUDIO_IN0:
@@ -312,7 +314,7 @@ void settingsSet(Param param, int16_t value)
     case PARAM_AUDIO_IN5:
     case PARAM_AUDIO_IN6:
     case PARAM_AUDIO_IN7:
-        aProc->par.inType[param - PARAM_AUDIO_IN0] = (InputType)value;
+        amp->inType[param - PARAM_AUDIO_IN0] = (InputType)value;
         break;
 
     case PARAM_AUDIO_GAIN0:
