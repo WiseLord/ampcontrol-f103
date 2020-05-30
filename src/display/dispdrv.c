@@ -244,8 +244,41 @@ void dispdrvReset(void)
     utilmDelay(50);
 }
 
+static void dispdrvInitPins(void)
+{
+    LL_GPIO_InitTypeDef initDef = {0};
+
+    initDef.Mode = LL_GPIO_MODE_OUTPUT;
+    initDef.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    initDef.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+#ifdef STM32F3
+    initDef.Pull = LL_GPIO_PULL_NO;
+#endif
+
+    initDef.Pin = DISP_CS_Pin;
+    LL_GPIO_Init(DISP_CS_Port, &initDef);
+    initDef.Pin = DISP_RS_Pin;
+    LL_GPIO_Init(DISP_RS_Port, &initDef);
+
+#ifdef _DISP_RST
+    initDef.Pin = DISP_RST_Pin;
+    LL_GPIO_Init(DISP_RST_Port, &initDef);
+#endif
+
+#ifndef _DISP_SPI
+    initDef.Pin = DISP_WR_Pin;
+    LL_GPIO_Init(DISP_WR_Port, &initDef);
+#endif
+#ifdef _DISP_READ_ENABLED
+    initDef.Pin = DISP_RD_Pin;
+    LL_GPIO_Init(DISP_RD_Port, &initDef);
+#endif
+}
+
 void dispdrvInit(void)
 {
+    dispdrvInitPins();
+
     dispdrvReset();
 
     dispdrv.init();
