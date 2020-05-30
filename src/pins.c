@@ -5,30 +5,6 @@
 #include "i2c.h"
 #include "settings.h"
 
-static void pinsInitButtons(void)
-{
-//    LL_GPIO_InitTypeDef GPIO_InitStructf;
-
-//    GPIO_InitStructf.Mode = LL_GPIO_MODE_INPUT;
-//    GPIO_InitStructf.Pull = LL_GPIO_PULL_UP;
-
-//    GPIO_InitStructf.Pin = DISP_DATA_Pin;
-//    LL_GPIO_Init(DISP_DATA_Port, &GPIO_InitStructf);
-}
-
-static void pinsInitRc(void)
-{
-#ifdef STM32F1
-    LL_GPIO_AF_SetEXTISource(RC_AR_ExtiPort, RC_AR_ExtiLine);
-    LL_GPIO_SetPinMode(RC_Port, RC_Pin, LL_GPIO_MODE_FLOATING);
-#endif
-
-    LL_EXTI_DisableEvent_0_31(RC_ExtiLine);
-    LL_EXTI_EnableIT_0_31(RC_ExtiLine);
-    LL_EXTI_EnableRisingTrig_0_31(RC_ExtiLine);
-    LL_EXTI_EnableFallingTrig_0_31(RC_ExtiLine);
-}
-
 static void pinsInitDisplay(void)
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -111,8 +87,6 @@ void pinsHwResetI2c(void)
 
 void pinsInit(void)
 {
-    pinsInitButtons();
-    pinsInitRc();
     pinsInitDisplay();
 
     pinsInitHwReset();

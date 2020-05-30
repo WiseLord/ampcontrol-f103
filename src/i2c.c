@@ -399,6 +399,9 @@ void I2C_EV_IRQHandler(I2C_TypeDef *I2Cx)
             ctx->rxIdx = 0;
             SR1 = 0;
             SR2 = 0;
+            if (ctx->txCb) {
+                ctx->txCb(ctx->txIdx);
+            }
         }
         // When Transmit data register empty flag (EV3)
         if (READ_BIT(SR1, I2C_SR1_TXE) == I2C_SR1_TXE) {
@@ -532,18 +535,13 @@ void I2C2_EV_IRQHandler(void)
 
 void I2C_ER_IRQHandler(I2C_TypeDef *I2Cx)
 {
-    I2cContext *ctx = i2cGetCtx(I2Cx);
-
     uint32_t SR1 = I2Cx->SR1;
     uint32_t SR2 = I2Cx->SR2;
 
+    (void)SR2;
+
     // When an acknowledge failure is received after a byte transmission
     if (READ_BIT(SR1, I2C_SR1_AF) == I2C_SR1_AF) {
-        if (READ_BIT(SR2, I2C_SR2_TRA) == I2C_SR2_TRA) {
-            if (ctx->txCb) {
-                ctx->txCb(ctx->txIdx);
-            }
-        }
         CLEAR_BIT(I2Cx->SR1, I2C_SR1_AF);
         SR1 = 0;
     }

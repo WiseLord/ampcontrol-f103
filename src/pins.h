@@ -13,13 +13,6 @@ extern "C" {
 #define DISP_BCKL_Port          GPIOC
 #define DISP_BCKL_Pin           LL_GPIO_PIN_13
 
-// Remote control pins
-#define RC_Port                 GPIOA
-#define RC_Pin                  LL_GPIO_PIN_8
-#define RC_ExtiLine             LL_EXTI_LINE_8
-#define RC_AR_ExtiPort          LL_GPIO_AF_EXTI_PORTA
-#define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
-
 // Mute and Standby lines
 #define MUTE_Port               GPIOB
 #define MUTE_Pin                LL_GPIO_PIN_11

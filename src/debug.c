@@ -23,3 +23,19 @@ void dbg(const char *str)
     dbgPutString(str);
     dbgPutString("\r\n");
 }
+
+#ifdef _PRINTF_USART1
+int _write(int fd, char* str, int len)
+{
+    (void)fd;
+    int i = 0;
+    while (str[i] && (i < len)) {
+        usartSendChar(USART1, (int)str[i]);
+        if (str[i] == '\n') {
+            usartSendChar(USART1, (int)'\r');
+        }
+        i++;
+    }
+    return len;
+}
+#endif

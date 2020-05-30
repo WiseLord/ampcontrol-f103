@@ -10,7 +10,14 @@ extern "C" {
 
 #include "action.h"
 
-#define GENERATE_RC_CMD(RC)    RC_CMD_ ## RC,
+#define GENERATE_RC_CMD(RC)     RC_CMD_ ## RC,
+
+// Remote control pins
+#define RC_Port                 GPIOA
+#define RC_Pin                  LL_GPIO_PIN_8
+#define RC_ExtiLine             LL_EXTI_LINE_8
+#define RC_AR_ExtiPort          LL_GPIO_AF_EXTI_PORTA
+#define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
 
 typedef uint8_t RcType;
 enum {

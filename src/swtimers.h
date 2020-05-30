@@ -12,6 +12,7 @@ extern "C" {
 
 typedef uint8_t SwTimer;
 enum {
+    // Decreasing timers
     SW_TIM_DISPLAY = 0,
     SW_TIM_SP_CONVERT,
     SW_TIM_INPUT_POLL,
@@ -27,6 +28,7 @@ enum {
 
     SW_TIM_DEC_END,
 
+    // Increasing timers
     SW_TIM_SYSTEM,
 
     SW_TIM_END,
