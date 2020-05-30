@@ -12,7 +12,8 @@
 
 static uint8_t silenceTimer = 0;
 static int16_t rtcCorr = 0;
-static uint8_t muteStby = 0;
+static bool stbyLow = false;
+static bool muteLow = false;
 static I2cAddrIdx i2cExtInIdx = I2C_ADDR_DISABLED;
 static I2cAddrIdx i2cBtIdx = I2C_ADDR_DISABLED;
 static int8_t brStby = 3;
@@ -85,10 +86,11 @@ static const EE_Cell eeMap[] = {
     [PARAM_ALARM_DAYS]      =   {0x62,  0},
 
     [PARAM_SYSTEM_LANG]     =   {0x70,  LANG_DEFAULT},
-    [PARAM_SYSTEM_MUTESTBY] =   {0x71,  MUTESTBY_POS},
     [PARAM_SYSTEM_SIL_TIM]  =   {0x72,  5},
     [PARAM_SYSTEM_RTC_CORR] =   {0x73,  0},
     [PARAM_SYSTEM_ENC_RES]  =   {0x74,  4},
+    [PARAM_SYSTEM_STBY_LOW] =   {0x75,  false},
+    [PARAM_SYSTEM_MUTE_LOW] =   {0x76,  false},
 
     [PARAM_I2C_EXT_IN_STAT] =   {0x78,  I2C_ADDR_DISABLED},
     [PARAM_I2C_EXT_BT]      =   {0x79,  I2C_ADDR_DISABLED},
@@ -243,9 +245,6 @@ int16_t settingsGet(Param param)
     case PARAM_SYSTEM_LANG:
         ret = labelsGetLang();
         break;
-    case PARAM_SYSTEM_MUTESTBY:
-        ret = muteStby;
-        break;
     case PARAM_SYSTEM_ENC_RES:
         ret = inputGet()->encRes;
         break;
@@ -254,6 +253,12 @@ int16_t settingsGet(Param param)
         break;
     case PARAM_SYSTEM_RTC_CORR:
         ret = rtcCorr;
+        break;
+    case PARAM_SYSTEM_STBY_LOW:
+        ret = stbyLow;
+        break;
+    case PARAM_SYSTEM_MUTE_LOW:
+        ret = muteLow;
         break;
 
     case PARAM_I2C_EXT_IN_STAT:
@@ -410,9 +415,6 @@ void settingsSet(Param param, int16_t value)
     case PARAM_SYSTEM_LANG:
         labelsSetLang((Lang)value);
         break;
-    case PARAM_SYSTEM_MUTESTBY:
-        muteStby = (uint8_t)value;
-        break;
     case PARAM_SYSTEM_ENC_RES:
         inputGet()->encRes = (int8_t)value;
         break;
@@ -421,6 +423,12 @@ void settingsSet(Param param, int16_t value)
         break;
     case PARAM_SYSTEM_RTC_CORR:
         rtcCorr = value;
+        break;
+    case PARAM_SYSTEM_STBY_LOW:
+        stbyLow = (bool)value;
+        break;
+    case PARAM_SYSTEM_MUTE_LOW:
+        muteLow = (bool)value;
         break;
 
     case PARAM_I2C_EXT_IN_STAT:

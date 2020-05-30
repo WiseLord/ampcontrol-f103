@@ -237,38 +237,38 @@ static void inputSetPower(bool value)
 
 void ampPinMute(bool value)
 {
-    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
+    bool muteLow = (bool)settingsGet(PARAM_SYSTEM_MUTE_LOW);
 
-    if (muteStby == MUTESTBY_POS) {
+    if (muteLow) {
         if (value) {
-            CLR(MUTE);
-        } else {
             SET(MUTE);
+        } else {
+            CLR(MUTE);
         }
-    } else if (muteStby == MUTESTBY_NEG) {
+    } else {
         if (value) {
-            SET(MUTE);
-        } else {
             CLR(MUTE);
+        } else {
+            SET(MUTE);
         }
     }
 }
 
 void ampPinStby(bool value)
 {
-    MuteStby muteStby = (MuteStby)settingsGet(PARAM_SYSTEM_MUTESTBY);
+    bool stbyLow = (bool)settingsGet(PARAM_SYSTEM_STBY_LOW);
 
-    if (muteStby == MUTESTBY_POS) {
+    if (stbyLow) {
         if (value) {
-            CLR(STBY);
-        } else {
             SET(STBY);
+        } else {
+            CLR(STBY);
         }
-    } else if (muteStby == MUTESTBY_NEG) {
+    } else {
         if (value) {
-            SET(STBY);
-        } else {
             CLR(STBY);
+        } else {
+            SET(STBY);
         }
     }
 

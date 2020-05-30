@@ -69,9 +69,6 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Jours de semaine",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "Tous les jours",
 
-    [LABEL_MUTESTBY + MUTESTBY_POS] = "Activation 1",
-    [LABEL_MUTESTBY + MUTESTBY_NEG] = "Activation 0",
-
     // NOTE: Keep in sync with MenuIdx in menu.h
     [LABEL_MENU + MENU_NULL]            = "Retour",
 
@@ -86,11 +83,12 @@ const char *const labels_fr[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_RC]        = "Télécommande",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Language",
-    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Silence & pause",
 //    [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C expander",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Résolution encodeur",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Durée du silence",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Correction du temps",
+//    [LABEL_MENU + MENU_SYSTEM_STBY_LOW] = "STBY active 0",
+//    [LABEL_MENU + MENU_SYSTEM_MUTE_LOW] = "MUTE active 0",
 
 //    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
 //    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",

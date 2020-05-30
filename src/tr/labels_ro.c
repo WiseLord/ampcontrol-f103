@@ -69,9 +69,6 @@ const char *const labels_ro[LABEL_END] = {
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekend",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "7/7",
 
-    [LABEL_MUTESTBY + MUTESTBY_POS] = "Activ 1",
-    [LABEL_MUTESTBY + MUTESTBY_NEG] = "Activ 0",
-
     // NOTE: Keep in sync with MenuIdx in menu.h
     [LABEL_MENU + MENU_NULL]            = "Inapoi",
 
@@ -86,11 +83,12 @@ const char *const labels_ro[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_RC]        = "Telecomanda",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Limba",
-    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mut & Stby",
 //    [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C expander",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Rezolutie encoder",
 //    [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Silence timer",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Corectie timp",
+//    [LABEL_MENU + MENU_SYSTEM_STBY_LOW] = "STBY active 0",
+//    [LABEL_MENU + MENU_SYSTEM_MUTE_LOW] = "MUTE active 0",
 
 //    [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
 //    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",

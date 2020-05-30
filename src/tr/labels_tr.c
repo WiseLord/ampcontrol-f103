@@ -65,9 +65,6 @@ const char *const labels_tr[LABEL_END] = {
 
     [LABEL_AUDIO_IC + AUDIO_IC_NO]      = "Yok",
 
-    [LABEL_MUTESTBY + MUTESTBY_POS] = "Mute & Stby Aktif 1",
-    [LABEL_MUTESTBY + MUTESTBY_NEG] = "Mute & Stby Aktif 0",
-
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Kapalı",
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Hafta İçi",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "Tüm Günler",
@@ -86,11 +83,12 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_RC]        = "Kumanda Ayarı",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Dil Seçeneği",
-    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute & Stby",
     [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C Genişletici",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Enkoder Çözünürlüğü",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Sessizlik Zamanlayıcısı",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Zaman Düzeltme",
+//    [LABEL_MENU + MENU_SYSTEM_STBY_LOW] = "STBY active 0",
+//    [LABEL_MENU + MENU_SYSTEM_MUTE_LOW] = "MUTE active 0",
 
     [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Giriş Durumu",
     [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth Kontrolü",

@@ -69,9 +69,6 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Будни",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "Все дни",
 
-    [LABEL_MUTESTBY + MUTESTBY_POS] = "Актив. 1",
-    [LABEL_MUTESTBY + MUTESTBY_NEG] = "Актив. 0",
-
     // NOTE: Keep in sync with MenuIdx in menu.h
     [LABEL_MENU + MENU_NULL]            = "Назад",
 
@@ -86,11 +83,12 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_MENU + MENU_SETUP_RC]        = "Пульт",
 
     [LABEL_MENU + MENU_SYSTEM_LANG]     = "Язык",
-    [LABEL_MENU + MENU_SYSTEM_MUTESTBY] = "Mute и Stby",
     [LABEL_MENU + MENU_SYSTEM_I2C_EXT]  = "I2C расширитель",
     [LABEL_MENU + MENU_SYSTEM_ENC_RES]  = "Разрешение энкодера",
     [LABEL_MENU + MENU_SYSTEM_SIL_TIM]  = "Таймер тишины",
     [LABEL_MENU + MENU_SYSTEM_RTC_CORR] = "Коррекция времени",
+    [LABEL_MENU + MENU_SYSTEM_STBY_LOW] = "STBY активный 0",
+    [LABEL_MENU + MENU_SYSTEM_MUTE_LOW] = "MUTE активный 0",
 
     [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Статус входов",
     [LABEL_MENU + MENU_I2C_EXT_BT]      = "Контроль Bluetooth",

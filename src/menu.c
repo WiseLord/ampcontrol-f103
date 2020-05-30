@@ -40,11 +40,12 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SETUP_RC]         = {MENU_SETUP,              MENU_TYPE_PARENT,   PARAM_NULL},
 
     [MENU_SYSTEM_LANG]      = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     PARAM_SYSTEM_LANG},
-    [MENU_SYSTEM_MUTESTBY]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_ENUM,     PARAM_SYSTEM_MUTESTBY},
     [MENU_SYSTEM_I2C_EXT]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_PARENT,   PARAM_NULL},
     [MENU_SYSTEM_ENC_RES]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   PARAM_SYSTEM_ENC_RES},
     [MENU_SYSTEM_SIL_TIM]   = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   PARAM_SYSTEM_SIL_TIM},
     [MENU_SYSTEM_RTC_CORR]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_NUMBER,   PARAM_SYSTEM_RTC_CORR},
+    [MENU_SYSTEM_STBY_LOW]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_BOOL,     PARAM_SYSTEM_STBY_LOW},
+    [MENU_SYSTEM_MUTE_LOW]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_BOOL,     PARAM_SYSTEM_MUTE_LOW},
 
     [MENU_I2C_EXT_IN_STAT]  = {MENU_SYSTEM_I2C_EXT,     MENU_TYPE_ENUM,     PARAM_I2C_EXT_IN_STAT},
     [MENU_I2C_EXT_BT]       = {MENU_SYSTEM_I2C_EXT,     MENU_TYPE_ENUM,     PARAM_I2C_EXT_BT},
@@ -127,12 +128,14 @@ static void menuStoreCurrentValue(void)
     }
 
     switch (menu.active) {
-    case MENU_SYSTEM_MUTESTBY:
-        ampPinMute(true);
-        ampPinStby(true);
-        break;
     case MENU_SYSTEM_RTC_CORR:
         rtcSetCorrection(menu.value);
+        break;
+    case MENU_SYSTEM_STBY_LOW:
+        ampPinStby(true);
+        break;
+    case MENU_SYSTEM_MUTE_LOW:
+        ampPinMute(true);
         break;
     case MENU_DISPLAY_BR_STBY:
     case MENU_DISPLAY_BR_WORK:
@@ -174,12 +177,6 @@ static void menuValueChange(int8_t diff)
             menu.value = LANG_END - 1;
         if (menu.value < LANG_DEFAULT)
             menu.value = LANG_DEFAULT;
-        break;
-    case MENU_SYSTEM_MUTESTBY:
-        if (menu.value > MUTESTBY_END - 1)
-            menu.value = MUTESTBY_END - 1;
-        if (menu.value < MUTESTBY_POS)
-            menu.value = MUTESTBY_POS;
         break;
     case MENU_SYSTEM_ENC_RES:
         if (menu.value > ENC_RES_MAX)
@@ -549,9 +546,6 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
     switch (index) {
     case MENU_SYSTEM_LANG:
         ret = labelsGetLangName((Lang)value);
-        break;
-    case MENU_SYSTEM_MUTESTBY:
-        ret = labelsGet((Label)(LABEL_MUTESTBY + value));
         break;
 
     case MENU_I2C_EXT_IN_STAT:
