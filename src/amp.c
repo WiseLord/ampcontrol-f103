@@ -1475,12 +1475,11 @@ static void ampActionHandle(void)
     case ACTION_TUNER_EDIT_NAME:
         canvas->te.name = labelsGet(LABEL_TUNER_FM_STATION_NAME);
         textEditSet(&canvas->te, stationGetName(stNum), STATION_NAME_MAX_LEN, STATION_NAME_MAX_SYM);
-        action.prevScreen = SCREEN_AUDIO_INPUT;
         actionSetScreen(SCREEN_TEXTEDIT, 10000);
         break;
     case ACTION_TUNER_DEL_STATION:
         stationRemove(tuner->status.freq);
-        actionSetScreen(action.prevScreen, 2000);
+        actionSetScreen(SCREEN_AUDIO_INPUT, 2000);
         break;
 
     case ACTION_TEXTEDIT_CHANGE:
@@ -1497,10 +1496,10 @@ static void ampActionHandle(void)
         break;
     case ACTION_TEXTEDIT_APPLY:
         stationStore(tuner->status.freq, canvas->te.str);
-        actionSetScreen(action.prevScreen, 2000);
+        actionSetScreen(SCREEN_AUDIO_INPUT, 2000);
         break;
     case ACTION_TEXTEDIT_CANCEL:
-        actionSetScreen(action.prevScreen, 2000);
+        actionSetScreen(SCREEN_AUDIO_INPUT, 2000);
         break;
 
     case ACTION_MENU_SELECT: {

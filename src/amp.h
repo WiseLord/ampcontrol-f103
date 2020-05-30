@@ -17,16 +17,6 @@ extern "C" {
 #define FLAG_ENTER          1
 #define FLAG_SWITCH         2
 
-typedef struct {
-    ActionType type;
-    ScreenType screen;
-
-    int16_t value;
-    int16_t timeout;
-
-    ScreenType prevScreen;
-} Action;
-
 typedef uint8_t AmpStatus;
 enum {
     AMP_STATUS_STBY,
@@ -36,26 +26,6 @@ enum {
     AMP_STATUS_ACTIVE,
 
     AMP_STATUS_END
-};
-
-typedef uint8_t InputType;
-enum {
-    IN_TUNER = 0,
-    IN_PC,
-    IN_TV,
-    IN_BLUETOOTH,
-    IN_DVD,
-    IN_USB,
-    IN_MICROPHONE,
-    IN_GUITAR,
-    IN_TURNTABLES,
-    IN_SDCARD,
-    IN_PROJECTOR,
-    IN_SATELLITE,
-    IN_MIXER,
-    IN_KARADIO,
-
-    IN_END
 };
 
 typedef struct {

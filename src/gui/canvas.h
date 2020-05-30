@@ -10,28 +10,6 @@ extern "C" {
 #include "layout.h"
 #include "palette.h"
 
-typedef uint8_t ScreenType;
-enum {
-    // Screens allowed to be default
-    SCREEN_SPECTRUM = 0,
-    SCREEN_TIME,
-    SCREEN_AUDIO_INPUT,
-
-    SCREEN_STANDBY,
-
-    SCREEN_AUDIO_PARAM,
-    SCREEN_AUDIO_FLAG,
-
-    SCREEN_MENU,
-
-    SCREEN_TEXTEDIT,
-
-    SCREEN_STBY_TIMER,
-    SCREEN_SILENCE_TIMER,
-
-    SCREEN_END
-};
-
 typedef struct {
     Glcd *glcd;
     const Palette *pal;
