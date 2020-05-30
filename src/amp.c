@@ -44,7 +44,16 @@ static void ampActionGet(void);
 static void ampActionRemap(void);
 static void ampActionHandle(void);
 
+static void ampHandleSwd(void);
 static void ampScreenShow(void);
+
+static Amp amp = {
+    .status = AMP_STATUS_STBY,
+    .screen = SCREEN_STANDBY,
+    .defScreen = SCREEN_SPECTRUM,
+    .inputStatus = 0x00,
+    .volume = 0,
+};
 
 static Action action = {
     .type = ACTION_NONE,
@@ -52,10 +61,6 @@ static Action action = {
     .value = FLAG_ENTER,
 };
 
-static Amp amp = {
-    .status = AMP_STATUS_STBY,
-    .inputStatus = 0x00
-};
 
 static void actionSet(ActionType type, int16_t value)
 {
@@ -271,15 +276,6 @@ void ampPinStby(bool value)
             SET(STBY);
         }
     }
-
-#if defined(STM32F1)
-    // Enable SWD interface in standby mode
-    if (value) {
-        LL_GPIO_AF_Remap_SWJ_NOJTAG();
-    } else {
-        LL_GPIO_AF_DisableRemap_SWJ();
-    }
-#endif
 }
 
 static void ampMute(bool value)
@@ -1139,6 +1135,8 @@ void ampInit(void)
     pinsInit();
     rtcInit();
 
+    ampHandleSwd();
+
     labelsInit();
     canvasInit();
 
@@ -1170,6 +1168,8 @@ void ampInit(void)
 void ampRun(void)
 {
     while (1) {
+        ampHandleSwd();
+
         controlGetData();
         karadioGetData();
         btReleaseKey();
@@ -1560,6 +1560,25 @@ static void ampActionHandle(void)
     }
 
     actionSet(ACTION_NONE, 0);
+}
+
+static void ampHandleSwd(void)
+{
+#if defined(STM32F1)
+    static bool swd = false;
+
+    if (SCREEN_STANDBY == amp.screen) {
+        if (!swd) {
+            LL_GPIO_AF_Remap_SWJ_NOJTAG();
+            swd = true;
+        }
+    } else {
+        if (swd) {
+            LL_GPIO_AF_DisableRemap_SWJ();
+            swd = false;
+        }
+    }
+#endif
 }
 
 void ampScreenShow(void)
