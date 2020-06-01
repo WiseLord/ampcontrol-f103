@@ -106,7 +106,7 @@ static bool screenCheckClear(void)
     if (amp.screen != amp.prevScreen || clear) {
         // Handle standby/work brightness
         ampSetBrightness((int8_t)settingsGet(amp.screen == SCREEN_STANDBY ?
-                                                PARAM_DISPLAY_BR_STBY : PARAM_DISPLAY_BR_WORK));
+                                             PARAM_DISPLAY_BR_STBY : PARAM_DISPLAY_BR_WORK));
     }
 
 
@@ -499,14 +499,19 @@ static int8_t actionGetNextAudioInput(int8_t diff)
 {
     AudioProc *aProc = audioGet();
 
-    int8_t ret = aProc->par.input + diff;
+    int8_t input = aProc->par.input;
     int8_t inCnt = aProc->par.inCnt;
 
-    if (ret < 0) {
-        ret = inCnt - 1;
-    } else if (ret >= inCnt) {
-        ret = 0;
-    }
+    int8_t ret = input;
+
+    do {
+        ret += diff;
+        if (ret < 0) {
+            ret = inCnt - 1;
+        } else if (ret >= inCnt) {
+            ret = 0;
+        }
+    } while ((amp.inType[ret] == IN_DISABLED) && (ret != input));
 
     return ret;
 }

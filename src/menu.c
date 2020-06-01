@@ -221,8 +221,8 @@ static void menuValueChange(int8_t diff)
     case MENU_AUDIO_IN_7:
         if (menu.value > IN_END - 1)
             menu.value = IN_END - 1;
-        if (menu.value < IN_TUNER)
-            menu.value = IN_TUNER;
+        if (menu.value < IN_DISABLED)
+            menu.value = IN_DISABLED;
         break;
 
     case MENU_TUNER_IC:
@@ -569,7 +569,7 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
     case MENU_AUDIO_IN_5:
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
-        ret = labelsGet((Label)(LABEL_IN_TUNER + value));
+        ret = labelsGet((Label)(value == IN_DISABLED ? LABEL_BOOL_OFF : LABEL_IN_TUNER + value));
         break;
     case MENU_TUNER_IC:
         ret = labelsGet((Label)(LABEL_TUNER_IC + value));

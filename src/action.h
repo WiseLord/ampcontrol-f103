@@ -141,8 +141,10 @@ enum {
     SCREEN_END
 };
 
-typedef uint8_t InputType;
+typedef int8_t InputType;
 enum {
+    IN_DISABLED = -1,
+
     IN_TUNER = 0,
     IN_PC,
     IN_TV,
@@ -158,7 +160,7 @@ enum {
     IN_MIXER,
     IN_KARADIO,
 
-    IN_END
+    IN_END,
 };
 
 typedef struct {

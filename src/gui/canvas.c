@@ -605,8 +605,8 @@ void canvasShowTune(bool clear)
 
     InputType inType = amp->inType[aProc->par.input];
 
-    const char *label = labelsGet(LABEL_IN_TUNER + inType);
-    Icon icon = (ICON_TUNER + inType);
+    const char *label = labelsGet(inType == IN_DISABLED ? LABEL_BOOL_OFF : LABEL_IN_TUNER + inType);
+    Icon icon = (inType == IN_DISABLED ? ICON_MUTE_OFF : ICON_TUNER + inType);
 
     if (aProc->tune < AUDIO_TUNE_GAIN) {
         label = labelsGet(LABEL_VOLUME + aProc->tune);
@@ -980,7 +980,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
     }
 
     const tFont *iconSet = lt->iconSet;
-    const char *label = labelsGet(LABEL_IN_TUNER + inType);
+    const char *label = labelsGet(inType == IN_DISABLED ? LABEL_BOOL_OFF : LABEL_IN_TUNER + inType);
 
     if (icon == ICON_EMPTY) {
         if (inType == IN_BLUETOOTH) {
@@ -996,7 +996,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
                 break;
             }
         } else {
-            icon = (ICON_TUNER + inType);
+            icon = (inType == IN_DISABLED ? ICON_MUTE_OFF : ICON_TUNER + inType);
         }
     }
 
