@@ -56,8 +56,21 @@ static void inputHandleEncoder(uint16_t encNow)
     }
 }
 
+static void inputInitPins(void)
+{
+    LL_GPIO_InitTypeDef initDef = {0};
+
+    initDef.Mode = LL_GPIO_MODE_INPUT;
+    initDef.Pull = LL_GPIO_PULL_UP;
+
+    initDef.Pin = DISP_DATA_Pin;
+    LL_GPIO_Init(DISP_DATA_Port, &initDef);
+}
+
 void inputInit(void)
 {
+    inputInitPins();
+
     timerInit(TIM_INPUT, 199, 359);  // 1kHz polling
 
     input.encRes = (int8_t)settingsGet(PARAM_SYSTEM_ENC_RES);
