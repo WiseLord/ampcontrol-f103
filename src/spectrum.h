@@ -20,12 +20,22 @@ enum {
     SP_CHAN_END = SP_CHAN_BOTH
 };
 
-typedef uint8_t SpMode;
+typedef int8_t SpMode;
 enum {
     SP_MODE_STEREO = 0,
     SP_MODE_MIRROR,
     SP_MODE_ANTIMIRROR,
+
+    SP_MODE_STEREO_END = SP_MODE_ANTIMIRROR,
+
     SP_MODE_MIXED,
+    SP_MODE_LEFT,
+    SP_MODE_RIGHT,
+
+    SP_MODE_MIXED_MIRROR,
+    SP_MODE_LEFT_MIRROR,
+    SP_MODE_RIGHT_MIRROR,
+
     SP_MODE_WATERFALL,
 
     SP_MODE_END

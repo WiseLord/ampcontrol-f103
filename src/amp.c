@@ -639,13 +639,22 @@ static void stbyTimerChange(void)
     }
 }
 
-static void spModeChange(Spectrum *sp)
+static void spModeChange(void)
 {
-    if (++sp->mode >= (sp->peaks ? SP_MODE_END : SP_MODE_WATERFALL)) {
+    Spectrum *sp = spGet();
+
+    sp->mode++;
+    // Skip unused modes
+    if (sp->mode > SP_MODE_MIXED && sp->mode < SP_MODE_WATERFALL) {
+        sp->mode = SP_MODE_WATERFALL;
+    }
+
+    if (sp->mode >= (sp->peaks ? SP_MODE_END : SP_MODE_WATERFALL)) {
         sp->mode = SP_MODE_STEREO;
         sp->peaks = !sp->peaks;
         settingsStore(PARAM_SPECTRUM_PEAKS, sp->peaks);
     }
+
     amp.clearScreen = true;
     settingsStore(PARAM_SPECTRUM_MODE, sp->mode);
 }
@@ -1263,8 +1272,6 @@ static void ampActionHandle(void)
 
     Canvas *canvas = canvasGet();
 
-    Spectrum *sp = spGet();
-
     action.timeout = 0;
 
     switch (action.type) {
@@ -1529,7 +1536,7 @@ static void ampActionHandle(void)
         break;
     case ACTION_SP_MODE:
         if (scrMode == SCREEN_SPECTRUM) {
-            spModeChange(sp);
+            spModeChange();
         }
         actionSetScreen(SCREEN_SPECTRUM, 3000);
         break;
