@@ -165,11 +165,13 @@ enum {
 
 typedef struct {
     ActionType type;
-    ScreenType screen;
-
     int16_t value;
-    int16_t timeout;
 } Action;
+
+typedef struct {
+    ScreenType type;
+    int16_t timeout;
+} Screen;
 
 #ifdef __cplusplus
 }

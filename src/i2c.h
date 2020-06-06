@@ -24,7 +24,7 @@ extern "C" {
 typedef void (*I2cRxFn)(int16_t rxBytes);
 typedef void (*I2cTxFn)(int16_t txBytes);
 
-uint8_t i2cInit(void *i2c, uint32_t ClockSpeed);
+uint8_t i2cInit(void *i2c, uint32_t ClockSpeed, uint8_t ownAddr);
 uint8_t i2cDeInit(void *i2c);
 bool i2cIsEnabled(void *i2c);
 

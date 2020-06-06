@@ -133,7 +133,7 @@ static void i2cDoStop(I2C_TypeDef *I2Cx)
 }
 #endif
 
-uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
+uint8_t i2cInit(void *i2c, uint32_t ClockSpeed, uint8_t ownAddr)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
 
@@ -183,7 +183,7 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed)
     I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
     I2C_InitStruct.DigitalFilter = 0;
 #endif
-    I2C_InitStruct.OwnAddress1 = 0x28;
+    I2C_InitStruct.OwnAddress1 = ownAddr;
     I2C_InitStruct.TypeAcknowledge = LL_I2C_ACK;
     I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
     LL_I2C_Init(I2Cx, &I2C_InitStruct);
