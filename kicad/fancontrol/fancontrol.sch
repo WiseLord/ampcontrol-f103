@@ -1,0 +1,200 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Transistor_BJT:MPSA42 Q1
+U 1 1 5EE690AE
+P 5800 2750
+F 0 "Q1" H 5990 2796 50  0000 L CNN
+F 1 "S9014" H 5990 2705 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 6000 2675 50  0001 L CIN
+F 3 "http://www.onsemi.com/pub_link/Collateral/MPSA42-D.PDF" H 5800 2750 50  0001 L CNN
+	1    5800 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:MPSA92 Q2
+U 1 1 5EE6949B
+P 5900 1950
+F 0 "Q2" V 6228 1950 50  0000 C CNN
+F 1 "S8550" V 6137 1950 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 6100 1875 50  0001 L CIN
+F 3 "http://www.onsemi.com/pub_link/Collateral/MPSA92-D.PDF" H 5900 1950 50  0001 L CNN
+	1    5900 1950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 5EE6A0EE
+P 5900 2350
+F 0 "R4" H 5970 2396 50  0000 L CNN
+F 1 "1k" H 5970 2305 50  0000 L CNN
+F 2 "" V 5830 2350 50  0001 C CNN
+F 3 "~" H 5900 2350 50  0001 C CNN
+	1    5900 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C2
+U 1 1 5EE6A669
+P 5500 2350
+F 0 "C2" H 5618 2396 50  0000 L CNN
+F 1 "47.0" H 5618 2305 50  0000 L CNN
+F 2 "" H 5538 2200 50  0001 C CNN
+F 3 "~" H 5500 2350 50  0001 C CNN
+	1    5500 2350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 2550 5900 2500
+Wire Wire Line
+	5900 2200 5900 2150
+$Comp
+L Device:CP C1
+U 1 1 5EE6C30C
+P 5200 2950
+F 0 "C1" H 5318 2996 50  0000 L CNN
+F 1 "47.0" H 5318 2905 50  0000 L CNN
+F 2 "" H 5238 2800 50  0001 C CNN
+F 3 "~" H 5200 2950 50  0001 C CNN
+	1    5200 2950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 5EE6CF9F
+P 4850 2950
+F 0 "R3" H 4920 2996 50  0000 L CNN
+F 1 "47k" H 4920 2905 50  0000 L CNN
+F 2 "" V 4780 2950 50  0001 C CNN
+F 3 "~" H 4850 2950 50  0001 C CNN
+	1    4850 2950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5600 2750 5200 2750
+Wire Wire Line
+	4850 2750 4850 2800
+Wire Wire Line
+	5200 2750 5200 2800
+Connection ~ 5200 2750
+Wire Wire Line
+	5200 2750 4850 2750
+$Comp
+L Diode:1N4001 D1
+U 1 1 5EE6D998
+P 4850 2550
+F 0 "D1" V 4896 2470 50  0000 R CNN
+F 1 "1N4001" V 4805 2470 50  0000 R CNN
+F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 4850 2375 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/88503/1n4001.pdf" H 4850 2550 50  0001 C CNN
+	1    4850 2550
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4850 2700 4850 2750
+Connection ~ 4850 2750
+$Comp
+L power:GND #PWR01
+U 1 1 5EE70D3E
+P 4850 3200
+F 0 "#PWR01" H 4850 2950 50  0001 C CNN
+F 1 "GND" H 4855 3027 50  0000 C CNN
+F 2 "" H 4850 3200 50  0001 C CNN
+F 3 "" H 4850 3200 50  0001 C CNN
+	1    4850 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 3200 4850 3150
+Wire Wire Line
+	4850 3150 5200 3150
+Wire Wire Line
+	5200 3150 5200 3100
+Connection ~ 4850 3150
+Wire Wire Line
+	4850 3150 4850 3100
+Wire Wire Line
+	5900 2950 5900 3150
+Wire Wire Line
+	5900 3150 5500 3150
+Connection ~ 5200 3150
+Wire Wire Line
+	5500 2500 5500 3150
+Connection ~ 5500 3150
+Wire Wire Line
+	5500 3150 5200 3150
+Wire Wire Line
+	5700 1850 5500 1850
+Wire Wire Line
+	5500 1850 5500 2200
+$Comp
+L Device:R R2
+U 1 1 5EE72180
+P 4600 2350
+F 0 "R2" V 4500 2350 50  0000 C CNN
+F 1 "10k" V 4700 2350 50  0000 C CNN
+F 2 "" V 4530 2350 50  0001 C CNN
+F 3 "~" H 4600 2350 50  0001 C CNN
+	1    4600 2350
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 5EE74F06
+P 4600 2050
+F 0 "R1" V 4500 2050 50  0000 C CNN
+F 1 "10k" V 4700 2050 50  0000 C CNN
+F 2 "" V 4530 2050 50  0001 C CNN
+F 3 "~" H 4600 2050 50  0001 C CNN
+	1    4600 2050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4750 2050 4850 2050
+Wire Wire Line
+	4850 2050 4850 2350
+Wire Wire Line
+	4750 2350 4850 2350
+Connection ~ 4850 2350
+Wire Wire Line
+	4850 2350 4850 2400
+Wire Wire Line
+	4850 3150 4300 3150
+Wire Wire Line
+	4450 2350 4400 2350
+Wire Wire Line
+	4450 2050 4400 2050
+Wire Wire Line
+	5500 1850 4250 1850
+Connection ~ 5500 1850
+Wire Wire Line
+	6100 1850 6200 1850
+Wire Wire Line
+	5900 3150 6200 3150
+Connection ~ 5900 3150
+Text GLabel 4250 1850 0    50   Input ~ 0
+9V
+Text GLabel 4400 2050 0    50   Input ~ 0
+ROUT
+Text GLabel 4400 2350 0    50   Input ~ 0
+LOUT
+Text GLabel 4300 3150 0    50   Input ~ 0
+GND
+Text GLabel 6200 1850 2    50   Output ~ 0
+FAN_P
+Text GLabel 6200 3150 2    50   Output ~ 0
+FAN_N
+$EndSCHEMATC
