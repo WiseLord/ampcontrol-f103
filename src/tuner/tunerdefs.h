@@ -19,6 +19,7 @@ extern "C" {
     TUNER_IC(RDA5807)               \
     TUNER_IC(SI4703)                \
     TUNER_IC(TEA5767)               \
+    TUNER_IC(TUX03X)                \
     TUNER_IC(TEST)                  \
 
 #define GENERATE_TUNER_IC(IC) TUNER_IC_ ## IC,

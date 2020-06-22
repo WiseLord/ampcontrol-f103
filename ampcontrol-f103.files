@@ -252,6 +252,8 @@ src/tuner/tea5767_regs.h
 src/tuner/tuner.c
 src/tuner/tunerdefs.h
 src/tuner/tuner.h
+src/tuner/tux03x.c
+src/tuner/tux03x.h
 src/usart.c
 src/usart.h
 src/usb/stm32f1xx_hal_conf.h

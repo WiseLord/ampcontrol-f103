@@ -15,6 +15,9 @@
 #ifdef _TEA5767
 #include "tea5767.h"
 #endif
+#ifdef _TUX03X
+#include "tux03x.h"
+#endif
 
 static Tuner tuner;
 
@@ -93,6 +96,10 @@ void tunerReadSettings(void)
 #ifdef _TEA5767
     case TUNER_IC_TEA5767:
         tuner.api = tea5767GetApi();
+        break;
+#endif
+#ifdef _TUX03X
+        tuner.api = tux03xGetApi();
         break;
 #endif
     case TUNER_IC_TEST:
