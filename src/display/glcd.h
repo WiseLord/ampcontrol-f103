@@ -36,6 +36,7 @@ typedef struct {
     color_t fontBg;
     GlcdAlign fontAlign;
     bool rotate;
+    bool portrate;
     bool strFramed;
 } Glcd;
 
@@ -46,6 +47,7 @@ void glcdInit(void);
 Glcd *glcdGet(void);
 
 void glcdRotate(bool rotate);
+void glcdPortrate(bool portrate);
 void glcdShift(int16_t pos);
 
 void glcdFbSync(void);

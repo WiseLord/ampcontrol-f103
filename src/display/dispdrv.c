@@ -472,23 +472,38 @@ void dispdrvDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr
 #endif
 }
 
-void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, color_t color, color_t bgColor,
+void dispdrvDrawImage(tImage *img, bool portrate, int16_t x, int16_t y,
+                      color_t color, color_t bgColor,
                       int16_t xOft, int16_t yOft, int16_t w, int16_t h)
 {
 #ifndef _DISP_FB
     CLR(DISP_CS);
 #endif
 
-    dispdrvSetWindow(x, y, w, h);
+    if (portrate) {
+        dispdrvSetWindow(y, dispdrv.height - w - x, h, w);
 
-    for (int16_t i = 0; i < w; i++) {
         for (int16_t j = 0; j < h; j++) {
-            uint8_t data = img->data[img->width * ((j + yOft) >> 3) + i + xOft];
-            if (j < h) {
-                dispdrvSendColor(data & (1 << ((j + yOft) & 0x7)) ? color : bgColor);
+            for (int16_t i = w - 1; i >= 0; i--) {
+                uint8_t data = img->data[img->width * ((j + yOft) >> 3) + i + xOft];
+                if (j < h) {
+                    dispdrvSendColor(data & (1 << ((j + yOft) & 0x7)) ? color : bgColor);
+                }
+            }
+        }
+    } else {
+        dispdrvSetWindow(x, y, w, h);
+
+        for (int16_t i = 0; i < w; i++) {
+            for (int16_t j = 0; j < h; j++) {
+                uint8_t data = img->data[img->width * ((j + yOft) >> 3) + i + xOft];
+                if (j < h) {
+                    dispdrvSendColor(data & (1 << ((j + yOft) & 0x7)) ? color : bgColor);
+                }
             }
         }
     }
+
 
 #ifndef _DISP_FB
     DISP_WAIT_BUSY();

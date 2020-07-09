@@ -83,7 +83,8 @@ void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color);
 
 void dispdrvDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr);
 
-void dispdrvDrawImage(tImage *img, int16_t x, int16_t y, color_t color, color_t bgColor,
+void dispdrvDrawImage(tImage *img, bool portrate, int16_t x, int16_t y,
+                      color_t color, color_t bgColor,
                       int16_t xOft, int16_t yOft, int16_t w, int16_t h);
 
 #ifdef __cplusplus

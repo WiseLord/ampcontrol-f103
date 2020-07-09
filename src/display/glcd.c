@@ -115,6 +115,16 @@ void glcdRotate(bool rotate)
     }
 }
 
+void glcdPortrate(bool portrate)
+{
+    glcd.portrate = portrate;
+
+    glcd.rect.x = 0;
+    glcd.rect.y = 0;
+    glcd.rect.w = portrate ? dispdrv.height : dispdrv.width;
+    glcd.rect.h = portrate ? dispdrv.width : dispdrv.height;
+}
+
 void glcdShift(int16_t pos)
 {
     if (glcd.drv->shift) {
@@ -254,7 +264,8 @@ void glcdDrawImage(const tImage *img, color_t color, color_t bgColor)
     x += rect->x;
     y += rect->y;
 
-    dispdrvDrawImage(imgUnRle, x, y, color, bgColor,
+    dispdrvDrawImage(imgUnRle, glcd.portrate, x, y,
+                     color, bgColor,
                      xOft, yOft, w, h);
 
     free(unRleData);
@@ -430,7 +441,11 @@ void glcdDrawPixel(int16_t x, int16_t y, color_t color)
     x += rect->x;
     y += rect->y;
 
-    dispdrvDrawPixel(x, y, color);
+    if (glcd.portrate) {
+        dispdrvDrawPixel(y, rect->w - 1 - x, color);
+    } else {
+        dispdrvDrawPixel(x, y, color);
+    }
 }
 
 void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color)
@@ -464,7 +479,11 @@ void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color)
     x += rect->x;
     y += rect->y;
 
-    dispdrvDrawRect(x, y, w, h, color);
+    if (glcd.portrate) {
+        dispdrvDrawRect(y, rect->w - w - x, h, w, color);
+    } else {
+        dispdrvDrawRect(x, y, w, h, color);
+    }
 }
 
 void glcdDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr)
@@ -498,7 +517,11 @@ void glcdDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr)
     x += rect->x;
     y += rect->y;
 
-    dispdrvDrawVertGrad(x, y, w, h, gr);
+    if (glcd.portrate) {
+        dispdrvDrawVertGrad(y, rect->w - w - x, h, w, gr);
+    } else {
+        dispdrvDrawVertGrad(x, y, w, h, gr);
+    }
 }
 
 void glcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, color_t color)
