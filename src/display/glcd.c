@@ -440,7 +440,7 @@ void glcdDrawPixel(int16_t x, int16_t y, color_t color)
     bool portrate = (glcd.orientation & GLCD_PORTRATE);
 
     if (portrate) {
-        dispdrvDrawPixel(y, rect->w - 1 - x, color);
+        dispdrvDrawPixel(y, dispdrv.height - 1 - x, color);
     } else {
         dispdrvDrawPixel(x, y, color);
     }
@@ -480,7 +480,7 @@ void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color)
     bool portrate = (glcd.orientation & GLCD_PORTRATE);
 
     if (portrate) {
-        dispdrvDrawRect(y, rect->w - w - x, h, w, color);
+        dispdrvDrawRect(y, dispdrv.height - w - x, h, w, color);
     } else {
         dispdrvDrawRect(x, y, w, h, color);
     }
@@ -520,7 +520,7 @@ void glcdDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr)
     bool portrate = (glcd.orientation & GLCD_PORTRATE);
 
     if (portrate) {
-        dispdrvDrawVertGrad(y, rect->w - w - x, h, w, gr);
+        dispdrvDrawVertGrad(y, dispdrv.height - w - x, h, w, gr);
     } else {
         dispdrvDrawVertGrad(x, y, w, h, gr);
     }
