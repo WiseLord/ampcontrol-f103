@@ -142,7 +142,7 @@ static void menuStoreCurrentValue(void)
         ampSetBrightness((int8_t)(menu.value));
         break;
     case MENU_DISPLAY_ROTATE:
-        glcdRotate((bool)menu.value);
+        glcdSetOrientation(menu.value ? GLCD_LANDSCAPE_ROT : GLCD_LANDSCAPE);
         canvasClear();
         break;
     case MENU_DISPLAY_PALETTE:

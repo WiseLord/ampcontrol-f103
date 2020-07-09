@@ -26,6 +26,14 @@ enum {
     GLCD_ALIGN_RIGHT
 };
 
+typedef uint8_t GlcdOrientation;
+enum {
+    GLCD_LANDSCAPE      = 0x00,
+    GLCD_LANDSCAPE_ROT  = 0x01,
+    GLCD_PORTRATE       = 0x02,
+    GLCD_PORTRATE_ROT   = 0x03,
+};
+
 typedef struct {
     const DispDriver *drv;
     const tFont *font;
@@ -35,19 +43,17 @@ typedef struct {
     color_t fontFg;
     color_t fontBg;
     GlcdAlign fontAlign;
-    bool rotate;
-    bool portrate;
+    GlcdOrientation orientation;
     bool strFramed;
 } Glcd;
 
 typedef int32_t UChar;
 
-void glcdInit(void);
+void glcdInit(GlcdOrientation value);
 
 Glcd *glcdGet(void);
 
-void glcdRotate(bool rotate);
-void glcdPortrate(bool portrate);
+void glcdSetOrientation(GlcdOrientation value);
 void glcdShift(int16_t pos);
 
 void glcdFbSync(void);

@@ -89,16 +89,13 @@ static UChar findSymbolCode(const char **string)
     return BLOCK_CHAR;
 }
 
-void glcdInit(void)
+void glcdInit(GlcdOrientation value)
 {
     dispdrvInit();
 
     glcd.drv = &dispdrv;
 
-    glcd.rect.x = 0;
-    glcd.rect.y = 0;
-    glcd.rect.w = dispdrv.width;
-    glcd.rect.h = dispdrv.height;
+    glcdSetOrientation(value);
 }
 
 Glcd *glcdGet(void)
@@ -106,18 +103,15 @@ Glcd *glcdGet(void)
     return &glcd;
 }
 
-void glcdRotate(bool rotate)
+void glcdSetOrientation(GlcdOrientation value)
 {
-    glcd.rotate = rotate;
+    glcd.orientation = value;
 
     if (glcd.drv->rotate) {
-        glcd.drv->rotate(rotate);
+        glcd.drv->rotate(value & GLCD_LANDSCAPE_ROT);
     }
-}
 
-void glcdPortrate(bool portrate)
-{
-    glcd.portrate = portrate;
+    bool portrate = (value & GLCD_PORTRATE);
 
     glcd.rect.x = 0;
     glcd.rect.y = 0;
@@ -264,7 +258,9 @@ void glcdDrawImage(const tImage *img, color_t color, color_t bgColor)
     x += rect->x;
     y += rect->y;
 
-    dispdrvDrawImage(imgUnRle, glcd.portrate, x, y,
+    bool portrate = (glcd.orientation & GLCD_PORTRATE);
+
+    dispdrvDrawImage(imgUnRle, portrate, x, y,
                      color, bgColor,
                      xOft, yOft, w, h);
 
@@ -441,7 +437,9 @@ void glcdDrawPixel(int16_t x, int16_t y, color_t color)
     x += rect->x;
     y += rect->y;
 
-    if (glcd.portrate) {
+    bool portrate = (glcd.orientation & GLCD_PORTRATE);
+
+    if (portrate) {
         dispdrvDrawPixel(y, rect->w - 1 - x, color);
     } else {
         dispdrvDrawPixel(x, y, color);
@@ -479,7 +477,9 @@ void glcdDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color)
     x += rect->x;
     y += rect->y;
 
-    if (glcd.portrate) {
+    bool portrate = (glcd.orientation & GLCD_PORTRATE);
+
+    if (portrate) {
         dispdrvDrawRect(y, rect->w - w - x, h, w, color);
     } else {
         dispdrvDrawRect(x, y, w, h, color);
@@ -517,7 +517,9 @@ void glcdDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr)
     x += rect->x;
     y += rect->y;
 
-    if (glcd.portrate) {
+    bool portrate = (glcd.orientation & GLCD_PORTRATE);
+
+    if (portrate) {
         dispdrvDrawVertGrad(y, rect->w - w - x, h, w, gr);
     } else {
         dispdrvDrawVertGrad(x, y, w, h, gr);

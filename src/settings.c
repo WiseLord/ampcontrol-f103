@@ -213,7 +213,7 @@ int16_t settingsGet(Param param)
         ret = brWork;
         break;
     case PARAM_DISPLAY_ROTATE:
-        ret = glcdGet()->rotate;
+        ret = (glcdGet()->orientation == GLCD_LANDSCAPE_ROT);
         break;
     case PARAM_DISPLAY_DEF:
         ret = ampGet()->defScreen;
@@ -383,7 +383,7 @@ void settingsSet(Param param, int16_t value)
         brWork = (int8_t)value;
         break;
     case PARAM_DISPLAY_ROTATE:
-        glcdGet()->rotate = (bool)value;
+        glcdGet()->orientation = (value ? GLCD_LANDSCAPE_ROT : GLCD_LANDSCAPE);
         break;
     case PARAM_DISPLAY_DEF:
         ampGet()->defScreen = (ScreenType)value;
