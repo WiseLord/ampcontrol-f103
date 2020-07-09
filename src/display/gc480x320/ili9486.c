@@ -83,11 +83,11 @@ void ili9486Init(void)
     SET(DISP_CS);
 }
 
-void ili9486Rotate(uint8_t rotate)
+void ili9486Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvSelectReg8(0x36);
         dispdrvSendData8(0x08);
     } else {

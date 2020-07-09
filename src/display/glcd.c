@@ -106,12 +106,12 @@ Glcd *glcdGet(void)
     return &glcd;
 }
 
-void glcdRotate(uint8_t rotate)
+void glcdRotate(bool rotate)
 {
     glcd.rotate = rotate;
 
     if (glcd.drv->rotate) {
-        glcd.drv->rotate(rotate ? LCD_ROTATE_180 : LCD_ROTATE_0);
+        glcd.drv->rotate(rotate);
     }
 }
 

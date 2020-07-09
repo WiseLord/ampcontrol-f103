@@ -53,11 +53,11 @@ void ssd1289Init(void)
     SET(DISP_CS);
 }
 
-void ssd1289Rotate(uint8_t rotate)
+void ssd1289Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvWriteReg16(0x0001, 0x6B3F);
     } else {
         dispdrvWriteReg16(0x0001, 0x293F);

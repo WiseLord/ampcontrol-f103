@@ -199,11 +199,11 @@ void s6d04d1Init(void)
     SET(DISP_CS);
 }
 
-void s6d04d1Rotate(uint8_t rotate)
+void s6d04d1Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvSelectReg8(0x36);
         dispdrvSendData8(0x08);
     } else {

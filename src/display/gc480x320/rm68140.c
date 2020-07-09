@@ -29,11 +29,11 @@ void rm68140Init(void)
     SET(DISP_CS);
 }
 
-void rm68140Rotate(uint8_t rotate)
+void rm68140Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvSelectReg8(0xB6);
         dispdrvSendData8(0x00);
         dispdrvSendData8(0x02);

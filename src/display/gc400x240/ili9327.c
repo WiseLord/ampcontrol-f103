@@ -85,11 +85,11 @@ void ili9327Init(void)
     SET(DISP_CS);
 }
 
-void ili9327Rotate(uint8_t rotate)
+void ili9327Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         shiftX = 32;
         dispdrvSelectReg8(0x36);
         dispdrvSendData8(0x0B);

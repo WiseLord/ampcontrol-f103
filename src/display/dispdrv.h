@@ -20,9 +20,6 @@ extern "C" {
 #define DISP_WAIT_BUSY()        (void)0
 #endif
 
-#define LCD_ROTATE_0        0x00
-#define LCD_ROTATE_180      0x02
-
 #define LCD_BR_MIN          1
 #define LCD_BR_MAX          32
 
@@ -51,7 +48,7 @@ typedef struct {
     void (*sleep)(void);
     void (*wakeup)(void);
     void (*setWindow)(int16_t x, int16_t y, int16_t w, int16_t h);
-    void (*rotate)(uint8_t rotate);
+    void (*rotate)(bool rotate);
     void (*shift)(int16_t value);
 
     void *fb;

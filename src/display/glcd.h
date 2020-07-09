@@ -45,7 +45,7 @@ void glcdInit(void);
 
 Glcd *glcdGet(void);
 
-void glcdRotate(uint8_t rotate);
+void glcdRotate(bool rotate);
 void glcdShift(int16_t pos);
 
 void glcdFbSync(void);

@@ -92,11 +92,11 @@ void r61581Init(void)
     SET(DISP_CS);
 }
 
-void r61581Rotate(uint8_t rotate)
+void r61581Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvSelectReg8(0xC0);  // Panel driving setting
         dispdrvSendData8(0x13); // REV, BGR, SS
     } else {

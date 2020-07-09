@@ -72,11 +72,11 @@ void ili9320Init(void)
     SET(DISP_CS);
 }
 
-void ili9320Rotate(uint8_t rotate)
+void ili9320Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvWriteReg16(0x0001, 0x0000);    // Set SS and SM bit
         dispdrvWriteReg16(0x0060, 0xA700);    // Gate scan line
     } else {

@@ -32,11 +32,11 @@ void hx8357cInit(void)
     SET(DISP_CS);
 }
 
-void hx8357cRotate(uint8_t rotate)
+void hx8357cRotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvSelectReg8(0xB6);
         dispdrvSendData8(0x00);
         dispdrvSendData8(0x02);

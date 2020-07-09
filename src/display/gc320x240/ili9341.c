@@ -120,11 +120,11 @@ void ili9341Init(void)
     SET(DISP_CS);
 }
 
-void ili9341Rotate(uint8_t rotate)
+void ili9341Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvSelectReg8(0xB6);
         dispdrvSendData8(0x0A);
         dispdrvSendData8(0x82);

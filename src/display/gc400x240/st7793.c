@@ -63,7 +63,7 @@ void st7793Init(void)
     SET(DISP_CS);
 }
 
-void st7793Rotate(uint8_t rotate)
+void st7793Rotate(bool rotate)
 {
     CLR(DISP_CS);
 

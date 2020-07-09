@@ -61,11 +61,11 @@ void s6d0129Init(void)
     SET(DISP_CS);
 }
 
-void s6d0129Rotate(uint8_t rotate)
+void s6d0129Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvWriteReg16(0x0001, 0x0827);
     } else {
         dispdrvWriteReg16(0x0001, 0x0B27);

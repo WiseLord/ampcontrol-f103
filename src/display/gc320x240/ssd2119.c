@@ -53,11 +53,11 @@ void ssd2119Init(void)
     SET(DISP_CS);
 }
 
-void ssd2119Rotate(uint8_t rotate)
+void ssd2119Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
-    if (rotate & LCD_ROTATE_180) {
+    if (rotate) {
         dispdrvWriteReg16(0x0001, 0x0000);    // Set SS and SM bit
         dispdrvWriteReg16(0x0060, 0xA700);    // Gate scan line
     } else {
