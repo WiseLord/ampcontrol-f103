@@ -24,9 +24,18 @@ extern "C" {
 #define LCD_BR_MAX          32
 
 // TFT LCD pins
+#ifdef _DISP_16BIT
+#define DISP_DATA_HI_Port       GPIOB
+#define DISP_DATA_HI_Pin        (LL_GPIO_PIN_8 | LL_GPIO_PIN_9 | LL_GPIO_PIN_10 | LL_GPIO_PIN_11 | \
+                                 LL_GPIO_PIN_12 | LL_GPIO_PIN_13 | LL_GPIO_PIN_14 | LL_GPIO_PIN_15)
+#define DISP_DATA_LO_Port       GPIOC
+#define DISP_DATA_LO_Pin        (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
+                                 LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
+#else
 #define DISP_DATA_Port          GPIOB
 #define DISP_DATA_Pin           (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
                                  LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
+#endif
 
 #define DISP_CS_Port            GPIOB
 #define DISP_CS_Pin             LL_GPIO_PIN_12
