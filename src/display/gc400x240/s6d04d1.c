@@ -215,24 +215,19 @@ void s6d04d1Rotate(bool rotate)
     SET(DISP_CS);
 }
 
-void s6d04d1Sleep(void)
+void s6d04d1Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvSelectReg8(0x28);    // Display OFF
-    utilmDelay(100);
-    dispdrvSelectReg8(0x10);
-
-    SET(DISP_CS);
-}
-
-void s6d04d1Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvSelectReg8(0x11);    // Display ON
-    utilmDelay(100);
-    dispdrvSelectReg8(0x29);
+    if (value) {
+        dispdrvSelectReg8(0x28);    // Display OFF
+        utilmDelay(100);
+        dispdrvSelectReg8(0x10);
+    } else {
+        dispdrvSelectReg8(0x11);    // Display ON
+        utilmDelay(100);
+        dispdrvSelectReg8(0x29);
+    }
 
     SET(DISP_CS);
 }
@@ -262,7 +257,6 @@ const DispDriver dispdrv = {
     .height = 240,
     .init = s6d04d1Init,
     .sleep = s6d04d1Sleep,
-    .wakeup = s6d04d1Wakeup,
     .setWindow = s6d04d1SetWindow,
     .rotate = s6d04d1Rotate,
 };

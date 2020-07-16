@@ -78,24 +78,17 @@ void ssd2119Shift(int16_t value)
     SET(DISP_CS);
 }
 
-void ssd2119Sleep(void)
+void ssd2119Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
-    dispdrvWriteReg16(0x0010, 0x0002);    // Sleep=0
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void ssd2119Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    // Power On Sequence
-    dispdrvWriteReg16(0x0010, 0x0000);    // Sleep=0
-    dispdrvWriteReg16(0x0007, 0x0173);    // display ON
+    if (value) {
+        dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
+        dispdrvWriteReg16(0x0010, 0x0002);    // Sleep=0
+    } else {
+        dispdrvWriteReg16(0x0010, 0x0000);    // Sleep=0
+        dispdrvWriteReg16(0x0007, 0x0173);    // display ON
+    }
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -123,7 +116,6 @@ const DispDriver dispdrv = {
     .height = 240,
     .init = ssd2119Init,
     .sleep = ssd2119Sleep,
-    .wakeup = ssd2119Wakeup,
     .setWindow = ssd2119SetWindow,
     .rotate = ssd2119Rotate,
     .shift = ssd2119Shift,

@@ -43,6 +43,8 @@ ifneq (,$(filter $(DISPLAY), \
   C_DEFS += -D_COLOR_24BIT
 endif
 
+C_DEFS += -D_DISP_BCKL_ENABLED
+
 C_SOURCES += main.c
 
 C_SOURCES += amp.c

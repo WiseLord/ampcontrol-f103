@@ -97,42 +97,36 @@ void ili9320Shift(int16_t value)
     SET(DISP_CS);
 }
 
-void ili9320Sleep(void)
+void ili9320Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
-    // Power Off Sequence
-    dispdrvWriteReg16(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-    dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
-    dispdrvWriteReg16(0x0012, 0x0000);    // VREG1OUT voltage
-    dispdrvWriteReg16(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
-    utilmDelay(200);
-    dispdrvWriteReg16(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+    if (value) {
+        dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
+        // Power Off Sequence
+        dispdrvWriteReg16(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+        dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
+        dispdrvWriteReg16(0x0012, 0x0000);    // VREG1OUT voltage
+        dispdrvWriteReg16(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
+        utilmDelay(200);
+        dispdrvWriteReg16(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+    } else {
+        // Power On Sequence
+        dispdrvWriteReg16(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+        dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
+        dispdrvWriteReg16(0x0012, 0x0000);    // VREG1OUT voltage
+        dispdrvWriteReg16(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
+        utilmDelay(200);
+        dispdrvWriteReg16(0x0010, 0x17B0);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+        dispdrvWriteReg16(0x0011, 0x0037);    // DC1[2:0], DC0[2:0], VC[2:0]
+        utilmDelay(50);
+        dispdrvWriteReg16(0x0012, 0x013A);    // VREG1OUT voltage
+        utilmDelay(50);
+        dispdrvWriteReg16(0x0013, 0x1600);    // VDV[4:0] for VCOM amplitude
+        dispdrvWriteReg16(0x0029, 0x000C);    // VCM[4:0] for VCOMH
 
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void ili9320Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    // Power On Sequence
-    dispdrvWriteReg16(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-    dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
-    dispdrvWriteReg16(0x0012, 0x0000);    // VREG1OUT voltage
-    dispdrvWriteReg16(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
-    utilmDelay(200);
-    dispdrvWriteReg16(0x0010, 0x17B0);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-    dispdrvWriteReg16(0x0011, 0x0037);    // DC1[2:0], DC0[2:0], VC[2:0]
-    utilmDelay(50);
-    dispdrvWriteReg16(0x0012, 0x013A);    // VREG1OUT voltage
-    utilmDelay(50);
-    dispdrvWriteReg16(0x0013, 0x1600);    // VDV[4:0] for VCOM amplitude
-    dispdrvWriteReg16(0x0029, 0x000C);    // VCM[4:0] for VCOMH
-
-    dispdrvWriteReg16(0x0007, 0x0173);    // 262K color and display ON
+        dispdrvWriteReg16(0x0007, 0x0173);    // 262K color and display ON
+    }
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -161,7 +155,6 @@ const DispDriver dispdrv = {
     .height = 240,
     .init = ili9320Init,
     .sleep = ili9320Sleep,
-    .wakeup = ili9320Wakeup,
     .setWindow = ili9320SetWindow,
     .rotate = ili9320Rotate,
     .shift = ili9320Shift,

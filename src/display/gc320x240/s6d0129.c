@@ -74,45 +74,40 @@ void s6d0129Rotate(bool rotate)
     SET(DISP_CS);
 }
 
-void s6d0129Sleep(void)
+void s6d0129Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
-    // Power Off Sequence
-    dispdrvWriteReg16(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-    dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
-    dispdrvWriteReg16(0x0013, 0x0000);    // VREG1OUT voltage
+    if (value) {
+        dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
+        // Power Off Sequence
+        dispdrvWriteReg16(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+        dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
+        dispdrvWriteReg16(0x0013, 0x0000);    // VREG1OUT voltage
 
-    dispdrvWriteReg16(0x0014, 0x0000);    // VDV[4:0] for VCOM amplitude
-    utilmDelay(200);
-    dispdrvWriteReg16(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-
-    SET(DISP_CS);
-}
-
-void s6d0129Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    // Power On Sequence
-    dispdrvWriteReg16(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-    dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
-    dispdrvWriteReg16(0x0013, 0x0000);    // VREG1OUT voltage
-    dispdrvWriteReg16(0x0014, 0x0000);    // VDV[4:0] for VCOM amplitude
-    utilmDelay(200);
-    dispdrvWriteReg16(0x0007, 0x0000);    // Display control1
-    dispdrvWriteReg16(0x0013, 0x0000);    // Power control4 setting
-    dispdrvWriteReg16(0x0011, 0x2604);    // Power control2 setting
-    dispdrvWriteReg16(0x0014, 0x0015);    // Power control5 setting
-    dispdrvWriteReg16(0x0010, 0x3C00);    // Power control1 setting
-    dispdrvWriteReg16(0x0013, 0x0040);    // Power control4 setting
-    utilmDelay(10);
-    dispdrvWriteReg16(0x0013, 0x0060);    // Power control4 setting
-    utilmDelay(50);
-    dispdrvWriteReg16(0x0013, 0x0070);    // Power control4 setting
-    utilmDelay(40);
-    dispdrvWriteReg16(0x0007, 0x0017);    // 262K color and display ON
+        dispdrvWriteReg16(0x0014, 0x0000);    // VDV[4:0] for VCOM amplitude
+        utilmDelay(200);
+        dispdrvWriteReg16(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+    } else {
+        // Power On Sequence
+        dispdrvWriteReg16(0x0010, 0x0000);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+        dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
+        dispdrvWriteReg16(0x0013, 0x0000);    // VREG1OUT voltage
+        dispdrvWriteReg16(0x0014, 0x0000);    // VDV[4:0] for VCOM amplitude
+        utilmDelay(200);
+        dispdrvWriteReg16(0x0007, 0x0000);    // Display control1
+        dispdrvWriteReg16(0x0013, 0x0000);    // Power control4 setting
+        dispdrvWriteReg16(0x0011, 0x2604);    // Power control2 setting
+        dispdrvWriteReg16(0x0014, 0x0015);    // Power control5 setting
+        dispdrvWriteReg16(0x0010, 0x3C00);    // Power control1 setting
+        dispdrvWriteReg16(0x0013, 0x0040);    // Power control4 setting
+        utilmDelay(10);
+        dispdrvWriteReg16(0x0013, 0x0060);    // Power control4 setting
+        utilmDelay(50);
+        dispdrvWriteReg16(0x0013, 0x0070);    // Power control4 setting
+        utilmDelay(40);
+        dispdrvWriteReg16(0x0007, 0x0017);    // 262K color and display ON
+    }
 
     SET(DISP_CS);
 }
@@ -137,7 +132,6 @@ const DispDriver dispdrv = {
     .height = 240,
     .init = s6d0129Init,
     .sleep = s6d0129Sleep,
-    .wakeup = s6d0129Wakeup,
     .setWindow = s6d0129SetWindow,
     .rotate = s6d0129Rotate,
 };

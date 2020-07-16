@@ -47,44 +47,44 @@ void ls020Init(void)
     SET(DISP_CS);
 }
 
-void ls020Sleep(void)
+void ls020Sleep(bool value)
 {
     SET(DISP_RS);
     CLR(DISP_CS);
-    dispdrvSendData16(0xEF00);
-    dispdrvSendData16(0x7E04);
-    dispdrvSendData16(0xEFB0);
-    dispdrvSendData16(0x5A48);
-    dispdrvSendData16(0xEF00);
-    dispdrvSendData16(0x7F01);
-    dispdrvSendData16(0xEFB0);
-    dispdrvSendData16(0x64FF);
-    dispdrvSendData16(0x6500);
-    dispdrvSendData16(0xEF00);
-    dispdrvSendData16(0x7F01);
-    dispdrvSendData16(0xE262);
-    dispdrvSendData16(0xE202);
-    dispdrvSendData16(0xEFB0);
-    dispdrvSendData16(0xBC02);
-    dispdrvSendData16(0xEF00);
-    dispdrvSendData16(0x7F01);
-    dispdrvSendData16(0xE200);
-    dispdrvSendData16(0x8000);
-    dispdrvSendData16(0xE204);
-    dispdrvSendData16(0xE200);
-    dispdrvSendData16(0xE100);
-    dispdrvSendData16(0xEFB0);
-    dispdrvSendData16(0xBC00);
-    dispdrvSendData16(0xEF00);
-    dispdrvSendData16(0x7F01);
+
+    if (value) {
+        dispdrvSendData16(0xEF00);
+        dispdrvSendData16(0x7E04);
+        dispdrvSendData16(0xEFB0);
+        dispdrvSendData16(0x5A48);
+        dispdrvSendData16(0xEF00);
+        dispdrvSendData16(0x7F01);
+        dispdrvSendData16(0xEFB0);
+        dispdrvSendData16(0x64FF);
+        dispdrvSendData16(0x6500);
+        dispdrvSendData16(0xEF00);
+        dispdrvSendData16(0x7F01);
+        dispdrvSendData16(0xE262);
+        dispdrvSendData16(0xE202);
+        dispdrvSendData16(0xEFB0);
+        dispdrvSendData16(0xBC02);
+        dispdrvSendData16(0xEF00);
+        dispdrvSendData16(0x7F01);
+        dispdrvSendData16(0xE200);
+        dispdrvSendData16(0x8000);
+        dispdrvSendData16(0xE204);
+        dispdrvSendData16(0xE200);
+        dispdrvSendData16(0xE100);
+        dispdrvSendData16(0xEFB0);
+        dispdrvSendData16(0xBC00);
+        dispdrvSendData16(0xEF00);
+        dispdrvSendData16(0x7F01);
+    } else {
+        ls020Init();
+    }
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-}
-
-void ls020Wakeup(void)
-{
-    ls020Init();
 }
 
 void ls020SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
@@ -111,6 +111,5 @@ const DispDriver dispdrv = {
     .height = 132,
     .init = ls020Init,
     .sleep = ls020Sleep,
-    .wakeup = ls020Wakeup,
     .setWindow = ls020SetWindow,
 };

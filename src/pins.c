@@ -5,21 +5,6 @@
 #include "i2c.h"
 #include "settings.h"
 
-static void pinsInitDisplay(void)
-{
-    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-#ifdef STM32F3
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-#endif
-
-    GPIO_InitStruct.Pin = DISP_BCKL_Pin;
-    LL_GPIO_Init(DISP_BCKL_Port, &GPIO_InitStruct);
-}
-
 void pinsInitHwReset()
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -87,17 +72,6 @@ void pinsHwResetI2c(void)
 
 void pinsInit(void)
 {
-    pinsInitDisplay();
-
     pinsInitHwReset();
     pinsResetUSB();
-}
-
-void pinsSetBckl(bool value)
-{
-    if (value) {
-        SET(DISP_BCKL);
-    } else {
-        CLR(DISP_BCKL);
-    }
 }

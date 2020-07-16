@@ -116,25 +116,20 @@ void l2f50126Init(void)
     SET(DISP_CS);
 }
 
-void l2f50126Sleep(void)
+void l2f50126Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    l2f50126SelectReg(0x95); // Display Sleep (no parameter)
-    l2f50126SelectReg(0xAE); // Display OFF (no parameter)
+    if (value) {
+        l2f50126SelectReg(0x95); // Display Sleep (no parameter)
+        l2f50126SelectReg(0xAE); // Display OFF (no parameter)
+    } else {
+        l2f50126SelectReg(0x94); // Display out of sleep (no parameter)
+        l2f50126SelectReg(0xAF); // Display ON (no parameter)
+    }
 
     SET(DISP_CS);
 
-}
-
-void l2f50126Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    l2f50126SelectReg(0x94); // Display out of sleep (no parameter)
-    l2f50126SelectReg(0xAF); // Display ON (no parameter)
-
-    SET(DISP_CS);
 }
 
 void l2f50126SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
@@ -162,6 +157,5 @@ const DispDriver dispdrv = {
     .height = 132,
     .init = l2f50126Init,
     .sleep = l2f50126Sleep,
-    .wakeup = l2f50126Wakeup,
     .setWindow = l2f50126SetWindow,
 };

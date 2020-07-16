@@ -62,24 +62,19 @@ void s6d0164Init(void)
     SET(DISP_CS);
 }
 
-void s6d0164Sleep(void)
+void s6d0164Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
-    utilmDelay(50);
-    dispdrvWriteReg16(0x0010, 0x0A01);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-
-    SET(DISP_CS);
-}
-
-void s6d0164Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvWriteReg16(0x0010, 0x0A00);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-    utilmDelay(50);
-    dispdrvWriteReg16(0x0007, 0x1017);    // 65K color and display ON
+    if (value) {
+        dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
+        utilmDelay(50);
+        dispdrvWriteReg16(0x0010, 0x0A01);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+    } else {
+        dispdrvWriteReg16(0x0010, 0x0A00);    // SAP, BT[3:0], AP, DSTB, SLP, STB
+        utilmDelay(50);
+        dispdrvWriteReg16(0x0007, 0x1017);    // 65K color and display ON
+    }
 
     SET(DISP_CS);
 }
@@ -107,6 +102,5 @@ const DispDriver dispdrv = {
     .height = 176,
     .init = s6d0164Init,
     .sleep = s6d0164Sleep,
-    .wakeup = s6d0164Wakeup,
     .setWindow = s6d0164SetWindow,
 };

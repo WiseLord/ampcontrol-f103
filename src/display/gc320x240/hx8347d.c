@@ -89,42 +89,38 @@ void hx8347dInit(void)
     SET(DISP_CS);
 }
 
-void hx8347dSleep(void)
+void hx8347dSleep(bool value)
 {
     CLR(DISP_CS);
 
-    // Enter Deep Sleep mode Setting
-    dispdrvWriteReg8(0x28, 0xB8); //GON=’1’ DTE=’1’ D[1:0]=’10’
-    utilmDelay(40);
-    dispdrvWriteReg8(0x1F, 0x89); // GAS=1, VOMG=00, PON=0, DK=1, XDK=0, DVDH_TRI=0, STB=1
-    utilmDelay(40);
-    dispdrvWriteReg8(0x28, 0x04); //GON=’0’ DTE=’0’ D[1:0]=’01’
-    utilmDelay(40);
-    dispdrvWriteReg8(0x19, 0x00); //OSC_EN=’0’
-    utilmDelay(5);
-    dispdrvWriteReg8(0x01, 0xC0); //DP_STB[1:0]=’11’*/
-
-    SET(DISP_CS);
-}
-
-void hx8347dWakeup(void)
-{
-    CLR(DISP_CS);
-    // Exit Deep Sleep mode Setting
-    dispdrvWriteReg8(0x01, 0x00); //DP_STB='0', out deep sleep
-    utilmDelay(10);
-    dispdrvWriteReg8(0x19, 0x01); //OSC_EN='1', start Osc
-    dispdrvWriteReg8(0x1F, 0x88); // GAS=1, VOMG=00, PON=0, DK=1, XDK=0, DVDH_TRI=0, STB=0
-    utilmDelay(5);
-    dispdrvWriteReg8(0x1F, 0x80); // GAS=1, VOMG=00, PON=0, DK=0, XDK=0, DVDH_TRI=0, STB=0
-    utilmDelay(5);
-    dispdrvWriteReg8(0x1F, 0x90); // GAS=1, VOMG=00, PON=1, DK=0, XDK=0, DVDH_TRI=0, STB=0
-    utilmDelay(5);
-    dispdrvWriteReg8(0x1F, 0xD0); // GAS=1, VOMG=10, PON=1, DK=0, XDK=0, DDVDH_TRI=0, STB=0
-    utilmDelay(5);
-    dispdrvWriteReg8(0x28, 0x38); //GON=1, DTE=1, D=1000
-    utilmDelay(40);
-    dispdrvWriteReg8(0x28, 0x3F); //GON=1, DTE=1, D=1100*/
+    if (value) {
+        // Enter Deep Sleep mode Setting
+        dispdrvWriteReg8(0x28, 0xB8); //GON=’1’ DTE=’1’ D[1:0]=’10’
+        utilmDelay(40);
+        dispdrvWriteReg8(0x1F, 0x89); // GAS=1, VOMG=00, PON=0, DK=1, XDK=0, DVDH_TRI=0, STB=1
+        utilmDelay(40);
+        dispdrvWriteReg8(0x28, 0x04); //GON=’0’ DTE=’0’ D[1:0]=’01’
+        utilmDelay(40);
+        dispdrvWriteReg8(0x19, 0x00); //OSC_EN=’0’
+        utilmDelay(5);
+        dispdrvWriteReg8(0x01, 0xC0); //DP_STB[1:0]=’11’*/
+    } else {
+        // Exit Deep Sleep mode Setting
+        dispdrvWriteReg8(0x01, 0x00); //DP_STB='0', out deep sleep
+        utilmDelay(10);
+        dispdrvWriteReg8(0x19, 0x01); //OSC_EN='1', start Osc
+        dispdrvWriteReg8(0x1F, 0x88); // GAS=1, VOMG=00, PON=0, DK=1, XDK=0, DVDH_TRI=0, STB=0
+        utilmDelay(5);
+        dispdrvWriteReg8(0x1F, 0x80); // GAS=1, VOMG=00, PON=0, DK=0, XDK=0, DVDH_TRI=0, STB=0
+        utilmDelay(5);
+        dispdrvWriteReg8(0x1F, 0x90); // GAS=1, VOMG=00, PON=1, DK=0, XDK=0, DVDH_TRI=0, STB=0
+        utilmDelay(5);
+        dispdrvWriteReg8(0x1F, 0xD0); // GAS=1, VOMG=10, PON=1, DK=0, XDK=0, DDVDH_TRI=0, STB=0
+        utilmDelay(5);
+        dispdrvWriteReg8(0x28, 0x38); //GON=1, DTE=1, D=1000
+        utilmDelay(40);
+        dispdrvWriteReg8(0x28, 0x3F); //GON=1, DTE=1, D=1100*/
+    }
 
     SET(DISP_CS);
 }
@@ -150,6 +146,5 @@ const DispDriver dispdrv = {
     .height = 240,
     .init = hx8347dInit,
     .sleep = hx8347dSleep,
-    .wakeup = hx8347dWakeup,
     .setWindow = hx8347dSetWindow,
 };

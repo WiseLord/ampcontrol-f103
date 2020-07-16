@@ -10,9 +10,6 @@ extern "C" {
 
 #include "hwlibs.h"
 
-#define DISP_BCKL_Port          GPIOC
-#define DISP_BCKL_Pin           LL_GPIO_PIN_13
-
 // Mute and Standby lines
 #define MUTE_Port               GPIOB
 #define MUTE_Pin                LL_GPIO_PIN_11
@@ -42,8 +39,6 @@ extern "C" {
 void pinsInit(void);
 
 void pinsHwResetI2c(void);
-
-void pinsSetBckl(bool value);
 
 #ifdef __cplusplus
 }

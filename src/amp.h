@@ -17,6 +17,9 @@ extern "C" {
 #define FLAG_ENTER          1
 #define FLAG_SWITCH         2
 
+#define LCD_BR_MIN          1
+#define LCD_BR_MAX          32
+
 typedef uint8_t AmpStatus;
 enum {
     AMP_STATUS_STBY,

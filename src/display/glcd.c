@@ -98,6 +98,19 @@ void glcdInit(GlcdOrientation value)
     glcdSetOrientation(value);
 }
 
+void glcdSetBacklight(bool value)
+{
+#ifdef _DISP_BCKL_ENABLED
+    if (value) {
+        SET(DISP_BCKL);
+    } else {
+        CLR(DISP_BCKL);
+    }
+#else
+    (void)value;
+#endif
+}
+
 Glcd *glcdGet(void)
 {
     return &glcd;
@@ -111,18 +124,27 @@ void glcdSetOrientation(GlcdOrientation value)
         glcd.drv->rotate(value & GLCD_LANDSCAPE_ROT);
     }
 
-    bool portrate = (value & GLCD_PORTRATE);
-
-    glcd.rect.x = 0;
-    glcd.rect.y = 0;
-    glcd.rect.w = portrate ? dispdrv.height : dispdrv.width;
-    glcd.rect.h = portrate ? dispdrv.width : dispdrv.height;
+    glcdResetRect();
 }
 
 void glcdShift(int16_t pos)
 {
     if (glcd.drv->shift) {
         glcd.drv->shift(pos);
+    }
+}
+
+void glcdSleep(bool value)
+{
+    if (glcd.drv->sleep) {
+        glcd.drv->sleep(value);
+    }
+}
+
+void glcdSetIdle(bool value)
+{
+    if (glcd.drv->setIdle) {
+        glcd.drv->setIdle(value);
     }
 }
 
@@ -140,6 +162,24 @@ void glcdSetRect(const GlcdRect *rect)
     glcd.rect.y = rect->y;
     glcd.rect.w = rect->w;
     glcd.rect.h = rect->h;
+}
+
+void glcdSetRectValues(int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    glcd.rect.x = x;
+    glcd.rect.y = y;
+    glcd.rect.w = w;
+    glcd.rect.h = h;
+}
+
+void glcdResetRect(void)
+{
+    bool portrate = (glcd.orientation & GLCD_PORTRATE);
+
+    glcd.rect.x = 0;
+    glcd.rect.y = 0;
+    glcd.rect.w = portrate ? dispdrv.height : dispdrv.width;
+    glcd.rect.h = portrate ? dispdrv.width : dispdrv.height;
 }
 
 GlcdRect *glcdGetRect(void)
@@ -349,6 +389,10 @@ int16_t glcdWriteString(const char *string)
     int16_t ret = 0;
 
     const tFont *font = glcd.font;
+
+    if (font == NULL) {
+        return 0;
+    }
 
     if (glcd.fontAlign != GLCD_ALIGN_LEFT) {
         uint16_t strLength = 0;
@@ -634,8 +678,6 @@ void glcdDrawCircle(int16_t xc, int16_t yc, int16_t r,
     int16_t x = 0;
     int16_t y = r;
 
-    glcdDrawLine(xc - r, yc, xc + r, yc, color);
-
     while (x < y) {
         if (f >= 0) {
             y--;
@@ -648,9 +690,11 @@ void glcdDrawCircle(int16_t xc, int16_t yc, int16_t r,
 
         glcdDrawLine(xc - x, yc + y, xc + x, yc + y, color);
         glcdDrawLine(xc - x, yc - y, xc + x, yc - y, color);
-        glcdDrawLine(xc - y, yc + x, xc + y, yc + x, color);
-        glcdDrawLine(xc - y, yc - x, xc + y, yc - x, color);
+        glcdDrawLine(xc - y, yc - x, xc - y, yc + x, color);
+        glcdDrawLine(xc + y, yc - x, xc + y, yc + x, color);
     }
+
+    glcdDrawRect(xc - x, yc - y, 2 * x, 2 * y, color);
 }
 
 void glcdDrawRing(int16_t xc, int16_t yc, int16_t r, int16_t t, color_t color)

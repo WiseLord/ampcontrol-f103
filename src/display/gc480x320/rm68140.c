@@ -68,26 +68,22 @@ void rm68140Shift(int16_t value)
     DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
-void rm68140Sleep(void)
+
+void rm68140Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvSelectReg8(0x28);    // Display OFF
-    utilmDelay(100);
-    dispdrvSelectReg8(0x10);
+    if (value) {
+        dispdrvSelectReg8(0x28);    // Display OFF
+        utilmDelay(100);
+        dispdrvSelectReg8(0x10);
+    } else {
+        dispdrvSelectReg8(0x11);    // Display ON
+        utilmDelay(100);
+        dispdrvSelectReg8(0x29);
+    }
 
     DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void rm68140Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvSelectReg8(0x11);    // Display ON
-    utilmDelay(100);
-    dispdrvSelectReg8(0x29);
-
     SET(DISP_CS);
 }
 
@@ -117,7 +113,6 @@ const DispDriver dispdrv = {
     .height = 320,
     .init = rm68140Init,
     .sleep = rm68140Sleep,
-    .wakeup = rm68140Wakeup,
     .setWindow = rm68140SetWindow,
     .rotate = rm68140Rotate,
     .shift = rm68140Shift,

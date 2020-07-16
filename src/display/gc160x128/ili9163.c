@@ -94,25 +94,19 @@ void ili9163Init(void)
     SET(DISP_CS);
 }
 
-void ili9163Sleep(void)
+void ili9163Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvSelectReg8(0x28);    // Display OFF
-    utilmDelay(100);
-    dispdrvSelectReg8(0x10);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void ili9163Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvSelectReg8(0x11);    // Display OFF
-    utilmDelay(100);
-    dispdrvSelectReg8(0x29);
+    if (value) {
+        dispdrvSelectReg8(0x28);    // Display OFF
+        utilmDelay(100);
+        dispdrvSelectReg8(0x10);
+    } else {
+        dispdrvSelectReg8(0x11);    // Display OFF
+        utilmDelay(100);
+        dispdrvSelectReg8(0x29);
+    }
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -142,7 +136,6 @@ const DispDriver dispdrv = {
     .width = 162,
     .height = 132,
     .sleep = ili9163Sleep,
-    .wakeup = ili9163Wakeup,
     .init = ili9163Init,
     .setWindow = ili9163SetWindow,
 };

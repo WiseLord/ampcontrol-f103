@@ -123,9 +123,9 @@ static void ampScreenPwm(void)
     }
 
     if (br == amp.brightness) {
-        pinsSetBckl(false);
+        glcdSetBacklight(false);
     } else if (br == 0) {
-        pinsSetBckl(true);
+        glcdSetBacklight(true);
     }
 }
 static void actionDispExpired(ScreenType scrMode)

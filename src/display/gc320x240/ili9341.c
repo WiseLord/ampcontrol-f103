@@ -158,20 +158,15 @@ void ili9341Shift(int16_t value)
     SET(DISP_CS);
 }
 
-void ili9341Sleep(void)
+void ili9341Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvSelectReg8(0x10); // Enter Sleep Mode
-
-    SET(DISP_CS);
-}
-
-void ili9341Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvSelectReg8(0x11); // Sleep Out
+    if (value) {
+        dispdrvSelectReg8(0x10); // Enter Sleep Mode
+    } else {
+        dispdrvSelectReg8(0x11); // Sleep Out
+    }
 
     SET(DISP_CS);
 }
@@ -201,7 +196,6 @@ const DispDriver dispdrv = {
     .height = 240,
     .init = ili9341Init,
     .sleep = ili9341Sleep,
-    .wakeup = ili9341Wakeup,
     .setWindow = ili9341SetWindow,
     .rotate = ili9341Rotate,
     .shift = ili9341Shift,

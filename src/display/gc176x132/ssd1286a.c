@@ -44,56 +44,49 @@ void ssd1286aInit(void)
     SET(DISP_CS);
 }
 
-void ssd1286aSleep(void)
+void ssd1286aSleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvSelectReg8(0x07);
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x00);
+    if (value) {
+        dispdrvSelectReg8(0x07);
+        dispdrvSendData8(0x00);
+        dispdrvSendData8(0x00);
 
-    dispdrvSelectReg8(0x10);
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x01);
+        dispdrvSelectReg8(0x10);
+        dispdrvSendData8(0x00);
+        dispdrvSendData8(0x01);
 
-    dispdrvSelectReg8(0x11);
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x00);
+        dispdrvSelectReg8(0x11);
+        dispdrvSendData8(0x00);
+        dispdrvSendData8(0x00);
 
-    dispdrvSelectReg8(0x12);
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x00);
+        dispdrvSelectReg8(0x12);
+        dispdrvSendData8(0x00);
+        dispdrvSendData8(0x00);
+    } else {
+        dispdrvSelectReg8(0x10);
+        dispdrvSendData8(0x1f);
+        dispdrvSendData8(0x92);
 
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
+        utilmDelay(20);
 
-void ssd1286aWakeup(void)
-{
-    CLR(DISP_CS);
+        dispdrvSelectReg8(0x11);
+        dispdrvSendData8(0x61);
+        dispdrvSendData8(0x1c);
 
-    dispdrvSelectReg8(0x10);
-    dispdrvSendData8(0x1f);
-    dispdrvSendData8(0x92);
+        utilmDelay(20);
 
-    utilmDelay(20);
+        dispdrvSelectReg8(0x12);
+        dispdrvSendData8(0x04);
+        dispdrvSendData8(0x0f);
 
-    dispdrvSelectReg8(0x11);
-    dispdrvSendData8(0x61);
-    dispdrvSendData8(0x1c);
+        utilmDelay(20);
 
-    utilmDelay(20);
-
-    dispdrvSelectReg8(0x12);
-    dispdrvSendData8(0x04);
-    dispdrvSendData8(0x0f);
-
-    utilmDelay(20);
-
-    dispdrvSelectReg8(0x07);
-    dispdrvSendData8(0x00);
-    dispdrvSendData8(0x33);
-
+        dispdrvSelectReg8(0x07);
+        dispdrvSendData8(0x00);
+        dispdrvSendData8(0x33);
+    }
     DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
@@ -125,6 +118,5 @@ const DispDriver dispdrv = {
     .height = 132,
     .init = ssd1286aInit,
     .sleep = ssd1286aSleep,
-    .wakeup = ssd1286aWakeup,
     .setWindow = ssd1286aSetWindow,
 };

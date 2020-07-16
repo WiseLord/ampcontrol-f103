@@ -72,40 +72,35 @@ void hx8340Init(void)
     SET(DISP_CS);
 }
 
-void hx8340Sleep(void)
+void hx8340Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvWriteReg8(0x26, 0xB8); //GON=’1’ DTE=’1’ D[1:0]=’10’
-    utilmDelay(40);
-    dispdrvWriteReg8(0x19, 0x01); //VCOMG=’0’, PON=’0’, DK=’1’
-    utilmDelay(40);
-    dispdrvWriteReg8(0x26, 0xA4); //GON=’1’ DTE=’0’ D[1:0]=’01’
-    utilmDelay(40);
-    dispdrvWriteReg8(0x26, 0x84); //GON=’0’ DTE=’0’ D[1:0]=’01’
-    utilmDelay(40);
-    dispdrvWriteReg8(0x1C, 0x00); //AP[2:0]=’000’
-    dispdrvWriteReg8(0x01, 0x02); //SLP=’1’
-    dispdrvWriteReg8(0x01, 0x00); //OSC_EN=’0’
-
-    SET(DISP_CS);
-}
-
-void hx8340Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvWriteReg8(0x18, 0x44); //I/P_RADJ,N/P_RADJ, Normal mode 60Hz
-    dispdrvWriteReg8(0x21, 0x01); //OSC_EN='1', start Osc
-    dispdrvWriteReg8(0x01, 0x00); //SLP='0', out sleep
-    dispdrvWriteReg8(0x1C, 0x03); //AP=011
-    dispdrvWriteReg8(0x19, 0x06); // VOMG=1,PON=1, DK=0,
-    utilmDelay(5);
-    dispdrvWriteReg8(0x26, 0x84); //PT=10,GON=0, DTE=0, D=0100
-    utilmDelay(40);
-    dispdrvWriteReg8(0x26, 0xB8); //PT=10,GON=1, DTE=1, D=1000
-    utilmDelay(40);
-    dispdrvWriteReg8(0x26, 0xBC); //PT=10,GON=1, DTE=1, D=1100
+    if (value) {
+        dispdrvWriteReg8(0x26, 0xB8); //GON=’1’ DTE=’1’ D[1:0]=’10’
+        utilmDelay(40);
+        dispdrvWriteReg8(0x19, 0x01); //VCOMG=’0’, PON=’0’, DK=’1’
+        utilmDelay(40);
+        dispdrvWriteReg8(0x26, 0xA4); //GON=’1’ DTE=’0’ D[1:0]=’01’
+        utilmDelay(40);
+        dispdrvWriteReg8(0x26, 0x84); //GON=’0’ DTE=’0’ D[1:0]=’01’
+        utilmDelay(40);
+        dispdrvWriteReg8(0x1C, 0x00); //AP[2:0]=’000’
+        dispdrvWriteReg8(0x01, 0x02); //SLP=’1’
+        dispdrvWriteReg8(0x01, 0x00); //OSC_EN=’0’
+    } else {
+        dispdrvWriteReg8(0x18, 0x44); //I/P_RADJ,N/P_RADJ, Normal mode 60Hz
+        dispdrvWriteReg8(0x21, 0x01); //OSC_EN='1', start Osc
+        dispdrvWriteReg8(0x01, 0x00); //SLP='0', out sleep
+        dispdrvWriteReg8(0x1C, 0x03); //AP=011
+        dispdrvWriteReg8(0x19, 0x06); // VOMG=1,PON=1, DK=0,
+        utilmDelay(5);
+        dispdrvWriteReg8(0x26, 0x84); //PT=10,GON=0, DTE=0, D=0100
+        utilmDelay(40);
+        dispdrvWriteReg8(0x26, 0xB8); //PT=10,GON=1, DTE=1, D=1000
+        utilmDelay(40);
+        dispdrvWriteReg8(0x26, 0xBC); //PT=10,GON=1, DTE=1, D=1100
+    }
 
     SET(DISP_CS);
 }
@@ -131,6 +126,5 @@ const DispDriver dispdrv = {
     .height = 176,
     .init = hx8340Init,
     .sleep = hx8340Sleep,
-    .wakeup = hx8340Wakeup,
     .setWindow = hx8340SetWindow,
 };

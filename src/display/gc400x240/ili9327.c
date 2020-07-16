@@ -103,24 +103,19 @@ void ili9327Rotate(bool rotate)
     SET(DISP_CS);
 }
 
-void ili9327Sleep(void)
+void ili9327Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvSelectReg8(0x28);    // Display OFF
-    utilmDelay(100);
-    dispdrvSelectReg8(0x10);
-
-    SET(DISP_CS);
-}
-
-void ili9327Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvSelectReg8(0x11);    // Display ON
-    utilmDelay(100);
-    dispdrvSelectReg8(0x29);
+    if (value) {
+        dispdrvSelectReg8(0x28);    // Display OFF
+        utilmDelay(100);
+        dispdrvSelectReg8(0x10);
+    } else {
+        dispdrvSelectReg8(0x11);    // Display ON
+        utilmDelay(100);
+        dispdrvSelectReg8(0x29);
+    }
 
     SET(DISP_CS);
 }
@@ -151,7 +146,6 @@ const DispDriver dispdrv = {
     .height = 240,
     .init = ili9327Init,
     .sleep = ili9327Sleep,
-    .wakeup = ili9327Wakeup,
     .setWindow = ili9327SetWindow,
     .rotate = ili9327Rotate,
 };

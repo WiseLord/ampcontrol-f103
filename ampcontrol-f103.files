@@ -22,6 +22,7 @@ src/control.h
 src/debug.c
 src/debug.h
 src/display/colors.h
+src/display/dispconf.h
 src/display/dispdrv.c
 src/display/dispdrv.h
 src/display/fonts/font-terminus-12.c

@@ -18,23 +18,17 @@ void lph9157Init(void)
     SET(DISP_CS);
 }
 
-void lph9157Sleep(void)
+void lph9157Sleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvSelectReg8(0x10);
-    dispdrvSelectReg8(0x28);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void lph9157Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvSelectReg8(0x11);
-    dispdrvSelectReg8(0x29);
+    if (value) {
+        dispdrvSelectReg8(0x10);
+        dispdrvSelectReg8(0x28);
+    } else {
+        dispdrvSelectReg8(0x11);
+        dispdrvSelectReg8(0x29);
+    }
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -65,6 +59,5 @@ const DispDriver dispdrv = {
     .height = 132,
     .init = lph9157Init,
     .sleep = lph9157Sleep,
-    .wakeup = lph9157Wakeup,
     .setWindow = lph9157SetWindow,
 };

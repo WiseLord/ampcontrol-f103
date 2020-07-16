@@ -118,26 +118,21 @@ void ili9486Shift(int16_t value)
     DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
-void ili9486Sleep(void)
+void ili9486Sleep(bool value)
 {
     CLR(DISP_CS);
 
+    if (value) {
     dispdrvSelectReg8(0x28);    // Display OFF
     utilmDelay(100);
     dispdrvSelectReg8(0x10);
+    } else {
+        dispdrvSelectReg8(0x11);    // Display ON
+        utilmDelay(100);
+        dispdrvSelectReg8(0x29);
+    }
 
     DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void ili9486Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvSelectReg8(0x11);    // Display ON
-    utilmDelay(100);
-    dispdrvSelectReg8(0x29);
-
     SET(DISP_CS);
 }
 
@@ -167,7 +162,6 @@ const DispDriver dispdrv = {
     .height = 320,
     .init = ili9486Init,
     .sleep = ili9486Sleep,
-    .wakeup = ili9486Wakeup,
     .setWindow = ili9486SetWindow,
     .rotate = ili9486Rotate,
     .shift = ili9486Shift,

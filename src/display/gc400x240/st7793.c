@@ -88,27 +88,22 @@ void st7793Shift(int16_t value)
     SET(DISP_CS);
 }
 
-void st7793Sleep(void)
+void st7793Sleep(bool value)
 {
     CLR(DISP_CS);
 
+    if (value) {
     dispdrvWriteReg16(0x0007, 0x0000);
     utilmDelay(50);
     dispdrvWriteReg16(0x0102, 0x0180);
     utilmDelay(200);
-
-    SET(DISP_CS);
-}
-
-void st7793Wakeup(void)
-{
-    CLR(DISP_CS);
-
-    // Power On Sequence
-    utilmDelay(200);
-    dispdrvWriteReg16(0x0102, 0x01b0);
-    utilmDelay(50);
-    dispdrvWriteReg16(0x0007, 0x0100);
+    } else {
+        // Power On Sequence
+        utilmDelay(200);
+        dispdrvWriteReg16(0x0102, 0x01b0);
+        utilmDelay(50);
+        dispdrvWriteReg16(0x0007, 0x0100);
+    }
 
     SET(DISP_CS);
 }
@@ -136,7 +131,6 @@ const DispDriver dispdrv = {
     .height = 240,
     .init = st7793Init,
     .sleep = st7793Sleep,
-    .wakeup = st7793Wakeup,
     .setWindow = st7793SetWindow,
     .rotate = st7793Rotate,
 //    .shift = st7793Shift,
