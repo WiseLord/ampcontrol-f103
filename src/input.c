@@ -1,6 +1,7 @@
 #include "input.h"
 
 #include "display/dispdrv.h"
+#include "hwlibs.h"
 #include "settings.h"
 #include "timers.h"
 
