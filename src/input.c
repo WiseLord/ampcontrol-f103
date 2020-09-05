@@ -63,8 +63,8 @@ static void inputInitPins(void)
     initDef.Mode = LL_GPIO_MODE_INPUT;
     initDef.Pull = LL_GPIO_PULL_UP;
 
-    initDef.Pin = DISP_DATA_Pin;
-    LL_GPIO_Init(DISP_DATA_Port, &initDef);
+    initDef.Pin = INPUT_Pin;
+    LL_GPIO_Init(INPUT_Port, &initDef);
 }
 
 void inputInit(void)

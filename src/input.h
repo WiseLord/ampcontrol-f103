@@ -34,6 +34,11 @@ extern "C" {
 #define BTN_FLAG_NO             0x0000
 #define BTN_FLAG_LONG_PRESS     0x0001
 
+// Input pins are shared with display data port
+#define INPUT_Port              GPIOB
+#define INPUT_Pin               (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
+                                 LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
+
 typedef struct {
     uint16_t btn;
     uint16_t flags;
