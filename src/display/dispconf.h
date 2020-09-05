@@ -48,7 +48,7 @@ extern "C" {
 
 #ifdef _DISP_READ_ENABLED
 #define DISP_RD_Port            GPIOB
-#define DISP_RD_Pin             LL_GPIO_PIN_14
+#define DISP_RD_Pin             LL_GPIO_PIN_11
 #endif
 
 #ifdef _DISP_RST_ENABLED

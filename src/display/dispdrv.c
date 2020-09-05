@@ -93,32 +93,11 @@ static inline void dispdrvBusIn(void)
 #if defined(_DISP_16BIT)
     WRITE_BYTE(DISP_DATA_HI, 0xFF);         // Set HIGH level on all data lines
     WRITE_BYTE(DISP_DATA_LO, 0xFF);
-#ifdef STM32F1
-    DISP_DATA_HI_Port->CRH = 0x88888888;
-    DISP_DATA_LO_Port->CRL = 0x88888888;
-#endif
-#ifdef STM32F3
-    DISP_DATA_HI_Port->MODER &= 0x0000FFFF;
-    DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
-#endif
+    IN_BYTE(DISP_DATA_HI);
+    IN_BYTE(DISP_DATA_LO);
 #elif defined(_DISP_8BIT)
     WRITE_BYTE(DISP_DATA, 0xFF);            // Set HIGH level on all data lines
-
-#if IS_GPIO_LO(DISP_DATA)
-#ifdef STM32F1
-    DISP_DATA_Port->CRL = 0x88888888;
-#endif
-#ifdef STM32F3
-    DISP_DATA_Port->MODER &= 0xFFFF0000;
-#endif
-#elif IS_GPIO_HI(DISP_DATA)
-#ifdef STM32F1
-    DISP_DATA_Port->CRH = 0x88888888;
-#endif
-#ifdef STM32F3
-    DISP_DATA_Port->MODER &= 0x0000FFFF;
-#endif
-#endif
+    IN_BYTE(DISP_DATA);
 #endif
     busBusy = false;
 }
@@ -131,35 +110,10 @@ static inline void dispdrvBusOut(void)
         busBusy = true;
     }
 #if defined(_DISP_16BIT)
-#ifdef STM32F1
-    DISP_DATA_HI_Port->CRH = 0x33333333;
-    DISP_DATA_LO_Port->CRL = 0x33333333;
-#endif
-#ifdef STM32F3
-    DISP_DATA_HI_Port->MODER &= 0x0000FFFF;
-    DISP_DATA_HI_Port->MODER |= 0x55550000;
-    DISP_DATA_LO_Port->MODER &= 0xFFFF0000;
-    DISP_DATA_LO_Port->MODER |= 0x55550000;
-#endif
+    OUT_BYTE(DISP_DATA_HI);
+    OUT_BYTE(DISP_DATA_LO);
 #elif defined(_DISP_8BIT)
-#if IS_GPIO_LO(DISP_DATA)
-#ifdef STM32F1
-    DISP_DATA_Port->CRL = 0x33333333;
-#endif
-#ifdef STM32F3
-    DISP_DATA_Port->MODER &= 0xFFFF0000;
-    DISP_DATA_Port->MODER |= 0x00005555;
-#endif
-#endif
-#if IS_GPIO_HI(DISP_DATA)
-#ifdef STM32F1
-    DISP_DATA_Port->CRH = 0x33333333;
-#endif
-#ifdef STM32F3
-    DISP_DATA_Port->MODER &= 0x0000FFFF;
-    DISP_DATA_Port->MODER |= 0x55550000;
-#endif
-#endif
+    OUT_BYTE(DISP_DATA);
 #endif
 }
 
@@ -271,6 +225,10 @@ static void dispdrvInitPins(void)
 
 #ifdef _DISP_BCKL_ENABLED
     OUT_PIN(DISP_BCKL);
+#endif
+
+#ifndef _DISP_SPI
+    dispdrvBusOut();
 #endif
 }
 
