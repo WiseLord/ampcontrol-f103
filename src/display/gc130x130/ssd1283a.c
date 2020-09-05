@@ -1,5 +1,7 @@
 #include "../dispdrv.h"
 
+static bool _rotate = 0;
+
 void ssd1283aInit(void)
 {
     CLR(DISP_CS);
@@ -59,12 +61,12 @@ void ssd1283aInit(void)
     dispdrvSendData8(0x33);
 
     dispdrvSelectReg8(0x01);
-    dispdrvSendData8(0x23); //0x21
+    dispdrvSendData8(0x21);
     dispdrvSendData8(0x83);
 
     dispdrvSelectReg8(0x03);
     dispdrvSendData8(0x68);
-    dispdrvSendData8(0x30);
+    dispdrvSendData8(0x20);
 
     dispdrvSelectReg8(0x2F);
     dispdrvSendData8(0xFF);
@@ -98,48 +100,40 @@ void ssd1283aInit(void)
     SET(DISP_CS);
 }
 
+void ssd1283aRotate(bool rotate)
+{
+    _rotate = rotate;
+
+    CLR(DISP_CS);
+
+    if (rotate) {
+        dispdrvSelectReg8(0x01);
+        dispdrvSendData8(0x23);
+        dispdrvSendData8(0x83);
+
+        dispdrvSelectReg8(0x03);
+        dispdrvSendData8(0x68);
+        dispdrvSendData8(0x30);
+    } else {
+        dispdrvSelectReg8(0x01);
+        dispdrvSendData8(0x21);
+        dispdrvSendData8(0x83);
+
+        dispdrvSelectReg8(0x03);
+        dispdrvSendData8(0x68);
+        dispdrvSendData8(0x20);
+    }
+
+    DISP_WAIT_BUSY();
+    SET(DISP_CS);
+}
+
 void ssd1283aSleep(bool value)
 {
     CLR(DISP_CS);
 
     if (value) {
-        dispdrvSelectReg8(0x07);
-        dispdrvSendData8(0x02);
-        dispdrvSendData8(0x00);
-
-        dispdrvSelectReg8(0x10);
-        dispdrvSendData8(0x00);
-        dispdrvSendData8(0x01);
-
-        dispdrvSelectReg8(0x11);
-        dispdrvSendData8(0x00);
-        dispdrvSendData8(0x00);
-
-        dispdrvSelectReg8(0x12);
-        dispdrvSendData8(0x00);
-        dispdrvSendData8(0x00);
     } else {
-        dispdrvSelectReg8(0x10);
-        dispdrvSendData8(0x1f);
-        dispdrvSendData8(0x92);
-
-        utilmDelay(20);
-
-        dispdrvSelectReg8(0x11);
-        dispdrvSendData8(0x61);
-        dispdrvSendData8(0x1c);
-
-        utilmDelay(20);
-
-        dispdrvSelectReg8(0x12);
-        dispdrvSendData8(0x04);
-        dispdrvSendData8(0x0f);
-
-        utilmDelay(20);
-
-        dispdrvSelectReg8(0x07);
-        dispdrvSendData8(0x02);
-        dispdrvSendData8(0x33);
     }
 
     DISP_WAIT_BUSY();
@@ -148,14 +142,22 @@ void ssd1283aSleep(bool value)
 
 void ssd1283aSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
-    uint8_t x0 = (uint8_t)x;
-    uint8_t y0 = (uint8_t)y + 2;
-    uint8_t x1 = (uint8_t)(x + w - 1);
-    uint8_t y1 = (uint8_t)(y + h - 1) + 2;
+    bool rot = _rotate;
+    const int16_t sh = 2;
+
+    uint8_t x0 = (uint8_t)(x + (rot ? 0 : sh));
+    uint8_t y0 = (uint8_t)(y - (rot ? 0 : sh));
+    uint8_t x1 = (uint8_t)(x + (rot ? 0 : sh) + w - 1);
+    uint8_t y1 = (uint8_t)(y - (rot ? 0 : sh) + h - 1);
 
     dispdrvSelectReg8(0x44);
-    dispdrvSendData8(y1);
-    dispdrvSendData8(y0);
+    if (_rotate) {
+        dispdrvSendData8(y1 + sh);
+        dispdrvSendData8(y0 + sh);
+    } else {
+        dispdrvSendData8(dispdrv.height - 1 - y0);
+        dispdrvSendData8(dispdrv.height - 1 - y1);
+    }
 
     dispdrvSelectReg8(0x45);
     dispdrvSendData8(x1);
@@ -163,7 +165,11 @@ void ssd1283aSetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 
     dispdrvSelectReg8(0x21);
     dispdrvSendData8(x0);
-    dispdrvSendData8(y0);
+    if (_rotate) {
+        dispdrvSendData8(y0 + sh);
+    } else {
+        dispdrvSendData8(dispdrv.height - 1 - y0);
+    }
 
     dispdrvSelectReg8(0x22);
 }
@@ -172,6 +178,7 @@ const DispDriver dispdrv = {
     .width = 130,
     .height = 130,
     .init = ssd1283aInit,
-//    .sleep = ssd1283aSleep,
+    .sleep = ssd1283aSleep,
     .setWindow = ssd1283aSetWindow,
+    .rotate = ssd1283aRotate,
 };
