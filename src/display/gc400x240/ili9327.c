@@ -11,7 +11,7 @@ void ili9327Init(void)
     dispdrvSendData8(0x20);
 
     dispdrvSelectReg8(0x11);
-    utilmDelay(100);
+    DISP_MDELAY(100);
 
     dispdrvSelectReg8(0xD1);
     dispdrvSendData8(0x00);
@@ -109,11 +109,11 @@ void ili9327Sleep(bool value)
 
     if (value) {
         dispdrvSelectReg8(0x28);    // Display OFF
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x10);
     } else {
         dispdrvSelectReg8(0x11);    // Display ON
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x29);
     }
 

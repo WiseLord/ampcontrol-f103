@@ -6,10 +6,10 @@ void lph9157Init(void)
 
     dispdrvSelectReg8(0x01);
     dispdrvSelectReg8(0x11);
-    utilmDelay(20);
+    DISP_MDELAY(20);
     dispdrvSelectReg8(0x3a);
     dispdrvSendData8(0x05);
-    utilmDelay(20);
+    DISP_MDELAY(20);
     dispdrvSelectReg8(0x36);
     dispdrvSendData8(0x40);
     dispdrvSelectReg8(0x29);

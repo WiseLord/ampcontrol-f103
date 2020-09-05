@@ -7,7 +7,7 @@ void ili9163Init(void)
     // Initial Sequence
     //************* Start Initial Sequence **********//
     dispdrvSelectReg8(0x11); //Exit Sleep
-    utilmDelay(20);
+    DISP_MDELAY(20);
 
     dispdrvSelectReg8(0x26); //Set Default Gamma
     dispdrvSendData8(0x04);
@@ -100,11 +100,11 @@ void ili9163Sleep(bool value)
 
     if (value) {
         dispdrvSelectReg8(0x28);    // Display OFF
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x10);
     } else {
         dispdrvSelectReg8(0x11);    // Display OFF
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x29);
     }
 

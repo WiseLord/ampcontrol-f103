@@ -5,7 +5,7 @@ void ili9341Init(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x01); // Software Reset
-    utilmDelay(10);
+    DISP_MDELAY(10);
     dispdrvSelectReg8(0x28); // Display OFF
 
     dispdrvSelectReg8(0xCF); // Power Control B

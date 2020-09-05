@@ -24,7 +24,7 @@ void st7793Init(void)
     dispdrvWriteReg16(0x0759, 0x0070);
 
     //--------------End Power Control Registers Initial ------------------------//
-    utilmDelay(100);
+    DISP_MDELAY(100);
     //--------------Display Windows 240 X 400-----------------------------------//
 
     dispdrvWriteReg16(0x0210, 0x0000);
@@ -33,7 +33,7 @@ void st7793Init(void)
     dispdrvWriteReg16(0x0213, 0x018f);
 
     //--------------End Display Windows 240 X 400-------------------------------//
-    utilmDelay(10);
+    DISP_MDELAY(10);
     //--------------Gamma Cluster Setting---------------------------------------//
 
     dispdrvWriteReg16(0x0380, 0x0100);
@@ -56,7 +56,7 @@ void st7793Init(void)
     //---------------End Vcom Setting-------------------------------------------//
 
     dispdrvWriteReg16(0x0007, 0x0100);
-    utilmDelay(200);
+    DISP_MDELAY(200);
     dispdrvWriteReg16(0x0200, 0x0000);
     dispdrvWriteReg16(0x0201, 0x0000);
 
@@ -94,14 +94,14 @@ void st7793Sleep(bool value)
 
     if (value) {
     dispdrvWriteReg16(0x0007, 0x0000);
-    utilmDelay(50);
+    DISP_MDELAY(50);
     dispdrvWriteReg16(0x0102, 0x0180);
-    utilmDelay(200);
+    DISP_MDELAY(200);
     } else {
         // Power On Sequence
-        utilmDelay(200);
+        DISP_MDELAY(200);
         dispdrvWriteReg16(0x0102, 0x01b0);
-        utilmDelay(50);
+        DISP_MDELAY(50);
         dispdrvWriteReg16(0x0007, 0x0100);
     }
 

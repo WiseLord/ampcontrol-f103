@@ -30,13 +30,13 @@ void ssd2119Init(void)
 
     // Power On Sequence
     dispdrvWriteReg16(0x000C, 0x0004);
-    utilmDelay(50);
+    DISP_MDELAY(50);
     dispdrvWriteReg16(0x000D, 0x0009);
-    utilmDelay(50);
+    DISP_MDELAY(50);
     dispdrvWriteReg16(0x001E, 0x0068);
-    utilmDelay(50);
+    DISP_MDELAY(50);
     dispdrvWriteReg16(0x000E, 0x2700);
-    utilmDelay(50);
+    DISP_MDELAY(50);
     dispdrvWriteReg16(0x0026, 0x7C00);
     dispdrvWriteReg16(0x0027, 0x006D);
 

@@ -61,20 +61,20 @@ void hx8347dInit(void)
     dispdrvWriteReg8(0x19, 0x01); //OSC_EN='1', start Osc
     dispdrvWriteReg8(0x01, 0x00); //DP_STB='0', out deep sleep
     dispdrvWriteReg8(0x1F, 0x88); // GAS=1, VOMG=00, PON=0, DK=1, XDK=0, DVDH_TRI=0, STB=0
-    utilmDelay(5);
+    DISP_MDELAY(5);
     dispdrvWriteReg8(0x1F, 0x80); // GAS=1, VOMG=00, PON=0, DK=0, XDK=0, DVDH_TRI=0, STB=0
-    utilmDelay(5);
+    DISP_MDELAY(5);
     dispdrvWriteReg8(0x1F, 0x90); // GAS=1, VOMG=00, PON=1, DK=0, XDK=0, DVDH_TRI=0, STB=0
-    utilmDelay(5);
+    DISP_MDELAY(5);
     dispdrvWriteReg8(0x1F, 0xD0); // GAS=1, VOMG=10, PON=1, DK=0, XDK=0, DDVDH_TRI=0, STB=0
-    utilmDelay(5);
+    DISP_MDELAY(5);
     //262k/65k color selection
     dispdrvWriteReg8(0x17, 0x05); //default 0x06 262k color // 0x05 65k color
     //SET PANEL
     dispdrvWriteReg8(0x36, 0x04); //SS_P, GS_P,REV_P,BGR_P
     //Display ON Setting
     dispdrvWriteReg8(0x28, 0x38); //GON=1, DTE=1, D=1000
-    utilmDelay(40);
+    DISP_MDELAY(40);
     dispdrvWriteReg8(0x28, 0x3C); //GON=1, DTE=1, D=1100
     //Set GRAM Area
     dispdrvWriteReg8(0x02, 0x00);
@@ -96,29 +96,29 @@ void hx8347dSleep(bool value)
     if (value) {
         // Enter Deep Sleep mode Setting
         dispdrvWriteReg8(0x28, 0xB8); //GON=’1’ DTE=’1’ D[1:0]=’10’
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x1F, 0x89); // GAS=1, VOMG=00, PON=0, DK=1, XDK=0, DVDH_TRI=0, STB=1
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x28, 0x04); //GON=’0’ DTE=’0’ D[1:0]=’01’
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x19, 0x00); //OSC_EN=’0’
-        utilmDelay(5);
+        DISP_MDELAY(5);
         dispdrvWriteReg8(0x01, 0xC0); //DP_STB[1:0]=’11’*/
     } else {
         // Exit Deep Sleep mode Setting
         dispdrvWriteReg8(0x01, 0x00); //DP_STB='0', out deep sleep
-        utilmDelay(10);
+        DISP_MDELAY(10);
         dispdrvWriteReg8(0x19, 0x01); //OSC_EN='1', start Osc
         dispdrvWriteReg8(0x1F, 0x88); // GAS=1, VOMG=00, PON=0, DK=1, XDK=0, DVDH_TRI=0, STB=0
-        utilmDelay(5);
+        DISP_MDELAY(5);
         dispdrvWriteReg8(0x1F, 0x80); // GAS=1, VOMG=00, PON=0, DK=0, XDK=0, DVDH_TRI=0, STB=0
-        utilmDelay(5);
+        DISP_MDELAY(5);
         dispdrvWriteReg8(0x1F, 0x90); // GAS=1, VOMG=00, PON=1, DK=0, XDK=0, DVDH_TRI=0, STB=0
-        utilmDelay(5);
+        DISP_MDELAY(5);
         dispdrvWriteReg8(0x1F, 0xD0); // GAS=1, VOMG=10, PON=1, DK=0, XDK=0, DDVDH_TRI=0, STB=0
-        utilmDelay(5);
+        DISP_MDELAY(5);
         dispdrvWriteReg8(0x28, 0x38); //GON=1, DTE=1, D=1000
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x28, 0x3F); //GON=1, DTE=1, D=1100*/
     }
 

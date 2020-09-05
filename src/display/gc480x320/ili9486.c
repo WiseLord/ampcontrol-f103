@@ -6,7 +6,7 @@ void ili9486Init(void)
 
     // Initial Sequence
     dispdrvSelectReg8(0x28);     // Display OFF
-    utilmDelay(100);
+    DISP_MDELAY(100);
 
     dispdrvSelectReg8(0x3A);     // Interface Pixel Format
     dispdrvSendData8(0x55);
@@ -76,7 +76,7 @@ void ili9486Init(void)
 
     dispdrvSelectReg8(0x11);     // Sleep OUT
 
-    utilmDelay(120);
+    DISP_MDELAY(120);
     dispdrvSelectReg8(0x29);     // Display ON
 
     DISP_WAIT_BUSY();
@@ -124,11 +124,11 @@ void ili9486Sleep(bool value)
 
     if (value) {
     dispdrvSelectReg8(0x28);    // Display OFF
-    utilmDelay(100);
+    DISP_MDELAY(100);
     dispdrvSelectReg8(0x10);
     } else {
         dispdrvSelectReg8(0x11);    // Display ON
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x29);
     }
 

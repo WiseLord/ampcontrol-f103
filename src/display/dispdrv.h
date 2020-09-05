@@ -11,16 +11,6 @@ extern "C" {
 
 #include "colors.h"
 #include "fonts.h"
-#include "hwlibs.h"
-#include "utils.h"
-
-#ifdef _DISP_SPI
-#include "spi.h"
-#define SPI_DISPLAY             SPI2
-#define DISP_WAIT_BUSY()        spiWaitBusy(SPI_DISPLAY)
-#else
-#define DISP_WAIT_BUSY()        (void)0
-#endif
 
 typedef struct {
     void (*init)(void);

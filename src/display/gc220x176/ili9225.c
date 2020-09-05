@@ -14,12 +14,12 @@ void ili9225Init(void)
 
     // Power On sequence
 
-    utilmDelay(50); // Delay 50ms
+    DISP_MDELAY(50); // Delay 50ms
 
     dispdrvWriteReg16(0x0010, 0x0A00);    // Set SAP,DSTB,STB
     dispdrvWriteReg16(0x0011, 0x1038);    // Set APON,PON,AON,VCI1EN,VC
 
-    utilmDelay(50); // Delay 50ms
+    DISP_MDELAY(50); // Delay 50ms
 
     dispdrvWriteReg16(0x0012, 0x6121);    // Internal reference voltage= Vci;
     dispdrvWriteReg16(0x0013, 0x0062);    // Set GVDD
@@ -51,7 +51,7 @@ void ili9225Init(void)
     dispdrvWriteReg16(0x0058, 0x0E00);
     dispdrvWriteReg16(0x0059, 0x000E);
 
-    utilmDelay(50); // Delay 50ms
+    DISP_MDELAY(50); // Delay 50ms
 
     dispdrvWriteReg16(0x0007, 0x1017);  // 65K color and display ON*/
 
@@ -64,11 +64,11 @@ void ili9225Sleep(bool value)
 
     if (value) {
         dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
-        utilmDelay(50);
+        DISP_MDELAY(50);
         dispdrvWriteReg16(0x0010, 0x0A01);    // SAP, BT[3:0], AP, DSTB, SLP, STB
     } else {
         dispdrvWriteReg16(0x0010, 0x0A00);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-        utilmDelay(50);
+        DISP_MDELAY(50);
         dispdrvWriteReg16(0x0007, 0x1017);    // 65K color and display ON
     }
 

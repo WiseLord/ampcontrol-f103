@@ -125,7 +125,7 @@ ifneq (,$(filter $(DISPLAY), \
 endif
 
 ifneq (,$(filter $(DISPLAY), \
-  HX8357C    \
+  HX8357C   \
   ILI9481   \
   ILI9486   \
   R61581    \

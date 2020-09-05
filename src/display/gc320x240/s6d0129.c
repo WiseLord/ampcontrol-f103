@@ -7,21 +7,21 @@ void s6d0129Init(void)
     dispdrvWriteReg16(0x00e5, 0x8000);
 
     dispdrvWriteReg16(0x0000, 0x0001);
-    utilmDelay(100);
+    DISP_MDELAY(100);
 
     dispdrvWriteReg16(0x0011, 0x2E00);
     dispdrvWriteReg16(0x0014, 0x040B);
     dispdrvWriteReg16(0x0010, 0x1040);
-    utilmDelay(10);
+    DISP_MDELAY(10);
     dispdrvWriteReg16(0x0013, 0x0040);
-    utilmDelay(10);
+    DISP_MDELAY(10);
     dispdrvWriteReg16(0x0013, 0x0060);
-    utilmDelay(10);
+    DISP_MDELAY(10);
     dispdrvWriteReg16(0x0013, 0x0070);
-    utilmDelay(6);
+    DISP_MDELAY(6);
     dispdrvWriteReg16(0x0011, 0x3704);
     dispdrvWriteReg16(0x0010, 0x1600);
-    utilmDelay(2);
+    DISP_MDELAY(2);
     dispdrvWriteReg16(0x0001, 0x0B27);
     dispdrvWriteReg16(0x0002, 0x0700);
     dispdrvWriteReg16(0x0003, 0x1030);
@@ -40,7 +40,7 @@ void s6d0129Init(void)
     dispdrvWriteReg16(0x0046, 0xEF00);
     dispdrvWriteReg16(0x0047, 0x013F);
     dispdrvWriteReg16(0x0048, 0x0000);
-    utilmDelay(5);
+    DISP_MDELAY(5);
 
     dispdrvWriteReg16(0x0030, 0x0000);
     dispdrvWriteReg16(0x0031, 0x0006);
@@ -54,9 +54,9 @@ void s6d0129Init(void)
     dispdrvWriteReg16(0x0039, 0x1100);
 
     dispdrvWriteReg16(0x0007, 0x0015);
-    utilmDelay(5);
+    DISP_MDELAY(5);
     dispdrvWriteReg16(0x0007, 0x0017);
-    utilmDelay(5);
+    DISP_MDELAY(5);
 
     SET(DISP_CS);
 }
@@ -86,7 +86,7 @@ void s6d0129Sleep(bool value)
         dispdrvWriteReg16(0x0013, 0x0000);    // VREG1OUT voltage
 
         dispdrvWriteReg16(0x0014, 0x0000);    // VDV[4:0] for VCOM amplitude
-        utilmDelay(200);
+        DISP_MDELAY(200);
         dispdrvWriteReg16(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
     } else {
         // Power On Sequence
@@ -94,18 +94,18 @@ void s6d0129Sleep(bool value)
         dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
         dispdrvWriteReg16(0x0013, 0x0000);    // VREG1OUT voltage
         dispdrvWriteReg16(0x0014, 0x0000);    // VDV[4:0] for VCOM amplitude
-        utilmDelay(200);
+        DISP_MDELAY(200);
         dispdrvWriteReg16(0x0007, 0x0000);    // Display control1
         dispdrvWriteReg16(0x0013, 0x0000);    // Power control4 setting
         dispdrvWriteReg16(0x0011, 0x2604);    // Power control2 setting
         dispdrvWriteReg16(0x0014, 0x0015);    // Power control5 setting
         dispdrvWriteReg16(0x0010, 0x3C00);    // Power control1 setting
         dispdrvWriteReg16(0x0013, 0x0040);    // Power control4 setting
-        utilmDelay(10);
+        DISP_MDELAY(10);
         dispdrvWriteReg16(0x0013, 0x0060);    // Power control4 setting
-        utilmDelay(50);
+        DISP_MDELAY(50);
         dispdrvWriteReg16(0x0013, 0x0070);    // Power control4 setting
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg16(0x0007, 0x0017);    // 262K color and display ON
     }
 

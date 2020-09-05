@@ -17,7 +17,7 @@ void s6d04d1Init(void)
     dispdrvSendData8(0x0b);
     dispdrvSendData8(0xf0);
     dispdrvSendData8(0x00);
-    utilmDelay(10);
+    DISP_MDELAY(10);
 
     dispdrvSelectReg8(0xf3);
     dispdrvSendData8(0xff);
@@ -187,13 +187,13 @@ void s6d04d1Init(void)
     dispdrvSendData8(0x40);
 
     dispdrvSelectReg8(0x11);
-    utilmDelay(120);
+    DISP_MDELAY(120);
 
     dispdrvSelectReg8(0xF1);
     dispdrvSendData8(0x00);
 
     dispdrvSelectReg8(0x29);
-    utilmDelay(40);
+    DISP_MDELAY(40);
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -221,11 +221,11 @@ void s6d04d1Sleep(bool value)
 
     if (value) {
         dispdrvSelectReg8(0x28);    // Display OFF
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x10);
     } else {
         dispdrvSelectReg8(0x11);    // Display ON
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x29);
     }
 

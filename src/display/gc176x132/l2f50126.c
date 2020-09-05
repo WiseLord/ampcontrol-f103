@@ -44,7 +44,7 @@ static void inline l2f50126PulseCS(void)
 {
     DISP_WAIT_BUSY();
     SET(DISP_CS);
-    utilmDelay(1);
+    DISP_MDELAY(1);
     CLR(DISP_CS);
 }
 */

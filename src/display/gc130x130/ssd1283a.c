@@ -38,13 +38,13 @@ void ssd1283aInit(void)
     dispdrvSendData8(0x00);
     dispdrvSendData8(0x01);
 
-    utilmDelay(100);
+    DISP_MDELAY(100);
 
     dispdrvSelectReg8(0x29);
     dispdrvSendData8(0x80);
     dispdrvSendData8(0xB0);
 
-    utilmDelay(30);
+    DISP_MDELAY(30);
 
     dispdrvSelectReg8(0x29);
     dispdrvSendData8(0xFF);
@@ -54,7 +54,7 @@ void ssd1283aInit(void)
     dispdrvSendData8(0x02);
     dispdrvSendData8(0x23);
 
-    utilmDelay(30);
+    DISP_MDELAY(30);
 
     dispdrvSelectReg8(0x07);
     dispdrvSendData8(0x02);

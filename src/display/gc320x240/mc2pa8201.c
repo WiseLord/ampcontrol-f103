@@ -6,15 +6,15 @@ void mc2pa8201Init(void)
 
     // Initial Sequence
     // Wait for reset
-    utilmDelay(50);
+    DISP_MDELAY(50);
 
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x01);
-    utilmDelay(100);
+    DISP_MDELAY(100);
 
     dispdrvSelectReg8(0x11);
-    utilmDelay(100);
+    DISP_MDELAY(100);
 
     dispdrvSelectReg8(0x20);
 
@@ -73,11 +73,11 @@ void mc2pa8201Sleep(bool value)
 
     if (value) {
         dispdrvSelectReg8(0x28);    // Display OFF
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x10);
     } else {
         dispdrvSelectReg8(0x11);    // Display OFF
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x29);
     }
 

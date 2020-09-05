@@ -7,10 +7,10 @@ void ili9481Init(void)
     // Initial Sequence
 
     dispdrvSelectReg8(0x01);
-    utilmDelay(120);
+    DISP_MDELAY(120);
 
     dispdrvSelectReg8(0x11);
-    utilmDelay(20);
+    DISP_MDELAY(20);
 
     dispdrvSelectReg8(0xD0);
     dispdrvSendData8(0x07);
@@ -74,10 +74,10 @@ void ili9481Init(void)
 
     dispdrvSelectReg8(0x3A);
     dispdrvSendData8(0x55);
-    utilmDelay(120);
+    DISP_MDELAY(120);
 
     dispdrvSelectReg8(0x29);
-    utilmDelay(120);
+    DISP_MDELAY(120);
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -105,11 +105,11 @@ void ili9481Sleep(bool value)
 
     if (value) {
         dispdrvSelectReg8(0x28);    // Display OFF
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x10);
     } else {
         dispdrvSelectReg8(0x11);    // Display ON
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x29);
     }
 

@@ -46,13 +46,13 @@ void hx8340Init(void)
     dispdrvWriteReg8(0x01, 0x00); //SLP='0', out sleep
     dispdrvWriteReg8(0x1C, 0x03); //AP=011
     dispdrvWriteReg8(0x19, 0x06); // VOMG=1,PON=1, DK=0,
-    utilmDelay(5);
+    DISP_MDELAY(5);
 
     //Display ON Setting
     dispdrvWriteReg8(0x26, 0x84); //PT=10,GON=0, DTE=0, D=0100
-    utilmDelay(40);
+    DISP_MDELAY(40);
     dispdrvWriteReg8(0x26, 0xB8); //PT=10,GON=1, DTE=1, D=1000
-    utilmDelay(40);
+    DISP_MDELAY(40);
     dispdrvWriteReg8(0x26, 0xBC); //PT=10,GON=1, DTE=1, D=1100
 
     //Set GRAM Area
@@ -78,13 +78,13 @@ void hx8340Sleep(bool value)
 
     if (value) {
         dispdrvWriteReg8(0x26, 0xB8); //GON=’1’ DTE=’1’ D[1:0]=’10’
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x19, 0x01); //VCOMG=’0’, PON=’0’, DK=’1’
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x26, 0xA4); //GON=’1’ DTE=’0’ D[1:0]=’01’
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x26, 0x84); //GON=’0’ DTE=’0’ D[1:0]=’01’
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x1C, 0x00); //AP[2:0]=’000’
         dispdrvWriteReg8(0x01, 0x02); //SLP=’1’
         dispdrvWriteReg8(0x01, 0x00); //OSC_EN=’0’
@@ -94,11 +94,11 @@ void hx8340Sleep(bool value)
         dispdrvWriteReg8(0x01, 0x00); //SLP='0', out sleep
         dispdrvWriteReg8(0x1C, 0x03); //AP=011
         dispdrvWriteReg8(0x19, 0x06); // VOMG=1,PON=1, DK=0,
-        utilmDelay(5);
+        DISP_MDELAY(5);
         dispdrvWriteReg8(0x26, 0x84); //PT=10,GON=0, DTE=0, D=0100
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x26, 0xB8); //PT=10,GON=1, DTE=1, D=1000
-        utilmDelay(40);
+        DISP_MDELAY(40);
         dispdrvWriteReg8(0x26, 0xBC); //PT=10,GON=1, DTE=1, D=1100
     }
 

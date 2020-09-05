@@ -5,7 +5,7 @@ void hx8357cInit(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x01);    // Soft Reset
-    LL_mDelay(150);
+    DISP_MDELAY(150);
     dispdrvSelectReg8(0x28);    // Display OFF
 
     dispdrvSelectReg8(0x3A);    // Interface Pixel Format
@@ -25,7 +25,7 @@ void hx8357cInit(void)
     dispdrvSelectReg8(0x20);    // Display inversion off
 
     dispdrvSelectReg8(0x11);    // Sleep OUT
-    LL_mDelay(120);
+    DISP_MDELAY(120);
     dispdrvSelectReg8(0x29);    // Display ON
 
     DISP_WAIT_BUSY();
@@ -72,25 +72,19 @@ void hx8357cShift(int16_t value)
     SET(DISP_CS);
 }
 
-void hx8357cSleep(void)
+void hx8357cSleep(bool value)
 {
     CLR(DISP_CS);
 
-    dispdrvSelectReg8(0x28);    // Display OFF
-    LL_mDelay(100);
-    dispdrvSelectReg8(0x10);
-
-    DISP_WAIT_BUSY();
-    SET(DISP_CS);
-}
-
-void hx8357cWakeup(void)
-{
-    CLR(DISP_CS);
-
-    dispdrvSelectReg8(0x11);    // Display ON
-    LL_mDelay(100);
-    dispdrvSelectReg8(0x29);
+    if (value) {
+        dispdrvSelectReg8(0x28);    // Display OFF
+        DISP_MDELAY(100);
+        dispdrvSelectReg8(0x10);
+    } else {
+        dispdrvSelectReg8(0x11);    // Display ON
+        DISP_MDELAY(100);
+        dispdrvSelectReg8(0x29);
+    }
 
     SET(DISP_CS);
 }
@@ -121,7 +115,6 @@ const DispDriver dispdrv = {
     .height = 320,
     .init = hx8357cInit,
     .sleep = hx8357cSleep,
-    .wakeup = hx8357cWakeup,
     .setWindow = hx8357cSetWindow,
     .rotate = hx8357cRotate,
     .shift = hx8357cShift,

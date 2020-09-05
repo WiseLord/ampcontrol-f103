@@ -10,7 +10,7 @@ void r61581Init(void)
     dispdrvSendData8(0x00); // Enable all
 
     dispdrvSelectReg8(0x28);  // Set display off
-    utilmDelay(30);
+    DISP_MDELAY(30);
 
     dispdrvSelectReg8(0xB3);  // Frame memory access and interface setting
     dispdrvSendData8(0x02); // WEMODE=1
@@ -84,10 +84,10 @@ void r61581Init(void)
     dispdrvSendData8(0x04);
 
     dispdrvSelectReg8(0x11);  // Exit sleep mode
-    utilmDelay(150);
+    DISP_MDELAY(150);
 
     dispdrvSelectReg8(0x29);  // Set display on
-    utilmDelay(30);
+    DISP_MDELAY(30);
 
     DISP_WAIT_BUSY();
     SET(DISP_CS);
@@ -135,11 +135,11 @@ void r61581Sleep(bool value)
 
     if (value) {
         dispdrvSelectReg8(0x28);    // Display OFF
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x10);
     } else {
         dispdrvSelectReg8(0x11);    // Display ON
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x29);
     }
 

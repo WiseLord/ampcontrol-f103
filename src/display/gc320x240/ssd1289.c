@@ -88,7 +88,7 @@ void ssd1289Sleep(bool value)
         dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
         dispdrvWriteReg16(0x0012, 0x0000);    // VREG1OUT voltage
         dispdrvWriteReg16(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
-        utilmDelay(200);
+        DISP_MDELAY(200);
         dispdrvWriteReg16(0x0010, 0x0002);    // SAP, BT[3:0], AP, DSTB, SLP, STB
     } else {
         // Power On Sequence
@@ -96,12 +96,12 @@ void ssd1289Sleep(bool value)
         dispdrvWriteReg16(0x0011, 0x0000);    // DC1[2:0], DC0[2:0], VC[2:0]
         dispdrvWriteReg16(0x0012, 0x0000);    // VREG1OUT voltage
         dispdrvWriteReg16(0x0013, 0x0000);    // VDV[4:0] for VCOM amplitude
-        utilmDelay(200);
+        DISP_MDELAY(200);
         dispdrvWriteReg16(0x0010, 0x17B0);    // SAP, BT[3:0], AP, DSTB, SLP, STB
         dispdrvWriteReg16(0x0011, 0x0037);    // DC1[2:0], DC0[2:0], VC[2:0]
-        utilmDelay(50);
+        DISP_MDELAY(50);
         dispdrvWriteReg16(0x0012, 0x013A);    // VREG1OUT voltage
-        utilmDelay(50);
+        DISP_MDELAY(50);
         dispdrvWriteReg16(0x0013, 0x1600);    // VDV[4:0] for VCOM amplitude
         dispdrvWriteReg16(0x0029, 0x000C);    // VCM[4:0] for VCOMH
 

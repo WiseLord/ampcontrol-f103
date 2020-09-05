@@ -69,19 +69,19 @@ void ssd1286aSleep(bool value)
         dispdrvSendData8(0x1f);
         dispdrvSendData8(0x92);
 
-        utilmDelay(20);
+        DISP_MDELAY(20);
 
         dispdrvSelectReg8(0x11);
         dispdrvSendData8(0x61);
         dispdrvSendData8(0x1c);
 
-        utilmDelay(20);
+        DISP_MDELAY(20);
 
         dispdrvSelectReg8(0x12);
         dispdrvSendData8(0x04);
         dispdrvSendData8(0x0f);
 
-        utilmDelay(20);
+        DISP_MDELAY(20);
 
         dispdrvSelectReg8(0x07);
         dispdrvSendData8(0x00);

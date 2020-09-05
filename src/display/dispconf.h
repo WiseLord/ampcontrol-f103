@@ -7,6 +7,19 @@ extern "C" {
 
 #include "hwlibs.h"
 
+#ifdef _DISP_SPI
+#include "spi.h"
+#define SPI_DISPLAY             SPI2
+#define DISP_WAIT_BUSY()        spiWaitBusy(SPI_DISPLAY)
+#define DISP_SPI_INIT()         spiInit(SPI_DISPLAY, false)
+#define DISP_SPI_SEND_BYTE(x)   spiSendByte(SPI_DISPLAY, x)
+#else
+#define DISP_WAIT_BUSY()        (void)0
+#endif
+
+#include "utils.h"
+#define DISP_MDELAY(x)          utilmDelay(x)
+
 // TFT LCD pins
 #ifdef _DISP_16BIT
 #define DISP_DATA_HI_Port       GPIOB

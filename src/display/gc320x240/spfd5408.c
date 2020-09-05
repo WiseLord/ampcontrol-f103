@@ -20,15 +20,15 @@ void spfd5408Init(void)
 
     // Power On Sequence
     dispdrvWriteReg16(0x0010, 0x14B0);
-    utilmDelay(20);
+    DISP_MDELAY(20);
     dispdrvWriteReg16(0x0011, 0x0007);
-    utilmDelay(20);
+    DISP_MDELAY(20);
     dispdrvWriteReg16(0x0017, 0x0001);
-    utilmDelay(20);
+    DISP_MDELAY(20);
     dispdrvWriteReg16(0x0012, 0x01B8);
-    utilmDelay(20);
+    DISP_MDELAY(20);
     dispdrvWriteReg16(0x0013, 0x1300);
-    utilmDelay(20);
+    DISP_MDELAY(20);
     dispdrvWriteReg16(0x0029, 0x000F);
 
     // Adjust the Gamma Curve
@@ -86,7 +86,7 @@ void spfd5408Init(void)
     dispdrvWriteReg16(0x00F0, 0x0000);
 
     dispdrvWriteReg16(0x0007, 0x0173);   // 262K color and display ON
-    utilmDelay(150);
+    DISP_MDELAY(150);
 
     SET(DISP_CS);
 }
@@ -97,38 +97,38 @@ void spfd5408Sleep(bool value)
         dispdrvWriteReg16(0x0007, 0x0000);   // Display OFF
         // Power Off Sequence
         dispdrvWriteReg16(0x0010, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0011, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0017, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0012, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0013, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0010, 0x0002);   // SAP, BT[3:0], AP, DSTB, SLP, STB
     } else {
         // Power On Sequence
         dispdrvWriteReg16(0x0010, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0011, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0017, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0012, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0013, 0x0000);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0010, 0x14B0);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0011, 0x0007);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0017, 0x0001);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0012, 0x01B8);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0013, 0x1300);
-        utilmDelay(20);
+        DISP_MDELAY(20);
         dispdrvWriteReg16(0x0029, 0x000F);
 
         dispdrvWriteReg16(0x0007, 0x0173);   // 262K color and display ON

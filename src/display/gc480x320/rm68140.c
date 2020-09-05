@@ -5,7 +5,7 @@ void rm68140Init(void)
     CLR(DISP_CS);
 
     dispdrvSelectReg8(0x01);    // Soft Reset
-    utilmDelay(150);
+    DISP_MDELAY(150);
     dispdrvSelectReg8(0x28);    // Display OFF
 
     dispdrvSelectReg8(0x3A);    // Interface Pixel Format
@@ -22,7 +22,7 @@ void rm68140Init(void)
     dispdrvSelectReg8(0x20);    // Display inversion off
 
     dispdrvSelectReg8(0x11);    // Sleep OUT
-    utilmDelay(120);
+    DISP_MDELAY(120);
     dispdrvSelectReg8(0x29);    // Display ON
 
     DISP_WAIT_BUSY();
@@ -75,11 +75,11 @@ void rm68140Sleep(bool value)
 
     if (value) {
         dispdrvSelectReg8(0x28);    // Display OFF
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x10);
     } else {
         dispdrvSelectReg8(0x11);    // Display ON
-        utilmDelay(100);
+        DISP_MDELAY(100);
         dispdrvSelectReg8(0x29);
     }
 

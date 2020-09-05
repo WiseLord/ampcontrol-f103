@@ -54,7 +54,7 @@ __attribute__((always_inline))
 static inline void dispdrvSendByte(uint8_t data)
 {
 #ifdef _DISP_SPI
-    spiSendByte(SPI_DISPLAY, data);
+    DISP_SPI_SEND_BYTE(data);
 #else
 #if defined(_DISP_16BIT)
     WRITE_BYTE(DISP_DATA_HI, 0x00);
@@ -235,7 +235,7 @@ void dispdrvReset(void)
 #endif
 
 #ifdef _DISP_SPI
-    spiInit(SPI_DISPLAY, false);
+    DISP_SPI_INIT();
 #else
     SET(DISP_CS);
 #ifdef _DISP_READ_ENABLED
@@ -246,10 +246,10 @@ void dispdrvReset(void)
     SET(DISP_RS);
 #ifdef _DISP_RST_ENABLED
     CLR(DISP_RST);
-    utilmDelay(50);
+    DISP_MDELAY(50);
     SET(DISP_RST);
 #endif
-    utilmDelay(50);
+    DISP_MDELAY(50);
 }
 
 static void dispdrvInitPins(void)

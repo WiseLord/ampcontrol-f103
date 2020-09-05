@@ -4,11 +4,11 @@ void s6d0144Init(void)
 {
     CLR(DISP_CS);
 
-    utilmDelay(1);
+    DISP_MDELAY(1);
     dispdrvWriteReg16(0xB4, 0x0010);
     dispdrvWriteReg16(0x07, 0x0000);
     dispdrvWriteReg16(0x13, 0x0000);
-    utilmDelay(1);
+    DISP_MDELAY(1);
     dispdrvWriteReg16(0x12, 0x0071);
     dispdrvWriteReg16(0x13, 0x080B);
     dispdrvWriteReg16(0x14, 0x78DD);
@@ -20,7 +20,7 @@ void s6d0144Init(void)
     dispdrvWriteReg16(0x08, 0x0101);
     dispdrvWriteReg16(0x0b, 0x0005);
     dispdrvWriteReg16(0x0C, 0x0002);
-    utilmDelay(10);
+    DISP_MDELAY(10);
 
 
     dispdrvWriteReg16(0x30, 0x0000);
@@ -42,9 +42,9 @@ void s6d0144Init(void)
     dispdrvWriteReg16(0x45, 0x9f00);
 
     dispdrvWriteReg16(0x13, 0x081B);
-    utilmDelay(50);
+    DISP_MDELAY(50);
     dispdrvWriteReg16(0x07, 0x0037);      // DTE =1
-    utilmDelay(20);
+    DISP_MDELAY(20);
 
     SET(DISP_CS);
 }
@@ -55,11 +55,11 @@ void s6d0144Sleep(bool value)
 
     if (value) {
         dispdrvWriteReg16(0x0007, 0x0000);    // Display OFF
-        utilmDelay(50);
+        DISP_MDELAY(50);
         dispdrvWriteReg16(0x0010, 0x0A01);    // SAP, BT[3:0], AP, DSTB, SLP, STB
     } else {
         dispdrvWriteReg16(0x0010, 0x0A00);    // SAP, BT[3:0], AP, DSTB, SLP, STB
-        utilmDelay(50);
+        DISP_MDELAY(50);
         dispdrvWriteReg16(0x0007, 0x1017);    // 65K color and display ON
     }
 
