@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "dispdrv.h"
+
 static Glcd glcd;
 
 static tImage unRleImg = {
@@ -96,6 +98,11 @@ void glcdInit(GlcdOrientation value)
     glcd.drv = &dispdrv;
 
     glcdSetOrientation(value);
+}
+
+uint8_t glcdGetBus(void)
+{
+    return dispdrvGetBus();
 }
 
 void glcdSetBacklight(bool value)

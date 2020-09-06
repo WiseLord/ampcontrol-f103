@@ -1,6 +1,6 @@
 #include "input.h"
 
-#include "display/dispdrv.h"
+#include "display/glcd.h"
 #include "hwlibs.h"
 #include "settings.h"
 #include "timers.h"
@@ -88,7 +88,7 @@ void TIM_INPUT_HANDLER(void)
         // Clear the update interrupt flag
         LL_TIM_ClearFlag_UPDATE(TIM_INPUT);
 
-        uint8_t dispBus = ~dispdrvGetBus();
+        uint8_t dispBus = ~glcdGetBus();
 
         inputHandleButtons(dispBus & BTN_ALL);
         inputHandleEncoder(dispBus & ENC_AB);

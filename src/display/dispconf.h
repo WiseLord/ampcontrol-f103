@@ -5,12 +5,6 @@
 extern "C" {
 #endif
 
-#if defined(STM32F103xB)
-#include "hw_stm32f1_ll.h"
-#elif defined (STM32F303xC)
-#include "hw_stm32f3_ll.h"
-#endif
-
 #ifdef _DISP_SPI
 #include "spi.h"
 #define SPI_DISPLAY             SPI2

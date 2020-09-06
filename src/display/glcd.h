@@ -9,8 +9,7 @@ extern "C" {
 #include <stdbool.h>
 
 #include "colors.h"
-#include "dispdrv.h"
-#include "fonts.h"
+#include "fonts/fonts.h"
 
 typedef struct {
     int16_t x;
@@ -35,7 +34,7 @@ enum {
 };
 
 typedef struct {
-    const DispDriver *drv;
+    const struct _DispDriver *drv;
     const tFont *font;
     GlcdRect rect;
     int16_t x;
@@ -50,6 +49,7 @@ typedef struct {
 typedef int32_t UChar;
 
 void glcdInit(GlcdOrientation value);
+uint8_t glcdGetBus(void);
 
 void glcdSetBacklight(bool value);
 

@@ -1607,7 +1607,7 @@ void ampScreenShow(void)
     if (amp.screen == SCREEN_TEXTEDIT) {
         GlcdRect teRect = canvasGet()->layout->textEdit.rect;
         if (clear) {
-            const int16_t th = canvasGet()->glcd->drv->height / 100;
+            const int16_t th = rect.h / 100;
             glcdDrawFrame(teRect.x - rect.x - th, teRect.y - rect.y - th, teRect.w + 2 * th, teRect.h + 2 * th,
                           th, canvasGet()->pal->fg);
         }

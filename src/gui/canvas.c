@@ -99,7 +99,7 @@ void canvasInit(void)
     paletteSetIndex(palIdx);
     canvas.pal = paletteGet();
 
-    glcdDrawRect(0, 0, dispdrv.width, dispdrv.height, canvas.pal->bg);
+    glcdDrawRect(0, 0, canvas.layout->rect.w, canvas.layout->rect.h, canvas.pal->bg);
 
     canvas.glcd->rect = canvas.layout->rect;
 
