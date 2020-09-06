@@ -90,12 +90,12 @@ void ssd1322Init(void)
     SET(DISP_CS);
 }
 
-void ssd1322Rotate(uint8_t rotate)
+void ssd1322Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
     dispdrvSelectReg8(SSD1322_SET_REMAP_AND_DUAL_COM_LINE_MODE);
-    dispdrvSendData8(rotate & LCD_ROTATE_180 ? 0x14 : 0x06);
+    dispdrvSendData8(rotate ? 0x14 : 0x06);
     dispdrvSendData8(0x11);
 
     dispdrvSelectReg8(SSD1322_SET_PHASE_LENGTH);
