@@ -208,23 +208,23 @@ void dispdrvReset(void)
 
 static void dispdrvInitPins(void)
 {
-    OUT_PIN(DISP_CS);
-    OUT_PIN(DISP_RS);
+    OUT(DISP_CS);
+    OUT(DISP_RS);
 
 #ifdef _DISP_RST_ENABLED
-    OUT_PIN(DISP_RST);
+    OUT(DISP_RST);
 #endif
 
 #ifndef _DISP_SPI
-    OUT_PIN(DISP_WR);
+    OUT(DISP_WR);
 #endif
 
 #ifdef _DISP_READ_ENABLED
-    OUT_PIN(DISP_RD);
+    OUT(DISP_RD);
 #endif
 
 #ifdef _DISP_BCKL_ENABLED
-    OUT_PIN(DISP_BCKL);
+    OUT(DISP_BCKL);
 #endif
 
 #ifndef _DISP_SPI

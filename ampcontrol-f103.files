@@ -75,8 +75,8 @@ src/display/gc480x320/r61581.c
 src/display/gc480x320/rm68140.c
 src/display/glcd.c
 src/display/glcd.h
-src/display/hw/stm32f1_ll.h
-src/display/hw/stm32f3_ll.h
+src/display/hw/stm32f1.h
+src/display/hw/stm32f3.h
 src/drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 src/drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 src/drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h

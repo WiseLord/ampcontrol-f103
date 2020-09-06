@@ -21,38 +21,35 @@ extern "C" {
 // TFT LCD pins
 #ifdef _DISP_16BIT
 #define DISP_DATA_HI_Port       GPIOB
-#define DISP_DATA_HI_Pin        (LL_GPIO_PIN_8 | LL_GPIO_PIN_9 | LL_GPIO_PIN_10 | LL_GPIO_PIN_11 | \
-                                 LL_GPIO_PIN_12 | LL_GPIO_PIN_13 | LL_GPIO_PIN_14 | LL_GPIO_PIN_15)
+#define DISP_DATA_HI_Pin        0xFF00
 #define DISP_DATA_LO_Port       GPIOC
-#define DISP_DATA_LO_Pin        (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
-                                 LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
+#define DISP_DATA_LO_Pin        0x00FF
 #else
 #define DISP_DATA_Port          GPIOB
 
-#define DISP_DATA_Pin           (LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | \
-                                 LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7)
+#define DISP_DATA_Pin           0x00FF
 #endif
 
 #define DISP_CS_Port            GPIOB
-#define DISP_CS_Pin             LL_GPIO_PIN_12
+#define DISP_CS_Pin             (1<<12)
 #define DISP_RS_Port            GPIOB
-#define DISP_RS_Pin             LL_GPIO_PIN_14
+#define DISP_RS_Pin             (1<<14)
 #define DISP_WR_Port            GPIOB
-#define DISP_WR_Pin             LL_GPIO_PIN_15
+#define DISP_WR_Pin             (1<<15)
 
 #ifdef _DISP_READ_ENABLED
 #define DISP_RD_Port            GPIOB
-#define DISP_RD_Pin             LL_GPIO_PIN_11
+#define DISP_RD_Pin             (1<<11)
 #endif
 
 #ifdef _DISP_RST_ENABLED
 #define DISP_RST_Port           GPIOB
-#define DISP_RST_Pin            LL_GPIO_PIN_10
+#define DISP_RST_Pin            (1<<10)
 #endif
 
 #ifdef _DISP_BCKL_ENABLED
 #define DISP_BCKL_Port          GPIOC
-#define DISP_BCKL_Pin           LL_GPIO_PIN_13
+#define DISP_BCKL_Pin           (1<<13)
 #endif
 
 #ifdef __cplusplus

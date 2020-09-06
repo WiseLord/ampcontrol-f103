@@ -6,9 +6,9 @@ extern "C" {
 #endif
 
 #if defined(STM32F103xB)
-#include "hw/stm32f1_ll.h"
+#include "hw/stm32f1.h"
 #elif defined (STM32F303xC)
-#include "hw/stm32f3_ll.h"
+#include "hw/stm32f3.h"
 #endif
 
 #include "dispconf.h"
