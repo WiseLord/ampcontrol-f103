@@ -35,7 +35,7 @@ enum {
 
 typedef struct {
     const struct _DispDriver *drv;
-    const tFont *font;
+    const __flash tFont *font;
     GlcdRect rect;
     int16_t x;
     int16_t y;
@@ -67,11 +67,11 @@ void glcdSetRectValues(int16_t x, int16_t y, int16_t w, int16_t h);
 void glcdResetRect(void);
 GlcdRect *glcdGetRect(void);
 
-void glcdSetFont(const tFont *font);
+void glcdSetFont(const __flash tFont *font);
 void glcdSetFontColor(color_t color);
 void glcdSetFontBgColor(color_t color);
 void glcdSetFontAlign(GlcdAlign align);
-int16_t glcdGetFontHeight(const tFont *font);
+int16_t glcdGetFontHeight(const __flash tFont *font);
 
 void glcdSetXY(int16_t x, int16_t y);
 void glcdSetX(int16_t x);
@@ -80,7 +80,7 @@ void glcdSetY(int16_t y);
 int16_t glcdFontSymbolPos(UChar code);
 UChar glcdFontSymbolCode(int16_t pos);
 
-void glcdDrawImage(const tImage *img, color_t color, color_t bgColor);
+void glcdDrawImage(const __flash tImage *img, color_t color, color_t bgColor);
 
 uint16_t glcdStrToUStr(const char *str, UChar *ustr);
 void glcdUStrToStr(const UChar *ustr, char *str);

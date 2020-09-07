@@ -9,6 +9,8 @@ extern "C" {
 #include "hw/stm32f1.h"
 #elif defined (STM32F303xC)
 #include "hw/stm32f3.h"
+#elif defined (__AVR__)
+#include "hw/avr.h"
 #endif
 
 #include "dispconf.h"
@@ -59,7 +61,8 @@ void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color);
 
 void dispdrvDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr);
 
-void dispdrvDrawImage(tImage *img, bool portrate, int16_t x, int16_t y,
+void dispdrvDrawImage(uint8_t *imgData, int16_t imgWidth,
+                      bool portrate, int16_t x, int16_t y,
                       color_t color, color_t bgColor,
                       int16_t xOft, int16_t yOft, int16_t w, int16_t h);
 

@@ -12,7 +12,7 @@
     <multiplicityWidth>1</multiplicityWidth>
     <multiplicityHeight>1</multiplicityHeight>
     <string> -.0123456789: █</string>
-    <converted>/home/STM32/Projects/ampcontrol-f103/display/fonts/font-terminus-dig-58.c</converted>
+    <converted>/home/STM32/Projects/ampcontrol-f103/src/gui/fonts/font-terminus-dig-58.c</converted>
     <chars>
         <char code="0020" character=" ">
             <picture format="png">iVBORw0KGgoAAAANSUhEUgAAABsAAAA6CAYAAABBJCLGAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANElEQVRYhe3NAQkAAAgDMLV/59tCELYC6ySpI3MVyWQymUwmk8lkMplMJpPJZDKZTCb7lS0SYARwDLiQXAAAAABJRU5ErkJggg==</picture>

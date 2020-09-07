@@ -406,8 +406,10 @@ void dispdrvDrawRect(int16_t x, int16_t y, int16_t w, int16_t h, color_t color)
 
     dispdrvSetWindow(x, y, w, h);
 
-    for (int32_t i = 0; i < w * h; i++) {
-        dispdrvSendColor(color);
+    for (int16_t i = 0; i < w; i++) {
+        for (int16_t j = 0; j < h; j++) {
+            dispdrvSendColor(color);
+        }
     }
 
 #ifndef _DISP_FB
@@ -424,9 +426,9 @@ void dispdrvDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr
 
     dispdrvSetWindow(x, y, w, h);
 
-    for (int32_t i = 0; i < w; i++) {
+    for (int16_t i = 0; i < w; i++) {
         color_t *color = gr;
-        for (int32_t j = 0; j < h; j++) {
+        for (int16_t j = 0; j < h; j++) {
             dispdrvSendColor(*color++);
         }
     }
@@ -437,7 +439,8 @@ void dispdrvDrawVertGrad(int16_t x, int16_t y, int16_t w, int16_t h, color_t *gr
 #endif
 }
 
-void dispdrvDrawImage(tImage *img, bool portrate, int16_t x, int16_t y,
+void dispdrvDrawImage(uint8_t *imgData, int16_t imgWidth,
+                      bool portrate, int16_t x, int16_t y,
                       color_t color, color_t bgColor,
                       int16_t xOft, int16_t yOft, int16_t w, int16_t h)
 {
@@ -450,7 +453,7 @@ void dispdrvDrawImage(tImage *img, bool portrate, int16_t x, int16_t y,
 
         for (int16_t j = 0; j < h; j++) {
             for (int16_t i = w - 1; i >= 0; i--) {
-                uint8_t data = img->data[img->width * ((j + yOft) >> 3) + i + xOft];
+                uint8_t data = imgData[imgWidth * ((j + yOft) >> 3) + i + xOft];
                 if (j < h) {
                     dispdrvSendColor(data & (1 << ((j + yOft) & 0x7)) ? color : bgColor);
                 }
@@ -461,7 +464,7 @@ void dispdrvDrawImage(tImage *img, bool portrate, int16_t x, int16_t y,
 
         for (int16_t i = 0; i < w; i++) {
             for (int16_t j = 0; j < h; j++) {
-                uint8_t data = img->data[img->width * ((j + yOft) >> 3) + i + xOft];
+                uint8_t data = imgData[imgWidth * ((j + yOft) >> 3) + i + xOft];
                 if (j < h) {
                     dispdrvSendColor(data & (1 << ((j + yOft) & 0x7)) ? color : bgColor);
                 }

@@ -13,7 +13,7 @@
 * encoding: UTF-8
 * unicode bom: no
 *
-* preset name: ampcontrol-f103-rle3
+* preset name: glcd-rle3
 * data block size: 8 bit(s), uint8_t
 * RLE compression enabled: yes
 * conversion type: Monochrome, Diffuse Dither 128
@@ -28,7 +28,7 @@
 
 /*
 typedef struct {
-    const uint8_t *data;
+    const __flash uint8_t *data;
     uint16_t width;
     uint16_t height;
     uint16_t size;
@@ -37,12 +37,12 @@ typedef struct {
 
 typedef struct {
     int32_t code;
-    const tImage *image;
+    const __flash tImage *image;
 } tChar;
 
 typedef struct {
     uint16_t length;
-    const tChar *chars;
+    const __flash tChar *chars;
 } tFont;
 */
 
@@ -57,7 +57,7 @@ typedef struct {
 
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x20[2] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x20[2] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -100,11 +100,11 @@ static const uint8_t image_data_fontterminusdig40_0x20[2] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0x5f, 0x00
 };
-static const tImage fontterminusdig40_0x20 = { image_data_fontterminusdig40_0x20, 19, 40, 2, yes};
+static const __flash tImage fontterminusdig40_0x20 = { image_data_fontterminusdig40_0x20, 19, 40, 2, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x2d[6] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x2d[6] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -147,11 +147,11 @@ static const uint8_t image_data_fontterminusdig40_0x2d[6] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0x24, 0x00, 0x12, 0x38, 0x24, 0x00
 };
-static const tImage fontterminusdig40_0x2d = { image_data_fontterminusdig40_0x2d, 18, 40, 6, yes};
+static const __flash tImage fontterminusdig40_0x2d = { image_data_fontterminusdig40_0x2d, 18, 40, 6, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x2e[4] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x2e[4] = {
     // ∙∙∙
     // ∙∙∙
     // ∙∙∙
@@ -194,11 +194,11 @@ static const uint8_t image_data_fontterminusdig40_0x2e[4] = {
     // ∙∙∙
     0x0c, 0x00, 0x03, 0x0f
 };
-static const tImage fontterminusdig40_0x2e = { image_data_fontterminusdig40_0x2e, 3, 40, 4, yes};
+static const __flash tImage fontterminusdig40_0x2e = { image_data_fontterminusdig40_0x2e, 3, 40, 4, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x30[64] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x30[64] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -241,11 +241,11 @@ static const uint8_t image_data_fontterminusdig40_0x30[64] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0xfb, 0xc0, 0xe0, 0xf0, 0xf8, 0x78, 0x09, 0x38, 0xfb, 0x78, 0xf8, 0xf0, 0xe0, 0xc0, 0x03, 0xff, 0x09, 0x00, 0xfc, 0x80, 0xc0, 0xe0, 0xf0, 0x06, 0xff, 0xf3, 0x00, 0x80, 0xc0, 0xe0, 0xf0, 0x78, 0x3c, 0x1e, 0x0f, 0x07, 0x03, 0x01, 0x00, 0x06, 0xff, 0xfc, 0x0f, 0x07, 0x03, 0x01, 0x09, 0x00, 0x03, 0xff, 0xfb, 0x03, 0x07, 0x0f, 0x1f, 0x1e, 0x09, 0x1c, 0xfb, 0x1e, 0x1f, 0x0f, 0x07, 0x03
 };
-static const tImage fontterminusdig40_0x30 = { image_data_fontterminusdig40_0x30, 19, 40, 64, yes};
+static const __flash tImage fontterminusdig40_0x30 = { image_data_fontterminusdig40_0x30, 19, 40, 64, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x31[37] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x31[37] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -288,11 +288,11 @@ static const uint8_t image_data_fontterminusdig40_0x31[37] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0x05, 0x00, 0xfa, 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xf8, 0x0b, 0x00, 0xfb, 0x0e, 0x0f, 0x07, 0x03, 0x01, 0x03, 0xff, 0x10, 0x00, 0x03, 0xff, 0x10, 0x00, 0x03, 0xff, 0x0b, 0x00, 0x05, 0x1c, 0x03, 0x1f, 0x04, 0x1c, 0x04, 0x00
 };
-static const tImage fontterminusdig40_0x31 = { image_data_fontterminusdig40_0x31, 19, 40, 37, yes};
+static const __flash tImage fontterminusdig40_0x31 = { image_data_fontterminusdig40_0x31, 19, 40, 37, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x32[53] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x32[53] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -335,11 +335,11 @@ static const uint8_t image_data_fontterminusdig40_0x32[53] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0xfb, 0xc0, 0xe0, 0xf0, 0xf8, 0x78, 0x09, 0x38, 0xfb, 0x78, 0xf8, 0xf0, 0xe0, 0xc0, 0x03, 0x3f, 0x0d, 0x00, 0x03, 0xff, 0x09, 0x00, 0xea, 0x80, 0xc0, 0xe0, 0xf0, 0x78, 0x3c, 0x1e, 0x0f, 0x07, 0x03, 0x00, 0x80, 0xc0, 0xe0, 0xf0, 0x78, 0x3c, 0x1e, 0x0f, 0x07, 0x03, 0x01, 0x07, 0x00, 0x03, 0x1f, 0x01, 0x1d, 0x0f, 0x1c
 };
-static const tImage fontterminusdig40_0x32 = { image_data_fontterminusdig40_0x32, 19, 40, 53, yes};
+static const __flash tImage fontterminusdig40_0x32 = { image_data_fontterminusdig40_0x32, 19, 40, 53, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x33[50] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x33[50] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -382,11 +382,11 @@ static const uint8_t image_data_fontterminusdig40_0x33[50] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0xfb, 0xc0, 0xe0, 0xf0, 0xf8, 0x78, 0x09, 0x38, 0xfb, 0x78, 0xf8, 0xf0, 0xe0, 0xc0, 0x03, 0x03, 0x0d, 0x00, 0x03, 0xff, 0x05, 0x00, 0x09, 0x1c, 0xfb, 0x3e, 0x7f, 0xf7, 0xe3, 0xc1, 0x03, 0xc0, 0x0d, 0x00, 0x03, 0xff, 0xfb, 0x03, 0x07, 0x0f, 0x1f, 0x1e, 0x09, 0x1c, 0xfb, 0x1e, 0x1f, 0x0f, 0x07, 0x03
 };
-static const tImage fontterminusdig40_0x33 = { image_data_fontterminusdig40_0x33, 19, 40, 50, yes};
+static const __flash tImage fontterminusdig40_0x33 = { image_data_fontterminusdig40_0x33, 19, 40, 50, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x34[46] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x34[46] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -429,11 +429,11 @@ static const uint8_t image_data_fontterminusdig40_0x34[46] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0x0c, 0x00, 0xfc, 0x80, 0xc0, 0xe0, 0xf0, 0x03, 0xf8, 0x04, 0x00, 0xf4, 0x80, 0xc0, 0xe0, 0xf0, 0x78, 0x3c, 0x1e, 0x0f, 0x07, 0x03, 0x01, 0x00, 0x03, 0xff, 0xf9, 0xf8, 0xfc, 0xfe, 0x0f, 0x07, 0x03, 0x01, 0x09, 0x00, 0x03, 0xff, 0x10, 0x07, 0x03, 0xff, 0x10, 0x00, 0x03, 0x1f
 };
-static const tImage fontterminusdig40_0x34 = { image_data_fontterminusdig40_0x34, 19, 40, 46, yes};
+static const __flash tImage fontterminusdig40_0x34 = { image_data_fontterminusdig40_0x34, 19, 40, 46, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x35[36] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x35[36] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -476,11 +476,11 @@ static const uint8_t image_data_fontterminusdig40_0x35[36] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0x03, 0xf8, 0x10, 0x38, 0x03, 0xff, 0x10, 0x00, 0x0e, 0x07, 0xfb, 0x0f, 0x1e, 0xfc, 0xf8, 0xf0, 0x03, 0xc0, 0x0d, 0x00, 0x03, 0xff, 0xfb, 0x03, 0x07, 0x0f, 0x1f, 0x1e, 0x09, 0x1c, 0xfb, 0x1e, 0x0f, 0x07, 0x03, 0x01
 };
-static const tImage fontterminusdig40_0x35 = { image_data_fontterminusdig40_0x35, 19, 40, 36, yes};
+static const __flash tImage fontterminusdig40_0x35 = { image_data_fontterminusdig40_0x35, 19, 40, 36, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x36[47] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x36[47] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -523,11 +523,11 @@ static const uint8_t image_data_fontterminusdig40_0x36[47] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0xfa, 0x00, 0x80, 0xc0, 0xe0, 0xf0, 0x78, 0x0a, 0x38, 0x03, 0x00, 0x03, 0xff, 0x01, 0x01, 0x0f, 0x00, 0x03, 0xff, 0x0b, 0x0e, 0xfb, 0x1e, 0x3e, 0xfc, 0xf8, 0xf0, 0x03, 0xff, 0x0d, 0x00, 0x03, 0xff, 0xfb, 0x03, 0x07, 0x0f, 0x1f, 0x1e, 0x09, 0x1c, 0xfb, 0x1e, 0x1f, 0x0f, 0x07, 0x03
 };
-static const tImage fontterminusdig40_0x36 = { image_data_fontterminusdig40_0x36, 19, 40, 47, yes};
+static const __flash tImage fontterminusdig40_0x36 = { image_data_fontterminusdig40_0x36, 19, 40, 47, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x37[40] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x37[40] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -570,11 +570,11 @@ static const uint8_t image_data_fontterminusdig40_0x37[40] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0x03, 0xf8, 0x0d, 0x38, 0x03, 0xf8, 0x03, 0x0f, 0x0b, 0x00, 0xfb, 0xc0, 0xf0, 0xff, 0x7f, 0x1f, 0x0a, 0x00, 0xf9, 0xc0, 0xf0, 0xfc, 0x7f, 0x1f, 0x07, 0x01, 0x0a, 0x00, 0xfb, 0xfc, 0xff, 0xff, 0x07, 0x01, 0x0e, 0x00, 0x03, 0x1f, 0x08, 0x00
 };
-static const tImage fontterminusdig40_0x37 = { image_data_fontterminusdig40_0x37, 19, 40, 40, yes};
+static const __flash tImage fontterminusdig40_0x37 = { image_data_fontterminusdig40_0x37, 19, 40, 40, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x38[54] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x38[54] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -617,11 +617,11 @@ static const uint8_t image_data_fontterminusdig40_0x38[54] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0xfb, 0xc0, 0xe0, 0xf0, 0xf8, 0x78, 0x09, 0x38, 0xfb, 0x78, 0xf8, 0xf0, 0xe0, 0xc0, 0x03, 0xff, 0x0d, 0x00, 0x03, 0xff, 0xfb, 0xc1, 0xe3, 0xf7, 0x7f, 0x3e, 0x09, 0x1c, 0xfb, 0x3e, 0x7f, 0xf7, 0xe3, 0xc1, 0x03, 0xff, 0x0d, 0x00, 0x03, 0xff, 0xfb, 0x03, 0x07, 0x0f, 0x1f, 0x1e, 0x09, 0x1c, 0xfb, 0x1e, 0x1f, 0x0f, 0x07, 0x03
 };
-static const tImage fontterminusdig40_0x38 = { image_data_fontterminusdig40_0x38, 19, 40, 54, yes};
+static const __flash tImage fontterminusdig40_0x38 = { image_data_fontterminusdig40_0x38, 19, 40, 54, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x39[47] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x39[47] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
@@ -664,11 +664,11 @@ static const uint8_t image_data_fontterminusdig40_0x39[47] = {
     // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
     0xfb, 0xc0, 0xe0, 0xf0, 0xf8, 0x78, 0x09, 0x38, 0xfb, 0x78, 0xf8, 0xf0, 0xe0, 0xc0, 0x03, 0xff, 0x0d, 0x00, 0x03, 0xff, 0xfb, 0x0f, 0x1f, 0x3f, 0x7c, 0x78, 0x0b, 0x70, 0x03, 0xff, 0x0f, 0x00, 0x01, 0x80, 0x03, 0xff, 0x03, 0x00, 0x0a, 0x1c, 0xfa, 0x1e, 0x0f, 0x07, 0x03, 0x01, 0x00
 };
-static const tImage fontterminusdig40_0x39 = { image_data_fontterminusdig40_0x39, 19, 40, 47, yes};
+static const __flash tImage fontterminusdig40_0x39 = { image_data_fontterminusdig40_0x39, 19, 40, 47, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0x3a[10] = {
+static const __flash uint8_t image_data_fontterminusdig40_0x3a[10] = {
     // ∙∙∙
     // ∙∙∙
     // ∙∙∙
@@ -711,11 +711,11 @@ static const uint8_t image_data_fontterminusdig40_0x3a[10] = {
     // ∙∙∙
     0x03, 0x00, 0x03, 0xf0, 0x03, 0x00, 0x03, 0xc0, 0x03, 0x03
 };
-static const tImage fontterminusdig40_0x3a = { image_data_fontterminusdig40_0x3a, 3, 40, 10, yes};
+static const __flash tImage fontterminusdig40_0x3a = { image_data_fontterminusdig40_0x3a, 3, 40, 10, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0xe28088[2] = {
+static const __flash uint8_t image_data_fontterminusdig40_0xe28088[2] = {
     // ∙∙∙
     // ∙∙∙
     // ∙∙∙
@@ -758,11 +758,11 @@ static const uint8_t image_data_fontterminusdig40_0xe28088[2] = {
     // ∙∙∙
     0x0f, 0x00
 };
-static const tImage fontterminusdig40_0xe28088 = { image_data_fontterminusdig40_0xe28088, 3, 40, 2, yes};
+static const __flash tImage fontterminusdig40_0xe28088 = { image_data_fontterminusdig40_0xe28088, 3, 40, 2, yes};
 #endif
 
 #if (0x0 == 0x0)
-static const uint8_t image_data_fontterminusdig40_0xe29688[2] = {
+static const __flash uint8_t image_data_fontterminusdig40_0xe29688[2] = {
     // ███████████████████
     // ███████████████████
     // ███████████████████
@@ -805,11 +805,11 @@ static const uint8_t image_data_fontterminusdig40_0xe29688[2] = {
     // ███████████████████
     0x5f, 0xff
 };
-static const tImage fontterminusdig40_0xe29688 = { image_data_fontterminusdig40_0xe29688, 19, 40, 2, yes};
+static const __flash tImage fontterminusdig40_0xe29688 = { image_data_fontterminusdig40_0xe29688, 19, 40, 2, yes};
 #endif
 
 
-static const tChar fontterminusdig40_array[] = {
+static const __flash tChar fontterminusdig40_array[] = {
 
 #if (0x0 == 0x0)
     // character: ' '
@@ -942,4 +942,4 @@ static const tChar fontterminusdig40_array[] = {
 };
 
 
-const tFont fontterminusdig40 = { 16, fontterminusdig40_array };
+const tFont __flash fontterminusdig40 = { 16, fontterminusdig40_array };
