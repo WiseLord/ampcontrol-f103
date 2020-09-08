@@ -378,91 +378,69 @@ void glcdSetStringFramed(bool framed)
 
 int16_t glcdWriteString(const char *string)
 {
-    if (string == NULL) {
-        return 0;
-    }
-
-    UChar code = 0;
-    const char *str = string;
-    int16_t ret = 0;
-
-    const __flash tFont *font = glcd.font;
-
-    if (font == NULL) {
+    if (string == NULL || glcd.font == 0) {
         return 0;
     }
 
     if (glcd.fontAlign != GLCD_ALIGN_LEFT) {
-        uint16_t strLength = 0;
-        int16_t pos = glcdFontSymbolPos(LETTER_SPACE_CHAR);
-        int16_t sWidth = font->chars[pos].image->width;
-
-        if (glcd.strFramed) {
-            strLength += 2 * sWidth;
-        }
-        while (*str) {
-            code = findSymbolCode(&str);
-            pos = glcdFontSymbolPos(code);
-            strLength += font->chars[pos].image->width;
-            if (*str) {
-                strLength += sWidth;
-            }
-        }
+        uint16_t sLen = glcdCalcStringLen(string);
 
         if (glcd.fontAlign == GLCD_ALIGN_CENTER) {
-            glcdSetX(glcd.x - strLength / 2);
+            glcdSetX(glcd.x - sLen / 2);
         } else if (glcd.fontAlign == GLCD_ALIGN_RIGHT) {
-            glcdSetX(glcd.x - strLength);
+            glcdSetX(glcd.x - sLen);
         }
 
         // Reset align after string finished
         glcd.fontAlign = GLCD_ALIGN_LEFT;
     }
 
-    str = string;
+    int16_t sLen = 0;
+    int16_t lsp = glcdCalcUCharLen(LETTER_SPACE_CHAR);
 
     if (glcd.strFramed) {
-        ret += glcdWriteUChar(LETTER_SPACE_CHAR);
+        glcdDrawRect(glcd.x, glcd.y, lsp, glcd.font->chars[0].image->height, glcd.fontBg);
+        sLen += lsp;
+        glcd.x += lsp;
     }
-    while (*str) {
-        code = findSymbolCode(&str);
-
-        ret += glcdWriteUChar(code);
-        if (*str) {
-            ret += glcdWriteUChar(LETTER_SPACE_CHAR);
+    while (*string) {
+        sLen += glcdWriteUChar(findSymbolCode(&string));
+        if (*string) {
+            glcdDrawRect(glcd.x, glcd.y, lsp, glcd.font->chars[0].image->height, glcd.fontBg);
+            sLen += lsp;
+            glcd.x += lsp;
         }
     }
     if (glcd.strFramed) {
-        ret += glcdWriteUChar(LETTER_SPACE_CHAR);
+        glcdDrawRect(glcd.x, glcd.y, lsp, glcd.font->chars[0].image->height, glcd.fontBg);
+        sLen += lsp;
+        glcd.x += lsp;
     }
 
-    return ret;
+    return sLen;
 }
 
 int16_t glcdCalcStringLen(const char *string)
 {
-    if (string == NULL) {
+    if (string == NULL || glcd.font == 0) {
         return 0;
     }
 
-    UChar code = 0;
-    const char *str = string;
-    int16_t ret = 0;
+    int16_t sLen = 0;
+    int16_t lsp = glcdCalcUCharLen(LETTER_SPACE_CHAR);
 
     if (glcd.strFramed) {
-        ret += 2 * glcdCalcUCharLen(LETTER_SPACE_CHAR);
+        sLen += 2 * lsp;
     }
 
-    while (*str) {
-        code = findSymbolCode(&str);
-
-        ret += glcdCalcUCharLen(code);
-        if (*str) {
-            ret += glcdCalcUCharLen(LETTER_SPACE_CHAR);
+    while (*string) {
+        sLen += glcdCalcUCharLen(findSymbolCode(&string));
+        if (*string) {
+            sLen += lsp;
         }
     }
 
-    return ret;
+    return sLen;
 }
 
 void glcdDrawPixel(int16_t x, int16_t y, color_t color)
