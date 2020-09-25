@@ -18,6 +18,7 @@ extern "C" {
 #define CLR(x)                  PORT(PCAT(x)) &= ~(1<<x ## _Pin)
 #define READ(x)                 PIN(PCAT(x)) & (1<<x ## _Pin)
 #define OUT(x)                  DDR(PCAT(x)) |= (1<<x ## _Pin)
+#define IN(x)                   DDR(PCAT(x)) &= ~(1<<x ## _Pin)
 
 #define READ_BYTE(p)            (PIN(PCAT(p)))
 #define WRITE_BYTE(p, data)     (PORT(PCAT(p)) = data)
