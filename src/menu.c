@@ -52,6 +52,7 @@ static const MenuItem menuItems[MENU_END] = {
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IC},
     [MENU_AUDIO_SHOWDB]     = {MENU_SETUP_AUDIO,        MENU_TYPE_BOOL,     PARAM_AUDIO_SHOWDB},
+    [MENU_AUDIO_MODE]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_MODE},
     [MENU_AUDIO_IN_0]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN0},
     [MENU_AUDIO_IN_1]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN1},
     [MENU_AUDIO_IN_2]       = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IN2},
@@ -199,7 +200,7 @@ static void menuValueChange(int8_t diff)
 
     case MENU_I2C_EXT_IN_STAT:
     case MENU_I2C_EXT_BT:
-        if (menu.value >= I2C_ADDR_END - 1)
+        if (menu.value > I2C_ADDR_END - 1)
             menu.value = I2C_ADDR_END - 1;
         if (menu.value < I2C_ADDR_DISABLED)
             menu.value = I2C_ADDR_DISABLED;
@@ -210,6 +211,12 @@ static void menuValueChange(int8_t diff)
             menu.value = AUDIO_IC_END - 1;
         if (menu.value < AUDIO_IC_NO)
             menu.value = AUDIO_IC_NO;
+        break;
+    case MENU_AUDIO_MODE:
+        if (menu.value > AUDIO_MODE_END - 1)
+            menu.value = AUDIO_MODE_END - 1;
+        if (menu.value < AUDIO_MODE_2_0)
+            menu.value = AUDIO_MODE_2_0;
         break;
     case MENU_AUDIO_IN_0:
     case MENU_AUDIO_IN_1:
@@ -560,6 +567,9 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
 
     case MENU_AUDIO_IC:
         ret = labelsGet((Label)(LABEL_AUDIO_IC + value));
+        break;
+    case MENU_AUDIO_MODE:
+        ret = labelsGet((Label)(LABEL_AUDIO_MODE + value));
         break;
     case MENU_AUDIO_IN_0:
     case MENU_AUDIO_IN_1:

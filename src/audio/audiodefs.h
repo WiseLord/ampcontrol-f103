@@ -56,6 +56,16 @@ enum {
     AUDIO_FLAG_BYPASS,
 };
 
+typedef uint8_t AudioMode;
+enum {
+    AUDIO_MODE_2_0 = 0,
+    AUDIO_MODE_2_1,
+    AUDIO_MODE_4_0,
+    AUDIO_MODE_5_1,
+
+    AUDIO_MODE_END
+};
+
 #define STEP_MULT   8
 
 typedef struct {
@@ -76,6 +86,7 @@ typedef struct {
     int8_t gain[MAX_INPUTS];
     int8_t input;
     int8_t inCnt;
+    AudioMode mode;
 
     bool mute;
     bool loudness;

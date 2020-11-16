@@ -31,6 +31,7 @@ static const EE_Cell eeMap[] = {
     [PARAM_AUDIO_EFFECT3D]  =   {0x05,  false},
     [PARAM_AUDIO_BYPASS]    =   {0x06,  false},
     [PARAM_AUDIO_SHOWDB]    =   {0x07,  true},
+    [PARAM_AUDIO_MODE]      =   {0x08,  AUDIO_MODE_2_0},
 
     [PARAM_AUDIO_IN0]       =   {0x10,  IN_TUNER},
     [PARAM_AUDIO_IN1]       =   {0x11,  IN_KARADIO},
@@ -139,6 +140,9 @@ int16_t settingsGet(Param param)
         break;
     case PARAM_AUDIO_SHOWDB:
         ret = amp->showDb;
+        break;
+    case PARAM_AUDIO_MODE:
+        ret = aProc->par.mode;
         break;
 
     case PARAM_AUDIO_IN0:
@@ -309,6 +313,9 @@ void settingsSet(Param param, int16_t value)
         break;
     case PARAM_AUDIO_SHOWDB:
         amp->showDb = (bool)value;
+        break;
+    case PARAM_AUDIO_MODE:
+        aProc->par.mode = (AudioMode)value;
         break;
 
     case PARAM_AUDIO_IN0:

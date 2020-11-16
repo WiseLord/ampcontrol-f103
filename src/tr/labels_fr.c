@@ -95,6 +95,7 @@ const char *const labels_fr[LABEL_END] = {
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Processeur audio",
 //    [LABEL_MENU + MENU_AUDIO_SHOWDB]    = "Show in dB",
+//    [LABEL_MENU + MENU_AUDIO_MODE]      = "Audio mode",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Entrée",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Récepteur IC",

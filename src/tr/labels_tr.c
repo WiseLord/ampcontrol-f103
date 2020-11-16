@@ -95,6 +95,7 @@ const char *const labels_tr[LABEL_END] = {
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
 //    [LABEL_MENU + MENU_AUDIO_SHOWDB]    = "Show in dB",
+//    [LABEL_MENU + MENU_AUDIO_MODE]      = "Audio mode",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Ses Giriş",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner İşlemci Modeli",

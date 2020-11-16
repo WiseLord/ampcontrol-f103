@@ -95,6 +95,7 @@ const char *const labels_by[LABEL_END] = {
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аўдыёпрацэсар",
     [LABEL_MENU + MENU_AUDIO_SHOWDB]    = "Паказваць у дБ",
+    [LABEL_MENU + MENU_AUDIO_MODE]      = "Рэжым аўдыё",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Уваход",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Чып цюнера",

@@ -65,6 +65,11 @@ const char *const labels_en[LABEL_END] = {
 
     FOREACH_AUDIO_IC(GENERATE_AUDIO_IC_TEXT)
 
+    [LABEL_AUDIO_MODE + AUDIO_MODE_2_0]     = "2.0",
+    [LABEL_AUDIO_MODE + AUDIO_MODE_2_1]     = "2.1",
+    [LABEL_AUDIO_MODE + AUDIO_MODE_4_0]     = "4.0",
+    [LABEL_AUDIO_MODE + AUDIO_MODE_5_1]     = "5.1",
+
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Disabled",
     [LABEL_ALARM_DAY + ALARM_DAY_WEEKDAYS]  = "Weekdays",
     [LABEL_ALARM_DAY + ALARM_DAY_ALL_DAYS]  = "All days",
@@ -95,6 +100,7 @@ const char *const labels_en[LABEL_END] = {
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
     [LABEL_MENU + MENU_AUDIO_SHOWDB]    = "Show in dB",
+    [LABEL_MENU + MENU_AUDIO_MODE]      = "Audio mode",
     [LABEL_MENU + MENU_AUDIO_IN]        = "Input",
 
     [LABEL_MENU + MENU_TUNER_IC]        = "Tuner IC",
