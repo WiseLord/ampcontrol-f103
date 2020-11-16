@@ -137,6 +137,31 @@ AudioProc *audioGet(void)
     return &aProc;
 }
 
+void audioSetRawBalance(AudioRaw *raw, int8_t volume)
+{
+    AudioParam *aPar = &aProc.par;
+
+    raw->frontLeft = volume;
+    raw->frontRight = volume;
+    raw->rearLeft = volume;
+    raw->rearRight = volume;
+
+    if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
+        raw->frontLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
+        raw->rearLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
+    } else {
+        raw->frontRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
+        raw->rearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
+    }
+    if (aPar->tune[AUDIO_TUNE_FRONTREAR].value > 0) {
+        raw->rearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+        raw->rearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+    } else {
+        raw->frontLeft += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+        raw->frontRight += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+    }
+}
+
 void audioSetPower(bool value)
 {
     if (!value) {

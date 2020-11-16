@@ -1,5 +1,6 @@
 #include "tda7418.h"
 
+#include "audio.h"
 #include "hwlibs.h"
 #include "i2c.h"
 
@@ -113,32 +114,15 @@ static void tda7418InputGain(int8_t input, int8_t gain)
 
 static void tda7418SetSpeakers(void)
 {
-    int8_t spFrontLeft = 0;
-    int8_t spFrontRight = 0;
-    int8_t spRearLeft = 0;
-    int8_t spRearRight = 0;
-
-    if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
-        spFrontLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-        spRearLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-    } else {
-        spFrontRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-        spRearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-    }
-    if (aPar->tune[AUDIO_TUNE_FRONTREAR].value > 0) {
-        spRearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        spRearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-    } else {
-        spFrontLeft += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        spFrontRight += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-    }
+    AudioRaw raw;
+    audioSetRawBalance(&raw, 0);
 
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7418_SP_FRONT_LEFT | TDA7418_AUTO_INC);
-    i2cSend(I2C_AMP, (uint8_t)(16 - spFrontLeft));
-    i2cSend(I2C_AMP, (uint8_t)(16 - spRearLeft));
-    i2cSend(I2C_AMP, (uint8_t)(16 - spRearRight));
-    i2cSend(I2C_AMP, (uint8_t)(16 - spFrontRight));
+    i2cSend(I2C_AMP, (uint8_t)(16 - raw.frontLeft));
+    i2cSend(I2C_AMP, (uint8_t)(16 - raw.rearLeft));
+    i2cSend(I2C_AMP, (uint8_t)(16 - raw.rearRight));
+    i2cSend(I2C_AMP, (uint8_t)(16 - raw.frontRight));
     i2cTransmit(I2C_AMP);
 }
 

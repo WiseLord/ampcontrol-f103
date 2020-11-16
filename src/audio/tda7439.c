@@ -1,5 +1,6 @@
 #include "tda7439.h"
 
+#include "audio.h"
 #include "hwlibs.h"
 #include "i2c.h"
 
@@ -60,18 +61,15 @@ void tda7439InitParam(AudioParam *param)
 
 void tda7439SetTune(AudioTune tune, int8_t value)
 {
-    int8_t spLeft = aPar->tune[AUDIO_TUNE_VOLUME].value;
-    int8_t spRight = aPar->tune[AUDIO_TUNE_VOLUME].value;
-    int8_t volMin = aPar->tune[AUDIO_TUNE_VOLUME].grid->min;
+    AudioRaw raw;
+    audioSetRawBalance(&raw, 0);
 
-    if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
-        spLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-        if (spLeft < volMin)
-            spLeft = volMin;
-    } else {
-        spRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-        if (spRight < volMin)
-            spRight = volMin;
+    int8_t volMin = aPar->tune[AUDIO_TUNE_VOLUME].grid->min;
+    if (raw.frontLeft < volMin) {
+        raw.frontLeft = volMin;
+    }
+    if (raw.frontRight < volMin) {
+        raw.frontRight = volMin;
     }
 
     switch (tune) {
@@ -79,8 +77,8 @@ void tda7439SetTune(AudioTune tune, int8_t value)
     case AUDIO_TUNE_BALANCE:
         i2cBegin(I2C_AMP, TDA7439_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7439_VOLUME_RIGHT | TDA7439_AUTO_INC);
-        i2cSend(I2C_AMP, (uint8_t)(-spRight));
-        i2cSend(I2C_AMP, (uint8_t)(-spLeft));
+        i2cSend(I2C_AMP, (uint8_t)(-raw.frontRight));
+        i2cSend(I2C_AMP, (uint8_t)(-raw.frontLeft));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BASS:

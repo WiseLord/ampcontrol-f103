@@ -1,5 +1,6 @@
 #include "tda731x.h"
 
+#include "audio.h"
 #include "hwlibs.h"
 #include "i2c.h"
 
@@ -62,25 +63,8 @@ void tda731xInitParam(AudioParam *param)
 
 void tda731xSetTune(AudioTune tune, int8_t value)
 {
-    int8_t spFrontLeft = 0;
-    int8_t spFrontRight = 0;
-    int8_t spRearLeft = 0;
-    int8_t spRearRight = 0;
-
-    if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
-        spFrontLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-        spRearLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-    } else {
-        spFrontRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-        spRearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-    }
-    if (aPar->tune[AUDIO_TUNE_FRONTREAR].value > 0) {
-        spRearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        spRearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-    } else {
-        spFrontLeft += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        spFrontRight += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-    }
+    AudioRaw raw;
+    audioSetRawBalance(&raw, 0);
 
     switch (tune) {
     case AUDIO_TUNE_VOLUME:
@@ -91,10 +75,10 @@ void tda731xSetTune(AudioTune tune, int8_t value)
     case AUDIO_TUNE_BALANCE:
     case AUDIO_TUNE_FRONTREAR:
         i2cBegin(I2C_AMP, TDA731X_I2C_ADDR);
-        i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_REAR_LEFT | -spRearLeft));
-        i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_REAR_RIGHT | -spRearRight));
-        i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_FRONT_LEFT | -spFrontLeft));
-        i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_FRONT_RIGHT | -spFrontRight));
+        i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_REAR_LEFT | -raw.rearLeft));
+        i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_REAR_RIGHT | -raw.rearRight));
+        i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_FRONT_LEFT | -raw.frontLeft));
+        i2cSend(I2C_AMP, (uint8_t)(TDA731X_SP_FRONT_RIGHT | -raw.frontRight));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BASS:

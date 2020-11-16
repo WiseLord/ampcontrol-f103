@@ -66,6 +66,13 @@ enum {
     AUDIO_MODE_END
 };
 
+typedef struct {
+    int8_t frontLeft;
+    int8_t frontRight;
+    int8_t rearLeft;
+    int8_t rearRight;
+} AudioRaw;
+
 #define STEP_MULT   8
 
 typedef struct {

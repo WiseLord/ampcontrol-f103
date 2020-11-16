@@ -1,5 +1,6 @@
 #include "pt232x.h"
 
+#include "audio.h"
 #include "hwlibs.h"
 #include "i2c.h"
 
@@ -94,32 +95,15 @@ static void pt232xSetSndFunc(bool mute, bool effect3d, bool bypass)
 
 static void pt2322SetSpeakers(void)
 {
-    int8_t spFrontLeft = 0;
-    int8_t spFrontRight = 0;
-    int8_t spRearLeft = 0;
-    int8_t spRearRight = 0;
-
-    if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
-        spFrontLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-        spRearLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-    } else {
-        spFrontRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-        spRearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-    }
-    if (aPar->tune[AUDIO_TUNE_FRONTREAR].value > 0) {
-        spRearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        spRearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-    } else {
-        spFrontLeft += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        spFrontRight += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-    }
+    AudioRaw raw;
+    audioSetRawBalance(&raw, 0);
 
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
-    i2cSend(I2C_AMP, PT2322_TRIM_FL | (uint8_t)(-spFrontLeft));
-    i2cSend(I2C_AMP, PT2322_TRIM_FR | (uint8_t)(-spFrontRight));
+    i2cSend(I2C_AMP, PT2322_TRIM_FL | (uint8_t)(-raw.frontLeft));
+    i2cSend(I2C_AMP, PT2322_TRIM_FR | (uint8_t)(-raw.frontRight));
     i2cSend(I2C_AMP, PT2322_TRIM_CT | (uint8_t)(-aPar->tune[AUDIO_TUNE_CENTER].value));
-    i2cSend(I2C_AMP, PT2322_TRIM_RL | (uint8_t)(-spRearLeft));
-    i2cSend(I2C_AMP, PT2322_TRIM_RR | (uint8_t)(-spRearRight));
+    i2cSend(I2C_AMP, PT2322_TRIM_RL | (uint8_t)(-raw.rearLeft));
+    i2cSend(I2C_AMP, PT2322_TRIM_RR | (uint8_t)(-raw.rearRight));
     i2cSend(I2C_AMP, PT2322_TRIM_SB | (uint8_t)(-aPar->tune[AUDIO_TUNE_SUBWOOFER].value));
     i2cTransmit(I2C_AMP);
 }

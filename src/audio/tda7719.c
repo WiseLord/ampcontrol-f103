@@ -1,5 +1,6 @@
 #include "tda7719.h"
 
+#include "audio.h"
 #include "hwlibs.h"
 #include "i2c.h"
 
@@ -236,25 +237,8 @@ void tda7719SetTune(AudioTune tune, int8_t value)
 {
     (void)value;
 
-    int8_t spFrontLeft = aPar->tune[AUDIO_TUNE_VOLUME].value;
-    int8_t spFrontRight = aPar->tune[AUDIO_TUNE_VOLUME].value;
-    int8_t spRearLeft = aPar->tune[AUDIO_TUNE_VOLUME].value;
-    int8_t spRearRight = aPar->tune[AUDIO_TUNE_VOLUME].value;
-
-    if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
-        spFrontLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-        spRearLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-    } else {
-        spFrontRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-        spRearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-    }
-    if (aPar->tune[AUDIO_TUNE_FRONTREAR].value > 0) {
-        spRearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        spRearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-    } else {
-        spFrontLeft += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        spFrontRight += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-    }
+    AudioRaw raw;
+    audioSetRawBalance(&raw, aPar->tune[AUDIO_TUNE_VOLUME].value);
 
     switch (tune) {
     case AUDIO_TUNE_VOLUME:
@@ -262,10 +246,10 @@ void tda7719SetTune(AudioTune tune, int8_t value)
     case AUDIO_TUNE_FRONTREAR:
         i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7719_SP_LEFT_FRONT | TDA7719_AUTOINC);
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-spFrontLeft));
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-spFrontRight));
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-spRearLeft));
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-spRearRight));
+        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.frontLeft));
+        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.frontRight));
+        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.rearLeft));
+        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.rearRight));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BASS:
