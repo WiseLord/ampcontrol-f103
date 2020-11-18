@@ -216,6 +216,13 @@ void tda7719InitParam(AudioParam *param)
 
 void tda7719Reset(void)
 {
+    uint8_t subDisable = TDA7719_SUB_DISABLE;
+
+    if (aPar->mode == AUDIO_MODE_2_1 ||
+        aPar->mode == AUDIO_MODE_4_1) {
+        subDisable = 0;
+    }
+
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
 
@@ -224,7 +231,7 @@ void tda7719Reset(void)
             TDA7719_2ND_IN_GAIN_3DB | TDA7719_2ND_IN_MD2 | 0);
     i2cSend(I2C_AMP, 0xFF);
     i2cSend(I2C_AMP, TDA7719_LM_RESET | TDA7719_REF_OUT_EXT | TDA7719_REAR_MAIN_IN | 0x0F);
-    i2cSend(I2C_AMP, TDA7719_BYPASS_ANTI_ALIAS | TDA7719_FAST_CHARGE_OFF | TDA7719_SUB_DISABLE |
+    i2cSend(I2C_AMP, TDA7719_BYPASS_ANTI_ALIAS | TDA7719_FAST_CHARGE_OFF | subDisable |
             TDA7719_MUTE_IIC_ONLY | TDA7719_SM_OFF);
     i2cSend(I2C_AMP, 0xFF);
     i2cSend(I2C_AMP, TDA7719_SPIKE_REJ_TIME_MASK | 0x07);
