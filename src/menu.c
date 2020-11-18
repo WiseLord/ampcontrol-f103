@@ -449,6 +449,11 @@ void menuSetActive(MenuIdx index)
                 break;
             }
         } else {
+            if (index == MENU_AUDIO_MODE) {
+                if (!audioIsModeSupported((AudioMode)menu.value)) {
+                    menu.value = SP_MODE_STEREO;
+                }
+            }
             menuStoreCurrentValue();
             if (index == MENU_DISPLAY_BR_STBY || index == MENU_DISPLAY_BR_WORK) {
                 ampSetBrightness((int8_t)settingsGet(PARAM_DISPLAY_BR_WORK));
@@ -535,7 +540,7 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
     }
 
     if (menuItems[index].type == MENU_TYPE_NUMBER) {
-        snprintf(str, len,"%5d", value);
+        snprintf(str, len, "%5d", value);
         return;
     }
 

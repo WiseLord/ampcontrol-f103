@@ -310,3 +310,45 @@ void audioSetBypass(bool value)
         audioSetTune(AUDIO_TUNE_TREBLE, aProc.par.tune[AUDIO_TUNE_TREBLE].value);
     }
 }
+
+bool audioIsModeSupported(AudioMode mode)
+{
+    bool ret = false;
+
+    AudioIC ic = aProc.par.ic;
+
+    switch (mode) {
+    case AUDIO_MODE_2_0:
+        ret = true;
+        break;
+    case AUDIO_MODE_2_1:
+    case AUDIO_MODE_4_0:
+        switch (ic) {
+        case AUDIO_IC_TDA7313:
+        case AUDIO_IC_PT232X:
+        case AUDIO_IC_TDA7418:
+        case AUDIO_IC_TDA7719:
+            ret = true;
+            break;
+        }
+        break;
+    case AUDIO_MODE_4_1:
+        switch (ic) {
+        case AUDIO_IC_PT232X:
+        case AUDIO_IC_TDA7418:
+        case AUDIO_IC_TDA7719:
+            ret = true;
+            break;
+        }
+        break;
+    case AUDIO_MODE_5_1:
+        switch (ic) {
+        case AUDIO_IC_PT232X:
+            ret = true;
+            break;
+        }
+        break;
+    }
+
+    return ret;
+}

@@ -37,6 +37,8 @@ void audioSetSurround(bool value);
 void audioSetEffect3D(bool value);
 void audioSetBypass(bool value);
 
+bool audioIsModeSupported(AudioMode mode);
+
 #ifdef __cplusplus
 }
 #endif
