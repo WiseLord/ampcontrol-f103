@@ -61,6 +61,7 @@ enum {
     AUDIO_MODE_2_0 = 0,
     AUDIO_MODE_2_1,
     AUDIO_MODE_4_0,
+    AUDIO_MODE_4_1,
     AUDIO_MODE_5_1,
 
     AUDIO_MODE_END

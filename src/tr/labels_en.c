@@ -68,6 +68,7 @@ const char *const labels_en[LABEL_END] = {
     [LABEL_AUDIO_MODE + AUDIO_MODE_2_0]     = "2.0",
     [LABEL_AUDIO_MODE + AUDIO_MODE_2_1]     = "2.1",
     [LABEL_AUDIO_MODE + AUDIO_MODE_4_0]     = "4.0",
+    [LABEL_AUDIO_MODE + AUDIO_MODE_4_1]     = "4.1",
     [LABEL_AUDIO_MODE + AUDIO_MODE_5_1]     = "5.1",
 
     [LABEL_ALARM_DAY + ALARM_DAY_OFF]       = "Disabled",
