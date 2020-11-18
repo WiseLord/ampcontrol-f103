@@ -21,11 +21,11 @@ typedef uint8_t Lang;
 enum {
     LANG_EN,
     LANG_BY,
-    LANG_FR,
-    LANG_RO,
     LANG_RU,
-    LANG_TR,
     LANG_UA,
+    LANG_TR,
+//    LANG_FR,
+//    LANG_RO,
 
     LANG_END,
 

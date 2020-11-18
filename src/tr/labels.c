@@ -13,11 +13,11 @@ typedef struct {
 static const LangMap langMap[LANG_END] = {
     [LANG_EN] = { labels_en,  "English", },
     [LANG_BY] = { labels_by,  "Беларуская"},
-    [LANG_FR] = { labels_fr,  "Français" },
     [LANG_RU] = { labels_ru,  "Русский"},
-    [LANG_TR] = { labels_tr,  "Türkçe"},
     [LANG_UA] = { labels_ua,  "Українська"},
-    [LANG_RO] = { labels_ro,  "Romaneste"},
+    [LANG_TR] = { labels_tr,  "Türkçe"},
+//    [LANG_FR] = { labels_fr,  "Français" },
+//    [LANG_RO] = { labels_ro,  "Romaneste"},
 };
 
 void labelsSetLang(Lang value)
