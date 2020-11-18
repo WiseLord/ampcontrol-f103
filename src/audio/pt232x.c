@@ -96,7 +96,7 @@ static void pt232xSetSndFunc(bool mute, bool effect3d, bool bypass)
 static void pt2322SetSpeakers(void)
 {
     AudioRaw raw;
-    audioSetRawBalance(&raw, 0);
+    audioSetRawBalance(&raw, 0, false);
 
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
     i2cSend(I2C_AMP, PT2322_TRIM_FL | (uint8_t)(-raw.frontLeft));

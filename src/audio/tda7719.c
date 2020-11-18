@@ -238,7 +238,7 @@ void tda7719SetTune(AudioTune tune, int8_t value)
     (void)value;
 
     AudioRaw raw;
-    audioSetRawBalance(&raw, aPar->tune[AUDIO_TUNE_VOLUME].value);
+    audioSetRawBalance(&raw, aPar->tune[AUDIO_TUNE_VOLUME].value, false);
 
     switch (tune) {
     case AUDIO_TUNE_VOLUME:

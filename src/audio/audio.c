@@ -137,7 +137,7 @@ AudioProc *audioGet(void)
     return &aProc;
 }
 
-void audioSetRawBalance(AudioRaw *raw, int8_t volume)
+void audioSetRawBalance(AudioRaw *raw, int8_t volume, bool rear2bass)
 {
     AudioParam *aPar = &aProc.par;
 
@@ -148,12 +148,16 @@ void audioSetRawBalance(AudioRaw *raw, int8_t volume)
 
     if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
         raw->frontLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
-        raw->rearLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
+        if (!rear2bass) {
+            raw->rearLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
+        }
     } else {
         raw->frontRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
-        raw->rearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
+        if (!rear2bass) {
+            raw->rearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
+        }
     }
-    if (aPar->tune[AUDIO_TUNE_FRONTREAR].value > 0) {
+    if (aPar->tune[rear2bass ? AUDIO_TUNE_SUBWOOFER : AUDIO_TUNE_FRONTREAR].value > 0) {
         raw->rearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
         raw->rearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
     } else {

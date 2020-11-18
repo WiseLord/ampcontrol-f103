@@ -115,7 +115,7 @@ static void tda7418InputGain(int8_t input, int8_t gain)
 static void tda7418SetSpeakers(void)
 {
     AudioRaw raw;
-    audioSetRawBalance(&raw, 0);
+    audioSetRawBalance(&raw, 0, false);
 
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7418_SP_FRONT_LEFT | TDA7418_AUTO_INC);

@@ -64,7 +64,7 @@ void tda731xInitParam(AudioParam *param)
 void tda731xSetTune(AudioTune tune, int8_t value)
 {
     AudioRaw raw;
-    audioSetRawBalance(&raw, 0);
+    audioSetRawBalance(&raw, 0, false);
 
     switch (tune) {
     case AUDIO_TUNE_VOLUME:
