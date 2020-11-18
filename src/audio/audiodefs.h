@@ -72,6 +72,8 @@ typedef struct {
     int8_t frontRight;
     int8_t rearLeft;
     int8_t rearRight;
+    int8_t center;
+    int8_t subwoofer;
 } AudioRaw;
 
 #define STEP_MULT   8

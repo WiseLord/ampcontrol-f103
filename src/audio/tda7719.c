@@ -154,9 +154,10 @@
 
 static const int8_t inCfg2[TDA7719_IN_CNT] = { 0, 4, 1, 2, 5, 6 };
 
-static const AudioGrid gridVolume  = {-79,  0, (int8_t)(1.00 * STEP_MULT)}; // -79..0dB with 1dB step
-static const AudioGrid gridToneBal = {-15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
-static const AudioGrid gridGain    = {  0,  1, (int8_t)(3.00 * STEP_MULT)}; // 0..3dB with 3dB step
+static const AudioGrid gridVolume    = {-79,  0, (int8_t)(1.00 * STEP_MULT)}; // -79..0dB with 1dB step
+static const AudioGrid gridToneBal   = {-15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
+static const AudioGrid gridSubwoofer = {-15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
+static const AudioGrid gridGain      = {  0,  1, (int8_t)(3.00 * STEP_MULT)}; // 0..3dB with 3dB step
 
 static AudioParam *aPar;
 
@@ -182,7 +183,8 @@ static void tda7719SetInputGain(int8_t input, int8_t gain)
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
 
-    i2cSend(I2C_AMP, (uint8_t)(TDA7719_INPUT_CFG2 | (gain ? TDA7719_INPUT_GAIN_3DB : 0) | TDA7719_INPUT_MD2 | input));
+    i2cSend(I2C_AMP, (uint8_t)(TDA7719_INPUT_CFG2 | (gain ? TDA7719_INPUT_GAIN_3DB : 0) |
+                               TDA7719_INPUT_MD2 | input));
     i2cTransmit(I2C_AMP);
 }
 
@@ -200,8 +202,15 @@ void tda7719InitParam(AudioParam *param)
     aPar->tune[AUDIO_TUNE_MIDDLE].grid      = &gridToneBal;
     aPar->tune[AUDIO_TUNE_TREBLE].grid      = &gridToneBal;
     aPar->tune[AUDIO_TUNE_PREAMP].grid      = &gridToneBal;
+    if (aPar->mode == AUDIO_MODE_4_0 ||
+        aPar->mode == AUDIO_MODE_4_1) {
+        aPar->tune[AUDIO_TUNE_FRONTREAR].grid   = &gridToneBal;
+    }
     aPar->tune[AUDIO_TUNE_BALANCE].grid     = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_FRONTREAR].grid   = &gridToneBal;
+    if (aPar->mode == AUDIO_MODE_2_1 ||
+        aPar->mode == AUDIO_MODE_4_1) {
+        aPar->tune[AUDIO_TUNE_SUBWOOFER].grid   = &gridSubwoofer;
+    }
     aPar->tune[AUDIO_TUNE_GAIN].grid        = &gridGain;
 }
 
@@ -211,10 +220,12 @@ void tda7719Reset(void)
     i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
 
     i2cSend(I2C_AMP, TDA7719_INPUT_CFG2 | TDA7719_INPUT_GAIN_3DB | TDA7719_INPUT_MD2 | 0);
-    i2cSend(I2C_AMP, TDA7719_QD4_BYPASS_SUB | TDA7719_QD3_BYPASS_REAR | TDA7719_QD2_BYPASS_FRONT | TDA7719_2ND_IN_GAIN_3DB | TDA7719_2ND_IN_MD2 | 0);
+    i2cSend(I2C_AMP, TDA7719_QD4_BYPASS_SUB | TDA7719_QD3_BYPASS_REAR | TDA7719_QD2_BYPASS_FRONT |
+            TDA7719_2ND_IN_GAIN_3DB | TDA7719_2ND_IN_MD2 | 0);
     i2cSend(I2C_AMP, 0xFF);
     i2cSend(I2C_AMP, TDA7719_LM_RESET | TDA7719_REF_OUT_EXT | TDA7719_REAR_MAIN_IN | 0x0F);
-    i2cSend(I2C_AMP, TDA7719_BYPASS_ANTI_ALIAS | TDA7719_FAST_CHARGE_OFF | TDA7719_SUB_DISABLE | TDA7719_MUTE_IIC_ONLY | TDA7719_SM_OFF);
+    i2cSend(I2C_AMP, TDA7719_BYPASS_ANTI_ALIAS | TDA7719_FAST_CHARGE_OFF | TDA7719_SUB_DISABLE |
+            TDA7719_MUTE_IIC_ONLY | TDA7719_SM_OFF);
     i2cSend(I2C_AMP, 0xFF);
     i2cSend(I2C_AMP, TDA7719_SPIKE_REJ_TIME_MASK | 0x07);
     i2cSend(I2C_AMP, TDA7719_HIGH_BOOST_OFF | TDA7719_LOUD_FREQ_800HZ);
@@ -222,13 +233,14 @@ void tda7719Reset(void)
     i2cSend(I2C_AMP, TDA7719_TREBLE_FREQ_10K0 | TDA7719_TREBLE_GAIN_MASK);
     i2cSend(I2C_AMP, TDA7719_MIDDLE_QFACT_0P5 | TDA7719_MIDDLE_GAIN_MASK);
     i2cSend(I2C_AMP, TDA7719_BASS_QFACT_1P0 | TDA7719_BASS_GAIN_MASK);
-    i2cSend(I2C_AMP, TDA7719_BASS_DC_MODE_OFF | TDA7719_BASS_FREQ_60HZ | TDA7719_MIDDLE_FREQ_1000HZ | TDA7719_SUB_PHASE_0 | TDA7719_SUB_CUT_FREQ_MASK);
+    i2cSend(I2C_AMP, TDA7719_BASS_DC_MODE_OFF | TDA7719_BASS_FREQ_60HZ | TDA7719_MIDDLE_FREQ_1000HZ |
+            TDA7719_SUB_PHASE_0 | TDA7719_SUB_CUT_FREQ_MASK);
     i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
     i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
     i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
     i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
-    i2cSend(I2C_AMP, 0x10);
-    i2cSend(I2C_AMP, 0x10);
+    i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
+    i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
 
     i2cTransmit(I2C_AMP);
 }
@@ -240,6 +252,17 @@ void tda7719SetTune(AudioTune tune, int8_t value)
     AudioRaw raw;
     audioSetRawBalance(&raw, aPar->tune[AUDIO_TUNE_VOLUME].value, false);
 
+    // Force direct signal for spectrum analyzer in lower modes
+    if (aPar->mode == AUDIO_MODE_2_0 ||
+        aPar->mode == AUDIO_MODE_4_0) {
+        raw.subwoofer = 0;
+    }
+    if (aPar->mode == AUDIO_MODE_2_0 ||
+        aPar->mode == AUDIO_MODE_2_1) {
+        raw.rearLeft = 0;
+        raw.rearRight = 0;
+    }
+
     switch (tune) {
     case AUDIO_TUNE_VOLUME:
     case AUDIO_TUNE_BALANCE:
@@ -250,6 +273,8 @@ void tda7719SetTune(AudioTune tune, int8_t value)
         i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.frontRight));
         i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.rearLeft));
         i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.rearRight));
+        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.subwoofer));
+        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.subwoofer));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BASS:
@@ -268,6 +293,13 @@ void tda7719SetTune(AudioTune tune, int8_t value)
         i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
         i2cSend(I2C_AMP, (uint8_t)TDA7719_TREBLE);
         i2cSend(I2C_AMP, (uint8_t)((value > 0 ? 31 - value : 15 + value) | TDA7719_TREBLE_FREQ_10K0));
+        i2cTransmit(I2C_AMP);
+        break;
+    case AUDIO_TUNE_SUBWOOFER:
+        i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
+        i2cSend(I2C_AMP, TDA7719_SUB_LEFT | TDA7719_AUTOINC);
+        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.subwoofer));
+        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.subwoofer));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_PREAMP:

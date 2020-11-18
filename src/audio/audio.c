@@ -145,6 +145,8 @@ void audioSetRawBalance(AudioRaw *raw, int8_t volume, bool rear2bass)
     raw->frontRight = volume;
     raw->rearLeft = volume;
     raw->rearRight = volume;
+    raw->center = volume;
+    raw->subwoofer = volume;
 
     if (aPar->tune[AUDIO_TUNE_BALANCE].value > 0) {
         raw->frontLeft -= aPar->tune[AUDIO_TUNE_BALANCE].value;
@@ -157,13 +159,21 @@ void audioSetRawBalance(AudioRaw *raw, int8_t volume, bool rear2bass)
             raw->rearRight += aPar->tune[AUDIO_TUNE_BALANCE].value;
         }
     }
-    if (aPar->tune[rear2bass ? AUDIO_TUNE_SUBWOOFER : AUDIO_TUNE_FRONTREAR].value > 0) {
-        raw->rearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        raw->rearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+    if (rear2bass) {
+        raw->rearLeft += aPar->tune[AUDIO_TUNE_SUBWOOFER].value;
+        raw->rearRight += aPar->tune[AUDIO_TUNE_SUBWOOFER].value;
     } else {
-        raw->frontLeft += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
-        raw->frontRight += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+        if (aPar->tune[AUDIO_TUNE_FRONTREAR].value > 0) {
+            raw->rearLeft -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+            raw->rearRight -= aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+        } else {
+            raw->frontLeft += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+            raw->frontRight += aPar->tune[AUDIO_TUNE_FRONTREAR].value;
+        }
     }
+
+    raw->center += aPar->tune[AUDIO_TUNE_CENTER].value;
+    raw->subwoofer += aPar->tune[AUDIO_TUNE_SUBWOOFER].value;
 }
 
 void audioSetPower(bool value)
