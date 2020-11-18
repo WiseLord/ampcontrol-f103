@@ -62,7 +62,7 @@ void tda7439InitParam(AudioParam *param)
 void tda7439SetTune(AudioTune tune, int8_t value)
 {
     AudioRaw raw;
-    audioSetRawBalance(&raw, 0, false);
+    audioSetRawBalance(&raw, aPar->tune[AUDIO_TUNE_VOLUME].value, false);
 
     int8_t volMin = aPar->tune[AUDIO_TUNE_VOLUME].grid->min;
     if (raw.frontLeft < volMin) {
