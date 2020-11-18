@@ -22,6 +22,7 @@ static const AudioGrid gridVolume  = {-63,  0, (int8_t)(1.25 * STEP_MULT)}; // -
 static const AudioGrid gridTone    = { -7,  7, (int8_t)(2.00 * STEP_MULT)}; // -14..14dB with 2dB step
 static const AudioGrid gridBalance = {-15, 15, (int8_t)(1.25 * STEP_MULT)}; // -18.75..18.75dB with 1.25dB step
 static const AudioGrid gridGain    = {  0,  3, (int8_t)(3.75 * STEP_MULT)}; // 0..11.25dB with 3.75dB step
+static const AudioGrid gridSub     = {-15,  0, (int8_t)(1.25 * STEP_MULT)}; // -18.75..0dB with 1.25dB step
 
 static AudioParam *aPar;
 
@@ -56,15 +57,20 @@ void tda731xInitParam(AudioParam *param)
     aPar->tune[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
     aPar->tune[AUDIO_TUNE_BASS].grid      = &gridTone;
     aPar->tune[AUDIO_TUNE_TREBLE].grid    = &gridTone;
+    if (aPar->mode == AUDIO_MODE_4_0) {
+        aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridBalance;
+    }
     aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridBalance;
-    aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridBalance;
+    if (aPar->mode == AUDIO_MODE_2_1) {
+        aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridSub;
+    }
     aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
 }
 
 void tda731xSetTune(AudioTune tune, int8_t value)
 {
     AudioRaw raw;
-    audioSetRawBalance(&raw, 0, false);
+    audioSetRawBalance(&raw, 0, aPar->mode == AUDIO_MODE_2_1);
 
     switch (tune) {
     case AUDIO_TUNE_VOLUME:
