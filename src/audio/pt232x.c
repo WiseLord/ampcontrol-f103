@@ -121,10 +121,20 @@ void pt232xInitParam(AudioParam *param)
     aPar->tune[AUDIO_TUNE_BASS].grid      = &gridTone;
     aPar->tune[AUDIO_TUNE_MIDDLE].grid    = &gridTone;
     aPar->tune[AUDIO_TUNE_TREBLE].grid    = &gridTone;
-    aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridBalance;
+    if (aPar->mode == AUDIO_MODE_4_0 ||
+        aPar->mode == AUDIO_MODE_4_1 ||
+        aPar->mode == AUDIO_MODE_5_1) {
+        aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridBalance;
+    }
     aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridBalance;
-    aPar->tune[AUDIO_TUNE_CENTER].grid    = &gridCenterSub;
-    aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridCenterSub;
+    if (aPar->mode == AUDIO_MODE_5_1) {
+        aPar->tune[AUDIO_TUNE_CENTER].grid    = &gridCenterSub;
+    }
+    if (aPar->mode == AUDIO_MODE_2_1 ||
+        aPar->mode == AUDIO_MODE_4_1 ||
+        aPar->mode == AUDIO_MODE_5_1) {
+        aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridCenterSub;
+    }
     aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
 }
 
