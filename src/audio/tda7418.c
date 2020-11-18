@@ -139,9 +139,15 @@ void tda7418InitParam(AudioParam *param)
     aPar->tune[AUDIO_TUNE_BASS].grid      = &gridToneBal;
     aPar->tune[AUDIO_TUNE_MIDDLE].grid    = &gridToneBal;
     aPar->tune[AUDIO_TUNE_TREBLE].grid    = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridToneBal;
+    if (aPar->mode == AUDIO_MODE_4_0 ||
+        aPar->mode == AUDIO_MODE_4_1) {
+        aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridToneBal;
+    }
     aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridSubwoofer;
+    if (aPar->mode == AUDIO_MODE_2_1 ||
+        aPar->mode == AUDIO_MODE_4_1) {
+        aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridSubwoofer;
+    }
     aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
 }
 
