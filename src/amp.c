@@ -47,6 +47,8 @@ static void ampActionHandle(void);
 static void ampHandleSwd(void);
 static void ampScreenShow(void);
 
+static void sendMediaKey(HidMediaKey key);
+
 static Amp amp = {
     .status = AMP_STATUS_STBY,
     .screen = SCREEN_STANDBY,
@@ -177,14 +179,15 @@ static void actionResetSilenceTimer(void)
 static void inputDisable(void)
 {
     AudioProc *aProc = audioGet();
-    int8_t input = aProc->par.input;
+    InputType inType = amp.inType[aProc->par.input];
 
-    switch (amp.inType[input]) {
+    switch (inType) {
     case IN_TUNER:
         tunerSetPower(false);
         break;
     case IN_KARADIO:
-        karadioSendMediaKey(HIDMEDIAKEY_STOP);
+    case IN_BLUETOOTH:
+        sendMediaKey(HIDMEDIAKEY_STOP);
         break;
     default:
         break;
@@ -197,9 +200,9 @@ static void inputEnable(void)
 {
     Tuner *tuner = tunerGet();
     AudioProc *aProc = audioGet();
-    int8_t input = aProc->par.input;
+    InputType inType = amp.inType[aProc->par.input];
 
-    switch (amp.inType[input]) {
+    switch (inType) {
     case IN_TUNER:
         tunerSetPower(true);
         tunerSetVolume(tuner->par.volume);
@@ -207,7 +210,8 @@ static void inputEnable(void)
         tunerSetFreq(tuner->status.freq);
         break;
     case IN_KARADIO:
-        karadioSendMediaKey(HIDMEDIAKEY_PLAY);
+    case IN_BLUETOOTH:
+        sendMediaKey(HIDMEDIAKEY_PLAY);
         break;
     default:
         break;
