@@ -10,11 +10,13 @@ extern "C" {
 
 #include "hidkeys.h"
 
-#define KARADIO_FLAG_NAME       0x01
-#define KARADIO_FLAG_META       0x02
-#define KARADIO_FLAG_NUMBER     0x04
+#define KARADIO_FLAG_NAME       0x0001
+#define KARADIO_FLAG_META       0x0002
+#define KARADIO_FLAG_NUMBER     0x0004
+#define KARADIO_FLAG_PLAYING    0x0100
 
-#define KARADIO_FLAG_ALL        (KARADIO_FLAG_NAME | KARADIO_FLAG_META | KARADIO_FLAG_NUMBER)
+#define KARADIO_FLAG_ALL        (KARADIO_FLAG_NAME | KARADIO_FLAG_META | KARADIO_FLAG_NUMBER | KARADIO_FLAG_PLAYING)
+
 
 #define ST_NUM_SIZE             4
 #define ST_NAME_SIZE            40
@@ -30,8 +32,6 @@ typedef struct {
 
 void karadioInit(void);
 KaRadio *karadioGet(void);
-
-void karadioSetEnabled(bool value);
 
 void karadioPlayStation(int16_t num);
 

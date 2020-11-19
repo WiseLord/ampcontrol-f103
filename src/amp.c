@@ -184,7 +184,7 @@ static void inputDisable(void)
         tunerSetPower(false);
         break;
     case IN_KARADIO:
-        karadioSetEnabled(false);
+        karadioSendMediaKey(HIDMEDIAKEY_STOP);
         break;
     default:
         break;
@@ -207,7 +207,7 @@ static void inputEnable(void)
         tunerSetFreq(tuner->status.freq);
         break;
     case IN_KARADIO:
-        karadioSetEnabled(true);
+        karadioSendMediaKey(HIDMEDIAKEY_PLAY);
         break;
     default:
         break;

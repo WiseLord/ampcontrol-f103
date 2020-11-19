@@ -44,11 +44,6 @@ KaRadio *karadioGet(void)
     return &kaRadio;
 }
 
-void karadioSetEnabled(bool value)
-{
-    karadioSendCmdCli(value ? "start" : "stop");
-}
-
 void karadioPlayStation(int16_t num)
 {
     char buf[32];
@@ -84,7 +79,11 @@ void karadioSendMediaKey(HidMediaKey cmd)
         karadioSendCmdCli("stop");
         break;
     case HIDMEDIAKEY_PLAY:
-        karadioSendCmdCli("start");
+        if (kaRadio.flags & KARADIO_FLAG_PLAYING) {
+            karadioSendCmdCli("stop");
+        } else {
+            karadioSendCmdCli("start");
+        }
         break;
     case HIDMEDIAKEY_PREV_TRACK:
         karadioSendCmdCli("prev");
@@ -125,8 +124,9 @@ static void karadioParseCli(char *line)
 {
     // Follows "##CLI."
     if (utilIsPrefix(line, "PLAYING#")) {
-        kaRadio.flags |= (KARADIO_FLAG_ALL);
+        kaRadio.flags |= KARADIO_FLAG_ALL;
     } else if (utilIsPrefix(line, "STOPPED#")) {
+        kaRadio.flags &= ~KARADIO_FLAG_PLAYING;
         karadioUpdateMeta("---");
     } else if (utilIsPrefix(line, "META#:")) {
         karadioUpdateMeta(line + sizeof("META#:"));
