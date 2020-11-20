@@ -156,7 +156,7 @@ static const int8_t inCfg2[TDA7719_IN_CNT] = { 0, 4, 1, 2, 5, 6 };
 
 static const AudioGrid gridVolume    = {-79,  0, (int8_t)(1.00 * STEP_MULT)}; // -79..0dB with 1dB step
 static const AudioGrid gridToneBal   = {-15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
-static const AudioGrid gridSubwoofer = {-15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
+static const AudioGrid gridSubwoofer = {  0, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
 static const AudioGrid gridGain      = {  0,  1, (int8_t)(3.00 * STEP_MULT)}; // 0..3dB with 3dB step
 
 static AudioParam *aPar;
@@ -186,6 +186,11 @@ static void tda7719SetInputGain(int8_t input, int8_t gain)
     i2cSend(I2C_AMP, (uint8_t)(TDA7719_INPUT_CFG2 | (gain ? TDA7719_INPUT_GAIN_3DB : 0) |
                                TDA7719_INPUT_MD2 | input));
     i2cTransmit(I2C_AMP);
+}
+
+static uint8_t tda7719GetFaderValue(int8_t in)
+{
+    return (in >= 0) ? in : 0x10 + (uint8_t)(-in);
 }
 
 const AudioApi *tda7719GetApi(void)
@@ -276,12 +281,12 @@ void tda7719SetTune(AudioTune tune, int8_t value)
     case AUDIO_TUNE_FRONTREAR:
         i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7719_SP_LEFT_FRONT | TDA7719_AUTOINC);
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.frontLeft));
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.frontRight));
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.rearLeft));
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.rearRight));
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.subwoofer));
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.subwoofer));
+        i2cSend(I2C_AMP, tda7719GetFaderValue(raw.frontLeft));
+        i2cSend(I2C_AMP, tda7719GetFaderValue(raw.frontRight));
+        i2cSend(I2C_AMP, tda7719GetFaderValue(raw.rearLeft));
+        i2cSend(I2C_AMP, tda7719GetFaderValue(raw.rearRight));
+        i2cSend(I2C_AMP, tda7719GetFaderValue(raw.subwoofer));
+        i2cSend(I2C_AMP, tda7719GetFaderValue(raw.subwoofer));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_BASS:
@@ -305,8 +310,8 @@ void tda7719SetTune(AudioTune tune, int8_t value)
     case AUDIO_TUNE_SUBWOOFER:
         i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7719_SUB_LEFT | TDA7719_AUTOINC);
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.subwoofer));
-        i2cSend(I2C_AMP, 0x10 + (uint8_t)(-raw.subwoofer));
+        i2cSend(I2C_AMP, tda7719GetFaderValue(raw.subwoofer));
+        i2cSend(I2C_AMP, tda7719GetFaderValue(raw.subwoofer));
         i2cTransmit(I2C_AMP);
         break;
     case AUDIO_TUNE_PREAMP:
