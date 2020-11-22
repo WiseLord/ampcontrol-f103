@@ -326,7 +326,6 @@ static void ampExitStby(void)
 
 static void ampEnterStby(void)
 {
-    swTimSet(SW_TIM_AMP_INIT, SW_TIM_OFF);
     swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
     swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
     swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
@@ -346,12 +345,11 @@ static void ampEnterStby(void)
 
     inputDisable();
 
-    ampPinStby(true);
-
     inputSetPower(false);   // Power off input device
 
     amp.status = AMP_STATUS_STBY;
     controlReportAmpStatus();
+    swTimSet(SW_TIM_AMP_INIT, 1000);
 }
 
 void ampInitHw(void)
@@ -385,6 +383,10 @@ void ampInitHw(void)
         amp.status = AMP_STATUS_ACTIVE;
 
         swTimSet(SW_TIM_INPUT_POLL, 100);
+        break;
+    case AMP_STATUS_STBY:
+        swTimSet(SW_TIM_AMP_INIT, SW_TIM_OFF);
+        ampPinStby(true);
         break;
     }
 }
