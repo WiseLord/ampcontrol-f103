@@ -710,9 +710,7 @@ static void sendMediaKey(HidMediaKey key)
 
 static void actionGetTimers(void)
 {
-    if (swTimGet(SW_TIM_DISPLAY) == 0) {
-        actionSet(ACTION_DISP_EXPIRED, 0);
-    } else if (swTimGet(SW_TIM_AMP_INIT) == 0) {
+    if (swTimGet(SW_TIM_AMP_INIT) == 0) {
         actionSet(ACTION_INIT_HW, 0);
     } else if (swTimGet(SW_TIM_STBY_TIMER) == 0) {
         sendMediaKey(HIDMEDIAKEY_STOP);
@@ -725,6 +723,8 @@ static void actionGetTimers(void)
         actionSet(ACTION_RESTORE_VOLUME, amp.volume);
     } else if (swTimGet(SW_TIM_DIGIT_INPUT) == 0) {
         actionSet(ACTION_FINISH_DIGIT_INPUT, 0);
+    } else if (swTimGet(SW_TIM_DISPLAY) == 0) {
+        actionSet(ACTION_DISP_EXPIRED, 0);
     }
 }
 
@@ -1098,6 +1098,7 @@ static void actionRemapCommon(void)
 
     if (SCREEN_STANDBY == scrMode &&
         (ACTION_STANDBY != action.type &&
+         ACTION_INIT_HW != action.type &&
          ACTION_REMOTE != action.type &&
          ACTION_INIT_RTC != action.type &&
          ACTION_MENU_SELECT != action.type)) {
@@ -1106,6 +1107,7 @@ static void actionRemapCommon(void)
 
     if (SCREEN_MENU == scrMode &&
         (ACTION_STANDBY != action.type &&
+         ACTION_INIT_HW != action.type &&
          ACTION_NAVIGATE != action.type &&
          ACTION_MENU_CHANGE != action.type &&
          ACTION_MENU_SELECT != action.type &&
