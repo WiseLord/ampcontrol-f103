@@ -72,15 +72,15 @@ static const EE_Cell eeMap[] = {
     [PARAM_TUNER_VOLUME]    =   {0x38,  TUNER_VOLUME_MAX},
     [PARAM_TUNER_FREQ]      =   {0x39,  9950},
 
-    [PARAM_DISPLAY_BR_STBY] =   {0x40,  1},
-    [PARAM_DISPLAY_BR_WORK] =   {0x41,  LCD_BR_MAX},
-    [PARAM_DISPLAY_ROTATE]  =   {0x42,  false},
-    [PARAM_DISPLAY_DEF]     =   {0x43,  SCREEN_AUDIO_INPUT},
-    [PARAM_DISPLAY_PALETTE] =   {0x44,  PAL_DEFAULT},
-
     [PARAM_SPECTRUM_MODE]   =   {0x50,  SP_MODE_STEREO},
     [PARAM_SPECTRUM_PEAKS]  =   {0x51,  true},
     [PARAM_SPECTRUM_GRAD]   =   {0x52,  true},
+
+    [PARAM_DISPLAY_BR_STBY] =   {0x58,  3},
+    [PARAM_DISPLAY_BR_WORK] =   {0x59,  LCD_BR_MAX},
+    [PARAM_DISPLAY_ROTATE]  =   {0x5A,  false},
+    [PARAM_DISPLAY_DEF]     =   {0x5B,  SCREEN_AUDIO_INPUT},
+    [PARAM_DISPLAY_PALETTE] =   {0x5C,  PAL_DEFAULT},
 
     [PARAM_ALARM_HOUR]      =   {0x60,  7},
     [PARAM_ALARM_MINUTE]    =   {0x61,  30},
