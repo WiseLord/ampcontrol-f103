@@ -15,6 +15,9 @@
 #ifdef _TEA5767
 #include "tea5767.h"
 #endif
+#ifdef _LC7213X
+#include "lc7213x.h"
+#endif
 
 static Tuner tuner;
 
@@ -67,16 +70,25 @@ static const TunerApi tunerTestApi = {
 };
 
 
-void tunerReadSettings(void)
+void tunerReadSettings(TunerIC defIC)
 {
     stationsInit();
 
     // Read stored parameters
     memset(&tuner, 0, sizeof(tuner));
 
-    for (Param par = PARAM_TUNER_BEGIN; par < PARAM_TUNER_END; par++) {
-        settingsSet(par, settingsRead(par));
-    }
+    tuner.par.ic = settingsRead(PARAM_TUNER_IC, defIC);
+    tuner.par.band = settingsRead(PARAM_TUNER_BAND, TUNER_BAND_FM_US_EUROPE);
+    tuner.par.step = settingsRead(PARAM_TUNER_STEP, TUNER_STEP_100K);
+    tuner.par.deemph = settingsRead(PARAM_TUNER_DEEMPH, TUNER_DEEMPH_50u);
+    tuner.par.stationMode = settingsRead(PARAM_TUNER_STA_MODE, false);
+    tuner.par.forcedMono = settingsRead(PARAM_TUNER_FMONO, false);
+    tuner.par.rds = settingsRead(PARAM_TUNER_RDS, true);
+    tuner.par.bassBoost = settingsRead(PARAM_TUNER_BASS, false);
+    tuner.par.volume = settingsRead(PARAM_TUNER_VOLUME, TUNER_VOLUME_MAX);
+    tuner.status.freq = settingsRead(PARAM_TUNER_FREQ, 9950);
+
+    stationFavInit();
 
     // API initialization
     switch (tuner.par.ic) {
@@ -93,6 +105,11 @@ void tunerReadSettings(void)
 #ifdef _TEA5767
     case TUNER_IC_TEA5767:
         tuner.api = tea5767GetApi();
+        break;
+#endif
+#ifdef _LC7213X
+    case TUNER_IC_LC7213X:
+        tuner.api = lc7213xGetApi();
         break;
 #endif
     case TUNER_IC_TEST:

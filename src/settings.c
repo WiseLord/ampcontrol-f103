@@ -63,6 +63,17 @@ static const EE_Cell eeMap[] = {
     [PARAM_TUNER_VOLUME]    =   {0x38,  TUNER_VOLUME_MAX},
     [PARAM_TUNER_FREQ]      =   {0x39,  9950},
 
+    [PARAM_TUNER_FAV_0]     =   {0x40,  0},
+    [PARAM_TUNER_FAV_1]     =   {0x41,  0},
+    [PARAM_TUNER_FAV_2]     =   {0x42,  0},
+    [PARAM_TUNER_FAV_3]     =   {0x43,  0},
+    [PARAM_TUNER_FAV_4]     =   {0x44,  0},
+    [PARAM_TUNER_FAV_5]     =   {0x45,  0},
+    [PARAM_TUNER_FAV_6]     =   {0x46,  0},
+    [PARAM_TUNER_FAV_7]     =   {0x47,  0},
+    [PARAM_TUNER_FAV_8]     =   {0x48,  0},
+    [PARAM_TUNER_FAV_9]     =   {0x49,  0},
+
     [PARAM_SPECTRUM_MODE]   =   {0x50,  SP_MODE_STEREO},
     [PARAM_SPECTRUM_PEAKS]  =   {0x51,  true},
     [PARAM_SPECTRUM_GRAD]   =   {0x52,  true},
@@ -93,13 +104,9 @@ static const EE_Cell eeMap[] = {
 void settingsInit(void)
 {
     eeInit(eeMap, PARAM_END);
-
-    for (Param par = PARAM_NULL + 1; par < PARAM_END; par++) {
-        settingsSet(par, settingsRead(par));
-    }
 }
 
-int16_t settingsRead(Param param)
+int16_t settingsRead(Param param, int16_t defValue)
 {
     if (param == PARAM_NULL || param >= PARAM_END) {
         return (int16_t)EE_NOT_FOUND;
@@ -111,8 +118,7 @@ int16_t settingsRead(Param param)
         return (int16_t)value;
     }
 
-    // Return default value if not found
-    return eeMap[param].value;
+    return defValue;
 }
 
 void settingsStore(Param param, int16_t value)

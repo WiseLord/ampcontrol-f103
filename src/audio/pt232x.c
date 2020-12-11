@@ -62,8 +62,7 @@ static const AudioGrid gridGain       = {  0,  1, (int8_t)(6.00 * STEP_MULT)}; /
 static AudioParam *aPar;
 
 static const AudioApi pt232xApi = {
-    .initParam = pt232xInitParam,
-    .reset = pt232xReset,
+    .init = pt232xInit,
 
     .setTune = pt232xSetTune,
     .setInput = pt232xSetInput,
@@ -113,7 +112,7 @@ const AudioApi *pt232xGetApi(void)
     return &pt232xApi;
 }
 
-void pt232xInitParam(AudioParam *param)
+void pt232xInit(AudioParam *param)
 {
     aPar = param;
 
@@ -136,10 +135,7 @@ void pt232xInitParam(AudioParam *param)
         aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridCenterSub;
     }
     aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
-}
 
-void pt232xReset(void)
-{
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
     i2cSend(I2C_AMP, PT2322_CREAR_REGS);
     i2cTransmit(I2C_AMP);

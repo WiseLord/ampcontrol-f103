@@ -30,7 +30,7 @@ static const AudioGrid gridTestCenterSub    = {-15,  0, (int8_t)(1.00 * STEP_MUL
 static const AudioGrid gridTestPreamp       = {-47,  0, (int8_t)(1.00 * STEP_MULT)}; // -47..0dB with 1dB step
 static const AudioGrid gridTestGain         = {  0, 15, (int8_t)(2.00 * STEP_MULT)}; // 0..30dB with 2dB step
 
-static void audioTestInitParam(AudioParam *aPar)
+static void audioTestInit(AudioParam *aPar)
 {
     aPar->tune[AUDIO_TUNE_VOLUME].grid    = &gridTestVolume;
     aPar->tune[AUDIO_TUNE_BASS].grid      = &gridTestTone;
@@ -45,16 +45,27 @@ static void audioTestInitParam(AudioParam *aPar)
 }
 
 static const AudioApi audioTestApi = {
-    .initParam = audioTestInitParam,
+    .init = audioTestInit,
 };
 
-void audioReadSettings(void)
+void audioReadSettings(AudioIC ic)
 {
     // Read stored parameters
     memset(&aProc, 0, sizeof(aProc));
 
-    for (Param par = PARAM_AUDIO_BEGIN; par < PARAM_AUDIO_END; par++) {
-        settingsSet(par, settingsRead(par));
+    aProc.par.ic = settingsRead(PARAM_AUDIO_IC, ic);
+    aProc.par.input = settingsRead(PARAM_AUDIO_INPUT, 0);
+    aProc.par.loudness = settingsRead(PARAM_AUDIO_LOUDNESS, false);
+    aProc.par.surround = settingsRead(PARAM_AUDIO_SURROUND, false);
+    aProc.par.effect3d = settingsRead(PARAM_AUDIO_EFFECT3D, false);
+    aProc.par.bypass = settingsRead(PARAM_AUDIO_BYPASS, false);
+    aProc.par.mode = settingsRead(PARAM_AUDIO_MODE, false);
+
+    for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN7; par++) {
+         aProc.par.gain[par - PARAM_AUDIO_GAIN0] = settingsRead(par, 0);
+    }
+    for (Param par = PARAM_AUDIO_VOLUME; par <= PARAM_AUDIO_PREAMP; par++) {
+         aProc.par.tune[par - PARAM_AUDIO_VOLUME].value = settingsRead(par, 0);
     }
 
     // API initialization
@@ -113,22 +124,15 @@ void audioSaveSettings(void)
         settingsStore(par, aProc.par.tune[par - PARAM_AUDIO_VOLUME].value);
     }
 
-    for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN_LAST; par++) {
+    for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN7; par++) {
         settingsStore(par, aProc.par.gain[par - PARAM_AUDIO_GAIN0]);
-    }
-}
-
-void audioInitParam(void)
-{
-    if (aProc.api && aProc.api->initParam) {
-        aProc.api->initParam(&aProc.par);
     }
 }
 
 void audioReset(void)
 {
-    if (aProc.api && aProc.api->reset) {
-        aProc.api->reset();
+    if (aProc.api && aProc.api->init) {
+        aProc.api->init(&aProc.par);
     }
 }
 

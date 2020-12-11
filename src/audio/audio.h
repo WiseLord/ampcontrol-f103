@@ -16,10 +16,9 @@ typedef struct {
     AudioTune tune;
 } AudioProc;
 
-void audioReadSettings(void);
+void audioReadSettings(AudioIC ic);
 void audioSaveSettings(void);
 
-void audioInitParam(void);
 void audioReset(void);
 
 AudioProc *audioGet(void);

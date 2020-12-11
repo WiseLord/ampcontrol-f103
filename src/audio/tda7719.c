@@ -162,8 +162,7 @@ static const AudioGrid gridGain      = {  0,  1, (int8_t)(3.00 * STEP_MULT)}; //
 static AudioParam *aPar;
 
 static const AudioApi tda7719Api = {
-    .initParam = tda7719InitParam,
-    .reset = tda7719Reset,
+    .init = tda7719Init,
 
     .setTune = tda7719SetTune,
     .setInput = tda7719SetInput,
@@ -198,7 +197,7 @@ const AudioApi *tda7719GetApi(void)
     return &tda7719Api;
 }
 
-void tda7719InitParam(AudioParam *param)
+void tda7719Init(AudioParam *param)
 {
     aPar = param;
 
@@ -217,10 +216,7 @@ void tda7719InitParam(AudioParam *param)
         aPar->tune[AUDIO_TUNE_SUBWOOFER].grid   = &gridSubwoofer;
     }
     aPar->tune[AUDIO_TUNE_GAIN].grid        = &gridGain;
-}
 
-void tda7719Reset(void)
-{
     uint8_t subDisable = TDA7719_SUB_DISABLE;
 
     if (aPar->mode == AUDIO_MODE_2_1 ||

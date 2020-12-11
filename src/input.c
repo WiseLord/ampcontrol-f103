@@ -74,7 +74,7 @@ void inputInit(void)
 
     timerInit(TIM_INPUT, 199, 359);  // 1kHz polling
 
-    input.encRes = (int8_t)settingsGet(PARAM_SYSTEM_ENC_RES);
+    input.encRes = (int8_t)settingsRead(PARAM_SYSTEM_ENC_RES, 4);
 }
 
 Input *inputGet()

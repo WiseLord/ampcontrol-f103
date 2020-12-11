@@ -76,6 +76,17 @@ enum {
     PARAM_TUNER_VOLUME,
     PARAM_TUNER_FREQ,
 
+    PARAM_TUNER_FAV_0,
+    PARAM_TUNER_FAV_1,
+    PARAM_TUNER_FAV_2,
+    PARAM_TUNER_FAV_3,
+    PARAM_TUNER_FAV_4,
+    PARAM_TUNER_FAV_5,
+    PARAM_TUNER_FAV_6,
+    PARAM_TUNER_FAV_7,
+    PARAM_TUNER_FAV_8,
+    PARAM_TUNER_FAV_9,
+
     PARAM_TUNER_END,
 
     //----------------------------------------------------------------
@@ -113,10 +124,7 @@ enum {
 
 void settingsInit(void);
 
-int16_t settingsGet(Param param);
-void settingsSet(Param param, int16_t value);
-
-int16_t settingsRead(Param param);
+int16_t settingsRead(Param param, int16_t defValue);
 void settingsStore(Param param, int16_t value);
 
 const EE_Cell *eeMapGet(void);

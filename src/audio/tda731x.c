@@ -27,7 +27,7 @@ static const AudioGrid gridSub     = {-15,  0, (int8_t)(1.25 * STEP_MULT)}; // -
 static AudioParam *aPar;
 
 static const AudioApi tda731xApi = {
-    .initParam = tda731xInitParam,
+    .init = tda731xInit,
 
     .setTune = tda731xSetTune,
     .setInput = tda731xSetInput,
@@ -50,7 +50,7 @@ const AudioApi *tda731xGetApi(void)
     return &tda731xApi;
 }
 
-void tda731xInitParam(AudioParam *param)
+void tda731xInit(AudioParam *param)
 {
     aPar = param;
 

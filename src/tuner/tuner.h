@@ -16,7 +16,7 @@ typedef struct {
     TunerStatus status;
 } Tuner;
 
-void tunerReadSettings(void);
+void tunerReadSettings(TunerIC defIc);
 void tunerSaveSettings(void);
 
 void tunerInit(void);

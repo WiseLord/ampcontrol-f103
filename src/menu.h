@@ -10,6 +10,7 @@ extern "C" {
 #include <stdint.h>
 
 #include "action.h"
+#include "settings.h"
 
 #define GENERATE_MENU_RC(CMD)    MENU_RC_ ## CMD,
 
@@ -109,6 +110,7 @@ typedef struct {
     int8_t dispOft;         // First visible item offset on display
 } Menu;
 
+void menuInit(void);
 Menu *menuGet(void);
 
 void menuSetActive(MenuIdx index);
@@ -119,6 +121,9 @@ MenuIdx menuGetFirstChild(void);
 
 void menuGetName(MenuIdx index, char *str, size_t len);
 void menuGetValueStr(MenuIdx index, char *str, size_t len);
+
+int16_t settingsGet(Param param);
+void settingsSet(Param param, int16_t value);
 
 #ifdef __cplusplus
 }

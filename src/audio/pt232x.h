@@ -14,8 +14,7 @@ extern "C" {
 
 const AudioApi *pt232xGetApi(void);
 
-void pt232xInitParam(AudioParam *param);
-void pt232xReset(void);
+void pt232xInit(AudioParam *param);
 
 void pt232xSetTune(AudioTune tune, int8_t value);
 void pt232xSetInput(int8_t value);

@@ -414,10 +414,10 @@ static void menuUpdate(MenuIdx index)
 {
     switch (index) {
     case MENU_AUDIO_IC:
-        audioReadSettings();
+        audioReadSettings(AUDIO_IC_TDA7439);
         break;
     case MENU_TUNER_IC:
-        tunerReadSettings();
+        tunerReadSettings(TUNER_IC_RDA5807);
         break;
     default:
         return;
@@ -426,6 +426,14 @@ static void menuUpdate(MenuIdx index)
     canvasClear();
     menuSelect(index);
     menu.active = index;
+}
+
+void menuInit(void)
+{
+    for (Param par = PARAM_NULL + 1; par < PARAM_END; par++) {
+        const EE_Cell *eeMap = eeMapGet();
+        settingsSet(par, settingsRead(par, eeMap[par].value));
+    }
 }
 
 Menu *menuGet(void)

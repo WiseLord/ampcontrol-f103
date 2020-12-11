@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "i2c.h"
 #include "i2cexp.h"
+#include "menu.h"
 #include "settings.h"
 #include "string.h"
 #include "swtimers.h"

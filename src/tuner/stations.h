@@ -12,6 +12,8 @@ extern "C" {
 #define STATION_NAME_MAX_LEN    30
 #define STATION_NAME_MAX_SYM    18
 
+#define STATION_FAV_COUNT       10
+
 typedef struct {
     uint16_t freq;
     char name[STATION_NAME_MAX_LEN];
@@ -29,6 +31,11 @@ char *stationGetName(int8_t num);
 void stationZap(int8_t num);
 void stationStore(uint16_t freq, char *name);
 void stationRemove(uint16_t freq);
+
+void stationFavInit(void);
+void stationFavZap(int8_t num);
+void stationFavStoreRemove(int8_t num);
+uint16_t stationFavGetMask(uint16_t freq);
 
 #ifdef __cplusplus
 }

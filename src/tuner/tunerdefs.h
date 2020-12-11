@@ -19,6 +19,7 @@ extern "C" {
     TUNER_IC(RDA5807)               \
     TUNER_IC(SI4703)                \
     TUNER_IC(TEA5767)               \
+    TUNER_IC(LC7213X)               \
     TUNER_IC(TEST)                  \
 
 #define GENERATE_TUNER_IC(IC) TUNER_IC_ ## IC,
@@ -42,6 +43,8 @@ enum {
     TUNER_FLAG_SEEKDOWN     = 0x0020, // Seek down in progress
 
     TUNER_FLAG_RDS_READY    = 0x0100, // RDS is ready
+
+    TUNER_FLAG_STATION      = 0x0200, // Tuned at station
 };
 
 typedef uint8_t TunerBand;

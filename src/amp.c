@@ -301,13 +301,12 @@ static void ampReadSettings(void)
     AudioProc *aProc = audioGet();
     AudioTuneItem *volItem = &aProc->par.tune[AUDIO_TUNE_VOLUME];
 
-    audioReadSettings();
-    audioInitParam();
+    audioReadSettings(AUDIO_IC_TDA7439);
 
     amp.volume = volItem->value;
     volItem->value = volItem->grid->min;
 
-    tunerReadSettings();
+    tunerReadSettings(TUNER_IC_RDA5807);
 }
 
 static void ampExitStby(void)
@@ -1152,6 +1151,8 @@ void ampInit(void)
     dbgInit();
 
     settingsInit();
+    menuInit();
+
     ampInitMuteStby();
     pinsInit();
     rtcInit();
