@@ -19,7 +19,7 @@ typedef struct {
 void audioReadSettings(AudioIC ic);
 void audioSaveSettings(void);
 
-void audioReset(void);
+void audioInit(void);
 
 AudioProc *audioGet(void);
 

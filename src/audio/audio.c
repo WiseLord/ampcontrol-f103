@@ -129,7 +129,7 @@ void audioSaveSettings(void)
     }
 }
 
-void audioReset(void)
+void audioInit(void)
 {
     if (aProc.api && aProc.api->init) {
         aProc.api->init(&aProc.par);

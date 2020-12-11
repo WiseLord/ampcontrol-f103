@@ -298,15 +298,17 @@ static void ampMute(bool value)
 
 static void ampReadSettings(void)
 {
+    audioReadSettings(AUDIO_IC_TDA7439);
+    tunerReadSettings(TUNER_IC_RDA5807);
+}
+
+static void ampVolumeInit(void)
+{
     AudioProc *aProc = audioGet();
     AudioTuneItem *volItem = &aProc->par.tune[AUDIO_TUNE_VOLUME];
 
-    audioReadSettings(AUDIO_IC_TDA7439);
-
     amp.volume = volItem->value;
     volItem->value = volItem->grid->min;
-
-    tunerReadSettings(TUNER_IC_RDA5807);
 }
 
 static void ampExitStby(void)
@@ -360,7 +362,8 @@ void ampInitHw(void)
         pinsHwResetI2c();
         i2cInit(I2C_AMP, 100000, 0x00);
 
-        audioReset();
+        audioInit();
+        ampVolumeInit();
 
         audioSetPower(true);
         ampMute(true);
