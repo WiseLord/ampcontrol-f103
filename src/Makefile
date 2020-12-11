@@ -228,7 +228,8 @@ endif
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 OPT_FLAGS = $(OPT) -fshort-enums -ffunction-sections -fdata-sections
 #OPT_FLAGS += -flto
-WARN = -Wall
+WARN += -Wall
+WARN += -Werror
 
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT_FLAGS) $(WARN)
 ASFLAGS = $(MCU) $(AS_DEFS) $(WARN)

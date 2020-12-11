@@ -627,3 +627,360 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
 
     snprintf(str, len, "%s", ret);
 }
+
+// Moved from settings.c
+
+static uint8_t silenceTimer = 0;
+static int16_t rtcCorr = 0;
+static bool stbyLow = false;
+static bool muteLow = false;
+static I2cAddrIdx i2cExtInIdx = I2C_ADDR_DISABLED;
+static I2cAddrIdx i2cBtIdx = I2C_ADDR_DISABLED;
+static int8_t brStby = 3;
+static int8_t brWork = LCD_BR_MAX;
+
+int16_t settingsGet(Param param)
+{
+    int16_t ret = 0;
+
+    AudioProc *aProc = audioGet();
+    Tuner *tuner = tunerGet();
+    Spectrum *sp = spGet();
+    Alarm *alarm = rtcGetAlarm(0);
+    Amp *amp = ampGet();
+
+    switch (param) {
+
+    case PARAM_AUDIO_IC:
+        ret = aProc->par.ic;
+        break;
+    case PARAM_AUDIO_INPUT:
+        ret = aProc->par.input;
+        break;
+    case PARAM_AUDIO_LOUDNESS:
+        ret = aProc->par.loudness;
+        break;
+    case PARAM_AUDIO_SURROUND:
+        ret = aProc->par.surround;
+        break;
+    case PARAM_AUDIO_EFFECT3D:
+        ret = aProc->par.effect3d;
+        break;
+    case PARAM_AUDIO_BYPASS:
+        ret = aProc->par.bypass;
+        break;
+    case PARAM_AUDIO_SHOWDB:
+        ret = amp->showDb;
+        break;
+    case PARAM_AUDIO_MODE:
+        ret = aProc->par.mode;
+        break;
+
+    case PARAM_AUDIO_IN0:
+    case PARAM_AUDIO_IN1:
+    case PARAM_AUDIO_IN2:
+    case PARAM_AUDIO_IN3:
+    case PARAM_AUDIO_IN4:
+    case PARAM_AUDIO_IN5:
+    case PARAM_AUDIO_IN6:
+    case PARAM_AUDIO_IN7:
+        ret = amp->inType[param - PARAM_AUDIO_IN0];
+        break;
+
+    case PARAM_AUDIO_GAIN0:
+    case PARAM_AUDIO_GAIN1:
+    case PARAM_AUDIO_GAIN2:
+    case PARAM_AUDIO_GAIN3:
+    case PARAM_AUDIO_GAIN4:
+    case PARAM_AUDIO_GAIN5:
+    case PARAM_AUDIO_GAIN6:
+    case PARAM_AUDIO_GAIN7:
+        ret = aProc->par.gain[param - PARAM_AUDIO_GAIN0];
+        break;
+
+    case PARAM_AUDIO_VOLUME:
+    case PARAM_AUDIO_BASS:
+    case PARAM_AUDIO_MIDDLE:
+    case PARAM_AUDIO_TREBLE:
+    case PARAM_AUDIO_FRONTREAR:
+    case PARAM_AUDIO_BALANCE:
+    case PARAM_AUDIO_CENTER:
+    case PARAM_AUDIO_SUBWOOFER:
+    case PARAM_AUDIO_PREAMP:
+        ret = aProc->par.tune[param - PARAM_AUDIO_VOLUME].value;
+        break;
+
+    case PARAM_TUNER_IC:
+        ret = tuner->par.ic;
+        break;
+    case PARAM_TUNER_BAND:
+        ret = tuner->par.band;
+        break;
+    case PARAM_TUNER_STEP:
+        ret = tuner->par.step;
+        break;
+    case PARAM_TUNER_DEEMPH:
+        ret = tuner->par.deemph;
+        break;
+    case PARAM_TUNER_STA_MODE:
+        ret = tuner->par.stationMode;
+        break;
+    case PARAM_TUNER_FMONO:
+        ret = tuner->par.forcedMono;
+        break;
+    case PARAM_TUNER_RDS:
+        ret = tuner->par.rds;
+        break;
+    case PARAM_TUNER_BASS:
+        ret = tuner->par.bassBoost;
+        break;
+    case PARAM_TUNER_VOLUME:
+        ret = tuner->par.volume;
+        break;
+    case PARAM_TUNER_FREQ:
+        ret = (int16_t)tuner->status.freq;
+        break;
+
+    case PARAM_DISPLAY_BR_STBY:
+        ret = brStby;
+        break;
+    case PARAM_DISPLAY_BR_WORK:
+        ret = brWork;
+        break;
+    case PARAM_DISPLAY_ROTATE:
+        ret = (glcdGet()->orientation == GLCD_LANDSCAPE_ROT);
+        break;
+    case PARAM_DISPLAY_DEF:
+        ret = ampGet()->defScreen;
+        break;
+    case PARAM_DISPLAY_PALETTE:
+        ret = paletteGetIndex();
+        break;
+
+    case PARAM_SPECTRUM_MODE:
+        ret = sp->mode;
+        break;
+    case PARAM_SPECTRUM_PEAKS:
+        ret = sp->peaks;
+        break;
+    case PARAM_SPECTRUM_GRAD:
+        ret = sp->grad;
+        break;
+
+    case PARAM_ALARM_HOUR:
+        ret = alarm->hour;
+        break;
+    case PARAM_ALARM_MINUTE:
+        ret = alarm->min;
+        break;
+    case PARAM_ALARM_DAYS:
+        ret = alarm->days;
+        break;
+
+    case PARAM_SYSTEM_LANG:
+        ret = labelsGetLang();
+        break;
+    case PARAM_SYSTEM_ENC_RES:
+        ret = inputGet()->encRes;
+        break;
+    case PARAM_SYSTEM_SIL_TIM:
+        ret = silenceTimer;
+        break;
+    case PARAM_SYSTEM_RTC_CORR:
+        ret = rtcCorr;
+        break;
+    case PARAM_SYSTEM_STBY_LOW:
+        ret = stbyLow;
+        break;
+    case PARAM_SYSTEM_MUTE_LOW:
+        ret = muteLow;
+        break;
+
+    case PARAM_I2C_EXT_IN_STAT:
+        ret = i2cExtInIdx;
+        break;
+    case PARAM_I2C_EXT_BT:
+        ret = i2cBtIdx;
+        break;
+
+    default:
+        break;
+    }
+
+    if (param >= PARAM_RC_STBY_SWITCH && param < PARAM_RC_STBY_SWITCH + RC_CMD_END) {
+        ret = (int16_t)rcGetCode(param - PARAM_RC_STBY_SWITCH);
+    }
+
+    return  ret;
+}
+
+void settingsSet(Param param, int16_t value)
+{
+    AudioProc *aProc = audioGet();
+    Tuner *tuner = tunerGet();
+    Spectrum *sp = spGet();
+    Alarm *alarm = rtcGetAlarm(0);
+    Amp *amp = ampGet();
+
+    switch (param) {
+
+    case PARAM_AUDIO_IC:
+        aProc->par.ic = (AudioIC)(value);
+        break;
+    case PARAM_AUDIO_INPUT:
+        aProc->par.input = (int8_t)value;
+        break;
+    case PARAM_AUDIO_LOUDNESS:
+        aProc->par.loudness = (bool)value;
+        break;
+    case PARAM_AUDIO_SURROUND:
+        aProc->par.surround = (bool)value;
+        break;
+    case PARAM_AUDIO_EFFECT3D:
+        aProc->par.effect3d = (bool)value;
+        break;
+    case PARAM_AUDIO_BYPASS:
+        aProc->par.bypass = (bool)value;
+        break;
+    case PARAM_AUDIO_SHOWDB:
+        amp->showDb = (bool)value;
+        break;
+    case PARAM_AUDIO_MODE:
+        aProc->par.mode = (AudioMode)value;
+        break;
+
+    case PARAM_AUDIO_IN0:
+    case PARAM_AUDIO_IN1:
+    case PARAM_AUDIO_IN2:
+    case PARAM_AUDIO_IN3:
+    case PARAM_AUDIO_IN4:
+    case PARAM_AUDIO_IN5:
+    case PARAM_AUDIO_IN6:
+    case PARAM_AUDIO_IN7:
+        amp->inType[param - PARAM_AUDIO_IN0] = (InputType)value;
+        break;
+
+    case PARAM_AUDIO_GAIN0:
+    case PARAM_AUDIO_GAIN1:
+    case PARAM_AUDIO_GAIN2:
+    case PARAM_AUDIO_GAIN3:
+    case PARAM_AUDIO_GAIN4:
+    case PARAM_AUDIO_GAIN5:
+    case PARAM_AUDIO_GAIN6:
+    case PARAM_AUDIO_GAIN7:
+        aProc->par.gain[param - PARAM_AUDIO_GAIN0] = (int8_t)value;
+        break;
+
+    case PARAM_AUDIO_VOLUME:
+    case PARAM_AUDIO_BASS:
+    case PARAM_AUDIO_MIDDLE:
+    case PARAM_AUDIO_TREBLE:
+    case PARAM_AUDIO_FRONTREAR:
+    case PARAM_AUDIO_BALANCE:
+    case PARAM_AUDIO_CENTER:
+    case PARAM_AUDIO_SUBWOOFER:
+    case PARAM_AUDIO_PREAMP:
+        aProc->par.tune[param - PARAM_AUDIO_VOLUME].value = (int8_t)value;
+        break;
+
+    case PARAM_TUNER_IC:
+        tuner->par.ic = (TunerIC)value;
+        break;
+    case PARAM_TUNER_BAND:
+        tuner->par.band = (TunerBand)value;
+        break;
+    case PARAM_TUNER_STEP:
+        tuner->par.step = (TunerStep)value;
+        break;
+    case PARAM_TUNER_DEEMPH:
+        tuner->par.deemph = (TunerDeemph)value;
+        break;
+    case PARAM_TUNER_STA_MODE:
+        tuner->par.stationMode = (bool)value;
+        break;
+    case PARAM_TUNER_FMONO:
+        tuner->par.forcedMono = (bool)value;
+        break;
+    case PARAM_TUNER_RDS:
+        tuner->par.rds = (bool)value;
+        break;
+    case PARAM_TUNER_BASS:
+        tuner->par.bassBoost = (bool)value;
+        break;
+    case PARAM_TUNER_VOLUME:
+        tuner->par.volume = (int8_t)value;
+        break;
+    case PARAM_TUNER_FREQ:
+        tuner->status.freq = (uint16_t)value;
+        break;
+
+    case PARAM_DISPLAY_BR_STBY:
+        brStby = (int8_t)value;
+        break;
+    case PARAM_DISPLAY_BR_WORK:
+        brWork = (int8_t)value;
+        break;
+    case PARAM_DISPLAY_ROTATE:
+        glcdGet()->orientation = (value ? GLCD_LANDSCAPE_ROT : GLCD_LANDSCAPE);
+        break;
+    case PARAM_DISPLAY_DEF:
+        ampGet()->defScreen = (ScreenType)value;
+        break;
+    case PARAM_DISPLAY_PALETTE:
+        paletteSetIndex((PalIdx)value);
+        break;
+
+    case PARAM_SPECTRUM_MODE:
+        sp->mode = (SpMode)value;
+        break;
+    case PARAM_SPECTRUM_PEAKS:
+        sp->peaks = (bool)value;
+        break;
+    case PARAM_SPECTRUM_GRAD:
+        sp->grad = (bool)value;
+        break;
+
+    case PARAM_ALARM_HOUR:
+        alarm->hour = (int8_t)value;
+        break;
+    case PARAM_ALARM_MINUTE:
+        alarm->min = (int8_t)value;
+        break;
+    case PARAM_ALARM_DAYS:
+        alarm->days = (AlarmDay)value;
+        break;
+
+    case PARAM_SYSTEM_LANG:
+        labelsSetLang((Lang)value);
+        break;
+    case PARAM_SYSTEM_ENC_RES:
+        inputGet()->encRes = (int8_t)value;
+        break;
+    case PARAM_SYSTEM_SIL_TIM:
+        silenceTimer = (uint8_t)value;
+        break;
+    case PARAM_SYSTEM_RTC_CORR:
+        rtcCorr = value;
+        break;
+    case PARAM_SYSTEM_STBY_LOW:
+        stbyLow = (bool)value;
+        break;
+    case PARAM_SYSTEM_MUTE_LOW:
+        muteLow = (bool)value;
+        break;
+
+    case PARAM_I2C_EXT_IN_STAT:
+        i2cExtInIdx = (I2cAddrIdx)value;
+        break;
+    case PARAM_I2C_EXT_BT:
+        i2cBtIdx = (I2cAddrIdx)value;
+        break;
+
+    default:
+        break;
+    }
+
+    if (param >= PARAM_RC_STBY_SWITCH && param < PARAM_RC_STBY_SWITCH + RC_CMD_END) {
+        rcSaveCode((uint16_t)(param - PARAM_RC_STBY_SWITCH), (uint16_t)value);
+    }
+}
