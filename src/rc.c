@@ -300,8 +300,16 @@ static void rcInitPins(void)
     LL_EXTI_EnableFallingTrig_0_31(RC_ExtiLine);
 }
 
+void rcReadSettings(void)
+{
+    for (RcCmd cmd = 0; cmd < RC_CMD_END; cmd++) {
+        rcCode[cmd] = settingsRead(PARAM_RC_STBY_SWITCH + cmd, EE_NOT_FOUND);
+    }
+}
+
 void rcInit(void)
 {
+    rcReadSettings();
     rcInitPins();
 
     timerInit(TIM_RC, 71, 65535); // 1MHz timer for remote control handling
@@ -371,6 +379,7 @@ void rcSaveCode(uint16_t cmd, uint16_t value)
         return;
 
     rcCode[cmd] = value;
+    settingsStore(PARAM_RC_STBY_SWITCH + cmd, value);
 }
 
 RcCmd rcGetCmd(RcData *rcData)

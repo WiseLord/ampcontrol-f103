@@ -23,6 +23,7 @@
 #include "tr/labels.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
+#include "utils.h"
 
 #ifdef _ENABLE_USB
 #include "usb/usbhid.h"
@@ -44,7 +45,6 @@ static void ampActionGet(void);
 static void ampActionRemap(void);
 static void ampActionHandle(void);
 
-static void ampHandleSwd(void);
 static void ampScreenShow(void);
 
 static void sendMediaKey(HidMediaKey key);
@@ -1151,6 +1151,8 @@ void ampSelectTune(AudioTune tune)
 
 void ampInit(void)
 {
+    utilEnableSwd(true);
+
     dbgInit();
 
     settingsInit();
@@ -1159,8 +1161,6 @@ void ampInit(void)
     ampInitMuteStby();
     pinsInit();
     rtcInit();
-
-    ampHandleSwd();
 
     labelsInit();
     canvasInit();
@@ -1193,7 +1193,7 @@ void ampInit(void)
 void ampRun(void)
 {
     while (1) {
-        ampHandleSwd();
+        utilEnableSwd(SCREEN_STANDBY == amp.screen);
 
         controlGetData();
         karadioGetData();
@@ -1586,25 +1586,6 @@ static void ampActionHandle(void)
 
     action.type = ACTION_NONE;
     screen.timeout = SW_TIM_OFF;
-}
-
-static void ampHandleSwd(void)
-{
-#if defined(STM32F1)
-    static bool swd = false;
-
-    if (SCREEN_STANDBY == amp.screen) {
-        if (!swd) {
-            LL_GPIO_AF_Remap_SWJ_NOJTAG();
-            swd = true;
-        }
-    } else {
-        if (swd) {
-            LL_GPIO_AF_DisableRemap_SWJ();
-            swd = false;
-        }
-    }
-#endif
 }
 
 void ampScreenShow(void)

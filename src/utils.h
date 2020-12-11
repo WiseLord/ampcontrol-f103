@@ -26,6 +26,8 @@ bool utilReadChar(LineParse *lp, char ch);
 bool utilIsPrefix(const char *line, const char *prefix);
 void utilTrimLineEnd(char *line);
 
+void utilEnableSwd(bool value);
+
 #ifdef __cplusplus
 }
 #endif
