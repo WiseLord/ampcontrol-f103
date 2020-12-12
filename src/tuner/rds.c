@@ -2,8 +2,6 @@
 
 #include <string.h>
 
-#define RDS_FLAG_INIT   50
-
 #define RDS_VERSION_A           0
 #define RDS_VERSION_B           1
 
@@ -32,8 +30,6 @@
 #define RDS_B_TEXT_MASK         0x000F
 #define RDS_B_TEXT_POS          0
 
-static uint8_t rdsFlagCounter = 0;
-
 static Rds rds;
 
 void rdsReset()
@@ -41,31 +37,10 @@ void rdsReset()
     memset(&rds, 0, sizeof (rds));
     memset(&rds.PS, ' ', 8);
     memset(&rds.text, ' ', 64);
-
-    rdsFlagCounter = 0;
-}
-
-bool rdsGetFlag()
-{
-    if (rdsFlagCounter) {
-        rdsFlagCounter--;
-    }
-
-    return (rdsFlagCounter > 0);
-}
-
-void rdsBufToBlock(uint8_t *buf, RdsBlock *block)
-{
-    block->a = (uint16_t)((buf[0] << 8) | buf[1]);
-    block->b = (uint16_t)((buf[2] << 8) | buf[3]);
-    block->c = (uint16_t)((buf[4] << 8) | buf[5]);
-    block->d = (uint16_t)((buf[6] << 8) | buf[7]);
 }
 
 void rdsDecode(RdsBlock *block)
 {
-    rdsFlagCounter = RDS_FLAG_INIT;
-
     rds.PI = block->a;
 
     uint8_t rdsGroup = (block->b >> RDS_B_GROUP_POS) & (RDS_B_GROUP_MASK >> RDS_B_GROUP_POS);

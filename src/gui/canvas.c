@@ -66,7 +66,6 @@ static SpDrawData spDrawData;
 static SpData spData[SP_CHAN_END];
 static DrawData prev;
 
-
 static const tImage *glcdFindIcon(Icon code, const tFont *iFont)
 {
     const tImage *ret = NULL;
@@ -846,7 +845,7 @@ void canvasShowTuner(bool clear)
     }
 
     // RDS enabled indicator
-    bool rdsFlag = rdsGetFlag();
+    bool rdsFlag = (rds->PI != 0);
 
     bool rdsSpClear = (clear || (rdsFlag != prev.par.rdsFlag));
     prev.par.rdsFlag = rdsFlag;

@@ -232,8 +232,12 @@ void si470xUpdateStatus(void)
             (rdBuf[2] & SI740X_BLERC) != SI740X_BLERC &&
             (rdBuf[2] & SI740X_BLERD) != SI740X_BLERD) {
 
-            RdsBlock rdsBlock;
-            rdsBufToBlock(&rdBuf[4], &rdsBlock);
+            RdsBlock rdsBlock = {
+                .a = (rdBuf[4] << 8) | rdBuf[5],
+                .b = (rdBuf[6] << 8) | rdBuf[7],
+                .c = (rdBuf[8] << 8) | rdBuf[9],
+                .d = (rdBuf[10] << 8) | rdBuf[11],
+            };
             rdsDecode(&rdsBlock);
 
             tStatus->flags |= TUNER_FLAG_RDS_READY;

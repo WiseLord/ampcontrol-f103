@@ -33,9 +33,7 @@ typedef struct {
 } Rds;
 
 void rdsReset(void);
-bool rdsGetFlag(void);
 
-void rdsBufToBlock(uint8_t *buf, RdsBlock *block);
 void rdsDecode(RdsBlock *block);
 Rds *rdsGet(void);
 
