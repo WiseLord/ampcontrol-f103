@@ -242,8 +242,8 @@ src/tr/labels_ua.c
 src/tuner/rda580x.c
 src/tuner/rda580x.h
 src/tuner/rda580x_regs.h
-src/tuner/rds.c
-src/tuner/rds.h
+src/tuner/rds/parser.c
+src/tuner/rds/parser.h
 src/tuner/si470x.c
 src/tuner/si470x.h
 src/tuner/si470x_regs.h

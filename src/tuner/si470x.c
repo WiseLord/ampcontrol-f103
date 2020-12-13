@@ -3,7 +3,7 @@
 
 #include "hwlibs.h"
 #include "i2c.h"
-#include "rds.h"
+#include "rds/parser.h"
 
 #define SI470X_I2C_ADDR             0x20
 
@@ -238,7 +238,7 @@ void si470xUpdateStatus(void)
                 .c = (rdBuf[8] << 8) | rdBuf[9],
                 .d = (rdBuf[10] << 8) | rdBuf[11],
             };
-            rdsDecode(&rdsBlock);
+            rdsParserDecode(&rdsBlock);
 
             tStatus->flags |= TUNER_FLAG_RDS_READY;
         }

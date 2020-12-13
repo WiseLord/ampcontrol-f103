@@ -3,7 +3,7 @@
 
 #include "hwlibs.h"
 #include "i2c.h"
-#include "rds.h"
+#include "rds/parser.h"
 
 #define RDA5807M_I2C_SEQ_ADDR       0x20
 #define RDA5807M_I2C_RAND_ADDR      0x22
@@ -312,7 +312,7 @@ void rda580xUpdateStatus()
                 .c = (rdBuf[REG_06h] << 8) | rdBuf[REG_06l],
                 .d = (rdBuf[REG_07h] << 8) | rdBuf[REG_07l],
             };
-            rdsDecode(&rdsBlock);
+            rdsParserDecode(&rdsBlock);
         }
     }
 

@@ -30,12 +30,12 @@ typedef struct {
     char PS[9];
 
     char text[65];
-} Rds;
+} RdsParser;
 
-void rdsReset(void);
+void rdsParserReset(void);
 
-void rdsDecode(RdsBlock *block);
-Rds *rdsGet(void);
+void rdsParserDecode(RdsBlock *block);
+RdsParser *rdsParserGet(void);
 
 #ifdef __cplusplus
 }

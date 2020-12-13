@@ -13,7 +13,7 @@
 #include "spectrum.h"
 #include "swtimers.h"
 #include "tr/labels.h"
-#include "tuner/rds.h"
+#include "tuner/rds/parser.h"
 #include "tuner/stations.h"
 #include "utils.h"
 
@@ -56,7 +56,7 @@ static void calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *
 static void drawWaterfall(bool clear);
 static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdRect *rect);
 static void drawSpectrumMode(bool clear, GlcdRect rect);
-static void drawRds(Rds *rds);
+static void drawRds(RdsParser *rds);
 static bool checkSpectrumReady(void);
 static void fftGet128(FftSample *sp, uint8_t *out, size_t size);
 
@@ -457,7 +457,7 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
     free(grad);
 }
 
-static void drawRds(Rds *rds)
+static void drawRds(RdsParser *rds)
 {
     const Layout *lt = canvas.layout;
 
@@ -775,7 +775,7 @@ void canvasShowTuner(bool clear)
     const Layout *lt = canvas.layout;
 
     Tuner *tuner = tunerGet();
-    Rds *rds = rdsGet();
+    RdsParser *rds = rdsParserGet();
 
     const tFont *iconSet = lt->iconSet;
 
@@ -867,7 +867,7 @@ void canvasShowTuner(bool clear)
         return;
     }
 
-    rdsReset();
+    rdsParserReset();
 
     // Spectrum
     GlcdRect rect = canvas.glcd->rect;

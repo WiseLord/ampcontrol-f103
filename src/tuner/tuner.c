@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "rds.h"
+#include "rds/parser.h"
 #include "settings.h"
 #include "stations.h"
 
@@ -132,7 +132,7 @@ void tunerSaveSettings(void)
 
 void tunerInit(void)
 {
-    rdsReset();
+    rdsParserReset();
 
     if (tuner.api && tuner.api->init) {
         tuner.api->init(&tuner.par, &tuner.status);
@@ -146,7 +146,7 @@ Tuner *tunerGet(void)
 
 void tunerSetPower(bool value)
 {
-    rdsReset();
+    rdsParserReset();
 
     if (!value) {
         tunerSaveSettings();
@@ -159,7 +159,7 @@ void tunerSetPower(bool value)
 
 void tunerSetFreq(uint16_t value)
 {
-    rdsReset();
+    rdsParserReset();
 
     const uint16_t freqMin = tuner.par.fMin;
     const uint16_t freqMax = tuner.par.fMax;
@@ -205,7 +205,7 @@ void tunerSetForcedMono(bool value)
 
 void tunerSetRds(bool value)
 {
-    rdsReset();
+    rdsParserReset();
 
     tuner.par.rds = value;
 
@@ -225,7 +225,7 @@ void tunerSetVolume(int8_t value)
 
 void tunerSeek(int8_t direction)
 {
-    rdsReset();
+    rdsParserReset();
 
     if (tuner.api && tuner.api->seek) {
         tuner.api->seek(direction);

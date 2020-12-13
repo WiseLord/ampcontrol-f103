@@ -1,4 +1,4 @@
-#include "rds.h"
+#include "parser.h"
 
 #include <string.h>
 
@@ -30,48 +30,48 @@
 #define RDS_B_TEXT_MASK         0x000F
 #define RDS_B_TEXT_POS          0
 
-static Rds rds;
+static RdsParser parser;
 
-void rdsReset()
+void rdsParserReset()
 {
-    memset(&rds, 0, sizeof (rds));
-    memset(&rds.PS, ' ', 8);
-    memset(&rds.text, ' ', 64);
+    memset(&parser, 0, sizeof (parser));
+    memset(&parser.PS, ' ', 8);
+    memset(&parser.text, ' ', 64);
 }
 
-void rdsDecode(RdsBlock *block)
+void rdsParserDecode(RdsBlock *block)
 {
-    rds.PI = block->a;
+    parser.PI = block->a;
 
     uint8_t rdsGroup = (block->b >> RDS_B_GROUP_POS) & (RDS_B_GROUP_MASK >> RDS_B_GROUP_POS);
     uint8_t rdsVersion = (block->b >> RDS_B_VERSION_POS) & (RDS_B_VERSION_MASK >> RDS_B_VERSION_POS);
 
-    rds.TP = (block->b >> RDS_B_TP_POS) & (RDS_B_TP_MASK >> RDS_B_TP_POS);
-    rds.PTY = (block->b >> RDS_B_PTY_POS) & (RDS_B_PTY_MASK >> RDS_B_PTY_POS);
+    parser.TP = (block->b >> RDS_B_TP_POS) & (RDS_B_TP_MASK >> RDS_B_TP_POS);
+    parser.PTY = (block->b >> RDS_B_PTY_POS) & (RDS_B_PTY_MASK >> RDS_B_PTY_POS);
 
     switch (rdsGroup) {
     case 0: {
         uint8_t PSN_index = (block->b >> RDS_B_PS_POS) & (RDS_B_PS_MASK >> RDS_B_PS_POS);
         bool DI = (block->b >> RDS_B_DI_POS) & (RDS_B_DI_MASK >> RDS_B_DI_POS);
 
-        rds.PS[2 * PSN_index + 0] = (block->d >> 8) & 0x7F;
-        rds.PS[2 * PSN_index + 1] = (block->d >> 0) & 0x7F;
+        parser.PS[2 * PSN_index + 0] = (block->d >> 8) & 0x7F;
+        parser.PS[2 * PSN_index + 1] = (block->d >> 0) & 0x7F;
 
-        rds.TA = (block->b >> RDS_B_TA_POS) & (RDS_B_TP_MASK >> RDS_B_TA_POS);
-        rds.MS = (block->b >> RDS_B_MS_POS) & (RDS_B_MS_MASK >> RDS_B_MS_POS);
+        parser.TA = (block->b >> RDS_B_TA_POS) & (RDS_B_TP_MASK >> RDS_B_TA_POS);
+        parser.MS = (block->b >> RDS_B_MS_POS) & (RDS_B_MS_MASK >> RDS_B_MS_POS);
 
         switch (PSN_index) {
         case 0:
-            rds.DI_ST = DI;
+            parser.DI_ST = DI;
             break;
         case 1:
-            rds.DI_AH = DI;
+            parser.DI_AH = DI;
             break;
         case 2:
-            rds.DI_CMP = DI;
+            parser.DI_CMP = DI;
             break;
         case 3:
-            rds.DI_stPTY = DI;
+            parser.DI_stPTY = DI;
             break;
         }
         break;
@@ -80,21 +80,21 @@ void rdsDecode(RdsBlock *block)
         uint8_t text_index = (block->b >> RDS_B_TEXT_POS) & (RDS_B_TEXT_MASK >> RDS_B_TEXT_POS);
         switch (rdsVersion) {
         case RDS_VERSION_A:
-            rds.text[4 * text_index + 0] = (block->c >> 8) & 0x7F;
-            rds.text[4 * text_index + 1] = (block->c >> 0) & 0x7F;
-            rds.text[4 * text_index + 2] = (block->d >> 8) & 0x7F;
-            rds.text[4 * text_index + 3] = (block->d >> 0) & 0x7F;
+            parser.text[4 * text_index + 0] = (block->c >> 8) & 0x7F;
+            parser.text[4 * text_index + 1] = (block->c >> 0) & 0x7F;
+            parser.text[4 * text_index + 2] = (block->d >> 8) & 0x7F;
+            parser.text[4 * text_index + 3] = (block->d >> 0) & 0x7F;
             break;
         case RDS_VERSION_B:
-            rds.text[2 * text_index + 0] = (block->d >> 8) & 0x7F;
-            rds.text[2 * text_index + 1] = (block->d >> 0) & 0x7F;
+            parser.text[2 * text_index + 0] = (block->d >> 8) & 0x7F;
+            parser.text[2 * text_index + 1] = (block->d >> 0) & 0x7F;
             break;
         }
     }
     }
 }
 
-Rds *rdsGet()
+RdsParser *rdsParserGet()
 {
-    return &rds;
+    return &parser;
 }
