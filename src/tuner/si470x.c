@@ -239,8 +239,6 @@ void si470xUpdateStatus(void)
                 .d = (rdBuf[10] << 8) | rdBuf[11],
             };
             rdsParserDecode(&rdsBlock);
-
-            tStatus->flags |= TUNER_FLAG_RDS_READY;
         }
     }
 

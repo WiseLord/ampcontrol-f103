@@ -2,6 +2,7 @@
 #include "lc7213x_regs.h"
 
 #include "hwlibs.h"
+#include "rds/demod.h"
 #include "tuner.h"
 #include "utils.h"
 
@@ -137,6 +138,8 @@ const TunerApi *lc7213xGetApi(void)
 
 void lc7213xInit(TunerParam *param, TunerStatus *status)
 {
+    rdsDemodInit();
+
     tPar = param;
     tStatus = status;
 

@@ -322,7 +322,5 @@ void rda580xUpdateStatus()
         } else {
             tStatus->flags |= TUNER_FLAG_SEEKDOWN;
         }
-
-        tStatus->flags |= TUNER_FLAG_RDS_READY;
     }
 }

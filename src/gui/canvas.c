@@ -775,7 +775,7 @@ void canvasShowTuner(bool clear)
     const Layout *lt = canvas.layout;
 
     Tuner *tuner = tunerGet();
-    RdsParser *rds = rdsParserGet();
+    RdsParser *rdsParser = rdsParserGet();
 
     const tFont *iconSet = lt->iconSet;
 
@@ -845,7 +845,7 @@ void canvasShowTuner(bool clear)
     }
 
     // RDS enabled indicator
-    bool rdsFlag = (rds->PI != 0);
+    bool rdsFlag = ((rdsParser->flags & RDS_FLAG_READY) == RDS_FLAG_READY);
 
     bool rdsSpClear = (clear || (rdsFlag != prev.par.rdsFlag));
     prev.par.rdsFlag = rdsFlag;
@@ -863,7 +863,7 @@ void canvasShowTuner(bool clear)
     }
 
     if (rdsFlag) {
-        drawRds(rds);
+        drawRds(rdsParser);
         return;
     }
 

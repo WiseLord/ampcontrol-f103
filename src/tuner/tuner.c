@@ -55,7 +55,7 @@ void tunerTestInit(TunerParam *tPar, TunerStatus *status)
     }
 
     status->rssi = 10;
-    status->flags = TUNER_FLAG_STEREO | TUNER_FLAG_RDS_READY;
+    status->flags = TUNER_FLAG_STEREO;
 }
 
 void tunerTestSetFreq(uint16_t value)

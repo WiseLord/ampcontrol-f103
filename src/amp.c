@@ -21,6 +21,7 @@
 #include "swtimers.h"
 #include "timers.h"
 #include "tr/labels.h"
+#include "tuner/rds/parser.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
 #include "utils.h"
@@ -77,6 +78,11 @@ static void screenSet(ScreenType type, int16_t timeout)
 {
     screen.type = type;
     screen.timeout = timeout;
+}
+
+static void rdsParserCb(void)
+{
+    swTimSet(SW_TIM_RDS_HOLD, 1000);
 }
 
 static bool screenCheckClear(void)
@@ -183,6 +189,7 @@ static void inputDisable(void)
 
     switch (inType) {
     case IN_TUNER:
+        swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
         tunerSetPower(false);
         break;
     case IN_KARADIO:
@@ -204,6 +211,7 @@ static void inputEnable(void)
 
     switch (inType) {
     case IN_TUNER:
+        swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
         tunerSetPower(true);
         tunerSetVolume(tuner->par.volume);
         tunerSetMute(false);
@@ -368,6 +376,7 @@ void ampInitHw(void)
         audioSetPower(true);
         ampMute(true);
 
+        swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
         tunerInit();
 
         btInit();
@@ -667,6 +676,7 @@ static void spModeChange(void)
 
 static void tunerSendMediaKey(HidMediaKey key)
 {
+    swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
     switch (key) {
     case HIDMEDIAKEY_PREV_TRACK:
         tunerMove(TUNER_DIR_DOWN);
@@ -1178,6 +1188,8 @@ void ampInit(void)
     timerInit(TIM_SPECTRUM, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
     swTimInit();
 
+    rdsParserSetCb(rdsParserCb);
+
     inputSetPower(false);    // Power off input device
 
     swTimSet(SW_TIM_RTC_INIT, 500);
@@ -1488,6 +1500,7 @@ static void ampActionHandle(void)
 
     case ACTION_TUNER_SET_FREQ:
         if (inType == IN_TUNER) {
+            swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
             tunerSetFreq((uint16_t)action.value);
             screenSet(SCREEN_AUDIO_INPUT, 2000);
         }
@@ -1608,12 +1621,16 @@ void ampScreenShow(void)
     }
 
     if (amp.screen != SCREEN_STANDBY) {
-        if (swTimGet(SW_TIM_INPUT_POLL) == 0) {
-            if (inType == IN_TUNER) {
+        if (inType == IN_TUNER) {
+            if (swTimGet(SW_TIM_INPUT_POLL) == 0) {
                 tunerUpdateStatus();
                 controlReportTunerFreq(false);
+                swTimSet(SW_TIM_INPUT_POLL, 100);
             }
-            swTimSet(SW_TIM_INPUT_POLL, 100);
+            if (swTimGet(SW_TIM_RDS_HOLD) == 0) {
+                rdsParserReset();
+                swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
+            }
         }
     }
 
