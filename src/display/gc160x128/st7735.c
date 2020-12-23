@@ -9,7 +9,7 @@ void st7735Init(void)
     dispdrvSelectReg8(0x11); //Exit Sleep
     DISP_MDELAY(20);
 
-    dispdrvSelectReg8(0x21); //Display Inversion On
+    dispdrvSelectReg8(0x20); //Display Inversion Off
 
     dispdrvSelectReg8(0x26); //Set Default Gamma
     dispdrvSendData8(0x04);
