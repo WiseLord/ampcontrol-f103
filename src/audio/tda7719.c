@@ -332,13 +332,28 @@ void tda7719SetInput(int8_t value)
 void tda7719SetMute(bool value)
 {
     if (value) {
+        // Mute front always
         i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
         i2cSend(I2C_AMP, TDA7719_SP_LEFT_FRONT | TDA7719_AUTOINC);
         i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
         i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
-        i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
-        i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
         i2cTransmit(I2C_AMP);
+        if (aPar->mode == AUDIO_MODE_4_0 ||
+            aPar->mode == AUDIO_MODE_4_1) {
+            i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
+            i2cSend(I2C_AMP, TDA7719_SP_LEFT_REAR | TDA7719_AUTOINC);
+            i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
+            i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
+            i2cTransmit(I2C_AMP);
+        }
+        if (aPar->mode == AUDIO_MODE_2_1 ||
+            aPar->mode == AUDIO_MODE_4_1) {
+            i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
+            i2cSend(I2C_AMP, TDA7719_SUB_LEFT | TDA7719_AUTOINC);
+            i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
+            i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
+            i2cTransmit(I2C_AMP);
+        }
     } else {
         tda7719SetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME].value);
     }
