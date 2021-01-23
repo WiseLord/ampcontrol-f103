@@ -96,13 +96,13 @@ Wire Wire Line
 Wire Wire Line
 	5850 6200 6100 6200
 Wire Wire Line
-	9800 3850 9500 3850
+	9800 3500 9400 3500
 Wire Wire Line
-	9800 3950 9500 3950
+	9800 3600 9400 3600
 Wire Wire Line
-	9800 3750 9500 3750
+	9800 3400 9400 3400
 Wire Wire Line
-	9800 3650 9500 3650
+	9800 3300 9400 3300
 Text Label 5850 5500 0    50   ~ 0
 DB0
 Text Label 5850 5600 0    50   ~ 0
@@ -119,13 +119,13 @@ Text Label 5850 6100 0    50   ~ 0
 DB6
 Text Label 5850 6200 0    50   ~ 0
 DB7
-Text Label 9500 3850 0    50   ~ 0
+Text Label 9400 3500 0    50   ~ 0
 SD_MISO
-Text Label 9500 3950 0    50   ~ 0
+Text Label 9400 3600 0    50   ~ 0
 SD_SCK
-Text Label 9500 3750 0    50   ~ 0
+Text Label 9400 3400 0    50   ~ 0
 SD_MOSI
-Text Label 9500 3650 0    50   ~ 0
+Text Label 9400 3300 0    50   ~ 0
 SD_CS
 $Comp
 L MCU_ST_STM32F1:STM32F103CBTx U2
@@ -1708,12 +1708,12 @@ SCK
 $Comp
 L Connector_Generic:Conn_01x04 J16
 U 1 1 5CE30DC8
-P 10000 3750
-F 0 "J16" H 10000 3950 50  0000 C CNN
-F 1 "SPI_2.4" V 10100 3700 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 10000 3750 50  0001 C CNN
-F 3 "~" H 10000 3750 50  0001 C CNN
-	1    10000 3750
+P 10000 3400
+F 0 "J16" H 10000 3600 50  0000 C CNN
+F 1 "SPI_2.4" V 10100 3350 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 10000 3400 50  0001 C CNN
+F 3 "~" H 10000 3400 50  0001 C CNN
+	1    10000 3400
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -1988,59 +1988,37 @@ SCL
 Text Label 9350 1600 0    50   ~ 0
 SDA
 Wire Wire Line
-	9800 4400 9500 4400
+	9800 4050 9400 4050
 Wire Wire Line
-	9800 4500 9500 4500
+	9800 4150 9400 4150
 Wire Wire Line
-	9800 4300 9500 4300
+	9800 3950 9400 3950
 Wire Wire Line
-	9800 4200 9500 4200
-Text Label 9500 4400 0    50   ~ 0
+	9800 3850 9400 3850
+Text Label 9400 4050 0    50   ~ 0
 SD_MISO
-Text Label 9500 4500 0    50   ~ 0
+Text Label 9400 4150 0    50   ~ 0
 SD_SCK
-Text Label 9500 4300 0    50   ~ 0
+Text Label 9400 3950 0    50   ~ 0
 SD_MOSI
-Text Label 9500 4200 0    50   ~ 0
+Text Label 9400 3850 0    50   ~ 0
 SD_CS
-$Comp
-L Connector_Generic:Conn_01x04 J17
-U 1 1 5C867944
-P 10000 4300
-F 0 "J17" H 10000 4500 50  0000 C CNN
-F 1 "SPI_2.8" V 10100 4250 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 10000 4300 50  0001 C CNN
-F 3 "~" H 10000 4300 50  0001 C CNN
-	1    10000 4300
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
-	9800 4950 9500 4950
+	9800 4700 9400 4700
 Wire Wire Line
-	9800 5050 9500 5050
+	9800 4800 9400 4800
 Wire Wire Line
-	9800 4850 9500 4850
+	9800 4600 9400 4600
 Wire Wire Line
-	9800 4750 9500 4750
-Text Label 9500 4950 0    50   ~ 0
+	9800 4500 9400 4500
+Text Label 9400 4700 0    50   ~ 0
 SD_MISO
-Text Label 9500 5050 0    50   ~ 0
+Text Label 9400 4800 0    50   ~ 0
 SD_SCK
-Text Label 9500 4850 0    50   ~ 0
+Text Label 9400 4600 0    50   ~ 0
 SD_MOSI
-Text Label 9500 4750 0    50   ~ 0
+Text Label 9400 4500 0    50   ~ 0
 SD_CS
-$Comp
-L Connector_Generic:Conn_01x04 J18
-U 1 1 5C897991
-P 10000 4850
-F 0 "J18" H 10000 5050 50  0000 C CNN
-F 1 "SPI_3.2" V 10100 4800 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 10000 4850 50  0001 C CNN
-F 3 "~" H 10000 4850 50  0001 C CNN
-	1    10000 4850
-	1    0    0    -1  
-$EndComp
 Text Label 8600 3950 0    50   ~ 0
 RD
 $Comp
@@ -2389,4 +2367,46 @@ Text Label 9200 5800 0    50   ~ 0
 HW_RST
 Text Notes 9350 6100 0    50   ~ 0
 R24: installed\nR25: not installed
+$Comp
+L Connector_Generic:Conn_01x05 J17
+U 1 1 6010BB85
+P 10000 4050
+F 0 "J17" H 9950 4350 50  0000 L CNN
+F 1 "SPI_2.8" V 10100 3900 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x05_P2.54mm_Vertical" H 10000 4050 50  0001 C CNN
+F 3 "~" H 10000 4050 50  0001 C CNN
+	1    10000 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x05 J18
+U 1 1 6010CFD8
+P 10000 4700
+F 0 "J18" H 9950 5000 50  0000 L CNN
+F 1 "SPI_3.2" V 10100 4550 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x05_P2.54mm_Vertical" H 10000 4700 50  0001 C CNN
+F 3 "~" H 10000 4700 50  0001 C CNN
+	1    10000 4700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GNDD #PWR0101
+U 1 1 6016C141
+P 9750 4950
+F 0 "#PWR0101" H 9750 4700 50  0001 C CNN
+F 1 "GNDD" H 9754 4795 50  0000 C CNN
+F 2 "" H 9750 4950 50  0001 C CNN
+F 3 "" H 9750 4950 50  0001 C CNN
+	1    9750 4950
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	9800 4900 9750 4900
+Wire Wire Line
+	9750 4900 9750 4950
+Wire Wire Line
+	9750 4900 9750 4250
+Wire Wire Line
+	9750 4250 9800 4250
+Connection ~ 9750 4900
 $EndSCHEMATC
