@@ -7,7 +7,7 @@
 * family: xos4 Terminus
 * size: 18
 * style: Regular
-* included characters:  *+-./0123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyzÀÂÇÈÉÊËÎÏÔÖÙÛÜàâçèéêëîïôöùûüÿĞğİıŞşŸЁЄІЇЎАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёєіїўҐґ █
+* included characters:  '*+-./0123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyzÀÂÇÈÉÊËÎÏÔÖÙÛÜàâçèéêëîïôöùûüÿĞğİıŞşŸЁЄІЇЎАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёєіїўҐґ █
 * antialiasing: no
 * type: proportional
 * encoding: UTF-8
@@ -115,6 +115,67 @@ static const __flash uint8_t image_data_fontterminusmod18x3_0x20[4] = {
     0x7f, 0x00, 0x14, 0x00
 };
 static const __flash tImage fontterminusmod18x3_0x20 = { image_data_fontterminusmod18x3_0x20, 21, 54, 4, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const __flash uint8_t image_data_fontterminusmod18x3_0x27[6] = {
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ███
+    // ███
+    // ███
+    // ███
+    // ███
+    // ███
+    // ███
+    // ███
+    // ███
+    // ███
+    // ███
+    // ███
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    // ∙∙∙
+    0x03, 0xf8, 0x03, 0x7f, 0x0f, 0x00
+};
+static const __flash tImage fontterminusmod18x3_0x27 = { image_data_fontterminusmod18x3_0x27, 3, 54, 6, yes};
 #endif
 
 #if (0x0 == 0x0)
@@ -11292,6 +11353,14 @@ static const __flash tChar fontterminusmod18x3_array[] = {
 #endif
 
 #if (0x0 == 0x0)
+    // character: '''
+    {0x27, &fontterminusmod18x3_0x27},
+#else
+    // character: ''' == ''
+    {0x27, &fontterminusmod18x3_0x},
+#endif
+
+#if (0x0 == 0x0)
     // character: '*'
     {0x2a, &fontterminusmod18x3_0x2a},
 #else
@@ -12758,4 +12827,4 @@ static const __flash tChar fontterminusmod18x3_array[] = {
 };
 
 
-const tFont __flash fontterminusmod18x3 = { 184, fontterminusmod18x3_array };
+const tFont __flash fontterminusmod18x3 = { 185, fontterminusmod18x3_array };

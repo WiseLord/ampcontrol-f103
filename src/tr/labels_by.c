@@ -20,7 +20,7 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_PREAMP]          = "Пасіленне",
 
     [LABEL_IN_TUNER]        = "Цюнер",
-    [LABEL_IN_PC]           = "Кампутар",
+    [LABEL_IN_PC]           = "Камп'ютар",
     [LABEL_IN_TV]           = "Тэлевізар",
     [LABEL_IN_BLUETOOTH]    = "Bluetooth",
     [LABEL_IN_DVD]          = "DVD",
