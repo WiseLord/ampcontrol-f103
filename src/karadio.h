@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "hidkeys.h"
+#include "mediakey.h"
 
 #define KARADIO_FLAG_NAME       0x0001
 #define KARADIO_FLAG_META       0x0002
@@ -38,7 +38,7 @@ void karadioPlayStation(int16_t num);
 void kaRadioSendDigit(uint8_t dig);
 void kaRadioFinishDigitInput(void);
 
-void karadioSendMediaKey(HidMediaKey cmd);
+void karadioSendMediaKey(MediaKey key);
 
 void karadioGetData(void);
 

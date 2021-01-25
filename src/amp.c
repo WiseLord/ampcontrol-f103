@@ -7,7 +7,6 @@
 #include "control.h"
 #include "debug.h"
 #include "gui/canvas.h"
-#include "hidkeys.h"
 #include "i2c.h"
 #include "i2cexp.h"
 #include "input.h"
@@ -27,6 +26,7 @@
 #include "utils.h"
 
 #ifdef _ENABLE_USB
+#include "usb/hidkeys.h"
 #include "usb/usbhid.h"
 #endif
 
@@ -48,7 +48,7 @@ static void ampActionHandle(void);
 
 static void ampScreenShow(void);
 
-static void sendMediaKey(HidMediaKey key);
+static void ampSendMediaKey(MediaKey key);
 
 static Amp amp = {
     .status = AMP_STATUS_STBY,
@@ -194,7 +194,7 @@ static void inputDisable(void)
         break;
     case IN_KARADIO:
     case IN_BLUETOOTH:
-        sendMediaKey(HIDMEDIAKEY_STOP);
+        ampSendMediaKey(MEDIAKEY_STOP);
         break;
     default:
         break;
@@ -219,7 +219,7 @@ static void inputEnable(void)
         break;
     case IN_KARADIO:
     case IN_BLUETOOTH:
-        sendMediaKey(HIDMEDIAKEY_PLAY);
+        ampSendMediaKey(MEDIAKEY_PLAY);
         break;
     default:
         break;
@@ -482,21 +482,21 @@ static void actionNavigateCommon(RcCmd cmd)
         action.type = ACTION_OPEN_MENU;
         break;
     case RC_CMD_NAV_BACK:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
+        actionSet(ACTION_MEDIA, MEDIAKEY_PLAY);
         break;
     case RC_CMD_NAV_RIGHT:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFWD);
+        actionSet(ACTION_MEDIA, MEDIAKEY_FFWD);
         break;
     case RC_CMD_NAV_LEFT:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
+        actionSet(ACTION_MEDIA, MEDIAKEY_REWIND);
         break;
     case RC_CMD_NAV_UP:
     case RC_CMD_CHAN_NEXT:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_NEXT_TRACK);
+        actionSet(ACTION_MEDIA, MEDIAKEY_NEXT);
         break;
     case RC_CMD_NAV_DOWN:
     case RC_CMD_CHAN_PREV:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PREV_TRACK);
+        actionSet(ACTION_MEDIA, MEDIAKEY_PREV);
         break;
     }
 }
@@ -674,20 +674,20 @@ static void spModeChange(void)
     settingsStore(PARAM_SPECTRUM_MODE, sp->mode);
 }
 
-static void tunerSendMediaKey(HidMediaKey key)
+static void tunerSendMediaKey(MediaKey key)
 {
     swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
     switch (key) {
-    case HIDMEDIAKEY_PREV_TRACK:
+    case MEDIAKEY_PREV:
         tunerMove(TUNER_DIR_DOWN);
         break;
-    case HIDMEDIAKEY_NEXT_TRACK:
+    case MEDIAKEY_NEXT:
         tunerMove(TUNER_DIR_UP);
         break;
-    case HIDMEDIAKEY_REWIND:
+    case MEDIAKEY_REWIND:
         tunerSeek(TUNER_DIR_DOWN);
         break;
-    case HIDMEDIAKEY_FFWD:
+    case MEDIAKEY_FFWD:
         tunerSeek(TUNER_DIR_UP);
         break;
     default:
@@ -695,7 +695,43 @@ static void tunerSendMediaKey(HidMediaKey key)
     }
 }
 
-static void sendMediaKey(HidMediaKey key)
+static void usbSendMediaKey(MediaKey key)
+{
+#ifdef _ENABLE_USB
+    switch (key) {
+    case MEDIAKEY_PREV:
+        usbHidSendMediaKey(HIDMEDIAKEY_PREV_TRACK);
+        break;
+    case MEDIAKEY_NEXT:
+        usbHidSendMediaKey(HIDMEDIAKEY_NEXT_TRACK);
+        break;
+    case MEDIAKEY_STOP:
+        usbHidSendMediaKey(HIDMEDIAKEY_STOP);
+        break;
+    case MEDIAKEY_PLAY:
+        usbHidSendMediaKey(HIDMEDIAKEY_PLAY);
+        break;
+    case MEDIAKEY_PAUSE:
+        usbHidSendMediaKey(HIDMEDIAKEY_PAUSE);
+        break;
+    case MEDIAKEY_REWIND:
+        usbHidSendMediaKey(HIDMEDIAKEY_REWIND);
+        break;
+    case MEDIAKEY_FFWD:
+        usbHidSendMediaKey(HIDMEDIAKEY_FFWD);
+        break;
+    case MEDIAKEY_MUTE:
+        usbHidSendMediaKey(HIDMEDIAKEY_MUTE);
+        break;
+    default:
+        break;
+    }
+#else
+    (void)key;
+#endif
+}
+
+static void ampSendMediaKey(MediaKey key)
 {
     AudioProc *aProc = audioGet();
     InputType inType = amp.inType[aProc->par.input];
@@ -705,9 +741,7 @@ static void sendMediaKey(HidMediaKey key)
         tunerSendMediaKey(key);
         break;
     case IN_PC:
-#ifdef _ENABLE_USB
-        usbHidSendMediaKey(key);
-#endif
+        usbSendMediaKey(key);
         break;
     case IN_KARADIO:
         karadioSendMediaKey(key);
@@ -725,7 +759,7 @@ static void actionGetTimers(void)
     if (swTimGet(SW_TIM_AMP_INIT) == 0) {
         actionSet(ACTION_INIT_HW, 0);
     } else if (swTimGet(SW_TIM_STBY_TIMER) == 0) {
-        sendMediaKey(HIDMEDIAKEY_STOP);
+        ampSendMediaKey(MEDIAKEY_STOP);
         actionSet(ACTION_STANDBY, FLAG_ENTER);
     } else if (swTimGet(SW_TIM_SILENCE_TIMER) == 0) {
         actionSet(ACTION_STANDBY, FLAG_ENTER);
@@ -803,7 +837,7 @@ static void actionRemapBtnLong(void)
     case BTN_D3:
         switch (inType) {
         case IN_TUNER:
-            actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
+            actionSet(ACTION_MEDIA, MEDIAKEY_REWIND);
             break;
         default:
             actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_PREV);
@@ -813,7 +847,7 @@ static void actionRemapBtnLong(void)
     case BTN_D4:
         switch (inType) {
         case IN_TUNER:
-            actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFWD);
+            actionSet(ACTION_MEDIA, MEDIAKEY_FFWD);
             break;
         default:
             actionSet(ACTION_NAVIGATE, RC_CMD_CHAN_NEXT);
@@ -883,10 +917,10 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_CHAN_NEXT:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_NEXT_TRACK);
+        actionSet(ACTION_MEDIA, MEDIAKEY_NEXT);
         break;
     case RC_CMD_CHAN_PREV:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PREV_TRACK);
+        actionSet(ACTION_MEDIA, MEDIAKEY_PREV);
         break;
 
     case RC_CMD_DIG_0:
@@ -958,16 +992,16 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_STOP:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_STOP);
+        actionSet(ACTION_MEDIA, MEDIAKEY_STOP);
         break;
     case RC_CMD_PLAY_PAUSE:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_PLAY);
+        actionSet(ACTION_MEDIA, MEDIAKEY_PLAY);
         break;
     case RC_CMD_REW:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_REWIND);
+        actionSet(ACTION_MEDIA, MEDIAKEY_REWIND);
         break;
     case RC_CMD_FWD:
-        actionSet(ACTION_MEDIA, HIDMEDIAKEY_FFWD);
+        actionSet(ACTION_MEDIA, MEDIAKEY_FFWD);
         break;
     case RC_CMD_TIMER:
         actionSet(ACTION_TIMER, 0);
@@ -1337,29 +1371,29 @@ static void ampActionHandle(void)
     case ACTION_MEDIA:
         switch (action.value) {
 
-        case HIDMEDIAKEY_PREV_TRACK:
+        case MEDIAKEY_PREV:
             amp.iconHint = ICON_PREV_TRACK;
             break;
-        case HIDMEDIAKEY_NEXT_TRACK:
+        case MEDIAKEY_NEXT:
             amp.iconHint = ICON_NEXT_TRACK;
             break;
-        case HIDMEDIAKEY_STOP:
+        case MEDIAKEY_STOP:
             amp.iconHint = ICON_STOP;
             break;
-        case HIDMEDIAKEY_PLAY:
+        case MEDIAKEY_PLAY:
             amp.iconHint = ICON_PLAY_PAUSE;
             break;
-        case HIDMEDIAKEY_PAUSE:
+        case MEDIAKEY_PAUSE:
             break;
-        case HIDMEDIAKEY_REWIND:
+        case MEDIAKEY_REWIND:
             amp.iconHint = ICON_REWIND;
             break;
-        case HIDMEDIAKEY_FFWD:
+        case MEDIAKEY_FFWD:
             amp.iconHint = ICON_FFWD;
             break;
         }
 
-        sendMediaKey((HidMediaKey)action.value);
+        ampSendMediaKey((MediaKey)action.value);
 
         switch (inType) {
         case IN_TUNER:

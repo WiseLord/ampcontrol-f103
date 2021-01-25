@@ -7,7 +7,7 @@ extern "C" {
 
 #include <stdint.h>
 
-#include "hidkeys.h"
+#include "mediakey.h"
 
 #define SONG_NAME_SIZE          128
 #define BT_FLAG_NAME_CHANGED    0x01
@@ -27,7 +27,7 @@ typedef struct {
 void btInit(void);
 BTCtx *btCtxGet(void);
 
-void btSendMediaKey(HidMediaKey cmd);
+void btSendMediaKey(MediaKey key);
 
 void btReleaseKey(void);
 

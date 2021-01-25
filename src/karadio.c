@@ -72,23 +72,23 @@ void kaRadioFinishDigitInput(void)
     kaRadio.station = -1;
 }
 
-void karadioSendMediaKey(HidMediaKey cmd)
+void karadioSendMediaKey(MediaKey key)
 {
-    switch (cmd) {
-    case HIDMEDIAKEY_STOP:
+    switch (key) {
+    case MEDIAKEY_STOP:
         karadioSendCmdCli("stop");
         break;
-    case HIDMEDIAKEY_PLAY:
+    case MEDIAKEY_PLAY:
         if (kaRadio.flags & KARADIO_FLAG_PLAYING) {
             karadioSendCmdCli("stop");
         } else {
             karadioSendCmdCli("start");
         }
         break;
-    case HIDMEDIAKEY_PREV_TRACK:
+    case MEDIAKEY_PREV:
         karadioSendCmdCli("prev");
         break;
-    case HIDMEDIAKEY_NEXT_TRACK:
+    case MEDIAKEY_NEXT:
         karadioSendCmdCli("next");
         break;
     default:

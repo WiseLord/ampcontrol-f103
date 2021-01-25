@@ -88,16 +88,16 @@ BTCtx *btCtxGet(void)
     return &btCtx;
 }
 
-void btSendMediaKey(HidMediaKey cmd)
+void btSendMediaKey(MediaKey key)
 {
-    switch (cmd) {
-    case HIDMEDIAKEY_PLAY:
+    switch (key) {
+    case MEDIAKEY_PLAY:
         btPlay();
         break;
-    case HIDMEDIAKEY_PREV_TRACK:
+    case MEDIAKEY_PREV:
         btPrevTrack();
         break;
-    case HIDMEDIAKEY_NEXT_TRACK:
+    case MEDIAKEY_NEXT:
         btNextTrack();
         break;
     default:
