@@ -153,12 +153,26 @@ void glcdFbSync(void)
 }
 
 
+static void glcdRectAdjustPos(void)
+{
+    glcd.rect.x += _GLCD_OFT_X;
+    glcd.rect.y += _GLCD_OFT_Y;
+}
+
+static void glcdRectAdjustSize(void)
+{
+    glcd.rect.w -= _GLCD_OFT_X;
+    glcd.rect.h -= _GLCD_OFT_Y;
+}
+
 void glcdSetRect(const GlcdRect *rect)
 {
     glcd.rect.x = rect->x;
     glcd.rect.y = rect->y;
     glcd.rect.w = rect->w;
     glcd.rect.h = rect->h;
+
+    glcdRectAdjustPos();
 }
 
 void glcdSetRectValues(int16_t x, int16_t y, int16_t w, int16_t h)
@@ -167,6 +181,8 @@ void glcdSetRectValues(int16_t x, int16_t y, int16_t w, int16_t h)
     glcd.rect.y = y;
     glcd.rect.w = w;
     glcd.rect.h = h;
+
+    glcdRectAdjustPos();
 }
 
 void glcdResetRect(void)
@@ -177,6 +193,9 @@ void glcdResetRect(void)
     glcd.rect.y = 0;
     glcd.rect.w = portrate ? dispdrv.height : dispdrv.width;
     glcd.rect.h = portrate ? dispdrv.width : dispdrv.height;
+
+    glcdRectAdjustPos();
+    glcdRectAdjustSize();
 }
 
 GlcdRect *glcdGetRect(void)

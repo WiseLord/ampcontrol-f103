@@ -11,6 +11,13 @@ extern "C" {
 #include "colors.h"
 #include "fonts/fonts.h"
 
+#ifndef _GLCD_OFT_X
+#define _GLCD_OFT_X     0
+#endif
+#ifndef _GLCD_OFT_Y
+#define _GLCD_OFT_Y     0
+#endif
+
 typedef struct {
     int16_t x;
     int16_t y;
