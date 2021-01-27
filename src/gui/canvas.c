@@ -6,7 +6,7 @@
 
 #include "amp.h"
 #include "bt.h"
-#include "karadio.h"
+#include "mpc.h"
 #include "menu.h"
 #include "rtc.h"
 #include "settings.h"
@@ -894,18 +894,22 @@ void canvasShowKaradio(bool clear, Icon icon)
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
     }
 
-    KaRadio *krData = karadioGet();
+    Mpc *krData = mpcGet();
     uint16_t nameLen;
 
     // Label + number
-    if (clear || (krData->flags & KARADIO_FLAG_NUMBER)) {
-        krData->flags &= ~KARADIO_FLAG_NUMBER;
+    if (clear || (krData->flags & MPC_FLAG_UPDATE_TRACKNUM)) {
+        krData->flags &= ~MPC_FLAG_UPDATE_TRACKNUM;
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
         nameLen = glcdWriteString(label);
         nameLen += glcdWriteString(" ");
-        nameLen += glcdWriteString(krData->num);
+        if (krData->trackNum >= 0) {
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%ld", krData->trackNum);
+            nameLen += glcdWriteString(buf);
+        }
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
                      lt->rect.w - nameLen - iconSet->chars[0].image->width, lt->lblFont->chars[0].image->height,
                      canvas.pal->bg);
@@ -914,8 +918,8 @@ void canvasShowKaradio(bool clear, Icon icon)
     int16_t yPos = lt->lblFont->chars[0].image->height;
 
     // Name
-    if (clear || (krData->flags & KARADIO_FLAG_NAME)) {
-        krData->flags &= ~KARADIO_FLAG_NAME;
+    if (clear || (krData->flags & MPC_FLAG_UPDATE_NAME)) {
+        krData->flags &= ~MPC_FLAG_UPDATE_NAME;
         glcdSetFont(lt->rds.psFont);
         glcdSetXY(0, yPos);
         nameLen = glcdWriteString(krData->name);
@@ -927,8 +931,8 @@ void canvasShowKaradio(bool clear, Icon icon)
     yPos += lt->rds.psFont->chars[0].image->height;
 
     // Meta
-    if (clear || (krData->flags & KARADIO_FLAG_META)) {
-        krData->flags &= ~KARADIO_FLAG_META;
+    if (clear || (krData->flags & MPC_FLAG_UPDATE_META)) {
+        krData->flags &= ~MPC_FLAG_UPDATE_META;
         glcdSetFont(lt->rds.textFont);
         glcdSetXY(0, yPos);
         nameLen = glcdWriteString(krData->meta);

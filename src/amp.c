@@ -10,7 +10,7 @@
 #include "i2c.h"
 #include "i2cexp.h"
 #include "input.h"
-#include "karadio.h"
+#include "mpc.h"
 #include "menu.h"
 #include "pins.h"
 #include "rc.h"
@@ -744,7 +744,7 @@ static void ampSendMediaKey(MediaKey key)
         usbSendMediaKey(key);
         break;
     case IN_KARADIO:
-        karadioSendMediaKey(key);
+        mpcSendMediaKey(key);
         break;
     case IN_BLUETOOTH:
         btSendMediaKey(key);
@@ -1215,7 +1215,7 @@ void ampInit(void)
     rcInit();
 
     controlInit();
-    karadioInit();
+    mpcInit();
 
     ampReadSettings();
 
@@ -1242,7 +1242,7 @@ void ampRun(void)
         utilEnableSwd(SCREEN_STANDBY == amp.screen);
 
         controlGetData();
-        karadioGetData();
+        mpcGetData();
         btReleaseKey();
 
         ampActionGet();
@@ -1356,14 +1356,14 @@ static void ampActionHandle(void)
             screenSet(SCREEN_TIME, 5000);
         } else if (inType == IN_KARADIO) {
             swTimSet(SW_TIM_DIGIT_INPUT, 1000);
-            kaRadioSendDigit((uint8_t)action.value);
+            mpcSendDigit((uint8_t)action.value);
             screenSet(SCREEN_AUDIO_INPUT, 1000);
         }
         break;
     case  ACTION_FINISH_DIGIT_INPUT:
         swTimSet(SW_TIM_DIGIT_INPUT, SW_TIM_OFF);
         if (inType == IN_KARADIO) {
-            kaRadioFinishDigitInput();
+            mpcFinishDigitInput();
             screenSet(SCREEN_AUDIO_INPUT, 1000);
         }
         break;

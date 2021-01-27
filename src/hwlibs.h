@@ -73,8 +73,8 @@ extern "C" {
 #define USART_DBG               USART1
 #define USART_DBG_HANDLER       USART1_IRQHandler
 
-#define USART_KARADIO           USART2
-#define USART_KARADIO_HANDLER   USART2_IRQHandler
+#define USART_MPC           USART2
+#define USART_MPC_HANDLER   USART2_IRQHandler
 
 #define TIM_SPECTRUM            TIM2
 #define TIM_SPECTRUM_HANDLER    TIM2_IRQHandler
