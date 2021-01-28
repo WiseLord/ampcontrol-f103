@@ -31,7 +31,7 @@ const char *const labels_en[LABEL_END] = {
     [LABEL_IN_SDCARD]       = "SD card",
     [LABEL_IN_PROJECTOR]    = "Projector",
     [LABEL_IN_SATELLITE]    = "Satellite",
-    [LABEL_IN_MIXER]        = "Mixer",
+    [LABEL_IN_MPD]          = "MPD",
     [LABEL_IN_KARADIO]      = "KaRadio",
 
     [LABEL_BOOL_OFF]        = "OFF",

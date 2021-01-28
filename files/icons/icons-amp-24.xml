@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<data name="icons-amp-24" type="font">
+<data type="font" name="icons-amp-24">
     <family>Liberation Sans</family>
     <size>14</size>
     <ascent>18</ascent>
@@ -90,7 +90,7 @@
             <picture format="png">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAq0lEQVRIibXVSQ7DMAgF0A/q/a/8u6kjxxODCysnknkgJ1hIEoWhIlKZHwoAlYi2RRWi/UMFIgCmQ749975QIclV5VGkz9H2igg+pw0Wsko6hi7fLhKc4lTIEbAQkmaXalVgIVaYHdwibiCLPID3s4wioQ4yyAuI/FxeJNVBBJmAmxHhAjJxQrbAvzrZAm3Y3R78BLxm+W8dgUbEvNHGkezBpgtnl7yP7ED8AjYGTENr4ajGAAAAAElFTkSuQmCC</picture>
         </char>
         <char character="L" code="004c">
-            <picture format="png">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAiUlEQVRIid1VwRaAIAjbfP7/L69DF8pSEum94qIeYIwhUJKQaCUz+CsAFQBIpgSXBAL4iQa2maJ3+64LkwXQ6llsBiu+xJlBsajebuolRPIQpxHZw6aX0CUDr7PHhgyiNmTQc7TnnU0zmC1duEQjZl2AmY56pEG0owD8YZpmrmRJ+zTNBPn+0t8Acn9mCtARp3QAAAAASUVORK5CYII=</picture>
+            <picture format="png">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAIAAABvFaqvAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAeUlEQVQ4jdWVwQ7AIAhDB/H/f7keNBwIdkB2mD2p2BcCJAiApyURsTOA0TY7vYOIGYBFYxA3NzMi5iyI+13WtxSbIH5cbCfNf70NVJujpbCb5YxOY1UDpSabfMpIP6FsUJ4Sjuh6LBfbsezaaX+Yl54C1e2ioa2xoyaCgDlBu+CWigAAAABJRU5ErkJggg==</picture>
         </char>
         <char character="M" code="004d">
             <picture format="png">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAIAAABvFaqvAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAr0lEQVQ4jc1TQQ7DMAjDqP//Mjt0YwQMy6pOmk+FGIcYCjOTFwDEcEYiaz0AkApqRkTMLOZVViQ5p8YwSXChy8hCftvZl7sQQ2olZrPjE+oRN7tSZyTyzzy6jKcF3md0us54yB+LalDZKfYqAMtmV5V96C0q4h5VlfoWp33wiO5rWleqe35ojLsuutZiiXYH32rxPdpXeQvRSXVDHIb7h/9a1/+MWnVQHqXO19z2tAdqSIokEa0SDQAAAABJRU5ErkJggg==</picture>

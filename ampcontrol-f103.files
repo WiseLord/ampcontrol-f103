@@ -234,8 +234,6 @@ src/tr/labels.c
 src/tr/labels.h
 src/tr/labels_by.c
 src/tr/labels_en.c
-src/tr/labels_fr.c
-src/tr/labels_ro.c
 src/tr/labels_ru.c
 src/tr/labels_tr.c
 src/tr/labels_ua.c

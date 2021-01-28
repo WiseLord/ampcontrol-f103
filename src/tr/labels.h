@@ -24,8 +24,6 @@ enum {
     LANG_RU,
     LANG_UA,
     LANG_TR,
-//    LANG_FR,
-//    LANG_RO,
 
     LANG_END,
 
@@ -63,7 +61,7 @@ typedef enum {
     LABEL_IN_SDCARD,
     LABEL_IN_PROJECTOR,
     LABEL_IN_SATELLITE,
-    LABEL_IN_MIXER,
+    LABEL_IN_MPD,
     LABEL_IN_KARADIO,
 
     LABEL_BOOL_OFF,

@@ -77,7 +77,7 @@ do {
     <codec>UTF-16</codec>
   </font>
   <templates>
-    <images>/home/STM32/Projects/ampcontrol-f103/files/fonts/template-image-ampcontrol-f103.tmpl</images>
+    <images>/home/STM32/Projects/ampcontrol-f103/src/display/fonts/src/template-font.tmpl</images>
     <fonts>/home/STM32/Projects/ampcontrol-f103/files/fonts/template-font-ampcontrol-f103.tmpl</fonts>
   </templates>
 </preset>

@@ -157,7 +157,7 @@ enum {
     IN_SDCARD,
     IN_PROJECTOR,
     IN_SATELLITE,
-    IN_MIXER,
+    IN_MPD,
     IN_KARADIO,
 
     IN_END,
