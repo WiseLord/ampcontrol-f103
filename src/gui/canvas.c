@@ -876,7 +876,7 @@ void canvasShowTuner(bool clear)
     drawSpectrumMode(clear, rect);
 }
 
-void canvasShowKaradio(bool clear, Icon icon)
+void canvasShowMpc(bool clear, Icon icon)
 {
     const Layout *lt = canvas.layout;
 
@@ -894,20 +894,20 @@ void canvasShowKaradio(bool clear, Icon icon)
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
     }
 
-    Mpc *krData = mpcGet();
+    Mpc *mpc = mpcGet();
     uint16_t nameLen;
 
     // Label + number
-    if (clear || (krData->flags & MPC_FLAG_UPDATE_TRACKNUM)) {
-        krData->flags &= ~MPC_FLAG_UPDATE_TRACKNUM;
+    if (clear || (mpc->flags & MPC_FLAG_UPDATE_TRACKNUM)) {
+        mpc->flags &= ~MPC_FLAG_UPDATE_TRACKNUM;
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
         nameLen = glcdWriteString(label);
         nameLen += glcdWriteString(" ");
-        if (krData->trackNum >= 0) {
+        if (mpc->trackNum >= 0) {
             char buf[16];
-            snprintf(buf, sizeof(buf), "%ld", krData->trackNum);
+            snprintf(buf, sizeof(buf), "%ld", mpc->trackNum);
             nameLen += glcdWriteString(buf);
         }
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
@@ -918,11 +918,11 @@ void canvasShowKaradio(bool clear, Icon icon)
     int16_t yPos = lt->lblFont->chars[0].image->height;
 
     // Name
-    if (clear || (krData->flags & MPC_FLAG_UPDATE_NAME)) {
-        krData->flags &= ~MPC_FLAG_UPDATE_NAME;
+    if (clear || (mpc->flags & MPC_FLAG_UPDATE_NAME)) {
+        mpc->flags &= ~MPC_FLAG_UPDATE_NAME;
         glcdSetFont(lt->rds.psFont);
         glcdSetXY(0, yPos);
-        nameLen = glcdWriteString(krData->name);
+        nameLen = glcdWriteString(mpc->name);
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
                      lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
                      canvas.pal->bg);
@@ -931,11 +931,11 @@ void canvasShowKaradio(bool clear, Icon icon)
     yPos += lt->rds.psFont->chars[0].image->height;
 
     // Meta
-    if (clear || (krData->flags & MPC_FLAG_UPDATE_META)) {
-        krData->flags &= ~MPC_FLAG_UPDATE_META;
+    if (clear || (mpc->flags & MPC_FLAG_UPDATE_META)) {
+        mpc->flags &= ~MPC_FLAG_UPDATE_META;
         glcdSetFont(lt->rds.textFont);
         glcdSetXY(0, yPos);
-        nameLen = glcdWriteString(krData->meta);
+        nameLen = glcdWriteString(mpc->meta);
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
                      lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height,
                      canvas.pal->bg);
@@ -966,7 +966,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
             }
             break;
         case IN_KARADIO:
-            canvasShowKaradio(clear, icon);
+            canvasShowMpc(clear, icon);
             return;
         case IN_BLUETOOTH:
         case IN_PC:
