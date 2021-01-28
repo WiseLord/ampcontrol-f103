@@ -880,11 +880,14 @@ void canvasShowMpc(bool clear, Icon icon)
 {
     const Layout *lt = canvas.layout;
 
+    AudioProc *aProc = audioGet();
+    InputType inType = ampGet()->inType[aProc->par.input];
+
     const tFont *iconSet = lt->iconSet;
-    const char *label = labelsGet(LABEL_IN_KARADIO);
+    const char *label = labelsGet(inType == IN_MPD ? LABEL_IN_MPD : LABEL_IN_KARADIO);
 
     if (icon == ICON_EMPTY) {
-        icon = ICON_KARADIO;
+        icon = inType == IN_MPD ? ICON_MPD : ICON_KARADIO;
     }
 
     if (clear || icon != prev.par.icon) {
@@ -896,6 +899,7 @@ void canvasShowMpc(bool clear, Icon icon)
 
     Mpc *mpc = mpcGet();
     uint16_t nameLen;
+    char buf[32];
 
     // Label + number
     if (clear || (mpc->flags & MPC_FLAG_UPDATE_TRACKNUM)) {
@@ -906,7 +910,6 @@ void canvasShowMpc(bool clear, Icon icon)
         nameLen = glcdWriteString(label);
         nameLen += glcdWriteString(" ");
         if (mpc->trackNum >= 0) {
-            char buf[16];
             snprintf(buf, sizeof(buf), "%ld", mpc->trackNum);
             nameLen += glcdWriteString(buf);
         }
@@ -917,12 +920,43 @@ void canvasShowMpc(bool clear, Icon icon)
 
     int16_t yPos = lt->lblFont->chars[0].image->height;
 
+    char *name = mpc->name;
+
+    if (inType == IN_MPD) {
+        int time = mpc->elapsed;
+
+        int8_t sec = time % 60;
+        time /= 60;
+        int8_t min = time % 60;
+        time /= 60;
+        int8_t hour = time % 24;
+        time /= 24;
+
+        char tm[16];
+
+        if (!(mpc->status & MPC_PLAYING)) {
+            snprintf(tm, sizeof(tm), "--:--:--");
+        } else if (time > 0) {
+            snprintf(tm, sizeof(tm), "%02d.%02d:%02d", time, hour, min);
+        } else {
+            snprintf(tm, sizeof(tm), "%02d:%02d:%02d", hour, min, sec);
+        }
+
+        snprintf(buf, sizeof(buf), "%s  %c %c %c %c", tm,
+                 mpc->status & MPC_REPEAT  ? 'R' : '-',
+                 mpc->status & MPC_SINGLE  ? '1' : '-',
+                 mpc->status & MPC_RANDOM  ? 'S' : '-',
+                 mpc->status & MPC_CONSUME ? 'C' : '-');
+
+        name = buf;
+    }
+
     // Name
-    if (clear || (mpc->flags & MPC_FLAG_UPDATE_NAME)) {
+    if (clear || (mpc->flags & (MPC_FLAG_UPDATE_NAME | MPC_FLAG_UPDATE_ELAPSED))) {
         mpc->flags &= ~MPC_FLAG_UPDATE_NAME;
         glcdSetFont(lt->rds.psFont);
         glcdSetXY(0, yPos);
-        nameLen = glcdWriteString(mpc->name);
+        nameLen = glcdWriteString(name);
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
                      lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
                      canvas.pal->bg);
@@ -965,6 +999,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
                 return;
             }
             break;
+        case IN_MPD:
         case IN_KARADIO:
             canvasShowMpc(clear, icon);
             return;

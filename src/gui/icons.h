@@ -42,7 +42,7 @@ enum {
     ICON_CASSETTE,
     ICON_PROJECTOR,
     ICON_SATELLITE,
-    ICON_MIXER,
+    ICON_MPD,
     ICON_KARADIO,
 
     // On/off icons

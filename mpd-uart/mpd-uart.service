@@ -1,0 +1,15 @@
+[Unit]
+Description=MPD UART control service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -u /home/pi/mpd-uart.py
+WorkingDirectory=/home/pi/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

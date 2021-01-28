@@ -12,15 +12,13 @@
 #include "usart.h"
 #include "utils.h"
 
-#define RING_BUF_SIZE 128
+#define RING_BUF_SIZE 256
 
 static Mpc mpc;
 
 static RingBuf rbuf;
 static char rbData[RING_BUF_SIZE];
 static LineParse lp;
-
-bool isKaradio = false;
 
 static void mpcSendCmd(const char *cmd)
 {
@@ -129,7 +127,7 @@ static void onBootComplete() // KaRadio only
     // Follows "I2S Speed:"
     Amp *amp = ampGet();
 
-    if ((amp->status == AMP_STATUS_ACTIVE) && isKaradio) {
+    if (amp->status == AMP_STATUS_ACTIVE) {
         mpcSendCmd("start");
     } else {
         mpcSendCmd("stop");
@@ -145,7 +143,6 @@ static void parseLine(char *line)
     } else if (utilIsPrefix(line, "ip:")) {
         parseIP(line + strlen("ip:"));
     } else if (utilIsPrefix(line, "I2S Speed:")) {
-        isKaradio = true;
         onBootComplete();
     }
 }
@@ -166,7 +163,6 @@ Mpc *mpcGet(void)
 
 void mpcSyncRequest(void)
 {
-    isKaradio = false;
     mpcSendCmd("info");
 }
 
@@ -211,15 +207,7 @@ void mpcSendMediaKey(MediaKey key)
 {
     switch (key) {
     case MEDIAKEY_PLAY:
-        if (isKaradio) {
-            if (mpc.status == MPC_PLAYING) {
-                mpcSendCmd("stop");
-            } else {
-                mpcSendCmd("start");
-            }
-        } else {
-            mpcSendCmd("play");
-        }
+        mpcSendCmd("start");
         break;
     case MEDIAKEY_PAUSE:
         mpcSendCmd("pause");

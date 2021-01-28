@@ -217,6 +217,8 @@ static void inputEnable(void)
         tunerSetMute(false);
         tunerSetFreq(tuner->status.freq);
         break;
+    case IN_MPD:
+        mpcSyncRequest();
     case IN_KARADIO:
     case IN_BLUETOOTH:
         ampSendMediaKey(MEDIAKEY_PLAY);
@@ -743,6 +745,7 @@ static void ampSendMediaKey(MediaKey key)
     case IN_PC:
         usbSendMediaKey(key);
         break;
+    case IN_MPD:
     case IN_KARADIO:
         mpcSendMediaKey(key);
         break;
@@ -1401,6 +1404,7 @@ static void ampActionHandle(void)
                 amp.iconHint = ICON_EMPTY;
             }
         case IN_PC:
+        case IN_MPD:
         case IN_KARADIO:
         case IN_BLUETOOTH:
             screenSet(SCREEN_AUDIO_INPUT, 800);
