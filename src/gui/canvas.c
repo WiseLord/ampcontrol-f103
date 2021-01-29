@@ -642,15 +642,15 @@ void canvasShowTune(bool clear)
         StripedBar bar = {value, min, max};
         stripedBarDraw(clear, &bar, &lt->tune.bar);
 
-       int16_t showValue = value;
+        int16_t showValue = value;
 
-       if (amp->showDb) {
-           showValue = value * mStep / STEP_MULT;
-       } else {
-           if (min + max != 0) {
-               showValue -= min;
-           }
-       }
+        if (amp->showDb) {
+            showValue = value * mStep / STEP_MULT;
+        } else {
+            if (min + max != 0) {
+                showValue -= min;
+            }
+        }
 
         // Value
         glcdSetXY(lt->rect.w, lt->tune.valY);
@@ -901,11 +901,11 @@ void canvasShowMpc(bool clear, Icon icon)
     uint16_t nameLen;
     char buf[32];
 
+    glcdSetFontColor(canvas.pal->fg);
+
     // Label + number
     if (clear || (mpc->flags & MPC_FLAG_UPDATE_TRACKNUM)) {
-        mpc->flags &= ~MPC_FLAG_UPDATE_TRACKNUM;
         glcdSetFont(lt->lblFont);
-        glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
         nameLen = glcdWriteString(label);
         nameLen += glcdWriteString(" ");
@@ -953,7 +953,6 @@ void canvasShowMpc(bool clear, Icon icon)
 
     // Name
     if (clear || (mpc->flags & (MPC_FLAG_UPDATE_NAME | MPC_FLAG_UPDATE_ELAPSED))) {
-        mpc->flags &= ~MPC_FLAG_UPDATE_NAME;
         glcdSetFont(lt->rds.psFont);
         glcdSetXY(0, yPos);
         nameLen = glcdWriteString(name);
@@ -966,7 +965,6 @@ void canvasShowMpc(bool clear, Icon icon)
 
     // Meta
     if (clear || (mpc->flags & MPC_FLAG_UPDATE_META)) {
-        mpc->flags &= ~MPC_FLAG_UPDATE_META;
         glcdSetFont(lt->rds.textFont);
         glcdSetXY(0, yPos);
         nameLen = glcdWriteString(mpc->meta);
@@ -982,6 +980,8 @@ void canvasShowMpc(bool clear, Icon icon)
     rect.y = yPos;
     rect.h = rect.h - rect.y;
     drawSpectrumMode(clear, rect);
+
+    mpc->flags = 0;
 }
 
 void canvasShowAudioInput(bool clear, Icon icon)
@@ -1141,4 +1141,38 @@ void canvasShowTimer(bool clear, int32_t value)
     rect.y = yPos;
     rect.h = rect.h - rect.y;
     drawSpectrumMode(clear, rect);
+}
+
+void canvasDebugFPS(void)
+{
+    return;
+
+    const Palette *pal = canvas.pal;
+    const Layout *lt = canvas.layout;
+
+    glcdSetFont(lt->menu.menuFont);
+    glcdSetFontColor(pal->active);
+    glcdSetFontAlign(GLCD_ALIGN_RIGHT);
+
+    static int32_t oldCnt = 0;
+    static int32_t oldFps = 0;
+    static int32_t frames = 0;
+
+    frames++;
+
+    int32_t cnt = swTimGet(SW_TIM_SYSTEM);
+    if (cnt - oldCnt > 500) {
+        int32_t fps = frames * 1000 / (cnt - oldCnt);
+        frames = 0;
+        oldFps = fps;
+        oldCnt = cnt;
+    } else {
+    }
+
+    char buf[16];
+
+    glcdSetXY(canvas.glcd->rect.w, canvas.glcd->rect.h - lt->menu.menuFont->chars[0].image->height);
+    glcdSetFontAlign(GLCD_ALIGN_RIGHT);
+    snprintf(buf, sizeof(buf), "%03d", (int)oldFps);
+    glcdWriteString(buf);
 }

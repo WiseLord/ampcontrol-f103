@@ -1708,6 +1708,8 @@ void ampScreenShow(void)
     default:
         break;
     }
+
+    canvasDebugFPS();
 }
 
 void ampSetBrightness(int8_t value)

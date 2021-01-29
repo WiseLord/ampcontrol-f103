@@ -33,6 +33,8 @@ void canvasShowAudioInput(bool clear, Icon icon);
 void canvasShowTextEdit(bool clear);
 void canvasShowTimer(bool clear, int32_t value);
 
+void canvasDebugFPS(void);
+
 #ifdef __cplusplus
 }
 #endif
