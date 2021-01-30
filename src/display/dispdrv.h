@@ -28,6 +28,7 @@ typedef struct _DispDriver {
     void (*setWindow)(int16_t x, int16_t y, int16_t w, int16_t h);
     void (*rotate)(bool value);
     void (*shift)(int16_t value);
+    void (*setBrightness)(uint8_t value);
 
     void *fb;
     void (*fbSync)(void);

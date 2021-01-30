@@ -59,6 +59,7 @@ void glcdInit(GlcdOrientation value);
 uint8_t glcdGetBus(void);
 
 void glcdSetBacklight(bool value);
+void glcdSetBrightness(uint8_t value);
 
 Glcd *glcdGet(void);
 

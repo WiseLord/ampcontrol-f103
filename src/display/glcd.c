@@ -108,6 +108,13 @@ void glcdSetBacklight(bool value)
 #endif
 }
 
+void glcdSetBrightness(uint8_t value)
+{
+    if (glcd.drv->setBrightness) {
+        glcd.drv->setBrightness(value);
+    }
+}
+
 Glcd *glcdGet(void)
 {
     return &glcd;

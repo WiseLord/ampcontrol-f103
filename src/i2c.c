@@ -4,7 +4,7 @@
 
 #include "hwlibs.h"
 
-#define I2C_TIMEOUT_MS      3
+#define I2C_TIMEOUT_MS      5
 
 typedef struct {
     I2cRxFn rxCb;
@@ -330,7 +330,7 @@ void i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
     SET_BIT(I2Cx->CR1, I2C_CR1_START);
 
     // Wait for START condition sent
-    ctx->timeout = 3;//I2C_TIMEOUT_MS;
+    ctx->timeout = I2C_TIMEOUT_MS;
     while (READ_BIT(I2Cx->CR1, I2C_CR1_START) == I2C_CR1_START) {
         if (i2cWait(ctx) == false) {
             i2cDisableInterrupts(I2Cx);

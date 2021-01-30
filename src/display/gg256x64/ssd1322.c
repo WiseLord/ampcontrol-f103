@@ -65,18 +65,18 @@ void ssd1322Init(void)
     dispdrvSendData8(0xB4);
     dispdrvSelectReg8(SSD1322_ENABLE_GRAY_SCALE_TABLE);
 
-    dispdrvSelectReg8(SSD1322_SET_PHASE_LENGTH);
-    dispdrvSendData8(0xE8); // 14 DCLKs phase 1, 17 DCLKs phase 2 (reset 0x74 => 7 + 9 DCLKs)
-
     dispdrvSelectReg8(SSD1322_ENHANCE_DRIVING_SCHEME_CAPABILITY);// 0xD1
     dispdrvSendData8(0x82); // Reserved; default is 0xA2 (normal)
     dispdrvSendData8(0x20);
 
+    dispdrvSelectReg8(SSD1322_SET_PHASE_LENGTH);
+    dispdrvSendData8(0x74); // Reset 0x74 => Phase 2 = 7 DCLKS, Phase 1 = 4*2=8 DCLKS)
+
     dispdrvSelectReg8(SSD1322_SET_PRECHARGE_VOLTAGE);
-    dispdrvSendData8(0x1F); // 0.6 Vcc (reset 0x17)
+    dispdrvSendData8(0x17); // Reset 0x17 => Table 9-1 in datasheet
 
     dispdrvSelectReg8(SSD1322_SET_SECOND_PRECHARGE_PERIOD);
-    dispdrvSendData8(0x08); // 8 DCLKs (reset)
+    dispdrvSendData8(0x08); // Reset 0x08 => Phase 3 = 8 DCLKs
 
     dispdrvSelectReg8(SSD1322_SET_VCOMH);
     dispdrvSendData8(0x07); // 0.86 Vcc (reset 0x04 => 0.86 Vcc)
@@ -97,9 +97,6 @@ void ssd1322Rotate(bool rotate)
     dispdrvSelectReg8(SSD1322_SET_REMAP_AND_DUAL_COM_LINE_MODE);
     dispdrvSendData8(rotate ? 0x14 : 0x06);
     dispdrvSendData8(0x11);
-
-    dispdrvSelectReg8(SSD1322_SET_PHASE_LENGTH);
-    dispdrvSendData8(0xE8); // 14 DCLKs phase 1, 17 DCLKs phase 2 (reset 0x74 => 7 + 9 DCLKs)
 
     SET(DISP_CS);
 }
@@ -137,6 +134,17 @@ void ssd1322FbSetPixel(int16_t x, int16_t y, color_t color)
     }
 }
 
+void ssd1322SetBrightness(uint8_t value)
+{
+    CLR(DISP_CS);
+
+    dispdrvSelectReg8(SSD1322_SET_CONTRAST_CURRENT);
+    dispdrvSendData8(value);
+
+    DISP_WAIT_BUSY();
+    SET(DISP_CS);
+}
+
 const DispDriver dispdrv = {
     .width = DISP_WIDTH,
     .height = DISP_HEIGHT,
@@ -145,6 +153,7 @@ const DispDriver dispdrv = {
 //    .wakeup = ssd1322Wakeup,
     .rotate = ssd1322Rotate,
 //    .shift = ssd1322Shift,
+    .setBrightness = ssd1322SetBrightness,
 
     .fb = fb,
     .fbSync = ssd1322FbSync,
