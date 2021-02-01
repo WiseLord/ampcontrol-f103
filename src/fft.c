@@ -1,6 +1,5 @@
 #include "fft.h"
 
-#define N_WAVE      1024
 #define N_HANN      1024
 
 static const int16_t sinTable[N_WAVE / 4 + 1] = {

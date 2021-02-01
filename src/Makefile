@@ -146,6 +146,7 @@ C_SOURCES += gui/palette.c
 C_SOURCES += $(wildcard gui/fonts/font*.c)
 C_SOURCES += $(wildcard gui/icons/icon*.c)
 C_SOURCES += $(wildcard gui/widget/*.c)
+C_SOURCES += $(wildcard gui/view/*.c)
 
 # Audio source files
 C_SOURCES += $(addprefix audio/, $(addsuffix .c, $(call lc, $(APROC_LIST))))

@@ -181,6 +181,8 @@ src/gui/lt400x240.c
 src/gui/lt480x320.c
 src/gui/palette.c
 src/gui/palette.h
+src/gui/view/starsview.c
+src/gui/view/starsview.h
 src/gui/widget/spectrumcolumn.c
 src/gui/widget/spectrumcolumn.h
 src/gui/widget/stripedbar.c

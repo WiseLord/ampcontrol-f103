@@ -27,6 +27,7 @@ void canvasShowMenu(bool clear);
 void canvasShowTune(bool clear);
 void canvasShowAudioFlag(bool clear);
 void canvasShowSpectrum(bool clear);
+void canvasShowStars(bool clear, int16_t offset);
 void canvasShowTuner(bool clear);
 void canvasShowMpc(bool clear, Icon icon);
 void canvasShowAudioInput(bool clear, Icon icon);

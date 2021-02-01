@@ -16,6 +16,7 @@
 #include "tuner/rds/parser.h"
 #include "tuner/stations.h"
 #include "utils.h"
+#include "view/starsview.h"
 
 #define SPECTRUM_SIZE   128
 
@@ -767,6 +768,17 @@ void canvasShowSpectrum(bool clear)
         break;
     default:
         break;
+    }
+}
+
+void canvasShowStars(bool clear, int16_t offset)
+{
+    StarsView view;
+    view.offset = offset;
+
+    if (swTimGet(SW_TIM_SP_CONVERT) == 0) {
+        swTimSet(SW_TIM_SP_CONVERT, 40);
+        starsView(&view, clear);
     }
 }
 

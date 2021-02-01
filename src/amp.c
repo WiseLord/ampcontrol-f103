@@ -144,6 +144,11 @@ static void actionDispExpired(ScreenType scrMode)
 
     int32_t timer;
 
+    timer = swTimGet(SW_TIM_SCREEN_SAVER);
+    if (timer == 0) {
+        scrDef = SCREEN_SAVER;
+    }
+
     timer = swTimGet(SW_TIM_STBY_TIMER);
     if (timer > 0 && timer < 60 * 1000 + 999) {
         scrDef = SCREEN_STBY_TIMER;
@@ -180,6 +185,8 @@ static void actionResetSilenceTimer(void)
     if (silenceTimer) {
         swTimSet(SW_TIM_SILENCE_TIMER, 1000 * 60 * silenceTimer + 999);
     }
+
+    swTimSet(SW_TIM_SCREEN_SAVER, 1000 * 60);
 }
 
 static void inputDisable(void)
@@ -1683,6 +1690,9 @@ void ampScreenShow(void)
         break;
     case SCREEN_SPECTRUM:
         canvasShowSpectrum(clear);
+        break;
+    case SCREEN_SAVER:
+        canvasShowStars(clear, 0);
         break;
     case SCREEN_AUDIO_PARAM:
         canvasShowTune(clear);

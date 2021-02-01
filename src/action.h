@@ -138,6 +138,8 @@ enum {
     SCREEN_STBY_TIMER,
     SCREEN_SILENCE_TIMER,
 
+    SCREEN_SAVER,
+
     SCREEN_END
 };
 

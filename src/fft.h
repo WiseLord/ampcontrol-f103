@@ -10,6 +10,8 @@ extern "C" {
 #define FFT_SIZE    1024
 #define FFT_LOG2    10
 
+#define N_WAVE      1024
+
 typedef struct {
     int16_t fr;
     int16_t fi;
