@@ -10,6 +10,7 @@ extern "C" {
 
 typedef struct {
     int16_t offset;
+    void *stars;
 } StarsView;
 
 void starsView(StarsView *this, bool clear);

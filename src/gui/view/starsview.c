@@ -5,16 +5,14 @@
 #include "display/glcd.h"
 #include "fft.h"
 
+#define STAR_NUM    128
+#define FRAMES      64
+
 typedef struct {
     uint8_t frameNum;
     uint8_t size;
     int16_t angle;
 } Star;
-
-#define STAR_NUM    64
-#define FRAMES      64
-
-static Star stars[STAR_NUM];
 
 static int16_t getDistance(uint8_t frameNum)
 {
@@ -51,6 +49,8 @@ void drawStar(Star *star, color_t color, int16_t offset)
 void starsView(StarsView *this, bool clear)
 {
     (void)clear;
+
+    Star *stars = this->stars;
 
     for (int i = 0; i < STAR_NUM; i++) {
         if (stars[i].frameNum == 0) {
