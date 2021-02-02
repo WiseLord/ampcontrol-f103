@@ -53,7 +53,8 @@ typedef struct {
 
 
 static void drawMenuItem(uint8_t idx, const tFont *fontItem);
-static void calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol);
+static void calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol,
+                      SpData *spData);
 static void drawWaterfall(bool clear);
 static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdRect *rect);
 static void drawSpectrumMode(bool clear, GlcdRect rect);
@@ -64,7 +65,6 @@ static void fftGet128(FftSample *sp, uint8_t *out, size_t size);
 
 static Canvas canvas;
 static SpDrawData spDrawData;
-static SpData spData[SP_CHAN_END];
 static DrawData prev;
 
 static const tImage *glcdFindIcon(Icon code, const tFont *iFont)
@@ -223,7 +223,8 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem)
     glcdDrawRect(x, y_pos + 2, width - 2 - x - strLen, fIh, canvas.pal->bg);
 }
 
-static void calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol)
+static void calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol,
+                      SpData *spData)
 {
     int16_t raw;
 
@@ -316,6 +317,9 @@ static void drawWaterfall(bool clear)
     if (!checkSpectrumReady()) {
         return;
     }
+
+    SpData spData[SP_CHAN_END];
+
     spGetADC(SP_CHAN_LEFT, spData[SP_CHAN_LEFT].raw, SPECTRUM_SIZE, fftGet128);
     spGetADC(SP_CHAN_RIGHT, spData[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE, fftGet128);
 
@@ -328,7 +332,7 @@ static void drawWaterfall(bool clear)
 
     for (uint8_t col = 0; col < SPECTRUM_SIZE; col++) {
         SpectrumColumn spCol;
-        calcSpCol(SP_CHAN_BOTH, 224, col, &spCol);
+        calcSpCol(SP_CHAN_BOTH, 224, col, &spCol, spData);
         color_t color = getRainbowColor((uint8_t)spCol.showW);
 
         int16_t posCurr = (col * lt->rect.h) / SPECTRUM_SIZE;
@@ -411,11 +415,18 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
         return;
     }
 
-    if (chan == SP_CHAN_LEFT || chan == SP_CHAN_BOTH) {
-        spGetADC(SP_CHAN_LEFT, spData[SP_CHAN_LEFT].raw, SPECTRUM_SIZE, fftGet128);
-    }
-    if (chan == SP_CHAN_RIGHT || chan == SP_CHAN_BOTH) {
-        spGetADC(SP_CHAN_RIGHT, spData[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE, fftGet128);
+    SpData spData[SP_CHAN_END];
+
+    if (clear) {
+        memset(&spDrawData, 0, sizeof (SpDrawData));
+        memset(spData, 0, sizeof(spData));
+    } else {
+        if (chan == SP_CHAN_LEFT || chan == SP_CHAN_BOTH) {
+            spGetADC(SP_CHAN_LEFT, spData[SP_CHAN_LEFT].raw, SPECTRUM_SIZE, fftGet128);
+        }
+        if (chan == SP_CHAN_RIGHT || chan == SP_CHAN_BOTH) {
+            spGetADC(SP_CHAN_RIGHT, spData[SP_CHAN_RIGHT].raw, SPECTRUM_SIZE, fftGet128);
+        }
     }
 
     const int16_t step = (rect->w  + 1) / SPECTRUM_SIZE + 1;    // Step of columns
@@ -428,11 +439,6 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
     const int16_t oft = (rect->w - width) / 2;                  // Spectrum offset for symmetry
 
     const int16_t y = rect->y;
-
-    if (clear) {
-        memset(&spDrawData, 0, sizeof (SpDrawData));
-        memset(spData, 0, sizeof (SpData) * SP_CHAN_END);
-    }
 
     Spectrum *sp = spGet();
 
@@ -447,7 +453,7 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
         int16_t x = oft + col * step;
 
         SpectrumColumn spCol;
-        calcSpCol(chan, height, col, &spCol);
+        calcSpCol(chan, height, col, &spCol, spData);
         if (!sp->peaks) {
             spCol.peakW = 0;
         }
