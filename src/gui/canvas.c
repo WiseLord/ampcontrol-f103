@@ -902,6 +902,8 @@ void canvasShowMpc(bool clear, Icon icon)
     AudioProc *aProc = audioGet();
     InputType inType = ampGet()->inType[aProc->par.input];
 
+    const Palette *pal = paletteGet();
+
     const tFont *iconSet = lt->iconSet;
     const char *label = labelsGet(inType == IN_MPD ? LABEL_IN_MPD : LABEL_IN_KARADIO);
 
@@ -913,14 +915,14 @@ void canvasShowMpc(bool clear, Icon icon)
         // Icon
         glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
-        glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
+        glcdDrawImage(img, pal->fg, pal->bg);
     }
 
     Mpc *mpc = mpcGet();
     uint16_t nameLen;
     char buf[32];
 
-    glcdSetFontColor(canvas.pal->fg);
+    glcdSetFontColor(pal->fg);
 
     // Label + number
     if (clear || (mpc->flags & MPC_FLAG_UPDATE_TRACKNUM)) {
@@ -934,7 +936,7 @@ void canvasShowMpc(bool clear, Icon icon)
         }
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
                      lt->rect.w - nameLen - iconSet->chars[0].image->width, lt->lblFont->chars[0].image->height,
-                     canvas.pal->bg);
+                     pal->bg);
     }
 
     int16_t yPos = lt->lblFont->chars[0].image->height;
@@ -951,22 +953,13 @@ void canvasShowMpc(bool clear, Icon icon)
         int8_t hour = time % 24;
         time /= 24;
 
-        char tm[16];
-
         if (!(mpc->status & MPC_PLAYING)) {
-            snprintf(tm, sizeof(tm), "--:--:--");
+            snprintf(buf, sizeof(buf), "--:--:--");
         } else if (time > 0) {
-            snprintf(tm, sizeof(tm), "%02d.%02d:%02d", time, hour, min);
+            snprintf(buf, sizeof(buf), "%02d.%02d:%02d", time, hour, min);
         } else {
-            snprintf(tm, sizeof(tm), "%02d:%02d:%02d", hour, min, sec);
+            snprintf(buf, sizeof(buf), "%02d:%02d:%02d", hour, min, sec);
         }
-
-        snprintf(buf, sizeof(buf), "%s  %c %c %c %c", tm,
-                 mpc->status & MPC_REPEAT  ? 'R' : '-',
-                 mpc->status & MPC_SINGLE  ? '1' : '-',
-                 mpc->status & MPC_RANDOM  ? 'S' : '-',
-                 mpc->status & MPC_CONSUME ? 'C' : '-');
-
         name = buf;
     }
 
@@ -975,9 +968,33 @@ void canvasShowMpc(bool clear, Icon icon)
         glcdSetFont(lt->rds.psFont);
         glcdSetXY(0, yPos);
         nameLen = glcdWriteString(name);
-        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
-                     lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height,
-                     canvas.pal->bg);
+        if (inType != IN_MPD) {
+            glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                         lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height, pal->bg);
+        }
+    }
+
+    // MPD cons
+    if (inType == IN_MPD) {
+        if (clear || (mpc->flags & MPC_FLAG_UPDATE_STATUS)) {
+            const tImage *img;
+
+            img = glcdFindIcon(ICON_REPEAT, iconSet);
+            glcdSetXY(lt->rect.w - img->width * 11 / 2, yPos);
+            glcdDrawImage(img, mpc->status & MPC_REPEAT ? pal->fg : pal->selected, pal->bg);
+
+            img = glcdFindIcon(ICON_SINGLE, iconSet);
+            glcdSetXY(lt->rect.w - img->width * 8 / 2, yPos);
+            glcdDrawImage(img, mpc->status & MPC_SINGLE ? pal->fg : pal->selected, pal->bg);
+
+            img = glcdFindIcon(ICON_RANDOM, iconSet);
+            glcdSetXY(lt->rect.w - img->width * 5 / 2, yPos);
+            glcdDrawImage(img, mpc->status & MPC_RANDOM ? pal->fg : pal->selected, pal->bg);
+
+            img = glcdFindIcon(ICON_CONSUME, iconSet);
+            glcdSetXY(lt->rect.w - img->width * 2 / 2, yPos);
+            glcdDrawImage(img, mpc->status & MPC_CONSUME ? pal->fg : pal->selected, pal->bg);
+        }
     }
 
     yPos += lt->rds.psFont->chars[0].image->height;
@@ -988,8 +1005,7 @@ void canvasShowMpc(bool clear, Icon icon)
         glcdSetXY(0, yPos);
         nameLen = glcdWriteString(mpc->meta);
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
-                     lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height,
-                     canvas.pal->bg);
+                     lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height, pal->bg);
     }
 
     yPos += lt->rds.textFont->chars[0].image->height;

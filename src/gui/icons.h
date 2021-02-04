@@ -18,6 +18,11 @@ enum {
     ICON_STEREO,
     ICON_FMONO,
 
+    ICON_REPEAT = 0x10,
+    ICON_RANDOM,
+    ICON_SINGLE,
+    ICON_CONSUME,
+
     // Audio tune icons
     ICON_VOLUME = 0x20,
     ICON_BASS,
