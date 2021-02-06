@@ -186,7 +186,7 @@ static void actionResetSilenceTimer(void)
         swTimSet(SW_TIM_SILENCE_TIMER, 1000 * 60 * silenceTimer + 999);
     }
 
-    swTimSet(SW_TIM_SCREEN_SAVER, 1000 * 60);
+    swTimSet(SW_TIM_SCREEN_SAVER, 1000 * 20);
 }
 
 static void inputDisable(void)
@@ -345,6 +345,7 @@ static void ampExitStby(void)
 static void ampEnterStby(void)
 {
     swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
+    swTimSet(SW_TIM_SCREEN_SAVER, SW_TIM_OFF);
     swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
     swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
     swTimSet(SW_TIM_SP_CONVERT, SW_TIM_OFF);
