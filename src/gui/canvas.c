@@ -1211,3 +1211,26 @@ void canvasDebugFPS(void)
     snprintf(buf, sizeof(buf), "%03d", (int)oldFps);
     glcdWriteString(buf);
 }
+
+void canvasDebugTimers()
+{
+    return;
+
+    const Palette *pal = canvas.pal;
+    const Layout *lt = canvas.layout;
+    const tFont *font = lt->menu.menuFont;
+
+    const int16_t stepY = font->chars[0].image->height;
+    const int16_t stepX = font->chars[0].image->width * 12;
+
+    glcdSetFont(lt->menu.menuFont);
+    glcdSetFontColor(pal->active);
+
+    char buf[16];
+
+    for (uint8_t i = 0; i < SW_TIM_END; i++) {
+        glcdSetXY((i / 10) * stepX, (i % 10) * stepY - 1);
+        snprintf(buf, sizeof(buf), "%10d", (int)swTimGet(i));
+        glcdWriteString(buf);
+    }
+}

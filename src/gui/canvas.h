@@ -35,6 +35,7 @@ void canvasShowTextEdit(bool clear);
 void canvasShowTimer(bool clear, int32_t value);
 
 void canvasDebugFPS(void);
+void canvasDebugTimers(void);
 
 #ifdef __cplusplus
 }
