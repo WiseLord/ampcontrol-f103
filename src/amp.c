@@ -796,7 +796,11 @@ static void actionRemapBtnShort(void)
         actionSet(ACTION_STANDBY, FLAG_SWITCH);
         break;
     case BTN_D1:
-        actionSet(ACTION_AUDIO_INPUT_CHANGE, +1);
+        if (amp.screen == SCREEN_TIME) {
+            actionSet(ACTION_RTC_MODE, 0);
+        } else {
+            actionSet(ACTION_AUDIO_INPUT_CHANGE, +1);
+        }
         break;
     case BTN_D2:
         actionSet(ACTION_NAVIGATE, RC_CMD_NAV_BACK);
