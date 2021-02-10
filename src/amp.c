@@ -149,11 +149,11 @@ static void actionDispExpired(ScreenType scrMode)
         scrDef = SCREEN_SAVER;
     }
 
-    timer = swTimGet(SW_TIM_STBY_TIMER);
+    timer = swTimGet(SW_TIM_STBY);
     if (timer > 0 && timer < 60 * 1000 + 999) {
         scrDef = SCREEN_STBY_TIMER;
     }
-    timer = swTimGet(SW_TIM_SILENCE_TIMER);
+    timer = swTimGet(SW_TIM_SILENCE);
     if (timer > 0 && timer < 30 * 1000 + 999) {
         scrDef = SCREEN_SILENCE_TIMER;
     }
@@ -170,10 +170,12 @@ static void actionDispExpired(ScreenType scrMode)
     switch (scrMode) {
     case SCREEN_STANDBY:
     case SCREEN_MENU:
-        screenSet(SCREEN_STANDBY, 1000); // TODO: Return to parent screen caused menu
+        screenSet(SCREEN_STANDBY, 0); // TODO: Return to parent screen caused menu
         break;
     default:
-        screenSet(scrDef, 1000);
+        if (scrMode != scrDef) {
+            screenSet(scrDef, 0);
+        }
         break;
     }
 }
@@ -183,7 +185,7 @@ static void actionResetSilenceTimer(void)
     int16_t silenceTimer = settingsGet(PARAM_SYSTEM_SIL_TIM);
 
     if (silenceTimer) {
-        swTimSet(SW_TIM_SILENCE_TIMER, 1000 * 60 * silenceTimer + 999);
+        swTimSet(SW_TIM_SILENCE, 1000 * 60 * silenceTimer + 999);
     }
 
     swTimSet(SW_TIM_SCREEN_SAVER, 1000 * 20);
@@ -344,9 +346,9 @@ static void ampExitStby(void)
 
 static void ampEnterStby(void)
 {
-    swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
+    swTimSet(SW_TIM_STBY, SW_TIM_OFF);
     swTimSet(SW_TIM_SCREEN_SAVER, SW_TIM_OFF);
-    swTimSet(SW_TIM_SILENCE_TIMER, SW_TIM_OFF);
+    swTimSet(SW_TIM_SILENCE, SW_TIM_OFF);
     swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
     swTimSet(SW_TIM_SP_CONVERT, SW_TIM_OFF);
 
@@ -638,7 +640,7 @@ static void actionGetRemote(void)
     } else {
         if (swTimGet(SW_TIM_RC_NOACION) == 0) {
             swTimSet(SW_TIM_RC_NOACION, SW_TIM_OFF);
-            swTimSet(SW_TIM_RC_REPEAT, 0);
+            swTimSet(SW_TIM_RC_REPEAT, SW_TIM_OFF);
             cmdPrev = RC_CMD_END;
         }
     }
@@ -646,7 +648,7 @@ static void actionGetRemote(void)
 
 static void stbyTimerChange(void)
 {
-    int32_t stbyTimer = swTimGet(SW_TIM_STBY_TIMER);
+    int32_t stbyTimer = swTimGet(SW_TIM_STBY);
 
     static const uint8_t stbyTimeMin[] = {
         2, 5, 10, 20, 40, 60, 90, 120, 180, 240,
@@ -655,11 +657,11 @@ static void stbyTimerChange(void)
     for (uint8_t i = 0; i < sizeof (stbyTimeMin) / sizeof (stbyTimeMin[0]); i++) {
         int32_t stbyTime = 1000 * 60 * stbyTimeMin[i];
         if (stbyTimer < stbyTime) {
-            swTimSet(SW_TIM_STBY_TIMER, stbyTime + 999);
+            swTimSet(SW_TIM_STBY, stbyTime + 999);
             break;
         }
         if (i == sizeof (stbyTimeMin) / sizeof (stbyTimeMin[0]) - 1) {
-            swTimSet(SW_TIM_STBY_TIMER, SW_TIM_OFF);
+            swTimSet(SW_TIM_STBY, SW_TIM_OFF);
         }
     }
 }
@@ -769,10 +771,10 @@ static void actionGetTimers(void)
 {
     if (swTimGet(SW_TIM_AMP_INIT) == 0) {
         actionSet(ACTION_INIT_HW, 0);
-    } else if (swTimGet(SW_TIM_STBY_TIMER) == 0) {
+    } else if (swTimGet(SW_TIM_STBY) == 0) {
         ampSendMediaKey(MEDIAKEY_STOP);
         actionSet(ACTION_STANDBY, FLAG_ENTER);
-    } else if (swTimGet(SW_TIM_SILENCE_TIMER) == 0) {
+    } else if (swTimGet(SW_TIM_SILENCE) == 0) {
         actionSet(ACTION_STANDBY, FLAG_ENTER);
     } else if (swTimGet(SW_TIM_RTC_INIT) == 0) {
         actionSet(ACTION_INIT_RTC, 0);
@@ -781,6 +783,8 @@ static void actionGetTimers(void)
     } else if (swTimGet(SW_TIM_DIGIT_INPUT) == 0) {
         actionSet(ACTION_FINISH_DIGIT_INPUT, 0);
     } else if (swTimGet(SW_TIM_DISPLAY) == 0) {
+        actionSet(ACTION_DISP_EXPIRED, 0);
+    } else if (swTimGet(SW_TIM_SCREEN_SAVER) == 0) {
         actionSet(ACTION_DISP_EXPIRED, 0);
     }
 }
@@ -1168,6 +1172,7 @@ static void actionRemapCommon(void)
          ACTION_NAVIGATE != action.type &&
          ACTION_MENU_CHANGE != action.type &&
          ACTION_MENU_SELECT != action.type &&
+         ACTION_DISP_EXPIRED != action.type &&
          ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
@@ -1343,7 +1348,6 @@ static void ampActionHandle(void)
     switch (action.type) {
     case ACTION_INIT_HW:
         ampInitHw();
-        actionResetSilenceTimer();
         break;
     case ACTION_INIT_RTC:
         rtcInit();
@@ -1621,14 +1625,17 @@ static void ampActionHandle(void)
         break;
     }
 
-    // Reset silence timer on any user action
-    if (action.type != ACTION_NONE && action.type != ACTION_DISP_EXPIRED) {
-        actionResetSilenceTimer();
-    }
+    if (amp.status == AMP_STATUS_ACTIVE) {
+        // Reset silence timer on any user action
+        if (action.type != ACTION_NONE && action.type != ACTION_DISP_EXPIRED) {
+            actionResetSilenceTimer();
+        }
 
-    // Reset silence timer on signal
-    if (scrMode != SCREEN_STANDBY) {
+        // Reset silence timer on signal
         if (spCheckSignal()) {
+            if (amp.screen == SCREEN_SAVER) {
+                screenSet(amp.defScreen, 3000);
+            }
             actionResetSilenceTimer();
         }
     }
@@ -1677,6 +1684,8 @@ void ampScreenShow(void)
                 rdsParserReset();
                 swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
             }
+        } else {
+            swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
         }
     }
 
@@ -1711,10 +1720,10 @@ void ampScreenShow(void)
         canvasShowTextEdit(clear);
         break;
     case SCREEN_STBY_TIMER:
-        canvasShowTimer(clear, swTimGet(SW_TIM_STBY_TIMER));
+        canvasShowTimer(clear, swTimGet(SW_TIM_STBY));
         break;
     case SCREEN_SILENCE_TIMER:
-        canvasShowTimer(clear, swTimGet(SW_TIM_SILENCE_TIMER));
+        canvasShowTimer(clear, swTimGet(SW_TIM_SILENCE));
         break;
     default:
         break;
