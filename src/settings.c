@@ -77,6 +77,7 @@ static const EE_Cell eeMap[] = {
     [PARAM_SPECTRUM_MODE]   =   {0x50,  SP_MODE_STEREO},
     [PARAM_SPECTRUM_PEAKS]  =   {0x51,  true},
     [PARAM_SPECTRUM_GRAD]   =   {0x52,  true},
+    [PARAM_SPECTRUM_DEMO]   =   {0x53,  false},
 
     [PARAM_DISPLAY_BR_STBY] =   {0x58,  3},
     [PARAM_DISPLAY_BR_WORK] =   {0x59,  LCD_BR_MAX},

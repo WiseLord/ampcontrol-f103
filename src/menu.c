@@ -769,10 +769,10 @@ int16_t settingsGet(Param param)
         ret = sp->mode;
         break;
     case PARAM_SPECTRUM_PEAKS:
-        ret = sp->peaks;
+        ret = ((sp->flags & SP_FLAG_PEAKS) == SP_FLAG_PEAKS);
         break;
     case PARAM_SPECTRUM_GRAD:
-        ret = sp->grad;
+        ret = ((sp->flags & SP_FLAG_GRAD) == SP_FLAG_GRAD);
         break;
 
     case PARAM_ALARM_HOUR:
@@ -942,10 +942,10 @@ void settingsSet(Param param, int16_t value)
         sp->mode = (SpMode)value;
         break;
     case PARAM_SPECTRUM_PEAKS:
-        sp->peaks = (bool)value;
+        sp->flags = (value ? (sp->flags | SP_FLAG_PEAKS) : (sp->flags & ~SP_FLAG_PEAKS));
         break;
     case PARAM_SPECTRUM_GRAD:
-        sp->grad = (bool)value;
+        sp->flags = (value ? (sp->flags | SP_FLAG_GRAD) : (sp->flags & ~SP_FLAG_GRAD));
         break;
 
     case PARAM_ALARM_HOUR:

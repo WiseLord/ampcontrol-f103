@@ -220,9 +220,13 @@ static void spDoFft(int16_t *dma, FftSample *smpl)
 
 static void spReadSettings(void)
 {
-    spectrum.mode = (SpMode)settingsRead(PARAM_SPECTRUM_MODE, SP_MODE_STEREO);
-    spectrum.peaks = (uint8_t)settingsRead(PARAM_SPECTRUM_PEAKS, true);
-    spectrum.grad = (uint8_t)settingsRead(PARAM_SPECTRUM_GRAD, true);
+    spectrum.mode = (SpMode)settingsRead(PARAM_SPECTRUM_MODE, SP_MODE_LEFT);
+    bool peaks = (uint8_t)settingsRead(PARAM_SPECTRUM_PEAKS, true);
+    bool grad = (uint8_t)settingsRead(PARAM_SPECTRUM_GRAD, false);
+    bool demo = (uint8_t)settingsRead(PARAM_SPECTRUM_DEMO, false);
+    spectrum.flags |= ((peaks ? SP_FLAG_PEAKS : SP_FLAG_NONE) |
+                       (grad ? SP_FLAG_GRAD : SP_FLAG_NONE) |
+                       (demo ? SP_FLAG_DEMO : SP_FLAG_NONE));
 }
 
 void spInit(void)

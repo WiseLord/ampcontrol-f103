@@ -676,10 +676,10 @@ static void spModeChange(void)
         sp->mode = SP_MODE_WATERFALL;
     }
 
-    if (sp->mode >= (sp->peaks ? SP_MODE_END : SP_MODE_WATERFALL)) {
+    if (sp->mode >= (sp->flags & SP_FLAG_PEAKS ? SP_MODE_END : SP_MODE_WATERFALL)) {
         sp->mode = SP_MODE_STEREO;
-        sp->peaks = !sp->peaks;
-        settingsStore(PARAM_SPECTRUM_PEAKS, sp->peaks);
+        sp->flags ^= SP_FLAG_PEAKS;
+        settingsStore(PARAM_SPECTRUM_PEAKS, (sp->flags & SP_FLAG_PEAKS) == SP_FLAG_PEAKS);
     }
 
     amp.clearScreen = true;

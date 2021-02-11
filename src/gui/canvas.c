@@ -359,7 +359,7 @@ static void calcGradient(Spectrum *sp, int16_t height, bool mirror, color_t *gra
     color_t bG = (colorG & 0x001F) >> 0;
 
     for (int16_t i = 0; i < height; i++) {
-        if (sp->grad) {
+        if (sp->flags & SP_FLAG_GRAD) {
             grad[i] = (color_t)(((rB + (rG - rB) * i / (height - 1)) << 11) |
                                 ((gB + (gG - gB) * i / (height - 1)) << 5) |
                                 ((bB + (bG - bB) * i / (height - 1)) << 0));
@@ -444,7 +444,7 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
 
     color_t *grad = NULL;
 
-    if (sp->grad) {
+    if (sp->flags & SP_FLAG_GRAD) {
         grad = malloc((size_t)height * sizeof (color_t));
         calcGradient(sp, height, mirror, grad);
     }
@@ -454,7 +454,7 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
 
         SpectrumColumn spCol;
         calcSpCol(chan, height, col, &spCol, spData);
-        if (!sp->peaks) {
+        if (!(sp->flags & SP_FLAG_PEAKS)) {
             spCol.peakW = 0;
         }
         GlcdRect rect = {x, y, colW, height};
