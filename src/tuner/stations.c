@@ -190,6 +190,15 @@ void stationRemove(uint16_t freq)
     free(stRam);
 }
 
+void stationStoreRemove(uint16_t freq, char *name)
+{
+    if (stationGetNum(freq) < 0) {
+        stationStore(freq, name);
+    } else {
+        stationRemove(freq);
+    }
+}
+
 void stationFavInit(void)
 {
     for (uint8_t i = 0; i < STATION_FAV_COUNT; i++) {

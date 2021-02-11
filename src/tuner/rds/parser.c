@@ -52,6 +52,11 @@ void rdsParserSetCb(RdsParserCb cb)
     rdsParserCb = cb;
 }
 
+static char convChar(char ch)
+{
+     return ch == 0x0D ? '\0' : ch == 0x0A ? ' ' : ch;
+}
+
 void rdsParserDecode(RdsBlock *block)
 {
     parser.PI = block->a;
@@ -106,17 +111,24 @@ void rdsParserDecode(RdsBlock *block)
         break;
     }
     case 2: {
-        uint8_t text_index = (block->b >> RDS_B_TEXT_POS) & (RDS_B_TEXT_MASK >> RDS_B_TEXT_POS);
+        uint8_t tIdx = (block->b >> RDS_B_TEXT_POS) & (RDS_B_TEXT_MASK >> RDS_B_TEXT_POS);
+        char ch = 0;
         switch (rdsVersion) {
         case RDS_VERSION_A:
-            parser.text[4 * text_index + 0] = (block->c >> 8) & 0x7F;
-            parser.text[4 * text_index + 1] = (block->c >> 0) & 0x7F;
-            parser.text[4 * text_index + 2] = (block->d >> 8) & 0x7F;
-            parser.text[4 * text_index + 3] = (block->d >> 0) & 0x7F;
+            ch = (block->c >> 8) & 0x7F;
+            parser.text[4 * tIdx + 0] = convChar(ch);
+            ch = (block->c >> 0) & 0x7F;
+            parser.text[4 * tIdx + 1] = convChar(ch);
+            ch = (block->d >> 8) & 0x7F;
+            parser.text[4 * tIdx + 2] = convChar(ch);
+            ch = (block->d >> 0) & 0x7F;
+            parser.text[4 * tIdx + 3] = convChar(ch);
             break;
         case RDS_VERSION_B:
-            parser.text[2 * text_index + 0] = (block->d >> 8) & 0x7F;
-            parser.text[2 * text_index + 1] = (block->d >> 0) & 0x7F;
+            ch = (block->d >> 8) & 0x7F;
+            parser.text[2 * tIdx + 0] = convChar(ch);
+            ch = (block->d >> 0) & 0x7F;
+            parser.text[2 * tIdx + 1] = convChar(ch);
             break;
         }
         informReady();

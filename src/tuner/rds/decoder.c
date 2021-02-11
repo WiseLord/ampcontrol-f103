@@ -72,6 +72,7 @@ void rdsDecoderPushBit(bool data)
             decoder.synced = true;
             decoder.block.blk[decoder.currIdx] = decoder.raw >> 10;
             decoder.goodMask = (1 << decoder.currIdx);
+            decoder.goodCnt = 2; // Number of good consecutive groups to start parsing
 
             decoder.currCnt = 0;
             decoder.currIdx = 1; // Block B will be next
@@ -80,6 +81,7 @@ void rdsDecoderPushBit(bool data)
         }
     } else {
         if (++decoder.currCnt >= 26) {
+            decoder.currCnt = 0;
             decoder.syndrome = correct(decoder.raw ^ offset_word[decoder.currIdx]);
 
             if (decoder.corrected) {
@@ -89,11 +91,17 @@ void rdsDecoderPushBit(bool data)
                 decoder.synced = false;
             }
 
-            if (decoder.goodMask == 0x0F) {
-                rdsParserDecode(&decoder.block);
+            if (decoder.currIdx == 3) {
+                if (decoder.goodMask == 0x0F) {
+                    if (decoder.goodCnt) {
+                        decoder.goodCnt--;
+                    }
+                    if (decoder.goodCnt == 0) {
+                        rdsParserDecode(&decoder.block);
+                    }
+                }
             }
 
-            decoder.currCnt = 0;
             decoder.currIdx = (decoder.currIdx + 1) % 4;
             if (decoder.currIdx == 0) {
                 decoder.goodMask = 0x00;

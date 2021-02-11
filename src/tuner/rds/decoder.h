@@ -22,6 +22,7 @@ typedef struct {
     int8_t currIdx;
     int8_t currCnt;
     uint8_t goodMask;
+    uint8_t goodCnt;
     bool corrected;
 } RdsDecoder;
 

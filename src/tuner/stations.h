@@ -31,6 +31,7 @@ char *stationGetName(int8_t num);
 void stationZap(int8_t num);
 void stationStore(uint16_t freq, char *name);
 void stationRemove(uint16_t freq);
+void stationStoreRemove(uint16_t freq, char *name);
 
 void stationFavInit(void);
 void stationFavZap(int8_t num);
