@@ -1,5 +1,7 @@
 PROJECT = ampcontrol
 
+MODULE = MAIN
+
 STM32_MCU = F103CB
 
 DISPLAY = ILI9341
@@ -45,7 +47,7 @@ endif
 
 C_DEFS += -D_DISP_BCKL_ENABLED
 
-C_SOURCES += main.c
+C_SOURCES += $(call lc, amp_$(MODULE)).c
 
 C_SOURCES += amp.c
 C_SOURCES += bt.c
@@ -55,6 +57,7 @@ C_SOURCES += eemul.c
 C_SOURCES += fft.c
 C_SOURCES += i2c.c
 C_SOURCES += input.c
+C_SOURCES += main.c
 C_SOURCES += menu.c
 C_SOURCES += mpc.c
 C_SOURCES += i2cexp.c

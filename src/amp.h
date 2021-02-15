@@ -20,6 +20,35 @@ extern "C" {
 #define LCD_BR_MIN          1
 #define LCD_BR_MAX          32
 
+typedef uint8_t ScreenType;
+enum {
+    // Screens allowed to be default
+    SCREEN_SPECTRUM = 0,
+    SCREEN_TIME,
+    SCREEN_AUDIO_INPUT,
+
+    SCREEN_STANDBY,
+
+    SCREEN_AUDIO_PARAM,
+    SCREEN_AUDIO_FLAG,
+
+    SCREEN_MENU,
+
+    SCREEN_TEXTEDIT,
+
+    SCREEN_STBY_TIMER,
+    SCREEN_SILENCE_TIMER,
+
+    SCREEN_SAVER,
+
+    SCREEN_END
+};
+
+typedef struct {
+    ScreenType type;
+    int16_t timeout;
+} Screen;
+
 typedef uint8_t AmpStatus;
 enum {
     AMP_STATUS_STBY,
@@ -29,6 +58,28 @@ enum {
     AMP_STATUS_ACTIVE,
 
     AMP_STATUS_END
+};
+
+typedef int8_t InputType;
+enum {
+    IN_DISABLED = -1,
+
+    IN_TUNER = 0,
+    IN_PC,
+    IN_TV,
+    IN_BLUETOOTH,
+    IN_DVD,
+    IN_USB,
+    IN_MICROPHONE,
+    IN_GUITAR,
+    IN_TURNTABLES,
+    IN_SDCARD,
+    IN_PROJECTOR,
+    IN_SATELLITE,
+    IN_MPD,
+    IN_KARADIO,
+
+    IN_END,
 };
 
 typedef struct {

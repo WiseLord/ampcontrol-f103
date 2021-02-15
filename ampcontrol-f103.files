@@ -2,6 +2,7 @@ src/.astylerc
 src/action.h
 src/amp.c
 src/amp.h
+src/amp_main.c
 src/audio/audio.c
 src/audio/audiodefs.h
 src/audio/audio.h
