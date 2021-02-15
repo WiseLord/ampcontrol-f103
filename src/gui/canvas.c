@@ -628,10 +628,11 @@ void canvasShowTune(bool clear)
     const int8_t max = grid ? grid->max : 0;
     const int8_t mStep = grid ? grid->mStep : 0;
 
+    glcdSetFont(lt->lblFont);
+    glcdSetFontColor(canvas.pal->fg);
+
     if (clear) {
         // Label
-        glcdSetFont(lt->lblFont);
-        glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
         glcdWriteString(label);
     }
@@ -714,10 +715,11 @@ void canvasShowAudioFlag(bool clear)
         break;
     }
 
+    glcdSetFont(lt->lblFont);
+    glcdSetFontColor(canvas.pal->fg);
+
     if (clear) {
         // Label
-        glcdSetFont(lt->lblFont);
-        glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
         glcdWriteString(labelsGet(label));
     }

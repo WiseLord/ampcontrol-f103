@@ -30,11 +30,17 @@
 #include "usb/usbhid.h"
 #endif
 
+#define SW_TIM_SCREENSAVER_GAP      20
+#define SW_TIM_SILENCE_SHOW_GAP     30
+#define SW_TIM_STBY_SHOW_GAP        60
+
+#define S_TO_MS(x)                  ((x) * 1000 + 999)
+
 typedef struct {
     Icon iconHint;
 
-    bool clearScreen;
-    ScreenType prevScreen;
+    bool screenClear;
+    ScreenType screenNext;
 
     uint8_t inputStatus;
     int8_t volume;
@@ -58,17 +64,14 @@ static void ampSendMediaKey(MediaKey key);
 static AmpPriv priv = {
     .inputStatus = 0x00,
     .volume = 0,
+    .screenClear = true,
+    .screenNext = SCREEN_STANDBY,
 };
 static Amp *amp;
 
 static Action action = {
     .type = ACTION_NONE,
     .value = FLAG_ENTER,
-};
-
-static Screen screen = {
-    .type = SCREEN_STANDBY,
-    .timeout = SW_TIM_OFF,
 };
 
 static void actionSet(ActionType type, int16_t value)
@@ -79,8 +82,8 @@ static void actionSet(ActionType type, int16_t value)
 
 static void screenSet(ScreenType type, int16_t timeout)
 {
-    screen.type = type;
-    screen.timeout = timeout;
+    priv.screenNext = type;
+    swTimSet(SW_TIM_DISPLAY, timeout);
 }
 
 static void rdsParserCb(void)
@@ -92,15 +95,15 @@ static bool screenCheckClear(void)
 {
     bool clear = false;
 
-    if (priv.clearScreen) {
+    if (priv.screenClear) {
         clear = true;
-        priv.clearScreen = false;
-    } else if (amp->screen != priv.prevScreen) {
+        priv.screenClear = false;
+    } else if (amp->screen != priv.screenNext) {
         clear = true;
         switch (amp->screen) {
         case SCREEN_STANDBY:
         case SCREEN_TIME:
-            if (priv.prevScreen == SCREEN_STANDBY || priv.prevScreen == SCREEN_TIME) {
+            if (priv.screenNext == SCREEN_STANDBY || priv.screenNext == SCREEN_TIME) {
                 clear = false;
             }
             break;
@@ -112,15 +115,14 @@ static bool screenCheckClear(void)
         }
     }
 
-    if (amp->screen != priv.prevScreen || clear) {
+    if (amp->screen != priv.screenNext || clear) {
         // Handle standby/work brightness
-        ampSetBrightness((int8_t)settingsGet(amp->screen == SCREEN_STANDBY ?
+        ampSetBrightness((int8_t)settingsGet(priv.screenNext == SCREEN_STANDBY ?
                                              PARAM_DISPLAY_BR_STBY : PARAM_DISPLAY_BR_WORK));
     }
 
-
     // Save current screen and screen parameter
-    priv.prevScreen = amp->screen;
+    amp->screen = priv.screenNext;
 
     return clear;
 }
@@ -144,63 +146,65 @@ static ScreenType getScrDef(void)
 {
     AudioProc *aProc = audioGet();
 
-    ScreenType scrDef = amp->defScreen;
+    int32_t swTimStby = swTimGet(SW_TIM_STBY);
+    int32_t swTimSilence = swTimGet(SW_TIM_SILENCE);
 
-    int32_t timer;
 
-    timer = swTimGet(SW_TIM_SCREEN_SAVER);
-    if (timer == 0) {
-        scrDef = SCREEN_SAVER;
+    if (swTimStby > 0 && swTimStby < swTimSilence) {
+        if (swTimStby < S_TO_MS(SW_TIM_STBY_SHOW_GAP)) {
+            return SCREEN_STBY_TIMER;
+        }
     }
 
-    timer = swTimGet(SW_TIM_STBY);
-    if (timer > 0 && timer < 60 * 1000 + 999) {
-        scrDef = SCREEN_STBY_TIMER;
-    }
-    timer = swTimGet(SW_TIM_SILENCE);
-    if (timer > 0 && timer < 30 * 1000 + 999) {
-        scrDef = SCREEN_SILENCE_TIMER;
+    if (swTimSilence > 0) {
+        int16_t min = settingsGet(PARAM_SYSTEM_SIL_TIM);
+        if (min <= 0) {
+            min = 32767;
+        }
+        if (swTimSilence < S_TO_MS(SW_TIM_SILENCE_SHOW_GAP)) {
+            return SCREEN_SILENCE_TIMER;
+        } else if (swTimSilence < S_TO_MS(60 * min - SW_TIM_SCREENSAVER_GAP)) {
+            return SCREEN_SAVER;
+        }
     }
 
     if (aProc->par.mute) {
-        scrDef = SCREEN_AUDIO_INPUT;
+        return SCREEN_AUDIO_INPUT;
     }
 
-    return scrDef;
+    return amp->defScreen;
 }
 
-static void actionDispExpired(ScreenType scrMode)
+static void actionDispExpired(void)
 {
     AudioProc *aProc = audioGet();
     ScreenType scrDef = getScrDef();
 
     priv.iconHint = ICON_EMPTY;
+    ScreenType scrMode = amp->screen;
 
     rtcSetMode(RTC_NOEDIT);
     aProc->tune = (scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME);
 
-    switch (scrMode) {
-    case SCREEN_STANDBY:
-    case SCREEN_MENU:
-        screenSet(SCREEN_STANDBY, 0); // TODO: Return to parent screen caused menu
-        break;
-    default:
+    if (amp->status != AMP_STATUS_STBY) {
         if (scrMode != scrDef) {
-            screenSet(scrDef, 0);
+            screenSet(scrDef, -1);
         }
-        break;
+    } else {
+        screenSet(SCREEN_STANDBY, -1);
     }
 }
 
 static void actionResetSilenceTimer(void)
 {
-    int16_t silenceTimer = settingsGet(PARAM_SYSTEM_SIL_TIM);
-
-    if (silenceTimer) {
-        swTimSet(SW_TIM_SILENCE, 1000 * 60 * silenceTimer + 999);
+    int16_t min = settingsGet(PARAM_SYSTEM_SIL_TIM);
+    if (min <= 0) {
+        min = 32767;
     }
 
-    swTimSet(SW_TIM_SCREEN_SAVER, 1000 * 20);
+    if (min) {
+        swTimSet(SW_TIM_SILENCE, S_TO_MS(60 * min));
+    }
 }
 
 static void inputDisable(void)
@@ -358,8 +362,9 @@ static void ampExitStby(void)
 
 static void ampEnterStby(void)
 {
+    ampSendMediaKey(MEDIAKEY_STOP);
+
     swTimSet(SW_TIM_STBY, SW_TIM_OFF);
-    swTimSet(SW_TIM_SCREEN_SAVER, SW_TIM_OFF);
     swTimSet(SW_TIM_SILENCE, SW_TIM_OFF);
     swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
     swTimSet(SW_TIM_SP_CONVERT, SW_TIM_OFF);
@@ -564,7 +569,7 @@ static void actionSetInput(int8_t value)
 
 static void actionPostSetInput(void)
 {
-    priv.clearScreen = true;
+    priv.screenClear = true;
     priv.iconHint = ICON_EMPTY;
     screenSet(SCREEN_AUDIO_INPUT, 5000);
 }
@@ -672,7 +677,7 @@ static void spModeChange(void)
         settingsStore(PARAM_SPECTRUM_PEAKS, (sp->flags & SP_FLAG_PEAKS) == SP_FLAG_PEAKS);
     }
 
-    priv.clearScreen = true;
+    priv.screenClear = true;
     settingsStore(PARAM_SPECTRUM_MODE, sp->mode);
 }
 
@@ -761,11 +766,6 @@ static void actionGetTimers(void)
 {
     if (swTimGet(SW_TIM_AMP_INIT) == 0) {
         actionSet(ACTION_INIT_HW, 0);
-    } else if (swTimGet(SW_TIM_STBY) == 0) {
-        ampSendMediaKey(MEDIAKEY_STOP);
-        actionSet(ACTION_STANDBY, FLAG_ENTER);
-    } else if (swTimGet(SW_TIM_SILENCE) == 0) {
-        actionSet(ACTION_STANDBY, FLAG_ENTER);
     } else if (swTimGet(SW_TIM_RTC_INIT) == 0) {
         actionSet(ACTION_INIT_RTC, 0);
     } else if (swTimGet(SW_TIM_SOFT_VOLUME) == 0) {
@@ -774,8 +774,28 @@ static void actionGetTimers(void)
         actionSet(ACTION_FINISH_DIGIT_INPUT, 0);
     } else if (swTimGet(SW_TIM_DISPLAY) == 0) {
         actionSet(ACTION_DISP_EXPIRED, 0);
-    } else if (swTimGet(SW_TIM_SCREEN_SAVER) == 0) {
-        actionSet(ACTION_DISP_EXPIRED, 0);
+    } else {
+        int32_t swTimStby = swTimGet(SW_TIM_STBY);
+        int32_t swTimSilence = swTimGet(SW_TIM_SILENCE);
+
+        if (swTimStby == SW_TIM_OFF && swTimSilence == SW_TIM_OFF) {
+            return;
+        }
+
+        if (swTimStby == 0 || swTimSilence == 0) {
+            actionSet(ACTION_STANDBY, FLAG_ENTER);
+            return;
+        }
+
+        switch (getScrDef()) {
+        case SCREEN_SAVER:
+        case SCREEN_SILENCE_TIMER:
+        case SCREEN_STBY_TIMER:
+            if (amp->screen != getScrDef()) {
+                actionSet(ACTION_DISP_EXPIRED, -1);
+            }
+            break;
+        }
     }
 }
 
@@ -1076,7 +1096,6 @@ static void actionRemapEncoder(void)
     }
 
     if (ACTION_AUDIO_PARAM_CHANGE == action.type) {
-        amp->screen = SCREEN_AUDIO_PARAM;
         switch (scrMode) {
         case SCREEN_SPECTRUM:
         case SCREEN_AUDIO_FLAG:
@@ -1172,7 +1191,7 @@ static void actionRemapCommon(void)
     }
 }
 
-void ampInitMuteStby(void)
+static void ampInitMuteStby(void)
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -1198,7 +1217,7 @@ void ampSelectTune(AudioTune tune)
 
     AudioProc *aProc = audioGet();
     if (aProc->tune != tune) {
-        priv.clearScreen = true;
+        priv.screenClear = true;
         aProc->tune = tune;
     }
 }
@@ -1343,11 +1362,11 @@ void ampActionHandle(void)
             screenSet(SCREEN_TIME, 1000);
         } else {
             ampEnterStby();
-            actionDispExpired(SCREEN_STANDBY);
+            actionDispExpired();
         }
         break;
     case ACTION_DISP_EXPIRED:
-        actionDispExpired(scrMode);
+        actionDispExpired();
         break;
 
     case ACTION_DIGIT_INPUT:
@@ -1414,7 +1433,7 @@ void ampActionHandle(void)
 
     case ACTION_OPEN_MENU:
         if (scrMode == SCREEN_AUDIO_PARAM) {
-            priv.clearScreen = true;
+            priv.screenClear = true;
             actionNextAudioParam(aProc);
         } else {
             aProc->tune = AUDIO_TUNE_VOLUME;
@@ -1480,7 +1499,7 @@ void ampActionHandle(void)
     case ACTION_AUDIO_MUTE:
         ampMute(action.value);
         if (aProc->tune != AUDIO_FLAG_MUTE) {
-            priv.clearScreen = true;
+            priv.screenClear = true;
         }
         aProc->tune = AUDIO_FLAG_MUTE;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1488,7 +1507,7 @@ void ampActionHandle(void)
     case ACTION_AUDIO_LOUDNESS:
         audioSetLoudness(action.value);
         if (aProc->tune != AUDIO_FLAG_LOUDNESS) {
-            priv.clearScreen = true;
+            priv.screenClear = true;
         }
         aProc->tune = AUDIO_FLAG_LOUDNESS;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1496,7 +1515,7 @@ void ampActionHandle(void)
     case ACTION_AUDIO_SURROUND:
         audioSetSurround(action.value);
         if (aProc->tune != AUDIO_FLAG_SURROUND) {
-            priv.clearScreen = true;
+            priv.screenClear = true;
         }
         aProc->tune = AUDIO_FLAG_SURROUND;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1504,7 +1523,7 @@ void ampActionHandle(void)
     case ACTION_AUDIO_EFFECT3D:
         audioSetEffect3D(action.value);
         if (aProc->tune != AUDIO_FLAG_EFFECT3D) {
-            priv.clearScreen = true;
+            priv.screenClear = true;
         }
         aProc->tune = AUDIO_FLAG_EFFECT3D;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1512,7 +1531,7 @@ void ampActionHandle(void)
     case ACTION_AUDIO_BYPASS:
         audioSetBypass(action.value);
         if (aProc->tune != AUDIO_FLAG_BYPASS) {
-            priv.clearScreen = true;
+            priv.screenClear = true;
         }
         aProc->tune = AUDIO_FLAG_BYPASS;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1575,7 +1594,7 @@ void ampActionHandle(void)
         MenuIdx parent = menuGet()->parent;
         menuSetActive((MenuIdx)action.value);
         if (parent != menuGet()->parent) {
-            priv.clearScreen = true;
+            priv.screenClear = true;
         }
         screenSet(SCREEN_MENU, 10000);
         break;
@@ -1612,31 +1631,25 @@ void ampActionHandle(void)
 
     if (amp->status == AMP_STATUS_ACTIVE) {
         // Reset silence timer on any user action
-        if (action.type != ACTION_NONE && action.type != ACTION_DISP_EXPIRED) {
+        if (action.type != ACTION_NONE &&
+            action.type != ACTION_DISP_EXPIRED) {
             actionResetSilenceTimer();
         }
 
         // Reset silence timer on signal
         if (spCheckSignal()) {
             actionResetSilenceTimer();
-            if (amp->screen == SCREEN_SAVER || amp->screen == SCREEN_SILENCE_TIMER) {
-                screenSet(getScrDef(), 3000);
+            if (swTimGet(SW_TIM_DISPLAY) == SW_TIM_OFF) {
+                actionDispExpired();
             }
         }
     }
 
-    if (action.type != ACTION_NONE) {
-        amp->screen = screen.type;
-    }
-
-    if (screen.timeout > 0) {
-        swTimSet(SW_TIM_DISPLAY, screen.timeout);
-    } else if (screen.timeout == 0) {
+    if (swTimGet(SW_TIM_DISPLAY) == 0) {
         swTimSet(SW_TIM_DISPLAY, SW_TIM_OFF);
     }
 
     action.type = ACTION_NONE;
-    screen.timeout = SW_TIM_OFF;
 }
 
 void ampScreenShow(void)
@@ -1648,6 +1661,7 @@ void ampScreenShow(void)
     glcdSetRect(&rect);
 
     bool clear = screenCheckClear();
+
     if (amp->screen == SCREEN_TEXTEDIT) {
         GlcdRect teRect = canvasGet()->layout->textEdit.rect;
         if (clear) {

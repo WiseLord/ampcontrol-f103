@@ -44,11 +44,6 @@ enum {
     SCREEN_END
 };
 
-typedef struct {
-    ScreenType type;
-    int16_t timeout;
-} Screen;
-
 typedef uint8_t AmpStatus;
 enum {
     AMP_STATUS_STBY,
@@ -115,14 +110,12 @@ void ampScreenShow(void);
 Action ampGetButtons();
 Action ampGetEncoder(void);
 
+
 void ampPinMute(bool value);
 void ampPinStby(bool value);
-void ampInitMuteStby(void);
 
 void ampSelectTune(AudioTune tune);
-
 void ampActionQueue(ActionType type, int16_t value);
-
 void ampSetBrightness(int8_t value);
 
 #ifdef __cplusplus
