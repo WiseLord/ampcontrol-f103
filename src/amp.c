@@ -136,7 +136,8 @@ static void ampScreenPwm(void)
         glcdSetBacklight(true);
     }
 }
-static void actionDispExpired(ScreenType scrMode)
+
+static ScreenType getScrDef(void)
 {
     AudioProc *aProc = audioGet();
 
@@ -161,6 +162,14 @@ static void actionDispExpired(ScreenType scrMode)
     if (aProc->par.mute) {
         scrDef = SCREEN_AUDIO_INPUT;
     }
+
+    return scrDef;
+}
+
+static void actionDispExpired(ScreenType scrMode)
+{
+    AudioProc *aProc = audioGet();
+    ScreenType scrDef = getScrDef();
 
     amp.iconHint = ICON_EMPTY;
 
@@ -1637,10 +1646,10 @@ static void ampActionHandle(void)
 
         // Reset silence timer on signal
         if (spCheckSignal()) {
-            if (amp.screen == SCREEN_SAVER) {
-                screenSet(amp.defScreen, 3000);
-            }
             actionResetSilenceTimer();
+            if (amp.screen == SCREEN_SAVER || amp.screen == SCREEN_SILENCE_TIMER) {
+                screenSet(getScrDef(), 3000);
+            }
         }
     }
 
