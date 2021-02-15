@@ -86,15 +86,8 @@ typedef struct {
     AmpStatus status;
     ScreenType screen;
     ScreenType defScreen;
-    ScreenType prevScreen;
-    bool clearScreen;
-
-    Icon iconHint;
-    int8_t brightness;
 
     InputType inType[MAX_INPUTS];
-    uint8_t inputStatus;
-    int8_t volume;
     bool showDb;
 } Amp;
 

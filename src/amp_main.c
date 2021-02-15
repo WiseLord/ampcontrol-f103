@@ -30,6 +30,18 @@
 #include "usb/usbhid.h"
 #endif
 
+typedef struct {
+    Icon iconHint;
+
+    bool clearScreen;
+    ScreenType prevScreen;
+
+    uint8_t inputStatus;
+    int8_t volume;
+
+    int8_t brightness;
+} AmpPriv;
+
 static void actionGetButtons(void);
 static void actionGetEncoder(void);
 static void actionGetRemote(void);
@@ -50,12 +62,14 @@ static void ampScreenShow(void);
 
 static void ampSendMediaKey(MediaKey key);
 
+static AmpPriv priv = {
+    .inputStatus = 0x00,
+    .volume = 0,
+};
 static Amp amp = {
     .status = AMP_STATUS_STBY,
     .screen = SCREEN_STANDBY,
     .defScreen = SCREEN_SPECTRUM,
-    .inputStatus = 0x00,
-    .volume = 0,
 };
 
 static Action action = {
@@ -89,15 +103,15 @@ static bool screenCheckClear(void)
 {
     bool clear = false;
 
-    if (amp.clearScreen) {
+    if (priv.clearScreen) {
         clear = true;
-        amp.clearScreen = false;
-    } else if (amp.screen != amp.prevScreen) {
+        priv.clearScreen = false;
+    } else if (amp.screen != priv.prevScreen) {
         clear = true;
         switch (amp.screen) {
         case SCREEN_STANDBY:
         case SCREEN_TIME:
-            if (amp.prevScreen == SCREEN_STANDBY || amp.prevScreen == SCREEN_TIME) {
+            if (priv.prevScreen == SCREEN_STANDBY || priv.prevScreen == SCREEN_TIME) {
                 clear = false;
             }
             break;
@@ -109,7 +123,7 @@ static bool screenCheckClear(void)
         }
     }
 
-    if (amp.screen != amp.prevScreen || clear) {
+    if (amp.screen != priv.prevScreen || clear) {
         // Handle standby/work brightness
         ampSetBrightness((int8_t)settingsGet(amp.screen == SCREEN_STANDBY ?
                                              PARAM_DISPLAY_BR_STBY : PARAM_DISPLAY_BR_WORK));
@@ -117,7 +131,7 @@ static bool screenCheckClear(void)
 
 
     // Save current screen and screen parameter
-    amp.prevScreen = amp.screen;
+    priv.prevScreen = amp.screen;
 
     return clear;
 }
@@ -130,7 +144,7 @@ static void ampScreenPwm(void)
         br = 0;
     }
 
-    if (br == amp.brightness) {
+    if (br == priv.brightness) {
         glcdSetBacklight(false);
     } else if (br == 0) {
         glcdSetBacklight(true);
@@ -171,7 +185,7 @@ static void actionDispExpired(ScreenType scrMode)
     AudioProc *aProc = audioGet();
     ScreenType scrDef = getScrDef();
 
-    amp.iconHint = ICON_EMPTY;
+    priv.iconHint = ICON_EMPTY;
 
     rtcSetMode(RTC_NOEDIT);
     aProc->tune = (scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME);
@@ -252,9 +266,9 @@ static void inputSetPower(bool value)
     int8_t input = aProc->par.input;
 
     if (value) {
-        amp.inputStatus = (uint8_t)(1 << input);
+        priv.inputStatus = (uint8_t)(1 << input);
     } else {
-        amp.inputStatus = 0x00;
+        priv.inputStatus = 0x00;
     }
 
     I2cAddrIdx i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_IN_STAT);
@@ -262,10 +276,10 @@ static void inputSetPower(bool value)
     if (i2cAddrIdx != I2C_ADDR_DISABLED) {
         if (!i2cIsEnabled(I2C_AMP)) {
             i2cInit(I2C_AMP, 100000, 0x00);
-            i2cexpSend(i2cAddrIdx, amp.inputStatus);
+            i2cexpSend(i2cAddrIdx, priv.inputStatus);
             i2cDeInit(I2C_AMP);
         } else {
-            i2cexpSend(i2cAddrIdx, amp.inputStatus);
+            i2cexpSend(i2cAddrIdx, priv.inputStatus);
         }
     }
 }
@@ -335,7 +349,7 @@ static void ampVolumeInit(void)
     AudioProc *aProc = audioGet();
     AudioTuneItem *volItem = &aProc->par.tune[AUDIO_TUNE_VOLUME];
 
-    amp.volume = volItem->value;
+    priv.volume = volItem->value;
     volItem->value = volItem->grid->min;
 }
 
@@ -369,7 +383,7 @@ static void ampEnterStby(void)
     // Restore volume value before saving
     AudioProc *aProc = audioGet();
     AudioTuneItem *volItem = &aProc->par.tune[AUDIO_TUNE_VOLUME];
-    volItem->value = amp.volume;
+    volItem->value = priv.volume;
 
     audioSetPower(false);
 
@@ -561,8 +575,8 @@ static void actionSetInput(int8_t value)
 
 static void actionPostSetInput(void)
 {
-    amp.clearScreen = true;
-    amp.iconHint = ICON_EMPTY;
+    priv.clearScreen = true;
+    priv.iconHint = ICON_EMPTY;
     screenSet(SCREEN_AUDIO_INPUT, 5000);
 }
 
@@ -691,7 +705,7 @@ static void spModeChange(void)
         settingsStore(PARAM_SPECTRUM_PEAKS, (sp->flags & SP_FLAG_PEAKS) == SP_FLAG_PEAKS);
     }
 
-    amp.clearScreen = true;
+    priv.clearScreen = true;
     settingsStore(PARAM_SPECTRUM_MODE, sp->mode);
 }
 
@@ -788,7 +802,7 @@ static void actionGetTimers(void)
     } else if (swTimGet(SW_TIM_RTC_INIT) == 0) {
         actionSet(ACTION_INIT_RTC, 0);
     } else if (swTimGet(SW_TIM_SOFT_VOLUME) == 0) {
-        actionSet(ACTION_RESTORE_VOLUME, amp.volume);
+        actionSet(ACTION_RESTORE_VOLUME, priv.volume);
     } else if (swTimGet(SW_TIM_DIGIT_INPUT) == 0) {
         actionSet(ACTION_FINISH_DIGIT_INPUT, 0);
     } else if (swTimGet(SW_TIM_DISPLAY) == 0) {
@@ -1217,7 +1231,7 @@ void ampSelectTune(AudioTune tune)
 
     AudioProc *aProc = audioGet();
     if (aProc->tune != tune) {
-        amp.clearScreen = true;
+        priv.clearScreen = true;
         aProc->tune = tune;
     }
 }
@@ -1265,18 +1279,29 @@ void ampInit(void)
     controlReportAmpStatus();
 }
 
+void ampSyncFromOthers(void)
+{
+    controlGetData();
+    mpcGetData();
+}
+
+void ampSyncToOthers(void)
+{
+    btReleaseKey();
+}
+
 void ampRun(void)
 {
     while (1) {
         utilEnableSwd(SCREEN_STANDBY == amp.screen);
 
-        controlGetData();
-        mpcGetData();
-        btReleaseKey();
+        ampSyncFromOthers();
 
         ampActionGet();
         ampActionRemap();
         ampActionHandle();
+
+        ampSyncToOthers();
 
         ampScreenShow();
     }
@@ -1400,24 +1425,24 @@ static void ampActionHandle(void)
         switch (action.value) {
 
         case MEDIAKEY_PREV:
-            amp.iconHint = ICON_PREV_TRACK;
+            priv.iconHint = ICON_PREV_TRACK;
             break;
         case MEDIAKEY_NEXT:
-            amp.iconHint = ICON_NEXT_TRACK;
+            priv.iconHint = ICON_NEXT_TRACK;
             break;
         case MEDIAKEY_STOP:
-            amp.iconHint = ICON_STOP;
+            priv.iconHint = ICON_STOP;
             break;
         case MEDIAKEY_PLAY:
-            amp.iconHint = ICON_PLAY_PAUSE;
+            priv.iconHint = ICON_PLAY_PAUSE;
             break;
         case MEDIAKEY_PAUSE:
             break;
         case MEDIAKEY_REWIND:
-            amp.iconHint = ICON_REWIND;
+            priv.iconHint = ICON_REWIND;
             break;
         case MEDIAKEY_FFWD:
-            amp.iconHint = ICON_FFWD;
+            priv.iconHint = ICON_FFWD;
             break;
         }
 
@@ -1426,7 +1451,7 @@ static void ampActionHandle(void)
         switch (inType) {
         case IN_TUNER:
             if (NULL == tuner->api) {
-                amp.iconHint = ICON_EMPTY;
+                priv.iconHint = ICON_EMPTY;
             }
         case IN_PC:
         case IN_MPD:
@@ -1435,14 +1460,14 @@ static void ampActionHandle(void)
             screenSet(SCREEN_AUDIO_INPUT, 800);
             break;
         default:
-            amp.iconHint = ICON_EMPTY;
+            priv.iconHint = ICON_EMPTY;
             break;
         }
         break;
 
     case ACTION_OPEN_MENU:
         if (scrMode == SCREEN_AUDIO_PARAM) {
-            amp.clearScreen = true;
+            priv.clearScreen = true;
             actionNextAudioParam(aProc);
         } else {
             aProc->tune = AUDIO_TUNE_VOLUME;
@@ -1489,7 +1514,7 @@ static void ampActionHandle(void)
     case ACTION_AUDIO_PARAM_CHANGE:
         audioChangeTune(aProc->tune, (int8_t)(action.value));
         if (aProc->tune == AUDIO_TUNE_VOLUME) {
-            amp.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
+            priv.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
         }
         if (aProc->par.mute) {
             ampMute(false);
@@ -1508,7 +1533,7 @@ static void ampActionHandle(void)
     case ACTION_AUDIO_MUTE:
         ampMute(action.value);
         if (aProc->tune != AUDIO_FLAG_MUTE) {
-            amp.clearScreen = true;
+            priv.clearScreen = true;
         }
         aProc->tune = AUDIO_FLAG_MUTE;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1516,7 +1541,7 @@ static void ampActionHandle(void)
     case ACTION_AUDIO_LOUDNESS:
         audioSetLoudness(action.value);
         if (aProc->tune != AUDIO_FLAG_LOUDNESS) {
-            amp.clearScreen = true;
+            priv.clearScreen = true;
         }
         aProc->tune = AUDIO_FLAG_LOUDNESS;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1524,7 +1549,7 @@ static void ampActionHandle(void)
     case ACTION_AUDIO_SURROUND:
         audioSetSurround(action.value);
         if (aProc->tune != AUDIO_FLAG_SURROUND) {
-            amp.clearScreen = true;
+            priv.clearScreen = true;
         }
         aProc->tune = AUDIO_FLAG_SURROUND;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1532,7 +1557,7 @@ static void ampActionHandle(void)
     case ACTION_AUDIO_EFFECT3D:
         audioSetEffect3D(action.value);
         if (aProc->tune != AUDIO_FLAG_EFFECT3D) {
-            amp.clearScreen = true;
+            priv.clearScreen = true;
         }
         aProc->tune = AUDIO_FLAG_EFFECT3D;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1540,7 +1565,7 @@ static void ampActionHandle(void)
     case ACTION_AUDIO_BYPASS:
         audioSetBypass(action.value);
         if (aProc->tune != AUDIO_FLAG_BYPASS) {
-            amp.clearScreen = true;
+            priv.clearScreen = true;
         }
         aProc->tune = AUDIO_FLAG_BYPASS;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
@@ -1557,7 +1582,7 @@ static void ampActionHandle(void)
 
     case ACTION_BT_INPUT_CHANGE:
         btNextInput();
-        amp.iconHint = ICON_EMPTY;
+        priv.iconHint = ICON_EMPTY;
         screenSet(SCREEN_AUDIO_INPUT, 5000);
         break;
 
@@ -1603,7 +1628,7 @@ static void ampActionHandle(void)
         MenuIdx parent = menuGet()->parent;
         menuSetActive((MenuIdx)action.value);
         if (parent != menuGet()->parent) {
-            amp.clearScreen = true;
+            priv.clearScreen = true;
         }
         screenSet(SCREEN_MENU, 10000);
         break;
@@ -1724,7 +1749,7 @@ void ampScreenShow(void)
         canvasShowAudioFlag(clear);
         break;
     case SCREEN_AUDIO_INPUT:
-        canvasShowAudioInput(clear, amp.iconHint);
+        canvasShowAudioInput(clear, priv.iconHint);
         break;
     case SCREEN_MENU:
         canvasShowMenu(clear);
@@ -1748,7 +1773,7 @@ void ampScreenShow(void)
 
 void ampSetBrightness(int8_t value)
 {
-    amp.brightness = value;
+    priv.brightness = value;
 }
 
 void TIM_SPECTRUM_HANDLER(void)
