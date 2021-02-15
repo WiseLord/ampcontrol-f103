@@ -99,16 +99,27 @@ enum {
     MUTESTBY_END,
 };
 
+void ampInit(void);
+Amp *ampGet(void);
+
+void ampRun(void);
+
+void ampSyncFromOthers(void);
+void ampSyncToOthers(void);
+
+void ampActionGet(void);
+void ampActionRemap(void);
+void ampActionHandle(void);
+void ampScreenShow(void);
+
+Action ampGetButtons();
+Action ampGetEncoder(void);
+
 void ampPinMute(bool value);
 void ampPinStby(bool value);
 void ampInitMuteStby(void);
 
 void ampSelectTune(AudioTune tune);
-
-void ampInit(void);
-void ampRun(void);
-
-Amp *ampGet(void);
 
 void ampActionQueue(ActionType type, int16_t value);
 
