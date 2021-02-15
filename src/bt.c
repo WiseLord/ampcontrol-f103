@@ -22,9 +22,6 @@
 
 static I2cAddrIdx i2cAddrIdx = I2C_ADDR_DISABLED;
 
-static BtInput btInputs = BT_IN_BLUETOOTH;
-static BtInput btInput = BT_IN_BLUETOOTH;
-
 static BTCtx btCtx;
 
 static void btStartKeyTimer(void)
@@ -115,21 +112,21 @@ void btReleaseKey(void)
 
 BtInput btGetInput(void)
 {
-    return btInput;
+    return btCtx.input;
 }
 
 void btAddInput(BtInput value)
 {
-    btInputs |= value;
+    btCtx.inMask |= value;
 }
 
 void btDelInput(BtInput value)
 {
-    btInputs &= ~value;
-    if (btInput & value) {
-        if (btInputs & BT_IN_USB) {
+    btCtx.inMask &= ~value;
+    if (btCtx.input & value) {
+        if (btCtx.inMask & BT_IN_USB) {
             btSetInput(BT_IN_USB);
-        } else if (btInputs & BT_IN_SDCARD) {
+        } else if (btCtx.inMask & BT_IN_SDCARD) {
             btSetInput(BT_IN_SDCARD);
         } else {
             btSetInput(BT_IN_BLUETOOTH);
@@ -139,8 +136,8 @@ void btDelInput(BtInput value)
 
 void btSetInput(BtInput value)
 {
-    btInputs |= value;
-    btInput = value;
+    btCtx.inMask |= value;
+    btCtx.input = value;
     btCtx.flags |= BT_FLAG_NAME_CHANGED;
 }
 
@@ -153,7 +150,7 @@ void btNextInput()
 
 char *btGetSongName(void)
 {
-    if (btInput == BT_IN_BLUETOOTH) {
+    if (btCtx.input == BT_IN_BLUETOOTH) {
         return "";
     } else {
         return btCtx.songName;

@@ -1055,6 +1055,20 @@ void canvasShowAudioInput(bool clear, Icon icon)
     const tFont *iconSet = lt->iconSet;
     const char *label = labelsGet(inType == IN_DISABLED ? LABEL_BOOL_OFF : LABEL_IN_TUNER + inType);
 
+    if (inType == IN_BLUETOOTH) {
+        switch (btGetInput()) {
+        case BT_IN_USB:
+            label = labelsGet(LABEL_IN_USB);
+            break;
+        case BT_IN_SDCARD:
+            label = labelsGet(LABEL_IN_SDCARD);
+            break;
+        default:
+            label = labelsGet(LABEL_IN_BLUETOOTH);
+            break;
+        }
+    }
+
     if (icon == ICON_EMPTY) {
         if (inType == IN_BLUETOOTH) {
             switch (btGetInput()) {
@@ -1062,7 +1076,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
                 icon = ICON_USB;
                 break;
             case BT_IN_SDCARD:
-                icon = ICON_CASSETTE;
+                icon = ICON_SDCARD;
                 break;
             default:
                 icon = ICON_BLUETOOTH;
@@ -1077,18 +1091,19 @@ void canvasShowAudioInput(bool clear, Icon icon)
         icon = ICON_MUTE_ON;
     }
 
-    if (clear) {
+    if (clear || icon != prev.par.icon) {
         // Label
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
-        glcdWriteString(label);
-    }
+        int16_t nameLen = glcdWriteString(label);
+        int16_t iconWidth = iconSet->chars[0].image->width;
 
-    // Icon
-    if (clear || icon != prev.par.icon) {
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y, lt->rect.w - nameLen - iconWidth,
+                     lt->lblFont->chars[0].image->height, canvas.pal->bg);
+
         prev.par.icon = icon;
-        glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
+        glcdSetXY(lt->rect.w - iconWidth, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
     }
@@ -1111,7 +1126,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
         yPos += lt->rds.textFont->chars[0].image->height;
     }
 
-    // Spectrum
+// Spectrum
     GlcdRect rect = canvas.glcd->rect;
     rect.y = yPos;
     rect.h = rect.h - rect.y;

@@ -22,6 +22,8 @@ enum {
 typedef struct {
     char songName[SONG_NAME_SIZE];
     uint16_t flags;
+    BtInput inMask;
+    BtInput input;
 } BTCtx;
 
 void btInit(void);
