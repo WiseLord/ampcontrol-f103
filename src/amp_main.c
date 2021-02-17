@@ -635,7 +635,7 @@ static void actionGetRemote(void)
     } else {
         if (swTimGet(SW_TIM_RC_NOACION) == 0) {
             swTimSet(SW_TIM_RC_NOACION, SW_TIM_OFF);
-            swTimSet(SW_TIM_RC_REPEAT, SW_TIM_OFF);
+            swTimSet(SW_TIM_RC_REPEAT, 0);
             cmdPrev = RC_CMD_END;
         }
     }
