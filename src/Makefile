@@ -186,13 +186,10 @@ ifeq "$(ENABLE_USB)" "YES"
   C_SOURCES += \
     drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_hal_pcd.c \
     drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_hal_pcd_ex.c \
+    drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_usb.c \
     drivers/STM32_USB_Device_Library/Core/Src/usbd_core.c \
     drivers/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
-    drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
-
-  ifeq "$(STM32_FAMILY)" "STM32F1"
-    C_SOURCES += drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_ll_usb.c
-  endif
+    drivers/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 
   C_SOURCES += \
     usb/usbd_amp.c \

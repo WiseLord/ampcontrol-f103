@@ -90,6 +90,7 @@
 ../src/drivers/CMSIS/Include/core_cm3.h
 ../src/drivers/CMSIS/Include/core_cm4.h
 ../src/drivers/CMSIS/Include/mpu_armv7.h
+../src/drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
 ../src/drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h
 ../src/drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 ../src/drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h
@@ -119,6 +120,7 @@
 ../src/drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c
 ../src/drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c
 ../src/drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c
+../src/drivers/STM32F3xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
 ../src/drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h
 ../src/drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h
 ../src/drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_pcd_ex.h
@@ -137,6 +139,7 @@
 ../src/drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_ll_system.h
 ../src/drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_ll_tim.h
 ../src/drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_ll_usart.h
+../src/drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_ll_usb.h
 ../src/drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_ll_utils.h
 ../src/drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pcd.c
 ../src/drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pcd_ex.c
