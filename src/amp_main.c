@@ -666,13 +666,14 @@ static void spModeChange(void)
     Spectrum *sp = spGet();
 
     sp->mode++;
-    // Skip unused modes
-    if (sp->mode > SP_MODE_MIXED && sp->mode < SP_MODE_WATERFALL) {
-        sp->mode = SP_MODE_WATERFALL;
+
+    if (sp->mode > SP_MODE_WATERFALL) {
+        sp->mode = SP_MODE_STEREO;
+    } else if (sp->mode > SP_MODE_MIXED) {
+        sp->mode = sp->flags & SP_FLAG_PEAKS ? SP_MODE_STEREO : SP_MODE_WATERFALL;
     }
 
-    if (sp->mode >= (sp->flags & SP_FLAG_PEAKS ? SP_MODE_END : SP_MODE_WATERFALL)) {
-        sp->mode = SP_MODE_STEREO;
+    if (sp->mode == SP_MODE_STEREO) {
         sp->flags ^= SP_FLAG_PEAKS;
         settingsStore(PARAM_SPECTRUM_PEAKS, (sp->flags & SP_FLAG_PEAKS) == SP_FLAG_PEAKS);
     }
@@ -891,6 +892,8 @@ static void actionRemapBtnLong(void)
         case SCREEN_STANDBY:
             actionSet(ACTION_MENU_SELECT, MENU_SETUP_SYSTEM);
             break;
+        default:
+            actionSet(ACTION_SP_MODE, 0);
         }
         break;
     case ENC_A:

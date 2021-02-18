@@ -748,11 +748,16 @@ static void drawSpectrumMode(bool clear, GlcdRect rect)
     switch (sp->mode) {
     case SP_MODE_STEREO:
     case SP_MODE_MIRROR:
+    case SP_MODE_INVERTED:
     case SP_MODE_ANTIMIRROR:
         rect.h = rect.h / 2;
-        drawSpectrum(clear, true, sp->mode == SP_MODE_ANTIMIRROR, SP_CHAN_LEFT, &rect);
+        drawSpectrum(clear, true,
+                     sp->mode == SP_MODE_ANTIMIRROR || sp->mode == SP_MODE_INVERTED,
+                     SP_CHAN_LEFT, &rect);
         rect.y += rect.h;
-        drawSpectrum(clear, false, sp->mode == SP_MODE_MIRROR, SP_CHAN_RIGHT, &rect);
+        drawSpectrum(clear, false,
+                     sp->mode == SP_MODE_MIRROR || sp->mode == SP_MODE_INVERTED,
+                     SP_CHAN_RIGHT, &rect);
         break;
     default:
         drawSpectrum(clear, true, false, SP_CHAN_BOTH, &rect);
@@ -767,6 +772,7 @@ void canvasShowSpectrum(bool clear)
     switch (sp->mode) {
     case SP_MODE_STEREO:
     case SP_MODE_MIRROR:
+    case SP_MODE_INVERTED:
     case SP_MODE_ANTIMIRROR:
     case SP_MODE_MIXED:
         drawSpectrumMode(clear, glcdGet()->rect);

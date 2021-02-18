@@ -55,9 +55,9 @@ const char *const labels_en[LABEL_END] = {
 
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stereo",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIRROR]      = "Mirror",
+    [LABEL_SPECTRUM_MODE + SP_MODE_INVERTED]    = "Inverted",
     [LABEL_SPECTRUM_MODE + SP_MODE_ANTIMIRROR]  = "Antimirror",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Mixed",
-    [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Waterfall",
 
     [LABEL_PAL_MODE + PAL_SNOW]         = "Snow",
     [LABEL_PAL_MODE + PAL_AQUA]         = "Aqua",

@@ -264,8 +264,8 @@ static void menuValueChange(int8_t diff)
         break;
 
     case MENU_SPECTRUM_MODE:
-        if (menu.value > SP_MODE_END - 1)
-            menu.value = SP_MODE_END - 1;
+        if (menu.value > SP_MODE_MIXED)
+            menu.value = SP_MODE_MIXED;
         if (menu.value < SP_MODE_STEREO)
             menu.value = SP_MODE_STEREO;
         break;

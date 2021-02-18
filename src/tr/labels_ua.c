@@ -55,9 +55,9 @@ const char *const labels_ua [LABEL_END] = {
 
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Стерео",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIRROR]      = "Дзеркало",
+    [LABEL_SPECTRUM_MODE + SP_MODE_INVERTED]    = "Інверсно",
     [LABEL_SPECTRUM_MODE + SP_MODE_ANTIMIRROR]  = "Антидзеркало",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Суміщення",
-    [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Водоспад",
 
     [LABEL_PAL_MODE + PAL_SNOW]         = "Сніг",
     [LABEL_PAL_MODE + PAL_AQUA]         = "Вода",

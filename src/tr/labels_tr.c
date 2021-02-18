@@ -55,9 +55,9 @@ const char *const labels_tr[LABEL_END] = {
 
     [LABEL_SPECTRUM_MODE + SP_MODE_STEREO]      = "Stereo",
 //    [LABEL_SPECTRUM_MODE + SP_MODE_MIRROR]      = "Mirror",
+//    [LABEL_SPECTRUM_MODE + SP_MODE_INVERTED]    = "Inverted",
 //    [LABEL_SPECTRUM_MODE + SP_MODE_ANTIMIRROR]  = "Antimirror",
     [LABEL_SPECTRUM_MODE + SP_MODE_MIXED]       = "Karışık",
-    [LABEL_SPECTRUM_MODE + SP_MODE_WATERFALL]   = "Renk Şelalesi",
 
     [LABEL_PAL_MODE + PAL_SNOW]         = "Kar Teması",
     [LABEL_PAL_MODE + PAL_AQUA]         = "Su Teması",
