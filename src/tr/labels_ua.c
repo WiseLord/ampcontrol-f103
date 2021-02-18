@@ -157,4 +157,5 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_RC_SP_MODE]      = "Режим спектру",
     [LABEL_MENU + MENU_RC_SCR_DEF]      = "Головний екран",
     [LABEL_MENU + MENU_RC_BT_IN_NEXT]   = "Наступний BT вх",
+    [LABEL_MENU + MENU_RC_TUNER_MONO]   = "Тюнер моно",
 };

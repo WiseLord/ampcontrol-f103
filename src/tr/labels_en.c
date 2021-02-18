@@ -163,4 +163,5 @@ const char *const labels_en[LABEL_END] = {
     [LABEL_MENU + MENU_RC_SP_MODE]      = "Spectrum mode",
     [LABEL_MENU + MENU_RC_SCR_DEF]      = "Default screen",
     [LABEL_MENU + MENU_RC_BT_IN_NEXT]   = "Next BT input",
+    [LABEL_MENU + MENU_RC_TUNER_MONO]   = "Tuner mono",
 };

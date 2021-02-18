@@ -51,6 +51,7 @@ extern "C" {
     CMD(SP_MODE)            \
     CMD(SCR_DEF)            \
     CMD(BT_IN_NEXT)         \
+    CMD(TUNER_MONO)         \
 
 typedef uint8_t ActionType;
 enum {
@@ -100,6 +101,7 @@ enum {
     ACTION_BT_INPUT_CHANGE,
 
     ACTION_TUNER_SET_FREQ,
+    ACTION_TUNER_FORCE_MONO,
     ACTION_TUNER_EDIT_NAME,
     ACTION_TUNER_DEL_STATION,
 

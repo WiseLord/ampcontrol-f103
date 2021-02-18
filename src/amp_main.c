@@ -1044,6 +1044,9 @@ static void actionRemapRemote(void)
     case RC_CMD_BT_IN_NEXT:
         actionSet(ACTION_BT_INPUT_CHANGE, +1);
         break;
+    case RC_CMD_TUNER_MONO:
+        actionSet(ACTION_TUNER_FORCE_MONO, FLAG_SWITCH);
+        break;
     default:
         break;
     }
@@ -1556,6 +1559,12 @@ void ampActionHandle(void)
         if (inType == IN_TUNER) {
             swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
             tunerSetFreq((uint16_t)action.value);
+            screenSet(SCREEN_AUDIO_INPUT, 2000);
+        }
+        break;
+    case ACTION_TUNER_FORCE_MONO:
+        if (inType == IN_TUNER) {
+            tunerSetForcedMono(!tuner->par.forcedMono);
             screenSet(SCREEN_AUDIO_INPUT, 2000);
         }
         break;
