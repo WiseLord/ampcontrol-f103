@@ -18,6 +18,7 @@ void tea5767SetFreq(uint16_t value);
 void tea5767Seek(int8_t direction);
 
 void tea5767SetMute(bool value);
+void tea5767SetForcedMono(bool value);
 
 void tea5767SetPower(bool value);
 

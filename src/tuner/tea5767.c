@@ -31,6 +31,7 @@ static const TunerApi tea5767Api = {
     .seek = tea5767Seek,
 
     .setMute = tea5767SetMute,
+    .setForcedMono = tea5767SetForcedMono,
 
     .setPower = tea5767SetPower,
 
@@ -221,6 +222,16 @@ void tea5767SetMute(bool value)
         wrBuf[0] |= TEA5767_MUTE;
     else
         wrBuf[0] &= ~TEA5767_MUTE;
+
+    tea5767WriteI2C(1);
+}
+
+void tea5767SetForcedMono(bool value)
+{
+    if (value)
+        wrBuf[2] |= TEA5767_MS;
+    else
+        wrBuf[2] &= ~TEA5767_MS;
 
     tea5767WriteI2C(3);
 }
