@@ -560,8 +560,6 @@ void canvasShowTime(bool clear)
 
 void canvasShowMenu(bool clear)
 {
-    (void)clear;
-
     const Layout *lt = canvas.layout;
 
     Menu *menu = menuGet();
@@ -576,22 +574,40 @@ void canvasShowMenu(bool clear)
     glcdSetFont(lt->menu.headFont);
     glcdSetFontColor(canvas.pal->fg);
 
-    glcdSetXY(2, 0);
+    static uint8_t lastActive = 0;
+    static uint8_t lastSelected = 0;
+    static uint8_t lastValue = 0;
 
-    char buf[64];
-    menuGetName(menu->parent, buf, sizeof(buf));
-    glcdWriteString(buf);
+    if (menu->active != lastActive ||
+        menu->selected != lastSelected ||
+        menu->value != lastValue) {
+        clear = true;
+    }
 
-    // Fill free space after header
-    glcdDrawRect(canvas.glcd->x, canvas.glcd->y, lt->rect.w - canvas.glcd->x, fHh, canvas.pal->bg);
+    if (clear) {
+        glcdSetXY(2, 0);
 
-    glcdDrawRect(0, dividerPos, lt->rect.w, 1, canvas.glcd->fontFg);
+        char buf[64];
+        menuGetName(menu->parent, buf, sizeof(buf));
+        glcdWriteString(buf);
+
+        // Fill free space after header
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y, lt->rect.w - canvas.glcd->x, fHh, canvas.pal->bg);
+        // Line between header and menu items
+        glcdDrawRect(0, dividerPos, lt->rect.w, 1, canvas.glcd->fontFg);
+    }
 
     for (uint8_t idx = 0; idx < menu->listSize; idx++) {
         if (idx >= menu->dispOft && idx < items + menu->dispOft) {
-            drawMenuItem(idx, lt->menu.menuFont);
+            if (clear) {
+                drawMenuItem(idx, lt->menu.menuFont);
+            }
         }
     }
+
+    lastActive = menu->active;
+    lastSelected = menu->selected;
+    lastValue = menu->value;
 }
 
 void canvasShowTune(bool clear)
