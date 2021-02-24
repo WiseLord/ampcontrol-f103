@@ -192,10 +192,17 @@ void mpcFinishDigitInput(void)
     mpc.flags |= MPC_FLAG_UPDATE_TRACKNUM;
 }
 
-void mpcLoadPlaylist(const char *name)
+void mpcLoadPlaylist(int16_t num)
 {
+    mpc.trackNum = -1;
+    mpc.flags |= MPC_FLAG_UPDATE_TRACKNUM;
+
+    if (num < 0 || num > 999) {
+        return;
+    }
+
     char buf[32];
-    snprintf(buf, sizeof(buf), "load %s", name);
+    snprintf(buf, sizeof(buf), "load(\"Playlist_%03d\")", num);
     mpcSendCmd(buf);
 }
 

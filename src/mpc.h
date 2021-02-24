@@ -50,7 +50,7 @@ void mpcSyncRequest(void);
 void mpcSendDigit(uint8_t dig);
 void mpcFinishDigitInput(void);
 
-void mpcLoadPlaylist(const char *name);
+void mpcLoadPlaylist(int16_t num);
 void mpcPlayTrack(int16_t num);
 
 void mpcSendMediaKey(MediaKey key);

@@ -1379,7 +1379,7 @@ void ampActionHandle(void)
         if (scrMode == SCREEN_TIME) {
             rtcEditTime(rtcGetMode(), (int8_t)(action.value));
             screenSet(SCREEN_TIME, 5000);
-        } else if (inType == IN_KARADIO) {
+        } else if (inType == IN_KARADIO || inType == IN_MPD) {
             swTimSet(SW_TIM_DIGIT_INPUT, 1000);
             mpcSendDigit((uint8_t)action.value);
             screenSet(SCREEN_AUDIO_INPUT, 1000);
@@ -1389,6 +1389,9 @@ void ampActionHandle(void)
         swTimSet(SW_TIM_DIGIT_INPUT, SW_TIM_OFF);
         if (inType == IN_KARADIO) {
             mpcFinishDigitInput();
+            screenSet(SCREEN_AUDIO_INPUT, 1000);
+        } else if (inType == IN_MPD) {
+            mpcLoadPlaylist(mpcGet()->trackNum);
             screenSet(SCREEN_AUDIO_INPUT, 1000);
         }
         break;
