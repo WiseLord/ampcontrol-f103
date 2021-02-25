@@ -123,9 +123,9 @@ void ili9486Sleep(bool value)
     CLR(DISP_CS);
 
     if (value) {
-    dispdrvSelectReg8(0x28);    // Display OFF
-    DISP_MDELAY(100);
-    dispdrvSelectReg8(0x10);
+        dispdrvSelectReg8(0x28);    // Display OFF
+        DISP_MDELAY(100);
+        dispdrvSelectReg8(0x10);
     } else {
         dispdrvSelectReg8(0x11);    // Display ON
         DISP_MDELAY(100);
@@ -146,7 +146,6 @@ void ili9486SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     dispdrvSendData8((y >> 0) & 0xFF);
     dispdrvSendData8((y1 >> 8) & 0xFF);
     dispdrvSendData8((y1 >> 0) & 0xFF);
-
 
     dispdrvSelectReg8(0x2B);
     dispdrvSendData8((x >> 8) & 0xFF);

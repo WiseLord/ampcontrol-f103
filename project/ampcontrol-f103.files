@@ -74,6 +74,7 @@
 ../src/display/gc480x320/ili9486.c
 ../src/display/gc480x320/r61581.c
 ../src/display/gc480x320/rm68140.c
+../src/display/gc480x320/st7796s.c
 ../src/display/glcd.c
 ../src/display/glcd.h
 ../src/display/hw/stm32f1.h

@@ -98,7 +98,6 @@ void rm68140SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
     dispdrvSendData8((y1 >> 8) & 0xFF);
     dispdrvSendData8((y1 >> 0) & 0xFF);
 
-
     dispdrvSelectReg8(0x2B);
     dispdrvSendData8((x >> 8) & 0xFF);
     dispdrvSendData8((x >> 0) & 0xFF);

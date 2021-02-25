@@ -64,6 +64,7 @@ do
   compile_display ${STM32_MCU} "ILI9486"   "8BIT"
   compile_display ${STM32_MCU} "R61581"    "8BIT"
   compile_display ${STM32_MCU} "RM68140"   "8BIT"
+  compile_display ${STM32_MCU} "ST7796S"   "8BIT"
 done
 
 make clean
