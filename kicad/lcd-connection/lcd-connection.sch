@@ -81,58 +81,58 @@ VCC pulled
 $Comp
 L Connector_Generic:Conn_01x08 J21
 U 1 1 603A2A1A
-P 5800 3700
-F 0 "J21" H 5800 4100 50  0000 C CNN
-F 1 "Arduino_Digital_Low" V 5900 3650 50  0000 C CNN
-F 2 "" H 5800 3700 50  0001 C CNN
-F 3 "~" H 5800 3700 50  0001 C CNN
-	1    5800 3700
+P 5900 3700
+F 0 "J21" H 5900 4100 50  0000 C CNN
+F 1 "Arduino_Digital_Low" V 6000 3650 50  0000 C CNN
+F 2 "" H 5900 3700 50  0001 C CNN
+F 3 "~" H 5900 3700 50  0001 C CNN
+	1    5900 3700
 	-1   0    0    -1  
 $EndComp
 Wire Wire Line
-	6000 3400 6400 3400
+	6100 3400 6500 3400
 Wire Wire Line
-	6400 3500 6000 3500
+	6500 3500 6100 3500
 Wire Wire Line
-	6000 3600 6400 3600
+	6100 3600 6500 3600
 Wire Wire Line
-	6400 3700 6000 3700
+	6500 3700 6100 3700
 Wire Wire Line
-	6000 3800 6400 3800
+	6100 3800 6500 3800
 Wire Wire Line
-	6400 3900 6000 3900
-Text Label 6400 3400 2    50   ~ 0
+	6500 3900 6100 3900
+Text Label 6500 3400 2    50   ~ 0
 LCD_D7
-Text Label 6400 3500 2    50   ~ 0
+Text Label 6500 3500 2    50   ~ 0
 LCD_D6
-Text Label 6400 3600 2    50   ~ 0
+Text Label 6500 3600 2    50   ~ 0
 LCD_D5
-Text Label 6400 3700 2    50   ~ 0
+Text Label 6500 3700 2    50   ~ 0
 LCD_D4
-Text Label 6400 3800 2    50   ~ 0
+Text Label 6500 3800 2    50   ~ 0
 LCD_D3
-Text Label 6400 3900 2    50   ~ 0
+Text Label 6500 3900 2    50   ~ 0
 LCD_D2
 $Comp
 L Connector_Generic:Conn_01x10 J22
 U 1 1 603A6B52
-P 5800 2550
-F 0 "J22" H 5800 3050 50  0000 C CNN
-F 1 "Arduino_Digital_High" V 5900 2450 50  0000 C CNN
-F 2 "" H 5800 2550 50  0001 C CNN
-F 3 "~" H 5800 2550 50  0001 C CNN
-	1    5800 2550
+P 5900 2550
+F 0 "J22" H 5900 3050 50  0000 C CNN
+F 1 "Arduino_Digital_High" V 6000 2450 50  0000 C CNN
+F 2 "" H 5900 2550 50  0001 C CNN
+F 3 "~" H 5900 2550 50  0001 C CNN
+	1    5900 2550
 	-1   0    0    -1  
 $EndComp
-NoConn ~ 6000 4000
-NoConn ~ 6000 4100
+NoConn ~ 6100 4000
+NoConn ~ 6100 4100
 Wire Wire Line
-	6000 2950 6400 2950
+	6100 2950 6500 2950
 Wire Wire Line
-	6400 3050 6000 3050
-Text Label 6400 2950 2    50   ~ 0
+	6500 3050 6100 3050
+Text Label 6500 2950 2    50   ~ 0
 LCC_D1
-Text Label 6400 3050 2    50   ~ 0
+Text Label 6500 3050 2    50   ~ 0
 LCD_D0
 $Comp
 L Connector_Generic:Conn_01x08 J20
@@ -145,14 +145,14 @@ F 3 "~" H 4550 3700 50  0001 C CNN
 	1    4550 3700
 	-1   0    0    -1  
 $EndComp
-NoConn ~ 6000 2850
-NoConn ~ 6000 2750
-NoConn ~ 6000 2650
-NoConn ~ 6000 2550
-NoConn ~ 6000 2450
-NoConn ~ 6000 2350
-NoConn ~ 6000 2250
-NoConn ~ 6000 2150
+NoConn ~ 6100 2850
+NoConn ~ 6100 2750
+NoConn ~ 6100 2650
+NoConn ~ 6100 2550
+NoConn ~ 6100 2450
+NoConn ~ 6100 2350
+NoConn ~ 6100 2250
+NoConn ~ 6100 2150
 Wire Wire Line
 	5150 4000 4750 4000
 Text Label 5150 4000 2    50   ~ 0
@@ -212,4 +212,8 @@ Wire Notes Line
 	6600 4300 6600 1800
 Wire Notes Line
 	6600 1800 4350 1800
+Text Notes 5250 2150 0    50   ~ 0
+VCC pulled
+Text Notes 5250 2550 0    50   ~ 0
+VCC pulled
 $EndSCHEMATC

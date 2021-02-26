@@ -1,6 +1,6 @@
 # UART control description
 
-Commands to control the device via uart are shown below.
+Commands to control the device via USART1 are shown below.
 
 Lines starting with '##' are the output from the device,
 an answer on user actions or control commands.
