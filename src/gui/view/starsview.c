@@ -5,7 +5,7 @@
 #include "display/glcd.h"
 #include "fft.h"
 
-#define STAR_NUM    128
+#define STAR_NUM    64
 #define FRAMES      64
 
 typedef struct {
@@ -16,7 +16,7 @@ typedef struct {
 
 static int16_t getDistance(uint8_t frameNum)
 {
-    return ((FRAMES - frameNum + 1) * (FRAMES - frameNum) / 2 + 1024) / 8 - 128;
+    return ((FRAMES - frameNum + 1) * (FRAMES - frameNum) / 2 + 512) / 4 - 128;
 }
 
 void drawStar(Star *star, color_t color, int16_t offset)
@@ -24,6 +24,7 @@ void drawStar(Star *star, color_t color, int16_t offset)
     GlcdRect *rect = glcdGetRect();
 
     int16_t distance = getDistance(star->frameNum);
+    distance += rect->h / 16; // Don't show frames in the center
 
     int16_t x = fft_cos(star->angle) * distance / 32768 + rect->w / 2;
     int16_t y = fft_sin(star->angle) * distance / 32768 + rect->h / 2 + offset;
