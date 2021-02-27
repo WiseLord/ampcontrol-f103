@@ -97,7 +97,7 @@ static const EE_Cell eeMap[] = {
     [PARAM_SYSTEM_MUTE_LOW] =   {0x76,  false},
 
     [PARAM_I2C_EXT_IN_STAT] =   {0x78,  I2C_ADDR_DISABLED},
-    [PARAM_I2C_EXT_BT]      =   {0x79,  I2C_ADDR_DISABLED},
+    [PARAM_I2C_EXT_GPIO]    =   {0x79,  I2C_ADDR_DISABLED},
 
     FOREACH_CMD(GENERATE_EE_RC_MAP)
 };

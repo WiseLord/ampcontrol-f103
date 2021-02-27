@@ -97,7 +97,7 @@ const char *const labels_en[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_MUTE_LOW] = "MUTE active 0",
 
     [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Input status",
-    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth control",
+    [LABEL_MENU + MENU_I2C_EXT_GPIO]    = "GPIO control",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Audioproc",
     [LABEL_MENU + MENU_AUDIO_SHOWDB]    = "Show in dB",

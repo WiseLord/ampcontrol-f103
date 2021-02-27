@@ -26,12 +26,9 @@ typedef struct {
     BtInput input;
 } BTCtx;
 
-void btInit(void);
 BTCtx *btCtxGet(void);
 
 void btSendMediaKey(MediaKey key);
-
-void btReleaseKey(void);
 
 BtInput btGetInput(void);
 void btAddInput(BtInput value);

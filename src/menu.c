@@ -48,7 +48,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_SYSTEM_MUTE_LOW]  = {MENU_SETUP_SYSTEM,       MENU_TYPE_BOOL,     PARAM_SYSTEM_MUTE_LOW},
 
     [MENU_I2C_EXT_IN_STAT]  = {MENU_SYSTEM_I2C_EXT,     MENU_TYPE_ENUM,     PARAM_I2C_EXT_IN_STAT},
-    [MENU_I2C_EXT_BT]       = {MENU_SYSTEM_I2C_EXT,     MENU_TYPE_ENUM,     PARAM_I2C_EXT_BT},
+    [MENU_I2C_EXT_GPIO]     = {MENU_SYSTEM_I2C_EXT,     MENU_TYPE_ENUM,     PARAM_I2C_EXT_GPIO},
 
     [MENU_AUDIO_IC]         = {MENU_SETUP_AUDIO,        MENU_TYPE_ENUM,     PARAM_AUDIO_IC},
     [MENU_AUDIO_SHOWDB]     = {MENU_SETUP_AUDIO,        MENU_TYPE_BOOL,     PARAM_AUDIO_SHOWDB},
@@ -199,7 +199,7 @@ static void menuValueChange(int8_t diff)
         break;
 
     case MENU_I2C_EXT_IN_STAT:
-    case MENU_I2C_EXT_BT:
+    case MENU_I2C_EXT_GPIO:
         if (menu.value > I2C_ADDR_END - 1)
             menu.value = I2C_ADDR_END - 1;
         if (menu.value < I2C_ADDR_DISABLED)
@@ -569,11 +569,11 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
         break;
 
     case MENU_I2C_EXT_IN_STAT:
-    case MENU_I2C_EXT_BT:
+    case MENU_I2C_EXT_GPIO:
         if (value == I2C_ADDR_DISABLED) {
             ret = labelsGet(LABEL_BOOL_OFF);
         } else {
-            snprintf(str, len, "0x%02X", i2cexpGetAddr((uint8_t)value));
+            snprintf(str, len, "0x%02X", i2cExpGetAddr((uint8_t)value));
             return;
         }
         break;
@@ -643,7 +643,7 @@ static int16_t rtcCorr = 0;
 static bool stbyLow = false;
 static bool muteLow = false;
 static I2cAddrIdx i2cExtInIdx = I2C_ADDR_DISABLED;
-static I2cAddrIdx i2cBtIdx = I2C_ADDR_DISABLED;
+static I2cAddrIdx i2cGpioIdx = I2C_ADDR_DISABLED;
 static int8_t brStby = 3;
 static int8_t brWork = LCD_BR_MAX;
 
@@ -807,8 +807,8 @@ int16_t settingsGet(Param param)
     case PARAM_I2C_EXT_IN_STAT:
         ret = i2cExtInIdx;
         break;
-    case PARAM_I2C_EXT_BT:
-        ret = i2cBtIdx;
+    case PARAM_I2C_EXT_GPIO:
+        ret = i2cGpioIdx;
         break;
 
     default:
@@ -980,8 +980,8 @@ void settingsSet(Param param, int16_t value)
     case PARAM_I2C_EXT_IN_STAT:
         i2cExtInIdx = (I2cAddrIdx)value;
         break;
-    case PARAM_I2C_EXT_BT:
-        i2cBtIdx = (I2cAddrIdx)value;
+    case PARAM_I2C_EXT_GPIO:
+        i2cGpioIdx = (I2cAddrIdx)value;
         break;
 
     default:

@@ -1,55 +1,31 @@
 #include "bt.h"
 
 #include "debug.h"
-#include "i2c.h"
 #include "i2cexp.h"
 #include "menu.h"
-#include "settings.h"
 #include "string.h"
-#include "swtimers.h"
 #include "utils.h"
 
-#define PCF8574_RELEASED    0x00
-
-//#define PCF8574_VOL_MINUS   (1 << 7)
-//#define PCF8574_VOL_PLUS    (1 << 6)
-#define PCF8574_NEXT_TRACK  (1 << 5)
-#define PCF8574_PREV_TRACK  (1 << 4)
-#define PCF8574_NEXT_INPUT  (1 << 3)
-#define PCF8574_PLAY_PAUSE  (1 << 2)
-//#define PCF8574_LED1        (1 << 1)
-//#define PCF8574_LED0        (1 << 0)
-
-static I2cAddrIdx i2cAddrIdx = I2C_ADDR_DISABLED;
-
 static BTCtx btCtx;
-
-static void btStartKeyTimer(void)
-{
-    swTimSet(SW_TIM_BT_KEY, 200);
-}
 
 static void btPlay()
 {
     dbg("AT+CB");
-    i2cexpSend(i2cAddrIdx, PCF8574_PLAY_PAUSE);
-    btStartKeyTimer();
+    i2cExpGpioKeyPress(PCF8574_BT_PLAY_PAUSE);
 }
 
 static void btPrevTrack(void)
 {
     dbg("AT+CD");
 
-    i2cexpSend(i2cAddrIdx, PCF8574_PREV_TRACK);
-    btStartKeyTimer();
+    i2cExpGpioKeyPress(PCF8574_BT_PREV_TRACK);
 }
 
 static void btNextTrack(void)
 {
     dbg("AT+CC");
 
-    i2cexpSend(i2cAddrIdx, PCF8574_NEXT_TRACK);
-    btStartKeyTimer();
+    i2cExpGpioKeyPress(PCF8574_BT_NEXT_TRACK);
 }
 
 static void utf16To8(char *ustr, char *str, int16_t size)
@@ -71,15 +47,6 @@ static void utf16To8(char *ustr, char *str, int16_t size)
     *str = 0;
 }
 
-void btInit(void)
-{
-    i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_BT);
-
-    if (i2cAddrIdx != I2C_ADDR_DISABLED) {
-        i2cexpSend(i2cAddrIdx, PCF8574_RELEASED);
-    }
-}
-
 BTCtx *btCtxGet(void)
 {
     return &btCtx;
@@ -99,14 +66,6 @@ void btSendMediaKey(MediaKey key)
         break;
     default:
         break;
-    }
-}
-
-void btReleaseKey(void)
-{
-    if (swTimGet(SW_TIM_BT_KEY) == 0) {
-        i2cexpSend(i2cAddrIdx, PCF8574_RELEASED);
-        swTimSet(SW_TIM_BT_KEY, SW_TIM_OFF);
     }
 }
 
@@ -144,8 +103,7 @@ void btSetInput(BtInput value)
 void btNextInput()
 {
     dbg("AT+CM00");
-    i2cexpSend(i2cAddrIdx, PCF8574_NEXT_INPUT);
-    btStartKeyTimer();
+    i2cExpGpioKeyPress(PCF8574_BT_NEXT_INPUT);
 }
 
 char *btGetSongName(void)

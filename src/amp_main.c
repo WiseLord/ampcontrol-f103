@@ -269,10 +269,10 @@ static void inputSetPower(bool value)
     if (i2cAddrIdx != I2C_ADDR_DISABLED) {
         if (!i2cIsEnabled(I2C_AMP)) {
             i2cInit(I2C_AMP, 100000, 0x00);
-            i2cexpSend(i2cAddrIdx, priv.inputStatus);
+            i2cExpSend(i2cAddrIdx, priv.inputStatus);
             i2cDeInit(I2C_AMP);
         } else {
-            i2cexpSend(i2cAddrIdx, priv.inputStatus);
+            i2cExpSend(i2cAddrIdx, priv.inputStatus);
         }
     }
 }
@@ -408,7 +408,7 @@ void ampInitHw(void)
         swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
         tunerInit();
 
-        btInit();
+        i2cExpGpioInit();
 
         amp->status = AMP_STATUS_HW_READY;
         controlReportAll();
@@ -1281,7 +1281,7 @@ void ampSyncFromOthers(void)
 
 void ampSyncToOthers(void)
 {
-    btReleaseKey();
+    i2cExpGpioKeyRelease();
 }
 
 void ampActionQueue(ActionType type, int16_t value)

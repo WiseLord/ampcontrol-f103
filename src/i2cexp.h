@@ -7,6 +7,16 @@ extern "C" {
 
 #include <stdint.h>
 
+#define PCF8574_RELEASED    0x00
+
+typedef uint8_t Pcf8574Gpio;
+
+// Bluetooth module buttons
+#define PCF8574_BT_NEXT_TRACK   (1 << 5)
+#define PCF8574_BT_PREV_TRACK   (1 << 4)
+#define PCF8574_BT_NEXT_INPUT   (1 << 3)
+#define PCF8574_BT_PLAY_PAUSE   (1 << 2)
+
 typedef uint8_t I2cAddrIdx;
 enum {
     I2C_ADDR_DISABLED,
@@ -32,9 +42,12 @@ enum {
     I2C_ADDR_END,
 };
 
-uint8_t i2cexpGetAddr(I2cAddrIdx idx);
+uint8_t i2cExpGetAddr(I2cAddrIdx idx);
+void i2cExpSend(I2cAddrIdx idx, uint8_t data);
 
-void i2cexpSend(I2cAddrIdx idx, uint8_t data);
+void i2cExpGpioInit(void);
+void i2cExpGpioKeyPress(Pcf8574Gpio gpio);
+void i2cExpGpioKeyRelease(void);
 
 #ifdef __cplusplus
 }

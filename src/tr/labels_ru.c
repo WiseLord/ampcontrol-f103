@@ -91,7 +91,7 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_MENU + MENU_SYSTEM_MUTE_LOW] = "MUTE активный 0",
 
     [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Статус входов",
-    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Контроль Bluetooth",
+    [LABEL_MENU + MENU_I2C_EXT_GPIO]    = "Контроль GPIO",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Аудиопроцессор",
     [LABEL_MENU + MENU_AUDIO_SHOWDB]    = "Показывать в дБ",

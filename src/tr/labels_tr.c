@@ -91,7 +91,7 @@ const char *const labels_tr[LABEL_END] = {
 //    [LABEL_MENU + MENU_SYSTEM_MUTE_LOW] = "MUTE active 0",
 
     [LABEL_MENU + MENU_I2C_EXT_IN_STAT] = "Giriş Durumu",
-    [LABEL_MENU + MENU_I2C_EXT_BT]      = "Bluetooth Kontrolü",
+    [LABEL_MENU + MENU_I2C_EXT_GPIO]    = "GPIO Kontrolü",
 
     [LABEL_MENU + MENU_AUDIO_IC]        = "Ses İşlemci Modeli",
 //    [LABEL_MENU + MENU_AUDIO_SHOWDB]    = "Show in dB",
