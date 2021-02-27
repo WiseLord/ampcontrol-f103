@@ -9,10 +9,9 @@ DISPVAR = SPI
 
 APROC_LIST = TDA7439 TDA731X PT232X TDA7418 TDA7719
 TUNER_LIST = RDA580X SI470X TEA5767
-FEATURE_LIST =
+FEATURE_LIST = USE_I2C_EXP ENABLE_USB
 
 DEBUG_KARADIO = YES
-ENABLE_USB = YES
 
 DEBUG = 1
 OPT = -Os
@@ -38,6 +37,7 @@ TARGET = $(call lc, $(PROJECT)_$(STM32_MCU)_$(DISPLAY)_$(DISPVAR))
 
 C_DEFS += -DUSE_FULL_LL_DRIVER -D$(STM32_GROUP) -D_$(STM32_MCU)
 C_DEFS += -DI2C1_BUF_SIZE=16 -D I2C2_BUF_SIZE=0
+C_DEFS += $(addprefix -D_, $(FEATURE_LIST))
 
 ifneq (,$(filter $(DISPLAY), \
   DISP24BIT    \
@@ -182,8 +182,8 @@ C_INCLUDES += \
   -Idrivers/CMSIS/Device/ST/$(STM32_FAMILY)xx/Include \
   -Idrivers/CMSIS/Include \
   -Isystem
-
-ifeq "$(ENABLE_USB)" "YES"
+  
+ifneq (,$(filter $(FEATURE_LIST), ENABLE_USB))
   C_SOURCES += \
     drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_hal_pcd.c \
     drivers/$(STM32_FAMILY)xx_HAL_Driver/Src/$(call lc, $(STM32_FAMILY))xx_hal_pcd_ex.c \
@@ -201,8 +201,6 @@ ifeq "$(ENABLE_USB)" "YES"
   C_INCLUDES += \
     -Idrivers/STM32_USB_Device_Library/Core/Inc \
     -Iusb
-
-  C_DEFS += -D_ENABLE_USB
 endif
 
 AS_DEFS +=

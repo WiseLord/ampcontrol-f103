@@ -348,6 +348,8 @@ static void ampVolumeInit(void)
 
 static void ampExitStby(void)
 {
+    mpcSchedPower(true);
+
     ampReadSettings();
 
     ampPinStby(false);      // Power on amplifier
@@ -363,6 +365,8 @@ static void ampExitStby(void)
 static void ampEnterStby(void)
 {
     ampSendMediaKey(MEDIAKEY_STOP);
+
+    mpcSchedPower(false);
 
     swTimSet(SW_TIM_STBY, SW_TIM_OFF);
     swTimSet(SW_TIM_SILENCE, SW_TIM_OFF);
@@ -427,6 +431,7 @@ void ampInitHw(void)
     case AMP_STATUS_STBY:
         swTimSet(SW_TIM_AMP_INIT, SW_TIM_OFF);
         ampPinStby(true);
+
         break;
     }
 }

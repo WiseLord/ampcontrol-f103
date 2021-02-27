@@ -11,21 +11,21 @@ static BTCtx btCtx;
 static void btPlay()
 {
     dbg("AT+CB");
-    i2cExpGpioKeyPress(PCF8574_BT_PLAY_PAUSE);
+    i2cExpGpioKeyPress(BT_PLAY_PAUSE);
 }
 
 static void btPrevTrack(void)
 {
     dbg("AT+CD");
 
-    i2cExpGpioKeyPress(PCF8574_BT_PREV_TRACK);
+    i2cExpGpioKeyPress(BT_PREV_TRACK);
 }
 
 static void btNextTrack(void)
 {
     dbg("AT+CC");
 
-    i2cExpGpioKeyPress(PCF8574_BT_NEXT_TRACK);
+    i2cExpGpioKeyPress(BT_NEXT_TRACK);
 }
 
 static void utf16To8(char *ustr, char *str, int16_t size)
@@ -103,7 +103,7 @@ void btSetInput(BtInput value)
 void btNextInput()
 {
     dbg("AT+CM00");
-    i2cExpGpioKeyPress(PCF8574_BT_NEXT_INPUT);
+    i2cExpGpioKeyPress(BT_NEXT_INPUT);
 }
 
 char *btGetSongName(void)

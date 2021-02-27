@@ -7,6 +7,8 @@
 
 static I2cAddrIdx idxGpio = I2C_ADDR_DISABLED;
 
+static Pcf8574Gpio pcf8574Gpio = 0x00;
+
 uint8_t i2cExpGetAddr(I2cAddrIdx idx)
 {
     uint8_t addr = 0x40;
@@ -33,30 +35,29 @@ void i2cExpSend(I2cAddrIdx idx, uint8_t data)
     i2cTransmit(I2C_AMP);
 }
 
-static void i2cExpGpioKeyTimer(void)
-{
-    swTimSet(SW_TIM_GPIO_KEY, 200);
-}
-
 void i2cExpGpioInit(void)
 {
     idxGpio = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_GPIO);
 
     if (idxGpio != I2C_ADDR_DISABLED) {
-        i2cExpSend(idxGpio, PCF8574_RELEASED);
+        i2cExpSend(idxGpio, pcf8574Gpio);
     }
 }
 
 void i2cExpGpioKeyPress(Pcf8574Gpio gpio)
 {
-    i2cExpSend(idxGpio, gpio);
-    i2cExpGpioKeyTimer();
+    pcf8574Gpio |= gpio;
+
+    i2cExpSend(idxGpio, pcf8574Gpio);
+    swTimSet(SW_TIM_GPIO_KEY, 200);
 }
 
 void i2cExpGpioKeyRelease(void)
 {
+    pcf8574Gpio &= ~BT_BTN_MASK;
+
     if (swTimGet(SW_TIM_GPIO_KEY) == 0) {
-        i2cExpSend(idxGpio, PCF8574_RELEASED);
+        i2cExpSend(idxGpio, pcf8574Gpio);
         swTimSet(SW_TIM_GPIO_KEY, SW_TIM_OFF);
     }
 }

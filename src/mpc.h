@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "mediakey.h"
@@ -56,6 +57,8 @@ void mpcPlayTrack(int16_t num);
 void mpcSendMediaKey(MediaKey key);
 
 void mpcGetData(void);
+
+void mpcSchedPower(bool value);
 
 #ifdef __cplusplus
 }
