@@ -191,8 +191,11 @@ class Player(object):
         status = self.client.status()
         if self.cmd_queue:
             cmd = self.cmd_queue.pop(0)
-            self.parse_cmd(cmd, status)
-            status = self.client.status()
+            try:
+                self.parse_cmd(cmd, status)
+                status = self.client.status()
+            except:
+                pass
         song = self.client.currentsong()
 
         player_info = {

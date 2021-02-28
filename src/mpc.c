@@ -149,6 +149,11 @@ static void parseLine(char *line)
     }
 }
 
+static void mpcReset(void)
+{
+    updateMeta("Booting...");
+}
+
 void mpcInit(void)
 {
     ringBufInit(&rbuf, rbData, sizeof(rbData));
@@ -156,6 +161,8 @@ void mpcInit(void)
 
     usartInit(USART_MPC, 115200);
     usartSetRxIRQ(USART_MPC, true);
+
+    mpcReset();
 }
 
 Mpc *mpcGet(void)
@@ -275,6 +282,7 @@ void mpcSchedPower(bool value)
 {
     if (!value) {
         mpcSendCmd("poweroff");
+        mpcReset();
     }
 }
 
