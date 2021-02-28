@@ -118,6 +118,8 @@ enum {
     ACTION_SP_MODE,
     ACTION_SCR_DEF,
 
+    ACTION_MPD_POWEROFF,
+
     ACTION_TYPE_END
 };
 

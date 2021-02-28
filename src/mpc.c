@@ -273,6 +273,9 @@ void mpcGetData(void)
 
 void mpcSchedPower(bool value)
 {
+    if (!value) {
+        mpcSendCmd("poweroff");
+    }
 }
 
 void USART_MPC_HANDLER(void)

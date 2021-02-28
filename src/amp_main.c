@@ -348,7 +348,7 @@ static void ampVolumeInit(void)
 
 static void ampExitStby(void)
 {
-    mpcSchedPower(true);
+    swTimSet(SW_TIM_MPD_POWEROFF, SW_TIM_OFF);
 
     ampReadSettings();
 
@@ -364,9 +364,8 @@ static void ampExitStby(void)
 
 static void ampEnterStby(void)
 {
-    ampSendMediaKey(MEDIAKEY_STOP);
-
-    mpcSchedPower(false);
+    swTimSet(SW_TIM_MPD_POWEROFF, 60000); // Turn off MPD after 60 seconds
+    mpcSendMediaKey(MEDIAKEY_STOP);
 
     swTimSet(SW_TIM_STBY, SW_TIM_OFF);
     swTimSet(SW_TIM_SILENCE, SW_TIM_OFF);
@@ -774,6 +773,8 @@ static void actionGetTimers(void)
         actionSet(ACTION_INIT_HW, 0);
     } else if (swTimGet(SW_TIM_RTC_INIT) == 0) {
         actionSet(ACTION_INIT_RTC, 0);
+    } else if (swTimGet(SW_TIM_MPD_POWEROFF) == 0) {
+        actionSet(ACTION_MPD_POWEROFF, 0);
     } else if (swTimGet(SW_TIM_SOFT_VOLUME) == 0) {
         actionSet(ACTION_RESTORE_VOLUME, priv.volume);
     } else if (swTimGet(SW_TIM_DIGIT_INPUT) == 0) {
@@ -1186,7 +1187,8 @@ static void actionRemapCommon(void)
          ACTION_INIT_HW != action.type &&
          ACTION_REMOTE != action.type &&
          ACTION_INIT_RTC != action.type &&
-         ACTION_MENU_SELECT != action.type)) {
+         ACTION_MENU_SELECT != action.type &&
+         ACTION_MPD_POWEROFF != action.type)) {
         actionSet(ACTION_NONE, 0);
     }
 
@@ -1644,6 +1646,11 @@ void ampActionHandle(void)
             }
         }
         screenSet(amp->defScreen, 3000);
+        break;
+
+    case ACTION_MPD_POWEROFF:
+        mpcSchedPower(false);
+        swTimSet(SW_TIM_MPD_POWEROFF, SW_TIM_OFF);
         break;
     default:
         break;

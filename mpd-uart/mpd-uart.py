@@ -7,6 +7,7 @@ import serial
 import mpd
 
 import socket
+import subprocess
 
 
 def do_meta(song):
@@ -161,6 +162,11 @@ class Player(object):
             self.client.single(int(not int(status.get(cmd))))
         if cmd == 'consume':
             self.client.consume(int(not int(status.get(cmd))))
+        if cmd == 'poweroff':
+            try:
+               subprocess.call(['sh', '/home/pi/poweroff.sh'])
+            except:
+                pass
 
     def notify_fn(self):
         while self.alive:
