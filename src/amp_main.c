@@ -46,6 +46,7 @@ typedef struct {
     int8_t volume;
 
     int8_t brightness;
+    uint8_t signalCnt;
 } AmpPriv;
 
 static void actionGetRemote(void);
@@ -360,6 +361,7 @@ static void ampExitStby(void)
 
     swTimSet(SW_TIM_AMP_INIT, 600);
     swTimSet(SW_TIM_SP_CONVERT, SW_TIM_ON);
+    swTimSet(SW_TIM_CHECK_SIGNAL, SW_TIM_ON);
 }
 
 static void ampEnterStby(void)
@@ -371,6 +373,7 @@ static void ampEnterStby(void)
     swTimSet(SW_TIM_SILENCE, SW_TIM_OFF);
     swTimSet(SW_TIM_INPUT_POLL, SW_TIM_OFF);
     swTimSet(SW_TIM_SP_CONVERT, SW_TIM_OFF);
+    swTimSet(SW_TIM_CHECK_SIGNAL, SW_TIM_OFF);
 
     settingsSet(PARAM_DISPLAY_DEF, amp->defScreen);
     settingsStore(PARAM_DISPLAY_DEF, amp->defScreen);
@@ -1663,12 +1666,23 @@ void ampActionHandle(void)
             actionResetSilenceTimer();
         }
 
-        // Reset silence timer on signal
-        if (spCheckSignal()) {
-            actionResetSilenceTimer();
-            if (swTimGet(SW_TIM_DISPLAY) == SW_TIM_OFF) {
-                actionDispExpired();
+        if (swTimGet(SW_TIM_CHECK_SIGNAL) == 0) {
+            // Reset silence timer on signal
+            if (spCheckSignal()) {
+                if (priv.signalCnt >= 5) { // 500ms produced 5 positive checks
+                    actionResetSilenceTimer();
+                    if (swTimGet(SW_TIM_DISPLAY) == SW_TIM_OFF) {
+                        actionDispExpired();
+                    }
+                } else {
+                    priv.signalCnt++;
+                }
+            } else {
+                if (priv.signalCnt > 0) {
+                    priv.signalCnt--;
+                }
             }
+            swTimSet(SW_TIM_CHECK_SIGNAL, 100);
         }
     }
 
