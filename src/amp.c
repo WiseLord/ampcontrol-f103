@@ -1,6 +1,10 @@
 #include "amp.h"
 
+#include <stdio.h>
+#include <string.h>
+
 #include "input.h"
+#include "rtc.h"
 #include "utils.h"
 
 static Amp amp = {
@@ -60,4 +64,25 @@ Action ampGetEncoder(void)
     }
 
     return ret;
+}
+
+void ampUpdateDate(char *date)
+{
+    int year, month, day, hour, min, sec;
+
+    int ret = sscanf(date, "%04d-%02d-%02dT%02d:%02d:%02d",
+                     &year, &month, &day, &hour, &min, &sec);
+
+    RTC_type rtc;
+
+    if (ret == 6) {
+        rtc.year = year % 100;
+        rtc.month = month;
+        rtc.date = day;
+        rtc.hour = hour;
+        rtc.min = min;
+        rtc.sec = sec;
+    }
+
+    rtcUpdateTime(&rtc);
 }

@@ -244,8 +244,10 @@ static void inputEnable(void)
         tunerSetFreq(tuner->status.freq);
         break;
     case IN_MPD:
-        mpcSyncRequest();
     case IN_KARADIO:
+        ampSendMediaKey(MEDIAKEY_PLAY);
+        mpcSyncRequest();
+        break;
     case IN_BLUETOOTH:
         ampSendMediaKey(MEDIAKEY_PLAY);
         break;

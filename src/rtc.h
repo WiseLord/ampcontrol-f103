@@ -61,6 +61,7 @@ void rtcInit(void);
 void rtcSetCb(RtcCb cb);
 void rtcSetCorrection(int16_t value);
 
+void rtcUpdateTime(RTC_type *rtc);
 void rtcGetTime(RTC_type *rtc);
 void rtcSetTime(RtcMode mode, int8_t value);
 void rtcChangeTime(RtcMode mode, int8_t diff);

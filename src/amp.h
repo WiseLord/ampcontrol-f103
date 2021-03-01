@@ -118,6 +118,8 @@ void ampSelectTune(AudioTune tune);
 void ampActionQueue(ActionType type, int16_t value);
 void ampSetBrightness(int8_t value);
 
+void ampUpdateDate(char *date);
+
 #ifdef __cplusplus
 }
 #endif

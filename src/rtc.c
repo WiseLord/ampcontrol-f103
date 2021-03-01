@@ -286,6 +286,11 @@ void RTC_IRQHandler(void)
 }
 #endif
 
+void rtcUpdateTime(RTC_type *rtc)
+{
+    rtcUpdate(rtc, RTC_NOEDIT, 0);
+}
+
 void rtcGetTime(RTC_type *rtc)
 {
     getRtc(rtc);
