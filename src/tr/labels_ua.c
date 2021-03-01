@@ -37,6 +37,8 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_BOOL_OFF]        = "ВИМКН",
     [LABEL_BOOL_ON]         = "УВІМК",
 
+    [LABEL_MPD_WAIT]        = "Очікую MPD...",
+
     [LABEL_TUNER_FM_STATION_NAME]   = "Ім'я FM станції",
 
     [LABEL_TUNER_IC + TUNER_IC_NO] = "Немає",

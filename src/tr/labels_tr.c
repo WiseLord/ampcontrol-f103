@@ -37,6 +37,8 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_BOOL_OFF]        = "Kapalı",
     [LABEL_BOOL_ON]         = "Açık",
 
+//    [LABEL_MPD_WAIT]        = "Wait for MPD...",
+
     [LABEL_TUNER_FM_STATION_NAME]   = "FM Radyo İsimleri:",
 
     [LABEL_TUNER_IC + TUNER_IC_NO]      = "Yok",

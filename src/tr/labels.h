@@ -67,6 +67,8 @@ typedef enum {
     LABEL_BOOL_OFF,
     LABEL_BOOL_ON,
 
+    LABEL_MPD_WAIT,
+
     LABEL_TUNER_FM_STATION_NAME,
 
     LABEL_TUNER_IC,

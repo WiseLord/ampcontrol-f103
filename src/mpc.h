@@ -25,6 +25,8 @@ enum {
 
 typedef uint16_t MpcStatus;
 enum {
+    MPC_IDLE    = 0x0000,
+
     MPC_PLAYING = 0x0001,
     MPC_PAUSED  = 0x0002,
     MPC_REPEAT  = 0x0010,
@@ -34,7 +36,7 @@ enum {
 };
 
 typedef struct {
-    uint16_t flags;
+    MpcFlags flags;
     MpcStatus status;
     int32_t trackNum;
     int32_t elapsed;

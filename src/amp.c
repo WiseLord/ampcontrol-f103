@@ -1,7 +1,6 @@
 #include "amp.h"
 
 #include <stdio.h>
-#include <string.h>
 
 #include "input.h"
 #include "rtc.h"

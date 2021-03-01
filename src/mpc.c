@@ -42,11 +42,19 @@ static void updateName(const char *str) // KaRadio only
     mpc.flags |= MPC_FLAG_UPDATE_NAME;
 }
 
+static void mpcReset(void)
+{
+    mpc.flags |= MPC_FLAG_UPDATE_STATUS;
+    mpc.status = MPC_IDLE;
+}
+
 static void parseSys(char *line)
 {
     if (utilIsPrefix(line, "DATE#:")) {
         char *date = line + sizeof("DATE#:");
         ampUpdateDate(date);
+    } else if (utilIsPrefix(line, "RESET")) {
+        mpcReset();
     }
 }
 
@@ -157,11 +165,6 @@ static void parseLine(char *line)
     } else if (utilIsPrefix(line, "I2S Speed:")) {
         onBootComplete();
     }
-}
-
-static void mpcReset(void)
-{
-    updateMeta("Booting...");
 }
 
 void mpcInit(void)

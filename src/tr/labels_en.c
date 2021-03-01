@@ -37,6 +37,8 @@ const char *const labels_en[LABEL_END] = {
     [LABEL_BOOL_OFF]        = "OFF",
     [LABEL_BOOL_ON]         = "ON",
 
+    [LABEL_MPD_WAIT]        = "Wait for MPD...",
+
     [LABEL_TUNER_FM_STATION_NAME]   = "FM station name",
 
     FOREACH_TUNER_IC(GENERATE_TUNER_IC_TEXT)

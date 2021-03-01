@@ -24,8 +24,8 @@ extern "C" {
 typedef void (*I2cRxFn)(int16_t rxBytes);
 typedef void (*I2cTxFn)(int16_t txBytes);
 
-uint8_t i2cInit(void *i2c, uint32_t ClockSpeed, uint8_t ownAddr);
-uint8_t i2cDeInit(void *i2c);
+bool i2cInit(void *i2c, uint32_t ClockSpeed, uint8_t ownAddr);
+bool i2cDeInit(void *i2c);
 bool i2cIsEnabled(void *i2c);
 
 void i2cSetRxCb(void *i2c, I2cRxFn cb);
@@ -33,10 +33,10 @@ void i2cSetTxCb(void *i2c, I2cTxFn cb);
 
 void i2cBegin(void *i2c, uint8_t addr);
 void i2cSend(void *i2c, uint8_t data);
-void i2cTransmit(void *i2c);
-void i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes);
+bool i2cTransmit(void *i2c);
+bool i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes);
 
-void i2cSlaveTransmitReceive(void *i2c, uint8_t *rxBuf, int16_t bytes);
+bool i2cSlaveTransmitReceive(void *i2c, uint8_t *rxBuf, int16_t bytes);
 
 #ifdef __cplusplus
 }

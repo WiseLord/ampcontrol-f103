@@ -133,12 +133,12 @@ static void i2cDoStop(I2C_TypeDef *I2Cx)
 }
 #endif
 
-uint8_t i2cInit(void *i2c, uint32_t ClockSpeed, uint8_t ownAddr)
+bool i2cInit(void *i2c, uint32_t ClockSpeed, uint8_t ownAddr)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
 
     if (ctx == NULL) {
-        return 1;
+        return false;
     }
 
     I2C_TypeDef *I2Cx = (I2C_TypeDef *)i2c;
@@ -191,15 +191,15 @@ uint8_t i2cInit(void *i2c, uint32_t ClockSpeed, uint8_t ownAddr)
 #ifdef STM32F3
     LL_I2C_SetOwnAddress2(I2Cx, 0, LL_I2C_OWNADDRESS2_NOMASK);
 #endif
-    return 0;
+    return true;
 }
 
-uint8_t i2cDeInit(void *i2c)
+bool i2cDeInit(void *i2c)
 {
     LL_I2C_Disable(i2c);
     LL_I2C_DeInit(i2c);
 
-    return 0;
+    return true;
 }
 
 bool i2cIsEnabled(void *i2c)
@@ -243,11 +243,11 @@ void i2cSend(void *i2c, uint8_t data)
     ctx->txBuf[ctx->bytes++] = data;
 }
 
-void i2cTransmit(void *i2c)
+bool i2cTransmit(void *i2c)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
     if (ctx == NULL) {
-        return;
+        return false;
     }
 
 #ifdef STM32F1
@@ -269,7 +269,7 @@ void i2cTransmit(void *i2c)
     while (READ_BIT(I2Cx->CR1, I2C_CR1_START) == I2C_CR1_START) {
         if (i2cWait(ctx) == false) {
             i2cDisableInterrupts(I2Cx);
-            return;
+            return false;
         }
     }
 
@@ -278,7 +278,7 @@ void i2cTransmit(void *i2c)
     while (READ_BIT(I2Cx->SR2, I2C_SR2_BUSY) == I2C_SR2_BUSY) {
         if (i2cWait(ctx) == false) {
             i2cDoStop(i2c);
-            return;
+            return false;
         }
     }
 #endif
@@ -297,19 +297,21 @@ void i2cTransmit(void *i2c)
         }
         if (i2cWait(ctx) == false) {
             LL_I2C_ClearFlag_STOP(i2c);
-            return;
+            return false;
         }
     }
 
     LL_I2C_ClearFlag_STOP(i2c);
 #endif
+
+    return true;
 }
 
-void i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
+bool i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
     if (ctx == NULL) {
-        return;
+        return false;
     }
 
     ctx->rxBuf = rxBuf;
@@ -334,7 +336,7 @@ void i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
     while (READ_BIT(I2Cx->CR1, I2C_CR1_START) == I2C_CR1_START) {
         if (i2cWait(ctx) == false) {
             i2cDisableInterrupts(I2Cx);
-            return;
+            return false;
         }
     }
 
@@ -343,7 +345,7 @@ void i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
     while (READ_BIT(I2Cx->SR2, I2C_SR2_BUSY) == I2C_SR2_BUSY) {
         if (i2cWait(ctx) == false) {
             i2cDoStop(i2c);
-            return;
+            return false;
         }
     }
     // Prepare the generation of a ACKnowledge to be ready for another reception
@@ -361,25 +363,29 @@ void i2cReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
             ctx->timeout = I2C_TIMEOUT_MS;
         }
         if (i2cWait(ctx) == false)
-            return;
+            return false;
     }
 
     LL_I2C_ClearFlag_STOP(i2c);
 #endif
+
+    return true;
 }
 
 
-void i2cSlaveTransmitReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
+bool i2cSlaveTransmitReceive(void *i2c, uint8_t *rxBuf, int16_t bytes)
 {
     I2cContext *ctx = i2cGetCtx(i2c);
     if (ctx == NULL) {
-        return;
+        return false;
     }
 
     ctx->rxBuf = rxBuf;
     ctx->bytes = bytes;
 
     i2cEnableInterrupts(i2c);
+
+    return true;
 }
 
 #ifdef STM32F1
