@@ -919,20 +919,119 @@ void canvasShowTuner(bool clear)
     drawSpectrumMode(clear, rect);
 }
 
-void canvasShowMpc(bool clear, Icon icon)
+void canvasShowMpd(bool clear, Icon icon)
 {
-    const Layout *lt = canvas.layout;
+    (void)icon;
 
-    AudioProc *aProc = audioGet();
-    InputType inType = ampGet()->inType[aProc->par.input];
+    const Layout *lt = canvas.layout;
 
     const Palette *pal = paletteGet();
 
     const tFont *iconSet = lt->iconSet;
-    const char *label = labelsGet(inType == IN_MPD ? LABEL_IN_MPD : LABEL_IN_KARADIO);
+    const char *label = labelsGet(LABEL_IN_MPD);
+
+    Mpc *mpc = mpcGet();
+    uint16_t nameLen;
+    char buf[32];
+
+    glcdSetFontColor(pal->fg);
+
+    // Label + number
+    if (clear || (mpc->flags & MPC_FLAG_UPDATE_TRACKNUM)) {
+        glcdSetFont(lt->lblFont);
+        glcdSetXY(0, 0);
+        nameLen = glcdWriteString(label);
+        nameLen += glcdWriteString(" ");
+        if (mpc->trackNum >= 0) {
+            snprintf(buf, sizeof(buf), "%ld", mpc->trackNum);
+            nameLen += glcdWriteString(buf);
+        }
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                     lt->rect.w - nameLen - iconSet->chars[0].image->width, lt->lblFont->chars[0].image->height,
+                     pal->bg);
+    }
+
+    // MPD icons
+    if (clear || (mpc->flags & MPC_FLAG_UPDATE_STATUS)) {
+        const tImage *img;
+
+        img = glcdFindIcon(ICON_REPEAT, iconSet);
+        glcdSetXY(lt->rect.w - img->width * 11 / 2, 0);
+        glcdDrawImage(img, mpc->status & MPC_REPEAT ? pal->fg : pal->selected, pal->bg);
+
+        img = glcdFindIcon(ICON_SINGLE, iconSet);
+        glcdSetXY(lt->rect.w - img->width * 8 / 2, 0);
+        glcdDrawImage(img, mpc->status & MPC_SINGLE ? pal->fg : pal->selected, pal->bg);
+
+        img = glcdFindIcon(ICON_RANDOM, iconSet);
+        glcdSetXY(lt->rect.w - img->width * 5 / 2, 0);
+        glcdDrawImage(img, mpc->status & MPC_RANDOM ? pal->fg : pal->selected, pal->bg);
+
+        img = glcdFindIcon(ICON_CONSUME, iconSet);
+        glcdSetXY(lt->rect.w - img->width * 2 / 2, 0);
+        glcdDrawImage(img, mpc->status & MPC_CONSUME ? pal->fg : pal->selected, pal->bg);
+    }
+
+    int16_t yPos = glcdFindIcon(ICON_REPEAT, iconSet)->height;
+
+    int time = mpc->elapsed;
+
+    int8_t sec = time % 60;
+    time /= 60;
+    int8_t min = time % 60;
+    time /= 60;
+    int8_t hour = time % 24;
+    time /= 24;
+
+    if (!(mpc->status & MPC_PLAYING)) {
+        snprintf(buf, sizeof(buf), "--:--:--");
+    } else if (time > 0) {
+        snprintf(buf, sizeof(buf), "%02d.%02d:%02d", time, hour, min);
+    } else {
+        snprintf(buf, sizeof(buf), "%02d:%02d:%02d", hour, min, sec);
+    }
+    char *pos = buf;
+
+    // Position timer
+    if (clear || (mpc->flags & (MPC_FLAG_UPDATE_NAME | MPC_FLAG_UPDATE_ELAPSED))) {
+        glcdSetFont(lt->rds.psFont);
+        glcdSetFontAlign(GLCD_ALIGN_RIGHT);
+        glcdSetXY(lt->rect.w, yPos);
+        nameLen = glcdWriteString(pos);
+    }
+
+    yPos += lt->rds.psFont->chars[0].image->height;
+
+    // Meta
+    if (clear || (mpc->flags & MPC_FLAG_UPDATE_META)) {
+        glcdSetFont(lt->rds.textFont);
+        glcdSetXY(0, yPos);
+        nameLen = glcdWriteString(mpc->meta);
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                     lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height, pal->bg);
+    }
+
+    yPos += lt->rds.textFont->chars[0].image->height;
+
+    // Spectrum
+    GlcdRect rect = canvas.glcd->rect;
+    rect.y = yPos;
+    rect.h = rect.h - rect.y;
+    drawSpectrumMode(clear, rect);
+
+    mpc->flags = 0;
+}
+
+void canvasShowKaradio(bool clear, Icon icon)
+{
+    const Layout *lt = canvas.layout;
+    const Palette *pal = paletteGet();
+
+    const tFont *iconSet = lt->iconSet;
+    const char *label = labelsGet(LABEL_IN_KARADIO);
 
     if (icon == ICON_EMPTY) {
-        icon = inType == IN_MPD ? ICON_MPD : ICON_KARADIO;
+        icon = ICON_KARADIO;
     }
 
     if (clear || icon != prev.par.icon) {
@@ -967,58 +1066,13 @@ void canvasShowMpc(bool clear, Icon icon)
 
     char *name = mpc->name;
 
-    if (inType == IN_MPD) {
-        int time = mpc->elapsed;
-
-        int8_t sec = time % 60;
-        time /= 60;
-        int8_t min = time % 60;
-        time /= 60;
-        int8_t hour = time % 24;
-        time /= 24;
-
-        if (!(mpc->status & MPC_PLAYING)) {
-            snprintf(buf, sizeof(buf), "--:--:--");
-        } else if (time > 0) {
-            snprintf(buf, sizeof(buf), "%02d.%02d:%02d", time, hour, min);
-        } else {
-            snprintf(buf, sizeof(buf), "%02d:%02d:%02d", hour, min, sec);
-        }
-        name = buf;
-    }
-
     // Name
     if (clear || (mpc->flags & (MPC_FLAG_UPDATE_NAME | MPC_FLAG_UPDATE_ELAPSED))) {
         glcdSetFont(lt->rds.psFont);
         glcdSetXY(0, yPos);
         nameLen = glcdWriteString(name);
-        if (inType != IN_MPD) {
-            glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
-                         lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height, pal->bg);
-        }
-    }
-
-    // MPD cons
-    if (inType == IN_MPD) {
-        if (clear || (mpc->flags & MPC_FLAG_UPDATE_STATUS)) {
-            const tImage *img;
-
-            img = glcdFindIcon(ICON_REPEAT, iconSet);
-            glcdSetXY(lt->rect.w - img->width * 11 / 2, yPos);
-            glcdDrawImage(img, mpc->status & MPC_REPEAT ? pal->fg : pal->selected, pal->bg);
-
-            img = glcdFindIcon(ICON_SINGLE, iconSet);
-            glcdSetXY(lt->rect.w - img->width * 8 / 2, yPos);
-            glcdDrawImage(img, mpc->status & MPC_SINGLE ? pal->fg : pal->selected, pal->bg);
-
-            img = glcdFindIcon(ICON_RANDOM, iconSet);
-            glcdSetXY(lt->rect.w - img->width * 5 / 2, yPos);
-            glcdDrawImage(img, mpc->status & MPC_RANDOM ? pal->fg : pal->selected, pal->bg);
-
-            img = glcdFindIcon(ICON_CONSUME, iconSet);
-            glcdSetXY(lt->rect.w - img->width * 2 / 2, yPos);
-            glcdDrawImage(img, mpc->status & MPC_CONSUME ? pal->fg : pal->selected, pal->bg);
-        }
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
+                     lt->rect.w - nameLen, lt->tuner.nameFont->chars[0].image->height, pal->bg);
     }
 
     yPos += lt->rds.psFont->chars[0].image->height;
@@ -1059,8 +1113,10 @@ void canvasShowAudioInput(bool clear, Icon icon)
             }
             break;
         case IN_MPD:
+            canvasShowMpd(clear, icon);
+            return;
         case IN_KARADIO:
-            canvasShowMpc(clear, icon);
+            canvasShowKaradio(clear, icon);
             return;
         case IN_BLUETOOTH:
         case IN_PC:
