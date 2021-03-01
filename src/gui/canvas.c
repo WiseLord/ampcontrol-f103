@@ -943,12 +943,11 @@ void canvasShowMpd(bool clear, Icon icon)
         nameLen = glcdWriteString(label);
         nameLen += glcdWriteString(" ");
         if (mpc->trackNum >= 0) {
-            snprintf(buf, sizeof(buf), "%ld", mpc->trackNum);
-            nameLen += glcdWriteString(buf);
+            snprintf(buf, sizeof(buf), "%-3d", (int)mpc->trackNum);
+        } else {
+            snprintf(buf, sizeof (buf), "%s", "   ");
         }
-        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
-                     lt->rect.w - nameLen - iconSet->chars[0].image->width, lt->lblFont->chars[0].image->height,
-                     pal->bg);
+        nameLen += glcdWriteString(buf);
     }
 
     // MPD icons
