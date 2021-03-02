@@ -6,7 +6,7 @@
 #include "fft.h"
 
 #define STAR_NUM    64
-#define FRAMES      64
+#define FRAMES      256
 
 typedef struct {
     uint8_t frameNum;
@@ -16,7 +16,7 @@ typedef struct {
 
 static int16_t getDistance(uint8_t frameNum)
 {
-    return ((FRAMES - frameNum + 1) * (FRAMES - frameNum) / 2 + 512) / 4 - 128;
+    return (FRAMES - frameNum) * (FRAMES - frameNum) / 128;
 }
 
 void drawStar(Star *star, color_t color, int16_t offset)
