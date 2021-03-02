@@ -11,7 +11,8 @@ extern "C" {
 #include "mediakey.h"
 
 #define MPC_META_SIZE           128
-#define MPC_NAME_SIZE            64
+#define MPC_NAME_SIZE           64
+#define IP_STR_SIZE             20
 
 typedef uint16_t MpcFlags;
 enum {
@@ -43,6 +44,7 @@ typedef struct {
     int32_t duration;
     char meta[MPC_META_SIZE];
     char name[MPC_NAME_SIZE];
+    char ip[IP_STR_SIZE];
 } Mpc;
 
 void mpcInit(void);

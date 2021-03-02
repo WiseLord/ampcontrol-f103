@@ -35,6 +35,13 @@ static void updateMeta(const char *str)
     mpc.flags |= MPC_FLAG_UPDATE_META;
 }
 
+static void updateIp(const char *str)
+{
+    strncpy(mpc.ip, str, IP_STR_SIZE);
+    utilTrimLineEnd(mpc.ip);
+    mpc.flags |= MPC_FLAG_UPDATE_META;
+}
+
 static void updateName(const char *str) // KaRadio only
 {
     strncpy(mpc.name, str, MPC_NAME_SIZE);
@@ -136,8 +143,8 @@ static void parseIP(char *line)
         *cm = '\0';
     }
     char buf[40];
-    snprintf(buf, sizeof(buf), "IP: %s", line);
-    updateMeta(buf);
+    snprintf(buf, sizeof(buf), "IP:%s", line);
+    updateIp(buf);
 }
 
 static void onBootComplete() // KaRadio only

@@ -1007,8 +1007,10 @@ void canvasShowMpd(bool clear, Icon icon)
         glcdSetXY(0, yPos);
         if (mpc->status == MPC_IDLE) {
             nameLen = glcdWriteString(labelsGet(LABEL_MPD_WAIT));
-        } else {
+        } else if (mpc->status & MPC_PLAYING) {
             nameLen = glcdWriteString(mpc->meta);
+        } else {
+            nameLen = glcdWriteString(mpc->ip);
         }
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
                      lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height, pal->bg);

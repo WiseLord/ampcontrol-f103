@@ -1,4 +1,5 @@
 import getopt
+import signal
 import sys
 import threading
 import time
@@ -174,6 +175,10 @@ class Player(object):
             if not self.cmd_queue:
                 time.sleep(0.1)
 
+    def signal_handler(self, sig, frame):
+        self.console.send('##SYS.RESET')
+        exit(0)
+
     def start(self):
         self.alive = True
         self.console.start()
@@ -181,6 +186,8 @@ class Player(object):
         self.notify_thread = threading.Thread(target=self.notify_fn, name='notify')
         self.notify_thread.daemon = True
         self.notify_thread.start()
+        signal.signal(signal.SIGTERM, self.signal_handler)
+        signal.signal(signal.SIGINT, self.signal_handler)
 
     def join(self):
         self.console.join()
@@ -245,8 +252,10 @@ class Player(object):
             self.send_elapsed()
         if update_all or update_duration:
             self.send_duration()
-        if update_all or update_state or update_ip:
+        if update_all or update_state:
             self.send_state()
+        if update_all or update_ip:
+            self.send_ip()
         if update_all or update_repeat:
             self.send_repeat()
         if update_all or update_random:
@@ -273,7 +282,9 @@ class Player(object):
             self.console.send('##CLI.PAUSED#')
         else:
             self.console.send('##CLI.STOPPED#')
-            self.console.send('ip: ' + self.networkChecker.get_ip())
+
+    def send_ip(self):
+        self.console.send('ip: ' + self.networkChecker.get_ip())
 
     def send_repeat(self):
         self.console.send('##CLI.REPEAT#: ' + self.player_info['repeat'])
