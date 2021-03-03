@@ -2,7 +2,6 @@
 
 #include <stdbool.h>
 
-static volatile bool busBusy;
 static volatile uint8_t busData;
 
 #ifdef _DISP_FB
@@ -99,16 +98,12 @@ static inline void dispdrvBusIn(void)
     WRITE_BYTE(DISP_DATA, 0xFF);            // Set HIGH level on all data lines
     IN_BYTE(DISP_DATA);
 #endif
-    busBusy = false;
 }
 
 __attribute__((always_inline))
 static inline void dispdrvBusOut(void)
 {
-    if (!busBusy) {
-        busData = dispdrvReadBus();
-        busBusy = true;
-    }
+    busData = dispdrvReadBus();
 #if defined(_DISP_16BIT)
     OUT_BYTE(DISP_DATA_HI);
     OUT_BYTE(DISP_DATA_LO);
@@ -241,12 +236,25 @@ void dispdrvInit(void)
     dispdrv.init();
 }
 
+void dispdrvSync(void)
+{
+    if (dispdrv.fbSync) {
+        dispdrv.fbSync();
+    } else {
+#ifdef _DISP_8BIT
+        // For bus reading in case nothing was written
+        if (dispdrv.setWindow) {
+            dispdrv.setWindow(0, 0, 1, 1);
+        }
+#endif
+    }
+}
+
 uint8_t dispdrvGetBus(void)
 {
-    if (!busBusy) {
-        busData = dispdrvReadBus();
-    }
-
+#ifdef _DISP_SPI
+    busData = dispdrvReadBus();
+#endif
     return busData;
 }
 

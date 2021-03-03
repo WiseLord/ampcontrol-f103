@@ -1773,6 +1773,8 @@ void ampScreenShow(void)
 
     canvasDebugFPS();
     canvasDebugTimers();
+
+    glcdSync();
 }
 
 void ampSetBrightness(int8_t value)

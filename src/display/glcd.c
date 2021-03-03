@@ -152,11 +152,9 @@ void glcdSetIdle(bool value)
     }
 }
 
-void glcdFbSync(void)
+void glcdSync(void)
 {
-    if (glcd.drv->fbSync) {
-        glcd.drv->fbSync();
-    }
+    dispdrvSync();
 }
 
 

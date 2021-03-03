@@ -43,6 +43,8 @@ extern const DispDriver dispdrv;
 void dispdrvReset(void);
 void dispdrvInit(void);
 
+void dispdrvSync(void);
+
 uint8_t dispdrvGetBus(void);
 
 void dispdrvSendData8(uint8_t data);
