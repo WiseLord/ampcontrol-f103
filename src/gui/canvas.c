@@ -1002,7 +1002,7 @@ void canvasShowMpd(bool clear, Icon icon)
     yPos += lt->rds.psFont->chars[0].image->height;
 
     // Meta
-    if (clear || (mpc->flags & MPC_FLAG_UPDATE_META)) {
+    if (clear || (mpc->flags & (MPC_FLAG_UPDATE_META | MPC_FLAG_UPDATE_STATUS))) {
         glcdSetFont(lt->rds.textFont);
         glcdSetXY(0, yPos);
         if (mpc->status == MPC_IDLE) {
