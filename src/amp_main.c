@@ -1061,6 +1061,12 @@ static void actionRemapRemote(void)
     case RC_CMD_TUNER_MONO:
         actionSet(ACTION_TUNER_FORCE_MONO, FLAG_SWITCH);
         break;
+    case RC_CMD_REPEAT:
+        actionSet(ACTION_MEDIA, MEDIAKEY_REPEAT);
+        break;
+    case RC_CMD_RANDOM:
+        actionSet(ACTION_MEDIA, MEDIAKEY_RANDOM);
+        break;
     default:
         break;
     }

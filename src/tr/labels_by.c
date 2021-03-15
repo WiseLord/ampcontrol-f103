@@ -160,4 +160,6 @@ const char *const labels_by[LABEL_END] = {
     [LABEL_MENU + MENU_RC_SCR_DEF]      = "Галоўны экран",
     [LABEL_MENU + MENU_RC_BT_IN_NEXT]   = "Наст. BT уваход",
     [LABEL_MENU + MENU_RC_TUNER_MONO]   = "Цюнер мона",
+    [LABEL_MENU + MENU_RC_REPEAT]       = "Паўтарыць",
+    [LABEL_MENU + MENU_RC_RANDOM]       = "Выпадкова",
 };

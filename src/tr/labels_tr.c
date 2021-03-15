@@ -160,4 +160,6 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_RC_SCR_DEF]      = "Varsayılan ekran",
     [LABEL_MENU + MENU_RC_BT_IN_NEXT]   = "Sonraki BT Giriş",
 //    [LABEL_MENU + MENU_RC_TUNER_MONO]   = "Tuner mono",
+//    [LABEL_MENU + MENU_RC_REPEAT]       = "Repeat",
+//    [LABEL_MENU + MENU_RC_RANDOM]       = "Random",
 };

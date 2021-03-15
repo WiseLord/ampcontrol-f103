@@ -52,6 +52,8 @@ extern "C" {
     CMD(SCR_DEF)            \
     CMD(BT_IN_NEXT)         \
     CMD(TUNER_MONO)         \
+    CMD(REPEAT)             \
+    CMD(RANDOM)             \
 
 typedef uint8_t ActionType;
 enum {
