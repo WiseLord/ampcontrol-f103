@@ -155,23 +155,8 @@ static void menuStoreCurrentValue(void)
     }
 }
 
-static void menuValueChange(int8_t diff)
+static void menuValueLimit()
 {
-    if (menuItems[menu.active].type == MENU_TYPE_BOOL) {
-        if (diff)
-            menu.value = !menu.value;
-        return;
-    }
-
-    if (menuItems[menu.active].type == MENU_TYPE_RC) {
-        RcData rcData = rcRead(false);
-
-        menu.value = (int16_t)(((rcData.addr & 0xFF) << 8) | rcData.cmd);
-        return;
-    }
-
-    menu.value += diff;
-
     switch (menu.active) {
     case MENU_SYSTEM_LANG:
         if (menu.value > LANG_END - 1)
@@ -315,6 +300,26 @@ static void menuValueChange(int8_t diff)
     if (menu.active == MENU_DISPLAY_BR_STBY || menu.active == MENU_DISPLAY_BR_WORK) {
         ampSetBrightness((int8_t)menu.value);
     }
+}
+
+static void menuValueChange(int8_t diff)
+{
+    if (menuItems[menu.active].type == MENU_TYPE_BOOL) {
+        if (diff)
+            menu.value = !menu.value;
+        return;
+    }
+
+    if (menuItems[menu.active].type == MENU_TYPE_RC) {
+        RcData rcData = rcRead(false);
+
+        menu.value = (int16_t)(((rcData.addr & 0xFF) << 8) | rcData.cmd);
+        return;
+    }
+
+    menu.value += diff;
+
+    menuValueLimit();
 }
 
 static bool menuIsValid(MenuIdx index)
@@ -486,6 +491,22 @@ void menuChange(int8_t diff)
         menuValueChange(diff);
     } else {
         menuMove(diff);
+    }
+}
+
+void menuReset(void)
+{
+    MenuIdx idx = menu.active;
+    if (idx >= MENU_END) {
+        return;
+    }
+
+    if (menu.selected) {
+        menu.value = settingsGetDefault(menuItems[idx].param);
+        menuValueLimit();
+        menuStoreCurrentValue();
+        menuUpdate(idx);
+        menu.selected = false;
     }
 }
 

@@ -903,6 +903,9 @@ static void actionRemapBtnLong(void)
         case SCREEN_STANDBY:
             actionSet(ACTION_MENU_SELECT, MENU_SETUP_SYSTEM);
             break;
+        case SCREEN_MENU:
+            actionSet(ACTION_MENU_RESET, 0);
+            break;
         default:
             actionSet(ACTION_SP_MODE, 0);
         }
@@ -1209,6 +1212,7 @@ static void actionRemapCommon(void)
          ACTION_NAVIGATE != action.type &&
          ACTION_MENU_CHANGE != action.type &&
          ACTION_MENU_SELECT != action.type &&
+         ACTION_MENU_RESET != action.type &&
          ACTION_DISP_EXPIRED != action.type &&
          ACTION_ENCODER != action.type)) {
         actionSet(ACTION_NONE, 0);
@@ -1634,6 +1638,10 @@ void ampActionHandle(void)
     }
     case ACTION_MENU_CHANGE:
         menuChange((int8_t)action.value);
+        screenSet(SCREEN_MENU, 10000);
+        break;
+    case ACTION_MENU_RESET:
+        menuReset();
         screenSet(SCREEN_MENU, 10000);
         break;
 

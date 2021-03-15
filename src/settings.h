@@ -125,6 +125,8 @@ enum {
 
 void settingsInit(void);
 
+int16_t settingsGetDefault(Param param);
+
 int16_t settingsRead(Param param, int16_t defValue);
 void settingsStore(Param param, int16_t value);
 
