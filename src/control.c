@@ -180,6 +180,9 @@ static void controlParseLine(LineParse *lp)
         // BT201 control
         if (utilIsPrefix(line, "QM+")) {
             bt201ParseInput(line + strlen("QM+"));
+            if (btGetInput() & (BT_IN_USB | BT_IN_SDCARD)) {
+                ampActionQueue(ACTION_AUDIO_INPUT_SET_TYPE, IN_BLUETOOTH);
+            }
         } else if (utilIsPrefix(line, "MU+")) {
             bt201ParseMount(line + strlen("MU+"));
         } else if (utilIsPrefix(line, "MF+")) {

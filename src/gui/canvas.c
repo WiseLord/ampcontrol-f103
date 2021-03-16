@@ -1290,7 +1290,7 @@ void canvasDebugFPS(void)
     glcdSetFontAlign(GLCD_ALIGN_RIGHT);
 
     static int32_t oldCnt = 0;
-    static int32_t oldFps = 0;
+    static int32_t oldFps = 0; (void)oldFps;
     static int32_t frames = 0;
 
     frames++;

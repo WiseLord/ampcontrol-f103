@@ -248,9 +248,6 @@ static void inputEnable(void)
         ampSendMediaKey(MEDIAKEY_PLAY);
         mpcSyncRequest();
         break;
-    case IN_BLUETOOTH:
-        ampSendMediaKey(MEDIAKEY_PLAY);
-        break;
     default:
         break;
     }
@@ -574,6 +571,22 @@ static void actionSetInput(int8_t value)
     ampSetInput(value);
     controlReportAudioInput();
     controlReportAudioTune(AUDIO_TUNE_GAIN);
+}
+
+static void actionSetInputType(InputType value)
+{
+    AudioProc *aProc = audioGet();
+
+    int8_t inCnt = aProc->par.inCnt;
+
+    for (int8_t i = 0; i < inCnt; i++) {
+        if (amp->inType[i] == value) {
+            if (aProc->par.input != i) {
+                actionSetInput(i);
+            }
+            break;
+        }
+    }
 }
 
 static void actionPostSetInput(void)
@@ -1506,6 +1519,10 @@ void ampActionHandle(void)
         break;
     case ACTION_AUDIO_INPUT_SET:
         actionSetInput((int8_t)action.value);
+        actionPostSetInput();
+        break;
+    case ACTION_AUDIO_INPUT_SET_TYPE:
+        actionSetInputType((InputType)action.value);
         actionPostSetInput();
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
