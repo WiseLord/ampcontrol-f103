@@ -129,6 +129,10 @@ static inline void dispdrvSendWord(uint16_t data)
     SET(DISP_WR);
 #else
 #ifndef _DISP_SPI
+    __asm volatile ("nop");
+    __asm volatile ("nop");
+    __asm volatile ("nop");
+    __asm volatile ("nop");
     dispdrvBusOut();
 #endif
     dispdrvSendByte(dataH);

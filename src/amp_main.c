@@ -1278,13 +1278,13 @@ void ampInit(void)
     pinsInit();
     rtcInit();
 
+    inputInit();
+    rcInit();
+
     labelsInit();
     canvasInit();
 
     spInit();
-
-    inputInit();
-    rcInit();
 
     controlInit();
     mpcInit();
