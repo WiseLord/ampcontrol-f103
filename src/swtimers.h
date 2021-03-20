@@ -28,6 +28,7 @@ enum {
     SW_TIM_GPIO_KEY,
     SW_TIM_MPD_POWEROFF,
     SW_TIM_DIGIT_INPUT,
+    SW_TIM_SCROLL,
 
     SW_TIM_DEC_END,
 

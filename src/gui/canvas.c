@@ -17,6 +17,7 @@
 #include "tuner/stations.h"
 #include "utils.h"
 #include "view/starsview.h"
+#include "widget/scrolltext.h"
 
 #define SPECTRUM_SIZE   128
 
@@ -64,10 +65,10 @@ static void drawRds(RdsParser *rds);
 static bool checkSpectrumReady(void);
 static void fftGet128(FftSample *sp, uint8_t *out, size_t size);
 
-
 static Canvas canvas;
 static SpDrawData spDrawData;
 static DrawData prev;
+static ScrollText scroll;
 
 static const tImage *glcdFindIcon(Icon code, const tFont *iFont)
 {
@@ -1006,6 +1007,44 @@ void canvasShowTuner(bool clear)
     drawSpectrumMode(clear, rect);
 }
 
+static void scrollMpdMeta(bool clear, int16_t yPos)
+{
+    const Layout *lt = canvas.layout;
+
+    Mpc *mpc = mpcGet();
+
+    if (mpc->flags & (MPC_FLAG_UPDATE_META | MPC_FLAG_UPDATE_STATUS)) {
+        clear = true;
+    }
+
+    glcdSetFont(lt->rds.textFont);
+
+    static GlcdRect rectMeta;
+    rectMeta.x = 0;
+    rectMeta.y = yPos;
+    rectMeta.w = lt->rect.w;
+    rectMeta.h = lt->rds.textFont->chars[0].image->height;
+
+    scroll.rect = &rectMeta;
+
+    if (swTimGet(SW_TIM_SCROLL) <= 0) {
+        swTimSet(SW_TIM_SCROLL, 15);
+        scroll.flags |= SCROLL_EVENT;
+    } else {
+        scroll.flags &= ~SCROLL_EVENT;
+    }
+
+    if (mpc->status == MPC_IDLE) {
+        scroll.text = labelsGet(LABEL_MPD_WAIT);
+    } else if (mpc->status & MPC_PLAYING) {
+        scroll.text = mpc->meta;
+    } else {
+        scroll.text = mpc->ip;
+    }
+
+    scrollTextDraw(&scroll, clear);
+}
+
 void canvasShowMpd(bool clear, Icon icon)
 {
     (void)icon;
@@ -1089,19 +1128,7 @@ void canvasShowMpd(bool clear, Icon icon)
     yPos += lt->rds.psFont->chars[0].image->height;
 
     // Meta
-    if (clear || (mpc->flags & (MPC_FLAG_UPDATE_META | MPC_FLAG_UPDATE_STATUS))) {
-        glcdSetFont(lt->rds.textFont);
-        glcdSetXY(0, yPos);
-        if (mpc->status == MPC_IDLE) {
-            nameLen = glcdWriteString(labelsGet(LABEL_MPD_WAIT));
-        } else if (mpc->status & MPC_PLAYING) {
-            nameLen = glcdWriteString(mpc->meta);
-        } else {
-            nameLen = glcdWriteString(mpc->ip);
-        }
-        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
-                     lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height, pal->bg);
-    }
+    scrollMpdMeta(clear, yPos);
 
     yPos += lt->rds.textFont->chars[0].image->height;
 
@@ -1170,17 +1197,7 @@ void canvasShowKaradio(bool clear, Icon icon)
     yPos += lt->rds.psFont->chars[0].image->height;
 
     // Meta
-    if (clear || (mpc->flags & (MPC_FLAG_UPDATE_STATUS | MPC_FLAG_UPDATE_META))) {
-        glcdSetFont(lt->rds.textFont);
-        glcdSetXY(0, yPos);
-        if (mpc->status & MPC_PLAYING) {
-            nameLen = glcdWriteString(mpc->meta);
-        } else {
-            nameLen = glcdWriteString(mpc->ip);
-        }
-        glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
-                     lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height, pal->bg);
-    }
+    scrollMpdMeta(clear, yPos);
 
     yPos += lt->rds.textFont->chars[0].image->height;
 

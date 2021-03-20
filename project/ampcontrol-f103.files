@@ -184,6 +184,8 @@
 ../src/gui/palette.h
 ../src/gui/view/starsview.c
 ../src/gui/view/starsview.h
+../src/gui/widget/scrolltext.c
+../src/gui/widget/scrolltext.h
 ../src/gui/widget/spectrumcolumn.c
 ../src/gui/widget/spectrumcolumn.h
 ../src/gui/widget/stripedbar.c
