@@ -34,6 +34,7 @@ enum {
     MPC_SINGLE  = 0x0020,
     MPC_RANDOM  = 0x0040,
     MPC_CONSUME = 0x0080,
+    MPC_ONLINE  = 0x0100,
 };
 
 typedef struct {

@@ -40,6 +40,7 @@ static void updateIp(const char *str)
     strncpy(mpc.ip, str, IP_STR_SIZE);
     utilTrimLineEnd(mpc.ip);
     mpc.flags |= MPC_FLAG_UPDATE_META;
+    mpc.status |= MPC_ONLINE;
 }
 
 static void updateName(const char *str) // KaRadio only
