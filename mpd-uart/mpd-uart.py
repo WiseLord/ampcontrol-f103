@@ -124,7 +124,10 @@ class Player(object):
         if cmd == 'info':
             self.player_info = []
         if cmd == 'start':
-            self.client.play()
+            if state == 'stop':
+                self.client.play()
+            else:
+                self.client.pause()
         if cmd == 'stop':
             self.client.stop()
         if cmd == 'pause':
@@ -309,24 +312,29 @@ class Player(object):
 
 def main(argv):
     #    port = '/dev/serial0'
-    port = '/dev/ttyS0'
+    sport = '/dev/ttyS0'
     baudrate = 115200
+    host = 'localhost'
+    port = 6600
     try:
-        opts, args = getopt.getopt(argv, "p:b:", ["port=", "baudrate="])
+        opts, args = getopt.getopt(argv, "s:b:h:p:", ["sport=", "baudrate=", "host=", "port="])
     except getopt.GetoptError:
         print("Wrong command line arguments")
         sys.exit(2)
 
     for opt, arg in opts:
-        if opt in ("-p", "--port"):
-            port = arg
+        if opt in ("-s", "--sport"):
+            sport = arg
         if opt in ("-b", "--baudrate"):
             baudrate = arg
+        if opt in ("-h", "--host"):
+            host = arg
+        if opt in ("-p", "--port"):
+            port = arg
 
-    player = Player(sport=port, baudrate=baudrate, host="localhost", port=6600)
+    player = Player(sport=sport, baudrate=baudrate, host=host, port=port)
     player.start()
     player.join()
-
 
 if __name__ == "__main__":
     main(sys.argv[1:])
