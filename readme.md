@@ -59,10 +59,10 @@ in [kicad/ampcontrol-f103](kicad/ampcontrol-f103) directory.
 
 ## Useful links
 
-[Firmware releases](https://github.com/WiseLord/ampcontrol-f103/releases)
+* [Firmware releases](https://github.com/WiseLord/ampcontrol-f103/releases)
 
-[The article (in Russian)](https://radiokot.ru/artfiles/6484/)
+* [The article (in Russian)](https://radiokot.ru/artfiles/6484/)
 
-[Forum thread (in Russian)](https://radiokot.ru/forum/viewtopic.php?f=2&t=158605)
+* [Forum thread (in Russian)](https://radiokot.ru/forum/viewtopic.php?f=2&t=158605)
 
-[Youtube playlist](https://www.youtube.com/playlist?list=PLfv57leyFFd1C61HgnKE3e_OFIXMBtf-D)
+* [Youtube playlist](https://www.youtube.com/playlist?list=PLfv57leyFFd1C61HgnKE3e_OFIXMBtf-D)
