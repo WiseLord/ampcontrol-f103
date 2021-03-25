@@ -324,7 +324,6 @@ static void menuValueChange(int8_t diff)
 
 static bool menuIsValid(MenuIdx index)
 {
-    AudioProc *aProc = audioGet();
     Tuner *tuner = tunerGet();
 
     switch (index) {
@@ -340,7 +339,7 @@ static bool menuIsValid(MenuIdx index)
     case MENU_AUDIO_IN_6:
     case MENU_AUDIO_IN_7:
         // Limit Audio inputs
-        if (index - MENU_AUDIO_IN_0 >= aProc->par.inCnt) {
+        if (index - MENU_AUDIO_IN_0 >= audioGetInputCount()) {
             return false;
         }
         break;

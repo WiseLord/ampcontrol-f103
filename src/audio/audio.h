@@ -21,6 +21,7 @@ void audioSaveSettings(void);
 void audioInit(void);
 
 AudioProc *audioGet(void);
+int8_t audioGetInputCount(void);
 
 void audioSetRawBalance(AudioRaw *raw, int8_t volume, bool rear2bass);
 void audioSetPower(bool value);

@@ -94,13 +94,11 @@ typedef struct {
 
 typedef struct {
     AudioIC ic;
-    AudioFlag flags;
-    AudioTuneItem tune[AUDIO_TUNE_END];
-
-    int8_t gain[MAX_INPUTS];
     int8_t input;
-    int8_t inCnt;
     AudioMode mode;
+    AudioFlag flags;
+    int8_t gain[MAX_INPUTS];
+    AudioTuneItem tune[AUDIO_TUNE_END];
 } AudioParam;
 
 typedef struct {

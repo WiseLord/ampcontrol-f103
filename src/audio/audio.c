@@ -4,22 +4,11 @@
 
 #include "settings.h"
 
-#ifdef _TDA7439
 #include "tda7439.h"
-#endif
-#ifdef _TDA731X
 #include "tda731x.h"
-#endif
-#ifdef _PT232X
 #include "pt232x.h"
-#endif
-#ifdef _TDA7418
 #include "tda7418.h"
-#endif
-#ifdef _TDA7719
 #include "tda7719.h"
-#endif
-
 
 static AudioProc aProc;
 
@@ -59,10 +48,10 @@ void audioReadSettings(AudioIC ic)
     aProc.par.mode = settingsRead(PARAM_AUDIO_MODE, false);
 
     for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN7; par++) {
-         aProc.par.gain[par - PARAM_AUDIO_GAIN0] = settingsRead(par, 0);
+        aProc.par.gain[par - PARAM_AUDIO_GAIN0] = settingsRead(par, 0);
     }
     for (Param par = PARAM_AUDIO_VOLUME; par <= PARAM_AUDIO_PREAMP; par++) {
-         aProc.par.tune[par - PARAM_AUDIO_VOLUME].value = settingsRead(par, 0);
+        aProc.par.tune[par - PARAM_AUDIO_VOLUME].value = settingsRead(par, 0);
     }
 
     // API initialization
@@ -71,39 +60,32 @@ void audioReadSettings(AudioIC ic)
     case AUDIO_IC_TDA7439:
     case AUDIO_IC_TDA7440:
         aProc.api = tda7439GetApi();
-        aProc.par.inCnt = TDA7439_IN_CNT;
         break;
 #endif
 #ifdef _TDA731X
     case AUDIO_IC_TDA7313:
         aProc.api = tda731xGetApi();
-        aProc.par.inCnt = TDA7313_IN_CNT;
         break;
 #endif
 #ifdef _PT232X
     case AUDIO_IC_PT232X:
         aProc.api = pt232xGetApi();
-        aProc.par.inCnt = PT2323_IN_CNT;
         break;
 #endif
 #ifdef _TDA7418
     case AUDIO_IC_TDA7418:
         aProc.api = tda7418GetApi();
-        aProc.par.inCnt = TDA7418_IN_CNT;
         break;
 #endif
 #ifdef _TDA7719
     case AUDIO_IC_TDA7719:
         aProc.api = tda7719GetApi();
-        aProc.par.inCnt = TDA7719_IN_CNT;
         break;
 #endif
     case AUDIO_IC_TEST:
         aProc.api = &audioTestApi;
-        aProc.par.inCnt = MAX_INPUTS;
         break;
     default:
-        aProc.par.inCnt = 1;
         break;
     }
 }
@@ -133,6 +115,27 @@ void audioInit(void)
 AudioProc *audioGet(void)
 {
     return &aProc;
+}
+
+int8_t audioGetInputCount(void)
+{
+    switch (aProc.par.ic) {
+    case AUDIO_IC_TDA7439:
+    case AUDIO_IC_TDA7440:
+        return TDA7439_IN_CNT;
+    case AUDIO_IC_TDA7313:
+        return TDA7313_IN_CNT;
+    case AUDIO_IC_PT232X:
+        return PT2323_IN_CNT;
+    case AUDIO_IC_TDA7418:
+        return TDA7418_IN_CNT;
+    case AUDIO_IC_TDA7719:
+        return TDA7719_IN_CNT;
+    case AUDIO_IC_TEST:
+        return MAX_INPUTS;
+    default:
+        return 1;
+    }
 }
 
 void audioSetRawBalance(AudioRaw *raw, int8_t volume, bool rear2bass)
@@ -246,7 +249,7 @@ void audioChangeTune(AudioTune tune, int8_t diff)
 
 void audioSetInput(int8_t value)
 {
-    if (value >= aProc.par.inCnt) {
+    if (value >= audioGetInputCount()) {
         value = 0;
     }
 

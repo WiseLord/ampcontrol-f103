@@ -552,7 +552,7 @@ static int8_t actionGetNextAudioInput(int8_t diff)
     AudioProc *aProc = audioGet();
 
     int8_t input = aProc->par.input;
-    int8_t inCnt = aProc->par.inCnt;
+    int8_t inCnt = audioGetInputCount();
 
     int8_t ret = input;
 
@@ -579,7 +579,7 @@ static void actionSetInputType(InputType value)
 {
     AudioProc *aProc = audioGet();
 
-    int8_t inCnt = aProc->par.inCnt;
+    int8_t inCnt = audioGetInputCount();
 
     for (int8_t i = 0; i < inCnt; i++) {
         if (amp->inType[i] == value) {
