@@ -686,17 +686,8 @@ int16_t settingsGet(Param param)
     case PARAM_AUDIO_INPUT:
         ret = aProc->par.input;
         break;
-    case PARAM_AUDIO_LOUDNESS:
-        ret = aProc->par.loudness;
-        break;
-    case PARAM_AUDIO_SURROUND:
-        ret = aProc->par.surround;
-        break;
-    case PARAM_AUDIO_EFFECT3D:
-        ret = aProc->par.effect3d;
-        break;
-    case PARAM_AUDIO_BYPASS:
-        ret = aProc->par.bypass;
+    case PARAM_AUDIO_FLAGS:
+        ret = aProc->par.flags;
         break;
     case PARAM_AUDIO_SHOWDB:
         ret = amp->showDb;
@@ -859,17 +850,8 @@ void settingsSet(Param param, int16_t value)
     case PARAM_AUDIO_INPUT:
         aProc->par.input = (int8_t)value;
         break;
-    case PARAM_AUDIO_LOUDNESS:
-        aProc->par.loudness = (bool)value;
-        break;
-    case PARAM_AUDIO_SURROUND:
-        aProc->par.surround = (bool)value;
-        break;
-    case PARAM_AUDIO_EFFECT3D:
-        aProc->par.effect3d = (bool)value;
-        break;
-    case PARAM_AUDIO_BYPASS:
-        aProc->par.bypass = (bool)value;
+    case PARAM_AUDIO_FLAGS:
+        aProc->par.flags = (AudioFlag)value;
         break;
     case PARAM_AUDIO_SHOWDB:
         amp->showDb = (bool)value;

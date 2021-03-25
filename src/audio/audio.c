@@ -55,10 +55,7 @@ void audioReadSettings(AudioIC ic)
 
     aProc.par.ic = settingsRead(PARAM_AUDIO_IC, ic);
     aProc.par.input = settingsRead(PARAM_AUDIO_INPUT, 0);
-    aProc.par.loudness = settingsRead(PARAM_AUDIO_LOUDNESS, false);
-    aProc.par.surround = settingsRead(PARAM_AUDIO_SURROUND, false);
-    aProc.par.effect3d = settingsRead(PARAM_AUDIO_EFFECT3D, false);
-    aProc.par.bypass = settingsRead(PARAM_AUDIO_BYPASS, false);
+    aProc.par.flags = settingsRead(PARAM_AUDIO_FLAGS, 0);
     aProc.par.mode = settingsRead(PARAM_AUDIO_MODE, false);
 
     for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN7; par++) {
@@ -115,10 +112,7 @@ void audioSaveSettings(void)
 {
     settingsStore(PARAM_AUDIO_IC, (int16_t)aProc.par.ic);
     settingsStore(PARAM_AUDIO_INPUT, aProc.par.input);
-    settingsStore(PARAM_AUDIO_LOUDNESS, aProc.par.loudness);
-    settingsStore(PARAM_AUDIO_SURROUND, aProc.par.surround);
-    settingsStore(PARAM_AUDIO_EFFECT3D, aProc.par.effect3d);
-    settingsStore(PARAM_AUDIO_BYPASS, aProc.par.bypass);
+    settingsStore(PARAM_AUDIO_FLAGS, aProc.par.flags & ~AUDIO_FLAG_MUTE);
 
     for (Param par = PARAM_AUDIO_VOLUME; par <= PARAM_AUDIO_PREAMP; par++) {
         settingsStore(par, aProc.par.tune[par - PARAM_AUDIO_VOLUME].value);
@@ -187,10 +181,10 @@ void audioSetPower(bool value)
     } else {
         audioSetInput(aProc.par.input);
 
-        audioSetLoudness(aProc.par.loudness);
-        audioSetSurround(aProc.par.surround);
-        audioSetEffect3D(aProc.par.effect3d);
-        audioSetBypass(aProc.par.bypass);
+        audioSetLoudness(!!(aProc.par.flags & AUDIO_FLAG_LOUDNESS));
+        audioSetSurround(!!(aProc.par.flags & AUDIO_FLAG_SURROUND));
+        audioSetEffect3D(!!(aProc.par.flags & AUDIO_FLAG_EFFECT3D));
+        audioSetBypass(!!(aProc.par.flags & AUDIO_FLAG_BYPASS));
 
         for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END; tune++) {
             audioSetTune(tune, aProc.par.tune[tune].value);
@@ -229,7 +223,7 @@ void audioSetTune(AudioTune tune, int8_t value)
         case AUDIO_TUNE_BASS:
         case AUDIO_TUNE_MIDDLE:
         case AUDIO_TUNE_TREBLE:
-            if (!aProc.api->setBypass && aProc.par.bypass) {
+            if (!aProc.api->setBypass && (aProc.par.flags & AUDIO_FLAG_BYPASS)) {
                 value = 0;
             }
             break;
@@ -268,7 +262,11 @@ void audioSetInput(int8_t value)
 
 void audioSetMute(bool value)
 {
-    aProc.par.mute = value;
+    if (value) {
+        aProc.par.flags |= AUDIO_FLAG_MUTE;
+    } else {
+        aProc.par.flags &= ~AUDIO_FLAG_MUTE;
+    }
 
     if (aProc.api && aProc.api->setMute) {
         aProc.api->setMute(value);
@@ -277,7 +275,11 @@ void audioSetMute(bool value)
 
 void audioSetLoudness(bool value)
 {
-    aProc.par.loudness = value;
+    if (value) {
+        aProc.par.flags |= AUDIO_FLAG_LOUDNESS;
+    } else {
+        aProc.par.flags &= ~AUDIO_FLAG_LOUDNESS;
+    }
 
     if (aProc.api && aProc.api->setLoudness) {
         aProc.api->setLoudness(value);
@@ -286,7 +288,11 @@ void audioSetLoudness(bool value)
 
 void audioSetSurround(bool value)
 {
-    aProc.par.surround = value;
+    if (value) {
+        aProc.par.flags |= AUDIO_FLAG_SURROUND;
+    } else {
+        aProc.par.flags &= ~AUDIO_FLAG_SURROUND;
+    }
 
     if (aProc.api && aProc.api->setSurround) {
         aProc.api->setSurround(value);
@@ -295,7 +301,11 @@ void audioSetSurround(bool value)
 
 void audioSetEffect3D(bool value)
 {
-    aProc.par.effect3d = value;
+    if (value) {
+        aProc.par.flags |= AUDIO_FLAG_EFFECT3D;
+    } else {
+        aProc.par.flags &= ~AUDIO_FLAG_EFFECT3D;
+    }
 
     if (aProc.api && aProc.api->setEffect3d) {
         aProc.api->setEffect3d(value);
@@ -304,7 +314,11 @@ void audioSetEffect3D(bool value)
 
 void audioSetBypass(bool value)
 {
-    aProc.par.bypass = value;
+    if (value) {
+        aProc.par.flags |= AUDIO_FLAG_BYPASS;
+    } else {
+        aProc.par.flags &= ~AUDIO_FLAG_BYPASS;
+    }
 
     if (aProc.api && aProc.api->setBypass) {
         aProc.api->setBypass(value);

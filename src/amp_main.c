@@ -47,6 +47,9 @@ typedef struct {
 
     int8_t brightness;
     uint8_t signalCnt;
+
+    AudioTune tune;
+    AudioTune flag;
 } AmpPriv;
 
 static void actionGetRemote(void);
@@ -169,7 +172,7 @@ static ScreenType getScrDef(void)
         }
     }
 
-    if (aProc->par.mute) {
+    if (aProc->par.flags & AUDIO_FLAG_MUTE) {
         return SCREEN_AUDIO_INPUT;
     }
 
@@ -178,14 +181,13 @@ static ScreenType getScrDef(void)
 
 static void actionDispExpired(void)
 {
-    AudioProc *aProc = audioGet();
     ScreenType scrDef = getScrDef();
 
     priv.iconHint = ICON_EMPTY;
     ScreenType scrMode = amp->screen;
 
     rtcSetMode(RTC_NOEDIT);
-    aProc->tune = (scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME);
+    priv.tune = (scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME);
 
     if (amp->status != AMP_STATUS_STBY) {
         if (scrMode != scrDef) {
@@ -539,10 +541,10 @@ static void actionNavigateCommon(RcCmd cmd)
 static void actionNextAudioParam(AudioProc *aProc)
 {
     do {
-        aProc->tune++;
-        if (aProc->tune >= AUDIO_TUNE_END)
-            aProc->tune = AUDIO_TUNE_VOLUME;
-    } while (aProc->par.tune[aProc->tune].grid == NULL && aProc->tune != AUDIO_TUNE_VOLUME);
+        priv.tune++;
+        if (priv.tune >= AUDIO_TUNE_END)
+            priv.tune = AUDIO_TUNE_VOLUME;
+    } while (aProc->par.tune[priv.tune].grid == NULL && priv.tune != AUDIO_TUNE_VOLUME);
 }
 
 static int8_t actionGetNextAudioInput(int8_t diff)
@@ -1108,7 +1110,6 @@ static void actionRemapNavigate(void)
 static void actionRemapEncoder(void)
 {
     ScreenType scrMode = ampGet()->screen;
-    AudioProc *aProc = audioGet();
 
     if (SCREEN_STANDBY == scrMode)
         return;
@@ -1139,7 +1140,7 @@ static void actionRemapEncoder(void)
         case SCREEN_SPECTRUM:
         case SCREEN_AUDIO_FLAG:
         case SCREEN_AUDIO_INPUT:
-            aProc->tune = AUDIO_TUNE_VOLUME;
+            priv.tune = AUDIO_TUNE_VOLUME;
             break;
         default:
             break;
@@ -1182,27 +1183,27 @@ static void actionRemapCommon(void)
         break;
     case ACTION_AUDIO_MUTE:
         if (FLAG_SWITCH == action.value) {
-            action.value = !aProc->par.mute;
+            action.value = !(aProc->par.flags & AUDIO_FLAG_MUTE);
         }
         break;
     case ACTION_AUDIO_LOUDNESS:
         if (FLAG_SWITCH == action.value) {
-            action.value = !aProc->par.loudness;
+            action.value = !(aProc->par.flags & AUDIO_FLAG_LOUDNESS);
         }
         break;
     case ACTION_AUDIO_SURROUND:
         if (FLAG_SWITCH == action.value) {
-            action.value = !aProc->par.surround;
+            action.value = !(aProc->par.flags & AUDIO_FLAG_SURROUND);
         }
         break;
     case ACTION_AUDIO_EFFECT3D:
         if (FLAG_SWITCH == action.value) {
-            action.value = !aProc->par.effect3d;
+            action.value = !(aProc->par.flags & AUDIO_FLAG_EFFECT3D);
         }
         break;
     case ACTION_AUDIO_BYPASS:
         if (FLAG_SWITCH == action.value) {
-            action.value = !aProc->par.bypass;
+            action.value = !(aProc->par.flags & AUDIO_FLAG_BYPASS);
         }
         break;
     default:
@@ -1256,10 +1257,9 @@ void ampSelectTune(AudioTune tune)
 {
     amp->screen = SCREEN_AUDIO_PARAM;
 
-    AudioProc *aProc = audioGet();
-    if (aProc->tune != tune) {
+    if (priv.tune != tune) {
         priv.screenClear = true;
-        aProc->tune = tune;
+        priv.tune = tune;
     }
 }
 
@@ -1480,7 +1480,7 @@ void ampActionHandle(void)
             priv.screenClear = true;
             actionNextAudioParam(aProc);
         } else {
-            aProc->tune = AUDIO_TUNE_VOLUME;
+            priv.tune = AUDIO_TUNE_VOLUME;
         }
         screenSet(SCREEN_AUDIO_PARAM, 5000);
         break;
@@ -1526,62 +1526,62 @@ void ampActionHandle(void)
         actionPostSetInput();
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
-        audioChangeTune(aProc->tune, (int8_t)(action.value));
-        if (aProc->tune == AUDIO_TUNE_VOLUME) {
+        audioChangeTune(priv.tune, (int8_t)(action.value));
+        if (priv.tune == AUDIO_TUNE_VOLUME) {
             priv.volume = aProc->par.tune[AUDIO_TUNE_VOLUME].value;
         }
-        if (aProc->par.mute) {
+        if (aProc->par.flags & AUDIO_FLAG_MUTE) {
             ampMute(false);
         }
         screenSet(SCREEN_AUDIO_PARAM, 3000);
-        controlReportAudioTune(aProc->tune);
+        controlReportAudioTune(priv.tune);
         swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
         break;
     case ACTION_AUDIO_PARAM_SET:
-        audioSetTune(aProc->tune, (int8_t)action.value);
+        audioSetTune(priv.tune, (int8_t)action.value);
         screenSet(SCREEN_AUDIO_PARAM, 3000);
-        controlReportAudioTune(aProc->tune);
+        controlReportAudioTune(priv.tune);
         swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
         break;
 
     case ACTION_AUDIO_MUTE:
         ampMute(action.value);
-        if (aProc->tune != AUDIO_FLAG_MUTE) {
+        if (priv.flag != AUDIO_FLAG_MUTE) {
             priv.screenClear = true;
         }
-        aProc->tune = AUDIO_FLAG_MUTE;
+        priv.flag = AUDIO_FLAG_MUTE;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
         break;
     case ACTION_AUDIO_LOUDNESS:
         audioSetLoudness(action.value);
-        if (aProc->tune != AUDIO_FLAG_LOUDNESS) {
+        if (priv.flag != AUDIO_FLAG_LOUDNESS) {
             priv.screenClear = true;
         }
-        aProc->tune = AUDIO_FLAG_LOUDNESS;
+        priv.flag = AUDIO_FLAG_LOUDNESS;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
         break;
     case ACTION_AUDIO_SURROUND:
         audioSetSurround(action.value);
-        if (aProc->tune != AUDIO_FLAG_SURROUND) {
+        if (priv.flag != AUDIO_FLAG_SURROUND) {
             priv.screenClear = true;
         }
-        aProc->tune = AUDIO_FLAG_SURROUND;
+        priv.flag = AUDIO_FLAG_SURROUND;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
         break;
     case ACTION_AUDIO_EFFECT3D:
         audioSetEffect3D(action.value);
-        if (aProc->tune != AUDIO_FLAG_EFFECT3D) {
+        if (priv.flag != AUDIO_FLAG_EFFECT3D) {
             priv.screenClear = true;
         }
-        aProc->tune = AUDIO_FLAG_EFFECT3D;
+        priv.flag = AUDIO_FLAG_EFFECT3D;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
         break;
     case ACTION_AUDIO_BYPASS:
         audioSetBypass(action.value);
-        if (aProc->tune != AUDIO_FLAG_BYPASS) {
+        if (priv.flag != AUDIO_FLAG_BYPASS) {
             priv.screenClear = true;
         }
-        aProc->tune = AUDIO_FLAG_BYPASS;
+        priv.flag = AUDIO_FLAG_BYPASS;
         screenSet(SCREEN_AUDIO_FLAG, 3000);
         break;
 
@@ -1778,10 +1778,10 @@ void ampScreenShow(void)
         canvasShowStars(clear, 0);
         break;
     case SCREEN_AUDIO_PARAM:
-        canvasShowTune(clear);
+        canvasShowTune(clear, priv.tune);
         break;
     case SCREEN_AUDIO_FLAG:
-        canvasShowAudioFlag(clear);
+        canvasShowAudioFlag(clear, priv.flag);
         break;
     case SCREEN_AUDIO_INPUT:
         canvasShowAudioInput(clear, priv.iconHint);

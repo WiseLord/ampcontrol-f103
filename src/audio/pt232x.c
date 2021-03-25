@@ -191,17 +191,17 @@ void pt232xSetInput(int8_t value)
 
 void pt232xSetMute(bool value)
 {
-    pt232xSetSndFunc(value, aPar->effect3d, aPar->bypass);
+    pt232xSetSndFunc(value, !!(aPar->flags & AUDIO_FLAG_EFFECT3D), !!(aPar->flags & AUDIO_FLAG_BYPASS));
 }
 
 void pt232xSetEffect3D(bool value)
 {
-    pt232xSetSndFunc(aPar->mute, value, aPar->bypass);
+    pt232xSetSndFunc(!!(aPar->flags & AUDIO_FLAG_MUTE), value, !!(aPar->flags & AUDIO_FLAG_BYPASS));
 }
 
 void pt232xSetBypass(bool value)
 {
-    pt232xSetSndFunc(aPar->mute, aPar->effect3d, value);
+    pt232xSetSndFunc(!!(aPar->flags & AUDIO_FLAG_MUTE), !!(aPar->flags & AUDIO_FLAG_EFFECT3D), value);
 }
 
 void pt232xSetSurround(bool value)

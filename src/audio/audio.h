@@ -13,7 +13,6 @@ extern "C" {
 typedef struct {
     const AudioApi *api;
     AudioParam par;
-    AudioTune tune;
 } AudioProc;
 
 void audioReadSettings(AudioIC ic);

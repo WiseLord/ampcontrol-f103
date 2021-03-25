@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdint.h>
 
+#include "audio/audiodefs.h"
 #include "layout.h"
 #include "palette.h"
 
@@ -24,8 +25,8 @@ void canvasClear(void);
 
 void canvasShowTime(bool clear);
 void canvasShowMenu(bool clear);
-void canvasShowTune(bool clear);
-void canvasShowAudioFlag(bool clear);
+void canvasShowTune(bool clear, AudioTune tune);
+void canvasShowAudioFlag(bool clear, AudioTune flag);
 void canvasShowSpectrum(bool clear);
 void canvasShowStars(bool clear, int16_t offset);
 void canvasShowTuner(bool clear);

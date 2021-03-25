@@ -610,7 +610,7 @@ void canvasShowMenu(bool clear)
     lastValue = menu->value;
 }
 
-void canvasShowTune(bool clear)
+void canvasShowTune(bool clear, AudioTune tune)
 {
     AudioProc *aProc = audioGet();
     Amp *amp = ampGet();
@@ -628,18 +628,18 @@ void canvasShowTune(bool clear)
     const char *label = labelsGet(inType == IN_DISABLED ? LABEL_BOOL_OFF : LABEL_IN_TUNER + inType);
     Icon icon = (inType == IN_DISABLED ? ICON_MUTE_OFF : ICON_TUNER + inType);
 
-    if (aProc->tune < AUDIO_TUNE_GAIN) {
-        label = labelsGet(LABEL_VOLUME + aProc->tune);
-        icon = ICON_VOLUME + aProc->tune;
+    if (tune < AUDIO_TUNE_GAIN) {
+        label = labelsGet(LABEL_VOLUME + tune);
+        icon = ICON_VOLUME + tune;
     }
 
-    if (icon == ICON_VOLUME && aProc->par.mute) {
+    if (icon == ICON_VOLUME && (aProc->par.flags & AUDIO_FLAG_MUTE)) {
         icon = ICON_MUTE_ON;
     }
 
-    const int16_t value = aProc->par.tune[aProc->tune].value;
+    const int16_t value = aProc->par.tune[tune].value;
 
-    const AudioGrid *grid = aProc->par.tune[aProc->tune].grid;
+    const AudioGrid *grid = aProc->par.tune[tune].grid;
     const int8_t min = grid ? grid->min : 0;
     const int8_t max = grid ? grid->max : 0;
     const int8_t mStep = grid ? grid->mStep : 0;
@@ -694,7 +694,7 @@ void canvasShowTune(bool clear)
     drawSpectrumMode(clear, rect);
 }
 
-void canvasShowAudioFlag(bool clear)
+void canvasShowAudioFlag(bool clear, AudioTune flag)
 {
     AudioProc *aProc = audioGet();
 
@@ -708,26 +708,26 @@ void canvasShowAudioFlag(bool clear)
     Label label;
     Icon icon;
 
-    switch (aProc->tune) {
+    switch (flag) {
     case AUDIO_FLAG_LOUDNESS:
         label = (Label)(LABEL_MENU + MENU_RC_LOUDNESS);
-        icon = aProc->par.loudness ? ICON_LOUDNESS_ON : ICON_LOUDNESS_OFF;
+        icon = aProc->par.flags & AUDIO_FLAG_LOUDNESS ? ICON_LOUDNESS_ON : ICON_LOUDNESS_OFF;
         break;
     case AUDIO_FLAG_SURROUND:
         label = (Label)(LABEL_MENU + MENU_RC_SURROUND);
-        icon = aProc->par.surround ? ICON_SURROUND_ON : ICON_SURROUND_OFF;
+        icon = aProc->par.flags & AUDIO_FLAG_SURROUND ? ICON_SURROUND_ON : ICON_SURROUND_OFF;
         break;
     case AUDIO_FLAG_EFFECT3D:
         label = (Label)(LABEL_MENU + MENU_RC_EFFECT_3D);
-        icon = aProc->par.effect3d ? ICON_EFFECT_3D_ON : ICON_EFFECT_3D_OFF;
+        icon = aProc->par.flags & AUDIO_FLAG_EFFECT3D ? ICON_EFFECT_3D_ON : ICON_EFFECT_3D_OFF;
         break;
     case AUDIO_FLAG_BYPASS:
         label = (Label)(LABEL_MENU + MENU_RC_TONE_BYPASS);
-        icon = aProc->par.bypass ? ICON_TONE_BYPASS_ON : ICON_TONE_BYPASS_OFF;
+        icon = aProc->par.flags & AUDIO_FLAG_BYPASS ? ICON_TONE_BYPASS_ON : ICON_TONE_BYPASS_OFF;
         break;
     default:
         label = (Label)(LABEL_MENU + MENU_RC_MUTE);
-        icon = aProc->par.mute ? ICON_MUTE_ON : ICON_MUTE_OFF;
+        icon = aProc->par.flags & AUDIO_FLAG_MUTE ? ICON_MUTE_ON : ICON_MUTE_OFF;
         break;
     }
 
@@ -1109,7 +1109,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
     AudioProc *aProc = audioGet();
     InputType inType = ampGet()->inType[aProc->par.input];
 
-    if (!aProc->par.mute || ampGet()->status == AMP_STATUS_HW_READY) {
+    if (!(aProc->par.flags & AUDIO_FLAG_MUTE) || ampGet()->status == AMP_STATUS_HW_READY) {
         switch (inType) {
         case IN_TUNER:
             if (NULL != tunerGet()->api) {
@@ -1170,7 +1170,7 @@ void canvasShowAudioInput(bool clear, Icon icon)
         }
     }
 
-    if (aProc->par.mute) {
+    if (aProc->par.flags & AUDIO_FLAG_MUTE) {
         icon = ICON_MUTE_ON;
     }
 
