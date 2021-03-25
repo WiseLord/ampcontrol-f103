@@ -117,27 +117,6 @@ AudioProc *audioGet(void)
     return &aProc;
 }
 
-int8_t audioGetInputCount(void)
-{
-    switch (aProc.par.ic) {
-    case AUDIO_IC_TDA7439:
-    case AUDIO_IC_TDA7440:
-        return TDA7439_IN_CNT;
-    case AUDIO_IC_TDA7313:
-        return TDA7313_IN_CNT;
-    case AUDIO_IC_PT232X:
-        return PT2323_IN_CNT;
-    case AUDIO_IC_TDA7418:
-        return TDA7418_IN_CNT;
-    case AUDIO_IC_TDA7719:
-        return TDA7719_IN_CNT;
-    case AUDIO_IC_TEST:
-        return MAX_INPUTS;
-    default:
-        return 1;
-    }
-}
-
 void audioSetRawBalance(AudioRaw *raw, int8_t volume, bool rear2bass)
 {
     AudioParam *aPar = &aProc.par;
@@ -184,10 +163,10 @@ void audioSetPower(bool value)
     } else {
         audioSetInput(aProc.par.input);
 
-        audioSetLoudness(!!(aProc.par.flags & AUDIO_FLAG_LOUDNESS));
-        audioSetSurround(!!(aProc.par.flags & AUDIO_FLAG_SURROUND));
-        audioSetEffect3D(!!(aProc.par.flags & AUDIO_FLAG_EFFECT3D));
-        audioSetBypass(!!(aProc.par.flags & AUDIO_FLAG_BYPASS));
+        audioSetFlag(AUDIO_FLAG_LOUDNESS, (aProc.par.flags & AUDIO_FLAG_LOUDNESS));
+        audioSetFlag(AUDIO_FLAG_SURROUND, (aProc.par.flags & AUDIO_FLAG_SURROUND));
+        audioSetFlag(AUDIO_FLAG_EFFECT3D, (aProc.par.flags & AUDIO_FLAG_EFFECT3D));
+        audioSetFlag(AUDIO_FLAG_BYPASS, (aProc.par.flags & AUDIO_FLAG_BYPASS));
 
         for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END; tune++) {
             audioSetTune(tune, aProc.par.tune[tune].value);
@@ -263,72 +242,63 @@ void audioSetInput(int8_t value)
     audioSetTune(AUDIO_TUNE_GAIN, aProc.par.gain[value]);
 }
 
-void audioSetMute(bool value)
+int8_t audioGetInputCount(void)
 {
-    if (value) {
-        aProc.par.flags |= AUDIO_FLAG_MUTE;
-    } else {
-        aProc.par.flags &= ~AUDIO_FLAG_MUTE;
-    }
-
-    if (aProc.api && aProc.api->setMute) {
-        aProc.api->setMute(value);
+    switch (aProc.par.ic) {
+    case AUDIO_IC_TDA7439:
+    case AUDIO_IC_TDA7440:
+        return TDA7439_IN_CNT;
+    case AUDIO_IC_TDA7313:
+        return TDA7313_IN_CNT;
+    case AUDIO_IC_PT232X:
+        return PT2323_IN_CNT;
+    case AUDIO_IC_TDA7418:
+        return TDA7418_IN_CNT;
+    case AUDIO_IC_TDA7719:
+        return TDA7719_IN_CNT;
+    case AUDIO_IC_TEST:
+        return MAX_INPUTS;
+    default:
+        return 1;
     }
 }
 
-void audioSetLoudness(bool value)
+void audioSetFlag(AudioFlag flag, bool value)
 {
     if (value) {
-        aProc.par.flags |= AUDIO_FLAG_LOUDNESS;
+        aProc.par.flags |= flag;
     } else {
-        aProc.par.flags &= ~AUDIO_FLAG_LOUDNESS;
+        aProc.par.flags &= ~flag;
     }
 
-    if (aProc.api && aProc.api->setLoudness) {
-        aProc.api->setLoudness(value);
+    if (flag & AUDIO_FLAG_MUTE) {
+        if (aProc.api && aProc.api->setMute) {
+            aProc.api->setMute(value);
+        }
     }
-}
-
-void audioSetSurround(bool value)
-{
-    if (value) {
-        aProc.par.flags |= AUDIO_FLAG_SURROUND;
-    } else {
-        aProc.par.flags &= ~AUDIO_FLAG_SURROUND;
+    if (flag & AUDIO_FLAG_LOUDNESS) {
+        if (aProc.api && aProc.api->setLoudness) {
+            aProc.api->setLoudness(value);
+        }
     }
-
-    if (aProc.api && aProc.api->setSurround) {
-        aProc.api->setSurround(value);
+    if (flag & AUDIO_FLAG_SURROUND) {
+        if (aProc.api && aProc.api->setSurround) {
+            aProc.api->setSurround(value);
+        }
     }
-}
-
-void audioSetEffect3D(bool value)
-{
-    if (value) {
-        aProc.par.flags |= AUDIO_FLAG_EFFECT3D;
-    } else {
-        aProc.par.flags &= ~AUDIO_FLAG_EFFECT3D;
+    if (flag & AUDIO_FLAG_EFFECT3D) {
+        if (aProc.api && aProc.api->setEffect3d) {
+            aProc.api->setEffect3d(value);
+        }
     }
-
-    if (aProc.api && aProc.api->setEffect3d) {
-        aProc.api->setEffect3d(value);
-    }
-}
-
-void audioSetBypass(bool value)
-{
-    if (value) {
-        aProc.par.flags |= AUDIO_FLAG_BYPASS;
-    } else {
-        aProc.par.flags &= ~AUDIO_FLAG_BYPASS;
-    }
-
-    if (aProc.api && aProc.api->setBypass) {
-        aProc.api->setBypass(value);
-    } else {
-        audioSetTune(AUDIO_TUNE_BASS, aProc.par.tune[AUDIO_TUNE_BASS].value);
-        audioSetTune(AUDIO_TUNE_MIDDLE, aProc.par.tune[AUDIO_TUNE_MIDDLE].value);
-        audioSetTune(AUDIO_TUNE_TREBLE, aProc.par.tune[AUDIO_TUNE_TREBLE].value);
+    if (flag & AUDIO_FLAG_BYPASS) {
+        if (aProc.api && aProc.api->setBypass) {
+            aProc.api->setBypass(value);
+        } else {
+            audioSetTune(AUDIO_TUNE_BASS, aProc.par.tune[AUDIO_TUNE_BASS].value);
+            audioSetTune(AUDIO_TUNE_MIDDLE, aProc.par.tune[AUDIO_TUNE_MIDDLE].value);
+            audioSetTune(AUDIO_TUNE_TREBLE, aProc.par.tune[AUDIO_TUNE_TREBLE].value);
+        }
     }
 }
 

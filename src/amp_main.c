@@ -330,7 +330,7 @@ static void ampMute(bool value)
     }
 
     ampPinMute(value);
-    audioSetMute(value);
+    audioSetFlag(AUDIO_FLAG_MUTE, value);
 }
 
 static void ampReadSettings(void)
@@ -1553,7 +1553,7 @@ void ampActionHandle(void)
         screenSet(SCREEN_AUDIO_FLAG, 3000);
         break;
     case ACTION_AUDIO_LOUDNESS:
-        audioSetLoudness(action.value);
+        audioSetFlag(AUDIO_FLAG_LOUDNESS, action.value);
         if (priv.flag != AUDIO_FLAG_LOUDNESS) {
             priv.screenClear = true;
         }
@@ -1561,7 +1561,7 @@ void ampActionHandle(void)
         screenSet(SCREEN_AUDIO_FLAG, 3000);
         break;
     case ACTION_AUDIO_SURROUND:
-        audioSetSurround(action.value);
+        audioSetFlag(AUDIO_FLAG_SURROUND, action.value);
         if (priv.flag != AUDIO_FLAG_SURROUND) {
             priv.screenClear = true;
         }
@@ -1569,7 +1569,7 @@ void ampActionHandle(void)
         screenSet(SCREEN_AUDIO_FLAG, 3000);
         break;
     case ACTION_AUDIO_EFFECT3D:
-        audioSetEffect3D(action.value);
+        audioSetFlag(AUDIO_FLAG_EFFECT3D, action.value);
         if (priv.flag != AUDIO_FLAG_EFFECT3D) {
             priv.screenClear = true;
         }
@@ -1577,7 +1577,7 @@ void ampActionHandle(void)
         screenSet(SCREEN_AUDIO_FLAG, 3000);
         break;
     case ACTION_AUDIO_BYPASS:
-        audioSetBypass(action.value);
+        audioSetFlag(AUDIO_FLAG_BYPASS, action.value);
         if (priv.flag != AUDIO_FLAG_BYPASS) {
             priv.screenClear = true;
         }

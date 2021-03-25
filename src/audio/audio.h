@@ -21,7 +21,6 @@ void audioSaveSettings(void);
 void audioInit(void);
 
 AudioProc *audioGet(void);
-int8_t audioGetInputCount(void);
 
 void audioSetRawBalance(AudioRaw *raw, int8_t volume, bool rear2bass);
 void audioSetPower(bool value);
@@ -30,11 +29,9 @@ void audioSetTune(AudioTune tune, int8_t value);
 void audioChangeTune(AudioTune tune, int8_t diff);
 
 void audioSetInput(int8_t value);
-void audioSetMute(bool value);
-void audioSetLoudness(bool value);
-void audioSetSurround(bool value);
-void audioSetEffect3D(bool value);
-void audioSetBypass(bool value);
+int8_t audioGetInputCount(void);
+
+void audioSetFlag(AudioFlag flag, bool value);
 
 bool audioIsModeSupported(AudioMode mode);
 
