@@ -82,10 +82,10 @@
 #define TDA7418_SOFTMUTE_OP96MS     0x02
 #define TDA7418_SOFTMUTE_1P23MS     0x04
 
-static const AudioGrid gridVolume    = {-79, 15, (int8_t)(1.00 * STEP_MULT)}; // -79..15dB with 1dB step
-static const AudioGrid gridToneBal   = {-15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
-static const AudioGrid gridSubwoofer = {-15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
-static const AudioGrid gridGain      = {  0, 15, (int8_t)(1.00 * STEP_MULT)}; // 0..15dB with 1dB step
+static const AudioGrid gridVolume    = {NULL, -79, 15, (int8_t)(1.00 * STEP_MULT)}; // -79..15dB with 1dB step
+static const AudioGrid gridToneBal   = {NULL, -15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
+static const AudioGrid gridSubwoofer = {NULL, -15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
+static const AudioGrid gridGain      = {NULL,   0, 15, (int8_t)(1.00 * STEP_MULT)}; // 0..15dB with 1dB step
 
 static AudioParam *aPar;
 

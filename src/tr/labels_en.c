@@ -13,11 +13,20 @@ const char *const labels_en[LABEL_END] = {
     [LABEL_BASS]            = "Bass",
     [LABEL_MIDDLE]          = "Middle",
     [LABEL_TREBLE]          = "Treble",
-    [LABEL_FRONTREAR]       = "Front/rear",
     [LABEL_BALANCE]         = "Balance",
+    [LABEL_FRONTREAR]       = "Front/rear",
     [LABEL_CENTER]          = "Center",
     [LABEL_SUBWOOFER]       = "Subwoofer",
     [LABEL_PREAMP]          = "Preamp",
+    [LABEL_LOUDNESS]        = "Loudness",
+
+    [LABEL_BASS_FREQ]       = "Bass freq",
+    [LABEL_BASS_QUAL]       = "Bass Q",
+    [LABEL_MIDDLE_KFREQ]    = "Middle freq",
+    [LABEL_MIDDLE_QUAL]     = "Middle Q",
+    [LABEL_TREBLE_KFREQ]    = "Treble freq",
+    [LABEL_SUB_CUT_FREQ]    = "Sub cut freq",
+    [LABEL_LOUD_PEAK_FREQ]  = "Loudness freq",
 
     [LABEL_IN_TUNER]        = "Tuner",
     [LABEL_IN_PC]           = "Computer",
@@ -36,6 +45,10 @@ const char *const labels_en[LABEL_END] = {
 
     [LABEL_BOOL_OFF]        = "OFF",
     [LABEL_BOOL_ON]         = "ON",
+
+    [LABEL_DB]              = "dB",
+    [LABEL_HZ]              = "Hz",
+    [LABEL_K]               = "k",
 
     [LABEL_MPD_WAIT]        = "Wait for MPD...",
 

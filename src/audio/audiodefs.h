@@ -27,11 +27,19 @@ extern "C" {
     AUDIO_TUNE(BASS)                    \
     AUDIO_TUNE(MIDDLE)                  \
     AUDIO_TUNE(TREBLE)                  \
-    AUDIO_TUNE(FRONTREAR)               \
     AUDIO_TUNE(BALANCE)                 \
+    AUDIO_TUNE(FRONTREAR)               \
     AUDIO_TUNE(CENTER)                  \
     AUDIO_TUNE(SUBWOOFER)               \
     AUDIO_TUNE(PREAMP)                  \
+    AUDIO_TUNE(LOUDNESS)                \
+    AUDIO_TUNE(BASS_FREQ)               \
+    AUDIO_TUNE(BASS_QUAL)               \
+    AUDIO_TUNE(MIDDLE_KFREQ)            \
+    AUDIO_TUNE(MIDDLE_QUAL)             \
+    AUDIO_TUNE(TREBLE_KFREQ)            \
+    AUDIO_TUNE(SUB_CUT_FREQ)            \
+    AUDIO_TUNE(LOUD_PEAK_FREQ)          \
     AUDIO_TUNE(GAIN)                    \
 
 #define GENERATE_AUDIO_TUNE(TUNE)    AUDIO_TUNE_ ## TUNE,
@@ -43,8 +51,10 @@ enum {
     AUDIO_IC_END
 };
 
-typedef uint8_t AudioTune;
+typedef int8_t AudioTune;
 enum {
+    AUDIO_TUNE_INVALID = -1,
+
     FOREACH_AUDIO_TUNE(GENERATE_AUDIO_TUNE)
 
     AUDIO_TUNE_END,
@@ -70,6 +80,21 @@ enum {
     AUDIO_MODE_END
 };
 
+typedef int8_t AudioGroup;
+enum {
+    AUDIO_GROUP_INVALID = -1,
+
+    AUDIO_GROUP_VOLUME = 0,
+    AUDIO_GROUP_BASS,
+    AUDIO_GROUP_MIDDLE,
+    AUDIO_GROUP_TREBLE,
+    AUDIO_GROUP_BALANCE,
+    AUDIO_GROUP_SUBFOOWER,
+    AUDIO_GROUP_LOUDNESS,
+
+    AUDIO_GROUP_END,
+};
+
 typedef struct {
     int8_t frontLeft;
     int8_t frontRight;
@@ -82,6 +107,7 @@ typedef struct {
 #define STEP_MULT   8
 
 typedef struct {
+    const int16_t *array;
     int8_t min;     // Minimum in steps
     int8_t max;     // Maximum in steps
     int8_t mStep;   // Step multiplied by STEP_MULT (to handle 1.25dB real step)

@@ -781,6 +781,13 @@ int16_t settingsGet(Param param)
     case PARAM_AUDIO_CENTER:
     case PARAM_AUDIO_SUBWOOFER:
     case PARAM_AUDIO_PREAMP:
+    case PARAM_AUDIO_BASS_FREQ:
+    case PARAM_AUDIO_BASS_QUAL:
+    case PARAM_AUDIO_MIDDLE_FREQ:
+    case PARAM_AUDIO_MIDDLE_QUAL:
+    case PARAM_AUDIO_TREBLE_FREQ:
+    case PARAM_AUDIO_SUB_CUT_FREQ:
+    case PARAM_AUDIO_LOUD_PEAK_FREQ:
         ret = aProc->par.tune[param - PARAM_AUDIO_VOLUME].value;
         break;
 
@@ -936,6 +943,13 @@ void settingsSet(Param param, int16_t value)
     case PARAM_AUDIO_CENTER:
     case PARAM_AUDIO_SUBWOOFER:
     case PARAM_AUDIO_PREAMP:
+    case PARAM_AUDIO_BASS_FREQ:
+    case PARAM_AUDIO_BASS_QUAL:
+    case PARAM_AUDIO_MIDDLE_FREQ:
+    case PARAM_AUDIO_MIDDLE_QUAL:
+    case PARAM_AUDIO_TREBLE_FREQ:
+    case PARAM_AUDIO_SUB_CUT_FREQ:
+    case PARAM_AUDIO_LOUD_PEAK_FREQ:
         aProc->par.tune[param - PARAM_AUDIO_VOLUME].value = (int8_t)value;
         break;
 

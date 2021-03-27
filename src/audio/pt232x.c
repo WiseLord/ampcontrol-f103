@@ -53,11 +53,11 @@
 #define PT2323_MIX              0x90
 #define PT2323_MIX_6DB          0x01
 
-static const AudioGrid gridVolume     = {-79,  0, (int8_t)(1.00 * STEP_MULT)}; // -79..0dB with 1dB step
-static const AudioGrid gridTone       = { -7,  7, (int8_t)(2.00 * STEP_MULT)}; // -14..14dB with 2dB step
-static const AudioGrid gridBalance    = { -7,  7, (int8_t)(1.00 * STEP_MULT)}; // -7..7dB with 1dB step
-static const AudioGrid gridCenterSub  = {-15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
-static const AudioGrid gridGain       = {  0,  1, (int8_t)(6.00 * STEP_MULT)}; // 0..6dB with 6dB step
+static const AudioGrid gridVolume     = {NULL, -79,  0, (int8_t)(1.00 * STEP_MULT)}; // -79..0dB with 1dB step
+static const AudioGrid gridTone       = {NULL,  -7,  7, (int8_t)(2.00 * STEP_MULT)}; // -14..14dB with 2dB step
+static const AudioGrid gridBalance    = {NULL,  -7,  7, (int8_t)(1.00 * STEP_MULT)}; // -7..7dB with 1dB step
+static const AudioGrid gridCenterSub  = {NULL, -15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
+static const AudioGrid gridGain       = {NULL,   0,  1, (int8_t)(6.00 * STEP_MULT)}; // 0..6dB with 6dB step
 
 static AudioParam *aPar;
 

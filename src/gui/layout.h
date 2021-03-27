@@ -29,15 +29,16 @@ typedef struct {
 } LayoutMenu;
 
 typedef struct {
-    const tFont *valFont;       // Foft to draw tune label
+    const tFont *labelFont;     // Foft to draw tune label
+    const tFont *valFont;       // Foft to draw tune value
     int16_t valY;               // Y position of the tune value
-    LayoutStripedBar bar;
+    const LayoutStripedBar bar;
 } LayoutTune;
 
 typedef struct {
     const tFont *stFont;        // Foft to draw station number
     const tFont *nameFont;      // Foft to draw station name
-    LayoutStripedBar bar;
+    const LayoutStripedBar bar;
     uint8_t iconSpace;          // Space between icons
 } LayoutTuner;
 

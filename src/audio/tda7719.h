@@ -19,7 +19,6 @@ void tda7719Init(AudioParam *param);
 void tda7719SetTune(AudioTune tune, int8_t value);
 void tda7719SetInput(int8_t value);
 void tda7719SetMute(bool value);
-void tda7719SetLoudness(bool value);
 
 #ifdef __cplusplus
 extern "C" {

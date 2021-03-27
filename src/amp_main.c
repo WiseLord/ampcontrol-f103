@@ -187,7 +187,7 @@ static void actionDispExpired(void)
     ScreenType scrMode = amp->screen;
 
     rtcSetMode(RTC_NOEDIT);
-    priv.tune = (scrDef == SCREEN_AUDIO_INPUT ? AUDIO_TUNE_GAIN : AUDIO_TUNE_VOLUME);
+    priv.tune = AUDIO_TUNE_VOLUME;
 
     if (amp->status != AMP_STATUS_STBY) {
         if (scrMode != scrDef) {
@@ -516,7 +516,7 @@ static void actionNavigateCommon(RcCmd cmd)
 {
     switch (cmd) {
     case RC_CMD_NAV_OK:
-        action.type = ACTION_OPEN_MENU;
+        actionSet(ACTION_OPEN_MENU, 0);
         break;
     case RC_CMD_NAV_BACK:
         actionSet(ACTION_MEDIA, MEDIAKEY_PLAY);
@@ -538,13 +538,30 @@ static void actionNavigateCommon(RcCmd cmd)
     }
 }
 
-static void actionNextAudioParam(AudioProc *aProc)
+static void actionNextAudioGroup(void)
 {
+    AudioGroup group = audioGetGroup(priv.tune);
+
+    do {
+        group = (group + 1) % AUDIO_GROUP_END;
+        priv.tune = audioGetFirstInGroup(group);
+    } while (priv.tune == AUDIO_TUNE_INVALID);
+}
+
+static void actionNextAudioSubParam(void)
+{
+    AudioGroup group = audioGetGroup(priv.tune);
+
+    if (group == AUDIO_GROUP_INVALID || priv.tune == AUDIO_TUNE_INVALID) {
+        return;
+    }
+
     do {
         priv.tune++;
-        if (priv.tune >= AUDIO_TUNE_END)
+        if (priv.tune >= AUDIO_TUNE_END) {
             priv.tune = AUDIO_TUNE_VOLUME;
-    } while (aProc->par.tune[priv.tune].grid == NULL && priv.tune != AUDIO_TUNE_VOLUME);
+        }
+    } while (!audioIsTuneValid(priv.tune) || audioGetGroup(priv.tune) != group);
 }
 
 static int8_t actionGetNextAudioInput(int8_t diff)
@@ -913,7 +930,7 @@ static void actionRemapBtnLong(void)
     case BTN_D5:
         switch (scrMode) {
         case SCREEN_TEXTEDIT:
-            action.type = ACTION_OPEN_MENU;
+            actionSet(ACTION_OPEN_MENU, 0);
             break;
         case SCREEN_STANDBY:
             actionSet(ACTION_MENU_SELECT, MENU_SETUP_SYSTEM);
@@ -922,7 +939,7 @@ static void actionRemapBtnLong(void)
             actionSet(ACTION_MENU_RESET, 0);
             break;
         default:
-            actionSet(ACTION_SP_MODE, 0);
+            actionSet(ACTION_OPEN_MENU, 1);
         }
         break;
     case ENC_A:
@@ -974,7 +991,7 @@ static void actionRemapRemote(void)
         break;
 
     case RC_CMD_MENU:
-        action.type = ACTION_OPEN_MENU;
+        actionSet(ACTION_OPEN_MENU, 1);
         break;
 
     case RC_CMD_CHAN_NEXT:
@@ -1478,9 +1495,11 @@ void ampActionHandle(void)
     case ACTION_OPEN_MENU:
         if (scrMode == SCREEN_AUDIO_PARAM) {
             priv.screenClear = true;
-            actionNextAudioParam(aProc);
-        } else {
-            priv.tune = AUDIO_TUNE_VOLUME;
+            if (action.value == 0) {
+                actionNextAudioGroup();
+            } else {
+                actionNextAudioSubParam();
+            }
         }
         screenSet(SCREEN_AUDIO_PARAM, 5000);
         break;

@@ -7,7 +7,7 @@
 * family: Liberation Sans
 * size: 14
 * style: Bold
-* included characters: \x0000\x0001\x0002\x0003\x0010\x0011\x0012\x0013 !"#$%&'(\x0040ABCDEFGHIJKLM`abcdefghi\x0080\x0081\x0082\x0083\x0084\x0085
+* included characters: \x0000\x0001\x0002\x0003\x0010\x0011\x0012\x0013 !"#$%&'()\x0040ABCDEFGHIJKLM`abcdefghi\x0080\x0081\x0082\x0083\x0084\x0085
 * antialiasing: no
 * type: proportional
 * encoding: UTF-16
@@ -355,38 +355,7 @@ static const __flash tImage iconsamp24_0x0023 = { image_data_iconsamp24_0x0023, 
 #endif
 
 #if (0x0 == 0x0)
-static const __flash uint8_t image_data_iconsamp24_0x0024[54] = {
-    // ∙∙∙∙∙∙∙∙∙██████∙∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙██∙∙∙∙∙∙██∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙█∙∙∙████∙∙∙█∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
-    // ████████████████████████
-    // ∙∙████████████████████∙∙
-    // ∙∙∙∙████████████████∙∙∙∙
-    // ∙∙∙∙∙∙████████████∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙████████████∙∙∙∙∙∙
-    // ∙∙∙∙████████████████∙∙∙∙
-    // ∙∙████████████████████∙∙
-    // ████████████████████████
-    // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙█∙∙∙████∙∙∙█∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙██∙∙∙∙∙∙██∙∙∙∙∙∙∙
-    // ∙∙∙∙∙∙∙∙∙██████∙∙∙∙∙∙∙∙∙
-    0xf6, 0x10, 0x10, 0x30, 0x30, 0x70, 0x70, 0xf4, 0xf2, 0xf2, 0xf1, 0x04, 0xf5, 0xf6, 0xf1, 0xf2, 0xf2, 0xf4, 0x70, 0x70, 0x30, 0x30, 0x10, 0x10, 0x08, 0x00, 0x08, 0xe7, 0x08, 0x00, 0xf6, 0x08, 0x08, 0x0c, 0x0c, 0x0e, 0x0e, 0x2f, 0x4f, 0x4f, 0x8f, 0x04, 0xaf, 0xf6, 0x8f, 0x4f, 0x4f, 0x2f, 0x0e, 0x0e, 0x0c, 0x0c, 0x08, 0x08
-};
-static const __flash tImage iconsamp24_0x0024 = { image_data_iconsamp24_0x0024, 24, 24, 54, yes};
-#endif
-
-#if (0x0 == 0x0)
-static const __flash uint8_t image_data_iconsamp24_0x0025[68] = {
+static const __flash uint8_t image_data_iconsamp24_0x0024[68] = {
     // ∙∙∙∙∙∙∙∙∙∙∙██∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙∙∙∙██∙∙∙∙∙∙∙∙∙∙∙
     // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
@@ -413,7 +382,38 @@ static const __flash uint8_t image_data_iconsamp24_0x0025[68] = {
     // ∙∙∙∙███∙∙∙∙∙∙∙∙∙∙███∙∙∙∙
     0x04, 0x00, 0xf0, 0x60, 0xf0, 0x78, 0x38, 0x1c, 0x1c, 0x8c, 0xff, 0xff, 0x8c, 0x1c, 0x1c, 0x38, 0x78, 0xf0, 0x60, 0x05, 0x00, 0xf7, 0x80, 0x60, 0x18, 0x06, 0x01, 0x06, 0x18, 0x60, 0x80, 0x04, 0x03, 0xde, 0x80, 0x60, 0x18, 0x06, 0x01, 0x06, 0x18, 0x60, 0x80, 0x00, 0x1e, 0x3d, 0x64, 0x4c, 0xdc, 0xdc, 0xfc, 0x7c, 0x7c, 0x3d, 0x1e, 0x00, 0x00, 0x1e, 0x3d, 0x64, 0x4c, 0xdc, 0xdc, 0xfc, 0x7c, 0x7c, 0x3d, 0x1e
 };
-static const __flash tImage iconsamp24_0x0025 = { image_data_iconsamp24_0x0025, 24, 24, 68, yes};
+static const __flash tImage iconsamp24_0x0024 = { image_data_iconsamp24_0x0024, 24, 24, 68, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const __flash uint8_t image_data_iconsamp24_0x0025[54] = {
+    // ∙∙∙∙∙∙∙∙∙██████∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙██∙∙∙∙∙∙██∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙█∙∙∙████∙∙∙█∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
+    // ████████████████████████
+    // ∙∙████████████████████∙∙
+    // ∙∙∙∙████████████████∙∙∙∙
+    // ∙∙∙∙∙∙████████████∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙████████∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙████████████∙∙∙∙∙∙
+    // ∙∙∙∙████████████████∙∙∙∙
+    // ∙∙████████████████████∙∙
+    // ████████████████████████
+    // ∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙█∙∙∙████∙∙∙█∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙██∙∙∙∙∙∙██∙∙∙∙∙∙∙
+    // ∙∙∙∙∙∙∙∙∙██████∙∙∙∙∙∙∙∙∙
+    0xf6, 0x10, 0x10, 0x30, 0x30, 0x70, 0x70, 0xf4, 0xf2, 0xf2, 0xf1, 0x04, 0xf5, 0xf6, 0xf1, 0xf2, 0xf2, 0xf4, 0x70, 0x70, 0x30, 0x30, 0x10, 0x10, 0x08, 0x00, 0x08, 0xe7, 0x08, 0x00, 0xf6, 0x08, 0x08, 0x0c, 0x0c, 0x0e, 0x0e, 0x2f, 0x4f, 0x4f, 0x8f, 0x04, 0xaf, 0xf6, 0x8f, 0x4f, 0x4f, 0x2f, 0x0e, 0x0e, 0x0c, 0x0c, 0x08, 0x08
+};
+static const __flash tImage iconsamp24_0x0025 = { image_data_iconsamp24_0x0025, 24, 24, 54, yes};
 #endif
 
 #if (0x0 == 0x0)
@@ -507,6 +507,37 @@ static const __flash uint8_t image_data_iconsamp24_0x0028[60] = {
     0x09, 0x00, 0xf4, 0x80, 0xc0, 0xe0, 0xf0, 0xfe, 0xff, 0x07, 0x06, 0x0e, 0x18, 0x70, 0xc0, 0x04, 0x00, 0xf9, 0xe0, 0xe0, 0xf0, 0xf0, 0xf8, 0xfc, 0xfe, 0x07, 0xff, 0xf5, 0xfe, 0xf8, 0xe1, 0xc2, 0x9c, 0x01, 0x87, 0xfc, 0x00, 0x00, 0x01, 0x04, 0x03, 0xf8, 0x07, 0x1f, 0x3f, 0x7f, 0xff, 0xfd, 0xf8, 0xe0, 0x03, 0x00, 0xf9, 0x01, 0x01, 0x03, 0x07, 0x07, 0x03, 0x00
 };
 static const __flash tImage iconsamp24_0x0028 = { image_data_iconsamp24_0x0028, 24, 24, 60, yes};
+#endif
+
+#if (0x0 == 0x0)
+static const __flash uint8_t image_data_iconsamp24_0x0029[71] = {
+    // ∙∙████████████████████∙∙
+    // ∙██████████████████████∙
+    // ███∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙███
+    // ██∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙██
+    // ██∙∙∙██∙∙∙∙██∙∙∙∙██∙∙∙██
+    // ██∙∙∙██∙∙∙∙██∙∙∙∙██∙∙∙██
+    // ██∙∙∙██∙∙∙∙██∙∙∙████∙∙██
+    // ██∙∙∙██∙∙∙∙██∙∙∙█∙∙█∙∙██
+    // ██∙∙∙██∙∙∙∙██∙∙∙█∙∙█∙∙██
+    // ██∙∙████∙∙∙██∙∙∙████∙∙██
+    // ██∙∙█∙∙█∙∙∙██∙∙∙∙██∙∙∙██
+    // ██∙∙█∙∙█∙∙∙██∙∙∙∙██∙∙∙██
+    // ██∙∙████∙∙∙██∙∙∙∙██∙∙∙██
+    // ██∙∙∙██∙∙∙∙██∙∙∙∙██∙∙∙██
+    // ██∙∙∙██∙∙∙∙██∙∙∙∙██∙∙∙██
+    // ██∙∙∙██∙∙∙████∙∙∙██∙∙∙██
+    // ██∙∙∙██∙∙∙█∙∙█∙∙∙██∙∙∙██
+    // ██∙∙∙██∙∙∙█∙∙█∙∙∙██∙∙∙██
+    // ██∙∙∙██∙∙∙████∙∙∙██∙∙∙██
+    // ██∙∙∙██∙∙∙∙██∙∙∙∙██∙∙∙██
+    // ██∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙██
+    // ███∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙∙███
+    // ∙██████████████████████∙
+    // ∙∙████████████████████∙∙
+    0xf9, 0xfc, 0xfe, 0x07, 0x03, 0x03, 0xf3, 0xf3, 0x04, 0x03, 0x02, 0xf3, 0x03, 0x03, 0xd9, 0xc3, 0x73, 0x73, 0xc3, 0x03, 0x07, 0xfe, 0xfc, 0xff, 0xff, 0x00, 0x00, 0x1e, 0xf3, 0xf3, 0x1e, 0x00, 0x00, 0x80, 0xff, 0xff, 0x80, 0x00, 0x00, 0x03, 0xfe, 0xfe, 0x03, 0x00, 0x00, 0xff, 0xff, 0x3f, 0x7f, 0xe0, 0xc0, 0xc0, 0xcf, 0xcf, 0x03, 0xc0, 0xfc, 0xc7, 0xcc, 0xcc, 0xc7, 0x03, 0xc0, 0xf9, 0xcf, 0xcf, 0xc0, 0xc0, 0xe0, 0x7f, 0x3f
+};
+static const __flash tImage iconsamp24_0x0029 = { image_data_iconsamp24_0x0029, 24, 24, 71, yes};
 #endif
 
 #if (0x0 == 0x0)
@@ -1005,7 +1036,7 @@ static const __flash uint8_t image_data_iconsamp24_0x0061[61] = {
 static const __flash tImage iconsamp24_0x0061 = { image_data_iconsamp24_0x0061, 24, 24, 61, yes};
 #endif
 
-#if (0x0 == 0x0)
+#if (0x00029 == 0x0)
 static const __flash uint8_t image_data_iconsamp24_0x0062[71] = {
     // ∙∙████████████████████∙∙
     // ∙██████████████████████∙
@@ -1579,6 +1610,14 @@ static const __flash tChar iconsamp24_array[] = {
 #endif
 
 #if (0x0 == 0x0)
+    // character: ')'
+    {0x0029, &iconsamp24_0x0029},
+#else
+    // character: ')' == ''
+    {0x0029, &iconsamp24_0x},
+#endif
+
+#if (0x0 == 0x0)
     // character: '\x0040'
     {0x0040, &iconsamp24_0x0040},
 #else
@@ -1706,12 +1745,12 @@ static const __flash tChar iconsamp24_array[] = {
     {0x0061, &iconsamp24_0x0020},
 #endif
 
-#if (0x0 == 0x0)
+#if (0x00029 == 0x0)
     // character: 'b'
     {0x0062, &iconsamp24_0x0062},
 #else
-    // character: 'b' == ''
-    {0x0062, &iconsamp24_0x},
+    // character: 'b' == ')'
+    {0x0062, &iconsamp24_0x0029},
 #endif
 
 #if (0x0 == 0x0)
@@ -1821,4 +1860,4 @@ static const __flash tChar iconsamp24_array[] = {
 };
 
 
-const tFont __flash iconsamp24 = { 47, iconsamp24_array };
+const tFont __flash iconsamp24 = { 48, iconsamp24_array };

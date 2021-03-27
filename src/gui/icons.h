@@ -28,11 +28,12 @@ enum {
     ICON_BASS,
     ICON_MIDDLE,
     ICON_TREBLE,
-    ICON_FRONTREAR,
     ICON_BALANCE,
+    ICON_FRONTREAR,
     ICON_CENTER,
     ICON_SUBWOOFER,
     ICON_PREAMP,
+    ICON_LOUDNESS,
 
     // Input icons
     ICON_TUNER = 0x40,

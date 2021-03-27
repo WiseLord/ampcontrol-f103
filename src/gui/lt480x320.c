@@ -17,6 +17,7 @@ static const Layout lt480x320 = {
     .menu.menuFont = &fontterminus24b,
     .menu.itemCnt = 10,
 
+    .tune.labelFont = &fontterminusmod24x3,
     .tune.valFont = &fontterminusmod24x3,
     .tune.valY = 70,
     .tune.bar.sc = 76,

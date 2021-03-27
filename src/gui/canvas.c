@@ -631,6 +631,9 @@ void canvasShowTune(bool clear, AudioTune tune)
     if (tune < AUDIO_TUNE_GAIN) {
         label = labelsGet(LABEL_VOLUME + tune);
         icon = ICON_VOLUME + tune;
+        if (tune > AUDIO_TUNE_LOUDNESS) {
+            icon = ICON_EMPTY; // TODO icons
+        }
     }
 
     if (icon == ICON_VOLUME && (aProc->par.flags & AUDIO_FLAG_MUTE)) {
@@ -662,31 +665,61 @@ void canvasShowTune(bool clear, AudioTune tune)
     }
 
     if (clear || value != prev.par.value) {
-        // Bar
-        StripedBar bar = {value, min, max};
-        stripedBarDraw(clear, &bar, &lt->tune.bar);
-
-        int16_t showValue = value;
-
-        if (amp->showDb) {
-            showValue = value * mStep / STEP_MULT;
-        } else {
-            if (min + max != 0) {
-                showValue -= min;
-            }
-        }
-
         // Value
         glcdSetXY(lt->rect.w, lt->tune.valY);
         glcdSetFontAlign(GLCD_ALIGN_RIGHT);
         glcdSetFont(lt->tune.valFont);
-        char buf[8];
-        snprintf(buf, sizeof(buf), "%3d", showValue);
-        glcdWriteString(buf);
+
+        int16_t showValue = value;
+
+        char bufValue[16] = "";
+
+        if (grid->array != NULL) {
+            showValue = grid->array[value];
+        }
+
+        switch (tune) {
+        case AUDIO_TUNE_BASS_FREQ:
+        case AUDIO_TUNE_SUB_CUT_FREQ:
+        case AUDIO_TUNE_LOUD_PEAK_FREQ:
+            snprintf(bufValue, sizeof(bufValue), "%4d%s", showValue / STEP_MULT, labelsGet(LABEL_HZ));
+            break;
+        case AUDIO_TUNE_MIDDLE_KFREQ:
+        case AUDIO_TUNE_TREBLE_KFREQ:
+            showValue = showValue * 1000 / STEP_MULT;
+            snprintf(bufValue, sizeof(bufValue), "%3d.%1d%s%s", showValue / 1000, showValue % 1000 / 100, labelsGet(LABEL_K), labelsGet(LABEL_HZ));
+            break;
+        case AUDIO_TUNE_BASS_QUAL:
+        case AUDIO_TUNE_MIDDLE_QUAL:
+            showValue = showValue * 1000 / STEP_MULT;
+            snprintf(bufValue, sizeof(bufValue), "%2d.%02d", showValue / 1000, showValue % 1000 / 10);
+            break;
+        default:
+            if (amp->showDb) {
+                showValue = value * mStep / STEP_MULT;
+            } else {
+                if (min + max != 0) {
+                    showValue -= min;
+                }
+            }
+            snprintf(bufValue, sizeof(bufValue), "%3d", showValue);
+        }
+
+        int16_t strLen = glcdWriteString(bufValue);
+
+
+        // Bar
+        StripedBar bar = {value, min, max};
+        LayoutStripedBar ltBar = lt->tune.bar;
+
+        ltBar.barW = lt->rect.w - strLen;
+
+        stripedBarDraw(clear, &bar, &ltBar);
+
         prev.par.value = value;
     }
 
-    int16_t yPos = lt->tune.valY + lt->tune.valFont->chars[0].image->height;
+    int16_t yPos = lt->tune.valY + lt->tune.labelFont->chars[0].image->height;
 
     GlcdRect rect = canvas.glcd->rect;
     rect.y = yPos;
@@ -824,7 +857,7 @@ void canvasShowTuner(bool clear)
 
     const tImage *icon = NULL;
     const uint8_t iconSpace = lt->tuner.iconSpace;
-    const LayoutStripedBar *ltTunerBar = &lt->tuner.bar;
+    LayoutStripedBar ltTunerBar = lt->tuner.bar;
 
     // Frequency
     uint16_t freq = tuner->status.freq;
@@ -847,7 +880,7 @@ void canvasShowTuner(bool clear)
 
         // Scale
         StripedBar bar = {(int16_t)freq, freqMin, freqMax};
-        stripedBarDraw(clear, &bar, ltTunerBar);
+        stripedBarDraw(clear, &bar, &ltTunerBar);
 
         glcdSetFont(lt->tuner.stFont);
         glcdSetXY(lt->rect.w, lt->tune.valY);

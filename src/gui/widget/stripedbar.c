@@ -9,12 +9,13 @@ void stripedBarDraw(bool clear, StripedBar *bar, LayoutStripedBar *lt)
 
     const Palette *pal = paletteGet();
 
-    const int16_t sc = lt->sc;         // Scale count
     const uint8_t sw = lt->sw;         // Scale width
+    const int16_t sc = lt->barW / lt->sw / 2;
+    const int16_t width = sc * 2 * sw;
+
     const int16_t barPos = lt->barY;
     const uint8_t barHalf = lt->half;
     const uint8_t barMiddle = lt->middle;
-    const int16_t width = lt->barW;
 
     int16_t value = bar->value;
     int16_t min = bar->min;
