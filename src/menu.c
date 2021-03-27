@@ -66,10 +66,10 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_TUNER_BAND]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     PARAM_TUNER_BAND},
     [MENU_TUNER_STEP]       = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     PARAM_TUNER_STEP},
     [MENU_TUNER_DEEMPH]     = {MENU_SETUP_TUNER,        MENU_TYPE_ENUM,     PARAM_TUNER_DEEMPH},
-    [MENU_TUNER_STA_MODE]   = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     PARAM_TUNER_STA_MODE},
-    [MENU_TUNER_FMONO]      = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     PARAM_TUNER_FMONO},
-    [MENU_TUNER_RDS]        = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     PARAM_TUNER_RDS},
-    [MENU_TUNER_BASS]       = {MENU_SETUP_TUNER,        MENU_TYPE_BOOL,     PARAM_TUNER_BASS},
+    [MENU_TUNER_STA_MODE]   = {MENU_SETUP_TUNER,        MENU_TYPE_FLAG,     PARAM_TUNER_FLAGS},
+    [MENU_TUNER_FMONO]      = {MENU_SETUP_TUNER,        MENU_TYPE_FLAG,     PARAM_TUNER_FLAGS},
+    [MENU_TUNER_RDS]        = {MENU_SETUP_TUNER,        MENU_TYPE_FLAG,     PARAM_TUNER_FLAGS},
+    [MENU_TUNER_BASS]       = {MENU_SETUP_TUNER,        MENU_TYPE_FLAG,     PARAM_TUNER_FLAGS},
     [MENU_TUNER_VOLUME]     = {MENU_SETUP_TUNER,        MENU_TYPE_NUMBER,   PARAM_TUNER_VOLUME},
 
     [MENU_ALARM_HOUR]       = {MENU_SETUP_ALARM,        MENU_TYPE_NUMBER,   PARAM_ALARM_HOUR},
@@ -117,20 +117,71 @@ static int16_t menuGetValue(MenuIdx index)
 
     ret = settingsGet(menuItems[index].param);
 
+    if (menuItems[index].type == MENU_TYPE_FLAG) {
+        switch (index) {
+            case MENU_TUNER_STA_MODE:
+            ret = !!(ret & TUNER_PARAM_STA_MODE);
+            break;
+        case MENU_TUNER_FMONO:
+            ret = !!(ret & TUNER_PARAM_MONO);
+            break;
+        case MENU_TUNER_RDS:
+            ret = !!(ret & TUNER_PARAM_RDS);
+            break;
+        case MENU_TUNER_BASS:
+            ret = !!(ret & TUNER_PARAM_BASS);
+            break;
+        }
+    }
+
     return ret;
+}
+
+static void paramSetFlag(int16_t *flags, const int16_t flag, bool value)
+{
+    if (value) {
+        *flags |= flag;
+    } else {
+        *flags &= ~flag;
+    }
 }
 
 static void menuStoreCurrentValue(void)
 {
-    if (menu.active < MENU_END) {
-        Param param = menuItems[menu.active].param;
-        settingsSet(param, menu.value);
-        settingsStore(param, menu.value);
+    MenuIdx index = menu.active;
+    int16_t value = menu.value;
+
+    if (index < MENU_END) {
+        Param param = menuItems[index].param;
+
+        if (menuItems[index].type == MENU_TYPE_FLAG) {
+            int16_t tFlags = tunerGet()->par.flags;
+
+            switch (index) {
+            case MENU_TUNER_STA_MODE:
+                paramSetFlag(&tFlags, TUNER_PARAM_STA_MODE, value);
+                break;
+            case MENU_TUNER_FMONO:
+                paramSetFlag(&tFlags, TUNER_PARAM_MONO, value);
+                break;
+            case MENU_TUNER_RDS:
+                paramSetFlag(&tFlags, TUNER_PARAM_RDS, value);
+                break;
+            case MENU_TUNER_BASS:
+                paramSetFlag(&tFlags, TUNER_PARAM_BASS, value);
+                break;
+            }
+
+            value = tFlags;
+        }
+
+        settingsSet(param, value);
+        settingsStore(param, value);
     }
 
-    switch (menu.active) {
+    switch (index) {
     case MENU_SYSTEM_RTC_CORR:
-        rtcSetCorrection(menu.value);
+        rtcSetCorrection(value);
         break;
     case MENU_SYSTEM_STBY_LOW:
         ampPinStby(true);
@@ -140,14 +191,14 @@ static void menuStoreCurrentValue(void)
         break;
     case MENU_DISPLAY_BR_STBY:
     case MENU_DISPLAY_BR_WORK:
-        ampSetBrightness((int8_t)(menu.value));
+        ampSetBrightness((int8_t)(value));
         break;
     case MENU_DISPLAY_ROTATE:
-        glcdSetOrientation(menu.value ? GLCD_LANDSCAPE_ROT : GLCD_LANDSCAPE);
+        glcdSetOrientation(value ? GLCD_LANDSCAPE_ROT : GLCD_LANDSCAPE);
         canvasClear();
         break;
     case MENU_DISPLAY_PALETTE:
-        paletteSetIndex((PalIdx)menu.value);
+        paletteSetIndex((PalIdx)value);
         canvasGet()->pal = paletteGet();
         break;
     default:
@@ -304,13 +355,15 @@ static void menuValueLimit()
 
 static void menuValueChange(int8_t diff)
 {
-    if (menuItems[menu.active].type == MENU_TYPE_BOOL) {
+    MenuType type = menuItems[menu.active].type;
+
+    if (type == MENU_TYPE_BOOL || type == MENU_TYPE_FLAG) {
         if (diff)
             menu.value = !menu.value;
         return;
     }
 
-    if (menuItems[menu.active].type == MENU_TYPE_RC) {
+    if (type == MENU_TYPE_RC) {
         RcData rcData = rcRead(false);
 
         menu.value = (int16_t)(((rcData.addr & 0xFF) << 8) | rcData.cmd);
@@ -550,7 +603,9 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
     static const char *noVal = "--";
 
     // Parent menu type
-    if (menuItems[index].type == MENU_TYPE_PARENT) {
+    MenuType type = menuItems[index].type;
+
+    if (type == MENU_TYPE_PARENT) {
         snprintf(str, len, "%s", index == MENU_NULL ? "" : ret);
         return;
     }
@@ -561,18 +616,18 @@ void menuGetValueStr(MenuIdx index, char *str, size_t len)
         value = menu.value;
 
     // Bool menu type
-    if (menuItems[index].type == MENU_TYPE_BOOL) {
+    if (type == MENU_TYPE_BOOL || type == MENU_TYPE_FLAG) {
         ret = labelsGet((Label)(LABEL_BOOL_OFF + value));
         snprintf(str, len, "%s", ret);
         return;
     }
 
-    if (menuItems[index].type == MENU_TYPE_NUMBER) {
+    if (type == MENU_TYPE_NUMBER) {
         snprintf(str, len, "%5d", value);
         return;
     }
 
-    if (menuItems[index].type == MENU_TYPE_RC) {
+    if (type == MENU_TYPE_RC) {
         if ((uint16_t)value == EE_NOT_FOUND) {
             snprintf(str, len, "%s", noVal);
             return;
@@ -741,17 +796,8 @@ int16_t settingsGet(Param param)
     case PARAM_TUNER_DEEMPH:
         ret = tuner->par.deemph;
         break;
-    case PARAM_TUNER_STA_MODE:
-        ret = tuner->par.stationMode;
-        break;
-    case PARAM_TUNER_FMONO:
-        ret = tuner->par.forcedMono;
-        break;
-    case PARAM_TUNER_RDS:
-        ret = tuner->par.rds;
-        break;
-    case PARAM_TUNER_BASS:
-        ret = tuner->par.bassBoost;
+    case PARAM_TUNER_FLAGS:
+        ret = tuner->par.flags;
         break;
     case PARAM_TUNER_VOLUME:
         ret = tuner->par.volume;
@@ -905,17 +951,8 @@ void settingsSet(Param param, int16_t value)
     case PARAM_TUNER_DEEMPH:
         tuner->par.deemph = (TunerDeemph)value;
         break;
-    case PARAM_TUNER_STA_MODE:
-        tuner->par.stationMode = (bool)value;
-        break;
-    case PARAM_TUNER_FMONO:
-        tuner->par.forcedMono = (bool)value;
-        break;
-    case PARAM_TUNER_RDS:
-        tuner->par.rds = (bool)value;
-        break;
-    case PARAM_TUNER_BASS:
-        tuner->par.bassBoost = (bool)value;
+    case PARAM_TUNER_FLAGS:
+        tuner->par.flags = (TunerParamFlag)value;
         break;
     case PARAM_TUNER_VOLUME:
         tuner->par.volume = (int8_t)value;

@@ -55,7 +55,7 @@ void tunerTestInit(TunerParam *tPar, TunerStatus *status)
     }
 
     status->rssi = 10;
-    status->flags = TUNER_FLAG_STEREO;
+    status->flags = TUNER_STATUS_STEREO;
 }
 
 void tunerTestSetFreq(uint16_t value)
@@ -81,10 +81,9 @@ void tunerReadSettings(TunerIC defIC)
     tuner.par.band = settingsRead(PARAM_TUNER_BAND, TUNER_BAND_FM_US_EUROPE);
     tuner.par.step = settingsRead(PARAM_TUNER_STEP, TUNER_STEP_100K);
     tuner.par.deemph = settingsRead(PARAM_TUNER_DEEMPH, TUNER_DEEMPH_50u);
-    tuner.par.stationMode = settingsRead(PARAM_TUNER_STA_MODE, false);
-    tuner.par.forcedMono = settingsRead(PARAM_TUNER_FMONO, false);
-    tuner.par.rds = settingsRead(PARAM_TUNER_RDS, true);
-    tuner.par.bassBoost = settingsRead(PARAM_TUNER_BASS, false);
+
+    tuner.par.flags = settingsRead(PARAM_TUNER_FLAGS, TUNER_PARAM_RDS);
+
     tuner.par.volume = settingsRead(PARAM_TUNER_VOLUME, TUNER_VOLUME_MAX);
     tuner.status.freq = settingsRead(PARAM_TUNER_FREQ, 9950);
 
@@ -123,11 +122,8 @@ void tunerReadSettings(TunerIC defIC)
 
 void tunerSaveSettings(void)
 {
-    settingsStore(PARAM_TUNER_FMONO, tuner.par.forcedMono);
-    settingsStore(PARAM_TUNER_RDS, tuner.par.rds);
-    settingsStore(PARAM_TUNER_BASS, tuner.par.bassBoost);
-
     settingsStore(PARAM_TUNER_FREQ, (int16_t)tuner.status.freq);
+    settingsStore(PARAM_TUNER_FLAGS, tuner.par.flags & ~TUNER_PARAM_MUTE);
 }
 
 void tunerInit(void)
@@ -178,7 +174,11 @@ void tunerSetFreq(uint16_t value)
 
 void tunerSetMute(bool value)
 {
-    tuner.par.mute = value;
+    if (value) {
+        tuner.par.flags |= TUNER_PARAM_MUTE;
+    } else {
+        tuner.par.flags &= ~TUNER_PARAM_MUTE;
+    }
 
     if (tuner.api && tuner.api->setMute) {
         tuner.api->setMute(value);
@@ -187,7 +187,11 @@ void tunerSetMute(bool value)
 
 void tunerSetBassBoost(bool value)
 {
-    tuner.par.bassBoost = value;
+    if (value) {
+        tuner.par.flags |= TUNER_PARAM_BASS;
+    } else {
+        tuner.par.flags &= ~TUNER_PARAM_BASS;
+    }
 
     if (tuner.api && tuner.api->setBassBoost) {
         tuner.api->setBassBoost(value);
@@ -196,7 +200,11 @@ void tunerSetBassBoost(bool value)
 
 void tunerSetForcedMono(bool value)
 {
-    tuner.par.forcedMono = value;
+    if (value) {
+        tuner.par.flags |= TUNER_PARAM_MONO;
+    } else {
+        tuner.par.flags &= ~TUNER_PARAM_MONO;
+    }
 
     if (tuner.api && tuner.api->setForcedMono) {
         tuner.api->setForcedMono(value);
@@ -207,7 +215,11 @@ void tunerSetRds(bool value)
 {
     rdsParserReset();
 
-    tuner.par.rds = value;
+    if (value) {
+        tuner.par.flags |= TUNER_PARAM_RDS;
+    } else {
+        tuner.par.flags &= ~TUNER_PARAM_RDS;
+    }
 
     if (tuner.api && tuner.api->setRds) {
         tuner.api->setRds(value);
@@ -257,7 +269,7 @@ void tunerStep(int8_t direction)
 
 void tunerMove(int8_t direction)
 {
-    if (tuner.par.stationMode) {
+    if (tuner.par.flags & TUNER_PARAM_STA_MODE) {
         if (stationGetCount() > 0) {
             stationSeek(direction);
         } else {
@@ -270,7 +282,7 @@ void tunerMove(int8_t direction)
 
 void tunerUpdateStatus(void)
 {
-    tuner.status.flags = TUNER_FLAG_INIT;
+    tuner.status.flags = TUNER_STATUS_INIT;
 
     if (tuner.api && tuner.api->updateStatus) {
         tuner.api->updateStatus();

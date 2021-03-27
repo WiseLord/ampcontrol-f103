@@ -1609,7 +1609,7 @@ void ampActionHandle(void)
         break;
     case ACTION_TUNER_FORCE_MONO:
         if (inType == IN_TUNER) {
-            tunerSetForcedMono(!tuner->par.forcedMono);
+            tunerSetForcedMono(!(tuner->par.flags & TUNER_PARAM_MONO));
             screenSet(SCREEN_AUDIO_INPUT, 2000);
         }
         break;

@@ -17,6 +17,7 @@ extern "C" {
 #define RDCL_AR_ExtiLine        LL_GPIO_AF_EXTI_LINE2
 
 void rdsDemodInit(void);
+void rdsDemodDeinit(void);
 void rdsDemodHandle(void);
 
 #ifdef __cplusplus

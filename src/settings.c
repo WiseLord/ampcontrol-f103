@@ -53,12 +53,10 @@ static const EE_Cell eeMap[] = {
     [PARAM_TUNER_BAND]      =   {0x31,  TUNER_BAND_FM_US_EUROPE},
     [PARAM_TUNER_STEP]      =   {0x32,  TUNER_STEP_100K},
     [PARAM_TUNER_DEEMPH]    =   {0x33,  TUNER_DEEMPH_50u},
-    [PARAM_TUNER_STA_MODE]  =   {0x34,  false},
-    [PARAM_TUNER_FMONO]     =   {0x35,  false},
-    [PARAM_TUNER_RDS]       =   {0x36,  true},
-    [PARAM_TUNER_BASS]      =   {0x37,  false},
+
     [PARAM_TUNER_VOLUME]    =   {0x38,  TUNER_VOLUME_MAX},
     [PARAM_TUNER_FREQ]      =   {0x39,  9950},
+    [PARAM_TUNER_FLAGS]     =   {0x3A,  0},
 
     [PARAM_TUNER_FAV_0]     =   {0x40,  0},
     [PARAM_TUNER_FAV_1]     =   {0x41,  0},

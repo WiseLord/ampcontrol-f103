@@ -98,6 +98,8 @@ static const TunerApi lc7213xApi = {
     .setFreq = lc7213xSetFreq,
 
     .setMute = lc7213xSetMute,
+    .setForcedMono = lc7213xSetForcedMono,
+    .setRds = lc7213xSetRds,
 
     .updateStatus = lc7213xUpdateStatus,
 };
@@ -138,8 +140,6 @@ const TunerApi *lc7213xGetApi(void)
 
 void lc7213xInit(TunerParam *param, TunerStatus *status)
 {
-    rdsDemodInit();
-
     tPar = param;
     tStatus = status;
 
@@ -165,6 +165,12 @@ void lc7213xInit(TunerParam *param, TunerStatus *status)
 
     updateIn1();
     updateIn2();
+
+    if (tPar->flags & TUNER_PARAM_RDS) {
+        rdsDemodInit();
+    } else {
+        rdsDemodDeinit();
+    }
 }
 
 void lc7213xSetFreq(uint16_t freq)
@@ -196,21 +202,30 @@ void lc7213xSetMute(bool value)
 void lc7213xSetForcedMono(bool value)
 {
     if (value) {
-        in2Buf[0] |= LC7213X_IN2_BO5;
+        in2Buf[1] |= LC7213X_IN2_BO5;
     } else {
-        in2Buf[0] &= ~LC7213X_IN2_BO5;
+        in2Buf[1] &= ~LC7213X_IN2_BO5;
     }
     updateIn2();
+}
+
+void lc7213xSetRds(bool value)
+{
+    if (value) {
+        rdsDemodInit();
+    } else {
+        rdsDemodDeinit();
+    }
 }
 
 void lc7213xUpdateStatus(void)
 {
     readOut();
     if (!(outBuf & LC7213X_OUT_I2)) {
-        tStatus->flags |= TUNER_FLAG_STEREO;
+        tStatus->flags |= TUNER_STATUS_STEREO;
     }
     if (!(outBuf & LC7213X_OUT_I1)) {
-        tStatus->flags |= TUNER_FLAG_STATION;
+        tStatus->flags |= TUNER_STATUS_STATION;
     }
     updateIn2();
 }

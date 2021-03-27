@@ -873,8 +873,8 @@ void canvasShowTuner(bool clear)
     }
 
     // Stereo / forced mono indicator
-    bool forcedMono = tuner->par.forcedMono;
-    bool stereo = ((tuner->status.flags & TUNER_FLAG_STEREO) == TUNER_FLAG_STEREO);
+    bool forcedMono = ((tuner->par.flags & TUNER_PARAM_MONO) == TUNER_PARAM_MONO);
+    bool stereo = ((tuner->status.flags & TUNER_STATUS_STEREO) == TUNER_STATUS_STEREO);
 
     if (clear || (stereo != prev.par.stereo) || (forcedMono != prev.par.forcedMono)) {
         prev.par.stereo = stereo;

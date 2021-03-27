@@ -91,6 +91,7 @@ typedef uint8_t MenuType;
 enum {
     MENU_TYPE_PARENT,
     MENU_TYPE_BOOL,
+    MENU_TYPE_FLAG,
     MENU_TYPE_NUMBER,
     MENU_TYPE_ENUM,
     MENU_TYPE_RC,

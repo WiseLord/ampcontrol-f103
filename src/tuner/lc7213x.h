@@ -18,6 +18,7 @@ void lc7213xSetFreq(uint16_t freq);
 
 void lc7213xSetMute(bool value);
 void lc7213xSetForcedMono(bool value);
+void lc7213xSetRds(bool value);
 
 void lc7213xUpdateStatus(void);
 

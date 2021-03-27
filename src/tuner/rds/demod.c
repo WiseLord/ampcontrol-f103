@@ -42,6 +42,13 @@ void rdsDemodInit(void)
     NVIC_EnableIRQ(EXTI2_IRQn);
 }
 
+void rdsDemodDeinit(void)
+{
+    NVIC_DisableIRQ(EXTI2_IRQn);
+
+    ringBufInit(&rbuf, rbData, sizeof(rbData));
+}
+
 void rdsDemodHandle(void)
 {
     uint16_t size = ringBufGetSize(&rbuf);
