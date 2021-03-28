@@ -61,18 +61,12 @@ enum {
 
     IN_TUNER = 0,
     IN_PC,
-    IN_TV,
+    IN_AUX,
     IN_BLUETOOTH,
-    IN_DVD,
-    IN_USB,
-    IN_MICROPHONE,
-    IN_GUITAR,
-    IN_TURNTABLES,
-    IN_SDCARD,
-    IN_PROJECTOR,
-    IN_SATELLITE,
-    IN_MPD,
     IN_KARADIO,
+    IN_USB,
+    IN_SDCARD,
+    IN_MPD,
 
     IN_END,
 };

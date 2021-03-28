@@ -38,18 +38,12 @@ enum {
     // Input icons
     ICON_TUNER = 0x40,
     ICON_PC,
-    ICON_TV,
+    ICON_AUX,
     ICON_BLUETOOTH,
-    ICON_DVD,
-    ICON_USB,
-    ICON_MICROPHONE,
-    ICON_GUITAR,
-    ICON_TURNTABLES,
-    ICON_SDCARD,
-    ICON_PROJECTOR,
-    ICON_SATELLITE,
-    ICON_MPD,
     ICON_KARADIO,
+    ICON_USB,
+    ICON_SDCARD,
+    ICON_MPD,
 
     // On/off icons
     ICON_MUTE_ON = 0x60,

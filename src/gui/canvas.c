@@ -656,7 +656,7 @@ void canvasShowTune(bool clear, AudioTune tune)
         glcdWriteString(label);
     }
 
-    if (clear || icon != prev.par.icon) {
+    if ((clear || icon != prev.par.icon) && icon != ICON_EMPTY) {
         // Icon
         glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);

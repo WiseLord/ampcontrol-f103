@@ -33,10 +33,10 @@ static const EE_Cell eeMap[] = {
     [PARAM_AUDIO_IN1]       =   {0x11,  IN_KARADIO},
     [PARAM_AUDIO_IN2]       =   {0x12,  IN_PC},
     [PARAM_AUDIO_IN3]       =   {0x13,  IN_BLUETOOTH},
-    [PARAM_AUDIO_IN4]       =   {0x14,  IN_TV},
+    [PARAM_AUDIO_IN4]       =   {0x14,  IN_AUX},
     [PARAM_AUDIO_IN5]       =   {0x15,  IN_USB},
-    [PARAM_AUDIO_IN6]       =   {0x16,  IN_DVD},
-    [PARAM_AUDIO_IN7]       =   {0x17,  IN_MICROPHONE},
+    [PARAM_AUDIO_IN6]       =   {0x16,  IN_AUX},
+    [PARAM_AUDIO_IN7]       =   {0x17,  IN_AUX},
 
     [PARAM_AUDIO_GAIN0]     =   {0x18,  0},
     [PARAM_AUDIO_GAIN1]     =   {0x19,  0},
