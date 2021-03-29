@@ -45,17 +45,10 @@ enum {
     ICON_SDCARD,
     ICON_MPD,
 
-    // On/off icons
-    ICON_MUTE_ON = 0x60,
-    ICON_MUTE_OFF,
-    ICON_LOUDNESS_ON,
-    ICON_LOUDNESS_OFF,
-    ICON_SURROUND_ON,
-    ICON_SURROUND_OFF,
-    ICON_EFFECT_3D_ON,
-    ICON_EFFECT_3D_OFF,
-    ICON_TONE_BYPASS_ON,
-    ICON_TONE_BYPASS_OFF,
+    // Flag icons
+    ICON_TONE = 0x60,
+    ICON_SURROUND,
+    ICON_EFFECT_3D,
 
     // Media keys
     ICON_PREV_TRACK = 0x80,

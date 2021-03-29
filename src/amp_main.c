@@ -65,12 +65,12 @@ static void actionRemapEncoder(void);
 static void ampSendMediaKey(MediaKey key);
 
 static const InputType ampInDefault[MAX_INPUTS] = {
-    IN_TUNER,
-    IN_KARADIO,
     IN_PC,
-    IN_BLUETOOTH,
     IN_AUX,
-    IN_USB,
+    IN_AUX,
+    IN_KARADIO,
+    IN_TUNER,
+    IN_BLUETOOTH,
     IN_DISABLED,
     IN_DISABLED,
 };

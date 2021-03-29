@@ -27,6 +27,7 @@ typedef union {
         uint16_t freq;
         int16_t value;
         Icon icon;
+        bool cross;
         bool stereo;
         bool forcedMono;
         bool rdsFlag;
@@ -85,6 +86,22 @@ static const tImage *glcdFindIcon(Icon code, const tFont *iFont)
     }
 
     return  ret;
+}
+
+static void drawCrosssing(int16_t x, int16_t y, int16_t w)
+{
+    const Palette *pal = paletteGet();
+
+    int8_t th = w / 20 + 1;
+
+    for (int8_t i = 0; i <= th; i++) {
+        color_t color = (i >= th ? pal->bg : pal->fg);
+        glcdDrawLine(x + i, y, x + w - 1, y + w - 1 - i, color);
+        glcdDrawLine(x, y + i, x + w - 1 - i, y + w - 1, color);
+
+        glcdDrawLine(x + i, y + w - 1, x + w - 1, y + i, color);
+        glcdDrawLine(x, y + w - 1 - i, x + w - 1 - i, y, color);
+    }
 }
 
 void canvasInit(void)
@@ -626,8 +643,14 @@ void canvasShowTune(bool clear, AudioTune tune)
 
     InputType inType = amp->inType[aProc->par.input];
 
+    bool cross = false;
+
     const char *label = labelsGet(inType == IN_DISABLED ? LABEL_BOOL_OFF : LABEL_IN_TUNER + inType);
-    Icon icon = (inType == IN_DISABLED ? ICON_MUTE_OFF : ICON_TUNER + inType);
+    Icon icon = ICON_TUNER + inType;
+    if (inType == IN_DISABLED) {
+        icon = ICON_VOLUME;
+        cross = true;
+    }
 
     if (tune < AUDIO_TUNE_GAIN) {
         label = labelsGet(LABEL_VOLUME + tune);
@@ -638,7 +661,7 @@ void canvasShowTune(bool clear, AudioTune tune)
     }
 
     if (icon == ICON_VOLUME && (aProc->par.flags & AUDIO_FLAG_MUTE)) {
-        icon = ICON_MUTE_ON;
+        cross = true;
     }
 
     const AudioGrid *grid = aProc->par.grid[tune];
@@ -657,12 +680,18 @@ void canvasShowTune(bool clear, AudioTune tune)
         glcdWriteString(label);
     }
 
-    if ((clear || icon != prev.par.icon) && icon != ICON_EMPTY) {
+    if ((clear || icon != prev.par.icon || cross != prev.par.cross) && icon != ICON_EMPTY) {
         // Icon
-        glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
+        int16_t w = iconSet->chars[0].image->width;
+        int16_t x = lt->rect.w - w;
+        glcdSetXY(x, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
+        if (cross) {
+            drawCrosssing(x, 0, w);
+        }
         prev.par.icon = icon;
+        prev.par.cross = cross;
     }
 
     if (clear || value != prev.par.value) {
@@ -688,7 +717,8 @@ void canvasShowTune(bool clear, AudioTune tune)
         case AUDIO_TUNE_MIDDLE_KFREQ:
         case AUDIO_TUNE_TREBLE_KFREQ:
             showValue = showValue * 1000 / STEP_MULT;
-            snprintf(bufValue, sizeof(bufValue), "%3d.%1d%s%s", showValue / 1000, showValue % 1000 / 100, labelsGet(LABEL_K), labelsGet(LABEL_HZ));
+            snprintf(bufValue, sizeof(bufValue), "%3d.%1d%s%s", showValue / 1000, showValue % 1000 / 100,
+                     labelsGet(LABEL_K), labelsGet(LABEL_HZ));
             break;
         case AUDIO_TUNE_BASS_QUAL:
         case AUDIO_TUNE_MIDDLE_QUAL:
@@ -741,27 +771,43 @@ void canvasShowAudioFlag(bool clear, AudioTune flag)
     const tFont *iconSet = lt->iconSet;
     Label label;
     Icon icon;
+    bool cross = false;
 
     switch (flag) {
     case AUDIO_FLAG_LOUDNESS:
         label = (Label)(LABEL_MENU + MENU_RC_LOUDNESS);
-        icon = aProc->par.flags & AUDIO_FLAG_LOUDNESS ? ICON_LOUDNESS_ON : ICON_LOUDNESS_OFF;
+        icon = ICON_LOUDNESS;
+        if (!(aProc->par.flags & AUDIO_FLAG_LOUDNESS)) {
+            cross = true;
+        }
         break;
     case AUDIO_FLAG_SURROUND:
         label = (Label)(LABEL_MENU + MENU_RC_SURROUND);
-        icon = aProc->par.flags & AUDIO_FLAG_SURROUND ? ICON_SURROUND_ON : ICON_SURROUND_OFF;
+        icon = ICON_SURROUND;
+        if (!(aProc->par.flags & AUDIO_FLAG_SURROUND)) {
+            cross = true;
+        }
         break;
     case AUDIO_FLAG_EFFECT3D:
         label = (Label)(LABEL_MENU + MENU_RC_EFFECT_3D);
-        icon = aProc->par.flags & AUDIO_FLAG_EFFECT3D ? ICON_EFFECT_3D_ON : ICON_EFFECT_3D_OFF;
+        icon = ICON_EFFECT_3D;
+        if (!(aProc->par.flags & AUDIO_FLAG_EFFECT3D)) {
+            cross = true;
+        }
         break;
     case AUDIO_FLAG_BYPASS:
         label = (Label)(LABEL_MENU + MENU_RC_TONE_BYPASS);
-        icon = aProc->par.flags & AUDIO_FLAG_BYPASS ? ICON_TONE_BYPASS_ON : ICON_TONE_BYPASS_OFF;
+        icon = ICON_TONE;
+        if (aProc->par.flags & AUDIO_FLAG_BYPASS) {
+            cross = true;
+        }
         break;
     default:
         label = (Label)(LABEL_MENU + MENU_RC_MUTE);
-        icon = aProc->par.flags & AUDIO_FLAG_MUTE ? ICON_MUTE_ON : ICON_MUTE_OFF;
+        icon = ICON_VOLUME;
+        if (aProc->par.flags & AUDIO_FLAG_MUTE) {
+            cross = true;
+        }
         break;
     }
 
@@ -775,11 +821,17 @@ void canvasShowAudioFlag(bool clear, AudioTune flag)
     }
 
     // Icon
-    if (clear || icon != prev.par.icon) {
-        glcdSetXY(lt->rect.w - iconSet->chars[0].image->width, 0);
+    if (clear || icon != prev.par.icon || cross != prev.par.cross) {
+        int16_t w = iconSet->chars[0].image->width;
+        int16_t x = lt->rect.w - w;
+        glcdSetXY(x, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
+        if (cross) {
+            drawCrosssing(x, 0, w);
+        }
         prev.par.icon = icon;
+        prev.par.cross = cross;
     }
 
     int16_t yPos = lt->lblFont->chars[0].image->height;
@@ -1186,6 +1238,8 @@ void canvasShowAudioInput(bool clear, Icon icon)
         }
     }
 
+    bool cross = false;
+
     if (icon == ICON_EMPTY) {
         if (inType == IN_BLUETOOTH) {
             switch (btGetInput()) {
@@ -1200,29 +1254,39 @@ void canvasShowAudioInput(bool clear, Icon icon)
                 break;
             }
         } else {
-            icon = (inType == IN_DISABLED ? ICON_MUTE_OFF : ICON_TUNER + inType);
+            icon = ICON_TUNER + inType;
+            if (inType == IN_DISABLED) {
+                icon = ICON_VOLUME;
+                cross = true;
+            }
         }
     }
 
     if (aProc->par.flags & AUDIO_FLAG_MUTE) {
-        icon = ICON_MUTE_ON;
+        icon = ICON_VOLUME;
+        cross = true;
     }
 
-    if (clear || icon != prev.par.icon) {
+    if (clear || icon != prev.par.icon || cross != prev.par.cross) {
         // Label
         glcdSetFont(lt->lblFont);
         glcdSetFontColor(canvas.pal->fg);
         glcdSetXY(0, 0);
         int16_t nameLen = glcdWriteString(label);
-        int16_t iconWidth = iconSet->chars[0].image->width;
+        int16_t w = iconSet->chars[0].image->width;
+        int16_t x = lt->rect.w - w;
 
-        glcdDrawRect(canvas.glcd->x, canvas.glcd->y, lt->rect.w - nameLen - iconWidth,
+        glcdDrawRect(canvas.glcd->x, canvas.glcd->y, x - nameLen,
                      lt->lblFont->chars[0].image->height, canvas.pal->bg);
 
-        prev.par.icon = icon;
-        glcdSetXY(lt->rect.w - iconWidth, 0);
+        glcdSetXY(x, 0);
         const tImage *img = glcdFindIcon(icon, iconSet);
         glcdDrawImage(img, canvas.pal->fg, canvas.pal->bg);
+        if (cross) {
+            drawCrosssing(x, 0, w);
+        }
+        prev.par.icon = icon;
+        prev.par.cross = cross;
     }
 
     int16_t yPos = lt->lblFont->chars[0].image->height;
@@ -1324,7 +1388,8 @@ void canvasDebugFPS(void)
     glcdSetFontAlign(GLCD_ALIGN_RIGHT);
 
     static int32_t oldCnt = 0;
-    static int32_t oldFps = 0; (void)oldFps;
+    static int32_t oldFps = 0;
+    (void)oldFps;
     static int32_t frames = 0;
 
     frames++;
