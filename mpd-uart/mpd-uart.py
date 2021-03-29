@@ -287,7 +287,7 @@ class Player(object):
             self.console.send('##CLI.STOPPED#')
 
     def send_ip(self):
-        self.console.send('ip: ' + self.networkChecker.get_ip())
+        self.console.send('ip:' + self.networkChecker.get_ip())
 
     def send_repeat(self):
         self.console.send('##CLI.REPEAT#: ' + self.player_info['repeat'])

@@ -144,7 +144,7 @@ static void parseIP(char *line)
         *cm = '\0';
     }
     char buf[40];
-    snprintf(buf, sizeof(buf), "IP:%s", line);
+    snprintf(buf, sizeof(buf), "IP: %s", line);
     updateIp(buf);
 }
 

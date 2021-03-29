@@ -1172,7 +1172,11 @@ void canvasShowKaradio(bool clear, Icon icon)
     if (clear || (mpc->flags & MPC_FLAG_UPDATE_META)) {
         glcdSetFont(lt->rds.textFont);
         glcdSetXY(0, yPos);
-        nameLen = glcdWriteString(mpc->meta);
+        if (mpc->status & MPC_PLAYING) {
+            nameLen = glcdWriteString(mpc->meta);
+        } else {
+            nameLen = glcdWriteString(mpc->ip);
+        }
         glcdDrawRect(canvas.glcd->x, canvas.glcd->y,
                      lt->rect.w - nameLen, lt->rds.textFont->chars[0].image->height, pal->bg);
     }
