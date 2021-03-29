@@ -59,6 +59,8 @@ typedef void (*RtcCb)(void);
 
 void rtcInit(void);
 void rtcSetCb(RtcCb cb);
+
+int16_t rtcGetCorrection(void);
 void rtcSetCorrection(int16_t value);
 
 void rtcUpdateTime(RTC_type *rtc);

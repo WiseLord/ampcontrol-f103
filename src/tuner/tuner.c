@@ -82,10 +82,9 @@ void tunerReadSettings(TunerIC defIC)
     tuner.par.step = settingsRead(PARAM_TUNER_STEP, TUNER_STEP_100K);
     tuner.par.deemph = settingsRead(PARAM_TUNER_DEEMPH, TUNER_DEEMPH_50u);
 
-    tuner.par.flags = settingsRead(PARAM_TUNER_FLAGS, TUNER_PARAM_RDS);
-
     tuner.par.volume = settingsRead(PARAM_TUNER_VOLUME, TUNER_VOLUME_MAX);
     tuner.status.freq = settingsRead(PARAM_TUNER_FREQ, 9950);
+    tuner.par.flags = settingsRead(PARAM_TUNER_FLAGS, TUNER_PARAM_RDS);
 
     stationFavInit();
 

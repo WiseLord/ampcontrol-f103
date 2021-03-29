@@ -25,6 +25,8 @@ static Alarm alarm[ALARM_COUNT];
 
 static RtcCb rtcCb;
 
+static int16_t rtcCorr = 0;
+
 static int8_t rtcDaysInMonth(RTC_type *rtc)
 {
     int8_t ret = rtc->month;
@@ -254,8 +256,15 @@ void rtcSetCb(RtcCb cb)
     rtcCb = cb;
 }
 
+int16_t rtcGetCorrection()
+{
+    return rtcCorr;
+}
+
 void rtcSetCorrection(int16_t value)
 {
+    rtcCorr = value;
+
 #ifdef STM32F1
     if (LL_RTC_EnterInitMode(RTC) != ERROR) {
         LL_RTC_CAL_SetCoarseDigital(BKP, (uint32_t)(64 - value));

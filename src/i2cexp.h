@@ -10,7 +10,7 @@ extern "C" {
 
 #define PCF8574_RELEASED    0x00
 
-typedef uint8_t Pcf8574Gpio;
+typedef uint8_t I2cExpKey;
 
 // Bluetooth module buttons
 #define BT_NEXT_TRACK   (1 << 5)
@@ -45,11 +45,19 @@ enum {
     I2C_ADDR_END,
 };
 
+typedef struct {
+    I2cAddrIdx idxInStatus;
+    I2cAddrIdx idxGpio;
+    I2cExpKey keys;
+} I2CExp;
+
 uint8_t i2cExpGetAddr(I2cAddrIdx idx);
 void i2cExpSend(I2cAddrIdx idx, uint8_t data);
 
-void i2cExpGpioInit(void);
-void i2cExpGpioKeyPress(Pcf8574Gpio gpio);
+void i2cExpInit(void);
+I2CExp *i2cExpGet(void);
+
+void i2cExpGpioKeyPress(I2cExpKey key);
 void i2cExpGpioKeyRelease(void);
 
 #ifdef __cplusplus

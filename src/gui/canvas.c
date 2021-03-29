@@ -89,13 +89,14 @@ static const tImage *glcdFindIcon(Icon code, const tFont *iFont)
 
 void canvasInit(void)
 {
-    bool rotate = settingsGet(PARAM_DISPLAY_ROTATE);
+    bool rotate = settingsRead(PARAM_DISPLAY_ROTATE, false);
+    PalIdx palIdx = (PalIdx)settingsRead(PARAM_DISPLAY_PALETTE, PAL_DEFAULT);
+
     glcdInit(rotate ? GLCD_LANDSCAPE_ROT : GLCD_LANDSCAPE);
 
     canvas.glcd = glcdGet();
     canvas.layout = layoutGet();
 
-    PalIdx palIdx = (PalIdx)settingsGet(PARAM_DISPLAY_PALETTE);
     paletteSetIndex(palIdx);
     canvas.pal = paletteGet();
 

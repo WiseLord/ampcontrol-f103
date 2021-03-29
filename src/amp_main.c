@@ -62,8 +62,18 @@ static void actionRemapCommon(void);
 static void actionRemapNavigate(void);
 static void actionRemapEncoder(void);
 
-
 static void ampSendMediaKey(MediaKey key);
+
+static const InputType ampInDefault[MAX_INPUTS] = {
+    IN_TUNER,
+    IN_KARADIO,
+    IN_PC,
+    IN_BLUETOOTH,
+    IN_AUX,
+    IN_USB,
+    IN_DISABLED,
+    IN_DISABLED,
+};
 
 static AmpPriv priv = {
     .inputStatus = 0x00,
@@ -121,8 +131,7 @@ static bool screenCheckClear(void)
 
     if (amp->screen != priv.screenNext || clear) {
         // Handle standby/work brightness
-        ampSetBrightness((int8_t)settingsGet(priv.screenNext == SCREEN_STANDBY ?
-                                             PARAM_DISPLAY_BR_STBY : PARAM_DISPLAY_BR_WORK));
+        ampSetBrightness(priv.screenNext == SCREEN_STANDBY ? amp->brStby : amp->brWork);
     }
 
     // Save current screen and screen parameter
@@ -161,7 +170,7 @@ static ScreenType getScrDef(void)
     }
 
     if (swTimSilence > 0) {
-        int16_t min = settingsGet(PARAM_SYSTEM_SIL_TIM);
+        int16_t min = amp->silenceTimer;
         if (min <= 0) {
             min = 32767;
         }
@@ -200,7 +209,7 @@ static void actionDispExpired(void)
 
 static void actionResetSilenceTimer(void)
 {
-    int16_t min = settingsGet(PARAM_SYSTEM_SIL_TIM);
+    int16_t min = amp->silenceTimer;
     if (min <= 0) {
         min = 32767;
     }
@@ -266,7 +275,7 @@ static void inputSetPower(bool value)
         priv.inputStatus = 0x00;
     }
 
-    I2cAddrIdx i2cAddrIdx = (I2cAddrIdx)settingsGet(PARAM_I2C_EXT_IN_STAT);
+    I2cAddrIdx i2cAddrIdx = i2cExpGet()->idxInStatus;
 
     if (i2cAddrIdx != I2C_ADDR_DISABLED) {
         if (!i2cIsEnabled(I2C_AMP)) {
@@ -281,9 +290,7 @@ static void inputSetPower(bool value)
 
 void ampPinMute(bool value)
 {
-    bool muteLow = (bool)settingsGet(PARAM_SYSTEM_MUTE_LOW);
-
-    if (muteLow) {
+    if (amp->muteLow) {
         if (value) {
             SET(MUTE);
         } else {
@@ -300,9 +307,7 @@ void ampPinMute(bool value)
 
 void ampPinStby(bool value)
 {
-    bool stbyLow = (bool)settingsGet(PARAM_SYSTEM_STBY_LOW);
-
-    if (stbyLow) {
+    if (amp->stbyLow) {
         if (value) {
             SET(STBY);
         } else {
@@ -335,6 +340,18 @@ static void ampMute(bool value)
 
 static void ampReadSettings(void)
 {
+    amp->brStby = settingsRead(PARAM_DISPLAY_BR_STBY, 3);
+    amp->brWork = settingsRead(PARAM_DISPLAY_BR_WORK, LCD_BR_MAX);
+    amp->defScreen = settingsRead(PARAM_DISPLAY_DEF, SCREEN_AUDIO_INPUT);
+    amp->silenceTimer = settingsRead(PARAM_SYSTEM_SIL_TIM, 5);
+    amp->stbyLow = settingsRead(PARAM_SYSTEM_STBY_LOW, false);
+    amp->muteLow = settingsRead(PARAM_SYSTEM_MUTE_LOW, false);
+    amp->showDb = settingsRead(PARAM_AUDIO_SHOWDB, true);
+
+    for (uint8_t i = 0; i < MAX_INPUTS; i++) {
+        amp->inType[i] = settingsRead(PARAM_AUDIO_IN0 + i, ampInDefault[i]);
+    }
+
     audioReadSettings(AUDIO_IC_TDA7439);
     tunerReadSettings(TUNER_IC_RDA5807);
 }
@@ -376,7 +393,6 @@ static void ampEnterStby(void)
     swTimSet(SW_TIM_SP_CONVERT, SW_TIM_OFF);
     swTimSet(SW_TIM_CHECK_SIGNAL, SW_TIM_OFF);
 
-    settingsSet(PARAM_DISPLAY_DEF, amp->defScreen);
     settingsStore(PARAM_DISPLAY_DEF, amp->defScreen);
 
     ampMute(true);
@@ -415,7 +431,7 @@ void ampInitHw(void)
         swTimSet(SW_TIM_RDS_HOLD, SW_TIM_OFF);
         tunerInit();
 
-        i2cExpGpioInit();
+        i2cExpInit();
 
         amp->status = AMP_STATUS_HW_READY;
         controlReportAll();
@@ -1289,7 +1305,6 @@ void ampInit(void)
     dbgInit();
 
     settingsInit();
-    menuInit();
 
     ampInitMuteStby();
     pinsInit();

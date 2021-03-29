@@ -77,7 +77,13 @@ typedef struct {
     ScreenType defScreen;
 
     InputType inType[MAX_INPUTS];
+
     bool showDb;
+    bool stbyLow;
+    bool muteLow;
+    uint8_t silenceTimer;
+    int8_t brStby;
+    int8_t brWork;
 } Amp;
 
 typedef uint16_t MuteStby;
