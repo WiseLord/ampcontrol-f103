@@ -270,7 +270,7 @@ void controlReportAudioTune(AudioTune tune)
     AudioParam *par = &audioGet()->par;
 
     char buf[32];
-    snprintf(buf, sizeof(buf), "##AMP.AUDIO.%s#: %d", CTRL_AUDIO_TUNE[tune], par->tune[tune].value);
+    snprintf(buf, sizeof(buf), "##AMP.AUDIO.%s#: %d", CTRL_AUDIO_TUNE[tune], par->tune[tune]);
     sendReport(buf);
 }
 

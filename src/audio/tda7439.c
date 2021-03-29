@@ -48,23 +48,23 @@ void tda7439Init(AudioParam *param)
 {
     aPar = param;
 
-    aPar->tune[AUDIO_TUNE_VOLUME].grid  = &gridVolume;
-    aPar->tune[AUDIO_TUNE_BASS].grid    = &gridTone;
+    aPar->grid[AUDIO_TUNE_VOLUME]  = &gridVolume;
+    aPar->grid[AUDIO_TUNE_BASS]    = &gridTone;
     if (aPar->ic == AUDIO_IC_TDA7439) {
-        aPar->tune[AUDIO_TUNE_MIDDLE].grid  = &gridTone;
+        aPar->grid[AUDIO_TUNE_MIDDLE]  = &gridTone;
     }
-    aPar->tune[AUDIO_TUNE_TREBLE].grid  = &gridTone;
-    aPar->tune[AUDIO_TUNE_PREAMP].grid  = &gridPreamp;
-    aPar->tune[AUDIO_TUNE_BALANCE].grid = &gridBalance;
-    aPar->tune[AUDIO_TUNE_GAIN].grid    = &gridGain;
+    aPar->grid[AUDIO_TUNE_TREBLE]  = &gridTone;
+    aPar->grid[AUDIO_TUNE_PREAMP]  = &gridPreamp;
+    aPar->grid[AUDIO_TUNE_BALANCE] = &gridBalance;
+    aPar->grid[AUDIO_TUNE_GAIN]    = &gridGain;
 }
 
 void tda7439SetTune(AudioTune tune, int8_t value)
 {
     AudioRaw raw;
-    audioSetRawBalance(&raw, aPar->tune[AUDIO_TUNE_VOLUME].value, false);
+    audioSetRawBalance(&raw, aPar->tune[AUDIO_TUNE_VOLUME], false);
 
-    int8_t volMin = aPar->tune[AUDIO_TUNE_VOLUME].grid->min;
+    int8_t volMin = aPar->grid[AUDIO_TUNE_VOLUME]->min;
     if (raw.frontLeft < volMin) {
         raw.frontLeft = volMin;
     }
@@ -123,6 +123,6 @@ void tda7439SetMute(bool value)
         i2cSend(I2C_AMP, TDA7439_SPEAKER_MUTE);
         i2cTransmit(I2C_AMP);
     } else {
-        tda7439SetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME].value);
+        tda7439SetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME]);
     }
 }

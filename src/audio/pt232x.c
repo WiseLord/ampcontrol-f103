@@ -100,10 +100,10 @@ static void pt2322SetSpeakers(void)
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
     i2cSend(I2C_AMP, PT2322_TRIM_FL | (uint8_t)(-raw.frontLeft));
     i2cSend(I2C_AMP, PT2322_TRIM_FR | (uint8_t)(-raw.frontRight));
-    i2cSend(I2C_AMP, PT2322_TRIM_CT | (uint8_t)(-aPar->tune[AUDIO_TUNE_CENTER].value));
+    i2cSend(I2C_AMP, PT2322_TRIM_CT | (uint8_t)(-aPar->tune[AUDIO_TUNE_CENTER]));
     i2cSend(I2C_AMP, PT2322_TRIM_RL | (uint8_t)(-raw.rearLeft));
     i2cSend(I2C_AMP, PT2322_TRIM_RR | (uint8_t)(-raw.rearRight));
-    i2cSend(I2C_AMP, PT2322_TRIM_SB | (uint8_t)(-aPar->tune[AUDIO_TUNE_SUBWOOFER].value));
+    i2cSend(I2C_AMP, PT2322_TRIM_SB | (uint8_t)(-aPar->tune[AUDIO_TUNE_SUBWOOFER]));
     i2cTransmit(I2C_AMP);
 }
 
@@ -116,25 +116,25 @@ void pt232xInit(AudioParam *param)
 {
     aPar = param;
 
-    aPar->tune[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
-    aPar->tune[AUDIO_TUNE_BASS].grid      = &gridTone;
-    aPar->tune[AUDIO_TUNE_MIDDLE].grid    = &gridTone;
-    aPar->tune[AUDIO_TUNE_TREBLE].grid    = &gridTone;
+    aPar->grid[AUDIO_TUNE_VOLUME]    = &gridVolume;
+    aPar->grid[AUDIO_TUNE_BASS]      = &gridTone;
+    aPar->grid[AUDIO_TUNE_MIDDLE]    = &gridTone;
+    aPar->grid[AUDIO_TUNE_TREBLE]    = &gridTone;
     if (aPar->mode == AUDIO_MODE_4_0 ||
         aPar->mode == AUDIO_MODE_4_1 ||
         aPar->mode == AUDIO_MODE_5_1) {
-        aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridBalance;
+        aPar->grid[AUDIO_TUNE_FRONTREAR] = &gridBalance;
     }
-    aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridBalance;
+    aPar->grid[AUDIO_TUNE_BALANCE]   = &gridBalance;
     if (aPar->mode == AUDIO_MODE_5_1) {
-        aPar->tune[AUDIO_TUNE_CENTER].grid    = &gridCenterSub;
+        aPar->grid[AUDIO_TUNE_CENTER]    = &gridCenterSub;
     }
     if (aPar->mode == AUDIO_MODE_2_1 ||
         aPar->mode == AUDIO_MODE_4_1 ||
         aPar->mode == AUDIO_MODE_5_1) {
-        aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridCenterSub;
+        aPar->grid[AUDIO_TUNE_SUBWOOFER] = &gridCenterSub;
     }
-    aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
+    aPar->grid[AUDIO_TUNE_GAIN]      = &gridGain;
 
     i2cBegin(I2C_AMP, PT2322_I2C_ADDR);
     i2cSend(I2C_AMP, PT2322_CREAR_REGS);

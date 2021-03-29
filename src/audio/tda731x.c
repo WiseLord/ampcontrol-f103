@@ -54,17 +54,17 @@ void tda731xInit(AudioParam *param)
 {
     aPar = param;
 
-    aPar->tune[AUDIO_TUNE_VOLUME].grid    = &gridVolume;
-    aPar->tune[AUDIO_TUNE_BASS].grid      = &gridTone;
-    aPar->tune[AUDIO_TUNE_TREBLE].grid    = &gridTone;
+    aPar->grid[AUDIO_TUNE_VOLUME]    = &gridVolume;
+    aPar->grid[AUDIO_TUNE_BASS]      = &gridTone;
+    aPar->grid[AUDIO_TUNE_TREBLE]    = &gridTone;
     if (aPar->mode == AUDIO_MODE_4_0) {
-        aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridBalance;
+        aPar->grid[AUDIO_TUNE_FRONTREAR] = &gridBalance;
     }
-    aPar->tune[AUDIO_TUNE_BALANCE].grid   = &gridBalance;
+    aPar->grid[AUDIO_TUNE_BALANCE]   = &gridBalance;
     if (aPar->mode == AUDIO_MODE_2_1) {
-        aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridSub;
+        aPar->grid[AUDIO_TUNE_SUBWOOFER] = &gridSub;
     }
-    aPar->tune[AUDIO_TUNE_GAIN].grid      = &gridGain;
+    aPar->grid[AUDIO_TUNE_GAIN]      = &gridGain;
 }
 
 void tda731xSetTune(AudioTune tune, int8_t value)
@@ -107,7 +107,7 @@ void tda731xSetTune(AudioTune tune, int8_t value)
 
 void tda731xSetInput(int8_t value)
 {
-    tda731xSwitch(value, aPar->tune[AUDIO_TUNE_GAIN].value, !!(aPar->flags & AUDIO_FLAG_LOUDNESS));
+    tda731xSwitch(value, aPar->tune[AUDIO_TUNE_GAIN], !!(aPar->flags & AUDIO_FLAG_LOUDNESS));
 }
 
 void tda731xSetMute(bool value)
@@ -120,11 +120,11 @@ void tda731xSetMute(bool value)
         i2cSend(I2C_AMP, TDA731X_SP_FRONT_RIGHT | TDA731X_MUTE);
         i2cTransmit(I2C_AMP);
     } else {
-        tda731xSetTune(AUDIO_TUNE_BALANCE, aPar->tune[AUDIO_TUNE_VOLUME].value);
+        tda731xSetTune(AUDIO_TUNE_BALANCE, aPar->tune[AUDIO_TUNE_VOLUME]);
     }
 }
 
 void tda731xSetLoudness(bool value)
 {
-    tda731xSwitch(aPar->input, aPar->tune[AUDIO_TUNE_GAIN].value, value);
+    tda731xSwitch(aPar->input, aPar->tune[AUDIO_TUNE_GAIN], value);
 }

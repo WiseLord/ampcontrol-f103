@@ -114,17 +114,13 @@ typedef struct {
 } AudioGrid;
 
 typedef struct {
-    const AudioGrid *grid;
-    int8_t value;   // Value in steps
-} AudioTuneItem;
-
-typedef struct {
     AudioIC ic;
     int8_t input;
     AudioMode mode;
     AudioFlag flags;
     int8_t gain[MAX_INPUTS];
-    AudioTuneItem tune[AUDIO_TUNE_END];
+    int8_t tune[AUDIO_TUNE_END];
+    const AudioGrid *grid[AUDIO_TUNE_END];
 } AudioParam;
 
 typedef struct {

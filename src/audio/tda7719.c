@@ -275,24 +275,24 @@ void tda7719Init(AudioParam *param)
 {
     aPar = param;
 
-    aPar->tune[AUDIO_TUNE_VOLUME].grid      = &gridVolume;
-    aPar->tune[AUDIO_TUNE_BASS].grid        = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_MIDDLE].grid      = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_TREBLE].grid      = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_PREAMP].grid      = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_LOUDNESS].grid    = &gridLoudness;
+    aPar->grid[AUDIO_TUNE_VOLUME]      = &gridVolume;
+    aPar->grid[AUDIO_TUNE_BASS]        = &gridToneBal;
+    aPar->grid[AUDIO_TUNE_MIDDLE]      = &gridToneBal;
+    aPar->grid[AUDIO_TUNE_TREBLE]      = &gridToneBal;
+    aPar->grid[AUDIO_TUNE_PREAMP]      = &gridToneBal;
+    aPar->grid[AUDIO_TUNE_LOUDNESS]    = &gridLoudness;
 
-    aPar->tune[AUDIO_TUNE_BALANCE].grid     = &gridToneBal;
-    aPar->tune[AUDIO_TUNE_GAIN].grid        = &gridGain;
+    aPar->grid[AUDIO_TUNE_BALANCE]     = &gridToneBal;
+    aPar->grid[AUDIO_TUNE_GAIN]        = &gridGain;
 
     if (aPar->mode == AUDIO_MODE_4_0 ||
         aPar->mode == AUDIO_MODE_4_1) {
-        aPar->tune[AUDIO_TUNE_FRONTREAR].grid = &gridToneBal;
+        aPar->grid[AUDIO_TUNE_FRONTREAR] = &gridToneBal;
     }
     if (aPar->mode == AUDIO_MODE_2_1 ||
         aPar->mode == AUDIO_MODE_4_1) {
-        aPar->tune[AUDIO_TUNE_SUBWOOFER].grid = &gridSubwoofer;
-        aPar->tune[AUDIO_TUNE_SUB_CUT_FREQ].grid = &adjustSubCutFreq;
+        aPar->grid[AUDIO_TUNE_SUBWOOFER] = &gridSubwoofer;
+        aPar->grid[AUDIO_TUNE_SUB_CUT_FREQ] = &adjustSubCutFreq;
     }
 
     uint8_t subDisable = TDA7719_SUB_DISABLE;
@@ -302,12 +302,12 @@ void tda7719Init(AudioParam *param)
         subDisable = 0;
     }
 
-    aPar->tune[AUDIO_TUNE_LOUD_PEAK_FREQ].grid  = &adjustLoudPeakFreq;
-    aPar->tune[AUDIO_TUNE_BASS_FREQ].grid       = &adjustBassCFreq;
-    aPar->tune[AUDIO_TUNE_BASS_QUAL].grid       = &adjustBassQFact;
-    aPar->tune[AUDIO_TUNE_MIDDLE_KFREQ].grid    = &adjustMiddleCFreqK;
-    aPar->tune[AUDIO_TUNE_MIDDLE_QUAL].grid     = &adjustMiddleQFact;
-    aPar->tune[AUDIO_TUNE_TREBLE_KFREQ].grid    = &adjustTrebleCFreqK;
+    aPar->grid[AUDIO_TUNE_LOUD_PEAK_FREQ]  = &adjustLoudPeakFreq;
+    aPar->grid[AUDIO_TUNE_BASS_FREQ]       = &adjustBassCFreq;
+    aPar->grid[AUDIO_TUNE_BASS_QUAL]       = &adjustBassQFact;
+    aPar->grid[AUDIO_TUNE_MIDDLE_KFREQ]    = &adjustMiddleCFreqK;
+    aPar->grid[AUDIO_TUNE_MIDDLE_QUAL]     = &adjustMiddleQFact;
+    aPar->grid[AUDIO_TUNE_TREBLE_KFREQ]    = &adjustTrebleCFreqK;
 
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
@@ -341,12 +341,12 @@ void tda7719Init(AudioParam *param)
 
 static void tda7719SetTrebleFilter(void)
 {
-    int8_t value = aPar->tune[AUDIO_TUNE_TREBLE].value;
+    int8_t value = aPar->tune[AUDIO_TUNE_TREBLE];
 
     uint8_t reg09 = (value > 0) ? (31 - value) : (15 + value);
 
     reg09 <<= TDA7719_MIDDLE_ATT_OFT;
-    reg09 |= (aPar->tune[AUDIO_TUNE_TREBLE_KFREQ].value < TDA7719_TREBLE_FREQ_OFT);
+    reg09 |= (aPar->tune[AUDIO_TUNE_TREBLE_KFREQ] < TDA7719_TREBLE_FREQ_OFT);
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_TREBLE);
@@ -356,11 +356,11 @@ static void tda7719SetTrebleFilter(void)
 
 static void tda7719SetMiddleFilter(void)
 {
-    int8_t value = aPar->tune[AUDIO_TUNE_MIDDLE].value;
+    int8_t value = aPar->tune[AUDIO_TUNE_MIDDLE];
     uint8_t reg10 = (value > 0) ? (31 - value) : (15 + value);
 
     reg10 <<= TDA7719_MIDDLE_ATT_OFT;
-    reg10 |= (aPar->tune[AUDIO_TUNE_MIDDLE_QUAL].value < TDA7719_MIDDLE_QFACT_OFT);
+    reg10 |= (aPar->tune[AUDIO_TUNE_MIDDLE_QUAL] < TDA7719_MIDDLE_QFACT_OFT);
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_MIDDLE);
@@ -370,11 +370,11 @@ static void tda7719SetMiddleFilter(void)
 
 static void tda7719SetBassFilter(void)
 {
-    int8_t value = aPar->tune[AUDIO_TUNE_BASS].value;
+    int8_t value = aPar->tune[AUDIO_TUNE_BASS];
     uint8_t reg11 = (value > 0) ? (31 - value) : (15 + value);
 
     reg11 <<= TDA7719_BASS_ATT_OFT;
-    reg11 |= (aPar->tune[AUDIO_TUNE_BASS_QUAL].value << TDA7719_BASS_QFACT_OFT);
+    reg11 |= (aPar->tune[AUDIO_TUNE_BASS_QUAL] << TDA7719_BASS_QFACT_OFT);
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_BASS);
@@ -386,9 +386,9 @@ static void tda7719SetSubwooferMiddleBass(void)
 {
     uint8_t reg12 = TDA7719_BASS_DCMODE_OFF | TDA7719_SUB_PHASE_0;
 
-    reg12 |= (aPar->tune[AUDIO_TUNE_BASS_FREQ].value << TDA7719_BASS_FREQ_OFT);
-    reg12 |= (aPar->tune[AUDIO_TUNE_MIDDLE_KFREQ].value << TDA7719_MIDDLE_FREQ_OFT);
-    reg12 |= (aPar->tune[AUDIO_TUNE_SUB_CUT_FREQ].value << TDA7719_SUB_CUT_FREQ_OFT);
+    reg12 |= (aPar->tune[AUDIO_TUNE_BASS_FREQ] << TDA7719_BASS_FREQ_OFT);
+    reg12 |= (aPar->tune[AUDIO_TUNE_MIDDLE_KFREQ] << TDA7719_MIDDLE_FREQ_OFT);
+    reg12 |= (aPar->tune[AUDIO_TUNE_SUB_CUT_FREQ] << TDA7719_SUB_CUT_FREQ_OFT);
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_SUB_MID_BASS);
@@ -400,8 +400,8 @@ static void tda7719SetLoudness()
 {
     uint8_t reg07 = TDA7719_HIGH_BOOST_OFF;
 
-    reg07 |= ((-aPar->tune[AUDIO_TUNE_LOUDNESS].value) << TDA7719_LOUDNESS_ATT_OFT);
-    reg07 |= (aPar->tune[AUDIO_TUNE_LOUD_PEAK_FREQ].value << TDA7719_LOUD_FREQ_OFT);
+    reg07 |= ((-aPar->tune[AUDIO_TUNE_LOUDNESS]) << TDA7719_LOUDNESS_ATT_OFT);
+    reg07 |= (aPar->tune[AUDIO_TUNE_LOUD_PEAK_FREQ] << TDA7719_LOUD_FREQ_OFT);
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_LOUDNESS);
@@ -414,7 +414,7 @@ void tda7719SetTune(AudioTune tune, int8_t value)
     (void)value;
 
     AudioRaw raw;
-    audioSetRawBalance(&raw, aPar->tune[AUDIO_TUNE_VOLUME].value, false);
+    audioSetRawBalance(&raw, aPar->tune[AUDIO_TUNE_VOLUME], false);
 
     // Force direct signal for spectrum analyzer in lower modes
     if (aPar->mode == AUDIO_MODE_2_0 ||
@@ -486,7 +486,7 @@ void tda7719SetTune(AudioTune tune, int8_t value)
 
 void tda7719SetInput(int8_t value)
 {
-    tda7719SetInputGain(value, aPar->tune[AUDIO_TUNE_GAIN].value);
+    tda7719SetInputGain(value, aPar->tune[AUDIO_TUNE_GAIN]);
 }
 
 void tda7719SetMute(bool value)
@@ -515,6 +515,6 @@ void tda7719SetMute(bool value)
             i2cTransmit(I2C_AMP);
         }
     } else {
-        tda7719SetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME].value);
+        tda7719SetTune(AUDIO_TUNE_VOLUME, aPar->tune[AUDIO_TUNE_VOLUME]);
     }
 }
