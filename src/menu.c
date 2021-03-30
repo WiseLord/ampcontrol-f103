@@ -539,22 +539,6 @@ void menuChange(int8_t diff)
     }
 }
 
-void menuReset(void)
-{
-    MenuIdx idx = menu.active;
-    if (idx >= MENU_END) {
-        return;
-    }
-
-    if (menu.selected) {
-        menu.value = settingsGetDefault(menuItems[idx].param);
-        menuValueLimit();
-        menuStoreCurrentValue();
-        menuUpdate(idx);
-        menu.selected = false;
-    }
-}
-
 bool menuIsTop(void)
 {
     // TODO: Top menu on first selection instead of MENU_SETUP

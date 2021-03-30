@@ -111,15 +111,6 @@ void settingsInit(void)
     eeInit(eeMap, PARAM_END);
 }
 
-int16_t settingsGetDefault(Param param)
-{
-    if (param == PARAM_NULL || param >= PARAM_END) {
-        return (int16_t)EE_NOT_FOUND;
-    }
-
-    return eeMap[param].value;
-}
-
 int16_t settingsRead(Param param, int16_t defValue)
 {
     if (param == PARAM_NULL || param >= PARAM_END) {

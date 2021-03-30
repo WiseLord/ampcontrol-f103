@@ -115,7 +115,6 @@ Menu *menuGet(void);
 
 void menuSetActive(MenuIdx index);
 void menuChange(int8_t diff);
-void menuReset(void);
 bool menuIsTop(void);
 
 MenuIdx menuGetFirstChild(void);
