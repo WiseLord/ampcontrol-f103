@@ -32,6 +32,7 @@ typedef union {
         bool forcedMono;
         bool rdsFlag;
     } par;
+    int timer;
 } DrawData;
 
 typedef union {
@@ -1331,45 +1332,27 @@ void canvasShowTimer(bool clear, int32_t value)
 {
     const Layout *lt = canvas.layout;
 
-    RTC_type rtc;
-    rtc.etm = RTC_NOEDIT;
+    char buf[32];
 
-    if (value < 0) {
-        rtc.hour = -1;
-        rtc.min = -1;
-        rtc.sec = -1;
-    } else {
-        value /= 1000;
-        rtc.hour = (int8_t)(value / 3600);
-        rtc.min = (int8_t)(value / 60 % 60);
-        rtc.sec = (int8_t)(value % 60);
+    int timer = value / 1000;
+
+    if (clear || timer != prev.timer) {
+        prev.timer = timer;
+        if (timer <= 0) {
+            snprintf(buf, sizeof(buf), "%s", "--:--:--");
+        } else {
+            snprintf(buf, sizeof(buf), "%02d:%02d:%02d", timer / 3600, timer / 60 % 60, timer % 60);
+        }
+
+        // HH:MM:SS
+        glcdSetFont(lt->time.hmsFont);
+        glcdSetFontColor(canvas.pal->fg);
+        glcdSetFontBgColor(canvas.pal->bg);
+        glcdSetFontAlign(GLCD_ALIGN_CENTER);
+        glcdSetXY(lt->rect.w / 2, lt->time.hmsY);
+
+        glcdWriteString(buf);
     }
-
-    // HH:MM:SS
-    glcdSetFont(lt->time.hmsFont);
-
-    int16_t digW = lt->time.hmsFont->chars[glcdFontSymbolPos('0')].image->width;
-    int16_t ltspW = lt->time.hmsFont->chars[glcdFontSymbolPos(LETTER_SPACE_CHAR)].image->width;
-
-    int16_t timeLen = 6 * digW + 15 * ltspW;    // 6 digits HHMMSS + 13 letter spaces + 2 ':'
-    int16_t timeX = (lt->rect.w - timeLen) / 2;
-
-    glcdSetXY(timeX, lt->time.hmsY);
-    drawTm(&rtc, RTC_HOUR, clear);
-
-    drawTmSpacer(':', clear);
-
-    timeX += digW * 2 + ltspW * 6;
-    glcdSetX(timeX);
-    drawTm(&rtc, RTC_MIN, clear);
-
-    drawTmSpacer(':', clear);
-
-    timeX += digW * 2 + ltspW * 6;
-    glcdSetX(timeX);
-    drawTm(&rtc, RTC_SEC, clear);
-
-    prev.rtc = rtc;
 
     int16_t yPos = lt->time.hmsY + lt->time.hmsFont->chars[0].image->height;
 
