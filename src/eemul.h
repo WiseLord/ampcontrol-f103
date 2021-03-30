@@ -39,7 +39,7 @@ typedef struct {
     int16_t value;
 } EE_Cell;
 
-void eeInit(const EE_Cell *map, uint16_t mapSize);
+void eeInit(const uint8_t *map, uint8_t mapSize);
 
 void *eeGetPageAddr(uint16_t page);
 void eeErasePages(uint16_t page, uint16_t count);

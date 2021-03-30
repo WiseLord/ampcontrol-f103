@@ -28,8 +28,9 @@
 #define HEAD_VALID          ((uint32_t)0x0000)
 
 static uint16_t currPage;
-static const EE_Cell *eeMap;
-static uint16_t eeMapSize;
+
+static const uint8_t *eeMap;
+static uint8_t eeMapSize;
 
 __attribute__((always_inline))
 static inline void eeUnlock(void)
@@ -90,7 +91,7 @@ static void eeCopyPage(uint16_t addr, uint16_t data)
     SET_BIT(FLASH->CR, FLASH_CR_PG);
 
     for (uint16_t i = 0; i < eeMapSize; i++) {
-        uint16_t cell = eeMap[i].cell;
+        uint16_t cell = eeMap[i];
         uint16_t last = eeFindLastCell(cell, EE_CELLS_NUM - 1);
         if (last != EE_NOT_FOUND) {
             uint16_t eeAddr = *ADDR(last);
@@ -136,7 +137,7 @@ static void eeSwapPage(void)
     eeFormatPage(currPage);
 }
 
-void eeInit(const EE_Cell *map, uint16_t mapSize)
+void eeInit(const uint8_t *map, uint8_t mapSize)
 {
     eeMap = map;
     eeMapSize = mapSize;

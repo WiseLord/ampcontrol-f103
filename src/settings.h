@@ -8,7 +8,6 @@ extern "C" {
 #include <stdint.h>
 
 #include "action.h"
-#include "eemul.h"
 
 #define GENERATE_PARAM_RC(CMD)  PARAM_RC_ ## CMD,
 
@@ -131,8 +130,6 @@ void settingsInit(void);
 
 int16_t settingsRead(Param param, int16_t defValue);
 void settingsStore(Param param, int16_t value);
-
-const EE_Cell *eeMapGet(void);
 
 #ifdef __cplusplus
 }

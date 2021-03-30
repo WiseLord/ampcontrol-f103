@@ -5,6 +5,7 @@
 
 #include "amp.h"
 #include "audio/audio.h"
+#include "eemul.h"
 #include "gui/canvas.h"
 #include "i2cexp.h"
 #include "input.h"

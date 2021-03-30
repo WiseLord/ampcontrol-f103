@@ -2,6 +2,7 @@
 
 #include "hwlibs.h"
 
+#include "eemul.h"
 #include "settings.h"
 #include "timers.h"
 
