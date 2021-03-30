@@ -6,6 +6,13 @@
 #include "settings.h"
 #include "timers.h"
 
+// Remote control pins
+#define RC_Port                 GPIOA
+#define RC_Pin                  LL_GPIO_PIN_8
+#define RC_ExtiLine             LL_EXTI_LINE_8
+#define RC_AR_ExtiPort          LL_GPIO_AF_EXTI_PORTA
+#define RC_AR_ExtiLine          LL_GPIO_AF_EXTI_LINE8
+
 static uint16_t rcCode[RC_CMD_END]; // Array with rc commands
 
 typedef  uint8_t NecState;
@@ -326,7 +333,7 @@ static void rcIRQ(void)
     uint16_t delay = (uint16_t)(timCnt - timCntOld);
     timCntOld = timCnt;
 
-    bool rc = !READ(RC);
+    bool rc = !(LL_GPIO_ReadInputPort(RC_Port) & LL_EXTI_LINE_8);
 
     rcDecodeNecSam(rc, delay);
     rcDecodeRC56(rc, delay);

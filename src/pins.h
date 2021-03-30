@@ -10,6 +10,16 @@ extern "C" {
 
 #include "hwlibs.h"
 
+// Pins helper definitions
+#define CONCAT(x,y)             x ## y
+
+#define SET(p)                  (LL_GPIO_SetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
+#define CLR(p)                  (LL_GPIO_ResetOutputPin(CONCAT(p, _Port), CONCAT(p, _Pin)))
+#define TOG(p)                  (LL_GPIO_TogglePin(CONCAT(p, _Port), CONCAT(p, _Pin)))
+
+#define OUT(p)                  (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_OUTPUT))
+#define IN(p)                   (LL_GPIO_SetPinMode(CONCAT(p, _Port), CONCAT(p, _Pin), LL_GPIO_MODE_INPUT))
+
 // Mute and Standby lines
 #define MUTE_Port               GPIOB
 #define MUTE_Pin                LL_GPIO_PIN_11
