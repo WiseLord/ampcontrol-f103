@@ -377,6 +377,13 @@ void rtcChangeMode(int8_t diff)
     }
 }
 
+void rtcInitAlarms(void)
+{
+    alarm[0].hour = settingsRead(PARAM_ALARM_HOUR, 7);
+    alarm[0].min = settingsRead(PARAM_ALARM_MINUTE, 30);
+    alarm[0].days = settingsRead(PARAM_ALARM_DAYS, ALARM_DAY_OFF);
+}
+
 Alarm *rtcGetAlarm(uint8_t index)
 {
     if (index >= ALARM_COUNT) {

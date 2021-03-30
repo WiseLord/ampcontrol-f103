@@ -1308,6 +1308,9 @@ void ampInit(void)
     settingsInit();
 
     ampInitMuteStby();
+
+    rtcInitAlarms();
+
     pinsInit();
     rtcInit();
 

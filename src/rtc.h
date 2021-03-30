@@ -76,6 +76,7 @@ RtcMode rtcGetMode(void);
 void rtcSetMode(RtcMode mode);
 void rtcChangeMode(int8_t diff);
 
+void rtcInitAlarms(void);
 Alarm *rtcGetAlarm(uint8_t index);
 bool rtcCheckAlarm(void);
 void rtcChangeAlarm(AlarmMode alarmMode,  int8_t diff);
