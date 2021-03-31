@@ -408,7 +408,7 @@ static void fftGet128(FftSample *sp, uint8_t *out, size_t size)
     for (int16_t i = 0; i < FFT_SIZE / 2; i++) {
         uint16_t calc = (uint16_t)((sp[i].fr * sp[i].fr + sp[i].fi * sp[i].fi) >> 15);
 
-        db = spGetDb(calc, 0, N_DB - 1);
+        db = spGetDb(calc);
 
         if (*po < db) {
             *po = db;

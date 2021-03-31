@@ -66,7 +66,7 @@ typedef void (*fftGet)(FftSample *sp, uint8_t *out, size_t size);
 void spInit(void);
 Spectrum *spGet(void);
 
-uint8_t spGetDb(uint16_t value, uint8_t min, uint8_t max);
+uint8_t spGetDb(uint16_t value);
 
 void spGetADC(SpChan chan, uint8_t *out, size_t size, fftGet fn);
 

@@ -240,15 +240,23 @@ Spectrum *spGet(void)
     return &spectrum;
 }
 
-uint8_t spGetDb(uint16_t value, uint8_t min, uint8_t max)
+uint8_t spGetDb(uint16_t value)
 {
+    uint8_t min = 0;
+    uint8_t max = N_DB - 1;
+
     uint8_t mid = (min + max) / 2;
 
-    if (dbTable[mid] < value) {
-        return mid == min ? mid : spGetDb(value, mid, max);
-    } else {
-        return mid == max ? mid : spGetDb(value, min, mid);
+    while (min != mid && max != mid) {
+        if (dbTable[mid] < value) {
+            min = mid;
+        } else {
+            max = mid;
+        }
+        mid = (min + max) / 2;
     }
+
+    return mid;
 }
 
 void spGetADC(SpChan chan, uint8_t *out, size_t size, fftGet fn)
