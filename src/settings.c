@@ -75,7 +75,6 @@ static const uint8_t eeMap[] = {
     [PARAM_SPECTRUM_MODE]        = 0x50,
     [PARAM_SPECTRUM_PEAKS]       = 0x51,
     [PARAM_SPECTRUM_GRAD]        = 0x52,
-    [PARAM_SPECTRUM_DEMO]        = 0x53,
 
     [PARAM_DISPLAY_BR_STBY]      = 0x58,
     [PARAM_DISPLAY_BR_WORK]      = 0x59,
