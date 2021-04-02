@@ -341,7 +341,7 @@ void tda7719Init(AudioParam *param)
 
 static void tda7719SetTrebleFilter(void)
 {
-    int8_t value = aPar->tune[AUDIO_TUNE_TREBLE];
+    int8_t value = (aPar->flags & AUDIO_FLAG_BYPASS) ? 0 : aPar->tune[AUDIO_TUNE_TREBLE];
 
     uint8_t reg09 = (value > 0) ? (31 - value) : (15 + value);
 
@@ -356,7 +356,7 @@ static void tda7719SetTrebleFilter(void)
 
 static void tda7719SetMiddleFilter(void)
 {
-    int8_t value = aPar->tune[AUDIO_TUNE_MIDDLE];
+    int8_t value = (aPar->flags & AUDIO_FLAG_BYPASS) ? 0 : aPar->tune[AUDIO_TUNE_MIDDLE];
     uint8_t reg10 = (value > 0) ? (31 - value) : (15 + value);
 
     reg10 <<= TDA7719_MIDDLE_ATT_OFT;
@@ -370,7 +370,7 @@ static void tda7719SetMiddleFilter(void)
 
 static void tda7719SetBassFilter(void)
 {
-    int8_t value = aPar->tune[AUDIO_TUNE_BASS];
+    int8_t value = (aPar->flags & AUDIO_FLAG_BYPASS) ? 0 : aPar->tune[AUDIO_TUNE_BASS];
     uint8_t reg11 = (value > 0) ? (31 - value) : (15 + value);
 
     reg11 <<= TDA7719_BASS_ATT_OFT;
