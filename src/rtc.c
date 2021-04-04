@@ -188,6 +188,8 @@ static bool rtcIsAlarmDay(AlarmDay days, int8_t wday)
 
 void rtcInit(void)
 {
+    rtcCorr = settingsRead(PARAM_SYSTEM_RTC_CORR, 0);
+
     switch (rtcPhase) {
     case RTC_INIT_DISABLED:
         // Power interface clock enable
@@ -233,7 +235,7 @@ void rtcInit(void)
                 break;
             }
 
-            rtcSetCorrection(settingsRead(PARAM_SYSTEM_RTC_CORR, 0));
+            rtcSetCorrection(rtcCorr);
 
             rtcPhase = RTC_INIT_READY;
         }
