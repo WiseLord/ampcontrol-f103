@@ -101,6 +101,7 @@ static const AudioGrid gridVolume    = {NULL, -79, 15, (int8_t)(1.00 * STEP_MULT
 static const AudioGrid gridToneBal   = {NULL, -15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
 static const AudioGrid gridSubwoofer = {NULL, -15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
 static const AudioGrid gridGain      = {NULL,   0, 15, (int8_t)(1.00 * STEP_MULT)}; // 0..15dB with 1dB step
+static const AudioGrid gridLoudness  = {NULL, -15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
 
 static const int16_t arrBassCFreq[] = {
     60  * STEP_MULT,
@@ -196,6 +197,8 @@ void tda7418Init(AudioParam *param)
     aPar->grid[AUDIO_TUNE_BASS]      = &gridToneBal;
     aPar->grid[AUDIO_TUNE_MIDDLE]    = &gridToneBal;
     aPar->grid[AUDIO_TUNE_TREBLE]    = &gridToneBal;
+    aPar->grid[AUDIO_TUNE_LOUDNESS]  = &gridLoudness;
+
     if (aPar->mode == AUDIO_MODE_4_0 ||
         aPar->mode == AUDIO_MODE_4_1) {
         aPar->grid[AUDIO_TUNE_FRONTREAR] = &gridToneBal;
