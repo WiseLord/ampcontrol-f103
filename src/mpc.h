@@ -35,6 +35,7 @@ enum {
     MPC_RANDOM  = 0x0040,
     MPC_CONSUME = 0x0080,
     MPC_ONLINE  = 0x0100,
+    MPC_BT_ON   = 0x0200,
 };
 
 typedef struct {
@@ -64,6 +65,7 @@ void mpcSendMediaKey(MediaKey key);
 void mpcGetData(void);
 
 void mpcSchedPower(bool value);
+void mpcSetBluetooth(bool value);
 
 #ifdef __cplusplus
 }
