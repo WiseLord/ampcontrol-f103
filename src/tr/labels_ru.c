@@ -117,6 +117,7 @@ const char *const labels_ru[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Развернуть",
     [LABEL_MENU + MENU_DISPLAY_DEF]     = "Главный экран",
     [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Палитра",
+    [LABEL_MENU + MENU_DISPLAY_SCRSAVER] = "Заставка",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Режим ожидания",

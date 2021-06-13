@@ -177,7 +177,9 @@ static ScreenType getScrDef(void)
         if (swTimSilence < S_TO_MS(SW_TIM_SILENCE_SHOW_GAP)) {
             return SCREEN_SILENCE_TIMER;
         } else if (swTimSilence < S_TO_MS(60 * min - SW_TIM_SCREENSAVER_GAP)) {
-            return SCREEN_SAVER;
+            if (amp->scrSaver) {
+                return SCREEN_SAVER;
+            }
         }
     }
 
@@ -343,6 +345,7 @@ static void ampReadSettings(void)
     amp->brStby = settingsRead(PARAM_DISPLAY_BR_STBY, 3);
     amp->brWork = settingsRead(PARAM_DISPLAY_BR_WORK, LCD_BR_MAX);
     amp->defScreen = settingsRead(PARAM_DISPLAY_DEF, SCREEN_AUDIO_INPUT);
+    amp->scrSaver = settingsRead(PARAM_DISPLAY_SCRSAVER, true);
     amp->silenceTimer = settingsRead(PARAM_SYSTEM_SIL_TIM, 5);
     amp->stbyLow = settingsRead(PARAM_SYSTEM_STBY_LOW, false);
     amp->muteLow = settingsRead(PARAM_SYSTEM_MUTE_LOW, false);

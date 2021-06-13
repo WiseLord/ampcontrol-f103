@@ -117,6 +117,7 @@ const char *const labels_ua [LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Повернути",
     [LABEL_MENU + MENU_DISPLAY_DEF]     = "Головний екран",
     [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Палітра",
+    [LABEL_MENU + MENU_DISPLAY_SCRSAVER] = "Заставка",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Режим очікування",

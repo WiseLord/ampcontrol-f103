@@ -117,6 +117,7 @@ const char *const labels_tr[LABEL_END] = {
     [LABEL_MENU + MENU_DISPLAY_ROTATE]  = "Ekran Döndürme",
     [LABEL_MENU + MENU_DISPLAY_DEF]     = "Ana Ekran",
     [LABEL_MENU + MENU_DISPLAY_PALETTE] = "Tema Renkleri",
+//    [LABEL_MENU + MENU_DISPLAY_SCRSAVER] = "Screensaver",
 
     // NOTE: Keep in sync with cmd.h define list
     [LABEL_MENU + MENU_RC_STBY_SWITCH]  = "Bekleme Butonu",

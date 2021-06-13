@@ -89,6 +89,7 @@ static const MenuItem menuItems[MENU_END] = {
     [MENU_DISPLAY_ROTATE]   = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL,     PARAM_DISPLAY_ROTATE},
     [MENU_DISPLAY_DEF]      = {MENU_SETUP_DISPLAY,      MENU_TYPE_ENUM,     PARAM_DISPLAY_DEF},
     [MENU_DISPLAY_PALETTE]  = {MENU_SETUP_DISPLAY,      MENU_TYPE_ENUM,     PARAM_DISPLAY_PALETTE},
+    [MENU_DISPLAY_SCRSAVER] = {MENU_SETUP_DISPLAY,      MENU_TYPE_BOOL,     PARAM_DISPLAY_SCRSAVER},
 
     FOREACH_CMD(GENERATE_MENU_ITEM)
 };
@@ -802,6 +803,9 @@ static int16_t menuGetParam(Param param)
     case PARAM_DISPLAY_PALETTE:
         ret = paletteGetIndex();
         break;
+    case PARAM_DISPLAY_SCRSAVER:
+        ret = amp->scrSaver;
+        break;
 
     default:
         break;
@@ -923,6 +927,9 @@ static void menuSetParam(Param param, int16_t value)
         break;
     case PARAM_DISPLAY_PALETTE:
         paletteSetIndex((PalIdx)value);
+        break;
+    case PARAM_DISPLAY_SCRSAVER:
+        amp->scrSaver = (bool)value;
         break;
 
     default:

@@ -84,6 +84,7 @@ typedef struct {
     uint8_t silenceTimer;
     int8_t brStby;
     int8_t brWork;
+    bool scrSaver;
 } Amp;
 
 typedef uint16_t MuteStby;

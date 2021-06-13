@@ -81,6 +81,7 @@ static const uint8_t eeMap[] = {
     [PARAM_DISPLAY_ROTATE]       = 0x5A,
     [PARAM_DISPLAY_DEF]          = 0x5B,
     [PARAM_DISPLAY_PALETTE]      = 0x5C,
+    [PARAM_DISPLAY_SCRSAVER]     = 0x5D,
 
     [PARAM_ALARM_HOUR]           = 0x60,
     [PARAM_ALARM_MINUTE]         = 0x61,
