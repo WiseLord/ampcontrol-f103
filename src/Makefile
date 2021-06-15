@@ -51,8 +51,6 @@ C_SOURCES += $(call lc, amp_$(MODULE)).c
 
 C_SOURCES += amp.c
 C_SOURCES += bt.c
-C_SOURCES += control.c
-C_SOURCES += debug.c
 C_SOURCES += eemul.c
 C_SOURCES += fft.c
 C_SOURCES += i2c.c

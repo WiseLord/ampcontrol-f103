@@ -15,14 +15,14 @@ compile_display()
   for DISPVAR in ${DISPVARS}
   do
     make clean
-    echo -e "\nCompiling display ${DISPLAY} ${DISPVAR}"
+    echo -e "Compiling display ${DISPLAY} ${DISPVAR}"
     make ${MAKEOPTS} STM32_MCU=${STM32_MCU} DISPLAY=${DISPLAY} DISPVAR=${DISPVAR}
   done
 }
 
 for STM32_MCU in ${STM32_MCU_LIST}
 do
-  echo -e "\n========== Compiling for ${STM32_MCU} =========="
+  echo -e "========== Compiling for ${STM32_MCU} =========="
 
   # 160x128 color displays
   compile_display ${STM32_MCU} "ILI9163"   "8BIT SPI"

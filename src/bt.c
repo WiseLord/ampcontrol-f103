@@ -1,30 +1,38 @@
 #include "bt.h"
 
-#include "debug.h"
+#include "amp.h"
 #include "i2cexp.h"
+#include "hwlibs.h"
 #include "menu.h"
-#include "string.h"
+#include "ringbuf.h"
+#include <usart.h>
 #include "utils.h"
+
+#include <string.h>
+
+#define CMDBUF_SIZE     256
+
+static RingBuf rbuf;
+static char rbData[CMDBUF_SIZE];
+static LineParse lp;
 
 static BTCtx btCtx;
 
 static void btPlay()
 {
-    dbg("AT+CB");
+    usartSendString(USART_BT, "AT+CB\r\n");
     i2cExpGpioKeyPress(BT_PLAY_PAUSE);
 }
 
 static void btPrevTrack(void)
 {
-    dbg("AT+CD");
-
+    usartSendString(USART_BT, "AT+CD\r\n");
     i2cExpGpioKeyPress(BT_PREV_TRACK);
 }
 
 static void btNextTrack(void)
 {
-    dbg("AT+CC");
-
+    usartSendString(USART_BT, "AT+CC\r\n");
     i2cExpGpioKeyPress(BT_NEXT_TRACK);
 }
 
@@ -102,7 +110,7 @@ void btSetInput(BtInput value)
 
 void btNextInput()
 {
-    dbg("AT+CM00");
+    usartSendString(USART_BT, "AT+CM00\r\n");
     i2cExpGpioKeyPress(BT_NEXT_INPUT);
 }
 
@@ -162,7 +170,57 @@ void bt201ParseSongName(char *line, int16_t size)
     btCtx.flags |= BT_FLAG_NAME_CHANGED;
 
     // Query current mode
-    dbg("AT+QM");
+    usartSendString(USART_BT, "AT+QM\r\n");
 
     return;
 }
+
+static void controlParseLine(LineParse *lp)
+{
+    char *line = lp->line;
+
+    // BT201 control
+    if (utilIsPrefix(line, "QM+")) {
+        bt201ParseInput(line + strlen("QM+"));
+        if (btGetInput() & (BT_IN_USB | BT_IN_SDCARD)) {
+            ampActionQueue(ACTION_AUDIO_INPUT_SET_TYPE, IN_BLUETOOTH);
+        }
+    } else if (utilIsPrefix(line, "MU+")) {
+        bt201ParseMount(line + strlen("MU+"));
+    } else if (utilIsPrefix(line, "MF+")) {
+        bt201ParseSongName(line + strlen("MF+"), lp->size - (int16_t)strlen("MF+"));
+    }
+}
+
+void btInit(void)
+{
+    ringBufInit(&rbuf, rbData, sizeof(rbData));
+
+    usartInit(USART_BT, 115200);
+    usartSetRxIRQ(USART_BT, true);
+    usartSendChar(USART_BT, '\r');
+}
+
+void USART_BT_HANDLER(void)
+{
+    // Check RXNE flag value in SR register
+    if (LL_USART_IsActiveFlag_RXNE(USART_BT) && LL_USART_IsEnabledIT_RXNE(USART_BT)) {
+        char ch = LL_USART_ReceiveData8(USART_BT);
+        ringBufPushChar(&rbuf, ch);
+    } else {
+        // Call Error function
+    }
+}
+
+void btGetData(void)
+{
+    while (ringBufGetSize(&rbuf) > 0) {
+        char ch = ringBufPopChar(&rbuf);
+        if (utilReadChar(&lp, ch)) {
+            if (lp.line[0] != '\0') {
+                controlParseLine(&lp);
+            }
+        }
+    }
+}
+

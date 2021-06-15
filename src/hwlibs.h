@@ -55,8 +55,8 @@ extern "C" {
 #define LL_I2C1_SCL_PIN         LL_GPIO_PIN_8
 #define LL_I2C1_SDA_PIN         LL_GPIO_PIN_9
 
-#define USART_DBG               USART1
-#define USART_DBG_HANDLER       USART1_IRQHandler
+#define USART_BT                USART1
+#define USART_BT_HANDLER        USART1_IRQHandler
 
 #define USART_MPC               USART2
 #define USART_MPC_HANDLER       USART2_IRQHandler

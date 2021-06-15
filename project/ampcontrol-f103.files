@@ -18,10 +18,6 @@
 ../src/audio/tda7719.h
 ../src/bt.c
 ../src/bt.h
-../src/control.c
-../src/control.h
-../src/debug.c
-../src/debug.h
 ../src/display/colors.h
 ../src/display/dispconf.h
 ../src/display/dispdrv.c

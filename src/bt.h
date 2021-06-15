@@ -45,6 +45,9 @@ void bt201ParseSongName(char *line, int16_t size);
 
 uint16_t btGetFlags(void);
 
+void btInit(void);
+void btGetData(void);
+
 #ifdef __cplusplus
 }
 #endif

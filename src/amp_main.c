@@ -4,8 +4,6 @@
 
 #include "audio/audio.h"
 #include "bt.h"
-#include "control.h"
-#include "debug.h"
 #include "gui/canvas.h"
 #include "i2c.h"
 #include "i2cexp.h"
@@ -413,7 +411,6 @@ static void ampEnterStby(void)
     inputSetPower(false);   // Power off input device
 
     amp->status = AMP_STATUS_STBY;
-    controlReportAmpStatus();
     swTimSet(SW_TIM_AMP_INIT, 1000);
 }
 
@@ -438,7 +435,6 @@ void ampInitHw(void)
         i2cExpInit();
 
         amp->status = AMP_STATUS_HW_READY;
-        controlReportAll();
 
         swTimSet(SW_TIM_AMP_INIT, 500);
         break;
@@ -608,8 +604,6 @@ static int8_t actionGetNextAudioInput(int8_t diff)
 static void actionSetInput(int8_t value)
 {
     ampSetInput(value);
-    controlReportAudioInput();
-    controlReportAudioTune(AUDIO_TUNE_GAIN);
 }
 
 static void actionSetInputType(InputType value)
@@ -1302,8 +1296,6 @@ void ampInit(void)
 
     utilEnableSwd(true);
 
-    dbgInit();
-
     settingsInit();
 
     ampInitMuteStby();
@@ -1321,7 +1313,7 @@ void ampInit(void)
 
     spInit();
 
-    controlInit();
+    btInit();
     mpcInit();
 
     ampReadSettings();
@@ -1340,12 +1332,11 @@ void ampInit(void)
 #endif
 
     amp->status = AMP_STATUS_STBY;
-    controlReportAmpStatus();
 }
 
 void ampSyncFromOthers(void)
 {
-    controlGetData();
+    btGetData();
     mpcGetData();
 }
 
@@ -1571,13 +1562,11 @@ void ampActionHandle(void)
             ampMute(false);
         }
         screenSet(SCREEN_AUDIO_PARAM, 3000);
-        controlReportAudioTune(priv.tune);
         swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
         break;
     case ACTION_AUDIO_PARAM_SET:
         audioSetTune(priv.tune, (int8_t)action.value);
         screenSet(SCREEN_AUDIO_PARAM, 3000);
-        controlReportAudioTune(priv.tune);
         swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
         break;
 
@@ -1783,7 +1772,6 @@ void ampScreenShow(void)
         if (inType == IN_TUNER) {
             if (swTimGet(SW_TIM_INPUT_POLL) == 0) {
                 tunerUpdateStatus();
-                controlReportTunerFreq(false);
                 swTimSet(SW_TIM_INPUT_POLL, 100);
             }
             if (swTimGet(SW_TIM_RDS_HOLD) == 0) {
