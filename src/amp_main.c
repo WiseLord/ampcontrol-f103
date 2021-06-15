@@ -606,7 +606,7 @@ static void actionSetInput(int8_t value)
     ampSetInput(value);
 }
 
-static void actionSetInputType(InputType value)
+static bool actionSetInputType(InputType value)
 {
     AudioProc *aProc = audioGet();
 
@@ -616,10 +616,13 @@ static void actionSetInputType(InputType value)
         if (amp->inType[i] == value) {
             if (aProc->par.input != i) {
                 actionSetInput(i);
+                return true;
             }
             break;
         }
     }
+
+    return false;
 }
 
 static void actionPostSetInput(void)
@@ -1550,8 +1553,9 @@ void ampActionHandle(void)
         actionPostSetInput();
         break;
     case ACTION_AUDIO_INPUT_SET_TYPE:
-        actionSetInputType((InputType)action.value);
-        actionPostSetInput();
+        if (actionSetInputType((InputType)action.value)) {
+            actionPostSetInput();
+        }
         break;
     case ACTION_AUDIO_PARAM_CHANGE:
         audioChangeTune(priv.tune, (int8_t)(action.value));
