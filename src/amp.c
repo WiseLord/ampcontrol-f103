@@ -1,6 +1,7 @@
 #include "amp.h"
 
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "input.h"
 #include "rtc.h"
@@ -67,21 +68,23 @@ Action ampGetEncoder(void)
 
 void ampUpdateDate(char *date)
 {
-    int year, month, day, hour, min, sec;
+    // Parsing date format YYYY-MM-DDTHH:MM:SS
+    if (strlen(date) >= 19 &&
+        date[4] == '-' &&
+        date[7] == '-' &&
+        date[10] == 'T' &&
+        date[13] == ':' &&
+        date[16] == ':') {
 
-    int ret = sscanf(date, "%04d-%02d-%02dT%02d:%02d:%02d",
-                     &year, &month, &day, &hour, &min, &sec);
+        RTC_type rtc;
 
-    RTC_type rtc;
+        rtc.year = strtol(date + 0, NULL, 10) % 100;
+        rtc.month = strtol(date + 5, NULL, 10);
+        rtc.date = strtol(date + 8, NULL, 10);
+        rtc.hour = strtol(date + 11, NULL, 10);
+        rtc.min = strtol(date + 14, NULL, 10);
+        rtc.sec = strtol(date + 17, NULL, 10);
 
-    if (ret == 6) {
-        rtc.year = year % 100;
-        rtc.month = month;
-        rtc.date = day;
-        rtc.hour = hour;
-        rtc.min = min;
-        rtc.sec = sec;
+        rtcUpdateTime(&rtc);
     }
-
-    rtcUpdateTime(&rtc);
 }

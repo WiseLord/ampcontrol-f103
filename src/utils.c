@@ -2,8 +2,9 @@
 
 #include "hwlibs.h"
 
-#include <stdarg.h>
-#include <stdio.h>
+#include <stddef.h>
+
+#include <stdlib.h>
 #include <string.h>
 
 void utilInitSysCounter(void)
@@ -49,6 +50,18 @@ bool utilReadChar(LineParse *lp, char ch)
         lp->size++;
         return false;
     }
+}
+
+bool utilIsPrefixInt(char *line, char *prefix, int *ret)
+{
+    int len = strlen(prefix);
+
+    if (strncmp(line, prefix, len) == 0) {
+        *ret = strtol(line + len, NULL, 10);
+        return true;
+    }
+
+    return false;
 }
 
 bool utilIsPrefix(const char *line, const char *prefix)
