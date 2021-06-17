@@ -144,6 +144,16 @@ static void parseApTrying(char *line) // KaRadio only
     updateMeta(comma + 1);
 }
 
+static void parseWiFi(char *line) // KaRadio32 only
+{
+    updateName(line);
+}
+
+static void parseDNS(char *line) // KaRadio32 only
+{
+    updateName(line);
+}
+
 static void parseIP(char *line)
 {
     char *pos = line;
@@ -189,8 +199,16 @@ static void parseLine(char *line)
         parseApTrying(line + strlen("Trying "));
     } else if (utilIsPrefix(line, "ip:")) {
         parseIP(line + strlen("ip:"));
+    } else if (utilIsPrefix(line, "IP: ")) {
+        parseIP(line + strlen("IP: "));
     } else if (utilIsPrefix(line, "I2S Speed:")) {
         onBootComplete();
+    } else if (utilIsPrefix(line, "rst:")) {
+        mpcReset();
+    } else if (utilIsPrefix(line, "WIFI ")) {
+        parseWiFi(line + strlen("WIFI "));
+    } else if (utilIsPrefix(line, "DNS: ")) {
+        parseDNS(line);
     }
 }
 
