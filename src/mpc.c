@@ -131,30 +131,39 @@ static void parseCli(char *line)
 static void parseApTrying(char *line) // KaRadio only
 {
     // Follows "Trying "
-    char *apName = line;
-    char *cm = strstr(apName, ",");
-    if (cm != apName) {
-        *cm = '\0';
+    char *comma = strstr(line, ",");
+
+    size_t apLen = 32;
+    if (comma != line) {
+        apLen = comma - line;
     }
-    char buf[32];
-    snprintf(buf, sizeof(buf), "AP: %s", line);
+
+    char buf[32] = "AP: ";
+    strncat(buf, line, apLen);
     updateName(buf);
-    updateMeta(cm + 1);
+    updateMeta(comma + 1);
 }
 
 static void parseIP(char *line)
 {
-    // Follows "ip:"
-    char *ip = line;
-    char *cm = strstr(ip, ",");
-    if (!cm) {
-        cm = line;
+    char *pos = line;
+
+    strtol(pos, &pos, 10);
+    if (*pos != '.') {
+        return;
     }
-    if (cm != ip) {
-        *cm = '\0';
+    strtol(pos+1, &pos, 10);
+    if (*pos != '.') {
+        return;
     }
-    char buf[40];
-    snprintf(buf, sizeof(buf), "IP: %s", line);
+    strtol(pos+1, &pos, 10);
+    if (*pos != '.') {
+        return;
+    }
+    strtol(pos+1, &pos, 10);
+
+    char buf[24] = "IP: ";
+    strncat(buf, line, pos-line);
     updateIp(buf);
 }
 
