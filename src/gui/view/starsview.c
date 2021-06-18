@@ -1,7 +1,5 @@
 #include "starsview.h"
 
-#include <stdlib.h>
-
 #include "display/glcd.h"
 #include "fft.h"
 
@@ -47,6 +45,14 @@ void drawStar(Star *star, color_t color, int16_t offset)
     }
 }
 
+static unsigned long int next = 1;
+
+int starsRand(void)  /* RAND_MAX assumed to be 32767. */
+{
+    next = next * 1103515245 + 12345;
+    return (unsigned)(next/65536) % 32768;
+}
+
 void starsView(StarsView *this, bool clear)
 {
     (void)clear;
@@ -55,15 +61,15 @@ void starsView(StarsView *this, bool clear)
 
     for (int i = 0; i < STAR_NUM; i++) {
         if (stars[i].frameNum == 0) {
-            int16_t frame = rand() % FRAMES;
+            int16_t frame = starsRand() % FRAMES;
             stars[i].frameNum = frame * frame / FRAMES;
             stars[i].size = 0;
             if (this->offset <= -32) {
-                stars[i].angle = rand() % (N_WAVE / 2); // Only bottom direction
+                stars[i].angle = starsRand() % (N_WAVE / 2); // Only bottom direction
             } else if (this->offset >= 32) {
-                stars[i].angle = rand() % (N_WAVE / 2) + (N_WAVE / 2); // only top direction
+                stars[i].angle = starsRand() % (N_WAVE / 2) + (N_WAVE / 2); // only top direction
             } else {
-                stars[i].angle = rand() % N_WAVE;
+                stars[i].angle = starsRand() % N_WAVE;
             }
         } else {
             drawStar(&stars[i], COLOR_BLACK, this->offset);
