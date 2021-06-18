@@ -8,7 +8,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
-#define LINE_SIZE       128
+#define LINE_SIZE       192
 
 typedef struct {
     char line[LINE_SIZE];

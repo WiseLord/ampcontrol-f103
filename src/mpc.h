@@ -10,7 +10,7 @@ extern "C" {
 
 #include "mediakey.h"
 
-#define MPC_META_SIZE           128
+#define MPC_META_SIZE           192
 #define MPC_NAME_SIZE           64
 #define IP_STR_SIZE             20
 
