@@ -1,7 +1,6 @@
 #include "canvas.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "amp.h"
@@ -462,10 +461,9 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
 
     Spectrum *sp = spGet();
 
-    color_t *grad = NULL;
+    color_t grad[512];
 
     if (sp->flags & SP_FLAG_GRAD) {
-        grad = malloc((size_t)height * sizeof (color_t));
         calcGradient(sp, height, mirror, grad);
     }
 
@@ -480,8 +478,6 @@ static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdR
         GlcdRect rect = {x, y, colW, height};
         spectrumColumnDraw(clear, &spCol, &rect, mirror, grad);
     }
-
-    free(grad);
 }
 
 static void drawRds(RdsParser *rds)

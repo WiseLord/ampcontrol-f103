@@ -1,6 +1,5 @@
 #include "stations.h"
 
-#include <stdlib.h>
 #include <string.h>
 
 #include "eemul.h"
@@ -104,7 +103,7 @@ void stationStore(uint16_t freq, char *name)
     uint16_t num = 0;
     bool saved = false;
 
-    Station *stRam = malloc(sizeof(Station) * STATION_COUNT);
+    Station stRam[STATION_COUNT];
 
     while (num < STATION_COUNT) {
         uint16_t stFreq = stFlash[idx].freq;
@@ -149,8 +148,6 @@ void stationStore(uint16_t freq, char *name)
     // Save array in RAM to Flash
     eeErasePages(EE_PAGE_FM, 1);
     eeWritePage(EE_PAGE_FM, stRam, (uint16_t)((num) * sizeof(Station)));
-
-    free(stRam);
 }
 
 void stationRemove(uint16_t freq)
@@ -159,7 +156,7 @@ void stationRemove(uint16_t freq)
     uint16_t num = 0;
     bool deleted = false;
 
-    Station *stRam = malloc(sizeof(Station) * STATION_COUNT);
+    Station stRam[STATION_COUNT];
 
     while (idx < STATION_COUNT) {
         uint16_t stFreq = stFlash[idx].freq;
@@ -167,7 +164,6 @@ void stationRemove(uint16_t freq)
         if (stFreq == 0x0000 || stFreq == 0xFFFF) {
             if (!deleted) {
                 // Not found station to delete
-                free(stRam);
                 return;
             }
             break;
@@ -186,8 +182,6 @@ void stationRemove(uint16_t freq)
     // Save array in RAM to Flash
     eeErasePages(EE_PAGE_FM, 1);
     eeWritePage(EE_PAGE_FM, stRam, (uint16_t)((num) * sizeof(Station)));
-
-    free(stRam);
 }
 
 void stationStoreRemove(uint16_t freq, char *name)

@@ -5,8 +5,7 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 #define USBD_MAX_NUM_INTERFACES             1

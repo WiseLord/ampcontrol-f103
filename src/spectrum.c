@@ -2,9 +2,6 @@
 
 #include "hwlibs.h"
 
-#include <stdlib.h>
-#include <string.h>
-
 #include "settings.h"
 #include "utils.h"
 
@@ -263,15 +260,13 @@ void spGetADC(SpChan chan, uint8_t *out, size_t size, fftGet fn)
 {
     int16_t *dma = &dmaData.dataSet->chan[chan];
 
-    FftSample *smpl = malloc(sizeof (FftSample) * FFT_SIZE);
+    FftSample smpl[FFT_SIZE];
 
     spDoFft(dma, smpl);
 
     if (NULL != fn) {
         fn(smpl, out, size);
     }
-
-    free(smpl);
 }
 
 void spConvertADC(void)
