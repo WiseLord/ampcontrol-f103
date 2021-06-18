@@ -392,7 +392,7 @@ static void calcGradient(Spectrum *sp, int16_t height, bool mirror, color_t *gra
 static bool checkSpectrumReady(void)
 {
     if (swTimGet(SW_TIM_SP_CONVERT) == 0) {
-        swTimSet(SW_TIM_SP_CONVERT, 20);
+        swTimSet(SW_TIM_SP_CONVERT, 25);
         return true;
     }
 
@@ -1028,7 +1028,7 @@ static void scrollMpdMeta(bool clear, int16_t yPos)
     scroll.rect = &rectMeta;
 
     if (swTimGet(SW_TIM_SCROLL) <= 0) {
-        swTimSet(SW_TIM_SCROLL, 15);
+        swTimSet(SW_TIM_SCROLL, 50);
         scroll.flags |= SCROLL_EVENT;
     } else {
         scroll.flags &= ~SCROLL_EVENT;
