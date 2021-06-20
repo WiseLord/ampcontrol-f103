@@ -66,6 +66,30 @@ an information about current song from USB or SDCARD is retreived
 TX: PA9
 RX: PA10
 
+## Bluetooth modules like BK8000L or CSR8645
+
+These modules don't have known interface to communicate with MCUs. But they have
+GPIOs to connect buttons for such functions as PLAY/PAUSE and so on.
+
+To control such kind of bluetooth modules, it's possible to use PCF8574 I²C bus expander
+to emulate buttons presses to execute corresponding functions. It's connected to the project
+via I²C line:
+
+SDA: PB9
+SCL: PB8
+
+Then, the correct I²C address (depends on PCF8574 address input pins conditions)
+should be selected in ampcontrol settings.
+
+PCF5874 is connected to the BT module in this way (see i2cexp.h):
+
+NEXT_TRACK: P5
+PREV_TRACK: P4
+NEXT_INPUT: P3
+PLAY_PAUSE: P2
+
+To emulate button press, PCF8574 sends short (200ms) positive impulse on the pin.
+
 ## KaRadio or MPD
 
 The device can act as a "plugin" for KaRadio/KaRadio32 projects. The control and all
