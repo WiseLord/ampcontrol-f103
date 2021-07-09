@@ -1003,7 +1003,7 @@ void canvasShowTuner(bool clear)
     drawSpectrumMode(clear, rect);
 }
 
-static void scrollMpdMeta(bool clear, int16_t yPos)
+static void scrollMpdMeta(bool clear, int16_t yPos, const char *inName)
 {
     const Layout *lt = canvas.layout;
 
@@ -1030,8 +1030,11 @@ static void scrollMpdMeta(bool clear, int16_t yPos)
         scroll.flags &= ~SCROLL_EVENT;
     }
 
+    char buf[32];
+
     if (mpc->status == MPC_IDLE) {
-        scroll.text = labelsGet(LABEL_MPD_WAIT);
+        snprintf(buf, sizeof(buf), "%s %s", labelsGet(LABEL_IN_WAIT), inName);
+        scroll.text = buf;
     } else if (mpc->status & MPC_PLAYING) {
         scroll.text = mpc->meta;
     } else {
@@ -1124,7 +1127,7 @@ void canvasShowMpd(bool clear, Icon icon)
     yPos += lt->rds.psFont->chars[0].image->height;
 
     // Meta
-    scrollMpdMeta(clear, yPos);
+    scrollMpdMeta(clear, yPos, label);
 
     yPos += lt->rds.textFont->chars[0].image->height;
 
@@ -1193,7 +1196,7 @@ void canvasShowKaradio(bool clear, Icon icon)
     yPos += lt->rds.psFont->chars[0].image->height;
 
     // Meta
-    scrollMpdMeta(clear, yPos);
+    scrollMpdMeta(clear, yPos, label);
 
     yPos += lt->rds.textFont->chars[0].image->height;
 

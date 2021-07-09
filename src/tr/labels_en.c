@@ -44,7 +44,7 @@ const char *const labels_en[LABEL_END] = {
     [LABEL_HZ]              = "Hz",
     [LABEL_K]               = "k",
 
-    [LABEL_MPD_WAIT]        = "Wait for MPD...",
+    [LABEL_IN_WAIT]         = "Waiting for",
 
     [LABEL_TUNER_FM_STATION_NAME]   = "FM station name",
 

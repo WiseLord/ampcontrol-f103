@@ -74,7 +74,7 @@ typedef enum {
     LABEL_HZ,
     LABEL_K,
 
-    LABEL_MPD_WAIT,
+    LABEL_IN_WAIT,
 
     LABEL_TUNER_FM_STATION_NAME,
 
