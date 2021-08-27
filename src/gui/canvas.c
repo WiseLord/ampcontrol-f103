@@ -58,7 +58,7 @@ static void drawMenuItem(uint8_t idx, const tFont *fontItem);
 static void calcSpCol(int16_t chan, int16_t scale, uint8_t col, SpectrumColumn *spCol,
                       SpData *spData);
 static void drawWaterfall(bool clear);
-static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdRect *rect);
+static void drawSpectrum(bool clear, bool mirror, SpChan chan, GlcdRect *rect);
 static void drawSpectrumMode(bool clear, GlcdRect rect);
 static void drawRds(RdsParser *rds);
 static bool checkSpectrumReady(void);
@@ -428,12 +428,8 @@ static void fftGet128(FftSample *sp, uint8_t *out, size_t size)
     }
 }
 
-static void drawSpectrum(bool clear, bool check, bool mirror, SpChan chan, GlcdRect *rect)
+static void drawSpectrum(bool clear, bool mirror, SpChan chan, GlcdRect *rect)
 {
-    if (check && !checkSpectrumReady()) {
-        return;
-    }
-
     SpData spData[SP_CHAN_END];
 
     if (clear) {
@@ -843,6 +839,10 @@ void canvasShowAudioFlag(bool clear, AudioTune flag)
 
 static void drawSpectrumMode(bool clear, GlcdRect rect)
 {
+    if (!checkSpectrumReady()) {
+        return;
+    }
+
     Spectrum *sp = spGet();
 
     switch (sp->mode) {
@@ -851,16 +851,14 @@ static void drawSpectrumMode(bool clear, GlcdRect rect)
     case SP_MODE_INVERTED:
     case SP_MODE_ANTIMIRROR:
         rect.h = rect.h / 2;
-        drawSpectrum(clear, true,
-                     sp->mode == SP_MODE_ANTIMIRROR || sp->mode == SP_MODE_INVERTED,
+        drawSpectrum(clear, sp->mode == SP_MODE_ANTIMIRROR || sp->mode == SP_MODE_INVERTED,
                      SP_CHAN_LEFT, &rect);
         rect.y += rect.h;
-        drawSpectrum(clear, false,
-                     sp->mode == SP_MODE_MIRROR || sp->mode == SP_MODE_INVERTED,
+        drawSpectrum(clear, sp->mode == SP_MODE_MIRROR || sp->mode == SP_MODE_INVERTED,
                      SP_CHAN_RIGHT, &rect);
         break;
     default:
-        drawSpectrum(clear, true, false, SP_CHAN_BOTH, &rect);
+        drawSpectrum(clear, false, SP_CHAN_BOTH, &rect);
         break;
     }
 }
