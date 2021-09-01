@@ -118,6 +118,7 @@ typedef struct {
     int8_t input;
     AudioMode mode;
     AudioFlag flags;
+    int8_t inCfg;
     int8_t gain[MAX_INPUTS];
     int8_t tune[AUDIO_TUNE_END];
     const AudioGrid *grid[AUDIO_TUNE_END];
@@ -125,6 +126,7 @@ typedef struct {
 
 typedef struct {
     void (*init)(AudioParam *param);
+    int8_t (*getInCnt)(void);
 
     void (*setTune)(AudioTune tune, int8_t value);
     void (*setInput)(int8_t value);

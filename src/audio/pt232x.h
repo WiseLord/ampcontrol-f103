@@ -10,11 +10,10 @@ extern "C" {
 
 #include "audiodefs.h"
 
-#define PT2323_IN_CNT       5
-
 const AudioApi *pt232xGetApi(void);
 
 void pt232xInit(AudioParam *param);
+int8_t pt232xGetInCnt(void);
 
 void pt232xSetTune(AudioTune tune, int8_t value);
 void pt232xSetInput(int8_t value);

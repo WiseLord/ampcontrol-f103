@@ -33,8 +33,14 @@ static void audioTestInit(AudioParam *aPar)
     aPar->grid[AUDIO_TUNE_GAIN]      = &gridTestGain;
 }
 
+static int8_t audioTestGetInCnt(void)
+{
+    return MAX_INPUTS;
+}
+
 static const AudioApi audioTestApi = {
     .init = audioTestInit,
+    .getInCnt = audioTestGetInCnt,
 };
 
 void audioReadSettings(AudioIC ic)
@@ -46,6 +52,7 @@ void audioReadSettings(AudioIC ic)
     aProc.par.input = settingsRead(PARAM_AUDIO_INPUT, 0);
     aProc.par.flags = settingsRead(PARAM_AUDIO_FLAGS, 0);
     aProc.par.mode = settingsRead(PARAM_AUDIO_MODE, AUDIO_MODE_2_0);
+    aProc.par.inCfg = settingsRead(PARAM_AUDIO_IN_CFG, AUDIO_IN_CFG_DEFAULT);
 
     for (Param par = PARAM_AUDIO_GAIN0; par <= PARAM_AUDIO_GAIN7; par++) {
         aProc.par.gain[par - PARAM_AUDIO_GAIN0] = settingsRead(par, 0);
@@ -241,23 +248,10 @@ void audioSetInput(int8_t value)
 
 int8_t audioGetInputCount(void)
 {
-    switch (aProc.par.ic) {
-    case AUDIO_IC_TDA7439:
-    case AUDIO_IC_TDA7440:
-        return TDA7439_IN_CNT;
-    case AUDIO_IC_TDA7313:
-        return TDA7313_IN_CNT;
-    case AUDIO_IC_PT232X:
-        return PT2323_IN_CNT;
-    case AUDIO_IC_TDA7418:
-        return TDA7418_IN_CNT;
-    case AUDIO_IC_TDA7719:
-        return TDA7719_IN_CNT;
-    case AUDIO_IC_TEST:
-        return MAX_INPUTS;
-    default:
-        return 1;
+    if (aProc.api->getInCnt) {
+        return aProc.api->getInCnt();
     }
+    return 1;
 }
 
 void audioSetFlag(AudioFlag flag, bool value)

@@ -7,6 +7,8 @@
 // I2C address
 #define TDA7418_I2C_ADDR            0x88
 
+#define TDA7418_IN_CNT              4
+
 // I2C function (subaddress) selection
 #define TDA7418_SOURCE_SELECT       0x00
 #define TDA7418_LOUDNESS            0x01
@@ -216,6 +218,11 @@ void tda7418Init(AudioParam *param)
     aPar->grid[AUDIO_TUNE_MIDDLE_KFREQ]    = &adjustMiddleCFreqK;
     aPar->grid[AUDIO_TUNE_MIDDLE_QUAL]     = &adjustMiddleQFact;
     aPar->grid[AUDIO_TUNE_TREBLE_KFREQ]    = &adjustTrebleCFreqK;
+}
+
+int8_t tda7418GetInCnt(void)
+{
+    return TDA7418_IN_CNT;
 }
 
 static void tda7418SetTrebleFilter(void)

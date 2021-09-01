@@ -168,9 +168,31 @@
 #define TDA7719_INPUT_MASK          0x07
 #define TDA7719_SOFT_STEP           0x80
 
-#define TDA7719_INPUT_CFG           TDA7719_INPUT_CFG2
+static const int8_t inSeq0[] = { 0, 1, 2, 3 };
+static const int8_t inSeq1[] = { 0, 4, 1, 2, 3 };
+static const int8_t inSeq2[] = { 0, 4, 1, 2, 5, 6 };
+static const int8_t inSeq3[] = { 0, 4, 1, 2, 3, 3 };
+static const int8_t inSeq4[] = { 0, 1, 2, 3 };
+static const int8_t inSeq5[] = { 0, 1, 2, 5, 6 };
+static const int8_t inSeq6[] = { 7, 4, 1, 2, 3 };
+static const int8_t inSeq7[] = { 0, 4, 1, 2, 3 };
 
-static const int8_t inCfg2[TDA7719_IN_CNT] = { 0, 4, 1, 2, 5, 6 };
+typedef struct {
+    const int8_t *in_seq;
+    uint8_t in_cnt;
+    uint8_t in_cfg;
+} TDA7719InputConfig;
+
+TDA7719InputConfig inputConfig[] = {
+    {inSeq0, sizeof(inSeq0), TDA7719_INPUT_CFG0},
+    {inSeq1, sizeof(inSeq1), TDA7719_INPUT_CFG1},
+    {inSeq2, sizeof(inSeq2), TDA7719_INPUT_CFG2},
+    {inSeq3, sizeof(inSeq3), TDA7719_INPUT_CFG3},
+    {inSeq4, sizeof(inSeq4), TDA7719_INPUT_CFG4},
+    {inSeq5, sizeof(inSeq5), TDA7719_INPUT_CFG5},
+    {inSeq6, sizeof(inSeq6), TDA7719_INPUT_CFG6},
+    {inSeq7, sizeof(inSeq7), TDA7719_INPUT_CFG7},
+};
 
 static const AudioGrid gridVolume    = {NULL, -79,  0, (int8_t)(1.00 * STEP_MULT)}; // -79..0dB with 1dB step
 static const AudioGrid gridToneBal   = {NULL, -15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
@@ -238,6 +260,7 @@ static AudioParam *aPar;
 
 static const AudioApi tda7719Api = {
     .init = tda7719Init,
+    .getInCnt = tda7719GetInCnt,
 
     .setTune = tda7719SetTune,
     .setInput = tda7719SetInput,
@@ -245,13 +268,26 @@ static const AudioApi tda7719Api = {
     .setMute = tda7719SetMute,
 };
 
+static int8_t getInCfg()
+{
+    int8_t inCfg = aPar->inCfg;
+
+    if (inCfg >= 8) {
+        inCfg = AUDIO_IN_CFG_DEFAULT;
+    }
+
+    return inCfg;
+}
+
 static void tda7719SetInputGain(int8_t input, int8_t gain)
 {
-    if (input >= TDA7719_IN_CNT) {
+    int8_t inCfg = getInCfg();
+
+    if (input >= inputConfig[inCfg].in_cnt) {
         input = 0;
     }
 
-    input = inCfg2[input];
+    input =  inputConfig[inCfg].in_seq[input];
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
@@ -309,11 +345,12 @@ void tda7719Init(AudioParam *param)
     aPar->grid[AUDIO_TUNE_MIDDLE_QUAL]     = &adjustMiddleQFact;
     aPar->grid[AUDIO_TUNE_TREBLE_KFREQ]    = &adjustTrebleCFreqK;
 
+    uint8_t in_cfg = TDA7719_INPUT_CFG2;
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_INPUT_CONFIG | TDA7719_AUTOINC);
 
-    i2cSend(I2C_AMP, TDA7719_INPUT_CFG2 | TDA7719_INPUT_GAIN_3DB | TDA7719_INPUT_MD2 | 0);
+    i2cSend(I2C_AMP, in_cfg | TDA7719_INPUT_GAIN_3DB | TDA7719_INPUT_MD2 | 0);
     i2cSend(I2C_AMP, TDA7719_QD4_BYPASS_SUB | TDA7719_QD3_BYPASS_REAR | TDA7719_QD2_BYPASS_FRONT |
             TDA7719_2ND_IN_GAIN_3DB | TDA7719_2ND_IN_MD2 | 0);
     i2cSend(I2C_AMP, 0xFF);
@@ -337,6 +374,13 @@ void tda7719Init(AudioParam *param)
     i2cSend(I2C_AMP, TDA7719_SP_ATT_MASK);
 
     i2cTransmit(I2C_AMP);
+}
+
+int8_t tda7719GetInCnt(void)
+{
+    int8_t inCfg = getInCfg();
+
+    return inputConfig[inCfg].in_cnt;
 }
 
 static void tda7719SetTrebleFilter(void)

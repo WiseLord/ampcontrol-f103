@@ -7,6 +7,8 @@
 // I2C address
 #define TDA731X_I2C_ADDR            0x88
 
+#define TDA7313_IN_CNT              3
+
 // I2C function selection
 #define TDA731X_VOLUME              0x00
 #define TDA731X_SP_FRONT_LEFT       0x80
@@ -65,6 +67,11 @@ void tda731xInit(AudioParam *param)
         aPar->grid[AUDIO_TUNE_SUBWOOFER] = &gridSub;
     }
     aPar->grid[AUDIO_TUNE_GAIN]      = &gridGain;
+}
+
+int8_t tda731xGetInCnt(void)
+{
+    return TDA7313_IN_CNT;
 }
 
 void tda731xSetTune(AudioTune tune, int8_t value)

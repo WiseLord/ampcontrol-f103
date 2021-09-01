@@ -16,6 +16,10 @@ typedef struct {
     AudioParam par;
 } AudioProc;
 
+#ifndef AUDIO_IN_CFG_DEFAULT
+#define AUDIO_IN_CFG_DEFAULT    2
+#endif
+
 void audioReadSettings(AudioIC ic);
 void audioSaveSettings(void);
 

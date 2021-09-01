@@ -8,6 +8,8 @@
 #define PT2322_I2C_ADDR         0x88
 #define PT2323_I2C_ADDR         0x94
 
+#define PT2323_IN_CNT           5
+
 // I2C function selection
 #define PT2322_NO_FUNC          0x00
 
@@ -147,6 +149,11 @@ void pt232xInit(AudioParam *param)
     i2cBegin(I2C_AMP, PT2323_I2C_ADDR);
     i2cSend(I2C_AMP, PT2323_UNMUTE_ALL);
     i2cTransmit(I2C_AMP);
+}
+
+int8_t pt232xGetInCnt()
+{
+    return PT2323_IN_CNT;
 }
 
 void pt232xSetTune(AudioTune tune, int8_t value)

@@ -7,6 +7,8 @@
 // I2C address
 #define TDA7439_I2C_ADDR            0x88
 
+#define TDA7439_IN_CNT              4
+
 // I2C function selection
 #define TDA7439_INPUT_SELECT        0x00
 #define TDA7439_INPUT_GAIN          0x01
@@ -57,6 +59,11 @@ void tda7439Init(AudioParam *param)
     aPar->grid[AUDIO_TUNE_PREAMP]  = &gridPreamp;
     aPar->grid[AUDIO_TUNE_BALANCE] = &gridBalance;
     aPar->grid[AUDIO_TUNE_GAIN]    = &gridGain;
+}
+
+int8_t tda7439GetInCnt(void)
+{
+    return TDA7439_IN_CNT;
 }
 
 void tda7439SetTune(AudioTune tune, int8_t value)
