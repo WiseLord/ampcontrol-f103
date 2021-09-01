@@ -272,7 +272,7 @@ static int8_t getInCfg()
 {
     int8_t inCfg = aPar->inCfg;
 
-    if (inCfg >= 8) {
+    if (inCfg < 0 || inCfg >= 8) {
         inCfg = AUDIO_IN_CFG_DEFAULT;
     }
 

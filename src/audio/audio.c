@@ -248,7 +248,7 @@ void audioSetInput(int8_t value)
 
 int8_t audioGetInputCount(void)
 {
-    if (aProc.api->getInCnt) {
+    if (aProc.api && aProc.api->getInCnt) {
         return aProc.api->getInCnt();
     }
     return 1;

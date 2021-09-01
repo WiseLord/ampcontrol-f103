@@ -30,6 +30,7 @@ static AudioParam *aPar;
 
 static const AudioApi tda731xApi = {
     .init = tda731xInit,
+    .getInCnt = tda731xGetInCnt,
 
     .setTune = tda731xSetTune,
     .setInput = tda731xSetInput,

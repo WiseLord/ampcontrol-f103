@@ -65,6 +65,7 @@ static AudioParam *aPar;
 
 static const AudioApi pt232xApi = {
     .init = pt232xInit,
+    .getInCnt = pt232xGetInCnt,
 
     .setTune = pt232xSetTune,
     .setInput = pt232xSetInput,

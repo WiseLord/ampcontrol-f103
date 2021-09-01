@@ -157,6 +157,7 @@ static AudioParam *aPar;
 
 static const AudioApi tda7418Api = {
     .init = tda7418Init,
+    .getInCnt = tda7418GetInCnt,
 
     .setTune = tda7418SetTune,
     .setInput = tda7418SetInput,
