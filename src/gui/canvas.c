@@ -698,7 +698,7 @@ void canvasShowTune(bool clear, AudioTune tune)
 
         char bufValue[16] = "";
 
-        if (grid->array != NULL) {
+        if (grid != NULL && grid->array != NULL) {
             showValue = grid->array[value];
         }
 
