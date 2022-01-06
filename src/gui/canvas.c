@@ -458,10 +458,7 @@ static void drawSpectrum(bool clear, bool mirror, SpChan chan, GlcdRect *rect)
     Spectrum *sp = spGet();
 
     color_t grad[512];
-
-    if (sp->flags & SP_FLAG_GRAD) {
-        calcGradient(sp, height, mirror, grad);
-    }
+    calcGradient(sp, height, mirror, grad);
 
     for (uint8_t col = 0; col < num; col++) {
         int16_t x = oft + col * step;

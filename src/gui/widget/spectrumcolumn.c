@@ -32,21 +32,13 @@ void spectrumColumnDraw(bool clear, SpectrumColumn *col, GlcdRect *rect, bool mi
 
     // Full redraw the column
     if (0 || clear) {
-        if (NULL != grad) {
-            glcdDrawVertGrad(x, mirror ? y : y + h - s, w, s, &grad[mirror ? 0 : h - s]);
-        } else {
-            glcdDrawRect(x, mirror ? y : y + h - s, w, s, pal->spColB);
-        }
+        glcdDrawVertGrad(x, mirror ? y : y + h - s, w, s, &grad[mirror ? 0 : h - s]);
         glcdDrawRect(x, mirror ? y + s : y, w, h - s, pal->bg);
     } else {
 
         // Draw part of changed column
         if (s > os) {
-            if (NULL != grad) {
-                glcdDrawVertGrad(x, mirror ? y + os : y + h - s, w, s - os, &grad[mirror ? os : h - s]);
-            } else {
-                glcdDrawRect(x, mirror ? y + os : y + h - s, w, s - os, pal->spColB);
-            }
+            glcdDrawVertGrad(x, mirror ? y + os : y + h - s, w, s - os, &grad[mirror ? os : h - s]);
         } else if (s < os) {
             glcdDrawRect(x, mirror ? y + s : y + h - os, w, os - s, pal->bg);
         }
