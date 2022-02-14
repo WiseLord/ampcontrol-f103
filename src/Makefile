@@ -9,7 +9,7 @@ DISPVAR = SPI
 
 APROC_LIST = TDA7439 TDA731X PT232X TDA7418 TDA7719
 TUNER_LIST = RDA580X SI470X TEA5767
-FEATURE_LIST = USE_I2C_EXP ENABLE_USB
+FEATURE_LIST = ENABLE_USB
 
 DEBUG_KARADIO = YES
 
@@ -147,10 +147,16 @@ C_DEFS += $(addprefix -D_, $(APROC_LIST))
 
 # Tuner source files
 C_SOURCES += $(addprefix tuner/, $(addsuffix .c, $(call lc, $(TUNER_LIST))))
-C_SOURCES += tuner/rds/parser.c
 C_SOURCES += tuner/stations.c
 C_SOURCES += tuner/tuner.c
 C_DEFS += $(addprefix -D_, $(TUNER_LIST))
+
+# RDS stuff
+C_SOURCES += tuner/rds/parser.c
+ifneq (,$(filter $(FEATURE_LIST), USE_RDS_DEMOD))
+C_SOURCES += tuner/rds/decoder.c
+C_SOURCES += tuner/rds/demod.c
+endif
 
 C_INCLUDES += \
   -Idisplay/fonts \

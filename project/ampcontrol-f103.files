@@ -242,6 +242,9 @@
 ../src/tr/labels_ru.c
 ../src/tr/labels_tr.c
 ../src/tr/labels_ua.c
+../src/tuner/lc7213x.c
+../src/tuner/lc7213x.h
+../src/tuner/lc7213x_regs.h
 ../src/tuner/rda580x.c
 ../src/tuner/rda580x.h
 ../src/tuner/rda580x_regs.h

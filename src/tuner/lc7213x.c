@@ -166,11 +166,7 @@ void lc7213xInit(TunerParam *param, TunerStatus *status)
     updateIn1();
     updateIn2();
 
-    if (tPar->flags & TUNER_PARAM_RDS) {
-        rdsDemodInit();
-    } else {
-        rdsDemodDeinit();
-    }
+    lc7213xSetRds((tPar->flags & TUNER_PARAM_RDS) == TUNER_PARAM_RDS);
 }
 
 void lc7213xSetFreq(uint16_t freq)
@@ -211,11 +207,13 @@ void lc7213xSetForcedMono(bool value)
 
 void lc7213xSetRds(bool value)
 {
+#ifdef _RDS_DEMOD
     if (value) {
         rdsDemodInit();
     } else {
         rdsDemodDeinit();
     }
+#endif
 }
 
 void lc7213xUpdateStatus(void)

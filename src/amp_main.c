@@ -18,6 +18,7 @@
 #include "swtimers.h"
 #include "timers.h"
 #include "tr/labels.h"
+#include "tuner/rds/demod.h"
 #include "tuner/rds/parser.h"
 #include "tuner/stations.h"
 #include "tuner/tuner.h"
@@ -1346,6 +1347,10 @@ void ampSyncFromOthers(void)
 void ampSyncToOthers(void)
 {
     i2cExpGpioKeyRelease();
+
+#ifdef _USE_RDS_DEMOD
+    rdsDemodHandle();
+#endif
 }
 
 void ampActionQueue(ActionType type, int16_t value)
