@@ -1301,6 +1301,7 @@ void ampInit(void)
     utilEnableSwd(true);
 
     settingsInit();
+    utilInitSysCounter();
 
     ampInitMuteStby();
 
