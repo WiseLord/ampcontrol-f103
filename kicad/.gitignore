@@ -1,3 +1,1 @@
-*.bak
-*-bak
-*.bck
+*-backups/
