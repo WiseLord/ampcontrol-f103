@@ -49,8 +49,8 @@ another swtitch doing this.
 Also, switching between inputs, powering on/off can produce audible clicks in acoustic system.
 MUTE pin can be used to mute an amplifier at these moments.
 
-STBY: PB11
-MUTE: PB10
+STBY: PB10
+MUTE: PB11
 
 ## Remote control
 
