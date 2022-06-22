@@ -156,6 +156,11 @@ void glcdSync(void)
     dispdrvSync();
 }
 
+void glcdScanIRQ(void)
+{
+    dispdrvScanIRQ();
+}
+
 
 static void glcdRectAdjustPos(void)
 {

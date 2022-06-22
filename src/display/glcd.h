@@ -69,6 +69,7 @@ void glcdSleep(bool value);
 void glcdSetIdle(bool value);
 
 void glcdSync(void);
+void glcdScanIRQ(void);
 
 void glcdSetRect(const GlcdRect *rect);
 void glcdSetRectValues(int16_t x, int16_t y, int16_t w, int16_t h);

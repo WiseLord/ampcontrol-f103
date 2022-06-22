@@ -254,6 +254,13 @@ void dispdrvSync(void)
     }
 }
 
+void dispdrvScanIRQ(void)
+{
+    if (dispdrv.scanIRQ) {
+        dispdrv.scanIRQ();
+    }
+}
+
 uint8_t dispdrvGetBus(void)
 {
 #ifdef _DISP_SPI

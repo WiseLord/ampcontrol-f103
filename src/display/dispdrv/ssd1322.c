@@ -161,7 +161,6 @@ const DispDriver dispdrv = {
 //    .shift = ssd1322Shift,
     .setBrightness = ssd1322SetBrightness,
 
-    .fb = fb,
     .fbSync = ssd1322FbSync,
     .fbSetPixel = ssd1322FbSetPixel,
 };

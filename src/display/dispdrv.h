@@ -30,9 +30,9 @@ typedef struct _DispDriver {
     void (*shift)(int16_t value);
     void (*setBrightness)(uint8_t value);
 
-    void *fb;
     void (*fbSync)(void);
     void (*fbSetPixel)(int16_t x, int16_t y, color_t data);
+    void (*scanIRQ)(void);
 
     int16_t width;
     int16_t height;
@@ -44,6 +44,7 @@ void dispdrvReset(void);
 void dispdrvInit(void);
 
 void dispdrvSync(void);
+void dispdrvScanIRQ(void);
 
 uint8_t dispdrvGetBus(void);
 
