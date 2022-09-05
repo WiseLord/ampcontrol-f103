@@ -1345,9 +1345,12 @@ void ampSyncFromOthers(void)
     mpcGetData();
 }
 
+void relayReleaseVolume();
+
 void ampSyncToOthers(void)
 {
     i2cExpGpioKeyRelease();
+    relayReleaseVolume();
 
 #ifdef _USE_RDS_DEMOD
     rdsDemodHandle();
@@ -1519,7 +1522,13 @@ void ampActionHandle(void)
                 actionNextAudioSubParam();
             }
         }
-        screenSet(SCREEN_AUDIO_PARAM, 5000);
+        if (aProc->par.ic == AUDIO_IC_RELAY) {
+            audioSetFlag(AUDIO_FLAG_LOUDNESS, !(aProc->par.flags & AUDIO_FLAG_LOUDNESS));
+            priv.flag = AUDIO_FLAG_LOUDNESS;
+            screenSet(SCREEN_AUDIO_FLAG, 3000);
+        } else {
+            screenSet(SCREEN_AUDIO_PARAM, 5000);
+        }
         break;
 
     case ACTION_RTC_MODE:

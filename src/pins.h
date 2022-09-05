@@ -36,6 +36,22 @@ extern "C" {
 #define USB_DP_Port             GPIOA
 #define USB_DP_Pin              LL_GPIO_PIN_12
 
+#define VOL_UP_Port             GPIOA
+#define VOL_UP_Pin              LL_GPIO_PIN_13
+#define VOL_DN_Port             GPIOA
+#define VOL_DN_Pin              LL_GPIO_PIN_14
+#define LOUDNESS_Port           GPIOA
+#define LOUDNESS_Pin            LL_GPIO_PIN_15
+
+#define IN_0_Port             GPIOA
+#define IN_0_Pin              LL_GPIO_PIN_4
+#define IN_1_Port             GPIOA
+#define IN_1_Pin              LL_GPIO_PIN_5
+#define IN_2_Port             GPIOA
+#define IN_2_Pin              LL_GPIO_PIN_6
+#define IN_3_Port             GPIOA
+#define IN_3_Pin              LL_GPIO_PIN_7
+
 void pinsInit(void);
 
 void pinsHwResetI2c(void);

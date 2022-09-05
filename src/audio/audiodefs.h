@@ -18,6 +18,7 @@ extern "C" {
     AUDIO_IC(TDA7418)               \
     AUDIO_IC(TDA7440)               \
     AUDIO_IC(TDA7719)               \
+    AUDIO_IC(RELAY)                 \
     AUDIO_IC(TEST)                  \
 
 #define GENERATE_AUDIO_IC(IC)    AUDIO_IC_ ## IC,

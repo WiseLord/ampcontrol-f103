@@ -727,8 +727,15 @@ void canvasShowTune(bool clear, AudioTune tune)
             snprintf(bufValue, sizeof(bufValue), "%3d", showValue);
         }
 
+        if (aProc->par.ic == AUDIO_IC_RELAY) {
+            glcdSetFontColor(canvas.pal->bg);
+        }
+
         int16_t strLen = glcdWriteString(bufValue);
 
+        if (aProc->par.ic == AUDIO_IC_RELAY) {
+            glcdSetFontColor(canvas.pal->bg);
+        }
 
         // Bar
         StripedBar bar = {value, min, max};

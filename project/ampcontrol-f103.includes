@@ -7,3 +7,4 @@
 ../src/drivers/STM32_USB_Device_Library/Core/Inc
 ../src/display/fonts
 ../src/usb
+../src/audio

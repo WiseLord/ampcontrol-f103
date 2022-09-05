@@ -7,6 +7,7 @@
 #include "tda7439.h"
 #include "tda731x.h"
 #include "pt232x.h"
+#include "relay.h"
 #include "tda7418.h"
 #include "tda7719.h"
 
@@ -87,6 +88,11 @@ void audioReadSettings(AudioIC ic)
 #ifdef _TDA7719
     case AUDIO_IC_TDA7719:
         aProc.api = tda7719GetApi();
+        break;
+#endif
+#ifdef _RELAY
+    case AUDIO_IC_RELAY:
+        aProc.api = relayGetApi();
         break;
 #endif
     case AUDIO_IC_TEST:
