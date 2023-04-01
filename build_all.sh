@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 cd src/
 
 MAKEOPTS="-j4 -s"
+ret=0
 
 STM32_MCU_LIST="F103CB F303CC F303CB"
 
@@ -16,7 +17,8 @@ compile_display()
   do
     make clean
     echo -e "Compiling display ${DISPLAY} ${DISPVAR}"
-    make ${MAKEOPTS} STM32_MCU=${STM32_MCU} DISPLAY=${DISPLAY} DISPVAR=${DISPVAR}
+    make ${MAKEOPTS} STM32_MCU=${STM32_MCU} DISPLAY=${DISPLAY} DISPVAR=${DISPVAR} \
+      || ret=$((ret + 1))
   done
 }
 
@@ -68,3 +70,5 @@ do
 done
 
 make clean
+
+return $ret
