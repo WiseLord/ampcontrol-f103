@@ -71,4 +71,4 @@ done
 
 make clean
 
-return $ret
+exit $ret

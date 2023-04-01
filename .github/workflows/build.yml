@@ -1,0 +1,23 @@
+name: C/C++ CI
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install compiler
+      run: |
+        sudo apt-get -y install gcc-arm-none-eabi
+    - name: Build firmwares
+      run: |
+        ./build_all.sh
+    - name: Store build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ampcontrol-f103-firmwares-${{ github.sha }}
+        path: |
+          src/flash
