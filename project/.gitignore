@@ -1,3 +1,4 @@
 *.user
 *.cflags
 *.cxxflags
+.qtc_clangd
