@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "audio/audio.h"
 #include "input.h"
 #include "rtc.h"
 #include "utils.h"
@@ -21,7 +22,7 @@ Amp *ampGet(void)
 void ampRun(void)
 {
     while (1) {
-        utilEnableSwd(SCREEN_STANDBY == amp.screen);
+        utilEnableSwd(ALLOW_SWD && (SCREEN_STANDBY == amp.screen));
 
         ampSyncFromOthers();
 

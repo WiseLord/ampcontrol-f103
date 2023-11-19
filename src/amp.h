@@ -9,7 +9,7 @@ extern "C" {
 #include <stdint.h>
 
 #include "action.h"
-#include "audio/audiodefs.h"
+#include "audio/audio.h"
 #include "gui/canvas.h"
 #include "gui/icons.h"
 
@@ -19,6 +19,8 @@ extern "C" {
 
 #define LCD_BR_MIN          1
 #define LCD_BR_MAX          32
+
+#define ALLOW_SWD           (audioGet()->par.ic != AUDIO_IC_RELAY)
 
 typedef uint8_t ScreenType;
 enum {

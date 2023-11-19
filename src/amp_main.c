@@ -1298,7 +1298,7 @@ void ampInit(void)
 {
     amp = ampGet();
 
-    utilEnableSwd(true);
+    utilEnableSwd(ALLOW_SWD);
 
     settingsInit();
     utilInitSysCounter();
