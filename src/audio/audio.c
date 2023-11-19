@@ -181,8 +181,10 @@ void audioSetPower(bool value)
         audioSetFlag(AUDIO_FLAG_EFFECT3D, (aProc.par.flags & AUDIO_FLAG_EFFECT3D));
         audioSetFlag(AUDIO_FLAG_BYPASS, (aProc.par.flags & AUDIO_FLAG_BYPASS));
 
-        for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END; tune++) {
-            audioSetTune(tune, aProc.par.tune[tune]);
+        if (aProc.par.ic != AUDIO_IC_RELAY) {
+            for (AudioTune tune = AUDIO_TUNE_VOLUME; tune < AUDIO_TUNE_END; tune++) {
+                audioSetTune(tune, aProc.par.tune[tune]);
+            }
         }
     }
 

@@ -331,8 +331,10 @@ static void ampMute(bool value)
     if (value) {
         swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_OFF);
     } else {
-        audioSetTune(AUDIO_TUNE_VOLUME, grid->min);
-        swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_ON);
+        if (aProc->par.ic != AUDIO_IC_RELAY) {
+            audioSetTune(AUDIO_TUNE_VOLUME, grid->min);
+            swTimSet(SW_TIM_SOFT_VOLUME, SW_TIM_ON);
+        }
     }
 
     ampPinMute(value);
