@@ -8,6 +8,7 @@
 #include "mpc.h"
 #include "menu.h"
 #include "rtc.h"
+#include "pins.h"
 #include "settings.h"
 #include "spectrum.h"
 #include "swtimers.h"
@@ -1437,4 +1438,30 @@ void canvasDebugTimers()
         snprintf(buf, sizeof(buf), "%10d", (int)swTimGet(i));
         glcdWriteString(buf);
     }
+}
+
+void canvasDebugGpio()
+{
+    return;
+
+    const Palette *pal = canvas.pal;
+    const Layout *lt = canvas.layout;
+
+    glcdSetFont(lt->time.wdFont);
+    glcdSetFontColor(pal->active);
+
+    int8_t in0 = !!READ(IN_0);
+    int8_t in1 = !!READ(IN_1);
+    int8_t in2 = !!READ(IN_2);
+    int8_t in3 = !!READ(IN_3);
+
+    int8_t vdn = !!READ(VOL_DN);
+    int8_t vup = !!READ(VOL_UP);
+
+    char buf[16];
+
+    glcdSetXY(0, 0);
+
+    snprintf(buf, sizeof(buf), "%1d %1d %1d %1d %1d %1d", in0, in1, in2, in3, vdn, vup);
+    glcdWriteString(buf);
 }

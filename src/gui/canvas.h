@@ -38,6 +38,7 @@ void canvasShowTimer(bool clear, int32_t value);
 
 void canvasDebugFPS(void);
 void canvasDebugTimers(void);
+void canvasDebugGpio(void);
 
 #ifdef __cplusplus
 }

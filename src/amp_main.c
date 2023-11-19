@@ -1842,6 +1842,7 @@ void ampScreenShow(void)
         break;
     }
 
+    canvasDebugGpio();
     canvasDebugFPS();
     canvasDebugTimers();
 
