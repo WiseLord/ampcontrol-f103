@@ -1323,6 +1323,10 @@ void ampInit(void)
 
     ampReadSettings();
 
+    if (audioGet()->par.ic == AUDIO_IC_RELAY) {
+        audioInit();
+    }
+
     timerInit(TIM_SPECTRUM, 99, 35); // 20kHz timer:Dsplay IRQ/PWM and ADC conversion trigger
     swTimInit();
 

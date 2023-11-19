@@ -38,6 +38,15 @@ void relayInit(AudioParam *param)
     OUT(IN_1);
     OUT(IN_2);
     OUT(IN_3);
+
+    CLR(VOL_UP);
+    CLR(VOL_DN);
+    CLR(LOUDNESS);
+
+    CLR(IN_0);
+    CLR(IN_1);
+    CLR(IN_2);
+    CLR(IN_3);
 }
 
 int8_t relayGetInCnt(void)
