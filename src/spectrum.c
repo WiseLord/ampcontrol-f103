@@ -2,8 +2,11 @@
 
 #include "hwlibs.h"
 
+#ifdef _USE_SETTINGS
 #include "settings.h"
-#include "utils.h"
+#else
+#define settingsRead(param, value) value
+#endif
 
 #define DMA_BUF_SIZE        (FFT_SIZE * SP_CHAN_END)
 
@@ -184,7 +187,7 @@ static void spInitADC(void)
         LL_ADC_StartCalibration(ADC1, LL_ADC_SINGLE_ENDED);
         while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0);
 
-        utilmDelay(1);
+        LL_mDelay(1);
 
         LL_ADC_Enable(ADC1);
         while (!LL_ADC_IsEnabled(ADC1));

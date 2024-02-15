@@ -9,13 +9,10 @@ DISPVAR = SPI
 
 APROC_LIST = TDA7439 TDA731X PT232X TDA7418 TDA7719
 TUNER_LIST = RDA580X SI470X TEA5767
-FEATURE_LIST = ENABLE_USB
-
-DEBUG_KARADIO = YES
+FEATURE_LIST = ENABLE_USB USE_SETTINGS DISP_BCKL_ENABLED
 
 DEBUG = 1
 OPT = -Os
-
 
 # Lowercase argument
 lc = $(shell echo $1 | tr '[:upper:]' '[:lower:]')
@@ -44,8 +41,6 @@ ifneq (,$(filter $(DISPLAY), \
 ))
   C_DEFS += -D_COLOR_24BIT
 endif
-
-C_DEFS += -D_DISP_BCKL_ENABLED
 
 C_SOURCES += $(call lc, amp_$(MODULE)).c
 
