@@ -16,10 +16,6 @@ extern "C" {
 #define DISP_WAIT_BUSY()        (void)0
 #endif
 
-// Third-party milliseconds delay function implementation
-#include "utils.h"
-#define DISP_MDELAY(x)          utilmDelay(x)
-
 // TFT LCD pins description
 #ifdef _DISP_16BIT
 #define DISP_DATA_HI_Port       B

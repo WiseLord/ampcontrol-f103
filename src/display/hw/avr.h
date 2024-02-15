@@ -6,6 +6,9 @@ extern "C" {
 #endif
 
 #include <avr/io.h>
+#include <util/delay.h>
+
+#define DISP_MDELAY(x)          _delay_ms(x)
 
 #define CONCAT(x,y)             x ## y
 #define PCAT(x)                 CONCAT(x, _Port)

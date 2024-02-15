@@ -6,6 +6,9 @@ extern "C" {
 #endif
 
 #include "stm32f1xx.h"
+#include <stm32f1xx_ll_utils.h>
+
+#define DISP_MDELAY(x)          LL_mDelay(x)
 
 #define CONCAT(x,y)             x ## y
 #define GPIO(x)                 CONCAT(GPIO, x)
