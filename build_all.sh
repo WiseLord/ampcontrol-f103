@@ -2,7 +2,7 @@
 
 cd src/
 
-MAKEOPTS="-j4 -s"
+MAKEOPTS="-j$(nproc) -s"
 ret=0
 
 STM32_MCU_LIST="F103CB F303CC F303CB"
