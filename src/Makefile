@@ -30,8 +30,6 @@ ifeq "$(STM32_MCU)" "F303CB"
   STM32_GROUP  = $(STM32_FAMILY)03xC
 endif
 
-TARGET = $(call lc, $(PROJECT)_$(STM32_MCU)_$(DISPLAY)_$(DISPVAR))
-
 C_DEFS += -DUSE_FULL_LL_DRIVER -D$(STM32_GROUP) -D_$(STM32_MCU)
 C_DEFS += -DI2C1_BUF_SIZE=16 -D I2C2_BUF_SIZE=0
 C_DEFS += $(addprefix -D_, $(FEATURE_LIST))
@@ -120,6 +118,8 @@ else ifneq (,$(filter $(DISPLAY), \
 ))
   DISPSIZE = 480x320
 endif
+
+TARGET = $(call lc, $(PROJECT)_$(STM32_MCU)_$(DISPSIZE)_$(DISPLAY)_$(DISPVAR))
 
 C_SOURCES += display/dispdrv/$(call lc,$(DISPLAY)).c
 C_SOURCES += display/dispdrv.c
