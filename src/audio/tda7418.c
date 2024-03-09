@@ -233,7 +233,7 @@ static void tda7418SetTrebleFilter(void)
     uint8_t reg03 = (value > 0) ? (31 - value) : (15 + value);
 
     reg03 <<= TDA7418_MIDDLE_ATT_OFT;
-    reg03 |= (aPar->tune[AUDIO_TUNE_TREBLE_KFREQ] < TDA7418_TREBLE_FREQ_OFT);
+    reg03 |= (aPar->tune[AUDIO_TUNE_TREBLE_KFREQ] << TDA7418_TREBLE_FREQ_OFT);
     reg03 |= 0x80;
 
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
@@ -249,7 +249,7 @@ static void tda7418SetMiddleFilter(void)
     uint8_t reg04 = (value > 0) ? (31 - value) : (15 + value);
 
     reg04 <<= TDA7418_MIDDLE_ATT_OFT;
-    reg04 |= (aPar->tune[AUDIO_TUNE_MIDDLE_QUAL] < TDA7418_MIDDLE_QFACT_OFT);
+    reg04 |= (aPar->tune[AUDIO_TUNE_MIDDLE_QUAL] << TDA7418_MIDDLE_QFACT_OFT);
 
     i2cBegin(I2C_AMP, TDA7418_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7418_MIDDLE);

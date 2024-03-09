@@ -390,7 +390,7 @@ static void tda7719SetTrebleFilter(void)
     uint8_t reg09 = (value > 0) ? (31 - value) : (15 + value);
 
     reg09 <<= TDA7719_MIDDLE_ATT_OFT;
-    reg09 |= (aPar->tune[AUDIO_TUNE_TREBLE_KFREQ] < TDA7719_TREBLE_FREQ_OFT);
+    reg09 |= (aPar->tune[AUDIO_TUNE_TREBLE_KFREQ] << TDA7719_TREBLE_FREQ_OFT);
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_TREBLE);
@@ -404,7 +404,7 @@ static void tda7719SetMiddleFilter(void)
     uint8_t reg10 = (value > 0) ? (31 - value) : (15 + value);
 
     reg10 <<= TDA7719_MIDDLE_ATT_OFT;
-    reg10 |= (aPar->tune[AUDIO_TUNE_MIDDLE_QUAL] < TDA7719_MIDDLE_QFACT_OFT);
+    reg10 |= (aPar->tune[AUDIO_TUNE_MIDDLE_QUAL] << TDA7719_MIDDLE_QFACT_OFT);
 
     i2cBegin(I2C_AMP, TDA7719_I2C_ADDR);
     i2cSend(I2C_AMP, TDA7719_MIDDLE);
