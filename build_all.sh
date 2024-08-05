@@ -28,7 +28,7 @@ do
 
   # 160x128 color displays
   compile_display ${STM32_MCU} "ILI9163"   "8BIT SPI"
-  compile_display ${STM32_MCU} "S6D0144"   "8BIT"
+  compile_display ${STM32_MCU} "S6D0144"   "8BIT SPI"
   compile_display ${STM32_MCU} "ST7735"    "8BIT SPI"
 
   # 176x132 color displays
@@ -38,35 +38,35 @@ do
   compile_display ${STM32_MCU} "SSD1286A"  "SPI"
 
   # 220x176 color displays
-  compile_display ${STM32_MCU} "HX8340"    "8BIT"
+  compile_display ${STM32_MCU} "HX8340"    "8BIT SPI"
   compile_display ${STM32_MCU} "ILI9225"   "8BIT SPI"
-  compile_display ${STM32_MCU} "LGDP4524"  "8BIT"
-  compile_display ${STM32_MCU} "S6D0164"   "8BIT"
+  compile_display ${STM32_MCU} "LGDP4524"  "8BIT SPI"
+  compile_display ${STM32_MCU} "S6D0164"   "8BIT SPI"
 
   # 320x240 color displays
-  compile_display ${STM32_MCU} "HX8347A"   "8BIT"
-  compile_display ${STM32_MCU} "HX8347D"   "8BIT"
-  compile_display ${STM32_MCU} "ILI9320"   "8BIT"
+  compile_display ${STM32_MCU} "HX8347A"   "8BIT SPI"
+  compile_display ${STM32_MCU} "HX8347D"   "8BIT SPI"
+  compile_display ${STM32_MCU} "ILI9320"   "8BIT SPI"
   compile_display ${STM32_MCU} "ILI9341"   "8BIT SPI"
-  compile_display ${STM32_MCU} "MC2PA8201" "8BIT"
-  compile_display ${STM32_MCU} "S6D0129"   "8BIT"
-  compile_display ${STM32_MCU} "S6D0139"   "8BIT"
-  compile_display ${STM32_MCU} "SPFD5408"  "8BIT"
-  compile_display ${STM32_MCU} "SSD1289"   "8BIT"
-  compile_display ${STM32_MCU} "SSD2119"   "8BIT"
+  compile_display ${STM32_MCU} "MC2PA8201" "8BIT SPI"
+  compile_display ${STM32_MCU} "S6D0129"   "8BIT SPI"
+  compile_display ${STM32_MCU} "S6D0139"   "8BIT SPI"
+  compile_display ${STM32_MCU} "SPFD5408"  "8BIT SPI"
+  compile_display ${STM32_MCU} "SSD1289"   "8BIT SPI"
+  compile_display ${STM32_MCU} "SSD2119"   "8BIT SPI"
 
   # 400x240 color displays
-  compile_display ${STM32_MCU} "ILI9327"   "8BIT"
-  compile_display ${STM32_MCU} "S6D04D1"   "8BIT"
-  compile_display ${STM32_MCU} "ST7793"    "8BIT"
+  compile_display ${STM32_MCU} "ILI9327"   "8BIT SPI"
+  compile_display ${STM32_MCU} "S6D04D1"   "8BIT SPI"
+  compile_display ${STM32_MCU} "ST7793"    "8BIT SPI"
 
   # 480x320 color displays
-  compile_display ${STM32_MCU} "HX8357C"   "8BIT"
-  compile_display ${STM32_MCU} "ILI9481"   "8BIT"
-  compile_display ${STM32_MCU} "ILI9486"   "8BIT"
-  compile_display ${STM32_MCU} "R61581"    "8BIT"
-  compile_display ${STM32_MCU} "RM68140"   "8BIT"
-  compile_display ${STM32_MCU} "ST7796S"   "8BIT"
+  compile_display ${STM32_MCU} "HX8357C"   "8BIT SPI"
+  compile_display ${STM32_MCU} "ILI9481"   "8BIT SPI"
+  compile_display ${STM32_MCU} "ILI9486"   "8BIT SPI"
+  compile_display ${STM32_MCU} "R61581"    "8BIT SPI"
+  compile_display ${STM32_MCU} "RM68140"   "8BIT SPI"
+  compile_display ${STM32_MCU} "ST7796S"   "8BIT SPI"
 done
 
 make clean
