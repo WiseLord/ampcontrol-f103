@@ -10,25 +10,31 @@ Some videos related to the device can be found at
 ## Hardware support
 
 - Graphic color TFT displays based on various controllers:
+  - 160x128: ILI9163, S6D0144, ST7735;
+  - 176x132: L2F50126, LPH9157, LS020, SSD1286A;
+  - 220x176: HX8340, ILI9225, LGDP4524, S6D0164;
+  - 320x240: HX8347A, HX8347D, ILI9320, ILI9341, MC2PA8201, S6D0129, S6D0139, SPFD5408, SSD1289, SSD2119;
+  - 400x240: ILI9327, S6D04D1, ST7793;
+  - 480x320: HX8357C, ILI9481, ILI9486, R61581, RM68140, ST7796S.
 
 - Audio processors with I²C bus:
-  - TDA7439, TDA731X, PT232X, TDA7418, TDA7719
+  - TDA7439, TDA731X, PT232X, TDA7418, TDA7719.
 
 - FM tuners with I²C bus:
-  - RDA580X, SI470X, TEA5767
+  - RDA580X, SI470X, TEA5767.
 
 - Bluetooth modules
-  - CSR8645, BK8000L (GPIO-based control via PCF8574x I²C expander)
-  - BT201 (USART-based control)
+  - CSR8645, BK8000L (GPIO-based control via PCF8574x I²C expander);
+  - BT201 (USART-based control).
 
 - USB HID
-  - Meida player on the PC can be controlled (Play/Pause and so on) by the device
+  - Meida player on the PC can be controlled (Play/Pause and so on) by the device.
 
 - KaRadio and MPD support
   - The device can act as "KaRadio plugin" via USART2 to add web radio support via ESP32. Alternatively, 
 it can control MPD server running on Linux (for example, Raspberry PI).
 
-More info can be found in [documentation](doc) pages.
+More specific info can be found in [documentation](doc) pages.
 
 ## Building the code
 
