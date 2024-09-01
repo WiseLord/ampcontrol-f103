@@ -1328,6 +1328,7 @@ void ampInit(void)
 
     rdsParserSetCb(rdsParserCb);
 
+    i2cExpInit();
     inputSetPower(false);    // Power off input device
 
     swTimSet(SW_TIM_RTC_INIT, 500);
