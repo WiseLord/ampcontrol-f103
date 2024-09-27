@@ -138,7 +138,7 @@ class Player(object):
         if cmd == 'next':
             if state == 'play':
                 self.client.next()
-        if cmd == 'previous':
+        if cmd == 'prev':
             if state == 'play':
                 self.client.previous()
         if cmd == 'rewind':

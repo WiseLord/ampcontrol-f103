@@ -290,7 +290,7 @@ void mpcSendMediaKey(MediaKey key)
         mpcSendCmd("stop");
         break;
     case MEDIAKEY_PREV:
-        mpcSendCmd("previous");
+        mpcSendCmd("prev");
         break;
     case MEDIAKEY_NEXT:
         mpcSendCmd("next");
