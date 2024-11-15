@@ -14,6 +14,8 @@ void st7796sInit(void)
 
     DISP_MDELAY(120); // Delay 120ms
 
+    dispdrvSelectReg8(0x3A);     // Interface Pixel Format
+    dispdrvSendData8(TFT_PIXFMT);
 
     dispdrvSelectReg8(0xf0); //Enable command 2
     dispdrvSendData8(0xc3);
@@ -28,7 +30,7 @@ void st7796sInit(void)
     dispdrvSendData8(0x01);
 
     dispdrvSelectReg8(0xb6);
-    dispdrvSendData8(0x20);
+    dispdrvSendData8(0x00);
     dispdrvSendData8(0x02);
     dispdrvSendData8(0x3b);
 

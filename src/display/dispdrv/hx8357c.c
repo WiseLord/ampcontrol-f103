@@ -9,7 +9,7 @@ void hx8357cInit(void)
     dispdrvSelectReg8(0x28);    // Display OFF
 
     dispdrvSelectReg8(0x3A);    // Interface Pixel Format
-    dispdrvSendData8(0x55);
+    dispdrvSendData8(TFT_PIXFMT);
 
 //    dispdrvSelectReg8(0xB6);    // Display function control
 //    dispdrvSendData8(0x00);     // BYPASS, RCM, RM, DM, PGT1, PGT0, PT1, PT0

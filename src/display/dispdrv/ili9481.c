@@ -73,7 +73,7 @@ void ili9481Init(void)
     dispdrvSendData8(0x08);
 
     dispdrvSelectReg8(0x3A);
-    dispdrvSendData8(0x55);
+    dispdrvSendData8(TFT_PIXFMT);
     DISP_MDELAY(120);
 
     dispdrvSelectReg8(0x29);

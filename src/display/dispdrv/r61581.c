@@ -63,7 +63,7 @@ void r61581Init(void)
         0x40); // B7=0 => Top to bottom, B6=1 => Right to left, B5=0 => Normal mode, B4=0 => Refresh top to bottom, B0=0 => Normal
 
     dispdrvSelectReg8(0x3A);  // Set pixel format
-    dispdrvSendData8(0x55); // DPI=5 => 16bits/pixel, DBI=5 => 16bits/pixel
+    dispdrvSendData8(TFT_PIXFMT); // DPI/DBI=5 => 16bits/pixel, DPI/DBI=6 => 18bits/pixel
 
     dispdrvSelectReg8(0x38);  // Exit idle mode
 

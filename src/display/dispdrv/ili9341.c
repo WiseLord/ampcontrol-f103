@@ -52,7 +52,7 @@ void ili9341Init(void)
     dispdrvSendData8(0xBE);
 
     dispdrvSelectReg8(0x3A); // COLMOD: Pixel Format Set
-    dispdrvSendData8(0x55);
+    dispdrvSendData8(TFT_PIXFMT);
 
     dispdrvSelectReg8(0xB1); // Frame Rate Control (In Normal Mode / Full Colors)
     dispdrvSendData8(0x00);

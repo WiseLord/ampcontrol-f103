@@ -1,6 +1,6 @@
 #include "../dispdrv.h"
 
-void ili9486Init(void)
+void ili9488Init(void)
 {
     CLR(DISP_CS);
 
@@ -83,7 +83,7 @@ void ili9486Init(void)
     SET(DISP_CS);
 }
 
-void ili9486Rotate(bool rotate)
+void ili9488Rotate(bool rotate)
 {
     CLR(DISP_CS);
 
@@ -99,7 +99,7 @@ void ili9486Rotate(bool rotate)
     SET(DISP_CS);
 }
 
-void ili9486Shift(int16_t value)
+void ili9488Shift(int16_t value)
 {
     CLR(DISP_CS);
 
@@ -118,7 +118,7 @@ void ili9486Shift(int16_t value)
     DISP_WAIT_BUSY();
     SET(DISP_CS);
 }
-void ili9486Sleep(bool value)
+void ili9488Sleep(bool value)
 {
     CLR(DISP_CS);
 
@@ -136,7 +136,7 @@ void ili9486Sleep(bool value)
     SET(DISP_CS);
 }
 
-void ili9486SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
+void ili9488SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 {
     int16_t x1 = x + w - 1;
     int16_t y1 = y + h - 1;
@@ -159,9 +159,9 @@ void ili9486SetWindow(int16_t x, int16_t y, int16_t w, int16_t h)
 const DispDriver dispdrv = {
     .width = 480,
     .height = 320,
-    .init = ili9486Init,
-    .sleep = ili9486Sleep,
-    .setWindow = ili9486SetWindow,
-    .rotate = ili9486Rotate,
-    .shift = ili9486Shift,
+    .init = ili9488Init,
+    .sleep = ili9488Sleep,
+    .setWindow = ili9488SetWindow,
+    .rotate = ili9488Rotate,
+    .shift = ili9488Shift,
 };

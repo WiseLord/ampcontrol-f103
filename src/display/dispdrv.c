@@ -144,7 +144,7 @@ static inline void dispdrvSendWord(uint16_t data)
 #endif // _DISP_16BIT
 }
 
-#ifdef _COLOR_24BIT
+#ifdef _DISP_PIXFMT_18BIT
 __attribute__((always_inline))
 static inline void dispdrvSendTriplet(uint16_t data)
 {
@@ -173,8 +173,8 @@ static inline void dispdrvSendColor(color_t data)
     fbSetPixel(fbArea.x, fbArea.y, data);
     fbShiftPos();
 #else
-#ifdef _COLOR_24BIT
-    dispdrvSendTriplet(color);
+#ifdef _DISP_PIXFMT_18BIT
+    dispdrvSendTriplet(data);
 #else
     dispdrvSendWord(data);
 #endif

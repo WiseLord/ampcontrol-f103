@@ -30,7 +30,7 @@ void s6d04d1Init(void)
     dispdrvSendData8(0x20);
 
     dispdrvSelectReg8(0x3a);
-    dispdrvSendData8(0x55);
+    dispdrvSendData8(TFT_PIXFMT);
 
     dispdrvSelectReg8(0xf2);
     dispdrvSendData8(0x10);

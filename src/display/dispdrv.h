@@ -21,6 +21,12 @@ extern "C" {
 #include "colors.h"
 #include "fonts.h"
 
+#ifdef _DISP_PIXFMT_18BIT
+#define TFT_PIXFMT 0x66
+#else
+#define TFT_PIXFMT 0x55
+#endif
+
 typedef struct _DispDriver {
     void (*init)(void);
     void (*sleep)(bool value);
