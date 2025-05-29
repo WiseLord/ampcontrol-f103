@@ -8,6 +8,8 @@
 ../src/audio/audio.h
 ../src/audio/pt232x.c
 ../src/audio/pt232x.h
+../src/audio/r2s15902.c
+../src/audio/r2s15902.h
 ../src/audio/tda731x.c
 ../src/audio/tda731x.h
 ../src/audio/tda7418.c

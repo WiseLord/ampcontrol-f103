@@ -7,6 +7,7 @@
 #include "tda7439.h"
 #include "tda731x.h"
 #include "pt232x.h"
+#include "r2s15902.h"
 #include "tda7418.h"
 #include "tda7719.h"
 
@@ -79,6 +80,11 @@ void audioReadSettings(AudioIC ic)
 #ifdef _PT232X
     case AUDIO_IC_PT232X:
         aProc.api = pt232xGetApi();
+        break;
+#endif
+#ifdef _R2S15902
+    case AUDIO_IC_R2S15902:
+        aProc.api = r2s15902GetApi();
         break;
 #endif
 #ifdef _TDA7418
@@ -312,6 +318,7 @@ bool audioIsModeSupported(AudioMode mode)
         case AUDIO_IC_PT232X:
         case AUDIO_IC_TDA7418:
         case AUDIO_IC_TDA7719:
+        case AUDIO_IC_R2S15902:
             ret = true;
             break;
         }
@@ -321,6 +328,7 @@ bool audioIsModeSupported(AudioMode mode)
         case AUDIO_IC_PT232X:
         case AUDIO_IC_TDA7418:
         case AUDIO_IC_TDA7719:
+        case AUDIO_IC_R2S15902:
             ret = true;
             break;
         }
@@ -328,6 +336,7 @@ bool audioIsModeSupported(AudioMode mode)
     case AUDIO_MODE_5_1:
         switch (ic) {
         case AUDIO_IC_PT232X:
+        case AUDIO_IC_R2S15902:
             ret = true;
             break;
         }
