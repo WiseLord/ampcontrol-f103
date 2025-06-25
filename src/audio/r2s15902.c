@@ -147,6 +147,10 @@ void r2s15902SetTune(AudioTune tune, int8_t value)
     switch (tune) {
     case AUDIO_TUNE_VOLUME:
     case AUDIO_TUNE_GAIN:
+    case AUDIO_TUNE_BALANCE:
+    case AUDIO_TUNE_FRONTREAR:
+    case AUDIO_TUNE_CENTER:
+    case AUDIO_TUNE_SUBWOOFER:
         val = aPar->tune[AUDIO_TUNE_GAIN];
         slot[1] = (val << 21) |(-raw.frontLeft << 14) | (val << 11) | (-raw.frontRight << 4) | 0x000001;
         slot[2] = (val << 21) |(-raw.center << 14) | (val << 11) | (-raw.subwoofer << 4) | 0x000002;
