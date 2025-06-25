@@ -39,6 +39,8 @@
 static const AudioGrid gridVolume     = {NULL, -99,  0, (int8_t)(1.00 * STEP_MULT)}; // -99..0dB with 1dB step
 static const AudioGrid gridGain       = {NULL,   0,  7, (int8_t)(2.00 * STEP_MULT)}; // 0..14dB with 2dB step
 static const AudioGrid gridTone       = {NULL,  -7,  7, (int8_t)(2.00 * STEP_MULT)}; // -14..14dB with 2dB step
+static const AudioGrid gridBalance    = {NULL, -15, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
+static const AudioGrid gridSubwoofer  = {NULL, 0, 15, (int8_t)(1.00 * STEP_MULT)}; // -15..15dB with 1dB step
 
 static uint32_t slot[R2S15902_SLOTS] = {
     0x000000,
@@ -110,6 +112,10 @@ void r2s15902Init(AudioParam *param)
     aPar->grid[AUDIO_TUNE_BASS]    = &gridTone;
     aPar->grid[AUDIO_TUNE_TREBLE]  = &gridTone;
     aPar->grid[AUDIO_TUNE_GAIN]    = &gridGain;
+    aPar->grid[AUDIO_TUNE_BALANCE] = &gridBalance;
+    aPar->grid[AUDIO_TUNE_FRONTREAR] = &gridBalance;
+    aPar->grid[AUDIO_TUNE_SUBWOOFER] = &gridSubwoofer;
+    aPar->grid[AUDIO_TUNE_CENTER] = &gridSubwoofer;
 
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
