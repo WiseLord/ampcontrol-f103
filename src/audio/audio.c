@@ -359,30 +359,21 @@ AudioGroup audioGetGroup(AudioTune tune)
 {
     switch (tune) {
     case AUDIO_TUNE_VOLUME:
-    case AUDIO_TUNE_PREAMP:
-    case AUDIO_TUNE_GAIN:
         return AUDIO_GROUP_VOLUME;
     case AUDIO_TUNE_BASS:
-    case AUDIO_TUNE_BASS_FREQ:
-    case AUDIO_TUNE_BASS_QUAL:
         return AUDIO_GROUP_BASS;
-    case AUDIO_TUNE_MIDDLE:
-    case AUDIO_TUNE_MIDDLE_KFREQ:
-    case AUDIO_TUNE_MIDDLE_QUAL:
-        return AUDIO_GROUP_MIDDLE;
     case AUDIO_TUNE_TREBLE:
-    case AUDIO_TUNE_TREBLE_KFREQ:
         return AUDIO_GROUP_TREBLE;
-    case AUDIO_TUNE_FRONTREAR:
     case AUDIO_TUNE_BALANCE:
-    case AUDIO_TUNE_CENTER:
         return AUDIO_GROUP_BALANCE;
+    case AUDIO_TUNE_FRONTREAR:
+        return AUDIO_GROUP_FRONTREAR;
+    case AUDIO_TUNE_CENTER:
+        return AUDIO_GROUP_CENTER;
     case AUDIO_TUNE_SUBWOOFER:
-    case AUDIO_TUNE_SUB_CUT_FREQ:
         return AUDIO_GROUP_SUBFOOWER;
-    case AUDIO_TUNE_LOUDNESS:
-    case AUDIO_TUNE_LOUD_PEAK_FREQ:
-        return AUDIO_GROUP_LOUDNESS;
+    case AUDIO_TUNE_GAIN:
+        return AUDIO_GROUP_GAIN;
     default:
         return AUDIO_GROUP_INVALID;
     }
@@ -392,55 +383,21 @@ AudioTune audioGetFirstInGroup(AudioGroup group)
 {
     switch (group) {
     case AUDIO_GROUP_VOLUME:
-        if (audioIsTuneValid(AUDIO_TUNE_VOLUME)) {
-            return AUDIO_TUNE_VOLUME;
-        } else if (audioIsTuneValid(AUDIO_TUNE_PREAMP)) {
-            return AUDIO_TUNE_PREAMP;
-        } else if (audioIsTuneValid(AUDIO_TUNE_GAIN)) {
-            return AUDIO_TUNE_GAIN;
-        }
+        return AUDIO_TUNE_VOLUME;
     case AUDIO_GROUP_BASS:
-        if (audioIsTuneValid(AUDIO_TUNE_BASS)) {
-            return AUDIO_TUNE_BASS;
-        } else if (audioIsTuneValid(AUDIO_TUNE_BASS_FREQ)) {
-            return AUDIO_TUNE_BASS_FREQ;
-        } else if (audioIsTuneValid(AUDIO_TUNE_BASS_QUAL)) {
-            return AUDIO_TUNE_BASS_QUAL;
-        }
-    case AUDIO_GROUP_MIDDLE:
-        if (audioIsTuneValid(AUDIO_TUNE_MIDDLE)) {
-            return AUDIO_TUNE_MIDDLE;
-        } else if (audioIsTuneValid(AUDIO_TUNE_MIDDLE_KFREQ)) {
-            return AUDIO_TUNE_MIDDLE_KFREQ;
-        } else if (audioIsTuneValid(AUDIO_TUNE_MIDDLE_QUAL)) {
-            return AUDIO_TUNE_MIDDLE_QUAL;
-        }
+        return AUDIO_TUNE_BASS;
     case AUDIO_GROUP_TREBLE:
-        if (audioIsTuneValid(AUDIO_TUNE_TREBLE)) {
-            return AUDIO_TUNE_TREBLE;
-        } else if (audioIsTuneValid(AUDIO_TUNE_TREBLE_KFREQ)) {
-            return AUDIO_TUNE_TREBLE_KFREQ;
-        }
+        return AUDIO_TUNE_TREBLE;
     case AUDIO_GROUP_BALANCE:
-        if (audioIsTuneValid(AUDIO_TUNE_BALANCE)) {
-            return AUDIO_TUNE_BALANCE;
-        } else if (audioIsTuneValid(AUDIO_TUNE_FRONTREAR)) {
-            return AUDIO_TUNE_FRONTREAR;
-        } else if (audioIsTuneValid(AUDIO_TUNE_CENTER)) {
-            return AUDIO_TUNE_CENTER;
-        }
+        return AUDIO_TUNE_BALANCE;
+    case AUDIO_GROUP_FRONTREAR:
+        return AUDIO_TUNE_FRONTREAR;
+    case AUDIO_GROUP_CENTER:
+        return AUDIO_TUNE_CENTER;
     case AUDIO_GROUP_SUBFOOWER:
-        if (audioIsTuneValid(AUDIO_TUNE_SUBWOOFER)) {
-            return AUDIO_TUNE_SUBWOOFER;
-        } else if (audioIsTuneValid(AUDIO_TUNE_SUB_CUT_FREQ)) {
-            return AUDIO_TUNE_SUB_CUT_FREQ;
-        }
-    case AUDIO_GROUP_LOUDNESS:
-        if (audioIsTuneValid(AUDIO_TUNE_LOUDNESS)) {
-            return AUDIO_TUNE_LOUDNESS;
-        } else if (audioIsTuneValid(AUDIO_TUNE_LOUD_PEAK_FREQ)) {
-            return AUDIO_TUNE_LOUD_PEAK_FREQ;
-        }
+        return AUDIO_TUNE_SUBWOOFER;
+    case AUDIO_GROUP_GAIN:
+        return AUDIO_TUNE_GAIN;
     }
 
     return AUDIO_TUNE_INVALID;
