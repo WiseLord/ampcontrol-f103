@@ -1032,6 +1032,12 @@ static void actionRemapRemote(void)
     case RC_CMD_IN_NEXT:
         actionSet(ACTION_AUDIO_INPUT_CHANGE, +1);
         break;
+    case RC_CMD_IN_0:
+        actionSet(ACTION_AUDIO_INPUT_SET, 0);
+        break;
+    case RC_CMD_IN_1:
+        actionSet(ACTION_AUDIO_INPUT_SET, 1);
+        break;
 
     case RC_CMD_NAV_OK:
     case RC_CMD_NAV_BACK:
