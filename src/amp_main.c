@@ -1038,6 +1038,12 @@ static void actionRemapRemote(void)
     case RC_CMD_IN_1:
         actionSet(ACTION_AUDIO_INPUT_SET, 1);
         break;
+    case RC_CMD_IN_2:
+        actionSet(ACTION_AUDIO_INPUT_SET, 2);
+        break;
+    case RC_CMD_IN_3:
+        actionSet(ACTION_AUDIO_INPUT_SET, 3);
+        break;
 
     case RC_CMD_NAV_OK:
     case RC_CMD_NAV_BACK:
@@ -1070,6 +1076,22 @@ static void actionRemapRemote(void)
         break;
     case RC_CMD_TREBLE_DOWN:
         ampSelectTune(AUDIO_TUNE_TREBLE);
+        actionSet(ACTION_ENCODER, -1);
+        break;
+    case RC_CMD_CENTER_UP:
+        ampSelectTune(AUDIO_TUNE_CENTER);
+        actionSet(ACTION_ENCODER, +1);
+        break;
+    case RC_CMD_CENTER_DOWN:
+        ampSelectTune(AUDIO_TUNE_CENTER);
+        actionSet(ACTION_ENCODER, -1);
+        break;
+    case RC_CMD_SUB_UP:
+        ampSelectTune(AUDIO_TUNE_SUBWOOFER);
+        actionSet(ACTION_ENCODER, +1);
+        break;
+    case RC_CMD_SUB_DOWN:
+        ampSelectTune(AUDIO_TUNE_SUBWOOFER);
         actionSet(ACTION_ENCODER, -1);
         break;
 

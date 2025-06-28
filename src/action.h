@@ -56,7 +56,12 @@ extern "C" {
     CMD(RANDOM)             \
     CMD(IN_0)               \
     CMD(IN_1)               \
-
+    CMD(IN_2)               \
+    CMD(IN_3)               \
+    CMD(CENTER_UP)          \
+    CMD(CENTER_DOWN)        \
+    CMD(SUB_UP)             \
+    CMD(SUB_DOWN)           \
 
 typedef uint8_t ActionType;
 enum {

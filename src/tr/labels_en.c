@@ -175,5 +175,12 @@ const char *const labels_en[LABEL_END] = {
     [LABEL_MENU + MENU_RC_BT_IN_NEXT]   = "Next BT input",
     [LABEL_MENU + MENU_RC_TUNER_MONO]   = "Tuner mono",
     [LABEL_MENU + MENU_RC_REPEAT]       = "Repeat",
-    [LABEL_MENU + MENU_RC_RANDOM]       = "Random",
+    [LABEL_MENU + MENU_RC_IN_0]         = "Input 0",
+    [LABEL_MENU + MENU_RC_IN_1]         = "Input 1",
+    [LABEL_MENU + MENU_RC_IN_2]         = "Input 2",
+    [LABEL_MENU + MENU_RC_IN_3]         = "Input 3",
+    [LABEL_MENU + MENU_RC_CENTER_UP]    = "Center up",
+    [LABEL_MENU + MENU_RC_CENTER_DOWN]  = "Center down",
+    [LABEL_MENU + MENU_RC_SUB_UP]       = "Sub up",
+    [LABEL_MENU + MENU_RC_SUB_DOWN]     = "Sub down",
 };
