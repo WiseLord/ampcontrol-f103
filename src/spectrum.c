@@ -218,7 +218,7 @@ static void spDoFft(int16_t *dma, FftSample *smpl)
 
 static void spReadSettings(void)
 {
-    spectrum.mode = (SpMode)settingsRead(PARAM_SPECTRUM_MODE, SP_MODE_LEFT);
+    spectrum.mode = (SpMode)settingsRead(PARAM_SPECTRUM_MODE, SP_MODE_STEREO);
     bool peaks = (uint8_t)settingsRead(PARAM_SPECTRUM_PEAKS, true);
     bool grad = (uint8_t)settingsRead(PARAM_SPECTRUM_GRAD, false);
     bool demo = false;
