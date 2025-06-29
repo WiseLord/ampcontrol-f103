@@ -19,6 +19,8 @@ static const AudioGrid gridTestCenterSub    = {NULL, -15,  0, (int8_t)(1.00 * ST
 static const AudioGrid gridTestPreamp       = {NULL, -47,  0, (int8_t)(1.00 * STEP_MULT)}; // -47..0dB with 1dB step
 static const AudioGrid gridTestGain         = {NULL,   0, 15, (int8_t)(2.00 * STEP_MULT)}; // 0..30dB with 2dB step
 
+AudioParam *aPar = &aProc.par;
+
 static void audioTestInit(AudioParam *aPar)
 {
     aPar->grid[AUDIO_TUNE_VOLUME]    = &gridTestVolume;

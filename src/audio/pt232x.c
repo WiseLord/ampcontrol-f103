@@ -61,8 +61,6 @@ static const AudioGrid gridBalance    = {NULL,  -7,  7, (int8_t)(1.00 * STEP_MUL
 static const AudioGrid gridCenterSub  = {NULL, -15,  0, (int8_t)(1.00 * STEP_MULT)}; // -15..0dB with 1dB step
 static const AudioGrid gridGain       = {NULL,   0,  1, (int8_t)(6.00 * STEP_MULT)}; // 0..6dB with 6dB step
 
-static AudioParam *aPar;
-
 static const AudioApi pt232xApi = {
     .init = pt232xInit,
     .getInCnt = pt232xGetInCnt,

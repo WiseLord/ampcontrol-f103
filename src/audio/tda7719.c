@@ -256,8 +256,6 @@ static const int16_t arrLoudPeakFreq[] = {
 };
 static const AudioGrid adjustLoudPeakFreq = {arrLoudPeakFreq, 0, 3, 0};
 
-static AudioParam *aPar;
-
 static const AudioApi tda7719Api = {
     .init = tda7719Init,
     .getInCnt = tda7719GetInCnt,

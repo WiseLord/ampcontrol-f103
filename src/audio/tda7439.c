@@ -30,8 +30,6 @@ static const AudioGrid gridBalance = {NULL, -15, 15, (int8_t)(1.00 * STEP_MULT)}
 static const AudioGrid gridPreamp  = {NULL, -47,  0, (int8_t)(1.00 * STEP_MULT)}; // -47..0dB with 1dB step
 static const AudioGrid gridGain    = {NULL,   0, 15, (int8_t)(2.00 * STEP_MULT)}; // 0..30dB with 2dB step
 
-static AudioParam *aPar;
-
 static const AudioApi tda7439Api = {
     .init = tda7439Init,
     .getInCnt = tda7439GetInCnt,

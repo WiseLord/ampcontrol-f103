@@ -16,6 +16,8 @@ typedef struct {
     AudioParam par;
 } AudioProc;
 
+extern AudioParam *aPar;
+
 #ifndef AUDIO_IN_CFG_DEFAULT
 #define AUDIO_IN_CFG_DEFAULT    2
 #endif

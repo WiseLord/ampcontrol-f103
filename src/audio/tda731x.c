@@ -26,8 +26,6 @@ static const AudioGrid gridBalance = {NULL, -15, 15, (int8_t)(1.25 * STEP_MULT)}
 static const AudioGrid gridGain    = {NULL,   0,  3, (int8_t)(3.75 * STEP_MULT)}; // 0..11.25dB with 3.75dB step
 static const AudioGrid gridSub     = {NULL, -15,  0, (int8_t)(1.25 * STEP_MULT)}; // -18.75..0dB with 1.25dB step
 
-static AudioParam *aPar;
-
 static const AudioApi tda731xApi = {
     .init = tda731xInit,
     .getInCnt = tda731xGetInCnt,
