@@ -15,6 +15,10 @@ static void inputHandleButtons(uint16_t btnNow)
     // Previous state
     static uint16_t btnPrev = BTN_NO;
 
+    if (input.encRes) {
+        btnNow &= ~ENC_AB;
+    }
+
     // On button event place it to command buffer
     if (btnNow) {
         if (btnNow == btnPrev) {
@@ -90,7 +94,7 @@ void TIM_INPUT_HANDLER(void)
 
         uint8_t dispBus = ~glcdGetBus();
 
-        inputHandleButtons(dispBus & BTN_ALL);
+        inputHandleButtons(dispBus & (BTN_ALL | ENC_AB));
         inputHandleEncoder(dispBus & ENC_AB);
     }
 }
